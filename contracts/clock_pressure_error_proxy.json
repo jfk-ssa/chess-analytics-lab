@@ -1,0 +1,16 @@
+{
+  "id": "clock_pressure_error_proxy",
+  "version": "1.0.0",
+  "grain": "one selected game x ply, stratified by clock-before bucket",
+  "sampling": "game ID SHA256 first eight bytes modulo 20 equals zero; deterministic 5% selection from the bounded prefix, independent of annotations",
+  "eligible": "non-first move by a player in a zero-increment rated Standard game with valid prior same-player clock and a completed result, excluding source-marked bots",
+  "buckets_seconds": ["[0,10)", "[10,30)", "[30,60)", "[60,infinity)"],
+  "evaluable": "eligible move with source-provided before and after centipawn evaluations; mate transitions excluded and counted separately",
+  "deterioration": "max(0, mover-perspective cp_before minus cp_after); source cp scores are White-perspective, invert both for Black",
+  "numerator": "evaluable eligible moves with deterioration >= 200 centipawns",
+  "denominator": "evaluable eligible moves in bucket",
+  "coverage_denominator": "all eligible moves in bucket",
+  "null_rules": "first same-player move, missing/invalid clock, missing evaluations and mate transitions never become zero error",
+  "units": "fraction",
+  "caveats": ["Exploratory proxy, not an official Lichess blunder label.", "Existing evaluation coverage is selected and source quality varies.", "The prefix and move sample do not represent all August games; no causal time-pressure claim."]
+}

@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-03T20:13:27.134783+00:00",
+  "complete_games": 100000,
+  "compressed_prefix_sha256": "c3bde12f35297b50b31199e87baade846044b88ae48bf0800a1c423acd3347dc",
+  "decompressed_bytes_through_last_complete_game": 236533866,
+  "extracted_bytes": 236533866,
+  "partial_archive": true,
+  "plan_sha256": "15ad1e49c4a1b677647549b5a7f5c399a9062742b37a04204d920cdc44b049f1",
+  "publisher_full_checksum_verified": false,
+  "source_sha256": "26b999b2a346d5b42d309fa434d27f9e74ccd036e5ab5d41c7927548ff00fb7a",
+  "stopped_at_game_cap": true,
+  "trailing_open_record_discarded": false
+}

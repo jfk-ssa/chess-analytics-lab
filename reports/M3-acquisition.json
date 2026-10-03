@@ -1,0 +1,14 @@
+{
+  "archive_listed_bytes": 30145862359,
+  "archive_listed_games": 91912325,
+  "at": "2026-10-03T20:13:25.928963+00:00",
+  "compressed_prefix_sha256": "c3bde12f35297b50b31199e87baade846044b88ae48bf0800a1c423acd3347dc",
+  "method": "cached_verified_prefix",
+  "partial_archive": true,
+  "period": "2026-08",
+  "publisher_full_checksum_verified": false,
+  "range_end_inclusive": 39999999,
+  "range_start": 0,
+  "retained_compressed_bytes": 40000000,
+  "url": "https://database.lichess.org/standard/lichess_db_standard_rated_2026-08.pgn.zst"
+}

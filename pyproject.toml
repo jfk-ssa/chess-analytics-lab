@@ -3,7 +3,7 @@ requires = ["hatchling==1.27.0", "packaging==26.3", "pathspec==1.1.1", "pluggy==
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/chess_analytics", "orchestration", "platform_m2"]
+packages = ["src/chess_analytics", "orchestration", "platform_m2", "analytics_m3"]
 
 [project]
 name = "chess-analytics-lab"

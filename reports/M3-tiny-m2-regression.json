@@ -1,0 +1,23 @@
+{
+  "dataset": "tiny",
+  "dbt_results": {
+    "created": 5,
+    "passed": 19
+  },
+  "lock_sha256": "2886447a800804d6c0144fb8bb356c1a1190edbbdbaed95bdce9eb7fba98e15e",
+  "mart_id": "52810ff8c95a2c7f9b0acacd",
+  "model_sha256": "55381586c12adec19465fbcd98c0a9a54fb24a3219e7778a1a73e75ef7ca41e4",
+  "observed": {
+    "accepted": 22,
+    "bots": 1,
+    "drawn": 4,
+    "eligible": 20,
+    "player_rows": 44,
+    "unknown": 1
+  },
+  "published_at": "2026-10-03T20:37:23.731907+00:00",
+  "snapshot_id": "0fdc4ce15185898c10b4f155",
+  "source_sha256": "130df65e85d18e78bbafd89daf6696c2596e03abf939adf47f2dcbdc4d33e75b",
+  "status": "published",
+  "warehouse_sha256": "258df8f1e0bec7813bfb1e509b069177fc9435f45fafe930976fce1af4893d9a"
+}

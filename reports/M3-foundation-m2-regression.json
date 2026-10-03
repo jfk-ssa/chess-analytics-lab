@@ -1,0 +1,23 @@
+{
+  "dataset": "foundation",
+  "dbt_results": {
+    "created": 5,
+    "passed": 19
+  },
+  "lock_sha256": "2886447a800804d6c0144fb8bb356c1a1190edbbdbaed95bdce9eb7fba98e15e",
+  "mart_id": "3b34836ba025a78a54e96c46",
+  "model_sha256": "55381586c12adec19465fbcd98c0a9a54fb24a3219e7778a1a73e75ef7ca41e4",
+  "observed": {
+    "accepted": 121332,
+    "bots": 0,
+    "drawn": 3982,
+    "eligible": 121332,
+    "player_rows": 242664,
+    "unknown": 0
+  },
+  "published_at": "2026-10-03T20:37:34.885361+00:00",
+  "snapshot_id": "b57f51ff70cc3c1637e641c7",
+  "source_sha256": "aa40b3671fa3cf1072eb182892cd90b0e1e003a4a5943492f64b77e7f3fd1635",
+  "status": "published",
+  "warehouse_sha256": "8876288fe43009d1c8ed37230bb4fd5f744b9379c7ab8d2538c5089e6d20e3a5"
+}

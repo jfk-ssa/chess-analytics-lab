@@ -1,4 +1,23 @@
 {
+  "analytical": {
+    "url": "https://database.lichess.org/standard/lichess_db_standard_rated_2026-08.pgn.zst",
+    "period": "2026-08",
+    "source_kind": "bounded_standard_rated_prefix",
+    "complete_archive": false,
+    "archive_listed_games": 91912325,
+    "archive_listed_bytes": 30145862359,
+    "listing_verified_on": "2026-10-03",
+    "range_start": 0,
+    "range_end_inclusive": 39999999,
+    "compressed_prefix_sha256": "c3bde12f35297b50b31199e87baade846044b88ae48bf0800a1c423acd3347dc",
+    "max_download_bytes": 40000000,
+    "max_source_bytes": 500000000,
+    "max_decompressed_bytes": 500000000,
+    "max_generated_bytes": 5000000000,
+    "max_games": 100000,
+    "max_record_bytes": 1000000,
+    "timeout_seconds": 30
+  },
   "foundation": {
     "url": "https://database.lichess.org/standard/lichess_db_standard_rated_2013-01.pgn.zst",
     "period": "2013-01",

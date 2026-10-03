@@ -1,0 +1,12 @@
+{
+  "id": "evaluation_coverage",
+  "version": "1.0.0",
+  "grain": "one selected game x ply, by clock-before bucket",
+  "inputs": ["fact_move"],
+  "filters": "same eligible move and deterministic game sample as clock_pressure_error_proxy",
+  "numerator": "eligible moves with comparable before and after source centipawn evaluations",
+  "denominator": "all eligible moves in bucket",
+  "null_rules": "missing source evals and mate transitions are non-evaluable, never zero deterioration",
+  "units": "fraction",
+  "caveats": ["Source evaluation availability can depend on which games were analyzed.", "Coverage is conditional on the observed prefix and deterministic move-game sample."]
+}

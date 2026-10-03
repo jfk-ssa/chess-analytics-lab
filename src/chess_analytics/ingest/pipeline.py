@@ -32,7 +32,7 @@ def ingest(project: Path, root: Path, dataset: str, source: Path, plan: dict):
         "started_at": now(),
         "status": "running",
         "plan": plan,
-        "partial": False,
+        "partial": not plan.get("complete_archive", True),
         "source_file": source.name,
         "source_bytes": source.stat().st_size,
         "software": {
@@ -61,6 +61,16 @@ def ingest(project: Path, root: Path, dataset: str, source: Path, plan: dict):
     dates = []
     missing = Counter()
     scanned = 0
+    batch_remaining = 0
+    write_batch = 32 * 1024 * 1024
+
+    def reserve_write(size):
+        nonlocal batch_remaining
+        if size > batch_remaining:
+            guard_disk(root, plan["max_generated_bytes"], max(write_batch, size))
+            batch_remaining = max(write_batch, size)
+        batch_remaining -= size
+
     try:
         if source.stat().st_size > plan["max_source_bytes"]:
             raise ValueError("source byte limit exceeded")
@@ -102,11 +112,7 @@ def ingest(project: Path, root: Path, dataset: str, source: Path, plan: dict):
                 if status == "accepted":
                     game_line = json.dumps(row) + "\n"
                     player_lines = "".join(json.dumps(p) + "\n" for p in participants)
-                    guard_disk(
-                        root,
-                        plan["max_generated_bytes"],
-                        len(game_line.encode()) + len(player_lines.encode()) + 65536,
-                    )
+                    reserve_write(len(game_line.encode()) + len(player_lines.encode()))
                     games.write(game_line)
                     players.write(player_lines)
                     if row["utc_date"]:
@@ -127,7 +133,7 @@ def ingest(project: Path, root: Path, dataset: str, source: Path, plan: dict):
                         )
                         + "\n"
                     )
-                    guard_disk(root, plan["max_generated_bytes"], len(entry.encode()) + 65536)
+                    reserve_write(len(entry.encode()))
                     quarantine.write(entry)
         if counts["conflict"]:
             raise ValueError("conflicting duplicate; entire candidate withheld pending resolution")

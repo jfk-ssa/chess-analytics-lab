@@ -1,0 +1,13 @@
+{
+  "id": "opening_player_score",
+  "version": "1.0.0",
+  "grain": "one player-game at selected color, opening family, exact time control, and rating band",
+  "inputs": ["fact_game", "fact_player_game"],
+  "filters": "completed rated Standard, no source-marked bot, known source opening, known focal rating; half-open rating band",
+  "win_rate": "wins / (wins + draws + losses)",
+  "score_rate": "(wins + 0.5 * draws) / (wins + draws + losses)",
+  "null_rules": "unknown result and missing focal rating excluded and counted in coverage",
+  "units": "fraction",
+  "low_support_threshold_games": 100,
+  "caveats": ["Descriptive association in the observed prefix only.", "Do not infer a causal advantage from opening choice.", "Focal-player games are dependent across players and opponents; M4 uncertainty method must account for this."]
+}

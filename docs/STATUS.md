@@ -1,7 +1,22 @@
 # Status — 2026-10-03
 
-**M0–M2 accepted locally; M3 is next.** This is a new standalone local Git
+**M0–M3 accepted locally; M4 next.** This is a new standalone local Git
 repository; projects 1–3 remain together. No remote repository or hosting created.
+
+## Phase tracker
+
+| Phase | State | Next gate |
+|---|---|---|
+| M0 bootstrap | Done | Accepted offline environment and fixtures |
+| M1 vertical slice | Done | Accepted bounded foundation ingestion and reference metric |
+| M2 reliable platform | Done | Accepted dbt/recovery/operational checks locally |
+| M3 analytical corpus and metrics | Done | Accepted bounded prefix, observed coverage, independent checks, 12 draft dev cases |
+| M4 analytics product | Next | Dashboard and two reproducible memos |
+| M5 analyst/eval harness | Queued | Offline typed tools, replay, 50 cases |
+| M6 measured release | Queued | Explicitly capped live evaluation and release checks |
+| M7 depth | Later | Select only measured improvements |
+| M8 Jev | Follow-up | Fair, measured integration experiment |
+| Personalized recommender | Backlog | Outside first-release scope |
 
 ## Completed acceptance
 
@@ -14,6 +29,9 @@ repository; projects 1–3 remain together. No remote repository or hosting crea
 | Optional orchestrators | Thin Dagster asset graph and Prefect task flow over the existing pipeline; exact pins in separate optional extras | Same-input offline comparison: 3 assets and 3 tasks succeeded; both produced 22 accepted fixture games, 4/20 draws, and identical source/snapshot/metric records. [Machine-readable result](../reports/orchestrator-comparison.json). |
 | M2 dbt | Five staging/intermediate/mart models over checked snapshots; isolated candidates, source-to-mart reconciliation, immutable published marts and lineage artifacts | Tiny and foundation each created 5 models and passed 19 dbt tests. Foundation mart: 121,332 games, 242,664 participant rows, 3,982 draws. [M2 evidence](M2.md). |
 | M2 recovery | Failed dbt attempts and logs retained; pointer protected until checks pass; backfill by snapshot ID; validated rollback; operational ledger and source-version warnings | Injected failure preserved prior mart; retry matched clean run; failed dbt kept M1 snapshot usable; 23 offline tests passed in dbt-only environment. Dagster 4 assets and Prefect 4 tasks succeeded locally with dbt enabled. |
+| M3 bounded source | Fixed 40,000,000-byte prefix of the August 2026 standard rated archive; complete-PGN extraction capped at 100,000; partial status and byte hashes retained | 100,000 complete PGNs; 99,467 accepted, 533 unrated excluded, zero quarantine/conflicts. Observed UTC coverage is **2026-08-01 only**. Full publisher archive checksum is not claimed. [Coverage](../reports/M3-coverage.json). |
+| M3 analytical metrics | Source-tag opening usage/player score and a deterministic 5% game-ID-hash move sample with a clock/evaluation error proxy; versioned contracts and immutable analytical snapshot | 4,924 games selected, 330,956 move rows, including 10 zero-ply selections. Independent raw-PGN checks passed for 12 opening families, 4 player cohorts, 4 clock buckets and source draw rate. [Check](../reports/M3-reference-check.json). |
+| M3 evaluation preparation | 12 draft development cases with dataset IDs, expected results, tolerances and caveats | Case file generated from independent reference; no agent or model response has been scored. M0–M2 tiny/foundation regressions rebuilt with 19 dbt tests each. [M3 evidence](M3.md). |
 
 Acceptance details: [reports/M0-M1.md](../reports/M0-M1.md), machine-readable
 [acceptance.json](../reports/acceptance.json), [foundation manifest](../reports/foundation-manifest.json).
@@ -24,20 +42,27 @@ CI workflow exists; equivalent commands ran locally. No hosted CI run is claimed
 - Foundation source: complete `lichess_db_standard_rated_2013-01.pgn.zst`,
   17,761,302 compressed bytes; 92,811,021 decompressed bytes scanned.
 - Source SHA256: `aa40b3671fa3cf1072eb182892cd90b0e1e003a4a5943492f64b77e7f3fd1635`.
-- Foundation snapshot: `d81caa5b8d6e3122dcf8e917` in ignored `data/published/`.
-- Tiny snapshot: `09759ec63554e3b47de939e6`; fabricated fixtures, never population data.
-- M2 marts over those checked snapshots: foundation `04001031eb6ba61d2ccbfa13`,
-  tiny `b2459d2fb4d0b3570051c6f6`. IDs also bind the dbt files and uv lock;
+- Foundation snapshot: `b57f51ff70cc3c1637e641c7` in ignored `data/published/`.
+- Tiny snapshot: `0fdc4ce15185898c10b4f155`; fabricated fixtures, never population data.
+- M2 marts over those checked snapshots: foundation `3b34836ba025a78a54e96c46`,
+  tiny `52810ff8c95a2c7f9b0acacd`. IDs also bind the dbt files and uv lock;
   a clean rebuild after a dependency change may use a new ID with the same counts.
+- M3 partial source snapshot: `6cf51473f8da6ae6b12ea5c2`; analytical move
+  snapshot: `84a38a404815ed2729917d76`. M3 data are ignored locally; manifests,
+  contracts, references and cases are tracked. The source prefix and extracted
+  PGNs must be reacquired to reproduce these data snapshots elsewhere.
 - Observed foundation UTC dates: **2012-12-31 through 2013-01-31**, not inferred
   from the archive label. 218 participant ratings are missing and remain null.
-- Metric/table contract version: 1.0.0. Source implementation commit:
-  `a617582b7df05193485d07721c6f21cccda72df0`. Final documentation/evidence commits
-  follow it without changing pipeline source. Full code/lock hashes are in reports.
+- M1 metric/table contract version: 1.0.0; M3 metric contracts are versioned
+  separately. The original M1 implementation commit was
+  `a617582b7df05193485d07721c6f21cccda72df0`; M3 changed bounded-write
+  handling and the partial-source manifest flag, so current snapshot IDs above
+  supersede those in historical M1/M2 reports. Full code/lock hashes are in
+  current manifests.
 
 ## Limitations and blockers
 
-No blocker for M3. Normal wheel installation (`--no-editable`) resolves the observed
+No blocker for M4. Normal wheel installation (`--no-editable`) resolves the observed
 macOS hidden editable `.pth` issue; see DECISIONS.md. Initial package/bootstrap
 failures are recorded there. Archive and dependencies were downloaded once with
 network access; offline reproduction assumes installed or cached dependencies.
@@ -46,25 +71,31 @@ M1/M2 target fixed complete Lichess exports and one local writer. They do not cl
 general PGN import, power-loss durability, full multi-source reconciliation,
 unattended scheduling, or scaling benchmarks. Failed/old local runs are retained.
 The 2013 archive provides ingestion evidence, not contemporary player or clock analysis.
+M3's newer data are an ordered archive prefix, not a random sample or full month.
+Opening labels come from provider tags. Clock/evaluation coverage is sparse and
+selected; the >=200-centipawn deterioration measure is exploratory and supports
+no causal claim about time pressure. The compressed-prefix checksum identifies
+the retained bytes, not the publisher's full archive.
 The optional orchestrators are local demonstrations, with no schedules or cloud
 deployments. Prefect's local ephemeral API needs a localhost socket. The first
 comparison attempt could not bind one inside the sandbox; a permitted local run
 completed and its result was saved. See [run instructions](ORCHESTRATION.md).
 Separate locked Dagster-only and Prefect-only environments installed from the local
-uv cache and completed one-off tiny runs. A fresh base-only environment still passes
-all 21 offline tests; Ruff check/format and `uv lock --check --offline` pass. The
-foundation snapshot still reports 3,982/121,332 from the base environment.
+uv cache and completed one-off tiny runs during M2. The current dbt-enabled
+environment passes all **25 offline tests**; Ruff check/format, Git whitespace check,
+and `uv lock --check --offline` pass with the workspace cache. The current foundation
+snapshot still reports 3,982/121,332. No hosted CI run is claimed.
 
-## Next concrete work — M3
+## Next concrete work — M4
 
-1. Select a newer, bounded source for opening and clock questions; record observed
-   coverage, missingness, provenance, and limits before making claims.
-2. Add versioned opening and clock metric contracts with independent references,
-   and draft 12 development evaluation cases.
-3. Consider an Airflow learning adapter only if comparing a third orchestration
-   model still justifies its added local stack. No Airflow install or run is claimed.
+1. Build a local dashboard over the checked M3 snapshot with visible denominators,
+   evaluation coverage, observed date range and filter provenance.
+2. Write two analytical memos with reproducible figures, uncertainty and caveats;
+   reject unsupported population or causal interpretations.
+3. Keep the optional Airflow learning adapter deferred unless a measured benefit
+   justifies its extra local stack. No Airflow install or run is claimed.
 
-Then M4 dashboard and memos; M5 analyst/replay/eval harness; M6 live experiment.
+Then M5 analyst/replay/eval harness; M6 capped live experiment.
 Jev remains M8; the personalized recommender remains backlog.
 
 **No model responses, replay results or live benchmark exist.** Provider configuration

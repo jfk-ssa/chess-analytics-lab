@@ -1,0 +1,13 @@
+{
+  "id": "opening_usage",
+  "version": "1.0.0",
+  "grain": "one provider/game_id in the observed bounded prefix",
+  "inputs": ["fact_game.source_opening", "fact_game.result", "fact_game.marked_bot"],
+  "classification": "source opening family is the trimmed text before the first colon in the provider tag; no local position classifier",
+  "numerator": "eligible games in selected source opening family",
+  "denominator": "eligible games with a nonempty source opening family",
+  "eligible": "rated Standard accepted games with completed result, excluding source-marked bots",
+  "null_rules": "missing/empty source opening excluded from denominator and reported separately",
+  "units": "fraction",
+  "caveats": ["The 100,000-game prefix is a convenience sample, not an August 2026 population sample.", "Opening tags are provider supplied; opening choice is confounded."]
+}

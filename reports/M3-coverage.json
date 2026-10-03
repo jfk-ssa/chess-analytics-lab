@@ -1,0 +1,96 @@
+{
+  "analytical_id": "84a38a404815ed2729917d76",
+  "archive_listed_bytes": 30145862359,
+  "archive_listed_games": 91912325,
+  "archive_period": "2026-08",
+  "clock_buckets": [
+    {
+      "bucket": "10_to_29",
+      "eligible_moves": 41003,
+      "error_proxy_rate": 0.12095507382972039,
+      "evaluable_moves": 3183,
+      "evaluation_coverage": 0.07762846620978953,
+      "mate_transition_moves": 371,
+      "proxy_errors": 385
+    },
+    {
+      "bucket": "30_to_59",
+      "eligible_moves": 78167,
+      "error_proxy_rate": 0.07764744754667108,
+      "evaluable_moves": 6053,
+      "evaluation_coverage": 0.07743676999245205,
+      "mate_transition_moves": 199,
+      "proxy_errors": 470
+    },
+    {
+      "bucket": "60_plus",
+      "eligible_moves": 118217,
+      "error_proxy_rate": 0.08331343996180472,
+      "evaluable_moves": 12567,
+      "evaluation_coverage": 0.10630450781190523,
+      "mate_transition_moves": 897,
+      "proxy_errors": 1047
+    },
+    {
+      "bucket": "under_10",
+      "eligible_moves": 20978,
+      "error_proxy_rate": 0.19311502938706968,
+      "evaluable_moves": 1191,
+      "evaluation_coverage": 0.05677376298979884,
+      "mate_transition_moves": 369,
+      "proxy_errors": 230
+    }
+  ],
+  "complete_pgns_extracted": 100000,
+  "compressed_prefix_sha256": "c3bde12f35297b50b31199e87baade846044b88ae48bf0800a1c423acd3347dc",
+  "compressed_range": [
+    0,
+    39999999
+  ],
+  "extracted_source_sha256": "26b999b2a346d5b42d309fa434d27f9e74ccd036e5ab5d41c7927548ff00fb7a",
+  "kind": "observed bounded-prefix coverage; not a monthly population estimate",
+  "limits": [
+    "First 100,000 complete games from a fixed 40 MB compressed prefix; observed dates only.",
+    "The SHA256 identifies retained prefix bytes, not the publisher's full archive.",
+    "Move games are selected by game-ID hash within the prefix, independent of annotations.",
+    "Clock error proxy covers only zero-increment moves with prior clocks and comparable source cp evaluations."
+  ],
+  "missing_fields": {
+    "participant_rating": 0,
+    "played_at": 0,
+    "source_opening": 0,
+    "utc_date": 0
+  },
+  "observed_first_utc_date": "2026-08-01",
+  "observed_last_utc_date": "2026-08-01",
+  "opening_coverage": {
+    "eligible_games": 99117,
+    "known_opening_games": 99117,
+    "missing_source_opening": 0
+  },
+  "partial_archive": true,
+  "publisher_full_checksum_verified": false,
+  "retained_compressed_bytes": 40000000,
+  "sampled_move_coverage": {
+    "after_clock_moves": 330585,
+    "before_clock_moves": 320783,
+    "cp_eval_moves": 32135,
+    "mate_eval_moves": 2005,
+    "moves": 330956,
+    "selected_games": 4914
+  },
+  "selected_games": 4924,
+  "selected_zero_ply_games": 10,
+  "source_counts": {
+    "accepted": 99467,
+    "conflict": 0,
+    "duplicate": 0,
+    "excluded": 533,
+    "quarantine": 0,
+    "seen": 100000
+  },
+  "source_exclusion_reasons": {
+    "not_rated": 533
+  },
+  "source_snapshot_id": "6cf51473f8da6ae6b12ea5c2"
+}

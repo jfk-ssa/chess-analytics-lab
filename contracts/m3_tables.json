@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "fact_move": {
+    "provider": "VARCHAR", "game_id": "VARCHAR", "ply": "BIGINT", "color": "VARCHAR",
+    "uci": "VARCHAR", "clock_after_seconds": "DOUBLE", "clock_before_seconds": "DOUBLE",
+    "clock_bucket": "VARCHAR", "eval_before_cp_white": "BIGINT", "eval_after_cp_white": "BIGINT",
+    "eval_before_mate_white": "BIGINT", "eval_after_mate_white": "BIGINT",
+    "centipawn_deterioration": "BIGINT", "error_proxy": "BOOLEAN", "phase_proxy": "VARCHAR"
+  }
+}

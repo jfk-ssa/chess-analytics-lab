@@ -1,4 +1,4 @@
-# Data dictionary — M1, contract 1.0.0
+# Data dictionary — M1–M3
 
 The explicit storage types are in contracts/tables.json.
 
@@ -7,7 +7,7 @@ The explicit storage types are in contracts/tables.json.
   1/2-1/2, or unknown (*). Standard/rated eligibility is checked during ingestion;
   source-marked bots are retained for visible metric exclusion. Fingerprint covers
   the trimmed source record, including annotations. Move count is validated by
-  legal replay; no move table is persisted yet.
+  legal replay. M3 persists a separate sampled move table.
 - **fact_player_game:** exactly two rows per accepted game (white, black). Rating
   and opponent rating are nullable values recorded at that game, not current
   ratings. Lichess uses Glicko-2 despite PGN “Elo” names. Score is 0, 0.5, 1, or null
@@ -31,4 +31,14 @@ present in staging. Failed framing/byte-limit runs may have only a lower-bound
 scanned byte count (last yielded record); no failed run claims full reconciliation.
 
 Source manifests/run records live in JSON during M1; warehouse dimensions, dbt
-lineage, full operational metrics and move/evaluation tables are later milestones.
+lineage and recovery records are added in M2.
+
+M3 adds `fact_move` with the explicit types in
+[m3_tables.json](../contracts/m3_tables.json): one selected provider/game ID and
+ply, side to move, SAN/UCI, after-move clock and source evaluation, previous
+same-player clock, and derived before/after centipawn values. Missing annotation
+values stay null; mate scores are separate from centipawns. A selected zero-ply
+game has no `fact_move` row but remains in the sample manifest. The M3 source
+manifest and move manifest explicitly mark the archive partial and retain
+source/implementation/contract hashes. Only the observed prefix, not the full
+publisher archive, has a verified compressed-byte hash.
