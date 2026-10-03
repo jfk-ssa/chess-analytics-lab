@@ -11,9 +11,12 @@ This is an inventory, not a grant to relicense third-party code.
 | zstandard | 0.25.0 | BSD-3-Clause (also inspect bundled native-library notices) |
 | pytest (development) | 8.4.2 | MIT |
 | Ruff (development) | 0.14.0 | MIT |
+| Dagster (optional) | 1.13.25 | Apache-2.0 |
+| dagster-webserver (optional) | 1.13.25 | Apache-2.0 |
+| Prefect (optional) | 3.8.7 | Apache-2.0 |
 
 Build uses pinned Hatchling and its pinned dependencies; uv.lock records runtime and
-development resolution with hashes. Source PGN data comes from the standard rated
+development and optional-orchestrator resolution with hashes. Source PGN data comes from the standard rated
 Lichess open database, released under CC0: https://database.lichess.org/.
 The exact source URL/checksum/listing date are in config/datasets.json. No broadcast
 data or engine binary is included. Tiny fixture games were authored for tests.

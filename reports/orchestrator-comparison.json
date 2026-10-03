@@ -1,0 +1,35 @@
+{
+  "counts": {
+    "accepted": 22,
+    "conflict": 0,
+    "duplicate": 0,
+    "excluded": 2,
+    "quarantine": 2,
+    "seen": 26
+  },
+  "dagster_assets_materialized": 3,
+  "dagster_version": "1.13.25",
+  "dataset": "tiny synthetic fixture",
+  "kind": "offline fixture adapter comparison; no model responses",
+  "metric": {
+    "caveats": [
+      "Historical foundation corpus is not evidence about contemporary players.",
+      "Excluding marked bots does not establish all other players are human.",
+      "No opening, time-pressure, or causal claims are supported by this metric."
+    ],
+    "contract_sha256": "b119f02815e73adbe680120b2b26460cd2f5cf867dd0399d1642b560e29042e4",
+    "denominator": 20,
+    "grain": "one provider/game_id",
+    "marked_bots": 1,
+    "metric_id": "game_draw_rate",
+    "metric_version": "1.0.0",
+    "numerator": 4,
+    "unknown_results": 1,
+    "value": 0.2
+  },
+  "prefect_tasks_completed": 3,
+  "prefect_version": "3.8.7",
+  "results_equal": true,
+  "snapshot_id": "fe9d1c3fd4821443919d07ce",
+  "source_sha256": "130df65e85d18e78bbafd89daf6696c2596e03abf939adf47f2dcbdc4d33e75b"
+}

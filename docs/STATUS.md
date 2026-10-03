@@ -1,6 +1,6 @@
 # Status — 2026-10-03
 
-**M0 and M1 accepted locally. M2 is next.** This is a new standalone local Git
+**M0 and M1 accepted locally; an optional M2 orchestration slice is accepted. M2 dbt and recovery remain next.** This is a new standalone local Git
 repository; projects 1–3 remain together. No remote repository or hosting created.
 
 ## Completed acceptance
@@ -11,6 +11,7 @@ repository; projects 1–3 remain together. No remote repository or hosting crea
 | M1 | Bounded complete-source acquisition, legal PGN replay, provenance/quarantine, typed Parquet → DuckDB, checked snapshots, draw-rate metric | Publisher SHA256 verified; 121,332 accepted games and 242,664 participant rows; zero quarantine/conflicts; all quality checks passed. |
 | M1 repeatability | Repeat full ingestion and repeat publication | Two full ingestions produced identical normalized-file hashes. An acquisition-only code change separates them; same-code repeat ingestion is also tested on tiny fixtures. Repeated foundation build preserves snapshot ID and metric. |
 | M1 metric reference | Independent fixture arithmetic and real-source header tally | Tiny: 4/20 = 0.20. Foundation: 3,982/121,332 = 0.03281904196749415; DuckDB agrees exactly with the independent script. |
+| Optional orchestrators | Thin Dagster asset graph and Prefect task flow over the existing pipeline; exact pins in separate optional extras | Same-input offline comparison: 3 assets and 3 tasks succeeded; both produced 22 accepted fixture games, 4/20 draws, and identical source/snapshot/metric records. [Machine-readable result](../reports/orchestrator-comparison.json). |
 
 Acceptance details: [reports/M0-M1.md](../reports/M0-M1.md), machine-readable
 [acceptance.json](../reports/acceptance.json), [foundation manifest](../reports/foundation-manifest.json).
@@ -38,8 +39,16 @@ network access; offline reproduction assumes installed or cached dependencies.
 
 M1 targets fixed complete Lichess exports and one local writer. It does not claim
 general PGN import, power-loss durability, full multi-source reconciliation, dbt
-lineage, orchestration or scaling benchmarks. Failed/old local runs are retained.
+lineage, scheduler reliability or scaling benchmarks. Failed/old local runs are retained.
 The 2013 archive provides ingestion evidence, not contemporary player or clock analysis.
+The optional orchestrators are local demonstrations, with no schedules or cloud
+deployments. Prefect's local ephemeral API needs a localhost socket. The first
+comparison attempt could not bind one inside the sandbox; a permitted local run
+completed and its result was saved. See [run instructions](ORCHESTRATION.md).
+Separate locked Dagster-only and Prefect-only environments installed from the local
+uv cache and completed one-off tiny runs. A fresh base-only environment still passes
+all 21 offline tests; Ruff check/format and `uv lock --check --offline` pass. The
+foundation snapshot still reports 3,982/121,332 from the base environment.
 
 ## Next concrete work — M2
 
@@ -48,7 +57,9 @@ The 2013 archive provides ingestion evidence, not contemporary player or clock a
    tests and documented lineage. Keep one implementation of ingestion/publication.
 2. Expand recovery to source drift, interrupted processes, rollback/backfill and
    conflicting versions; preserve compact failure evidence and an operational report.
-3. Add local Dagster only after those pipeline functions and acceptance checks pass.
+3. Revisit orchestration after M2 transformations exist. The initial Dagster and
+   Prefect adapters are already present; evaluate Airflow only if a third local
+   learning exercise is still useful. No Airflow install or run is claimed.
 
 Then M3 newer bounded corpus + clock/opening contracts + 12 development eval
 references; M4 dashboard and memos; M5 analyst/replay/eval harness; M6 live experiment.
