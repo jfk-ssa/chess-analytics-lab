@@ -189,3 +189,35 @@ def test_download_checksum_success_and_no_network_reuse(project, tmp_path, monke
     monkeypatch.setattr("urllib.request.urlopen", lambda *a, **k: pytest.fail("downloaded twice"))
     assert acquire(tmp_path, plan) == first
     assert read_json(tmp_path / "raw/acquisition.json")["publisher_checksum_verified"]
+
+
+def test_download_retry_cap_and_preserved_jobs(project, tmp_path, monkeypatch):
+    class BrokenResponse(io.BytesIO):
+        status = 200
+        headers = {}
+
+        def read(self, size=-1):
+            if self.tell():
+                raise OSError("injected connection failure")
+            return super().read(min(size, 4))
+
+    plan = {**read_json(project / "config/datasets.json")["foundation"], "max_source_bytes": 6}
+    monkeypatch.setattr("urllib.request.urlopen", lambda *a, **k: BrokenResponse(b"123456789"))
+    monkeypatch.setattr("time.sleep", lambda _: None)
+    for _ in range(2):
+        with pytest.raises(ValueError, match="byte limit"):
+            acquire(tmp_path, plan)
+    jobs = list((tmp_path / "raw/acquisition").iterdir())
+    assert len(jobs) == 2
+    for job in jobs:
+        assert (job / "attempt-1.part").read_bytes() == b"1234"
+        assert sum(p.stat().st_size for p in job.glob("*.part")) <= 6
+        assert len(read_json(job / "failures.json")) == 2
+
+
+def test_annotation_change_is_a_conflict(project, tmp_path):
+    raw = first_record(project)
+    source = tmp_path / "annotations.pgn"
+    source.write_text(raw + raw.replace("0:04:59", "0:04:58"))
+    with pytest.raises(ValueError, match="conflicting duplicate"):
+        ingest(project, tmp_path / "data", "tiny", source, fixture_plan(project))

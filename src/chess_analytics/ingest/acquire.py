@@ -1,6 +1,7 @@
 import time
 import urllib.error
 import urllib.request
+import uuid
 from pathlib import Path
 
 from chess_analytics.common import digest, guard_disk, now, write_json
@@ -31,42 +32,52 @@ def acquire(root: Path, plan: dict):
         if target.stat().st_size > plan["max_source_bytes"] or digest(target) != plan["sha256"]:
             raise ValueError("cached source failed bounds/checksum; preserved for investigation")
         return target
+    job = raw / "acquisition" / uuid.uuid4().hex
+    job.mkdir(parents=True)
+    write_json(job / "plan.json", {"recorded_at": now(), **plan})
     errors = []
+    previous_bytes = 0
     for attempt in range(1, plan["max_attempts"] + 1):
-        part = target.with_suffix(f".attempt-{attempt}.part")
+        part = job / f"attempt-{attempt}.part"
         try:
+            remaining = plan["max_source_bytes"] - previous_bytes
+            if remaining <= 0:
+                raise ValueError("acquisition job byte limit exhausted across attempts")
             request = urllib.request.Request(plan["url"], headers={"User-Agent": "ChessLab/0.1"})
             with urllib.request.urlopen(request, timeout=plan["timeout_seconds"]) as response:
                 if response.status != 200:
                     raise ValueError("complete acquisition requires HTTP 200")
                 length = response.headers.get("Content-Length")
-                if length and int(length) > plan["max_source_bytes"]:
+                if length and int(length) > remaining:
                     raise ValueError("declared compressed source exceeds limit")
-                count = bounded_copy(
-                    response, part, plan["max_source_bytes"], root, plan["max_generated_bytes"]
-                )
+                count = bounded_copy(response, part, remaining, root, plan["max_generated_bytes"])
                 if length and count != int(length):
                     raise ValueError("incomplete HTTP body")
             if digest(part) != plan["sha256"]:
                 raise ValueError("publisher SHA256 mismatch")
             part.replace(target)
-            write_json(
-                raw / "acquisition.json",
-                {
-                    "finished_at": now(),
-                    "bytes": count,
-                    "attempts": attempt,
-                    "previous_errors": errors,
-                    "sha256": plan["sha256"],
-                    "publisher_checksum_verified": True,
-                },
-            )
+            receipt = {
+                "finished_at": now(),
+                "bytes": count,
+                "job_bytes_retained": previous_bytes + count,
+                "attempts": attempt,
+                "previous_errors": errors,
+                "sha256": plan["sha256"],
+                "publisher_checksum_verified": True,
+            }
+            write_json(job / "receipt.json", receipt)
+            write_json(raw / "acquisition.json", receipt)
             return target
-        except (OSError, ValueError, urllib.error.URLError) as e:
-            errors.append({"attempt": attempt, "error": str(e), "partial": part.name})
+        except BaseException as e:
+            previous_bytes += part.stat().st_size if part.exists() else 0
+            errors.append(
+                {"attempt": attempt, "error": str(e), "partial": str(part.relative_to(raw))}
+            )
+            write_json(job / "failures.json", errors)
             write_json(raw / "acquisition-failures.json", errors)
             # Policy and integrity failures are not repaired by repeated downloads.
-            if isinstance(e, ValueError) or attempt == plan["max_attempts"]:
+            retryable = isinstance(e, (OSError, urllib.error.URLError))
+            if not retryable or attempt == plan["max_attempts"]:
                 raise
             time.sleep(min(attempt, 3))
     raise RuntimeError("unreachable")
