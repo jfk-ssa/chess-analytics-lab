@@ -1,0 +1,10 @@
+{
+  "enabled": false,
+  "personal_account_acknowledged": false,
+  "model": "SET_EXPLICIT_MODEL_ID",
+  "max_run_usd": 0,
+  "input_usd_per_million": 0,
+  "output_usd_per_million": 0,
+  "max_output_tokens": 512,
+  "api_key_env": "CHESSLAB_PERSONAL_OPENAI_API_KEY"
+}

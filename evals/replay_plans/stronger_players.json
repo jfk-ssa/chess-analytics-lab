@@ -1,0 +1,9 @@
+{
+  "kind": "fixture_plan_no_model_response",
+  "plan": {
+    "actions": [],
+    "interpretation": "descriptive_observed_prefix",
+    "status": "needs_clarification"
+  },
+  "question": "Do stronger players perform better in this opening?"
+}

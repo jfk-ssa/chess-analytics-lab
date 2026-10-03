@@ -1,0 +1,32 @@
+{
+  "analytical_id": "84a38a404815ed2729917d76",
+  "kind": "local Streamlit AppTest smoke; no hosted deployment",
+  "replay_action_checked": true,
+  "status": "passed",
+  "views": [
+    {
+      "exceptions": [],
+      "view": "Overview and coverage"
+    },
+    {
+      "exceptions": [],
+      "view": "Opening comparisons"
+    },
+    {
+      "exceptions": [],
+      "view": "Clock pressure"
+    },
+    {
+      "exceptions": [],
+      "view": "Data quality"
+    },
+    {
+      "exceptions": [],
+      "view": "AI analyst"
+    },
+    {
+      "exceptions": [],
+      "view": "Evaluation results"
+    }
+  ]
+}

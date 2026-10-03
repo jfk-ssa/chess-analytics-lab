@@ -37,3 +37,9 @@ M3 metrics use the checked partial analytical snapshot and are descriptive only:
 These definitions are versioned, and [M3's independent raw-PGN check](../reports/M3-reference-check.json)
 confirms selected arithmetic. Source annotations are not independently
 engine-verified. No monthly, population, or causal interpretation is warranted.
+
+M4 adds [opening adjusted score](../contracts/opening_adjusted_score.json):
+common pooled weights across three focal-minus-opponent rating-difference
+strata, with a seeded focal-player cluster bootstrap. The M4 dashboard and
+analyst tool use the same implementation. Its interval describes dependence
+within the observed prefix, not uncertainty for all August games.

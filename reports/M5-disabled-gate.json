@@ -1,0 +1,9 @@
+{
+  "kind": "local disabled-provider gate check; no model response",
+  "attempt_id": "e5c56343e7054a28b816485e129f608c",
+  "config": "config/personal_provider.example.json",
+  "status": "rejected_before_transport",
+  "error": "live provider explicitly disabled",
+  "provider_response": null,
+  "attempt_log": "ignored data/analyst_attempts/"
+}

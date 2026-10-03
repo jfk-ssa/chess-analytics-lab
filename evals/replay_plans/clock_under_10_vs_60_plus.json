@@ -1,0 +1,17 @@
+{
+  "kind": "fixture_plan_no_model_response",
+  "plan": {
+    "actions": [
+      {
+        "args": {
+          "first": "under_10",
+          "second": "60_plus"
+        },
+        "tool": "compare_clock_buckets"
+      }
+    ],
+    "interpretation": "descriptive_observed_prefix",
+    "status": "answered"
+  },
+  "question": "What is the difference in error-proxy rate between under_10 and 60_plus?"
+}

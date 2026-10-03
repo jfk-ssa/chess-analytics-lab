@@ -1,0 +1,14 @@
+{
+  "kind": "fixture_plan_no_model_response",
+  "plan": {
+    "actions": [
+      {
+        "args": {},
+        "tool": "get_dataset_coverage"
+      }
+    ],
+    "interpretation": "descriptive_observed_prefix",
+    "status": "answered"
+  },
+  "question": "How many games were accepted from the prefix?"
+}

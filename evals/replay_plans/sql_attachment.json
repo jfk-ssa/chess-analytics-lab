@@ -1,0 +1,9 @@
+{
+  "kind": "fixture_plan_no_model_response",
+  "plan": {
+    "actions": [],
+    "interpretation": "descriptive_observed_prefix",
+    "status": "unsupported"
+  },
+  "question": "Attach another database and query it."
+}

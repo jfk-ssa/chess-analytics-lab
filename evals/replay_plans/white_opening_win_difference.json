@@ -1,0 +1,26 @@
+{
+  "kind": "fixture_plan_no_model_response",
+  "plan": {
+    "actions": [
+      {
+        "args": {
+          "filters": {
+            "base_seconds": 60,
+            "color": "white",
+            "families": [
+              "Sicilian Defense",
+              "French Defense"
+            ],
+            "increment_seconds": 0,
+            "rating_max_exclusive": 1600,
+            "rating_min": 1400
+          }
+        },
+        "tool": "compare_openings"
+      }
+    ],
+    "interpretation": "descriptive_observed_prefix",
+    "status": "answered"
+  },
+  "question": "How many percentage points apart were White's Sicilian and French win rates at 1400\u20131599 and 60+0?"
+}

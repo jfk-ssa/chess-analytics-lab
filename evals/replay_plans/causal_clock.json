@@ -1,0 +1,9 @@
+{
+  "kind": "fixture_plan_no_model_response",
+  "plan": {
+    "actions": [],
+    "interpretation": "descriptive_observed_prefix",
+    "status": "unsupported"
+  },
+  "question": "Prove that time pressure caused these errors."
+}

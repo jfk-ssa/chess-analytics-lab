@@ -1,0 +1,17 @@
+{
+  "case_set_sha256": "64bf83183a8729898fbfd2f355701b54d1ad4beecef9cade5a79bd735c97c78a",
+  "cases": 50,
+  "categories": {
+    "ambiguity": 6,
+    "basic_calculation": 10,
+    "filtering_perspective": 10,
+    "missing_data": 8,
+    "multi_step": 8,
+    "reliability_access": 8
+  },
+  "dataset_id": "84a38a404815ed2729917d76",
+  "dev": 30,
+  "heldout_warning": "Do not tune on test references; retire test set after inspection.",
+  "kind": "reference set, not agent results",
+  "test": 20
+}

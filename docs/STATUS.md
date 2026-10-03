@@ -1,6 +1,6 @@
 # Status — 2026-10-03
 
-**M0–M3 accepted locally; M4 next.** This is a new standalone local Git
+**M0–M5 accepted locally; M6 next.** This is a new standalone local Git
 repository; projects 1–3 remain together. No remote repository or hosting created.
 
 ## Phase tracker
@@ -11,9 +11,9 @@ repository; projects 1–3 remain together. No remote repository or hosting crea
 | M1 vertical slice | Done | Accepted bounded foundation ingestion and reference metric |
 | M2 reliable platform | Done | Accepted dbt/recovery/operational checks locally |
 | M3 analytical corpus and metrics | Done | Accepted bounded prefix, observed coverage, independent checks, 12 draft dev cases |
-| M4 analytics product | Next | Dashboard and two reproducible memos |
-| M5 analyst/eval harness | Queued | Offline typed tools, replay, 50 cases |
-| M6 measured release | Queued | Explicitly capped live evaluation and release checks |
+| M4 analytics product | Done | Accepted local six-view dashboard and two reproducible memos |
+| M5 analyst/eval harness | Done | Accepted checked typed tools, fixture replay and 50-case harness; no model result |
+| M6 measured release | Next | Verify personal provider configuration and cap; evaluate actual model responses |
 | M7 depth | Later | Select only measured improvements |
 | M8 Jev | Follow-up | Fair, measured integration experiment |
 | Personalized recommender | Backlog | Outside first-release scope |
@@ -32,6 +32,9 @@ repository; projects 1–3 remain together. No remote repository or hosting crea
 | M3 bounded source | Fixed 40,000,000-byte prefix of the August 2026 standard rated archive; complete-PGN extraction capped at 100,000; partial status and byte hashes retained | 100,000 complete PGNs; 99,467 accepted, 533 unrated excluded, zero quarantine/conflicts. Observed UTC coverage is **2026-08-01 only**. Full publisher archive checksum is not claimed. [Coverage](../reports/M3-coverage.json). |
 | M3 analytical metrics | Source-tag opening usage/player score and a deterministic 5% game-ID-hash move sample with a clock/evaluation error proxy; versioned contracts and immutable analytical snapshot | 4,924 games selected, 330,956 move rows, including 10 zero-ply selections. Independent raw-PGN checks passed for 12 opening families, 4 player cohorts, 4 clock buckets and source draw rate. [Check](../reports/M3-reference-check.json). |
 | M3 evaluation preparation | 12 draft development cases with dataset IDs, expected results, tolerances and caveats | Case file generated from independent reference; no agent or model response has been scored. M0–M2 tiny/foundation regressions rebuilt with 19 dbt tests each. [M3 evidence](M3.md). |
+| M4 analytics product | Local Streamlit overview, opening, clock, quality, analyst and evaluation views; two short memos; exact figure inputs | Six views and a replay action ran without app exceptions in Streamlit AppTest. Two memo figures match independent raw-PGN opening/clock references; 400 seeded focal-player bootstrap repetitions per opening cohort. [M4–M5 evidence](M4-M5.md). |
+| M5 offline analyst | Allowlisted read-only typed tools, four-step state machine, evidence IDs, fixture replay and separate scoring; disabled-by-default personal Responses adapter | 50 cases frozen (30 dev/20 test) across six categories; fixture-replay/scorer check 50/50. Ten plausible wrong-answer mutations rejected; raw SQL/file/network/extension attempts have no enabled tool. These are harness tests, **not model accuracy**. |
+| M5 live gate | Personal config and positive cap required; only named personal key variable permitted | Disabled example config rejected a CLI live attempt before transport; failure retained in ignored local attempt log. No provider request occurred. |
 
 Acceptance details: [reports/M0-M1.md](../reports/M0-M1.md), machine-readable
 [acceptance.json](../reports/acceptance.json), [foundation manifest](../reports/foundation-manifest.json).
@@ -51,6 +54,8 @@ CI workflow exists; equivalent commands ran locally. No hosted CI run is claimed
   snapshot: `84a38a404815ed2729917d76`. M3 data are ignored locally; manifests,
   contracts, references and cases are tracked. The source prefix and extracted
   PGNs must be reacquired to reproduce these data snapshots elsewhere.
+- M4 figures and M5 cases use analytical ID `84a38a404815ed2729917d76`.
+  M5 case-set SHA256 is in [the manifest](../evals/cases/m5_manifest.json).
 - Observed foundation UTC dates: **2012-12-31 through 2013-01-31**, not inferred
   from the archive label. 218 participant ratings are missing and remain null.
 - M1 metric/table contract version: 1.0.0; M3 metric contracts are versioned
@@ -62,7 +67,9 @@ CI workflow exists; equivalent commands ran locally. No hosted CI run is claimed
 
 ## Limitations and blockers
 
-No blocker for M4. Normal wheel installation (`--no-editable`) resolves the observed
+No blocker for offline M6 preparation. A personal provider configuration,
+current personal-account model/pricing verification, and explicit spending cap
+are required before live M6 work. Normal wheel installation (`--no-editable`) resolves the observed
 macOS hidden editable `.pth` issue; see DECISIONS.md. Initial package/bootstrap
 failures are recorded there. Archive and dependencies were downloaded once with
 network access; offline reproduction assumes installed or cached dependencies.
@@ -76,29 +83,36 @@ Opening labels come from provider tags. Clock/evaluation coverage is sparse and
 selected; the >=200-centipawn deterioration measure is exploratory and supports
 no causal claim about time pressure. The compressed-prefix checksum identifies
 the retained bytes, not the publisher's full archive.
+M4 intervals describe focal-player resampling within the observed prefix, not
+uncertainty for the full month. M5 free-form SQL remains disabled because a
+separate isolated benchmark worker has not been established. The held-out
+case labels have been used to validate the offline harness; do not claim an
+untouched model holdout after inspecting or tuning on them.
+M5's 30-second tool check is post-execution, not a hard worker timeout; a
+killable worker is required before live model-driven tool execution.
 The optional orchestrators are local demonstrations, with no schedules or cloud
 deployments. Prefect's local ephemeral API needs a localhost socket. The first
 comparison attempt could not bind one inside the sandbox; a permitted local run
 completed and its result was saved. See [run instructions](ORCHESTRATION.md).
 Separate locked Dagster-only and Prefect-only environments installed from the local
 uv cache and completed one-off tiny runs during M2. The current dbt-enabled
-environment passes all **25 offline tests**; Ruff check/format, Git whitespace check,
+environment passes all **30 offline tests**; Ruff check/format, Git whitespace check,
 and `uv lock --check --offline` pass with the workspace cache. The current foundation
 snapshot still reports 3,982/121,332. No hosted CI run is claimed.
 
-## Next concrete work — M4
+## Next concrete work — M6
 
-1. Build a local dashboard over the checked M3 snapshot with visible denominators,
-   evaluation coverage, observed date range and filter provenance.
-2. Write two analytical memos with reproducible figures, uncertainty and caveats;
-   reject unsupported population or causal interpretations.
-3. Keep the optional Airflow learning adapter deferred unless a measured benefit
-   justifies its extra local stack. No Airflow install or run is claimed.
+1. Verify current personal-account entitlement, exact model, prices and an
+   explicit run spending cap before enabling any live call. Freeze dataset,
+   case set, prompts and configuration first. Add a killable tool worker.
+2. Run a budgeted experiment, retain every response/failure/usage record, and
+   report numerical, clarification, reliability, latency and gross-cost results
+   separately. Retire the current test split if it was inspected for tuning.
+3. Prepare the fresh-clone demo and release evidence. Keep optional Airflow
+   deferred unless its extra local stack has a measured benefit.
 
-Then M5 analyst/replay/eval harness; M6 capped live experiment.
-Jev remains M8; the personalized recommender remains backlog.
+Then M7 measured depth and M8 Jev. The recommender remains backlog.
 
-**No model responses, replay results or live benchmark exist.** Provider configuration
-is disabled and inert; no provider SDK or credential discovery exists. Before M5/M6
-live work, require personal account configuration, named model/prices and an explicit
-run spending cap. No workplace credentials were read or used.
+**No model responses or live benchmark exist.** M5 has fixture replay results,
+explicitly labeled as harness validation. The provider example is disabled;
+no personal key or workplace credential was read or used. No paid call occurred.

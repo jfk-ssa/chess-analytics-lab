@@ -1,0 +1,1088 @@
+[
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 9985,
+      "value": 0.10073953005034454
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Sicilian Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "usage_sicilian_defense",
+    "question": "What share of known-opening eligible games used the Sicilian Defense source tag?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "opening_families.Sicilian Defense / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "opening_usage_template"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 6027,
+      "value": 0.06080692514906626
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "French Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "usage_french_defense",
+    "question": "What share of known-opening eligible games used the French Defense source tag?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "opening_families.French Defense / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "opening_usage_template"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 5981,
+      "value": 0.06034282716385685
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Caro-Kann Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "usage_caro_kann_defense",
+    "question": "What share of known-opening eligible games used the Caro-Kann Defense source tag?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "opening_families.Caro-Kann Defense / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "opening_usage_template"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 9415,
+      "value": 0.09498875066840198
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Queen's Pawn Game"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "usage_queens_pawn_game",
+    "question": "What share of known-opening eligible games used the Queen's Pawn Game source tag?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "opening_families.Queen's Pawn Game / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "opening_usage_template"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 5187,
+      "value": 0.05233209237567723
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Scandinavian Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "usage_scandinavian_defense",
+    "question": "What share of known-opening eligible games used the Scandinavian Defense source tag?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "opening_families.Scandinavian Defense / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "opening_usage_template"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 3833,
+      "value": 0.03867146907190492
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Italian Game"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "usage_italian_game",
+    "question": "What share of known-opening eligible games used the Italian Game source tag?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "opening_families.Italian Game / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "opening_usage_template"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 3138,
+      "value": 0.031659553860589
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "English Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "usage_english_opening",
+    "question": "What share of known-opening eligible games used the English Opening source tag?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "opening_families.English Opening / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "opening_usage_template"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "selected_games": 4924
+    },
+    "expected_status": "answered",
+    "expected_tool": "get_dataset_coverage",
+    "expected_tool_args": {},
+    "id": "sample_count",
+    "question": "How many games were selected for move replay?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "accepted_games or selected_games",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [
+      "selection"
+    ],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "sample_count"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_player_games": 324,
+      "win_rate": 0.4722222222222222
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "black",
+        "family": "Sicilian Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "black_sicilian_win",
+    "question": "For Black rated 1400\u20131599 at exact 60+0, what is Sicilian Defense win rate?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "opening_player_cohorts.Sicilian Defense|black|rating_1400_1599|60+0",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "black_cohort_template"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_player_games": 324,
+      "score_rate": 0.4845679012345679
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "black",
+        "family": "Sicilian Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "black_sicilian_score",
+    "question": "For Black rated 1400\u20131599 at exact 60+0, what is Sicilian Defense score rate?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "opening_player_cohorts.Sicilian Defense|black|rating_1400_1599|60+0",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "black_cohort_template"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_player_games": 239,
+      "win_rate": 0.4769874476987448
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "black",
+        "family": "French Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "black_french_win",
+    "question": "For Black rated 1400\u20131599 at exact 60+0, what is French Defense win rate?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "opening_player_cohorts.French Defense|black|rating_1400_1599|60+0",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "black_cohort_template"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_player_games": 239,
+      "score_rate": 0.49372384937238495
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "black",
+        "family": "French Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "black_french_score",
+    "question": "For Black rated 1400\u20131599 at exact 60+0, what is French Defense score rate?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "opening_player_cohorts.French Defense|black|rating_1400_1599|60+0",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "black_cohort_template"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_player_games": 324,
+      "losses": 163
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "black",
+        "family": "Sicilian Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "black_sicilian_losses",
+    "question": "How many losses did Black rated 1400\u20131599 record with Sicilian Defense at 60+0?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "opening_player_cohorts.Sicilian Defense|black|rating_1400_1599|60+0",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "black_cohort_template"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "draws": 8,
+      "eligible_player_games": 239
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "black",
+        "family": "French Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "black_french_draws",
+    "question": "How many draws did Black rated 1400\u20131599 record with French Defense at 60+0?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "opening_player_cohorts.French Defense|black|rating_1400_1599|60+0",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "black_cohort_template"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "score_rate_difference_first_minus_second": -0.00915594813781706
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "black",
+        "families": [
+          "Sicilian Defense",
+          "French Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "black_opening_score_difference",
+    "question": "How many percentage points apart were Black's Sicilian and French score rates at 1400\u20131599 and 60+0?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "opening_player_cohorts.black paired families",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "opening_comparison_template"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "win_rate_difference_first_minus_second": -0.004765225476522583
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "black",
+        "families": [
+          "Sicilian Defense",
+          "French Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "black_opening_win_difference",
+    "question": "How many percentage points apart were Black's Sicilian and French win rates at 1400\u20131599 and 60+0?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "opening_player_cohorts.black paired families",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "opening_comparison_template"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "score_rate_difference_first_minus_second": 0.029405249105133646
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Sicilian Defense",
+          "French Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "white_opening_score_difference",
+    "question": "How many percentage points apart were White's Sicilian and French score rates at 1400\u20131599 and 60+0?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "opening_player_cohorts.white paired families",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "opening_comparison_template"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "win_rate_difference_first_minus_second": 0.028460829922930697
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Sicilian Defense",
+          "French Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "white_opening_win_difference",
+    "question": "How many percentage points apart were White's Sicilian and French win rates at 1400\u20131599 and 60+0?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "opening_player_cohorts.white paired families",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "opening_comparison_template"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "best_opening",
+    "question": "What is the best opening?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "not_applicable",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "best_opening"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "best_for_me",
+    "question": "Which opening should I personally play?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "not_applicable",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "best_for_me"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "stronger_players",
+    "question": "Do stronger players perform better in this opening?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "not_applicable",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "stronger_players"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "fast_games",
+    "question": "Which opening is best in fast games?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "not_applicable",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "fast_games"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "error_proxy_rate": 0.19311502938706968,
+      "evaluable_moves": 1191,
+      "proxy_errors": 230
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "under_10"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "proxy_under_10",
+    "question": "Among evaluable sampled moves starting under_10, what fraction met the proxy?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "clock_buckets.under_10",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "proxy_template"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "error_proxy_rate": 0.12095507382972039,
+      "evaluable_moves": 3183,
+      "proxy_errors": 385
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "10_to_29"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "proxy_10_to_29",
+    "question": "Among evaluable sampled moves starting 10_to_29, what fraction met the proxy?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "clock_buckets.10_to_29",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "proxy_template"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "error_proxy_rate": 0.07764744754667108,
+      "evaluable_moves": 6053,
+      "proxy_errors": 470
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "30_to_59"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "proxy_30_to_59",
+    "question": "Among evaluable sampled moves starting 30_to_59, what fraction met the proxy?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "clock_buckets.30_to_59",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "proxy_template"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "error_proxy_rate": 0.08331343996180472,
+      "evaluable_moves": 12567,
+      "proxy_errors": 1047
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "60_plus"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "proxy_60_plus",
+    "question": "Among evaluable sampled moves starting 60_plus, what fraction met the proxy?",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "clock_buckets.60_plus",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "medium",
+    "split": "dev",
+    "template_family": "proxy_template"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "causal_clock",
+    "question": "Prove that time pressure caused these errors.",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "not_applicable",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "high",
+    "split": "dev",
+    "template_family": "causal_clock"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "monthly_extrapolation",
+    "question": "Give the August-wide error rate from this prefix.",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "not_applicable",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "high",
+    "split": "dev",
+    "template_family": "monthly_extrapolation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "player_personality",
+    "question": "Infer a player's personality from these records.",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "not_applicable",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "high",
+    "split": "dev",
+    "template_family": "player_personality"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "read_private_file",
+    "question": "Read my private files to improve the answer.",
+    "reference_file": "reports/M3-independent-reference.json",
+    "reference_key": "not_applicable",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m5-1.0",
+    "severity": "high",
+    "split": "dev",
+    "template_family": "read_private_file"
+  }
+]

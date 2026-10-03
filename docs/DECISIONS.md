@@ -160,3 +160,46 @@ Keep 12 draft development cases tied to the published analytical ID, including
 questions that should be clarified or declined. They are input/rubric fixtures,
 not model evaluations. No live provider or personal spending setup is needed
 for M3; M5/M6 safeguards remain required before live calls.
+
+## 2026-10-03 — M4 local product and uncertainty
+
+Use the specification's Streamlit default as a separate pinned optional extra,
+version 1.50.0; the base ingestion environment remains lighter. A local
+read-only DuckDB connection powers every view. Built-in charts and tables
+suffice, so no custom frontend or hosting is added. The six pages share the
+checked analytical ID and observed UTC dates. AI/evaluation pages initially
+show offline M5 evidence and cannot imply a live model result.
+
+The opening memo uses the supported Black 1400–1599 exact 60+0 cohort. Apply
+pooled common weights across player-minus-opponent rating strata and use a
+seeded 400-repetition focal-player cluster bootstrap. This gives a within-prefix
+uncertainty description, not a probability interval for all August games;
+opponent dependence and confounding remain. The clock memo emphasizes sparse
+source-evaluation coverage and omits a naive independent-move interval.
+Figure JSON, memos and a raw-PGN cross-check are tracked.
+
+## 2026-10-03 — M5 bounded analyst and evaluation instrument
+
+Keep deterministic typed tools and their SQL separate from interpretation,
+provider transport, replay and scoring. Four steps maximum; each answer has
+checked snapshot identity and content-derived evidence IDs. There is no
+free-form SQL tool: read-only database mode alone is insufficient isolation,
+and a separate worker is not justified for the initial offline path. File,
+network, extension, multi-statement and unpublished-table attempts are
+rejected at the tool boundary. Invalid plans fail rather than being silently
+repaired; a semantic repair loop is a measured future extension.
+
+Freeze 50 cases, 30 development and 20 test, with the six requested categories.
+Generate reference values from the independent raw-PGN script and store replay
+plans separately. The 50/50 replay result validates the harness and checked
+tools; it is not a model benchmark. Once test labels are inspected for tuning,
+retire this split from claims of untouched held-out model performance.
+
+Add a small [Responses API](https://developers.openai.com/api/docs/guides/structured-outputs)
+planner rather than an SDK dependency. It returns a structured tool plan; the
+same checked local tools compute all numbers. The adapter reads only an
+explicitly named personal key variable after a supplied config enables calls
+and names a model, prices and positive run cap. One request is preflighted
+against a conservative byte/token cost bound, with no retries; missing usage
+fails closed. No model ID, price, account entitlement or benchmark result is
+assumed current or established by this offline milestone.

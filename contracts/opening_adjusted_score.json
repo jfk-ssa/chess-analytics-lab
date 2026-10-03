@@ -1,0 +1,15 @@
+{
+  "id": "opening_adjusted_score",
+  "version": "1.0.0",
+  "grain": "one focal player-game in a selected source Opening family",
+  "filters": "completed non-marked-bot games; exact color, half-open player rating band, exact base+increment, two named source opening families; recorded opponent rating required for adjustment",
+  "score": "wins plus 0.5 times draws divided by eligible player-games",
+  "strata": "player rating minus recorded opponent rating: below -100, -100 to 99, and 100 or more",
+  "common_weights": "pooled eligible player-game counts over strata represented in both openings, normalized to sum to one",
+  "adjusted_result": "within-stratum score rates for each opening averaged using identical common weights",
+  "interval": "400 seeded focal-player cluster bootstrap repetitions within each opening; percentile 2.5 and 97.5 bounds among valid resamples",
+  "low_support": "fewer than 100 eligible player-games is a project warning",
+  "null_rules": "missing opponent rating is excluded from adjustment but remains in raw score; a missing common stratum yields no adjusted rate",
+  "units": "score fraction",
+  "caveats": ["Observed ordered prefix only; no month-wide inference.", "Association, not opening-choice causation.", "Bootstrap does not model opponent dependence or archive-prefix selection."]
+}

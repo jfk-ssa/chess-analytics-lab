@@ -1,0 +1,19 @@
+{
+  "kind": "fixture_plan_no_model_response",
+  "plan": {
+    "actions": [
+      {
+        "args": {
+          "filters": {
+            "bucket": "under_10"
+          },
+          "metric_id": "clock_pressure_error_proxy"
+        },
+        "tool": "query_metric"
+      }
+    ],
+    "interpretation": "descriptive_observed_prefix",
+    "status": "answered"
+  },
+  "question": "Among evaluable sampled moves starting under_10, what fraction met the proxy?"
+}

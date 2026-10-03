@@ -3,7 +3,7 @@
 A local portfolio connecting reliable chess data, defensible analytics, and an
 evaluated AI analyst in one repository. Target recurring infrastructure cost: $0.
 
-**Current scope: M0–M3.** The CLI acquires the fixed January 2013 Lichess archive,
+**Current scope: M0–M5 offline.** The CLI acquires the fixed January 2013 Lichess archive,
 validates and normalizes games, publishes Parquet and DuckDB snapshots, and reports
 one governed draw-rate metric. A tiny synthetic fixture runs entirely offline.
 See [status](docs/STATUS.md) for measured acceptance evidence and remaining work.
@@ -11,6 +11,9 @@ See [status](docs/STATUS.md) for measured acceptance evidence and remaining work
 M3 adds a bounded **partial** August 2026 source, source-tag opening metrics,
 sampled move annotations and an exploratory clock/evaluation proxy. Its observed
 games cover August 1 only. See the [M3 runbook and evidence](docs/M3.md).
+M4 adds a local Streamlit dashboard and two checked analytical memos. M5 adds
+typed metric tools, offline fixture replay and a 50-case harness; see
+[M4–M5 evidence and commands](docs/M4-M5.md). No model accuracy is claimed.
 
 The same tiny offline pipeline can be run as [Dagster assets or a Prefect flow](docs/ORCHESTRATION.md).
 Both adapters use the existing ingestion and metric code; an optional fourth step
@@ -67,13 +70,11 @@ The foundation archive is historical ingestion evidence. It cannot establish
 contemporary player behavior or clock-pressure findings. Source-marked bots and
 unknown results are counted explicitly and excluded from the draw-rate denominator.
 
-**Roadmap:** M4 dashboard and analytical memos; M5 offline analyst/replay
-and evaluation harness; M6 explicitly budgeted live evaluation. No AI benchmark,
-model response replay, or dashboard exists yet. Jev is M8; recommendations stay backlog.
+**Roadmap:** M6 explicitly budgeted live evaluation and reproducible first
+release; M7 measured depth; M8 Jev. Recommendations stay backlog.
 
-No live provider code or credential loader is included in M0–M3. The disabled
-configuration cannot enable paid calls. Personal provider configuration and an
-explicit run spending cap are prerequisites for a future live adapter.
+The M5 provider adapter is disabled by default. Personal provider configuration
+and an explicit run spending cap are prerequisites for any future live call.
 
 Data: [Lichess open database](https://database.lichess.org/), CC0. Dependency notices
 and repository licensing status are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

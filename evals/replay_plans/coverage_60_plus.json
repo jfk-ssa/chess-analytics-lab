@@ -1,0 +1,19 @@
+{
+  "kind": "fixture_plan_no_model_response",
+  "plan": {
+    "actions": [
+      {
+        "args": {
+          "filters": {
+            "bucket": "60_plus"
+          },
+          "metric_id": "clock_pressure_error_proxy"
+        },
+        "tool": "query_metric"
+      }
+    ],
+    "interpretation": "descriptive_observed_prefix",
+    "status": "answered"
+  },
+  "question": "What fraction of eligible sampled 60_plus moves had comparable evaluations?"
+}

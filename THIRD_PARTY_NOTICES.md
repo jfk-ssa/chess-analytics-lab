@@ -16,6 +16,8 @@ This is an inventory, not a grant to relicense third-party code.
 | Prefect (optional) | 3.8.7 | Apache-2.0 |
 | dbt-duckdb (optional) | 1.10.1 | Apache-2 (distribution metadata) |
 | dbt-core (transitive optional) | 1.12.5 | Apache-2.0 |
+| Streamlit (optional dashboard) | 1.50.0 | Apache License 2.0 (distribution metadata) |
+| PyArrow (transitive dashboard) | 25.0.1 | Apache-2.0 (license expression) |
 
 Build uses pinned Hatchling and its pinned dependencies; uv.lock records runtime and
 development and optional-orchestrator resolution with hashes. Source PGN data comes from the standard rated
