@@ -8,7 +8,10 @@ the caller to take `writer_lock`.
 ## Recovery
 
 1. **Download failure:** inspect data/raw/acquisition-failures.json and retained
-   attempt-N.part files. Retry ingest. Existing complete files are reused only after
+   data/raw/acquisition/JOB/attempt-N.part files. Each job preserves its plan and
+   failures; the top-level failures file is a latest-job convenience. Retry ingest.
+   Retained bytes across retries share one job allowance (a one-byte EOF probe can
+   detect a bound violation). Existing complete files are reused only after
    checksum verification. Failed partial files are not resumed or published.
 2. **Corrupt cached source:** ingest refuses it. Preserve/rename it for diagnosis,
    then run ingest again to acquire the exact configured source. Never update a

@@ -1,30 +1,60 @@
 # Status — 2026-10-03
 
-## M0 — implemented; final fresh-environment check pending
+**M0 and M1 accepted locally. M2 is next.** This is a new standalone local Git
+repository; projects 1–3 remain together. No remote repository or hosting created.
 
-New local Git repository, copied complete brief, Python 3.12.14, uv.lock, pinned
-runtime/development/build dependencies, explicit table/metric contracts and CLI.
-Tiny synthetic fixture: 26 inputs, 22 accepted games, 44 participant rows, 2 exclusions,
-2 quarantined. Independently specified draw rate 4/20 = 0.20.
-19 offline tests pass with socket connections forbidden; Ruff passes.
-Regular wheel installation resolves this Mac's hidden editable .pth incompatibility.
+## Completed acceptance
 
-## M1 — verification in progress
+| Milestone | Implemented behavior | Verified evidence |
+|---|---|---|
+| M0 | Python 3.12.14, uv.lock, exact package/build pins, CLI, synthetic fixtures, table/metric contracts | Clean local clone + fresh environment installed offline from cache; all 21 tests and demo passed. Ruff check/format passed. |
+| M1 | Bounded complete-source acquisition, legal PGN replay, provenance/quarantine, typed Parquet → DuckDB, checked snapshots, draw-rate metric | Publisher SHA256 verified; 121,332 accepted games and 242,664 participant rows; zero quarantine/conflicts; all quality checks passed. |
+| M1 repeatability | Repeat full ingestion and repeat publication | Two full ingestions produced identical normalized-file hashes. An acquisition-only code change separates them; same-code repeat ingestion is also tested on tiny fixtures. Repeated foundation build preserves snapshot ID and metric. |
+| M1 metric reference | Independent fixture arithmetic and real-source header tally | Tiny: 4/20 = 0.20. Foundation: 3,982/121,332 = 0.03281904196749415; DuckDB agrees exactly with the independent script. |
 
-Bounded acquisition succeeded for the complete January 2013 standard archive.
-Publisher SHA256 verified: aa40b3671fa3cf1072eb182892cd90b0e1e003a4a5943492f64b77e7f3fd1635.
-Independent header reference: 121,332 games, 3,982 draws, fraction 0.03281904196749415.
-Observed source UTC dates: 2012-12-31 through 2013-01-31.
-Legal-move parsing, Parquet → DuckDB build, and full-corpus rerun remain to be checked.
+Acceptance details: [reports/M0-M1.md](../reports/M0-M1.md), machine-readable
+[acceptance.json](../reports/acceptance.json), [foundation manifest](../reports/foundation-manifest.json).
+CI workflow exists; equivalent commands ran locally. No hosted CI run is claimed.
 
-## Scope and next milestone
+## Current dataset versions
 
-M2–M8 remain unimplemented. Next after M1 acceptance: dbt models/tests/lineage,
-expanded recovery/source-drift tests and operational report; only then Dagster.
-M3 adds bounded newer data, clock/opening metric contracts and initial eval references.
-M4 dashboard/memos; M5 analyst/replay/eval harness; M6 separately authorized live study.
-Jev follows core release; personalized recommender remains backlog.
+- Foundation source: complete `lichess_db_standard_rated_2013-01.pgn.zst`,
+  17,761,302 compressed bytes; 92,811,021 decompressed bytes scanned.
+- Source SHA256: `aa40b3671fa3cf1072eb182892cd90b0e1e003a4a5943492f64b77e7f3fd1635`.
+- Foundation snapshot: `d81caa5b8d6e3122dcf8e917` in ignored `data/published/`.
+- Tiny snapshot: `09759ec63554e3b47de939e6`; fabricated fixtures, never population data.
+- Observed foundation UTC dates: **2012-12-31 through 2013-01-31**, not inferred
+  from the archive label. 218 participant ratings are missing and remain null.
+- Metric/table contract version: 1.0.0. Source implementation commit:
+  `a617582b7df05193485d07721c6f21cccda72df0`. Final documentation/evidence commits
+  follow it without changing pipeline source. Full code/lock hashes are in reports.
 
-No provider SDK/calls, credential reads, model responses, replay results or model
-benchmarks. No cloud infrastructure, remote repository, hosting or spend configured.
-Failures and partial runs stay in ignored data/. See DECISIONS.md and RUNBOOK.md.
+## Limitations and blockers
+
+No blocker for M2. Normal wheel installation (`--no-editable`) resolves the observed
+macOS hidden editable `.pth` issue; see DECISIONS.md. Initial package/bootstrap
+failures are recorded there. Archive and dependencies were downloaded once with
+network access; offline reproduction assumes installed or cached dependencies.
+
+M1 targets fixed complete Lichess exports and one local writer. It does not claim
+general PGN import, power-loss durability, full multi-source reconciliation, dbt
+lineage, orchestration or scaling benchmarks. Failed/old local runs are retained.
+The 2013 archive provides ingestion evidence, not contemporary player or clock analysis.
+
+## Next concrete work — M2
+
+1. Introduce compatible locked dbt-duckdb models over the existing normalized
+   Parquet contracts: staging → intermediate → marts, with key/result/referential
+   tests and documented lineage. Keep one implementation of ingestion/publication.
+2. Expand recovery to source drift, interrupted processes, rollback/backfill and
+   conflicting versions; preserve compact failure evidence and an operational report.
+3. Add local Dagster only after those pipeline functions and acceptance checks pass.
+
+Then M3 newer bounded corpus + clock/opening contracts + 12 development eval
+references; M4 dashboard and memos; M5 analyst/replay/eval harness; M6 live experiment.
+Jev remains M8; the personalized recommender remains backlog.
+
+**No model responses, replay results or live benchmark exist.** Provider configuration
+is disabled and inert; no provider SDK or credential discovery exists. Before M5/M6
+live work, require personal account configuration, named model/prices and an explicit
+run spending cap. No workplace credentials were read or used.

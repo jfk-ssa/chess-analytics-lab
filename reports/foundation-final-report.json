@@ -1,0 +1,42 @@
+{
+  "counts": {
+    "accepted": 121332,
+    "conflict": 0,
+    "duplicate": 0,
+    "excluded": 0,
+    "quarantine": 0,
+    "seen": 121332
+  },
+  "coverage": {
+    "first_utc_date": "2012-12-31",
+    "last_utc_date": "2013-01-31",
+    "missing": {
+      "participant_rating": 218,
+      "played_at": 0,
+      "source_opening": 0,
+      "utc_date": 0
+    }
+  },
+  "dataset": "foundation",
+  "evidence_kind": "deterministic data validation; no model experiment",
+  "free_disk_bytes": 81920000000,
+  "metric": {
+    "caveats": [
+      "Historical foundation corpus is not evidence about contemporary players.",
+      "Excluding marked bots does not establish all other players are human.",
+      "No opening, time-pressure, or causal claims are supported by this metric."
+    ],
+    "contract_sha256": "b119f02815e73adbe680120b2b26460cd2f5cf867dd0399d1642b560e29042e4",
+    "denominator": 121332,
+    "grain": "one provider/game_id",
+    "marked_bots": 0,
+    "metric_id": "game_draw_rate",
+    "metric_version": "1.0.0",
+    "numerator": 3982,
+    "unknown_results": 0,
+    "value": 0.03281904196749415
+  },
+  "snapshot_disk_bytes": 53575174,
+  "snapshot_id": "d81caa5b8d6e3122dcf8e917",
+  "source_sha256": "aa40b3671fa3cf1072eb182892cd90b0e1e003a4a5943492f64b77e7f3fd1635"
+}

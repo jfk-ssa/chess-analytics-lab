@@ -1,6 +1,6 @@
 {
   "credentials_read": false,
-  "free_disk_bytes": 82329600000,
+  "free_disk_bytes": 81920000000,
   "live_calls_supported": false,
   "lock_present": true,
   "platform": "macOS-27.0.1-arm64-arm-64bit",

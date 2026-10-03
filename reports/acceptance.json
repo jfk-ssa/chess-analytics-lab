@@ -1,0 +1,41 @@
+{
+  "data_directory_bytes_at_acceptance": 381759102,
+  "evidence_kind": "M0/M1 data-platform acceptance; no model responses or benchmark",
+  "final_ingest_seconds": 174.8552066659995,
+  "first_ingest_seconds": 161.92061537500012,
+  "foundation_games": 121332,
+  "foundation_participant_rows": 242664,
+  "foundation_snapshot": "d81caa5b8d6e3122dcf8e917",
+  "fresh_checkout_demo_metric": {
+    "caveats": [
+      "Historical foundation corpus is not evidence about contemporary players.",
+      "Excluding marked bots does not establish all other players are human.",
+      "No opening, time-pressure, or causal claims are supported by this metric."
+    ],
+    "contract_sha256": "b119f02815e73adbe680120b2b26460cd2f5cf867dd0399d1642b560e29042e4",
+    "denominator": 20,
+    "grain": "one provider/game_id",
+    "marked_bots": 1,
+    "metric_id": "game_draw_rate",
+    "metric_version": "1.0.0",
+    "numerator": 4,
+    "unknown_results": 1,
+    "value": 0.2
+  },
+  "fresh_environment_and_clean_checkout_offline_tests_passed": 21,
+  "implementation_sha256": "141e12e008794022f3fa7b1ca94f32deb40aa2ef86d0b18fdc8b3317fabccb9e",
+  "independent_header_reference_matches_metric": true,
+  "limitations": [
+    "Two full ingestions span an acquisition-only implementation change; normalized artifacts match exactly. Same-version repeat ingestion is also tested on the fixture.",
+    "Network was needed for initial dependencies and source acquisition; clean checkout installation used the local dependency cache.",
+    "CI workflow authored and equivalent commands passed locally; no hosted GitHub Actions run.",
+    "No throughput scaling or peak-memory benchmark; no opening/clock analytics or analyst yet."
+  ],
+  "lock_sha256": "84a0a2efb9c8336d12b8bcae15979ac9cdac4f4ac1895dc24b287e95f828deb2",
+  "normalized_file_hashes_equal_across_two_full_ingestions": true,
+  "repeated_build_snapshot_and_metric_equal": true,
+  "ruff_check_and_format_passed": true,
+  "snapshot_disk_bytes": 53575174,
+  "source_checksum_verified": true,
+  "source_code_commit": "a617582b7df05193485d07721c6f21cccda72df0"
+}

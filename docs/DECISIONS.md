@@ -44,6 +44,10 @@ Caps: 1 GB compressed, 1 GB decompressed, 150,000 games, 1 MB/record, 5 GB data
 directory allowance. Smaller foundation-specific expanded/game caps are compatible
 with the brief's maximums. Download retries: 3; socket timeout: 30 seconds.
 Partial downloads and failed runs are retained and count against the allowance.
+Follow-up hardening gives each acquisition job its own immutable attempt paths;
+retries share the job allowance. An EOF probe can read one byte beyond the retained
+byte limit to detect an oversized response. This is a retained-byte guard, not a
+measurement of network protocol overhead or bytes hidden inside transport failures.
 
 PGN framing requires an Event header per game as used by Lichess. Missing optional
 data stays null. Required malformed fields and illegal moves are quarantined.
