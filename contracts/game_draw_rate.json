@@ -1,0 +1,14 @@
+{
+  "id": "game_draw_rate",
+  "version": "1.0.0",
+  "grain": "one provider/game_id",
+  "inputs": ["fact_game"],
+  "filters": "rated Standard games, excluding source-marked bots, completed results only",
+  "numerator": "count of eligible games with result 1/2-1/2",
+  "denominator": "count of eligible games with result in 1-0, 0-1, 1/2-1/2",
+  "formula": "numerator / denominator",
+  "null_rules": "unknown results excluded and counted; empty denominator yields null",
+  "units": "fraction",
+  "result_schema": {"numerator": "integer", "denominator": "integer", "value": "number|null", "unknown_results": "integer", "marked_bots": "integer"},
+  "caveats": ["Historical foundation corpus is not evidence about contemporary players.", "Excluding marked bots does not establish all other players are human.", "No opening, time-pressure, or causal claims are supported by this metric."]
+}

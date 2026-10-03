@@ -1,0 +1,18 @@
+{
+  "foundation": {
+    "url": "https://database.lichess.org/standard/lichess_db_standard_rated_2013-01.pgn.zst",
+    "period": "2013-01",
+    "expected_records": 121332,
+    "sha256": "aa40b3671fa3cf1072eb182892cd90b0e1e003a4a5943492f64b77e7f3fd1635",
+    "checksum_url": "https://database.lichess.org/standard/sha256sums.txt",
+    "listing_verified_on": "2026-10-03",
+    "max_source_bytes": 1000000000,
+    "max_decompressed_bytes": 1000000000,
+    "max_generated_bytes": 5000000000,
+    "max_games": 150000,
+    "max_record_bytes": 1000000,
+    "timeout_seconds": 30,
+    "max_attempts": 3,
+    "complete_archive": true
+  }
+}

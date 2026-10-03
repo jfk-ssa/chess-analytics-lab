@@ -1,0 +1,366 @@
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0001"]
+[Date "2020.01.01"]
+[Round "-"]
+[White "FixtureWhite1"]
+[Black "FixtureBlack1"]
+[Result "1-0"]
+[UTCDate "2020.01.01"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 {[%clk 0:04:59]} e5 2. Nf3 Nc6 3. Bb5 a6 1-0
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0002"]
+[Date "2020.01.02"]
+[Round "-"]
+[White "FixtureWhite2"]
+[Black "FixtureBlack2"]
+[Result "1-0"]
+[UTCDate "2020.01.02"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 {[%eval #3]} Nc6 3. Bb5 a6 1-0
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0003"]
+[Date "2020.01.03"]
+[Round "-"]
+[White "FixtureWhite3"]
+[Black "FixtureBlack3"]
+[Result "1-0"]
+[UTCDate "2020.01.03"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 1-0
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0004"]
+[Date "2020.01.04"]
+[Round "-"]
+[White "FixtureWhite4"]
+[Black "FixtureBlack4"]
+[Result "1-0"]
+[UTCDate "2020.01.04"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 1-0
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0005"]
+[Date "2020.01.05"]
+[Round "-"]
+[White "FixtureWhite5"]
+[Black "FixtureBlack5"]
+[Result "1-0"]
+[UTCDate "2020.01.05"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 1-0
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0006"]
+[Date "2020.01.06"]
+[Round "-"]
+[White "FixtureWhite6"]
+[Black "FixtureBlack6"]
+[Result "1-0"]
+[UTCDate "2020.01.06"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 1-0
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0007"]
+[Date "2020.01.07"]
+[Round "-"]
+[White "FixtureWhite7"]
+[Black "FixtureBlack7"]
+[Result "1-0"]
+[UTCDate "2020.01.07"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 1-0
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0008"]
+[Date "2020.01.08"]
+[Round "-"]
+[White "FixtureWhite8"]
+[Black "FixtureBlack8"]
+[Result "1-0"]
+[UTCDate "2020.01.08"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 1-0
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0009"]
+[Date "2020.01.09"]
+[Round "-"]
+[White "FixtureWhite9"]
+[Black "FixtureBlack9"]
+[Result "1-0"]
+[UTCDate "2020.01.09"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 1-0
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0010"]
+[Date "2020.01.10"]
+[Round "-"]
+[White "FixtureWhite10"]
+[Black "FixtureBlack10"]
+[Result "1-0"]
+[UTCDate "2020.01.10"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 1-0
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0011"]
+[Date "2020.01.11"]
+[Round "-"]
+[White "FixtureWhite11"]
+[Black "FixtureBlack11"]
+[Result "0-1"]
+[UTCDate "2020.01.11"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 0-1
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0012"]
+[Date "2020.01.12"]
+[Round "-"]
+[White "FixtureWhite12"]
+[Black "FixtureBlack12"]
+[Result "0-1"]
+[UTCDate "2020.01.12"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 0-1
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0013"]
+[Date "2020.01.13"]
+[Round "-"]
+[White "FixtureWhite13"]
+[Black "FixtureBlack13"]
+[Result "0-1"]
+[UTCDate "2020.01.13"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 0-1
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0014"]
+[Date "2020.01.14"]
+[Round "-"]
+[White "FixtureWhite14"]
+[Black "FixtureBlack14"]
+[Result "0-1"]
+[UTCDate "2020.01.14"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 0-1
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0015"]
+[Date "2020.01.15"]
+[Round "-"]
+[White "FixtureWhite15"]
+[Black "FixtureBlack15"]
+[Result "0-1"]
+[UTCDate "2020.01.15"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 0-1
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0016"]
+[Date "2020.01.16"]
+[Round "-"]
+[White "FixtureWhite16"]
+[Black "FixtureBlack16"]
+[Result "0-1"]
+[UTCDate "2020.01.16"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 0-1
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0017"]
+[Date "2020.01.17"]
+[Round "-"]
+[White "FixtureWhite17"]
+[Black "FixtureBlack17"]
+[Result "1/2-1/2"]
+[UTCDate "2020.01.17"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 1/2-1/2
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0018"]
+[Date "2020.01.18"]
+[Round "-"]
+[White "FixtureWhite18"]
+[Black "FixtureBlack18"]
+[Result "1/2-1/2"]
+[UTCDate "2020.01.18"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 1/2-1/2
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0019"]
+[Date "2020.01.19"]
+[Round "-"]
+[White "FixtureWhite19"]
+[Black "FixtureBlack19"]
+[Result "1/2-1/2"]
+[UTCDate "2020.01.19"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 1/2-1/2
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0020"]
+[Date "2020.01.20"]
+[Round "-"]
+[White "FixtureWhite20"]
+[Black "FixtureBlack20"]
+[Result "1/2-1/2"]
+[UTCDate "2020.01.20"]
+[WhiteElo "?"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 1/2-1/2
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0021"]
+[Date "2020.01.21"]
+[Round "-"]
+[White "FixtureWhite21"]
+[Black "FixtureBlack21"]
+[Result "*"]
+[UTCDate "2020.01.21"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 *
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0022"]
+[Date "2020.01.22"]
+[Round "-"]
+[White "FixtureWhite22"]
+[Black "FixtureBlack22"]
+[Result "1/2-1/2"]
+[UTCDate "2020.01.22"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+[WhiteTitle "BOT"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 1/2-1/2
+
+[Event "Casual Blitz synthetic fixture"]
+[Site "https://lichess.org/test0023"]
+[Date "2020.01.23"]
+[Round "-"]
+[White "FixtureWhite23"]
+[Black "FixtureBlack23"]
+[Result "1/2-1/2"]
+[UTCDate "2020.01.23"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 1/2-1/2
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0024"]
+[Date "2020.01.24"]
+[Round "-"]
+[White "FixtureWhite24"]
+[Black "FixtureBlack24"]
+[Result "1/2-1/2"]
+[UTCDate "2020.01.24"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+[Variant "Chess960"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 1/2-1/2
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "not-a-game-id"]
+[Date "2020.01.25"]
+[Round "-"]
+[White "FixtureWhite25"]
+[Black "FixtureBlack25"]
+[Result "1/2-1/2"]
+[UTCDate "2020.01.25"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 1/2-1/2
+
+[Event "Rated Blitz synthetic fixture"]
+[Site "https://lichess.org/test0026"]
+[Date "2020.01.26"]
+[Round "-"]
+[White "FixtureWhite26"]
+[Black "FixtureBlack26"]
+[Result "1/2-1/2"]
+[UTCDate "2020.01.26"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[TimeControl "300+0"]
+
+1. e4 e5 2. Bh6 1/2-1/2
+

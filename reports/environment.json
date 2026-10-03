@@ -1,0 +1,14 @@
+{
+  "credentials_read": false,
+  "free_disk_bytes": 82329600000,
+  "live_calls_supported": false,
+  "lock_present": true,
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "provider_configuration": {
+    "live_enabled": false,
+    "model": null,
+    "personal_account_confirmed": false,
+    "run_cap_usd": null
+  },
+  "python": "3.12.14"
+}

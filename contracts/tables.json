@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "fact_game": {
+    "provider": "VARCHAR", "game_id": "VARCHAR", "source_ordinal": "BIGINT",
+    "result": "VARCHAR", "rated": "BOOLEAN", "variant": "VARCHAR", "utc_date": "DATE",
+    "played_at": "TIMESTAMPTZ", "timestamp_precision": "VARCHAR", "time_control": "VARCHAR",
+    "base_seconds": "BIGINT", "increment_seconds": "BIGINT", "source_opening": "VARCHAR",
+    "source_eco": "VARCHAR", "termination": "VARCHAR", "marked_bot": "BOOLEAN",
+    "ply_count": "BIGINT", "headers_json": "VARCHAR", "record_fingerprint": "VARCHAR"
+  },
+  "fact_player_game": {
+    "provider": "VARCHAR", "game_id": "VARCHAR", "color": "VARCHAR", "player_key": "VARCHAR",
+    "rating": "BIGINT", "opponent_rating": "BIGINT", "score": "DOUBLE"
+  }
+}

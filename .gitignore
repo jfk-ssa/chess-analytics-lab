@@ -1,0 +1,13 @@
+.venv/
+.ruff_cache/
+.pytest_cache/
+__pycache__/
+*.egg-info/
+.env
+.env.*
+!.env.example
+/data/*
+!/data/README.md
+/artifacts/
+/work/
+.DS_Store

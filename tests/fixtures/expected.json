@@ -1,0 +1,4 @@
+{
+  "counts": {"seen": 26, "accepted": 22, "duplicate": 0, "conflict": 0, "excluded": 2, "quarantine": 2},
+  "metric": {"numerator": 4, "denominator": 20, "value": 0.2, "unknown_results": 1, "marked_bots": 1}
+}
