@@ -1,0 +1,16 @@
+name: chess_analytics
+version: '1.0.0'
+config-version: 2
+profile: chess_analytics
+model-paths: [models]
+test-paths: [tests]
+target-path: target
+clean-targets: [target, dbt_packages]
+models:
+  chess_analytics:
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: view
+    marts:
+      +materialized: table

@@ -1,5 +1,6 @@
 """Common adapter boundary. Business rules remain in chess_analytics."""
 
+import sys
 from pathlib import Path
 
 from chess_analytics.cli import fixture_plan
@@ -41,3 +42,14 @@ def publish(project: Path, data_dir: Path, dataset: str) -> dict:
 
 def verify(project: Path, data_dir: Path, dataset: str) -> dict:
     return report(project.resolve(), current(data_dir.resolve(), dataset))
+
+
+def transform(project: Path, data_dir: Path, dataset: str) -> dict:
+    from platform_m2.pipeline import build_mart, validate_mart
+
+    executable = Path(sys.executable).with_name("dbt")
+    if not executable.exists():
+        raise ValueError("dbt extra is required for M2 transformation")
+    with writer_lock(data_dir.resolve()):
+        path = build_mart(project.resolve(), data_dir.resolve(), dataset, executable)
+    return validate_mart(path)

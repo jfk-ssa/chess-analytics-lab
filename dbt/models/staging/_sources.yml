@@ -1,0 +1,18 @@
+version: 2
+sources:
+  - name: published
+    schema: main
+    description: Checked M1 snapshot tables copied into an isolated M2 candidate.
+    tables:
+      - name: fact_game
+        columns:
+          - name: game_id
+            data_tests: [not_null]
+          - name: provider
+            data_tests: [not_null]
+      - name: fact_player_game
+        columns:
+          - name: game_id
+            data_tests: [not_null]
+          - name: color
+            data_tests: [not_null]

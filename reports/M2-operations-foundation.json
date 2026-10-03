@@ -1,0 +1,94 @@
+{
+  "current_mart": "04001031eb6ba61d2ccbfa13",
+  "current_snapshot": "d81caa5b8d6e3122dcf8e917",
+  "dataset": "foundation",
+  "generated_at": "2026-10-03T19:59:25.343611+00:00",
+  "generated_disk_bytes": 477381316,
+  "ingestion_attempts": [
+    {
+      "counts": {
+        "accepted": 121332,
+        "conflict": 0,
+        "duplicate": 0,
+        "excluded": 0,
+        "quarantine": 0,
+        "seen": 121332
+      },
+      "coverage": {
+        "first_utc_date": "2012-12-31",
+        "last_utc_date": "2013-01-31",
+        "missing": {
+          "participant_rating": 218,
+          "played_at": 0,
+          "source_opening": 0,
+          "utc_date": 0
+        }
+      },
+      "decompressed_bytes_scanned": 92811021,
+      "elapsed_seconds": 174.8552066659995,
+      "error": null,
+      "expected_source_sha256": "aa40b3671fa3cf1072eb182892cd90b0e1e003a4a5943492f64b77e7f3fd1635",
+      "reasons": {},
+      "run_id": "2271a699a84148adb9f7980b36220724",
+      "scan_bytes_per_second": 530787.8602510443,
+      "source_bytes": 17761302,
+      "source_sha256": "aa40b3671fa3cf1072eb182892cd90b0e1e003a4a5943492f64b77e7f3fd1635",
+      "status": "staged"
+    },
+    {
+      "counts": {
+        "accepted": 121332,
+        "conflict": 0,
+        "duplicate": 0,
+        "excluded": 0,
+        "quarantine": 0,
+        "seen": 121332
+      },
+      "coverage": {
+        "first_utc_date": "2012-12-31",
+        "last_utc_date": "2013-01-31",
+        "missing": {
+          "participant_rating": 218,
+          "played_at": 0,
+          "source_opening": 0,
+          "utc_date": 0
+        }
+      },
+      "decompressed_bytes_scanned": 92811021,
+      "elapsed_seconds": 161.92061537500012,
+      "error": null,
+      "expected_source_sha256": "aa40b3671fa3cf1072eb182892cd90b0e1e003a4a5943492f64b77e7f3fd1635",
+      "reasons": {},
+      "run_id": "25a7ca62b2284ceda4fb900367663c0f",
+      "scan_bytes_per_second": 573188.4157249172,
+      "source_bytes": 17761302,
+      "source_sha256": "aa40b3671fa3cf1072eb182892cd90b0e1e003a4a5943492f64b77e7f3fd1635",
+      "status": "staged"
+    }
+  ],
+  "kind": "observed local pipeline operations",
+  "mart_attempts": [
+    {
+      "elapsed_seconds": 2.8103340829984518,
+      "error": null,
+      "mart_id": "04001031eb6ba61d2ccbfa13",
+      "snapshot_id": "d81caa5b8d6e3122dcf8e917",
+      "status": "published"
+    }
+  ],
+  "peak_memory_bytes": null,
+  "peak_memory_note": "not measured; DuckDB memory limit is configured, not process RSS",
+  "snapshot_build_attempts": [
+    {
+      "error": null,
+      "snapshot_id": "d81caa5b8d6e3122dcf8e917",
+      "status": "published"
+    },
+    {
+      "error": null,
+      "snapshot_id": "d81caa5b8d6e3122dcf8e917",
+      "status": "published"
+    }
+  ],
+  "source_drift": []
+}

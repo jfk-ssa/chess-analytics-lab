@@ -12,7 +12,7 @@ from orchestration import core  # noqa: E402
 PROJECT = Path(__file__).resolve().parents[1]
 
 
-def make_assets(project: Path, data_dir: Path, dataset: str = "tiny"):
+def make_assets(project: Path, data_dir: Path, dataset: str = "tiny", with_dbt: bool = False):
     """Bind one fixed dataset and directory to three inspectable data assets."""
     project, data_dir = project.resolve(), data_dir.resolve()
 
@@ -59,15 +59,35 @@ def make_assets(project: Path, data_dir: Path, dataset: str = "tiny"):
             }
         )
 
-    return [staged_games, published_snapshot, verified_metric]
+    assets = [staged_games, published_snapshot, verified_metric]
+    if with_dbt:
+
+        @dg.asset(
+            deps=[verified_metric],
+            group_name="chesslab",
+            description="Checked dbt staging, intermediate, and mart models",
+        )
+        def analytical_marts() -> dg.MaterializeResult:
+            result = core.transform(project, data_dir, dataset)
+            return dg.MaterializeResult(
+                metadata={
+                    "dataset": dataset,
+                    "mart_id": result["mart_id"],
+                    "dbt_tests_passed": result["dbt_results"]["passed"],
+                }
+            )
+
+        assets.append(analytical_marts)
+    return assets
 
 
-def make_definitions(project: Path, data_dir: Path, dataset: str = "tiny"):
-    return dg.Definitions(assets=make_assets(project, data_dir, dataset))
+def make_definitions(project: Path, data_dir: Path, dataset: str = "tiny", with_dbt: bool = False):
+    return dg.Definitions(assets=make_assets(project, data_dir, dataset, with_dbt))
 
 
 defs = make_definitions(
     PROJECT,
     Path(os.environ.get("CHESSLAB_DATA_DIR", PROJECT / "data")),
     os.environ.get("CHESSLAB_DATASET", "tiny"),
+    os.environ.get("CHESSLAB_WITH_DBT") == "1",
 )

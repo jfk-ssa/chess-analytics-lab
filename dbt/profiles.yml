@@ -1,0 +1,11 @@
+chess_analytics:
+  target: local
+  outputs:
+    local:
+      type: duckdb
+      path: "{{ env_var('CHESSLAB_DBT_PATH') }}"
+      schema: main
+      threads: 1
+      settings:
+        memory_limit: 256MB
+        max_temp_directory_size: 512MB

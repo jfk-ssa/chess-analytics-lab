@@ -3,7 +3,8 @@
 Dagster and Prefect are optional views over one Chess Analytics Lab pipeline. The
 Dagster graph has `staged_games → published_snapshot → verified_metric` assets;
 the Prefect flow has the corresponding `stage_source → publish_snapshot →
-verify_metric` tasks. Both call `orchestration/core.py`, which delegates parsing,
+verify_metric` tasks. With dbt enabled, each adds a fourth analytical-mart step.
+Both call `orchestration/core.py`, which delegates parsing,
 validation, publication, and metric calculation to the existing `chess_analytics`
 package. The default dataset is the committed tiny synthetic fixture. There is no
 schedule, cloud account, model call, or paid service in these demos.
@@ -78,6 +79,17 @@ UV_PROJECT_ENVIRONMENT=work/both-venv uv sync --locked --no-editable --extra dag
 work/both-venv/bin/python -m scripts.compare_orchestrators
 ```
 
+To compare the M2 step, install the dbt extra alongside either framework. For
+Dagster, set `CHESSLAB_WITH_DBT=1` in the materialize or UI command; for Prefect,
+add `--with-dbt` to its one-off or `--serve` command. The dbt build is local and
+publishes only after its tests and reconciliation pass. The separate M2 evidence
+and recovery commands are in [M2.md](M2.md).
+
+```sh
+UV_PROJECT_ENVIRONMENT=work/dagster-dbt-venv uv sync --locked --no-editable --extra dagster --extra dbt
+UV_PROJECT_ENVIRONMENT=work/prefect-dbt-venv uv sync --locked --no-editable --extra prefect --extra dbt
+```
+
 The recorded run on 2026-10-03 materialized three Dagster assets and completed
 three Prefect tasks. Both accepted 22 fixture games and independently read the
 same 4/20 draw-rate metric from their own published snapshots. The compared
@@ -88,7 +100,7 @@ foundation snapshot remains governed by the M1 checks.
 These optional packages increase local install size and dependency count but add
 no recurring project charge when self-hosted locally. Do not enable Dagster+ or
 Prefect Cloud for this exercise. The Python/CLI path remains the smallest runtime
-and source of truth. A third Airflow adapter is deferred until the dbt/warehouse
-work of M2 is complete; then compare its operator/DAG ergonomics against these
-two only if that learning objective still justifies another large local stack.
+and source of truth. A third Airflow adapter can now be considered against a
+working dbt pipeline, but only if its operator/DAG ergonomics justify another
+large local stack.
 No Airflow dependency or infrastructure is present now.

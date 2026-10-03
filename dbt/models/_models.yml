@@ -1,0 +1,48 @@
+version: 2
+models:
+  - name: stg_games
+    description: One accepted game, preserving source dates and nullable opening tags.
+    columns:
+      - name: provider
+        data_tests: [not_null]
+      - name: game_id
+        data_tests: [not_null]
+      - name: result
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['1-0', '0-1', '1/2-1/2', '*']
+  - name: stg_player_games
+    description: One participant per game and color, with rating at that game.
+    columns:
+      - name: game_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_games')
+                field: game_id
+      - name: color
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['white', 'black']
+  - name: int_game_eligibility
+    description: Game-grain eligibility for the versioned game draw-rate contract.
+    columns:
+      - name: game_id
+        data_tests: [not_null]
+  - name: mart_game_outcomes
+    description: Date and exact time-control outcome counts. Null dates and controls remain visible.
+    columns:
+      - name: accepted_games
+        data_tests: [not_null]
+      - name: eligible_games
+        data_tests: [not_null]
+      - name: drawn_games
+        data_tests: [not_null]
+  - name: mart_player_outcomes
+    description: Player-game grain; descriptive scores, not a causal opening analysis.
+    columns:
+      - name: game_id
+        data_tests: [not_null]
