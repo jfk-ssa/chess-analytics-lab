@@ -1,13 +1,14 @@
 """M6 budget and process-boundary acceptance without provider calls."""
 
 import json
+import os
 import subprocess
 from pathlib import Path
 
 import pytest
 
 from analyst_m5.core import run_killable_tool
-from analyst_m5.experiment import prepare, run
+from analyst_m5.experiment import _load_named_key, prepare, run
 from analyst_m5.provider import quote_request
 
 PROJECT = Path(__file__).resolve().parents[1]
@@ -93,3 +94,34 @@ def test_no_key_blocks_run_before_attempt_directory(tmp_path, monkeypatch):
     monkeypatch.setenv("CHESSLAB_PERSONAL_OPENAI_API_KEY", "obsolete-test-only")
     with pytest.raises(ValueError, match="personal API key is absent"):
         run(PROJECT, path, frozen_path)
+
+
+def test_configless_preflight_still_requires_explicit_cap_and_key(tmp_path, monkeypatch):
+    if not (PROJECT / "data/analytical-current.json").exists():
+        pytest.skip("optional real analytical snapshot not in clean checkout")
+    with pytest.raises(ValueError, match="exactly one"):
+        prepare(PROJECT)
+    with pytest.raises(ValueError, match="positive max_run_usd"):
+        prepare(PROJECT, max_run_usd=0)
+    preflight = prepare(PROJECT, max_run_usd=0.10)
+    assert preflight["fits_cap"]
+    assert preflight["model"] == "gpt-6-luna"
+    assert preflight["price_source"].startswith("https://developers.openai.com/")
+    assert preflight["max_run_usd"] == 0.10
+    frozen_path = tmp_path / "frozen.json"
+    frozen_path.write_text(json.dumps(preflight))
+    monkeypatch.delenv("CHESSLAB_OPENAI_API_KEY", raising=False)
+    with pytest.raises(ValueError, match="personal API key is absent"):
+        run(PROJECT, None, frozen_path, max_run_usd=0.10)
+
+
+def test_env_file_loader_reads_only_named_key(tmp_path, monkeypatch):
+    path = tmp_path / ".env"
+    path.write_text(
+        "UNRELATED_WORKPLACE_TEST_KEY=do-not-import\nCHESSLAB_OPENAI_API_KEY='test-only'\n"
+    )
+    monkeypatch.delenv("CHESSLAB_OPENAI_API_KEY", raising=False)
+    monkeypatch.delenv("UNRELATED_WORKPLACE_TEST_KEY", raising=False)
+    _load_named_key(path)
+    assert os.environ["CHESSLAB_OPENAI_API_KEY"] == "test-only"
+    assert "UNRELATED_WORKPLACE_TEST_KEY" not in os.environ

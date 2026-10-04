@@ -13,7 +13,7 @@ repository; projects 1–3 remain together. No remote repository or hosting crea
 | M3 analytical corpus and metrics | Done | Accepted bounded prefix, observed coverage, independent checks, 12 draft dev cases |
 | M4 analytics product | Done | Accepted local six-view dashboard and two reproducible memos |
 | M5 analyst/eval harness | Done | Accepted checked typed tools, fixture replay and 50-case harness; no model result |
-| M6 measured release | In progress | Offline safety/preflight complete; personal provider configuration and cap needed for live evaluation; key variable is `CHESSLAB_OPENAI_API_KEY` |
+| M6 measured release | In progress | Offline safety/preflight complete; explicit cap and personal key needed for live evaluation; provider JSON now optional |
 | M7 depth | Later | Select only measured improvements |
 | M8 Jev | Follow-up | Fair, measured integration experiment |
 | Personalized recommender | Backlog | Outside first-release scope |
@@ -103,9 +103,9 @@ snapshot still reports 3,982/121,332. No hosted CI run is claimed.
 
 ## Next concrete work — finish M6
 
-1. Verify personal-account entitlement, exact model, prices and the user's
-   explicit total run spending cap before enabling any live call. The offline
-   preflight and killable tool worker are implemented.
+1. Confirm personal-account entitlement and the user's explicit total run cap
+   before enabling any live call. Current model/pricing defaults were verified
+   on 2026-10-03; the offline preflight and killable tool worker are implemented.
 2. Run the budgeted development pilot, retain every response/failure/usage record, and
    report numerical, clarification, reliability, latency and gross-cost results
    separately. Retire the current test split if it was inspected for tuning.

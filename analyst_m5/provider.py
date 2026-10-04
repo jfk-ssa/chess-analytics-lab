@@ -167,14 +167,19 @@ def quote_request(project: Path, question: str, config: dict, condition="semanti
 def live_answer(
     project: Path,
     question: str,
-    config_path: Path,
+    config_path: Path | None,
     *,
+    config: dict | None = None,
     transport=None,
     condition="semantic_context",
     remaining_usd=None,
 ) -> dict:
     """One capped planning request; all numerical answers come from checked tools."""
-    config = validate_personal_config(json.loads(config_path.read_text()))
+    if (config_path is None) == (config is None):
+        raise ValueError("provide either personal config path or explicit config")
+    config = validate_personal_config(
+        config if config is not None else json.loads(config_path.read_text())
+    )
     quote = quote_request(project, question, config, condition)
     reserved_usd = quote["reserved_cost_usd"]
     if reserved_usd > config["max_run_usd"] or (
