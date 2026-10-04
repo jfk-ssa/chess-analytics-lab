@@ -1,0 +1,483 @@
+{
+  "attempted": 59,
+  "high_severity_cases": 0,
+  "integrity_passed": 58,
+  "kind": "M7 holdout evidence integrity audit of actual model attempts",
+  "model_score_passed": 41,
+  "rows": [
+    {
+      "case_id": "m7d_usage_canard_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7d_usage_canard_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_center_game_accepted",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7d_usage_center_game_accepted",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_creepy_crawly_formation",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7d_usage_creepy_crawly_formation",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_danish_gambit_declined",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7d_usage_danish_gambit_declined",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_fried_fox_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_fried_fox_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_hippopotamus_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7d_usage_hippopotamus_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_kangaroo_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7d_usage_kangaroo_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_kings_indian_attack,_with_bf5",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7d_usage_kings_indian_attack,_with_bf5",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_kings_pawn_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_kings_pawn_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_lasker_simul_special",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7d_usage_lasker_simul_special",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_london_system,_with_bd3",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_london_system,_with_bd3",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_london_system,_with_be2",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7d_usage_london_system,_with_be2",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_mexican_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_mexican_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_paleface_attack",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7d_usage_paleface_attack",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_portuguese_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_portuguese_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_pseudo_queens_indian_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_pseudo_queens_indian_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_pterodactyl_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7d_usage_pterodactyl_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_queens_gambit",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7d_usage_queens_gambit",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_queens_indian_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_queens_indian_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_richter_veresov_attack",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7d_usage_richter_veresov_attack",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_rubinstein_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7d_usage_rubinstein_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_slav_indian",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_slav_indian",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_sodium_attack",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7d_usage_sodium_attack",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_valencia_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7d_usage_valencia_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_wade_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_usage_wade_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_white_portuguese_opening_score",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_white_portuguese_opening_score",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_white_queens_gambit_score",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_white_queens_gambit_score",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_white_richter_veresov_attack_score",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_white_richter_veresov_attack_score",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_white_wade_defense_score",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_white_wade_defense_score",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7d_compare_portuguese_opening_queens_gambit_score",
+      "condition": "schema_only",
+      "issues": [
+        "execution_failure"
+      ],
+      "score_passed": false,
+      "status": "failed",
+      "trace_steps": 0
+    }
+  ]
+}

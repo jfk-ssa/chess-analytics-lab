@@ -14,7 +14,7 @@ repository; projects 1–3 remain together. No remote repository or hosting crea
 | M4 analytics product | Done | Accepted local six-view dashboard and two reproducible memos |
 | M5 analyst/eval harness | Done | Accepted checked typed tools, fixture replay and 50-case harness; no model result |
 | M6 measured release | Done; typed-analyst release gates met | Three complete frozen v2 repetitions, 118/120 scored passes, all evidence audits and offline checks passed. See [release checkpoint](M6-RELEASE.md). |
-| M7 depth | In progress; v2 and v3 inspected, v4 frozen | v2 missed an answerable gate; v3 missed a run-1 ambiguity gate despite 96/100, 95/100, 98/100. Fresh v4 three-repeat conservative total including prior gross is $0.496278885 under the approved $0.50 cap. [Evidence and plan](M7.md). |
+| M7 depth | In progress; quality gate not met | v2 missed the run-1 answerable gate; v3 missed the run-1 ambiguity gate; v4 stopped at request 59 on provider HTTP 400 with unknown usage. All failures are retained. New independently referenced data and an uninspected holdout are the next gate. [Cumulative checkpoint](../reports/M7-checkpoint.json). |
 | M8 Jev | Follow-up | Fair, measured integration experiment |
 | Personalized recommender | Backlog | Outside first-release scope |
 
@@ -48,6 +48,8 @@ repository; projects 1–3 remain together. No remote repository or hosting crea
 | M7 v3 fresh freeze | Prompt clarifies specified clock-proxy queries; 50 new cases and 25 further opening families absent inspected splits | Independent raw-PGN cohorts and 50/50 checked-tool/oracle pass. [Preflight](../reports/M7-holdout-v3-preflight.json) reserves $0.1395495 per 100-request repeat; three plus prior accounted gross total $0.45964258 of $0.50. No v3 model result at freeze. |
 | M7 v3 measured result | Three complete frozen 100-request repetitions | Scored 96/100, 95/100, 98/100; answerable 238/246, ambiguity/unsupported 51/54, high severity 30/30, evidence integrity 300/300; no execution failures. Gross $0.026632805, cumulative accounted $0.067626885. [Checkpoint](../reports/M7-holdout-v3-checkpoint.json) **fails** run-1 ambiguity gate (16/18). |
 | M7 v4 fresh freeze | Prompt clarifies small nonempty cohorts; 50 new cases, 25 more opening families, explicit missing-filter boundaries | 50/50 checked-tool/oracle pass against independent raw-PGN references. [Preflight](../reports/M7-holdout-v4-preflight.json) reserves $0.142884 per 100-request run; three plus prior accounted gross total $0.496278885 of $0.50. No v4 model result at freeze. |
+| M7 v4 stopped live run | Frozen 100-request plan, stopped on provider HTTP 400 at cell 59 | 58/59 attempted cells completed, 41 scored passes, 41 cells unattempted. First 29 paired cases: schema-only 12/29, governed context 29/29. One failed request has unknown usage and is charged its full $0.001043 reservation. [Partial report](../reports/M7-holdout-v4-partial-1.json). |
+| M7 cumulative checkpoint | Frozen failures and cost accounting across v1–v4 | Known actual gross $0.072358895 plus $0.00200325 full reservations for two unknown-cost attempts = **$0.074362145** of approved $0.50. [Checkpoint](../reports/M7-checkpoint.json) keeps M7 in progress; no broad quality claim. |
 | M7 data-depth feasibility | Measured current local source, disk and processing baseline | [Feasibility](../reports/M7-depth-feasibility.json): 40 MB compressed prefix, 236.5 MB extracted PGN, 111-second source ingestion, August 1 only. No second-day acquisition or engine benchmark; both deferred pending a bounded method/value test. |
 
 Acceptance details: [reports/M0-M1.md](../reports/M0-M1.md), machine-readable
@@ -82,7 +84,7 @@ CI workflow exists; equivalent commands ran locally. No hosted CI run is claimed
 ## Limitations and blockers
 
 The personal key was loaded only by the named live adapter after explicit
-caps. The M7 $0.50 cumulative cap is active only for its frozen evaluation;
+caps. The M7 $0.50 cap applies cumulatively to explicitly frozen M7 evaluations;
 the M6 caps are closed. Model/pricing defaults were last checked
 against the official model page on 2026-10-04; account credit use itself was
 not independently verified.
@@ -114,15 +116,17 @@ comparison attempt could not bind one inside the sandbox; a permitted local run
 completed and its result was saved. See [run instructions](ORCHESTRATION.md).
 Separate locked Dagster-only and Prefect-only environments installed from the local
 uv cache and completed one-off tiny runs during M2. The current dbt-enabled
-environment with optional dbt/dashboard extras passes **43 offline tests** (none skipped); Ruff check/format, Git whitespace check,
+environment with optional dbt/dashboard extras passes **46 offline tests** (none skipped); Ruff check/format, Git whitespace check,
 and `uv lock --check --offline` pass with the workspace cache. The current foundation
 snapshot still reports 3,982/121,332. No hosted CI run is claimed.
 
 ## Next concrete work — M7
 
-Run the fresh frozen M7 v4 evaluation under the approved cumulative cap, then audit every failure and
-paired result. Study bounded source and
-engine depth only with measured coverage, runtime and disk benefit. Evaluate
+Do not reuse the inspected M7 splits for a new untouched quality claim.
+Develop a bounded way to reach independently referenced new source dates,
+then freeze a new holdout and preflight any live evaluation against the
+remaining cumulative cap. Study engine depth only with measured coverage,
+runtime and disk benefit. Evaluate
 OpenRouter or CheaperInference only if inference costs rise materially. The
 restricted-SQL baseline remains deferred until isolation is proved. Optional
 Airflow remains deferred unless its local stack has a measured benefit. M8 Jev
@@ -130,10 +134,11 @@ is follow-up; the recommender remains backlog.
 
 Every future live-cap request will include a specific recommended gross cap,
 fresh conservative preflight and prior actual-cost evidence. The user approved
-$0.50 cumulative for the M7 evaluation; the fresh v4 three-repeat reservation
-plus prior accounted gross is $0.496278885. This cap does not authorize any other live run.
+$0.50 cumulative for M7; $0.074362145 is accounted and $0.425637855 remains.
+No further live call is planned on the inspected splits. A future M7 run must
+be separately frozen and fit the remaining cumulative cap.
 
-The actual v2 model responses and two scored failures are retained. M5's 50/50
+The actual M6 v2 model responses and two scored failures are retained. M5's 50/50
 fixture replay is harness validation, not model accuracy. The provider example
 is disabled by default; no workplace credential was used. Gross cost is reported
 even if account credit covers it. No hosted CI run or broad model-performance

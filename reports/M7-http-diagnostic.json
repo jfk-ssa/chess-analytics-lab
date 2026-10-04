@@ -1,0 +1,23 @@
+{
+  "diagnostic_reserved_usd": 0.00096025,
+  "failed_attempt_assumed_usd": 0.00096025,
+  "gross_cost_usd": 0.00011530000000000001,
+  "http_status": 200,
+  "kind": "separate M7 HTTP diagnostic; excluded from holdout score",
+  "known_prior_gross_usd": 0.004642445,
+  "request_sha256": "840ebf9d117d3606963e3e04f59330bbb1550edbc42876704136b9e16a0b4fb4",
+  "resolved_model": "gpt-6-luna",
+  "response_id": "resp_0ecbe598dc052962016ac25818bdf887d29e6cd4af5f1b4b90",
+  "usage": {
+    "input_tokens": 863,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 58,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 921
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "budget": {
+    "approved_cumulative_gross_cap_usd": 0.5,
+    "credit_balance_not_used_as_cap": true,
+    "cumulative_accounted_gross_usd": 0.074362145,
+    "known_actual_gross_usd": 0.072358895,
+    "remaining_authorized_headroom_usd": 0.425637855,
+    "unknown_attempt_full_reservations_usd": 0.00200325
+  },
+  "depth_feasibility": {
+    "accepted_games": 99467,
+    "analytical_published_disk_bytes": 98565118,
+    "analytical_staging_disk_bytes": 477631307,
+    "complete_pgns_extracted": 100000,
+    "extracted_source_bytes": 236533866,
+    "observed_first_utc_date": "2026-08-01",
+    "observed_last_utc_date": "2026-08-01",
+    "retained_compressed_bytes": 40000000,
+    "source_ingest_elapsed_seconds": 110.98386362499878,
+    "source_snapshot_disk_bytes": 47838127,
+    "stockfish_on_path": false
+  },
+  "evidence_class": "actual model responses except labeled offline oracle and diagnostic",
+  "kind": "M7 depth checkpoint; inspected live failures retained",
+  "limitations": [
+    "M7 splits reuse the bounded August 1 source and some clock-bucket concepts.",
+    "The v4 run is censored; its 41 unattempted cells are not successes.",
+    "Schema-only versus governed context compares prompt conditions, not a SQL baseline.",
+    "No broad model-accuracy, monthwide, causal, engine or new-day claim follows."
+  ],
+  "live_quality_gate_passed": false,
+  "live_runs": {
+    "v1": {
+      "benchmark_attempts": 169,
+      "completed_full_repeats": 1,
+      "full_repeat_scored": "95/100",
+      "separate_http_diagnostic_requests": 1,
+      "stopped_partial_repeats": 2
+    },
+    "v2": {
+      "failed_gate": "run-1 answerable 72/82 below 90%",
+      "full_repeats": 3,
+      "gate_passed": false,
+      "scored": [
+        90,
+        96,
+        92
+      ]
+    },
+    "v3": {
+      "failed_gate": "run-1 ambiguity/unsupported 16/18 below 90%",
+      "full_repeats": 3,
+      "gate_passed": false,
+      "scored": [
+        96,
+        95,
+        98
+      ]
+    },
+    "v4": {
+      "benchmark_attempts": 59,
+      "completed": 58,
+      "failed_cell_reserved_usd": 0.001043,
+      "not_attempted": 41,
+      "schema_only_completed_passed": "12/29",
+      "scored_passed": 41,
+      "semantic_context_completed_passed": "29/29",
+      "stop_reason": "provider HTTP 400: invalid_request_error: Invalid prompt: your prompt was flagged as potentially violating our usage policy. Please try again with a different prompt: https://platform.openai.com/docs/guides/reasoning#advice-on-prompting"
+    }
+  },
+  "next_gate": "New independently referenced data and an uninspected holdout; retain the frozen failures, validate a bounded source-depth method, then quote any live run against remaining cumulative cap.",
+  "offline_reference_checks": {
+    "cases_per_split": 50,
+    "oracle_matches_per_split": 50,
+    "source": "independent raw-PGN opening/cohort tallies and M3 clock reference",
+    "splits": 4
+  },
+  "phase_status": "in_progress_quality_gate_not_met"
+}
