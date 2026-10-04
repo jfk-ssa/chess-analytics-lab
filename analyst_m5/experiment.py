@@ -9,7 +9,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-from analyst_m5.evaluation import score_case
+from analyst_m5.evaluation import score_case_m6
 from analyst_m5.provider import (
     KEY_ENV,
     _default_transport,
@@ -220,7 +220,7 @@ def run(
                 condition=cell["condition"],
                 remaining_usd=current["max_run_usd"] - reserved + cell["reserved_cost_usd"],
             )
-            record.update(status="completed", answer=answer, score=score_case(case, answer))
+            record.update(status="completed", answer=answer, score=score_case_m6(case, answer))
         except Exception as exc:
             key = os.environ.get(KEY_ENV)
             message = str(exc).replace(key, "[redacted]") if key else str(exc)

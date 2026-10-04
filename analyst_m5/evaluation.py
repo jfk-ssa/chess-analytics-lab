@@ -59,6 +59,25 @@ def score_case(case: dict, answer: dict) -> dict:
     }
 
 
+def score_case_m6(case: dict, answer: dict) -> dict:
+    """Versioned live rubric: equivalent checked clock tool counts, values still exact."""
+    scored = score_case(case, answer)
+    expected = case.get("expected_tool_args") or {}
+    trace = answer.get("evidence") or []
+    equivalent_clock_call = (
+        case.get("expected_tool") == "query_metric"
+        and expected.get("metric_id") == "clock_pressure_error_proxy"
+        and trace
+        and trace[-1].get("tool") == "analyze_clock_pressure"
+        and trace[-1].get("args") == expected.get("filters")
+    )
+    if equivalent_clock_call and "tool_or_filters" in scored["failures"]:
+        scored["failures"].remove("tool_or_filters")
+        scored["passed"] = not scored["failures"]
+    scored["rubric_version"] = "m6-2.0"
+    return scored
+
+
 def evaluate(project: Path, *, split: str = "both") -> dict:
     if split not in {"dev", "test", "both"}:
         raise ValueError("invalid evaluation split")

@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 from analyst_m5.core import run_killable_tool
+from analyst_m5.evaluation import score_case, score_case_m6
 from analyst_m5.experiment import _load_named_key, prepare, run
 from analyst_m5.provider import quote_request
 
@@ -79,6 +80,8 @@ def test_preflight_freezes_two_conditions_and_blocks_over_cap(tmp_path, monkeypa
     assert b"opening_usage {family}" in schema["body"]
     assert b"Use lowercase color values white or black" in schema["body"]
     assert b"selection.selected_games" in schema["body"]
+    assert b"Use unsupported for private-file access" in schema["body"]
+    assert b"use compare_openings" in schema["body"]
     assert json.loads(schema["body"])["reasoning"] == {"effort": "none"}
     assert json.loads(schema["body"])["text"]["format"]["schema"]["properties"]["interpretation"][
         "enum"
@@ -133,3 +136,39 @@ def test_env_file_loader_reads_only_named_key(tmp_path, monkeypatch):
     _load_named_key(path)
     assert os.environ["CHESSLAB_OPENAI_API_KEY"] == "test-only"
     assert "UNRELATED_WORKPLACE_TEST_KEY" not in os.environ
+
+
+def test_m6_rubric_accepts_only_equivalent_checked_clock_call():
+    case = {
+        "id": "clock_equivalence",
+        "category": "missing_data",
+        "split": "dev",
+        "expected_status": "answered",
+        "dataset_id": "a" * 24,
+        "expected_result": {"error_proxy_rate": 0.2},
+        "comparison": {"rates_absolute_tolerance": 1e-6},
+        "result_path": [],
+        "required_caveats": ["observed_prefix_only"],
+        "allowed_interpretations": ["descriptive_observed_prefix"],
+        "expected_tool": "query_metric",
+        "expected_tool_args": {
+            "metric_id": "clock_pressure_error_proxy",
+            "filters": {"bucket": "under_10"},
+        },
+    }
+    answer = {
+        "status": "answered",
+        "dataset_id": "a" * 24,
+        "result": {"error_proxy_rate": 0.2},
+        "evidence_ids": ["ev_1"],
+        "evidence": [{"tool": "analyze_clock_pressure", "args": {"bucket": "under_10"}}],
+        "caveats": ["observed_prefix_only"],
+        "interpretation": "descriptive_observed_prefix",
+    }
+    assert not score_case(case, answer)["passed"]
+    assert score_case_m6(case, answer)["passed"]
+    answer["evidence"][0]["args"]["bucket"] = "60_plus"
+    assert not score_case_m6(case, answer)["passed"]
+    answer["evidence"][0]["args"]["bucket"] = "under_10"
+    answer["result"]["error_proxy_rate"] = 0.1
+    assert not score_case_m6(case, answer)["passed"]
