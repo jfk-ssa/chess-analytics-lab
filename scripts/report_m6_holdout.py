@@ -27,7 +27,10 @@ def _selected_model_text(response: dict | None, selection: dict | None):
 def build(project: Path, summary_path: Path, preflight_path: Path) -> dict:
     summary = json.loads(summary_path.read_text())
     preflight = json.loads(preflight_path.read_text())
-    if preflight["kind"] != "m6_typed_planner_holdout_preflight_no_model_calls":
+    if preflight["kind"] not in {
+        "m6_typed_planner_holdout_preflight_no_model_calls",
+        "m7_typed_planner_holdout_preflight_no_model_calls",
+    }:
         raise ValueError("not a frozen holdout preflight")
     cases = json.loads((project / preflight["case_file"]).read_text())
     digest = hashlib.sha256(
@@ -104,7 +107,11 @@ def build(project: Path, summary_path: Path, preflight_path: Path) -> dict:
     abstention = [a for a in attempts if a["expected_status"] != "answered"]
     return {
         "kind": "one_shot_frozen_family_split_holdout_actual_model_responses",
-        "scorer": "m6-2.1 frozen before model calls",
+        "scorer": (
+            "m7-1.0 frozen before model calls"
+            if preflight["kind"].startswith("m7_")
+            else "m6-2.1 frozen before model calls"
+        ),
         "preflight_sha256": hashlib.sha256(preflight_path.read_bytes()).hexdigest(),
         "case_set_sha256": digest,
         "model": preflight["model"],

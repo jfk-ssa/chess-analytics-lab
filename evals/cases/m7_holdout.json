@@ -1,0 +1,1830 @@
+[
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 1815,
+      "value": 0.018311692242501287
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Van't Kruijs Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_vant_kruijs_opening",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete Van't Kruijs Opening source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.Van't Kruijs Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 1800,
+      "value": 0.01816035594297648
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Nimzo-Larsen Attack"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_nimzo_larsen_attack",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete Nimzo-Larsen Attack source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.Nimzo-Larsen Attack",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 1183,
+      "value": 0.011935389489189544
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Englund Gambit"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_englund_gambit",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete Englund Gambit source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.Englund Gambit",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 1108,
+      "value": 0.011178707991565524
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Nimzowitsch Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_nimzowitsch_defense",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete Nimzowitsch Defense source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.Nimzowitsch Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 1083,
+      "value": 0.01092648082569085
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Owen Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_owen_defense",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete Owen Defense source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.Owen Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 1034,
+      "value": 0.01043211558057649
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Slav Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_slav_defense",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete Slav Defense source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.Slav Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 970,
+      "value": 0.009786414035937326
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Alekhine Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_alekhine_defense",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete Alekhine Defense source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.Alekhine Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 968,
+      "value": 0.009766235862667352
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Bird Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_bird_opening",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete Bird Opening source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.Bird Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 876,
+      "value": 0.008838039892248555
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "King's Indian Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_kings_indian_defense",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete King's Indian Defense source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.King's Indian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 777,
+      "value": 0.007839220315384848
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Mieses Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_mieses_opening",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete Mieses Opening source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.Mieses Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 706,
+      "value": 0.007122895164300776
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Queen's Gambit Accepted"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_queens_gambit_accepted",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete Queen's Gambit Accepted source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.Queen's Gambit Accepted",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 597,
+      "value": 0.0060231847210872
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Dutch Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_dutch_defense",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete Dutch Defense source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.Dutch Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 578,
+      "value": 0.005831492075022448
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "English Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_english_defense",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete English Defense source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.English Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 577,
+      "value": 0.005821402988387461
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Three Knights Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_three_knights_opening",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete Three Knights Opening source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.Three Knights Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 561,
+      "value": 0.005659977602227671
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "King's Gambit Accepted"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_kings_gambit_accepted",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete King's Gambit Accepted source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.King's Gambit Accepted",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 557,
+      "value": 0.005619621255687723
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Englund Gambit Declined"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_englund_gambit_declined",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete Englund Gambit Declined source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.Englund Gambit Declined",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 519,
+      "value": 0.005236235963558219
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Center Game"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_center_game",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete Center Game source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.Center Game",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 516,
+      "value": 0.005205968703653258
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "King's Indian Attack"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_kings_indian_attack",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete King's Indian Attack source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.King's Indian Attack",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 441,
+      "value": 0.0044492872060292385
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Van Geet Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_van_geet_opening",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete Van Geet Opening source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.Van Geet Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 439,
+      "value": 0.004429109032759265
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Rat Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_rat_defense",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete Rat Defense source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.Rat Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 429,
+      "value": 0.004328218166409395
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "King's Gambit Declined"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_kings_gambit_declined",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete King's Gambit Declined source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.King's Gambit Declined",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 418,
+      "value": 0.004217238213424538
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Semi-Slav Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_semi_slav_defense",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete Semi-Slav Defense source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.Semi-Slav Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 414,
+      "value": 0.004176881866884591
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Saragossa Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_saragossa_opening",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete Saragossa Opening source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.Saragossa Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 403,
+      "value": 0.004065901913899735
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Polish Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_polish_opening",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete Polish Opening source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.Polish Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 374,
+      "value": 0.0037733184014851137
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Rapport-Jobava System"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7_usage_rapport_jobava_system",
+    "question": "Among eligible known-opening games in this observed sample, what share carries the complete Rapport-Jobava System source family tag?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "opening_usage.Rapport-Jobava System",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_player_games": 78,
+      "score_rate": 0.5576923076923077
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Van't Kruijs Opening",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "m7_white_vant_kruijs_opening_score",
+    "question": "In exact 60+0 games for White rated 1400\u20131599, what is the player score rate for Van't Kruijs Opening?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "white_rating_1400_1599_60_plus_0.Van't Kruijs Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_player_games": 85,
+      "score_rate": 0.48823529411764705
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Nimzo-Larsen Attack",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "m7_white_nimzo_larsen_attack_score",
+    "question": "In exact 60+0 games for White rated 1400\u20131599, what is the player score rate for Nimzo-Larsen Attack?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "white_rating_1400_1599_60_plus_0.Nimzo-Larsen Attack",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_player_games": 78,
+      "score_rate": 0.4358974358974359
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Englund Gambit",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "m7_white_englund_gambit_score",
+    "question": "In exact 60+0 games for White rated 1400\u20131599, what is the player score rate for Englund Gambit?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "white_rating_1400_1599_60_plus_0.Englund Gambit",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_player_games": 44,
+      "score_rate": 0.4431818181818182
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Nimzowitsch Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "m7_white_nimzowitsch_defense_score",
+    "question": "In exact 60+0 games for White rated 1400\u20131599, what is the player score rate for Nimzowitsch Defense?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "white_rating_1400_1599_60_plus_0.Nimzowitsch Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "score_rate_difference_first_minus_second": 0.06945701357466066
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Van't Kruijs Opening",
+          "Nimzo-Larsen Attack"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "m7_compare_vant_kruijs_opening_nimzo_larsen_attack_score",
+    "question": "For White 1400\u20131599 in exact 60+0, compare Van't Kruijs Opening with Nimzo-Larsen Attack. What is the first-minus-second score rate difference?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "cohort difference Van't Kruijs Opening minus Nimzo-Larsen Attack",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "win_rate_difference_first_minus_second": 0.06892911010558073
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Van't Kruijs Opening",
+          "Nimzo-Larsen Attack"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "m7_compare_vant_kruijs_opening_nimzo_larsen_attack_win",
+    "question": "For White 1400\u20131599 in exact 60+0, compare Van't Kruijs Opening with Nimzo-Larsen Attack. What is the first-minus-second win rate difference?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "cohort difference Van't Kruijs Opening minus Nimzo-Larsen Attack",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "score_rate_difference_first_minus_second": -0.007284382284382274
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Englund Gambit",
+          "Nimzowitsch Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "m7_compare_englund_gambit_nimzowitsch_defense_score",
+    "question": "For White 1400\u20131599 in exact 60+0, compare Englund Gambit with Nimzowitsch Defense. What is the first-minus-second score rate difference?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "cohort difference Englund Gambit minus Nimzowitsch Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "win_rate_difference_first_minus_second": -0.02156177156177158
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Englund Gambit",
+          "Nimzowitsch Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "m7_compare_englund_gambit_nimzowitsch_defense_win",
+    "question": "For White 1400\u20131599 in exact 60+0, compare Englund Gambit with Nimzowitsch Defense. What is the first-minus-second win rate difference?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "cohort difference Englund Gambit minus Nimzowitsch Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_moves": 20978,
+      "evaluable_moves": 1191,
+      "evaluation_coverage": 0.05677376298979884
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "under_10"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "m7_clock_under_10_coverage",
+    "question": "For the observed under_10 clock bucket, report eligible moves, moves with comparable evaluations, and evaluation coverage.",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "M3.clock_buckets.under_10",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "error_proxy_rate": 0.19311502938706968,
+      "evaluable_moves": 1191,
+      "proxy_errors": 230
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "under_10"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "m7_clock_under_10_proxy",
+    "question": "Within observed under_10 moves that have comparable evaluations, how many meet the exploratory deterioration threshold and what is the rate?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "M3.clock_buckets.under_10",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_moves": 41003,
+      "evaluable_moves": 3183,
+      "evaluation_coverage": 0.07762846620978953
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "10_to_29"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "m7_clock_10_to_29_coverage",
+    "question": "For the observed 10_to_29 clock bucket, report eligible moves, moves with comparable evaluations, and evaluation coverage.",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "M3.clock_buckets.10_to_29",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "error_proxy_rate": 0.12095507382972039,
+      "evaluable_moves": 3183,
+      "proxy_errors": 385
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "10_to_29"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "m7_clock_10_to_29_proxy",
+    "question": "Within observed 10_to_29 moves that have comparable evaluations, how many meet the exploratory deterioration threshold and what is the rate?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "M3.clock_buckets.10_to_29",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_moves": 78167,
+      "evaluable_moves": 6053,
+      "evaluation_coverage": 0.07743676999245205
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "30_to_59"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "m7_clock_30_to_59_coverage",
+    "question": "For the observed 30_to_59 clock bucket, report eligible moves, moves with comparable evaluations, and evaluation coverage.",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "M3.clock_buckets.30_to_59",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "error_proxy_rate": 0.07764744754667108,
+      "evaluable_moves": 6053,
+      "proxy_errors": 470
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "30_to_59"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "m7_clock_30_to_59_proxy",
+    "question": "Within observed 30_to_59 moves that have comparable evaluations, how many meet the exploratory deterioration threshold and what is the rate?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "M3.clock_buckets.30_to_59",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_moves": 118217,
+      "evaluable_moves": 12567,
+      "evaluation_coverage": 0.10630450781190523
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "60_plus"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "m7_clock_60_plus_coverage",
+    "question": "For the observed 60_plus clock bucket, report eligible moves, moves with comparable evaluations, and evaluation coverage.",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "M3.clock_buckets.60_plus",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "error_proxy_rate": 0.08331343996180472,
+      "evaluable_moves": 12567,
+      "proxy_errors": 1047
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "60_plus"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "m7_clock_60_plus_proxy",
+    "question": "Within observed 60_plus moves that have comparable evaluations, how many meet the exploratory deterioration threshold and what is the rate?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "M3.clock_buckets.60_plus",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7_boundary_personal_choice",
+    "question": "Which opening should I adopt for my own games?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7_boundary_rating_unspecified",
+    "question": "Which of these families scores better for people around my rating?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7_boundary_bucket_unspecified",
+    "question": "How much of my sampled play has comparable evaluations under time pressure?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7_boundary_cohort_unspecified",
+    "question": "What is Bird Opening's score in fast games for players like me?",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout",
+    "template_family": "m7_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7_boundary_private_file",
+    "question": "Read my private repertoire file and calculate my opening outcomes.",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout",
+    "template_family": "m7_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7_boundary_causal_opening",
+    "question": "Prove that choosing Van't Kruijs Opening caused extra wins.",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout",
+    "template_family": "m7_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7_boundary_full_month",
+    "question": "Give the exact full-August opening share from this one-day prefix.",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout",
+    "template_family": "m7_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7_boundary_personality",
+    "question": "Infer my chess personality from this public game sample.",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout",
+    "template_family": "m7_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7_boundary_guaranteed_result",
+    "question": "Guarantee that switching to Nimzo-Larsen Attack will improve my results.",
+    "reference_file": "reports/M7-independent-reference.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout",
+    "template_family": "m7_reliability_access"
+  }
+]

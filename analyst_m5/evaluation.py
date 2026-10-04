@@ -96,6 +96,13 @@ def score_case_m6_holdout(case: dict, answer: dict) -> dict:
     return scored
 
 
+def score_case_m7(case: dict, answer: dict) -> dict:
+    """Freeze the M7 rubric before live calls; retain M6 equivalence rules."""
+    scored = score_case_m6_holdout(case, answer)
+    scored["rubric_version"] = "m7-1.0"
+    return scored
+
+
 def evaluate(project: Path, *, split: str = "both") -> dict:
     if split not in {"dev", "test", "both"}:
         raise ValueError("invalid evaluation split")

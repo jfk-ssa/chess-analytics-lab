@@ -57,7 +57,11 @@ def audit(project: Path, summary_path: Path, preflight_path: Path) -> dict:
     if len(rows) != summary["attempts"]:
         raise ValueError("attempt count mismatch")
     return {
-        "kind": "M6 holdout evidence integrity audit of actual model attempts",
+        "kind": (
+            "M7 holdout evidence integrity audit of actual model attempts"
+            if preflight["kind"].startswith("m7_")
+            else "M6 holdout evidence integrity audit of actual model attempts"
+        ),
         "attempted": len(rows),
         "integrity_passed": sum(not row["issues"] for row in rows),
         "high_severity_cases": sum(cases[row["case_id"]]["severity"] == "high" for row in rows),

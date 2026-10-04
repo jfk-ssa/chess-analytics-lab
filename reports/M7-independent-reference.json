@@ -1,0 +1,88 @@
+{
+  "clock_buckets_reference": "reports/M3-independent-reference.json",
+  "dataset_id": "84a38a404815ed2729917d76",
+  "families": [
+    "Van't Kruijs Opening",
+    "Nimzo-Larsen Attack",
+    "Englund Gambit",
+    "Nimzowitsch Defense",
+    "Owen Defense",
+    "Slav Defense",
+    "Alekhine Defense",
+    "Bird Opening",
+    "King's Indian Defense",
+    "Mieses Opening",
+    "Queen's Gambit Accepted",
+    "Dutch Defense",
+    "English Defense",
+    "Three Knights Opening",
+    "King's Gambit Accepted",
+    "Englund Gambit Declined",
+    "Center Game",
+    "King's Indian Attack",
+    "Van Geet Opening",
+    "Rat Defense",
+    "King's Gambit Declined",
+    "Semi-Slav Defense",
+    "Saragossa Opening",
+    "Polish Opening",
+    "Rapport-Jobava System"
+  ],
+  "kind": "independent raw-PGN M7 reference; no model responses",
+  "known_opening_games": 99117,
+  "opening_usage": {
+    "Alekhine Defense": 970,
+    "Bird Opening": 968,
+    "Center Game": 519,
+    "Dutch Defense": 597,
+    "English Defense": 578,
+    "Englund Gambit": 1183,
+    "Englund Gambit Declined": 557,
+    "King's Gambit Accepted": 561,
+    "King's Gambit Declined": 429,
+    "King's Indian Attack": 516,
+    "King's Indian Defense": 876,
+    "Mieses Opening": 777,
+    "Nimzo-Larsen Attack": 1800,
+    "Nimzowitsch Defense": 1108,
+    "Owen Defense": 1083,
+    "Polish Opening": 403,
+    "Queen's Gambit Accepted": 706,
+    "Rapport-Jobava System": 374,
+    "Rat Defense": 439,
+    "Saragossa Opening": 414,
+    "Semi-Slav Defense": 418,
+    "Slav Defense": 1034,
+    "Three Knights Opening": 577,
+    "Van Geet Opening": 441,
+    "Van't Kruijs Opening": 1815
+  },
+  "source": "data/analytical/complete-2026-08-first-100000.pgn",
+  "source_snapshot_id": "6cf51473f8da6ae6b12ea5c2",
+  "white_rating_1400_1599_60_plus_0": {
+    "Englund Gambit": {
+      "draws": 4,
+      "games": 78,
+      "losses": 42,
+      "wins": 32
+    },
+    "Nimzo-Larsen Attack": {
+      "draws": 1,
+      "games": 85,
+      "losses": 43,
+      "wins": 41
+    },
+    "Nimzowitsch Defense": {
+      "draws": 1,
+      "games": 44,
+      "losses": 24,
+      "wins": 19
+    },
+    "Van't Kruijs Opening": {
+      "draws": 1,
+      "games": 78,
+      "losses": 34,
+      "wins": 43
+    }
+  }
+}

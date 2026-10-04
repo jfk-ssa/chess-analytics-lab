@@ -9,7 +9,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-from analyst_m5.evaluation import score_case_m6, score_case_m6_holdout
+from analyst_m5.evaluation import score_case_m6, score_case_m6_holdout, score_case_m7
 from analyst_m5.provider import (
     KEY_ENV,
     _default_transport,
@@ -100,11 +100,15 @@ def prepare(
     """Quote all cells and freeze code/data/question inputs without a key."""
     config = _resolve_config(config_path, max_run_usd)
     if holdout:
-        if holdout_version not in {1, 2}:
+        if holdout_version not in {1, 2, 3}:
             raise ValueError("unknown holdout version")
-        suffix = "" if holdout_version == 1 else "_v2"
-        case_file = f"evals/cases/m6_holdout{suffix}.json"
-        manifest_file = f"evals/cases/m6_holdout{suffix}_manifest.json"
+        if holdout_version == 3:
+            case_file = "evals/cases/m7_holdout.json"
+            manifest_file = "evals/cases/m7_holdout_manifest.json"
+        else:
+            suffix = "" if holdout_version == 1 else "_v2"
+            case_file = f"evals/cases/m6_holdout{suffix}.json"
+            manifest_file = f"evals/cases/m6_holdout{suffix}_manifest.json"
         cases = json.loads((project / case_file).read_text())
         selected = cases
         digest_cases = cases
@@ -155,19 +159,29 @@ def prepare(
         "uv.lock",
     ]
     if holdout:
-        reference_file = (
-            "reports/M6-independent-reference.json"
-            if holdout_version == 1
-            else "reports/M6-independent-reference-v2.json"
-        )
-        frozen_files.extend(
-            (
-                "reports/M3-independent-reference.json",
-                reference_file,
-                "scripts/reference_m6_holdout.py",
-                "scripts/build_m6_holdout.py",
+        if holdout_version == 3:
+            frozen_files.extend(
+                (
+                    "reports/M3-independent-reference.json",
+                    "reports/M7-independent-reference.json",
+                    "scripts/reference_m7_holdout.py",
+                    "scripts/build_m7_holdout.py",
+                )
             )
-        )
+        else:
+            reference_file = (
+                "reports/M6-independent-reference.json"
+                if holdout_version == 1
+                else "reports/M6-independent-reference-v2.json"
+            )
+            frozen_files.extend(
+                (
+                    "reports/M3-independent-reference.json",
+                    reference_file,
+                    "scripts/reference_m6_holdout.py",
+                    "scripts/build_m6_holdout.py",
+                )
+            )
     else:
         frozen_files.append("evals/cases/m5_test.json")
     frozen_files.extend(
@@ -175,7 +189,11 @@ def prepare(
     )
     return {
         "kind": (
-            "m6_typed_planner_holdout_preflight_no_model_calls"
+            (
+                "m7_typed_planner_holdout_preflight_no_model_calls"
+                if holdout_version == 3
+                else "m6_typed_planner_holdout_preflight_no_model_calls"
+            )
             if holdout
             else "m6_typed_planner_development_pilot_preflight_no_model_calls"
         ),
@@ -183,7 +201,11 @@ def prepare(
         "dataset_id": manifest["dataset_id"],
         "case_set_sha256": manifest["case_set_sha256"],
         "selection": (
-            f"20 family-split holdout v{holdout_version} cases; one-shot"
+            (
+                "50 new-family M7 holdout cases; one-shot"
+                if holdout_version == 3
+                else f"20 family-split holdout v{holdout_version} cases; one-shot"
+            )
             if holdout
             else "12 inspected development cases; not untouched holdout"
         ),
@@ -288,7 +310,11 @@ def run(
                 condition=cell["condition"],
                 remaining_usd=current["max_run_usd"] - reserved + cell["reserved_cost_usd"],
             )
-            scorer = score_case_m6_holdout if holdout else score_case_m6
+            scorer = (
+                (score_case_m7 if holdout_version == 3 else score_case_m6_holdout)
+                if holdout
+                else score_case_m6
+            )
             record.update(status="completed", answer=answer, score=scorer(case, answer))
         except Exception as exc:
             key = os.environ.get(KEY_ENV)
@@ -367,8 +393,8 @@ def main(argv=None):
     config_group.add_argument("--max-run-usd", type=float)
     parser.add_argument("--env-file", type=Path, help="run mode only; reads only the named key")
     parser.add_argument("--preflight", type=Path, required=True)
-    parser.add_argument("--holdout", action="store_true", help="use frozen M6 family split")
-    parser.add_argument("--holdout-version", type=int, choices=(1, 2), default=1)
+    parser.add_argument("--holdout", action="store_true", help="use frozen M6/M7 family split")
+    parser.add_argument("--holdout-version", type=int, choices=(1, 2, 3), default=1)
     args = parser.parse_args(argv)
     if args.mode == "prepare":
         if args.env_file is not None:
