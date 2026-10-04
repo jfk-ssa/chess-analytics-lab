@@ -6,5 +6,5 @@
   "input_usd_per_million": 0,
   "output_usd_per_million": 0,
   "max_output_tokens": 512,
-  "api_key_env": "CHESSLAB_PERSONAL_OPENAI_API_KEY"
+  "api_key_env": "CHESSLAB_OPENAI_API_KEY"
 }

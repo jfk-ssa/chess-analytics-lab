@@ -22,7 +22,7 @@ def _personal_config(tmp_path, cap=1.0):
         "input_usd_per_million": 0.10,
         "output_usd_per_million": 0.50,
         "max_output_tokens": 512,
-        "api_key_env": "CHESSLAB_PERSONAL_OPENAI_API_KEY",
+        "api_key_env": "CHESSLAB_OPENAI_API_KEY",
     }
     path = tmp_path / "personal.json"
     path.write_text(json.dumps(config))
@@ -76,7 +76,7 @@ def test_preflight_freezes_two_conditions_and_blocks_over_cap(tmp_path, monkeypa
     assert b"Governed metric definitions" in semantic["body"]
     frozen_path = tmp_path / "frozen.json"
     frozen_path.write_text(json.dumps(preflight))
-    monkeypatch.setenv("CHESSLAB_PERSONAL_OPENAI_API_KEY", "test-only")
+    monkeypatch.setenv("CHESSLAB_OPENAI_API_KEY", "test-only")
     path, _ = _personal_config(tmp_path, cap=0.00000001)
     with pytest.raises(ValueError, match="drifted"):
         run(PROJECT, path, frozen_path, transport=lambda body, key: pytest.fail("sent"))
@@ -89,6 +89,7 @@ def test_no_key_blocks_run_before_attempt_directory(tmp_path, monkeypatch):
     preflight = prepare(PROJECT, path)
     frozen_path = tmp_path / "frozen.json"
     frozen_path.write_text(json.dumps(preflight))
-    monkeypatch.delenv("CHESSLAB_PERSONAL_OPENAI_API_KEY", raising=False)
+    monkeypatch.delenv("CHESSLAB_OPENAI_API_KEY", raising=False)
+    monkeypatch.setenv("CHESSLAB_PERSONAL_OPENAI_API_KEY", "obsolete-test-only")
     with pytest.raises(ValueError, match="personal API key is absent"):
         run(PROJECT, path, frozen_path)

@@ -11,7 +11,7 @@ from pathlib import Path
 
 from analyst_m5.evaluation import score_case
 from analyst_m5.provider import (
-    PERSONAL_KEY_ENV,
+    KEY_ENV,
     _default_transport,
     live_answer,
     quote_request,
@@ -130,7 +130,7 @@ def run(project: Path, config_path: Path, preflight_path: Path, *, transport=Non
         raise ValueError("frozen experiment preflight drifted")
     if not current["fits_cap"]:
         raise ValueError("whole experiment exceeds explicit run spending cap")
-    if not os.environ.get(PERSONAL_KEY_ENV):
+    if not os.environ.get(KEY_ENV):
         raise ValueError("explicit personal API key is absent")
     cases = {c["id"]: c for c in json.loads((project / "evals/cases/m5_dev.json").read_text())}
     experiment_id = uuid.uuid4().hex
@@ -162,7 +162,7 @@ def run(project: Path, config_path: Path, preflight_path: Path, *, transport=Non
             )
             record.update(status="completed", answer=answer, score=score_case(case, answer))
         except Exception as exc:
-            key = os.environ.get(PERSONAL_KEY_ENV)
+            key = os.environ.get(KEY_ENV)
             message = str(exc).replace(key, "[redacted]") if key else str(exc)
             record.update(
                 status="failed",

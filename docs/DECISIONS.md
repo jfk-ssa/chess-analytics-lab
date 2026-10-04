@@ -228,3 +228,11 @@ entitlement, exact model/prices, and the user's cap, then freeze request and
 code hashes. Reserve each entire request bound against the total cap. Retain
 all responses/failures; stop after a failure with uncertain usage. Do not infer
 zero cost from a transport error. No model request or result has occurred.
+
+## 2026-10-03 — Shorter local key variable
+
+Use `CHESSLAB_OPENAI_API_KEY` as the one allowed environment variable for a
+personal API key. The user requested removing `PERSONAL` from the variable
+name. Personal-account acknowledgement, explicit configuration, and the total
+run spending cap remain separate required gates. The former longer variable
+is not read as a fallback. No key value was accessed or migrated.

@@ -113,7 +113,7 @@ def test_live_requires_explicit_personal_configuration():
         "input_usd_per_million": 1.0,
         "output_usd_per_million": 1.0,
         "max_output_tokens": 512,
-        "api_key_env": "CHESSLAB_PERSONAL_OPENAI_API_KEY",
+        "api_key_env": "CHESSLAB_OPENAI_API_KEY",
     }
     with pytest.raises(ValueError, match="disabled"):
         validate_personal_config(config)
@@ -143,7 +143,7 @@ def test_live_cap_prevents_transport_before_any_request(tmp_path, monkeypatch):
             return {"definition": {"id": metric_id}}
 
     monkeypatch.setattr(provider, "CheckedTools", FakeTools)
-    monkeypatch.setenv("CHESSLAB_PERSONAL_OPENAI_API_KEY", "test-only")
+    monkeypatch.setenv("CHESSLAB_OPENAI_API_KEY", "test-only")
     config = {
         "enabled": True,
         "personal_account_acknowledged": True,
@@ -152,7 +152,7 @@ def test_live_cap_prevents_transport_before_any_request(tmp_path, monkeypatch):
         "input_usd_per_million": 10.0,
         "output_usd_per_million": 10.0,
         "max_output_tokens": 512,
-        "api_key_env": "CHESSLAB_PERSONAL_OPENAI_API_KEY",
+        "api_key_env": "CHESSLAB_OPENAI_API_KEY",
     }
     path = tmp_path / "personal.json"
     path.write_text(json.dumps(config))

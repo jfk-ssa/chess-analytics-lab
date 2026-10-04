@@ -12,7 +12,7 @@ from analyst_m5.core import execute_plan
 from analyst_m5.tools import CheckedTools
 from chess_analytics.common import write_json
 
-PERSONAL_KEY_ENV = "CHESSLAB_PERSONAL_OPENAI_API_KEY"
+KEY_ENV = "CHESSLAB_OPENAI_API_KEY"
 ENDPOINT = "https://api.openai.com/v1/responses"
 PLAN_SCHEMA = {
     "type": "object",
@@ -64,7 +64,7 @@ def validate_personal_config(config: dict) -> dict:
         raise ValueError("complete personal provider configuration required")
     if config["enabled"] is not True or config["personal_account_acknowledged"] is not True:
         raise ValueError("live provider explicitly disabled")
-    if config["api_key_env"] != PERSONAL_KEY_ENV:
+    if config["api_key_env"] != KEY_ENV:
         raise ValueError("only the named personal API key environment variable is allowed")
     if (
         not isinstance(config["model"], str)
@@ -181,7 +181,7 @@ def live_answer(
         remaining_usd is not None and reserved_usd > remaining_usd
     ):
         raise ValueError("explicit run spending cap below conservative request bound")
-    key = os.environ.get(PERSONAL_KEY_ENV)
+    key = os.environ.get(KEY_ENV)
     if not key:
         raise ValueError("explicit personal API key is absent")
     response = (transport or _default_transport)(quote["body"], key)
@@ -249,7 +249,7 @@ def recorded_live_answer(project: Path, question: str, config_path: Path) -> dic
         )
         return answer
     except Exception as exc:
-        key = os.environ.get(PERSONAL_KEY_ENV)
+        key = os.environ.get(KEY_ENV)
         message = str(exc).replace(key, "[redacted]") if key else str(exc)
         write_json(
             path,

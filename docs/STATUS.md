@@ -13,7 +13,7 @@ repository; projects 1–3 remain together. No remote repository or hosting crea
 | M3 analytical corpus and metrics | Done | Accepted bounded prefix, observed coverage, independent checks, 12 draft dev cases |
 | M4 analytics product | Done | Accepted local six-view dashboard and two reproducible memos |
 | M5 analyst/eval harness | Done | Accepted checked typed tools, fixture replay and 50-case harness; no model result |
-| M6 measured release | In progress | Offline safety/preflight complete; personal provider configuration and cap needed for live evaluation |
+| M6 measured release | In progress | Offline safety/preflight complete; personal provider configuration and cap needed for live evaluation; key variable is `CHESSLAB_OPENAI_API_KEY` |
 | M7 depth | Later | Select only measured improvements |
 | M8 Jev | Follow-up | Fair, measured integration experiment |
 | Personalized recommender | Backlog | Outside first-release scope |
@@ -97,7 +97,7 @@ comparison attempt could not bind one inside the sandbox; a permitted local run
 completed and its result was saved. See [run instructions](ORCHESTRATION.md).
 Separate locked Dagster-only and Prefect-only environments installed from the local
 uv cache and completed one-off tiny runs during M2. The current dbt-enabled
-environment passes all **30 offline tests**; Ruff check/format, Git whitespace check,
+environment passes all **34 offline tests**; Ruff check/format, Git whitespace check,
 and `uv lock --check --offline` pass with the workspace cache. The current foundation
 snapshot still reports 3,982/121,332. No hosted CI run is claimed.
 
@@ -109,8 +109,9 @@ snapshot still reports 3,982/121,332. No hosted CI run is claimed.
 2. Run the budgeted development pilot, retain every response/failure/usage record, and
    report numerical, clarification, reliability, latency and gross-cost results
    separately. Retire the current test split if it was inspected for tuning.
-3. Prepare the fresh-clone demo and release evidence. Keep optional Airflow
-   deferred unless its extra local stack has a measured benefit.
+3. Complete release evidence after the live pilot; the fresh-clone tiny demo
+   has passed. Keep optional Airflow deferred unless its extra local stack has
+   a measured benefit.
 
 Then M7 measured depth and M8 Jev. The recommender remains backlog.
 
