@@ -1,5 +1,6 @@
 """Independent raw-PGN tally for the new M6 opening-family holdout."""
 
+import argparse
 import json
 from collections import Counter
 from pathlib import Path
@@ -12,10 +13,14 @@ from chess_analytics.warehouse.snapshots import current
 from scripts.reference_m3 import HEADER, family
 
 PROJECT = Path(__file__).resolve().parents[1]
-FAMILIES = ("Zukertort Opening", "King's Pawn Game")
+FAMILY_SETS = {
+    1: ("Zukertort Opening", "King's Pawn Game"),
+    2: ("Hungarian Opening", "Ruy Lopez"),
+}
 
 
-def build(project: Path = PROJECT) -> dict:
+def build(project: Path = PROJECT, *, version: int = 1) -> dict:
+    families = FAMILY_SETS[version]
     root = project / "data"
     plan = read_json(project / "config/datasets.json")["analytical"]
     source = root / "analytical" / f"complete-{plan['period']}-first-{plan['max_games']}.pgn"
@@ -45,7 +50,7 @@ def build(project: Path = PROJECT) -> dict:
         if not label:
             continue
         known += 1
-        if label not in FAMILIES:
+        if label not in families:
             continue
         usage[label] += 1
         if headers.get("TimeControl") != "60+0":
@@ -60,7 +65,7 @@ def build(project: Path = PROJECT) -> dict:
             cohorts[(label, "wins")] += 1
         else:
             cohorts[(label, "losses")] += 1
-    if any(cohorts[(name, "games")] == 0 for name in FAMILIES):
+    if any(cohorts[(name, "games")] == 0 for name in families):
         raise ValueError("holdout family has an empty cohort")
     analytical_id = json.loads((project / "reports/M3-analytical-manifest.json").read_text())[
         "analytical_id"
@@ -70,16 +75,20 @@ def build(project: Path = PROJECT) -> dict:
         "dataset_id": analytical_id,
         "source_snapshot_id": snapshot.name,
         "source": str(source.relative_to(project)),
-        "families": list(FAMILIES),
+        "families": list(families),
         "known_opening_games": known,
-        "opening_usage": {name: usage[name] for name in FAMILIES},
+        "opening_usage": {name: usage[name] for name in families},
         "white_rating_1400_1599_60_plus_0": {
             name: {field: cohorts[(name, field)] for field in ("games", "wins", "draws", "losses")}
-            for name in FAMILIES
+            for name in families
         },
     }
 
 
 if __name__ == "__main__":
-    write_json(PROJECT / "reports/M6-independent-reference.json", build())
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--version", type=int, choices=tuple(FAMILY_SETS), default=1)
+    version = parser.parse_args().version
+    name = "M6-independent-reference.json" if version == 1 else "M6-independent-reference-v2.json"
+    write_json(PROJECT / "reports" / name, build(version=version))
     print(json.dumps({"reference_written": True}))

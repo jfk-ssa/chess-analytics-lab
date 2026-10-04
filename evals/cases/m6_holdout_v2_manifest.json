@@ -1,0 +1,23 @@
+{
+  "ambiguity_or_unsupported": 6,
+  "answerable": 14,
+  "case_set_sha256": "97ea934e63bbab1491fd91f1e565a2e343d78e548db13511bc8947f8ec97267a",
+  "cases": 20,
+  "dataset_id": "84a38a404815ed2729917d76",
+  "families_not_in_m5_usage_cases": [
+    "Hungarian Opening",
+    "Ruy Lopez",
+    "Bishop's Opening",
+    "Benoni Defense",
+    "Horwitz Defense",
+    "Four Knights Game",
+    "Petrov's Defense",
+    "Vienna Game"
+  ],
+  "kind": "frozen unseen-family holdout; no model response",
+  "no_model_response_scored": true,
+  "reference_files": [
+    "reports/M3-independent-reference.json",
+    "reports/M6-independent-reference-v2.json"
+  ]
+}

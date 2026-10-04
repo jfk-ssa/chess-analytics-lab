@@ -148,16 +148,83 @@ def _default_transport(body: bytes, key: str) -> dict:
         return json.load(response)
 
 
-def _extract_text(response: dict) -> str:
+def _extract_plan(response: dict) -> tuple[dict, dict]:
+    """Accept one valid structured candidate; expose discarded chunks explicitly."""
     chunks = [
         part.get("text")
         for item in response.get("output", [])
         for part in item.get("content", [])
         if part.get("type") == "output_text"
     ]
-    if len(chunks) != 1 or not isinstance(chunks[0], str):
-        raise ValueError("provider returned no single structured plan")
-    return chunks[0]
+    valid = []
+    tools = set(PLAN_SCHEMA["properties"]["actions"]["items"]["properties"]["tool"]["enum"])
+    for index, chunk in enumerate(chunks):
+        if not isinstance(chunk, str):
+            continue
+        try:
+            raw = json.loads(chunk)
+            if (
+                not isinstance(raw, dict)
+                or set(raw) != {"status", "interpretation", "actions"}
+                or raw["status"] not in {"answered", "needs_clarification", "unsupported"}
+                or raw["interpretation"] != "descriptive_observed_prefix"
+                or not isinstance(raw["actions"], list)
+                or len(raw["actions"]) > 4
+            ):
+                continue
+            actions = []
+            for item in raw["actions"]:
+                if not isinstance(item, dict) or set(item) != {"tool", "args_json"}:
+                    raise ValueError("invalid action schema")
+                if item["tool"] not in tools or not isinstance(item["args_json"], str):
+                    raise ValueError("invalid action tool")
+                args = json.loads(item["args_json"])
+                if not isinstance(args, dict):
+                    raise ValueError("tool args must be an object")
+                actions.append({"tool": item["tool"], "args": args})
+            valid.append(
+                (
+                    index,
+                    {
+                        "status": raw["status"],
+                        "interpretation": raw["interpretation"],
+                        "actions": actions,
+                    },
+                    chunk,
+                )
+            )
+        except (ValueError, TypeError, KeyError):
+            continue
+    if len(valid) != 1:
+        raise ValueError("provider returned no unique structured plan")
+    index, plan, selected = valid[0]
+    return plan, {
+        "output_text_chunks": len(chunks),
+        "selected_chunk_index": index,
+        "selected_chunk_sha256": hashlib.sha256(selected.encode()).hexdigest(),
+        "discarded_invalid_chunks": len(chunks) - 1,
+    }
+
+
+def _normalize_plan(plan: dict) -> tuple[dict, list[str]]:
+    """Wrap one known flat tool signature; preserve the raw plan in the response."""
+    repairs = []
+    normalized = {**plan, "actions": []}
+    opening_keys = {
+        "families",
+        "color",
+        "rating_min",
+        "rating_max_exclusive",
+        "base_seconds",
+        "increment_seconds",
+    }
+    for index, action in enumerate(plan["actions"]):
+        args = action["args"]
+        if action["tool"] == "compare_openings" and set(args) == opening_keys:
+            args = {"filters": args}
+            repairs.append(f"action_{index}:wrapped_compare_openings_filters")
+        normalized["actions"].append({"tool": action["tool"], "args": args})
+    return normalized, repairs
 
 
 CONDITIONS = {"schema_only", "semantic_context"}
@@ -201,6 +268,11 @@ def quote_request(project: Path, question: str, config: dict, condition="semanti
         "For differences between two opening families, use compare_openings with "
         "filters {families:[full first family name, full second family name],color,"
         "rating_min,rating_max_exclusive,base_seconds,increment_seconds}. "
+        "For a first-minus-second opening difference, compare_openings is mandatory: "
+        "two query_metric calls return components, not the requested difference. "
+        "For compare_openings, args_json must have one outer filters key, never flat fields. "
+        "Opening usage is fully specified by the source family alone; do not ask for "
+        "color, rating, or time control for opening_usage. "
         "Copy full provider family names from the question; never abbreviate "
         "Sicilian Defense to Sicilian or French Defense to French. "
         "For Black's Sicilian versus French comparison, use full source names "
@@ -280,17 +352,8 @@ def live_answer(
     actual_cost, cost_basis = price_usage(config, usage)
     if actual_cost > config["max_run_usd"]:
         raise ValueError("provider usage exceeded configured run spending cap")
-    raw_plan = json.loads(_extract_text(response))
-    if set(raw_plan) != {"status", "interpretation", "actions"}:
-        raise ValueError("provider plan schema mismatch")
-    plan = {
-        "status": raw_plan["status"],
-        "interpretation": raw_plan["interpretation"],
-        "actions": [
-            {"tool": item["tool"], "args": json.loads(item["args_json"])}
-            for item in raw_plan["actions"]
-        ],
-    }
+    parsed_plan, selection = _extract_plan(response)
+    plan, repairs = _normalize_plan(parsed_plan)
     answer = execute_plan(project, question, plan, source="live_provider")
     answer["provider"] = {
         "response_id": response.get("id"),
@@ -305,6 +368,8 @@ def live_answer(
         "input_usd_per_million": config["input_usd_per_million"],
         "output_usd_per_million": config["output_usd_per_million"],
         "raw_response": response,
+        "response_selection": selection,
+        "argument_repairs": repairs,
         "attempts": 1,
     }
     return answer

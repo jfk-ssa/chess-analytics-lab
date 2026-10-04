@@ -11,6 +11,19 @@ from chess_analytics.common import write_json
 from scripts.report_m6_live import _model_text
 
 
+def _selected_model_text(response: dict | None, selection: dict | None):
+    if not response or not selection:
+        return _model_text(response)
+    chunks = [
+        part.get("text")
+        for item in response.get("output", [])
+        for part in item.get("content", [])
+        if part.get("type") == "output_text"
+    ]
+    index = selection.get("selected_chunk_index")
+    return chunks[index] if type(index) is int and 0 <= index < len(chunks) else None
+
+
 def build(project: Path, summary_path: Path, preflight_path: Path) -> dict:
     summary = json.loads(summary_path.read_text())
     preflight = json.loads(preflight_path.read_text())
@@ -46,6 +59,7 @@ def build(project: Path, summary_path: Path, preflight_path: Path) -> dict:
         usage = raw.get("provider_usage") or (response or {}).get("usage")
         cost, basis = price_usage(rates, usage) if usage else (None, "missing_usage")
         answer = raw.get("answer") or {}
+        selection = answer.get("provider", {}).get("response_selection")
         attempts.append(
             {
                 "case_id": case["id"],
@@ -63,7 +77,10 @@ def build(project: Path, summary_path: Path, preflight_path: Path) -> dict:
                 "gross_cost_usd": cost,
                 "cost_basis": basis,
                 "elapsed_seconds": raw["elapsed_seconds"],
-                "model_text": _model_text(response),
+                "model_text": _selected_model_text(response, selection),
+                "response_selection": selection,
+                "argument_repairs": answer.get("provider", {}).get("argument_repairs", []),
+                "tool_steps": answer.get("tool_steps"),
                 "answer_status": answer.get("status"),
                 "result": answer.get("result"),
                 "evidence_ids": answer.get("evidence_ids"),

@@ -1,0 +1,29 @@
+{
+  "dataset_id": "84a38a404815ed2729917d76",
+  "families": [
+    "Hungarian Opening",
+    "Ruy Lopez"
+  ],
+  "kind": "independent raw-PGN M6 holdout reference; no model responses",
+  "known_opening_games": 99117,
+  "opening_usage": {
+    "Hungarian Opening": 1623,
+    "Ruy Lopez": 1584
+  },
+  "source": "data/analytical/complete-2026-08-first-100000.pgn",
+  "source_snapshot_id": "6cf51473f8da6ae6b12ea5c2",
+  "white_rating_1400_1599_60_plus_0": {
+    "Hungarian Opening": {
+      "draws": 1,
+      "games": 80,
+      "losses": 36,
+      "wins": 43
+    },
+    "Ruy Lopez": {
+      "draws": 2,
+      "games": 30,
+      "losses": 14,
+      "wins": 14
+    }
+  }
+}

@@ -11,7 +11,13 @@ import pytest
 from analyst_m5.core import execute_plan, run_killable_tool
 from analyst_m5.evaluation import score_case, score_case_m6, score_case_m6_holdout
 from analyst_m5.experiment import _load_named_key, prepare, run
-from analyst_m5.provider import price_usage, quote_request
+from analyst_m5.provider import (
+    _extract_plan,
+    _normalize_plan,
+    live_answer,
+    price_usage,
+    quote_request,
+)
 
 PROJECT = Path(__file__).resolve().parents[1]
 
@@ -197,10 +203,119 @@ def test_cache_write_and_hit_costs_are_separate():
     assert cost == pytest.approx(0.000175)
 
 
-def test_holdout_reference_and_frozen_preflight_without_model_calls(tmp_path, monkeypatch):
+def test_structured_response_recovery_is_unique_and_recorded():
+    raw = {
+        "status": "answered",
+        "interpretation": "descriptive_observed_prefix",
+        "actions": [
+            {
+                "tool": "compare_openings",
+                "args_json": json.dumps(
+                    {
+                        "families": ["A", "B"],
+                        "color": "white",
+                        "rating_min": 1400,
+                        "rating_max_exclusive": 1600,
+                        "base_seconds": 60,
+                        "increment_seconds": 0,
+                    }
+                ),
+            }
+        ],
+    }
+    valid = json.dumps(raw)
+    response = {
+        "output": [
+            {
+                "content": [
+                    {"type": "output_text", "text": valid + " trailing"},
+                    {"type": "output_text", "text": valid},
+                ]
+            }
+        ]
+    }
+    plan, selection = _extract_plan(response)
+    assert selection["output_text_chunks"] == 2
+    assert selection["selected_chunk_index"] == 1
+    assert selection["discarded_invalid_chunks"] == 1
+    normalized, repairs = _normalize_plan(plan)
+    assert repairs == ["action_0:wrapped_compare_openings_filters"]
+    assert normalized["actions"][0]["args"] == {"filters": plan["actions"][0]["args"]}
+    response["output"][0]["content"][0]["text"] = valid
+    with pytest.raises(ValueError, match="unique"):
+        _extract_plan(response)
+    response["output"][0]["content"][0]["text"] = json.dumps({**raw, "extra": 1})
+    assert _extract_plan(response)[1]["discarded_invalid_chunks"] == 1
+    no_repair = {
+        "status": "answered",
+        "interpretation": "descriptive_observed_prefix",
+        "actions": [
+            {
+                "tool": "compare_openings",
+                "args": {"families": ["A", "B"], "color": "white", "rating_min": 1400, "extra": 1},
+            }
+        ],
+    }
+    assert _normalize_plan(no_repair)[1] == []
+
+
+def test_live_adapter_records_unique_chunk_and_safe_argument_wrap(monkeypatch, tmp_path):
     if not (PROJECT / "data/analytical-current.json").exists():
         pytest.skip("optional real analytical snapshot not in clean checkout")
-    cases = json.loads((PROJECT / "evals/cases/m6_holdout.json").read_text())
+    _, config = _personal_config(tmp_path)
+    monkeypatch.setenv("CHESSLAB_OPENAI_API_KEY", "test-only")
+    filters = {
+        "families": ["Zukertort Opening", "King's Pawn Game"],
+        "color": "white",
+        "rating_min": 1400,
+        "rating_max_exclusive": 1600,
+        "base_seconds": 60,
+        "increment_seconds": 0,
+    }
+    plan = {
+        "status": "answered",
+        "interpretation": "descriptive_observed_prefix",
+        "actions": [{"tool": "compare_openings", "args_json": json.dumps(filters)}],
+    }
+    valid = json.dumps(plan)
+    response = {
+        "id": "fixture_response",
+        "model": "gpt-6-luna",
+        "usage": {
+            "input_tokens": 1000,
+            "output_tokens": 100,
+            "input_tokens_details": {"cache_write_tokens": 0, "cached_tokens": 0},
+        },
+        "output": [
+            {
+                "content": [
+                    {"type": "output_text", "text": valid + " invalid"},
+                    {"type": "output_text", "text": valid},
+                ]
+            }
+        ],
+    }
+    answer = live_answer(
+        PROJECT,
+        "Compare these two openings for White 1400–1599 at 60+0",
+        None,
+        config=config,
+        transport=lambda body, key: response,
+        condition="schema_only",
+    )
+    assert answer["status"] == "answered"
+    assert answer["result"]["score_rate_difference_first_minus_second"] is not None
+    assert answer["provider"]["response_selection"]["discarded_invalid_chunks"] == 1
+    assert answer["provider"]["argument_repairs"] == ["action_0:wrapped_compare_openings_filters"]
+    assert answer["evidence"][-1]["args"] == {"filters": filters}
+
+
+@pytest.mark.parametrize("version", [1, 2])
+def test_holdout_reference_and_frozen_preflight_without_model_calls(tmp_path, monkeypatch, version):
+    if not (PROJECT / "data/analytical-current.json").exists():
+        pytest.skip("optional real analytical snapshot not in clean checkout")
+    suffix = "" if version == 1 else "_v2"
+    cases = json.loads((PROJECT / f"evals/cases/m6_holdout{suffix}.json").read_text())
     assert len(cases) == 20
     assert sum(c["expected_status"] == "answered" for c in cases) == 14
     for case in cases:
@@ -215,15 +330,15 @@ def test_holdout_reference_and_frozen_preflight_without_model_calls(tmp_path, mo
         }
         answer = execute_plan(PROJECT, case["question"], plan)
         assert score_case_m6_holdout(case, answer)["passed"], case["id"]
-    preflight = prepare(PROJECT, max_run_usd=0.10, holdout=True)
+    preflight = prepare(PROJECT, max_run_usd=0.10, holdout=True, holdout_version=version)
     assert preflight["attempts_planned"] == 40
     assert preflight["fits_cap"]
-    assert preflight["case_file"] == "evals/cases/m6_holdout.json"
+    assert preflight["case_file"] == f"evals/cases/m6_holdout{suffix}.json"
     frozen_path = tmp_path / "holdout.json"
     frozen_path.write_text(json.dumps(preflight))
     monkeypatch.delenv("CHESSLAB_OPENAI_API_KEY", raising=False)
     with pytest.raises(ValueError, match="personal API key is absent"):
-        run(PROJECT, None, frozen_path, max_run_usd=0.10, holdout=True)
+        run(PROJECT, None, frozen_path, max_run_usd=0.10, holdout=True, holdout_version=version)
 
 
 def test_stopped_repeats_keep_unattempted_cells_out_of_accuracy_denominators(tmp_path):

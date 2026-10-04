@@ -90,13 +90,21 @@ def _resolve_config(config_path: Path | None, max_run_usd: float | None) -> dict
 
 
 def prepare(
-    project: Path, config_path: Path | None = None, *, max_run_usd=None, holdout=False
+    project: Path,
+    config_path: Path | None = None,
+    *,
+    max_run_usd=None,
+    holdout=False,
+    holdout_version=1,
 ) -> dict:
     """Quote all cells and freeze code/data/question inputs without a key."""
     config = _resolve_config(config_path, max_run_usd)
     if holdout:
-        case_file = "evals/cases/m6_holdout.json"
-        manifest_file = "evals/cases/m6_holdout_manifest.json"
+        if holdout_version not in {1, 2}:
+            raise ValueError("unknown holdout version")
+        suffix = "" if holdout_version == 1 else "_v2"
+        case_file = f"evals/cases/m6_holdout{suffix}.json"
+        manifest_file = f"evals/cases/m6_holdout{suffix}_manifest.json"
         cases = json.loads((project / case_file).read_text())
         selected = cases
         digest_cases = cases
@@ -147,10 +155,15 @@ def prepare(
         "uv.lock",
     ]
     if holdout:
+        reference_file = (
+            "reports/M6-independent-reference.json"
+            if holdout_version == 1
+            else "reports/M6-independent-reference-v2.json"
+        )
         frozen_files.extend(
             (
                 "reports/M3-independent-reference.json",
-                "reports/M6-independent-reference.json",
+                reference_file,
                 "scripts/reference_m6_holdout.py",
                 "scripts/build_m6_holdout.py",
             )
@@ -170,7 +183,7 @@ def prepare(
         "dataset_id": manifest["dataset_id"],
         "case_set_sha256": manifest["case_set_sha256"],
         "selection": (
-            "20 new family-split holdout cases; one-shot"
+            f"20 family-split holdout v{holdout_version} cases; one-shot"
             if holdout
             else "12 inspected development cases; not untouched holdout"
         ),
@@ -205,11 +218,18 @@ def run(
     env_file: Path | None = None,
     transport=None,
     holdout=False,
+    holdout_version=1,
 ) -> dict:
     """One attempt per frozen cell, reserving the whole run before transport."""
     preflight = json.loads(preflight_path.read_text())
     config = _resolve_config(config_path, max_run_usd)
-    current = prepare(project, config_path, max_run_usd=max_run_usd, holdout=holdout)
+    current = prepare(
+        project,
+        config_path,
+        max_run_usd=max_run_usd,
+        holdout=holdout,
+        holdout_version=holdout_version,
+    )
     frozen_keys = (
         "dataset_id",
         "case_set_sha256",
@@ -348,12 +368,17 @@ def main(argv=None):
     parser.add_argument("--env-file", type=Path, help="run mode only; reads only the named key")
     parser.add_argument("--preflight", type=Path, required=True)
     parser.add_argument("--holdout", action="store_true", help="use frozen M6 family split")
+    parser.add_argument("--holdout-version", type=int, choices=(1, 2), default=1)
     args = parser.parse_args(argv)
     if args.mode == "prepare":
         if args.env_file is not None:
             parser.error("--env-file applies only to run mode")
         result = prepare(
-            args.project, args.config, max_run_usd=args.max_run_usd, holdout=args.holdout
+            args.project,
+            args.config,
+            max_run_usd=args.max_run_usd,
+            holdout=args.holdout,
+            holdout_version=args.holdout_version,
         )
         write_json(args.preflight, result)
     else:
@@ -364,6 +389,7 @@ def main(argv=None):
             max_run_usd=args.max_run_usd,
             env_file=args.env_file,
             holdout=args.holdout,
+            holdout_version=args.holdout_version,
         )
     print(json.dumps(result, indent=2, sort_keys=True))
 

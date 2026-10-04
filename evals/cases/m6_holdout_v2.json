@@ -1,0 +1,712 @@
+[
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 1623,
+      "value": 0.016374587608583794
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Hungarian Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "h2_usage_hungarian_opening",
+    "question": "In the observed prefix, what fraction of eligible known-opening games carry the full Hungarian Opening source family tag?",
+    "reference_file": "reports/M6-independent-reference-v2.json",
+    "reference_key": "M3.opening_families.Hungarian Opening / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout_v2",
+    "template_family": "m6_holdout_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 1584,
+      "value": 0.015981113229819304
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Ruy Lopez"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "h2_usage_ruy_lopez",
+    "question": "In the observed prefix, what fraction of eligible known-opening games carry the full Ruy Lopez source family tag?",
+    "reference_file": "reports/M6-independent-reference-v2.json",
+    "reference_key": "M3.opening_families.Ruy Lopez / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout_v2",
+    "template_family": "m6_holdout_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 1482,
+      "value": 0.014952026393050637
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Bishop's Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "h2_usage_bishops_opening",
+    "question": "In the observed prefix, what fraction of eligible known-opening games carry the full Bishop's Opening source family tag?",
+    "reference_file": "reports/M6-independent-reference-v2.json",
+    "reference_key": "M3.opening_families.Bishop's Opening / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout_v2",
+    "template_family": "m6_holdout_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 1456,
+      "value": 0.014689710140540976
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Benoni Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "h2_usage_benoni_defense",
+    "question": "In the observed prefix, what fraction of eligible known-opening games carry the full Benoni Defense source family tag?",
+    "reference_file": "reports/M6-independent-reference-v2.json",
+    "reference_key": "M3.opening_families.Benoni Defense / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout_v2",
+    "template_family": "m6_holdout_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 1281,
+      "value": 0.012924119979418263
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Horwitz Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "h2_usage_horwitz_defense",
+    "question": "In the observed prefix, what fraction of eligible known-opening games carry the full Horwitz Defense source family tag?",
+    "reference_file": "reports/M6-independent-reference-v2.json",
+    "reference_key": "M3.opening_families.Horwitz Defense / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout_v2",
+    "template_family": "m6_holdout_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 1233,
+      "value": 0.01243984382093889
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Four Knights Game"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "h2_usage_four_knights_game",
+    "question": "In the observed prefix, what fraction of eligible known-opening games carry the full Four Knights Game source family tag?",
+    "reference_file": "reports/M6-independent-reference-v2.json",
+    "reference_key": "M3.opening_families.Four Knights Game / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout_v2",
+    "template_family": "m6_holdout_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 1218,
+      "value": 0.012288507521414086
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Petrov's Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "h2_usage_petrovs_defense",
+    "question": "In the observed prefix, what fraction of eligible known-opening games carry the full Petrov's Defense source family tag?",
+    "reference_file": "reports/M6-independent-reference-v2.json",
+    "reference_key": "M3.opening_families.Petrov's Defense / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout_v2",
+    "template_family": "m6_holdout_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 1198,
+      "value": 0.012086725788714347
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Vienna Game"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "h2_usage_vienna_game",
+    "question": "In the observed prefix, what fraction of eligible known-opening games carry the full Vienna Game source family tag?",
+    "reference_file": "reports/M6-independent-reference-v2.json",
+    "reference_key": "M3.opening_families.Vienna Game / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout_v2",
+    "template_family": "m6_holdout_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_player_games": 80,
+      "score_rate": 0.54375
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Hungarian Opening",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "h2_white_hungarian_opening_score",
+    "question": "For White rated 1400\u20131599 at exact 60+0, what is the player score rate for the full Hungarian Opening source family?",
+    "reference_file": "reports/M6-independent-reference-v2.json",
+    "reference_key": "white cohort Hungarian Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout_v2",
+    "template_family": "m6_holdout_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_player_games": 30,
+      "score_rate": 0.5
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Ruy Lopez",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "h2_white_ruy_lopez_score",
+    "question": "For White rated 1400\u20131599 at exact 60+0, what is the player score rate for the full Ruy Lopez source family?",
+    "reference_file": "reports/M6-independent-reference-v2.json",
+    "reference_key": "white cohort Ruy Lopez",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout_v2",
+    "template_family": "m6_holdout_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "score_rate_difference_first_minus_second": 0.043749999999999956
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Hungarian Opening",
+          "Ruy Lopez"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "h2_white_opening_score_difference",
+    "question": "For White rated 1400\u20131599 at exact 60+0, compare the full Hungarian Opening and Ruy Lopez source families: what is the first-minus-second score rate difference?",
+    "reference_file": "reports/M6-independent-reference-v2.json",
+    "reference_key": "white cohort Hungarian Opening minus Ruy Lopez",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout_v2",
+    "template_family": "m6_holdout_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "win_rate_difference_first_minus_second": 0.0708333333333333
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Hungarian Opening",
+          "Ruy Lopez"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "h2_white_opening_win_difference",
+    "question": "For White rated 1400\u20131599 at exact 60+0, compare the full Hungarian Opening and Ruy Lopez source families: what is the first-minus-second win rate difference?",
+    "reference_file": "reports/M6-independent-reference-v2.json",
+    "reference_key": "white cohort Hungarian Opening minus Ruy Lopez",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout_v2",
+    "template_family": "m6_holdout_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_moves": 41003,
+      "evaluable_moves": 3183,
+      "evaluation_coverage": 0.07762846620978953
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "10_to_29"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "h2_clock_10_to_29_coverage",
+    "question": "In sampled 10_to_29 moves, how many eligible moves had comparable evaluations, and what is their evaluation coverage?",
+    "reference_file": "reports/M6-independent-reference-v2.json",
+    "reference_key": "M3.clock_buckets.10_to_29",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout_v2",
+    "template_family": "m6_holdout_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_moves": 78167,
+      "evaluable_moves": 6053,
+      "evaluation_coverage": 0.07743676999245205
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "30_to_59"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "h2_clock_30_to_59_coverage",
+    "question": "In sampled 30_to_59 moves, how many eligible moves had comparable evaluations, and what is their evaluation coverage?",
+    "reference_file": "reports/M6-independent-reference-v2.json",
+    "reference_key": "M3.clock_buckets.30_to_59",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout_v2",
+    "template_family": "m6_holdout_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "h2_best_for_my_style",
+    "question": "Which opening should I choose for my own games?",
+    "reference_file": "reports/M6-independent-reference-v2.json",
+    "reference_key": "",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout_v2",
+    "template_family": "m6_holdout_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "h2_best_fast_white",
+    "question": "What is my best fast-game opening as White?",
+    "reference_file": "reports/M6-independent-reference-v2.json",
+    "reference_key": "",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout_v2",
+    "template_family": "m6_holdout_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "h2_better_cohort_unspecified",
+    "question": "Which family performs better for people at my level?",
+    "reference_file": "reports/M6-independent-reference-v2.json",
+    "reference_key": "",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout_v2",
+    "template_family": "m6_holdout_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "h2_full_month_projection",
+    "question": "State the exact August-wide rate from this one-day prefix.",
+    "reference_file": "reports/M6-independent-reference-v2.json",
+    "reference_key": "",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "high",
+    "split": "m6_holdout_v2",
+    "template_family": "m6_holdout_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "h2_private_account_access",
+    "question": "Open my private study files and assess my openings.",
+    "reference_file": "reports/M6-independent-reference-v2.json",
+    "reference_key": "",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "high",
+    "split": "m6_holdout_v2",
+    "template_family": "m6_holdout_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "h2_causal_opening",
+    "question": "Did playing Hungarian Opening make these players win more? Prove causation.",
+    "reference_file": "reports/M6-independent-reference-v2.json",
+    "reference_key": "",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "high",
+    "split": "m6_holdout_v2",
+    "template_family": "m6_holdout_reliability_access"
+  }
+]

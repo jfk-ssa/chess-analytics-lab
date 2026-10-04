@@ -1,0 +1,293 @@
+{
+  "attempts_planned": 40,
+  "cache_write_usd_per_million": 0.125,
+  "cached_input_usd_per_million": 0.01,
+  "case_file": "evals/cases/m6_holdout_v2.json",
+  "case_set_sha256": "97ea934e63bbab1491fd91f1e565a2e343d78e548db13511bc8947f8ec97267a",
+  "cells": [
+    {
+      "case_id": "h2_usage_hungarian_opening",
+      "condition": "schema_only",
+      "request_sha256": "16884333a3148f3de2d7b271ca9ffa9e6cdd451067ab4feb8b1d7ecdb45994d0",
+      "reserved_cost_usd": 0.000916625
+    },
+    {
+      "case_id": "h2_usage_hungarian_opening",
+      "condition": "semantic_context",
+      "request_sha256": "32aff8966f7fb8340dffee5633187d3784b4fc81b31bf2e87d240710ddb53a6a",
+      "reserved_cost_usd": 0.001695125
+    },
+    {
+      "case_id": "h2_usage_ruy_lopez",
+      "condition": "schema_only",
+      "request_sha256": "6a5b4a0fe9b8bce3da24fc2e4bff4fdc2b25f789aaa00f4a183faf9775db5078",
+      "reserved_cost_usd": 0.000915625
+    },
+    {
+      "case_id": "h2_usage_ruy_lopez",
+      "condition": "semantic_context",
+      "request_sha256": "2ea16104e22554add2c4c2a6f3dd29802fc08907453143a4e9856ec2835e784d",
+      "reserved_cost_usd": 0.001694125
+    },
+    {
+      "case_id": "h2_usage_bishops_opening",
+      "condition": "schema_only",
+      "request_sha256": "6f3ad6007d7fb3b474ff3b711fe542dfea1743803283ed0ebcb98a34cc23e263",
+      "reserved_cost_usd": 0.0009165
+    },
+    {
+      "case_id": "h2_usage_bishops_opening",
+      "condition": "semantic_context",
+      "request_sha256": "08850d30da3201a00fda3d2af99d86bc1def596ecdbd9f3dfb55a9069422e8e5",
+      "reserved_cost_usd": 0.001695
+    },
+    {
+      "case_id": "h2_usage_benoni_defense",
+      "condition": "schema_only",
+      "request_sha256": "88e25afdb5540246b10b350b8e58ad64db673b66689a3f7f34171ccda6f6bf66",
+      "reserved_cost_usd": 0.00091625
+    },
+    {
+      "case_id": "h2_usage_benoni_defense",
+      "condition": "semantic_context",
+      "request_sha256": "ddd214038d3bac5dea36a25e006971e3b5e9db0790c5f22e3e5697176a4689ea",
+      "reserved_cost_usd": 0.00169475
+    },
+    {
+      "case_id": "h2_usage_horwitz_defense",
+      "condition": "schema_only",
+      "request_sha256": "7a025732240f4579e3874af2e10963c815d01e93ebc1d2e4dce8aaf62d286d8a",
+      "reserved_cost_usd": 0.000916375
+    },
+    {
+      "case_id": "h2_usage_horwitz_defense",
+      "condition": "semantic_context",
+      "request_sha256": "52b078e6d36d5549063f2528cddfcef9d8b891d8dbd37f21f3f054833804ac62",
+      "reserved_cost_usd": 0.001694875
+    },
+    {
+      "case_id": "h2_usage_four_knights_game",
+      "condition": "schema_only",
+      "request_sha256": "7a9dfbc71b2c40aa0a14d844ac8e828c64d0f2d9515035cac8bddd9f3d994ebc",
+      "reserved_cost_usd": 0.000916625
+    },
+    {
+      "case_id": "h2_usage_four_knights_game",
+      "condition": "semantic_context",
+      "request_sha256": "dd53ed19484eceaf2b9a3a13e6a5f1172cd11f0f9afe40ea4f97692fa48eab0b",
+      "reserved_cost_usd": 0.001695125
+    },
+    {
+      "case_id": "h2_usage_petrovs_defense",
+      "condition": "schema_only",
+      "request_sha256": "9fc1416215cb68277ce1b63934a65e42c9f1a036d3888cf4ac6d705a6de16da7",
+      "reserved_cost_usd": 0.0009165
+    },
+    {
+      "case_id": "h2_usage_petrovs_defense",
+      "condition": "semantic_context",
+      "request_sha256": "1ec407700b528025b2b6d3324b9550f37a2cffdc3aed9bafa5fde52f8ba0c974",
+      "reserved_cost_usd": 0.001695
+    },
+    {
+      "case_id": "h2_usage_vienna_game",
+      "condition": "schema_only",
+      "request_sha256": "0233c3a705b374691a2deb367c0f26403f3cfcd6d3be5bdf513cc239210a2362",
+      "reserved_cost_usd": 0.000915875
+    },
+    {
+      "case_id": "h2_usage_vienna_game",
+      "condition": "semantic_context",
+      "request_sha256": "97d1b416ee71ab342e83d67359660432be160541a4efc213cb68c5eb52ea9606",
+      "reserved_cost_usd": 0.001694375
+    },
+    {
+      "case_id": "h2_white_hungarian_opening_score",
+      "condition": "schema_only",
+      "request_sha256": "2eef7c01d9a29a31821f867af419530027ee42f93f28c83e9e8cc491285431cf",
+      "reserved_cost_usd": 0.000916625
+    },
+    {
+      "case_id": "h2_white_hungarian_opening_score",
+      "condition": "semantic_context",
+      "request_sha256": "199a139e29562d5a846c938e2045f333c1b947cdebdcba445739bb29923f4765",
+      "reserved_cost_usd": 0.001695125
+    },
+    {
+      "case_id": "h2_white_ruy_lopez_score",
+      "condition": "schema_only",
+      "request_sha256": "243a9d1bf6017e4fef54a39b29ebf0d8d6c53e71a984e1b1fefb47f838bd27ca",
+      "reserved_cost_usd": 0.000915625
+    },
+    {
+      "case_id": "h2_white_ruy_lopez_score",
+      "condition": "semantic_context",
+      "request_sha256": "22be310c39bbd90590ba1731b059c42ac7844e2472f50093e94449854e78230d",
+      "reserved_cost_usd": 0.001694125
+    },
+    {
+      "case_id": "h2_white_opening_score_difference",
+      "condition": "schema_only",
+      "request_sha256": "30d4cd2b3dc4e05e3caa8f50498a0d34511acc71378b0b5dc8fa27100c58500f",
+      "reserved_cost_usd": 0.000922125
+    },
+    {
+      "case_id": "h2_white_opening_score_difference",
+      "condition": "semantic_context",
+      "request_sha256": "b549e3e4bb5ef20ac4f24fa2d3734bd5b71cb198804bf7ea5e00b6e16e4fbe1f",
+      "reserved_cost_usd": 0.001700625
+    },
+    {
+      "case_id": "h2_white_opening_win_difference",
+      "condition": "schema_only",
+      "request_sha256": "eaaacccf06f083f5d7ea79ba5a92c6e3913a2f6386842c13aebd3643831f45d2",
+      "reserved_cost_usd": 0.000921875
+    },
+    {
+      "case_id": "h2_white_opening_win_difference",
+      "condition": "semantic_context",
+      "request_sha256": "ece8da5f71c0d8ad62c2ab9e84ce713c1eb67f22e87d994dd402e3e690891308",
+      "reserved_cost_usd": 0.001700375
+    },
+    {
+      "case_id": "h2_clock_10_to_29_coverage",
+      "condition": "schema_only",
+      "request_sha256": "4244fd5daa1b551e36a10780c27fffa73b3752c56074ac5fa246dc1f442b1716",
+      "reserved_cost_usd": 0.000916125
+    },
+    {
+      "case_id": "h2_clock_10_to_29_coverage",
+      "condition": "semantic_context",
+      "request_sha256": "1e6555858989c274cc558ed919f30b4c5b7986b23d486c3091f7874aaef61f40",
+      "reserved_cost_usd": 0.001694625
+    },
+    {
+      "case_id": "h2_clock_30_to_59_coverage",
+      "condition": "schema_only",
+      "request_sha256": "7f1a465190190ecea03e5d2bd823630487c3a823880a2e0938293d4592d85a2c",
+      "reserved_cost_usd": 0.000916125
+    },
+    {
+      "case_id": "h2_clock_30_to_59_coverage",
+      "condition": "semantic_context",
+      "request_sha256": "02a333c81a50aaebcc02b2403da182cb303f06075957a3834aedb4f5148a2df2",
+      "reserved_cost_usd": 0.001694625
+    },
+    {
+      "case_id": "h2_best_for_my_style",
+      "condition": "schema_only",
+      "request_sha256": "84db979caa901deb0690784a65ca6e3e606ba4347750dd2bf57f7acf3626430c",
+      "reserved_cost_usd": 0.000907375
+    },
+    {
+      "case_id": "h2_best_for_my_style",
+      "condition": "semantic_context",
+      "request_sha256": "20ab9c5d7aa10061e1e92886c9e7c970125ec1838358c0d891ce90a36e708dba",
+      "reserved_cost_usd": 0.001685875
+    },
+    {
+      "case_id": "h2_best_fast_white",
+      "condition": "schema_only",
+      "request_sha256": "9829c392f6c82f2585f19ccab7413baa65e11a381d843fa64a782e5077b32b7a",
+      "reserved_cost_usd": 0.000906875
+    },
+    {
+      "case_id": "h2_best_fast_white",
+      "condition": "semantic_context",
+      "request_sha256": "d4e6d9ea50cf5b4189e466a013d51caafcb757ed583dd660e1620a8384548b78",
+      "reserved_cost_usd": 0.001685375
+    },
+    {
+      "case_id": "h2_better_cohort_unspecified",
+      "condition": "schema_only",
+      "request_sha256": "5d76b2936cb5fb08bbeffc80b68c27e14144cdcfe4ae577fe52937ac2aacf501",
+      "reserved_cost_usd": 0.000908
+    },
+    {
+      "case_id": "h2_better_cohort_unspecified",
+      "condition": "semantic_context",
+      "request_sha256": "3e73382beb50f765e9a1732834966761873ca3e82eed611c96e9ed12fb9ca3b3",
+      "reserved_cost_usd": 0.0016865
+    },
+    {
+      "case_id": "h2_full_month_projection",
+      "condition": "schema_only",
+      "request_sha256": "0d33f3d30d9fcd11518ead628ce36d6a80810fad6910c43092cd3c0d8265d104",
+      "reserved_cost_usd": 0.00090875
+    },
+    {
+      "case_id": "h2_full_month_projection",
+      "condition": "semantic_context",
+      "request_sha256": "f2f4d366f39b6291f42f60516dc37d8ea530eb44bd327a3df07f18fbb7a2a668",
+      "reserved_cost_usd": 0.00168725
+    },
+    {
+      "case_id": "h2_private_account_access",
+      "condition": "schema_only",
+      "request_sha256": "18c4fe52c01b2e6c3f1cdc80b10f23ed70ab7dc8e42da213b42633cbe446eedc",
+      "reserved_cost_usd": 0.000907875
+    },
+    {
+      "case_id": "h2_private_account_access",
+      "condition": "semantic_context",
+      "request_sha256": "41191d513043f20913dcacabdddfe8ed67c153e29ed4553b24b996d9ba1bdaa2",
+      "reserved_cost_usd": 0.001686375
+    },
+    {
+      "case_id": "h2_causal_opening",
+      "condition": "schema_only",
+      "request_sha256": "6798fbee65ffcd4a82cdf6883095fabe5ce861deec9ddc3f09086c93ea250fab",
+      "reserved_cost_usd": 0.000910875
+    },
+    {
+      "case_id": "h2_causal_opening",
+      "condition": "semantic_context",
+      "request_sha256": "09cdf7fc1b7140e20fbeb89225fac3f22363988ca4cdaf3b15100ccce8df694d",
+      "reserved_cost_usd": 0.001689375
+    }
+  ],
+  "comparison": "typed planner with versus without governed metric definitions; not SQL baseline",
+  "conditions": [
+    "schema_only",
+    "semantic_context"
+  ],
+  "conservative_total_usd": 0.05214725,
+  "created_utc": "2026-10-04T12:00:53.426078+00:00",
+  "dataset_id": "84a38a404815ed2729917d76",
+  "fits_cap": true,
+  "frozen_file_sha256": {
+    "analyst_m5/core.py": "528efd7c52bec4a9e8156fee80e3899fc91a0dac40ea7505b64565efd23e6e66",
+    "analyst_m5/evaluation.py": "de8a325be2418f3d7d350acbee7895146cdf4eba6e81099a1d2aadd4d0613cc7",
+    "analyst_m5/experiment.py": "40cbdc47eaed1eefff2d3e75cd3e336fd704cc43d8816c304e373fa572995d9a",
+    "analyst_m5/provider.py": "5ed8b77d24f3bfca93d506bed19f388d54e975e11c8e383b9476eb733a277cd4",
+    "analyst_m5/tool_worker.py": "fff693a59f8fb1aeedeb9abe4211604ca34d873c3d68817a7b1fee0219960417",
+    "analyst_m5/tools.py": "732febe4a600c91d1179a075ad9f909ebe79f904ce4b6d7667520c143dfc1dd2",
+    "analytics_m3/metrics.py": "8c5e2f67a52e12990d6b174fc59be2f4985ceecec18db0ce0d63a50b48b091de",
+    "analytics_m4/analysis.py": "0d5b1e9fab995739cb382a714454ed64b3c86465f495f9ac25e457c4fb9ecbea",
+    "contracts/clock_pressure_error_proxy.json": "0ee7dbc7a903dabbc22414ed0ac6623067053b55d8cf8c2e0bdcfa711c9698d8",
+    "contracts/evaluation_coverage.json": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+    "contracts/game_draw_rate.json": "b119f02815e73adbe680120b2b26460cd2f5cf867dd0399d1642b560e29042e4",
+    "contracts/m3_tables.json": "8b4b48d0c319dbd636bacd9ab335ed5cb6207f2eb8dd56ba2290f8ac19f840dc",
+    "contracts/opening_adjusted_score.json": "784fd284e1a7b9296f099902104f1a7777ff03c1eb8d1738fe34b0f3aff5bf62",
+    "contracts/opening_player_score.json": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+    "contracts/opening_usage.json": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+    "contracts/tables.json": "5ed382ed37dc7cd89ff33daf3989fab3fc935048194ff6a08dedfcafa46faf01",
+    "docs/METRICS.md": "ee2865e43e842459e30f58add9bc62738387b284930ad19a64e87beada8efbaa",
+    "evals/cases/m6_holdout_v2.json": "90cb0cf1856b998be4fb6038b2fb7b323e22b7c9f372066ac6cca73ee4785cf6",
+    "evals/cases/m6_holdout_v2_manifest.json": "d1d2da57d5e0d2f2ab1ed8e92265196f7211c25802265441c487fbe19219d350",
+    "reports/M3-independent-reference.json": "bdbfa5505160e00bc9d2a5211ccbb9410dc83f890cfc5be3f84488ebb73a6268",
+    "reports/M6-independent-reference-v2.json": "72bf2e8ac3fe0644f6ea233253e04597738c011b34a5ed482454b91a3766718c",
+    "scripts/build_m6_holdout.py": "c4fd83ea088b4e653a4e9cd125516baaa3f497506b9df336d7630e184ba230e1",
+    "scripts/reference_m6_holdout.py": "169b5f981a58e4d9a299d431c747dccd915aff033f31fdba34b73e17c5c3a972",
+    "uv.lock": "667b0ee7faec38b0a59d88199595ca5c9a4bf940c26df2d3e2b90ce2e04fff4c"
+  },
+  "input_usd_per_million": 0.1,
+  "kind": "m6_typed_planner_holdout_preflight_no_model_calls",
+  "max_output_tokens": 512,
+  "max_run_usd": 0.1,
+  "model": "gpt-6-luna",
+  "output_usd_per_million": 0.5,
+  "price_checked_utc_date": "2026-10-04",
+  "price_source": "https://developers.openai.com/api/docs/models/gpt-6-luna",
+  "selection": "20 family-split holdout v2 cases; one-shot"
+}

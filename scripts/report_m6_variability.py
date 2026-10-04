@@ -45,6 +45,11 @@ def build(preflight_path: Path, report_paths: list[Path]) -> dict:
                     (a["usage"] or {}).get("input_tokens_details", {}).get("cache_write_tokens", 0)
                     for a in attempts
                 ),
+                "unique_chunk_recoveries": sum(
+                    (a.get("response_selection") or {}).get("output_text_chunks", 0) > 1
+                    for a in attempts
+                ),
+                "argument_repairs": sum(len(a.get("argument_repairs") or []) for a in attempts),
                 "failures": [
                     {
                         "case_id": a["case_id"],
