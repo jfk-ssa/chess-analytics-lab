@@ -1,0 +1,23 @@
+{
+  "cache_fill": {
+    "result": "locked production packages installed in disposable clone; platform wheels cached"
+  },
+  "commit": "6ba10d0",
+  "first_attempt": {
+    "reason": "local uv cache lacked selected macOS ruff and duckdb wheels",
+    "result": "failed"
+  },
+  "fresh_offline_clone": {
+    "accepted": 22,
+    "command": "uv sync --locked --offline --no-editable --no-dev --extra dashboard --extra dbt; uv run --locked --offline --no-editable --no-dev chesslab demo",
+    "denominator": 20,
+    "metric": "game_draw_rate",
+    "numerator": 4,
+    "result": "passed",
+    "seen": 26,
+    "snapshot_id": "08acebd885e71887a18481b8",
+    "value": 0.2
+  },
+  "kind": "offline release smoke; no model experiment",
+  "limits": "Requires a prepared platform-specific dependency cache; tracked repo alone does not contain wheels or the ignored M3 analytical dataset."
+}
