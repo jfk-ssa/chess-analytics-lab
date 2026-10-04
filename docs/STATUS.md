@@ -1,6 +1,6 @@
 # Status — 2026-10-03
 
-**M0–M5 accepted locally; M6 next.** This is a new standalone local Git
+**M0–M5 accepted locally; M6 in progress.** This is a new standalone local Git
 repository; projects 1–3 remain together. No remote repository or hosting created.
 
 ## Phase tracker
@@ -13,7 +13,7 @@ repository; projects 1–3 remain together. No remote repository or hosting crea
 | M3 analytical corpus and metrics | Done | Accepted bounded prefix, observed coverage, independent checks, 12 draft dev cases |
 | M4 analytics product | Done | Accepted local six-view dashboard and two reproducible memos |
 | M5 analyst/eval harness | Done | Accepted checked typed tools, fixture replay and 50-case harness; no model result |
-| M6 measured release | Next | Verify personal provider configuration and cap; evaluate actual model responses |
+| M6 measured release | In progress | Offline safety/preflight complete; personal provider configuration and cap needed for live evaluation |
 | M7 depth | Later | Select only measured improvements |
 | M8 Jev | Follow-up | Fair, measured integration experiment |
 | Personalized recommender | Backlog | Outside first-release scope |
@@ -35,6 +35,7 @@ repository; projects 1–3 remain together. No remote repository or hosting crea
 | M4 analytics product | Local Streamlit overview, opening, clock, quality, analyst and evaluation views; two short memos; exact figure inputs | Six views and a replay action ran without app exceptions in Streamlit AppTest. Two memo figures match independent raw-PGN opening/clock references; 400 seeded focal-player bootstrap repetitions per opening cohort. [M4–M5 evidence](M4-M5.md). |
 | M5 offline analyst | Allowlisted read-only typed tools, four-step state machine, evidence IDs, fixture replay and separate scoring; disabled-by-default personal Responses adapter | 50 cases frozen (30 dev/20 test) across six categories; fixture-replay/scorer check 50/50. Ten plausible wrong-answer mutations rejected; raw SQL/file/network/extension attempts have no enabled tool. These are harness tests, **not model accuracy**. |
 | M5 live gate | Personal config and positive cap required; only named personal key variable permitted | Disabled example config rejected a CLI live attempt before transport; failure retained in ignored local attempt log. No provider request occurred. |
+| M6 offline preparation | Hard-deadline credential-free tool worker; 12-case/two-condition typed-planner pilot with whole-run budget reservation and frozen request hashes | Worker ran against the real checked snapshot; proposed 24-cell quote is $0.0198638 under hypothetical $1 cap. These are offline checks, not model outcomes. [M6 evidence](M6.md). |
 
 Acceptance details: [reports/M0-M1.md](../reports/M0-M1.md), machine-readable
 [acceptance.json](../reports/acceptance.json), [foundation manifest](../reports/foundation-manifest.json).
@@ -88,8 +89,8 @@ uncertainty for the full month. M5 free-form SQL remains disabled because a
 separate isolated benchmark worker has not been established. The held-out
 case labels have been used to validate the offline harness; do not claim an
 untouched model holdout after inspecting or tuning on them.
-M5's 30-second tool check is post-execution, not a hard worker timeout; a
-killable worker is required before live model-driven tool execution.
+M6 adds a killable 30-second worker for live model-driven tool execution; typed
+fixture replay still uses the direct local path.
 The optional orchestrators are local demonstrations, with no schedules or cloud
 deployments. Prefect's local ephemeral API needs a localhost socket. The first
 comparison attempt could not bind one inside the sandbox; a permitted local run
@@ -100,12 +101,12 @@ environment passes all **30 offline tests**; Ruff check/format, Git whitespace c
 and `uv lock --check --offline` pass with the workspace cache. The current foundation
 snapshot still reports 3,982/121,332. No hosted CI run is claimed.
 
-## Next concrete work — M6
+## Next concrete work — finish M6
 
-1. Verify current personal-account entitlement, exact model, prices and an
-   explicit run spending cap before enabling any live call. Freeze dataset,
-   case set, prompts and configuration first. Add a killable tool worker.
-2. Run a budgeted experiment, retain every response/failure/usage record, and
+1. Verify personal-account entitlement, exact model, prices and the user's
+   explicit total run spending cap before enabling any live call. The offline
+   preflight and killable tool worker are implemented.
+2. Run the budgeted development pilot, retain every response/failure/usage record, and
    report numerical, clarification, reliability, latency and gross-cost results
    separately. Retire the current test split if it was inspected for tuning.
 3. Prepare the fresh-clone demo and release evidence. Keep optional Airflow

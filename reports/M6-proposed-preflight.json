@@ -1,0 +1,182 @@
+{
+  "attempts_planned": 24,
+  "authorization": "No personal key or confirmed user cap; no live run authorized by this file.",
+  "case_set_sha256": "64bf83183a8729898fbfd2f355701b54d1ad4beecef9cade5a79bd735c97c78a",
+  "cells": [
+    {
+      "case_id": "usage_sicilian_defense",
+      "condition": "schema_only",
+      "request_sha256": "ac6aa7409b0c0dacfd3cc564a4f461da87620290ba6f5dc989ccbe9e2b9218f8",
+      "reserved_cost_usd": 0.0005183
+    },
+    {
+      "case_id": "usage_sicilian_defense",
+      "condition": "semantic_context",
+      "request_sha256": "a9354255c0516f460ade9af26d3bd76fd4e385cbf4966b8d1a1f16ad9232edeb",
+      "reserved_cost_usd": 0.0011411
+    },
+    {
+      "case_id": "sample_count",
+      "condition": "schema_only",
+      "request_sha256": "f100f9e0ff55d9ccc04f9d5821f9a2cd73444abbf92c7ca0ad0c2b74296f8972",
+      "reserved_cost_usd": 0.0005147999999999999
+    },
+    {
+      "case_id": "sample_count",
+      "condition": "semantic_context",
+      "request_sha256": "2f047ddc1c5ebf3e775161908aef4a81427bcbfdb92e64f990dbbceabf5e08a7",
+      "reserved_cost_usd": 0.0011376
+    },
+    {
+      "case_id": "black_sicilian_score",
+      "condition": "schema_only",
+      "request_sha256": "7736deddd6b17d6683cbee69908b7bd38fbba5bbf1dcf9e7c267c57f0c4068a8",
+      "reserved_cost_usd": 0.0005185
+    },
+    {
+      "case_id": "black_sicilian_score",
+      "condition": "semantic_context",
+      "request_sha256": "d6c48617d5be76bcb657162af8edbab3b5e431cb92ae1bbc1c51244a74e8d501",
+      "reserved_cost_usd": 0.0011413000000000003
+    },
+    {
+      "case_id": "black_opening_score_difference",
+      "condition": "schema_only",
+      "request_sha256": "458e534e1b098420fac519bb26244dab0b72127ddcc1f0407b3c213ba6636973",
+      "reserved_cost_usd": 0.0005208
+    },
+    {
+      "case_id": "black_opening_score_difference",
+      "condition": "semantic_context",
+      "request_sha256": "5fa1312bde5b9392d14c825ba785fe5bc7df41cc7cb22339a0aea9bc8bd60fc7",
+      "reserved_cost_usd": 0.0011435999999999998
+    },
+    {
+      "case_id": "best_opening",
+      "condition": "schema_only",
+      "request_sha256": "e435461a81742c80ba58c8772ecfec5691c5cc18a3548ea15df17675775a0b29",
+      "reserved_cost_usd": 0.0005128
+    },
+    {
+      "case_id": "best_opening",
+      "condition": "semantic_context",
+      "request_sha256": "6bf5901310e91d2fda164d1d0e7984634a2c512204f34e42623829f21e1e370a",
+      "reserved_cost_usd": 0.0011355999999999998
+    },
+    {
+      "case_id": "best_for_me",
+      "condition": "schema_only",
+      "request_sha256": "60f513bc58a20ab114e75d51591fb49f48d7315f908deb800efe8183fefa80f5",
+      "reserved_cost_usd": 0.0005142
+    },
+    {
+      "case_id": "best_for_me",
+      "condition": "semantic_context",
+      "request_sha256": "b4f4a48d504d26df5d8514b36cb0255552bc031fb9fb6950428a78848f37100f",
+      "reserved_cost_usd": 0.001137
+    },
+    {
+      "case_id": "proxy_under_10",
+      "condition": "schema_only",
+      "request_sha256": "a24d61b351b7f9370618dc0d890409f9bae2bd5903712b46a2da425754e20467",
+      "reserved_cost_usd": 0.000518
+    },
+    {
+      "case_id": "proxy_under_10",
+      "condition": "semantic_context",
+      "request_sha256": "e880a287d7ab848a3ed4b97b45ba9dda6e25abc7e992fd6e0d73ab52411820f0",
+      "reserved_cost_usd": 0.0011408000000000002
+    },
+    {
+      "case_id": "proxy_60_plus",
+      "condition": "schema_only",
+      "request_sha256": "e1c26d6b5bf8b12b0b8a1e43a49f74f61848ad76dc2a3e31b2b41cc9e4ad91fe",
+      "reserved_cost_usd": 0.0005179000000000001
+    },
+    {
+      "case_id": "proxy_60_plus",
+      "condition": "semantic_context",
+      "request_sha256": "92c5e8a755bb3205ca17b7a992d4b0d9d1dea6fe85046d655bd54ecdf6acff3c",
+      "reserved_cost_usd": 0.0011407000000000001
+    },
+    {
+      "case_id": "causal_clock",
+      "condition": "schema_only",
+      "request_sha256": "9368995889d236e66351c10c4131ab126bcb6d1d99146050cb50bb201cc09f37",
+      "reserved_cost_usd": 0.0005147999999999999
+    },
+    {
+      "case_id": "causal_clock",
+      "condition": "semantic_context",
+      "request_sha256": "3d1a99d57853ae578a508a703508bd7dd5cf559f12306c4b3032f0fea7f1fb23",
+      "reserved_cost_usd": 0.0011376
+    },
+    {
+      "case_id": "monthly_extrapolation",
+      "condition": "schema_only",
+      "request_sha256": "2080890706cbe3a3ddfc0ab69292f54864dc1c94344182e6ae4fdeeebcd1344e",
+      "reserved_cost_usd": 0.0005152000000000001
+    },
+    {
+      "case_id": "monthly_extrapolation",
+      "condition": "semantic_context",
+      "request_sha256": "490caed6a22691d41ce0827b34df0e8dafdae30e314dc2b24e559e264a572e22",
+      "reserved_cost_usd": 0.001138
+    },
+    {
+      "case_id": "player_personality",
+      "condition": "schema_only",
+      "request_sha256": "a7dc5b55c81571e96dfdf4f0713ddd5b42952b352e67726561d72eb3657125d0",
+      "reserved_cost_usd": 0.0005151
+    },
+    {
+      "case_id": "player_personality",
+      "condition": "semantic_context",
+      "request_sha256": "2243cbf6aa7204059eb194aca43f875189d131e9005db619d3ea5b9a7b8936df",
+      "reserved_cost_usd": 0.0011379
+    },
+    {
+      "case_id": "read_private_file",
+      "condition": "schema_only",
+      "request_sha256": "7081ab9231ca8637ca69a6319dab40a2fcfcd25505c0c5b14583759470ac0db2",
+      "reserved_cost_usd": 0.0005147000000000001
+    },
+    {
+      "case_id": "read_private_file",
+      "condition": "semantic_context",
+      "request_sha256": "626955d28d7378e2826b758bd684f7f665eea724fdda58cf20168c866ed353db",
+      "reserved_cost_usd": 0.0011375
+    }
+  ],
+  "comparison": "typed planner with versus without governed metric definitions; not SQL baseline",
+  "conditions": [
+    "schema_only",
+    "semantic_context"
+  ],
+  "conservative_total_usd": 0.0198638,
+  "created_utc": "2026-10-03T22:20:51.545277+00:00",
+  "dataset_id": "84a38a404815ed2729917d76",
+  "fits_cap": true,
+  "frozen_file_sha256": {
+    "analyst_m5/core.py": "528efd7c52bec4a9e8156fee80e3899fc91a0dac40ea7505b64565efd23e6e66",
+    "analyst_m5/evaluation.py": "c0ab6944d9b903be6f64c6273d101bad418cc374800b5b34ad86573b8acd2b80",
+    "analyst_m5/experiment.py": "ab2f0ae3af68cf47a0b6ce44d678b4c7f80fca35b58249a72244bd50ae038eab",
+    "analyst_m5/provider.py": "9f9a5f940054e638439ddcaf9417890e7954279f8b0e060f754e27723d20486d",
+    "analyst_m5/tool_worker.py": "fff693a59f8fb1aeedeb9abe4211604ca34d873c3d68817a7b1fee0219960417",
+    "analyst_m5/tools.py": "732febe4a600c91d1179a075ad9f909ebe79f904ce4b6d7667520c143dfc1dd2",
+    "docs/METRICS.md": "ee2865e43e842459e30f58add9bc62738387b284930ad19a64e87beada8efbaa",
+    "evals/cases/m5_dev.json": "152096ab7a2fcfed4017b8b80223b7e8902be8842d2a78aca25bb672b0552be8",
+    "evals/cases/m5_manifest.json": "fe4fc2fa39560f097030e105f514a55e81356353b5c0cd4f8f814ce52fa08be1",
+    "evals/cases/m5_test.json": "2e81c0d76d9f70f6978b1d92f305cbcaab02c17b1af136e94dc5518ed11bb2b0",
+    "uv.lock": "667b0ee7faec38b0a59d88199595ca5c9a4bf940c26df2d3e2b90ce2e04fff4c"
+  },
+  "input_usd_per_million": 0.1,
+  "kind": "m6_typed_planner_development_pilot_preflight_no_model_calls",
+  "max_output_tokens": 512,
+  "max_run_usd": 1.0,
+  "model": "gpt-6-luna",
+  "output_usd_per_million": 0.5,
+  "price_source": "https://developers.openai.com/api/docs/models/gpt-6-luna",
+  "proposed_only": true,
+  "selection": "12 inspected development cases; not untouched holdout"
+}

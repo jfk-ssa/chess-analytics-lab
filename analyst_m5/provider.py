@@ -1,5 +1,6 @@
 """Disabled-by-default personal Responses adapter; no implicit credential lookup."""
 
+import hashlib
 import json
 import os
 import re
@@ -106,26 +107,34 @@ def _extract_text(response: dict) -> str:
     return chunks[0]
 
 
-def live_answer(project: Path, question: str, config_path: Path, *, transport=None) -> dict:
-    """One capped planning request; all numerical answers come from checked tools."""
-    config = validate_personal_config(json.loads(config_path.read_text()))
+CONDITIONS = {"schema_only", "semantic_context"}
+
+
+def quote_request(project: Path, question: str, config: dict, condition="semantic_context") -> dict:
+    """Build and price an exact planner request without reading any credential."""
+    config = validate_personal_config(config)
+    if condition not in CONDITIONS:
+        raise ValueError("unknown experiment condition")
     tools = CheckedTools(project)
     if not isinstance(question, str) or not 1 <= len(question) <= 2000:
         raise ValueError("invalid question length")
-    key = os.environ.get(PERSONAL_KEY_ENV)
-    if not key:
-        raise ValueError("explicit personal API key is absent")
     prompt = (
         "Select at most four reviewed metric tool actions. Use only the observed bounded prefix. "
         "If essential filters are absent, request clarification. Reject causal or unsupported "
         "claims. Return tool arguments as JSON in args_json. Do not calculate numeric answers. "
-        f"Dataset: {tools.dataset_id}. Available metric definitions: "
-        f"{json.dumps(tools.list_metrics())}. "
+        f"Dataset: {tools.dataset_id}. Available metric IDs: "
+        f"{json.dumps(tools.list_metrics()['metric_ids'])}. "
         "Opening player-score filters require family, color, rating_min, "
         "rating_max_exclusive, base_seconds, increment_seconds. "
         "Adjusted opening score uses the same filters with families as two names. "
         "Clock bucket is under_10, 10_to_29, 30_to_59, or 60_plus."
     )
+    if condition == "semantic_context":
+        definitions = [
+            tools.get_metric_definition(metric_id)["definition"]
+            for metric_id in tools.list_metrics()["metric_ids"]
+        ]
+        prompt += " Governed metric definitions: " + json.dumps(definitions, sort_keys=True)
     payload = {
         "model": config["model"],
         "instructions": prompt,
@@ -142,14 +151,40 @@ def live_answer(project: Path, question: str, config_path: Path, *, transport=No
         },
     }
     body = json.dumps(payload, ensure_ascii=True).encode()
-    # UTF-8 bytes upper-bound token count conservatively for this bounded request.
+    # JSON ASCII bytes plus a fixed envelope allowance; verify billed usage afterward.
     reserved_usd = (
-        len(body) * config["input_usd_per_million"]
+        (len(body) + 1000) * config["input_usd_per_million"]
         + config["max_output_tokens"] * config["output_usd_per_million"]
     ) / 1_000_000
-    if reserved_usd > config["max_run_usd"]:
+    return {
+        "body": body,
+        "request_sha256": hashlib.sha256(body).hexdigest(),
+        "reserved_cost_usd": reserved_usd,
+        "condition": condition,
+    }
+
+
+def live_answer(
+    project: Path,
+    question: str,
+    config_path: Path,
+    *,
+    transport=None,
+    condition="semantic_context",
+    remaining_usd=None,
+) -> dict:
+    """One capped planning request; all numerical answers come from checked tools."""
+    config = validate_personal_config(json.loads(config_path.read_text()))
+    quote = quote_request(project, question, config, condition)
+    reserved_usd = quote["reserved_cost_usd"]
+    if reserved_usd > config["max_run_usd"] or (
+        remaining_usd is not None and reserved_usd > remaining_usd
+    ):
         raise ValueError("explicit run spending cap below conservative request bound")
-    response = (transport or _default_transport)(body, key)
+    key = os.environ.get(PERSONAL_KEY_ENV)
+    if not key:
+        raise ValueError("explicit personal API key is absent")
+    response = (transport or _default_transport)(quote["body"], key)
     usage = response.get("usage")
     if not isinstance(usage, dict) or not all(
         type(usage.get(name)) is int for name in ("input_tokens", "output_tokens")
@@ -179,6 +214,8 @@ def live_answer(project: Path, question: str, config_path: Path, *, transport=No
         "usage": usage,
         "gross_cost_usd": actual_cost,
         "reserved_cost_usd": reserved_usd,
+        "request_sha256": quote["request_sha256"],
+        "condition": condition,
         "max_run_usd": config["max_run_usd"],
         "input_usd_per_million": config["input_usd_per_million"],
         "output_usd_per_million": config["output_usd_per_million"],

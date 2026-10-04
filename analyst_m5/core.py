@@ -2,6 +2,9 @@
 
 import hashlib
 import json
+import os
+import subprocess
+import sys
 import time
 from pathlib import Path
 
@@ -10,6 +13,37 @@ from analyst_m5.tools import CheckedTools
 STATUSES = {"answered", "needs_clarification", "unsupported"}
 MAX_STEPS = 4
 MAX_TOOL_SECONDS = 30
+MAX_WORKER_OUTPUT_BYTES = 1_000_000
+
+
+def run_killable_tool(project: Path, name: str, args: dict, timeout_seconds=MAX_TOOL_SECONDS):
+    """Kill a checked tool process if its wall-clock deadline expires."""
+    request = json.dumps({"project": str(project.resolve()), "tool": name, "args": args})
+    if len(request.encode()) > 100_000:
+        raise ValueError("tool request too large")
+    clean_env = {"PATH": os.defpath, "PYTHONNOUSERSITE": "1"}
+    try:
+        completed = subprocess.run(
+            [sys.executable, "-m", "analyst_m5.tool_worker"],
+            input=request,
+            text=True,
+            capture_output=True,
+            cwd=project,
+            env=clean_env,
+            timeout=timeout_seconds,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise TimeoutError("tool worker killed after 30-second deadline") from exc
+    if len(completed.stdout.encode()) > MAX_WORKER_OUTPUT_BYTES:
+        raise ValueError("tool worker returned too much data")
+    try:
+        message = json.loads(completed.stdout)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError("tool worker returned invalid output") from exc
+    if completed.returncode or not message.get("ok"):
+        raise ValueError(f"checked tool failed: {message.get('error_type', 'worker_error')}")
+    return message["dataset_id"], message["result"]
 
 
 def _evidence_id(dataset_id: str, tool: str, args: dict, result: dict) -> str:
@@ -38,10 +72,15 @@ def execute_plan(project: Path, question: str, plan: dict, *, source: str = "typ
     for step in actions:
         if not isinstance(step, dict) or set(step) != {"tool", "args"}:
             raise ValueError("invalid tool step")
-        tool_started = time.monotonic()
-        result = tools.execute(step["tool"], step["args"])
-        if time.monotonic() - tool_started > MAX_TOOL_SECONDS:
-            raise TimeoutError("tool exceeded 30-second response limit")
+        if source == "live_provider":
+            worker_dataset, result = run_killable_tool(project, step["tool"], step["args"])
+            if worker_dataset != tools.dataset_id:
+                raise ValueError("worker dataset mismatch")
+        else:
+            tool_started = time.monotonic()
+            result = tools.execute(step["tool"], step["args"])
+            if time.monotonic() - tool_started > MAX_TOOL_SECONDS:
+                raise TimeoutError("tool exceeded 30-second response limit")
         if (
             result.get("analytical_id", result.get("dataset_id", tools.dataset_id))
             != tools.dataset_id

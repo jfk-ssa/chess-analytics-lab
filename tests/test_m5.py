@@ -139,6 +139,9 @@ def test_live_cap_prevents_transport_before_any_request(tmp_path, monkeypatch):
         def list_metrics(self):
             return {"metric_ids": ["opening_usage"]}
 
+        def get_metric_definition(self, metric_id):
+            return {"definition": {"id": metric_id}}
+
     monkeypatch.setattr(provider, "CheckedTools", FakeTools)
     monkeypatch.setenv("CHESSLAB_PERSONAL_OPENAI_API_KEY", "test-only")
     config = {
