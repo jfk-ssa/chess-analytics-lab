@@ -1,0 +1,88 @@
+{
+  "clock_buckets_reference": "reports/M3-independent-reference.json",
+  "dataset_id": "84a38a404815ed2729917d76",
+  "families": [
+    "Canard Opening",
+    "Center Game Accepted",
+    "Creepy Crawly Formation",
+    "Danish Gambit Declined",
+    "Fried Fox Defense",
+    "Hippopotamus Defense",
+    "Kangaroo Defense",
+    "King's Indian Attack, with Bf5",
+    "King's Pawn Opening",
+    "Lasker Simul Special",
+    "London System, with Bd3",
+    "London System, with Be2",
+    "Mexican Defense",
+    "Paleface Attack",
+    "Portuguese Opening",
+    "Pseudo Queen's Indian Defense",
+    "Pterodactyl Defense",
+    "Queen's Gambit",
+    "Queen's Indian Defense",
+    "Richter-Veresov Attack",
+    "Rubinstein Opening",
+    "Slav Indian",
+    "Sodium Attack",
+    "Valencia Opening",
+    "Wade Defense"
+  ],
+  "kind": "independent raw-PGN M7 v4 reference; no model responses",
+  "known_opening_games": 99117,
+  "opening_usage": {
+    "Canard Opening": 19,
+    "Center Game Accepted": 14,
+    "Creepy Crawly Formation": 8,
+    "Danish Gambit Declined": 18,
+    "Fried Fox Defense": 9,
+    "Hippopotamus Defense": 12,
+    "Kangaroo Defense": 16,
+    "King's Indian Attack, with Bf5": 32,
+    "King's Pawn Opening": 21,
+    "Lasker Simul Special": 21,
+    "London System, with Bd3": 47,
+    "London System, with Be2": 20,
+    "Mexican Defense": 18,
+    "Paleface Attack": 21,
+    "Portuguese Opening": 40,
+    "Pseudo Queen's Indian Defense": 18,
+    "Pterodactyl Defense": 48,
+    "Queen's Gambit": 47,
+    "Queen's Indian Defense": 53,
+    "Richter-Veresov Attack": 65,
+    "Rubinstein Opening": 21,
+    "Slav Indian": 24,
+    "Sodium Attack": 12,
+    "Valencia Opening": 18,
+    "Wade Defense": 16
+  },
+  "source": "data/analytical/complete-2026-08-first-100000.pgn",
+  "source_snapshot_id": "6cf51473f8da6ae6b12ea5c2",
+  "white_rating_1400_1599_60_plus_0": {
+    "Portuguese Opening": {
+      "draws": 0,
+      "games": 4,
+      "losses": 2,
+      "wins": 2
+    },
+    "Queen's Gambit": {
+      "draws": 0,
+      "games": 4,
+      "losses": 0,
+      "wins": 4
+    },
+    "Richter-Veresov Attack": {
+      "draws": 0,
+      "games": 3,
+      "losses": 0,
+      "wins": 3
+    },
+    "Wade Defense": {
+      "draws": 0,
+      "games": 3,
+      "losses": 2,
+      "wins": 1
+    }
+  }
+}

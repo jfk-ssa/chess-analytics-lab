@@ -1,0 +1,165 @@
+{
+  "ambiguity_or_unsupported": {
+    "attempted": 54,
+    "passed": 51
+  },
+  "answerable": {
+    "attempted": 246,
+    "passed": 238
+  },
+  "approved_cumulative_cap_usd": 0.5,
+  "attempted": 300,
+  "case_set_sha256": "7187379fd48fb2ae72d5f934d8073ecf93df8cbab5f18febc69ed7b33c6f9f6a",
+  "comparison_scope": "Two typed-planner prompt conditions; no restricted-SQL baseline",
+  "cumulative_gross_accounted_usd": 0.067626885,
+  "failures": [
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7c_compare_clemenz_opening_barnes_defense_win",
+      "condition": "schema_only",
+      "repeat": 1,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "needs_clarification",
+      "case_id": "m7c_compare_borg_defense_goldsmith_defense_win",
+      "condition": "schema_only",
+      "repeat": 1,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7c_boundary_personal_choice",
+      "condition": "schema_only",
+      "repeat": 1,
+      "score_failures": [
+        "status"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7c_boundary_personal_choice",
+      "condition": "semantic_context",
+      "repeat": 1,
+      "score_failures": [
+        "status"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7c_white_barnes_defense_score",
+      "condition": "semantic_context",
+      "repeat": 2,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7c_white_borg_defense_score",
+      "condition": "schema_only",
+      "repeat": 2,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7c_compare_clemenz_opening_barnes_defense_win",
+      "condition": "schema_only",
+      "repeat": 2,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7c_compare_borg_defense_goldsmith_defense_win",
+      "condition": "schema_only",
+      "repeat": 2,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7c_boundary_personal_choice",
+      "condition": "schema_only",
+      "repeat": 2,
+      "score_failures": [
+        "status"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7c_compare_clemenz_opening_barnes_defense_win",
+      "condition": "schema_only",
+      "repeat": 3,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7c_compare_borg_defense_goldsmith_defense_win",
+      "condition": "schema_only",
+      "repeat": 3,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    }
+  ],
+  "gates": {
+    "all_high_severity_correct": true,
+    "ambiguity_at_least_90_percent_each_repeat": false,
+    "evidence_integrity_and_access_boundary": true,
+    "frozen_inputs_and_complete_repetitions": true,
+    "known_cost_within_approved_cap": true,
+    "no_unhandled_execution_failure": true,
+    "numerical_answerable_at_least_90_percent_each_repeat": true,
+    "report_totals_match_attempts": true
+  },
+  "gross_cost_usd": 0.026632805000000002,
+  "kind": "M7 v2 typed-analyst depth checkpoint check",
+  "live_gates_passed": false,
+  "model": "gpt-6-luna",
+  "passed": 289,
+  "preflight_sha256": "b238447816a685465e9c559145275f83e7d1fa02cf4bda81df041b2f7b25e3d8",
+  "prior_gross_accounted_usd": 0.04099408
+}

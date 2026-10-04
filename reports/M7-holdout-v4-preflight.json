@@ -1,0 +1,653 @@
+{
+  "attempts_planned": 100,
+  "cache_write_usd_per_million": 0.125,
+  "cached_input_usd_per_million": 0.01,
+  "case_file": "evals/cases/m7_holdout_v4.json",
+  "case_set_sha256": "aeabe8d5f213e2f97fcf46a38b9f71ea8d3ea1fda61e1bad38530af9ce8a2dc5",
+  "cells": [
+    {
+      "case_id": "m7d_usage_canard_opening",
+      "condition": "schema_only",
+      "request_sha256": "4b6dfe400f411560c8b57c472244f7d20bf8d021d511303f0dc24eedc45ab98d",
+      "reserved_cost_usd": 0.00103975
+    },
+    {
+      "case_id": "m7d_usage_canard_opening",
+      "condition": "semantic_context",
+      "request_sha256": "641caf444f9160fe69abd64c4f79fd77173d6d2057a1291acc2b8de57355ecab",
+      "reserved_cost_usd": 0.00181825
+    },
+    {
+      "case_id": "m7d_usage_center_game_accepted",
+      "condition": "schema_only",
+      "request_sha256": "67a2548f55fc6a95d5cc0f006af9f5ef8d93cf327e38d41191f02c279f27bb76",
+      "reserved_cost_usd": 0.0010405
+    },
+    {
+      "case_id": "m7d_usage_center_game_accepted",
+      "condition": "semantic_context",
+      "request_sha256": "2335dcf5dac8a501fcf98ebbb833f69047729981aba58402aa13a67911122aab",
+      "reserved_cost_usd": 0.001819
+    },
+    {
+      "case_id": "m7d_usage_creepy_crawly_formation",
+      "condition": "schema_only",
+      "request_sha256": "6a6d36db107291a2136d0e15b600c0c0b7d20a0f3bc92db2537620f8c2cca914",
+      "reserved_cost_usd": 0.001040875
+    },
+    {
+      "case_id": "m7d_usage_creepy_crawly_formation",
+      "condition": "semantic_context",
+      "request_sha256": "ac00280b7e7c97b8094d37759723649e22f5ba125b1de3e9e1f9997461c38c7e",
+      "reserved_cost_usd": 0.001819375
+    },
+    {
+      "case_id": "m7d_usage_danish_gambit_declined",
+      "condition": "schema_only",
+      "request_sha256": "e55741d934cfc984760d92bccd002691334aa0441ef038a139cfbdafd660eb56",
+      "reserved_cost_usd": 0.00104075
+    },
+    {
+      "case_id": "m7d_usage_danish_gambit_declined",
+      "condition": "semantic_context",
+      "request_sha256": "89441d5de0fd2c3ae8c1cff614568bfae2f72e88930ea0810a79897f0210b7ee",
+      "reserved_cost_usd": 0.00181925
+    },
+    {
+      "case_id": "m7d_usage_fried_fox_defense",
+      "condition": "schema_only",
+      "request_sha256": "5853ca186660a57b13b130cb5eae9d515dd132778369d3b5aa5735831a0c9219",
+      "reserved_cost_usd": 0.001040125
+    },
+    {
+      "case_id": "m7d_usage_fried_fox_defense",
+      "condition": "semantic_context",
+      "request_sha256": "db2b408bb012023c177d05136c2b4e3902d9e2629ae76767dae01c8ff334d4da",
+      "reserved_cost_usd": 0.001818625
+    },
+    {
+      "case_id": "m7d_usage_hippopotamus_defense",
+      "condition": "schema_only",
+      "request_sha256": "e66bb1ed6c7131486679bedd3da2172805d4767b7f31f81baddac2c0cf670294",
+      "reserved_cost_usd": 0.0010405
+    },
+    {
+      "case_id": "m7d_usage_hippopotamus_defense",
+      "condition": "semantic_context",
+      "request_sha256": "d27a5dd2db6f203f08c59ac11ba90b398d05073866d62970f52a22191bf02ce7",
+      "reserved_cost_usd": 0.001819
+    },
+    {
+      "case_id": "m7d_usage_kangaroo_defense",
+      "condition": "schema_only",
+      "request_sha256": "e3e3f2a291baf8591ec1d6564ca897d194e7d06c9c53e5d1fcc7271446824cd8",
+      "reserved_cost_usd": 0.00104
+    },
+    {
+      "case_id": "m7d_usage_kangaroo_defense",
+      "condition": "semantic_context",
+      "request_sha256": "7e9af2090c4967b4c232c78e5a61462c8dfe40286289036bb7aad81e4df11232",
+      "reserved_cost_usd": 0.0018185
+    },
+    {
+      "case_id": "m7d_usage_kings_indian_attack,_with_bf5",
+      "condition": "schema_only",
+      "request_sha256": "4dc266752ac3a9c3b1852dd136a932000324adc45eb10a4ce9148eda17469009",
+      "reserved_cost_usd": 0.00104175
+    },
+    {
+      "case_id": "m7d_usage_kings_indian_attack,_with_bf5",
+      "condition": "semantic_context",
+      "request_sha256": "e41b62ee41fdb9fcf9669e781ec9a82366449c3bc4f861a7de369620ccc36fb4",
+      "reserved_cost_usd": 0.00182025
+    },
+    {
+      "case_id": "m7d_usage_kings_pawn_opening",
+      "condition": "schema_only",
+      "request_sha256": "2f9f9a90a27310bc1738f5340e0ff0a2dc2d93cdd6ac2b6d67a5942a4d708601",
+      "reserved_cost_usd": 0.001040375
+    },
+    {
+      "case_id": "m7d_usage_kings_pawn_opening",
+      "condition": "semantic_context",
+      "request_sha256": "8ea2b5aadd52a25b4aeb36638675a5763b9edf6db1c755d80c194536df3dd3b0",
+      "reserved_cost_usd": 0.001818875
+    },
+    {
+      "case_id": "m7d_usage_lasker_simul_special",
+      "condition": "schema_only",
+      "request_sha256": "822e631ea1c42c5357174feeb7cb047f3fb5ffbca07ca51afad3e252a4977c80",
+      "reserved_cost_usd": 0.0010405
+    },
+    {
+      "case_id": "m7d_usage_lasker_simul_special",
+      "condition": "semantic_context",
+      "request_sha256": "8e19d7fdfc60a8f5003e78f63a3d1fc163d0c34310f78def9f0417f79c69c3a1",
+      "reserved_cost_usd": 0.001819
+    },
+    {
+      "case_id": "m7d_usage_london_system,_with_bd3",
+      "condition": "schema_only",
+      "request_sha256": "9733a92d9e98b74bc44f90cf234e14a97864d19b21eb24b27cdacfd17a3ec91e",
+      "reserved_cost_usd": 0.001040875
+    },
+    {
+      "case_id": "m7d_usage_london_system,_with_bd3",
+      "condition": "semantic_context",
+      "request_sha256": "1a38bb8c16499da1404becb4d6adf4c093cc998b9c4950f634b2c8442b15133d",
+      "reserved_cost_usd": 0.001819375
+    },
+    {
+      "case_id": "m7d_usage_london_system,_with_be2",
+      "condition": "schema_only",
+      "request_sha256": "8ddaf5ab153c3d99d3cdafba99a85ac7c64af402bfad0d17501b2a5d85b13d3a",
+      "reserved_cost_usd": 0.001040875
+    },
+    {
+      "case_id": "m7d_usage_london_system,_with_be2",
+      "condition": "semantic_context",
+      "request_sha256": "043c03275e66eff5147ebebfc3efcce036a3e9c625c8f37aab56a560193084b1",
+      "reserved_cost_usd": 0.001819375
+    },
+    {
+      "case_id": "m7d_usage_mexican_defense",
+      "condition": "schema_only",
+      "request_sha256": "60f28725f19e90a0226e08d7bbcb7ea1b6f098f8c144331e2a693801423ce6a6",
+      "reserved_cost_usd": 0.001039875
+    },
+    {
+      "case_id": "m7d_usage_mexican_defense",
+      "condition": "semantic_context",
+      "request_sha256": "5e2817d35077b22a730f31f189b256f8470707fdc91e6b8fe70b1790ba352fa2",
+      "reserved_cost_usd": 0.001818375
+    },
+    {
+      "case_id": "m7d_usage_paleface_attack",
+      "condition": "schema_only",
+      "request_sha256": "52636d6d33028c9c9e30a02d6b50bbd9125e45a93fe49ac063746e8d7efd0c0c",
+      "reserved_cost_usd": 0.001039875
+    },
+    {
+      "case_id": "m7d_usage_paleface_attack",
+      "condition": "semantic_context",
+      "request_sha256": "c8cba3481218067e2c83f1e78483285f97cefd2a5d09042ebd1e3b8f0b4f85d3",
+      "reserved_cost_usd": 0.001818375
+    },
+    {
+      "case_id": "m7d_usage_portuguese_opening",
+      "condition": "schema_only",
+      "request_sha256": "7a34f27ac1d520c478cec3d26da60f81afce06053d6178c4d4801a2927002cae",
+      "reserved_cost_usd": 0.00104025
+    },
+    {
+      "case_id": "m7d_usage_portuguese_opening",
+      "condition": "semantic_context",
+      "request_sha256": "9feaf9da7dc5944e35d0185b147645fc40e47361592a11c5e3c1296b1bfafd16",
+      "reserved_cost_usd": 0.00181875
+    },
+    {
+      "case_id": "m7d_usage_pseudo_queens_indian_defense",
+      "condition": "schema_only",
+      "request_sha256": "5c98191833a5ca067ec5f2a945f6e2f3ec5a0c1aa3df328d908a41a95654fd75",
+      "reserved_cost_usd": 0.001041625
+    },
+    {
+      "case_id": "m7d_usage_pseudo_queens_indian_defense",
+      "condition": "semantic_context",
+      "request_sha256": "d66725fac850b545256d63255e55770585384d6cfac00ac9769043ba85c638ca",
+      "reserved_cost_usd": 0.001820125
+    },
+    {
+      "case_id": "m7d_usage_pterodactyl_defense",
+      "condition": "schema_only",
+      "request_sha256": "904c382b2d55fabd0f9d5414914ee6e81331d84a890c8da360aae1dbfaf3bd25",
+      "reserved_cost_usd": 0.001040375
+    },
+    {
+      "case_id": "m7d_usage_pterodactyl_defense",
+      "condition": "semantic_context",
+      "request_sha256": "b35faaf10c80050ec46788afd34842ed0c83460d8e80c4eeea5d641a757a9efc",
+      "reserved_cost_usd": 0.001818875
+    },
+    {
+      "case_id": "m7d_usage_queens_gambit",
+      "condition": "schema_only",
+      "request_sha256": "25fe52620c785cf3987725f93006f1afe2ab66b6468c292e142ae11840ebda16",
+      "reserved_cost_usd": 0.00103975
+    },
+    {
+      "case_id": "m7d_usage_queens_gambit",
+      "condition": "semantic_context",
+      "request_sha256": "6a7d9936d33edeff051d0001b54e70df066eaff23bab86f90982c22b3cb3e796",
+      "reserved_cost_usd": 0.00181825
+    },
+    {
+      "case_id": "m7d_usage_queens_indian_defense",
+      "condition": "schema_only",
+      "request_sha256": "2e65897d7b51c0d0c1f27cbd4efc649257de3d22147d8b108efb1549b8c4732f",
+      "reserved_cost_usd": 0.00104075
+    },
+    {
+      "case_id": "m7d_usage_queens_indian_defense",
+      "condition": "semantic_context",
+      "request_sha256": "0429d9a13505f8d9e13a02aab6a0f11bd0d0b34dc7d151f875d17c007f8c452b",
+      "reserved_cost_usd": 0.00181925
+    },
+    {
+      "case_id": "m7d_usage_richter_veresov_attack",
+      "condition": "schema_only",
+      "request_sha256": "52a0f22ebafbc5e7cdc6ac88b196172d20f2066618063e5f1ccf9aa45a4ab424",
+      "reserved_cost_usd": 0.00104075
+    },
+    {
+      "case_id": "m7d_usage_richter_veresov_attack",
+      "condition": "semantic_context",
+      "request_sha256": "f9831b7bacd7f7f556bef5f5d05568aadcd365ca9c886ac895a176adf579b39b",
+      "reserved_cost_usd": 0.00181925
+    },
+    {
+      "case_id": "m7d_usage_rubinstein_opening",
+      "condition": "schema_only",
+      "request_sha256": "ef6c4f694ea3eee6308a9904901f5c7b6320ff82fb0f08d19083aa3b7608e777",
+      "reserved_cost_usd": 0.00104025
+    },
+    {
+      "case_id": "m7d_usage_rubinstein_opening",
+      "condition": "semantic_context",
+      "request_sha256": "08c921bdae8fee9bbc20034aa8275ab7663cc8a2eb99f236329f1de18ab4ca0b",
+      "reserved_cost_usd": 0.00181875
+    },
+    {
+      "case_id": "m7d_usage_slav_indian",
+      "condition": "schema_only",
+      "request_sha256": "0448ad6beace11e21625de6132a904facb041041d319b4e0fb82cbb0636c94b1",
+      "reserved_cost_usd": 0.001039375
+    },
+    {
+      "case_id": "m7d_usage_slav_indian",
+      "condition": "semantic_context",
+      "request_sha256": "9fe27b753f84c602ea04c7fcbed9c6110d7d3bca651ab2badc60cd7a1b8985bc",
+      "reserved_cost_usd": 0.001817875
+    },
+    {
+      "case_id": "m7d_usage_sodium_attack",
+      "condition": "schema_only",
+      "request_sha256": "2b8ad0d8a07cb1c700eb8e3045ca91798ab0c84927536370cc523b99ce7fb1fc",
+      "reserved_cost_usd": 0.001039625
+    },
+    {
+      "case_id": "m7d_usage_sodium_attack",
+      "condition": "semantic_context",
+      "request_sha256": "2bfbb04e72e6830f5311e1f1fe5c57d4aa3a33476a78ef4ed20250126a32fdcb",
+      "reserved_cost_usd": 0.001818125
+    },
+    {
+      "case_id": "m7d_usage_valencia_opening",
+      "condition": "schema_only",
+      "request_sha256": "35299720a6c5996f0504370f102f03564a4bd8caf240abf948ed1ccbbf377742",
+      "reserved_cost_usd": 0.00104
+    },
+    {
+      "case_id": "m7d_usage_valencia_opening",
+      "condition": "semantic_context",
+      "request_sha256": "fef9d329b4ae59e333549cbd2fba503acea79068f7955fe59114210e61026d3e",
+      "reserved_cost_usd": 0.0018185
+    },
+    {
+      "case_id": "m7d_usage_wade_defense",
+      "condition": "schema_only",
+      "request_sha256": "c086627818aaeb23499379c8f88acc5cc0272cd1971e7bba3189de5fac9bd4ff",
+      "reserved_cost_usd": 0.0010395
+    },
+    {
+      "case_id": "m7d_usage_wade_defense",
+      "condition": "semantic_context",
+      "request_sha256": "8a535d200528f58c4dd8a47743aea1ee05461520333270df5f222a6f307123ca",
+      "reserved_cost_usd": 0.001818
+    },
+    {
+      "case_id": "m7d_white_portuguese_opening_score",
+      "condition": "schema_only",
+      "request_sha256": "4f02f90fdd87496bc19e9e19b81f6e5195b3b84b0b7bc7cf8e29414cc4271e5f",
+      "reserved_cost_usd": 0.001039625
+    },
+    {
+      "case_id": "m7d_white_portuguese_opening_score",
+      "condition": "semantic_context",
+      "request_sha256": "4fca4680514210ffb82c0ef1eec05378cf69d0474559ef22205903c1d1c3f394",
+      "reserved_cost_usd": 0.001818125
+    },
+    {
+      "case_id": "m7d_white_queens_gambit_score",
+      "condition": "schema_only",
+      "request_sha256": "b02ac8cba1b37762951c6732a1e1acf0b6c00516cd75a9f1a68e2bfa47c8cf54",
+      "reserved_cost_usd": 0.001039125
+    },
+    {
+      "case_id": "m7d_white_queens_gambit_score",
+      "condition": "semantic_context",
+      "request_sha256": "55627117687211722ec4e8e441cb8ace9473e6cfd5a6937837df22568e1353d7",
+      "reserved_cost_usd": 0.001817625
+    },
+    {
+      "case_id": "m7d_white_richter_veresov_attack_score",
+      "condition": "schema_only",
+      "request_sha256": "015e9ab8d68bd93b652c1d442bb42fcba4c3b8a79b17b43fbf46a0a3e8058c23",
+      "reserved_cost_usd": 0.001040125
+    },
+    {
+      "case_id": "m7d_white_richter_veresov_attack_score",
+      "condition": "semantic_context",
+      "request_sha256": "90a5ab84c3ce597dcd85cda5c9a850ec86266834312eb0833f0266066f1967ad",
+      "reserved_cost_usd": 0.001818625
+    },
+    {
+      "case_id": "m7d_white_wade_defense_score",
+      "condition": "schema_only",
+      "request_sha256": "b2320e83719358712767ba1dabe2443ebfb3f8415b36da62d6d16004cdbb0d89",
+      "reserved_cost_usd": 0.001038875
+    },
+    {
+      "case_id": "m7d_white_wade_defense_score",
+      "condition": "semantic_context",
+      "request_sha256": "951928025a8cfa02136c1961babf53841f05e8a945b0c10c5fe24425358ad5be",
+      "reserved_cost_usd": 0.001817375
+    },
+    {
+      "case_id": "m7d_compare_portuguese_opening_queens_gambit_score",
+      "condition": "schema_only",
+      "request_sha256": "275750bb13c45a8a3a7971f52ada3b3fe6df4969e0bcd3110b923b684c8a7c8e",
+      "reserved_cost_usd": 0.001043
+    },
+    {
+      "case_id": "m7d_compare_portuguese_opening_queens_gambit_score",
+      "condition": "semantic_context",
+      "request_sha256": "ed425f87501bed5f6efcd880c40984309e2b695d131949f5a520f4ada3ca5d59",
+      "reserved_cost_usd": 0.0018215
+    },
+    {
+      "case_id": "m7d_compare_portuguese_opening_queens_gambit_win",
+      "condition": "schema_only",
+      "request_sha256": "8435ec20a2abd019abec0a793bfaf47066ca5ff1dab82f014f7d261b6fef06bf",
+      "reserved_cost_usd": 0.00104275
+    },
+    {
+      "case_id": "m7d_compare_portuguese_opening_queens_gambit_win",
+      "condition": "semantic_context",
+      "request_sha256": "3a03839d5e1288ca84cbb125dbdef1b35f349f9b06c8eb1506dbeeb54efdf44c",
+      "reserved_cost_usd": 0.00182125
+    },
+    {
+      "case_id": "m7d_compare_richter_veresov_attack_wade_defense_score",
+      "condition": "schema_only",
+      "request_sha256": "d8bbf0365cccb5438468bea29b3456f38d930e98324ec72784276834e705ab69",
+      "reserved_cost_usd": 0.00104325
+    },
+    {
+      "case_id": "m7d_compare_richter_veresov_attack_wade_defense_score",
+      "condition": "semantic_context",
+      "request_sha256": "58c6981846ef4a9f07235cbe13120925edcbc3742ef50599de8b670d80a00a51",
+      "reserved_cost_usd": 0.00182175
+    },
+    {
+      "case_id": "m7d_compare_richter_veresov_attack_wade_defense_win",
+      "condition": "schema_only",
+      "request_sha256": "274bbb12ecafdc64c2b488ca59fb7589433c618c6b6531a5131998f861239c87",
+      "reserved_cost_usd": 0.001043
+    },
+    {
+      "case_id": "m7d_compare_richter_veresov_attack_wade_defense_win",
+      "condition": "semantic_context",
+      "request_sha256": "9bc16a7348459ae740b7239d6e536ef57d0b1ff374cbd605b269446e5d3c9008",
+      "reserved_cost_usd": 0.0018215
+    },
+    {
+      "case_id": "m7d_clock_under_10_coverage",
+      "condition": "schema_only",
+      "request_sha256": "e0407b191a69f90d1dcfd14a46e9624550478880f90812a6a2bce39c2a85852b",
+      "reserved_cost_usd": 0.001040125
+    },
+    {
+      "case_id": "m7d_clock_under_10_coverage",
+      "condition": "semantic_context",
+      "request_sha256": "3d60a93128dfba1ee1801311a6847cec4479156737a4bd50065e40b21626f1d3",
+      "reserved_cost_usd": 0.001818625
+    },
+    {
+      "case_id": "m7d_clock_under_10_proxy",
+      "condition": "schema_only",
+      "request_sha256": "3989834708b4a717e2b163fbbcf2ec4fa9367ef82cbfbe8893473550dd554385",
+      "reserved_cost_usd": 0.00104225
+    },
+    {
+      "case_id": "m7d_clock_under_10_proxy",
+      "condition": "semantic_context",
+      "request_sha256": "000447aaba61c5d68a8c20e5ff420ef4b5e33611d87437fecac13404ac9177d5",
+      "reserved_cost_usd": 0.00182075
+    },
+    {
+      "case_id": "m7d_clock_10_to_29_coverage",
+      "condition": "schema_only",
+      "request_sha256": "3f1496e69f138c049c7482857d891b8f4a3d65246622eb83679e52be9b2a69cf",
+      "reserved_cost_usd": 0.001040125
+    },
+    {
+      "case_id": "m7d_clock_10_to_29_coverage",
+      "condition": "semantic_context",
+      "request_sha256": "5520a4105782ede76acff9419599c2b5d9f3043b90b6a4b6dc803a6ae2b5f623",
+      "reserved_cost_usd": 0.001818625
+    },
+    {
+      "case_id": "m7d_clock_10_to_29_proxy",
+      "condition": "schema_only",
+      "request_sha256": "1cd537a78a76537897bd554a9d80a4615f08d88c36717acf38a7d252f8f26495",
+      "reserved_cost_usd": 0.00104225
+    },
+    {
+      "case_id": "m7d_clock_10_to_29_proxy",
+      "condition": "semantic_context",
+      "request_sha256": "acb2f8591156097e5ce0ae9988737a32c464d36262b681dfe8ff122441ab2ab1",
+      "reserved_cost_usd": 0.00182075
+    },
+    {
+      "case_id": "m7d_clock_30_to_59_coverage",
+      "condition": "schema_only",
+      "request_sha256": "f97dd0235f307f861aa284a8d96f87a62018f9628ee9aeb03281eb3fda362333",
+      "reserved_cost_usd": 0.001040125
+    },
+    {
+      "case_id": "m7d_clock_30_to_59_coverage",
+      "condition": "semantic_context",
+      "request_sha256": "9caf554146932a7ee614311b5aee804b66774bd188637e3a0efab512b12e14d1",
+      "reserved_cost_usd": 0.001818625
+    },
+    {
+      "case_id": "m7d_clock_30_to_59_proxy",
+      "condition": "schema_only",
+      "request_sha256": "c77f5c1961028e8f524d51b9a0a2f0a96addfe0247390036cbaf2329d88258b9",
+      "reserved_cost_usd": 0.00104225
+    },
+    {
+      "case_id": "m7d_clock_30_to_59_proxy",
+      "condition": "semantic_context",
+      "request_sha256": "dba595e4ee39beac9aa06382184eef22fb59f4d21b37b01cd31c01de0cb85ed0",
+      "reserved_cost_usd": 0.00182075
+    },
+    {
+      "case_id": "m7d_clock_60_plus_coverage",
+      "condition": "schema_only",
+      "request_sha256": "d75f4bd6056730059e2946b4ee1457dad92cc8206e8776e5fee039748312e6c9",
+      "reserved_cost_usd": 0.00104
+    },
+    {
+      "case_id": "m7d_clock_60_plus_coverage",
+      "condition": "semantic_context",
+      "request_sha256": "901120cfb91579d6d77ed1009128a9814a559c2f907367976e2e3ec7d2f2b6a8",
+      "reserved_cost_usd": 0.0018185
+    },
+    {
+      "case_id": "m7d_clock_60_plus_proxy",
+      "condition": "schema_only",
+      "request_sha256": "a716d6da49438b561c456f770a6647a5e55711df14dc57b6c6cf1a61e5298f55",
+      "reserved_cost_usd": 0.001042125
+    },
+    {
+      "case_id": "m7d_clock_60_plus_proxy",
+      "condition": "semantic_context",
+      "request_sha256": "b0cd3b5617050c0d30e6cf7b53a22713b42b25b6035095941e316fad5c29c300",
+      "reserved_cost_usd": 0.001820625
+    },
+    {
+      "case_id": "m7d_boundary_personal_choice",
+      "condition": "schema_only",
+      "request_sha256": "45f983e65730c253478a701ec218397a1c8ddb1b6d08c3a8b2b333cb5680b563",
+      "reserved_cost_usd": 0.001041
+    },
+    {
+      "case_id": "m7d_boundary_personal_choice",
+      "condition": "semantic_context",
+      "request_sha256": "fcb7b6ebc7308304fd42f893035b6bcc5b25f22592f483187381ee8916135442",
+      "reserved_cost_usd": 0.0018195
+    },
+    {
+      "case_id": "m7d_boundary_rating_unspecified",
+      "condition": "schema_only",
+      "request_sha256": "a386cafbd518fb2e291db0a60e49d3e7d7ee1dc6bdcd334ede85a7fe50dd0ea4",
+      "reserved_cost_usd": 0.0010375
+    },
+    {
+      "case_id": "m7d_boundary_rating_unspecified",
+      "condition": "semantic_context",
+      "request_sha256": "6a51c31f038de605c789d4a114cb3cf8ed1fdf00019b75e6ee102903af7f3518",
+      "reserved_cost_usd": 0.001816
+    },
+    {
+      "case_id": "m7d_boundary_bucket_unspecified",
+      "condition": "schema_only",
+      "request_sha256": "11530e8a5515be7268bbc15634979d11b7b67107e6db5c146acd2a99d86beff5",
+      "reserved_cost_usd": 0.001033625
+    },
+    {
+      "case_id": "m7d_boundary_bucket_unspecified",
+      "condition": "semantic_context",
+      "request_sha256": "c01942bd02aa87b97b7164463188dd77a613e5ccd79f5600f21399abfe19bf64",
+      "reserved_cost_usd": 0.001812125
+    },
+    {
+      "case_id": "m7d_boundary_cohort_unspecified",
+      "condition": "schema_only",
+      "request_sha256": "a04dbabe5ea697db5805d81a633b6f8024c1bd3fc61b546d676e84b531d2a644",
+      "reserved_cost_usd": 0.001036875
+    },
+    {
+      "case_id": "m7d_boundary_cohort_unspecified",
+      "condition": "semantic_context",
+      "request_sha256": "8775edaadf59571480ae2412fd897e2fb8ae5402a5d34f41da7984a01e4d88fe",
+      "reserved_cost_usd": 0.001815375
+    },
+    {
+      "case_id": "m7d_boundary_private_file",
+      "condition": "schema_only",
+      "request_sha256": "6c0a2c1506b99c70a98d130653ff581e5a56005aeb993e0bd2a2161199af211a",
+      "reserved_cost_usd": 0.001032875
+    },
+    {
+      "case_id": "m7d_boundary_private_file",
+      "condition": "semantic_context",
+      "request_sha256": "1560bf6a94de74a685c4c2888824f76ff0dc4d8d6574ecb012c47ecb56d37b59",
+      "reserved_cost_usd": 0.001811375
+    },
+    {
+      "case_id": "m7d_boundary_causal_opening",
+      "condition": "schema_only",
+      "request_sha256": "e7b1b649f2b0a1d0c0a7cb740478e608737edd6f6c0a1aa67d83241f7c232b11",
+      "reserved_cost_usd": 0.001032125
+    },
+    {
+      "case_id": "m7d_boundary_causal_opening",
+      "condition": "semantic_context",
+      "request_sha256": "f1de3e4a5d0baf86727a3d3358cb144fba04dfdf245828b12f8eaf5ed47a61d3",
+      "reserved_cost_usd": 0.001810625
+    },
+    {
+      "case_id": "m7d_boundary_full_month",
+      "condition": "schema_only",
+      "request_sha256": "7029ce6592b771bc262d78c27a04cc9c48771f69c55a457b1e13951b8b55d8f6",
+      "reserved_cost_usd": 0.001033
+    },
+    {
+      "case_id": "m7d_boundary_full_month",
+      "condition": "semantic_context",
+      "request_sha256": "b54eb54c7d2cdf05b8719215704416a653895a2db8bfbe2d2748282d56d04214",
+      "reserved_cost_usd": 0.0018115
+    },
+    {
+      "case_id": "m7d_boundary_personality",
+      "condition": "schema_only",
+      "request_sha256": "1b96c74ba9344d5e7fa5e8fd84381385ddb26c7ecd1a9c7426eff2f564a901c0",
+      "reserved_cost_usd": 0.001032125
+    },
+    {
+      "case_id": "m7d_boundary_personality",
+      "condition": "semantic_context",
+      "request_sha256": "305678e1f025abc3ce5aa7e311ed4c8498acb4be4926ae775375d74d70b33934",
+      "reserved_cost_usd": 0.001810625
+    },
+    {
+      "case_id": "m7d_boundary_guaranteed_result",
+      "condition": "schema_only",
+      "request_sha256": "0630fba1825ca10cdcc01d7bb30a9441c2b76ad2353fddff05907d96fcf08195",
+      "reserved_cost_usd": 0.0010325
+    },
+    {
+      "case_id": "m7d_boundary_guaranteed_result",
+      "condition": "semantic_context",
+      "request_sha256": "82fbf44e311e98b5a602f3f4d7e8a3365a70186bb29e55e89110476a044d322f",
+      "reserved_cost_usd": 0.001811
+    }
+  ],
+  "comparison": "typed planner with versus without governed metric definitions; not SQL baseline",
+  "conditions": [
+    "schema_only",
+    "semantic_context"
+  ],
+  "conservative_total_usd": 0.142884,
+  "created_utc": "2026-10-04T15:36:55.220837+00:00",
+  "dataset_id": "84a38a404815ed2729917d76",
+  "fits_cap": true,
+  "frozen_file_sha256": {
+    "analyst_m5/core.py": "528efd7c52bec4a9e8156fee80e3899fc91a0dac40ea7505b64565efd23e6e66",
+    "analyst_m5/evaluation.py": "2bf4235517960ec811e8172d2a6913649c7997831bb412428a15ed9b36773fc6",
+    "analyst_m5/experiment.py": "3ddbc3792eb18dcb624b5b746f906e3c2c45da9a74ad69e0b3418187c86ad024",
+    "analyst_m5/provider.py": "e59bf31e58c96b574143f3784b26ea165726afeaab2aa2a53d902c9876019afb",
+    "analyst_m5/tool_worker.py": "fff693a59f8fb1aeedeb9abe4211604ca34d873c3d68817a7b1fee0219960417",
+    "analyst_m5/tools.py": "732febe4a600c91d1179a075ad9f909ebe79f904ce4b6d7667520c143dfc1dd2",
+    "analytics_m3/metrics.py": "8c5e2f67a52e12990d6b174fc59be2f4985ceecec18db0ce0d63a50b48b091de",
+    "analytics_m4/analysis.py": "0d5b1e9fab995739cb382a714454ed64b3c86465f495f9ac25e457c4fb9ecbea",
+    "contracts/clock_pressure_error_proxy.json": "0ee7dbc7a903dabbc22414ed0ac6623067053b55d8cf8c2e0bdcfa711c9698d8",
+    "contracts/evaluation_coverage.json": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+    "contracts/game_draw_rate.json": "b119f02815e73adbe680120b2b26460cd2f5cf867dd0399d1642b560e29042e4",
+    "contracts/m3_tables.json": "8b4b48d0c319dbd636bacd9ab335ed5cb6207f2eb8dd56ba2290f8ac19f840dc",
+    "contracts/opening_adjusted_score.json": "784fd284e1a7b9296f099902104f1a7777ff03c1eb8d1738fe34b0f3aff5bf62",
+    "contracts/opening_player_score.json": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+    "contracts/opening_usage.json": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+    "contracts/tables.json": "5ed382ed37dc7cd89ff33daf3989fab3fc935048194ff6a08dedfcafa46faf01",
+    "docs/METRICS.md": "ee2865e43e842459e30f58add9bc62738387b284930ad19a64e87beada8efbaa",
+    "evals/cases/m7_holdout_v4.json": "08da907762794776df376e18de6a745c5121d90811f801c5087e266c38ed664b",
+    "evals/cases/m7_holdout_v4_manifest.json": "84f7c61d7d0c83b59b8c527a2095c1c5e5f7853a23dd6ad22add15ee9cb74ee9",
+    "reports/M3-independent-reference.json": "bdbfa5505160e00bc9d2a5211ccbb9410dc83f890cfc5be3f84488ebb73a6268",
+    "reports/M7-independent-reference-v4.json": "8c7df75fa0590a66a63f430aedef8a1d2b416a204624b29516cd93a92f680caf",
+    "scripts/build_m7_holdout_v4.py": "bb5cb25aba32c0e53073297946d8e7abb151f7827c36f585f0f4018ff9898de5",
+    "scripts/reference_m7_holdout_v4.py": "c9a25267c2fc51a4e064bf88b790f1512882f4048dc4d7e6ec1103d8f45cc495",
+    "uv.lock": "667b0ee7faec38b0a59d88199595ca5c9a4bf940c26df2d3e2b90ce2e04fff4c"
+  },
+  "input_usd_per_million": 0.1,
+  "kind": "m7_typed_planner_holdout_preflight_no_model_calls",
+  "max_output_tokens": 512,
+  "max_run_usd": 0.5,
+  "model": "gpt-6-luna",
+  "output_usd_per_million": 0.5,
+  "price_checked_utc_date": "2026-10-04",
+  "price_source": "https://developers.openai.com/api/docs/models/gpt-6-luna",
+  "selection": "50 new-family M7 holdout v4 cases; one-shot"
+}

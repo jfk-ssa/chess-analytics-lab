@@ -1,0 +1,32 @@
+{
+  "decision": {
+    "engine_enrichment": "defer pending a fixed version/sample/budget and measured value test; no engine benchmark claimed",
+    "increase_byte_cap_alone_adds_no_games_with_current_100000_game_cap": true,
+    "next_day_not_observed": true,
+    "provider_comparison": "defer while direct inference remains cents per evaluation",
+    "sequential_extension": "defer pending a bounded date-targeted acquisition method; the archive prefix has no established seek index"
+  },
+  "kind": "M7 bounded depth feasibility; measured local state, no new acquisition",
+  "limits": [
+    "Archive byte/game averages are not a measured per-day resource forecast.",
+    "Staging disk includes retained failed and previous attempts.",
+    "No new source day, engine analysis, or causal inference is claimed."
+  ],
+  "measured": {
+    "accepted_games": 99467,
+    "analytical_published_disk_bytes": 98565118,
+    "analytical_staging_disk_bytes": 477631307,
+    "complete_pgns_extracted": 100000,
+    "extracted_source_bytes": 236533866,
+    "observed_first_utc_date": "2026-08-01",
+    "observed_last_utc_date": "2026-08-01",
+    "retained_compressed_bytes": 40000000,
+    "source_ingest_elapsed_seconds": 110.98386362499878,
+    "source_snapshot_disk_bytes": 47838127,
+    "stockfish_on_path": false
+  },
+  "publisher_metadata": {
+    "archive_listed_bytes": 30145862359,
+    "archive_listed_games": 91912325
+  }
+}

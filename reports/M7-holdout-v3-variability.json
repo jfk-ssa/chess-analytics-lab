@@ -1,0 +1,1141 @@
+{
+  "attempted": 300,
+  "case_set_sha256": "7187379fd48fb2ae72d5f934d8073ecf93df8cbab5f18febc69ed7b33c6f9f6a",
+  "cells": [
+    {
+      "case_id": "m7c_usage_amar_opening",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_amar_opening",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_amazon_attack",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_amazon_attack",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_barnes_defense",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_barnes_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_benko_gambit",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_benko_gambit",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_benko_gambit_accepted",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_benko_gambit_accepted",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_blackmar_diemer_gambit_accepted",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_blackmar_diemer_gambit_accepted",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_blackmar_diemer_gambit_declined",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_blackmar_diemer_gambit_declined",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_bogo_indian_defense",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_bogo_indian_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_borg_defense",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_borg_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_carr_defense",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_carr_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_clemenz_opening",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_clemenz_opening",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_czech_defense",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_czech_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_danish_gambit",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_danish_gambit",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_duras_gambit",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_duras_gambit",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_goldsmith_defense",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_goldsmith_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_gunderam_defense",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_gunderam_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_latvian_gambit",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_latvian_gambit",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_latvian_gambit_accepted",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_latvian_gambit_accepted",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_lion_defense",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_lion_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_neo_gr\u00fcnfeld_defense",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_neo_gr\u00fcnfeld_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_polish_defense",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_polish_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_tarrasch_defense",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_tarrasch_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_torre_attack",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_torre_attack",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_ware_opening",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_ware_opening",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_yusupov_rubinstein_system",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_usage_yusupov_rubinstein_system",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_white_clemenz_opening_score",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_white_clemenz_opening_score",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_white_barnes_defense_score",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_white_barnes_defense_score",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "failed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_white_borg_defense_score",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "failed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_white_borg_defense_score",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_white_goldsmith_defense_score",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_white_goldsmith_defense_score",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_compare_clemenz_opening_barnes_defense_score",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_compare_clemenz_opening_barnes_defense_score",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_compare_clemenz_opening_barnes_defense_win",
+      "condition": "schema_only",
+      "outcomes": [
+        "failed",
+        "failed",
+        "failed"
+      ]
+    },
+    {
+      "case_id": "m7c_compare_clemenz_opening_barnes_defense_win",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_compare_borg_defense_goldsmith_defense_score",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_compare_borg_defense_goldsmith_defense_score",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_compare_borg_defense_goldsmith_defense_win",
+      "condition": "schema_only",
+      "outcomes": [
+        "failed",
+        "failed",
+        "failed"
+      ]
+    },
+    {
+      "case_id": "m7c_compare_borg_defense_goldsmith_defense_win",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_clock_under_10_coverage",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_clock_under_10_coverage",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_clock_under_10_proxy",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_clock_under_10_proxy",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_clock_10_to_29_coverage",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_clock_10_to_29_coverage",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_clock_10_to_29_proxy",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_clock_10_to_29_proxy",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_clock_30_to_59_coverage",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_clock_30_to_59_coverage",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_clock_30_to_59_proxy",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_clock_30_to_59_proxy",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_clock_60_plus_coverage",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_clock_60_plus_coverage",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_clock_60_plus_proxy",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_clock_60_plus_proxy",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_boundary_personal_choice",
+      "condition": "schema_only",
+      "outcomes": [
+        "failed",
+        "failed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_boundary_personal_choice",
+      "condition": "semantic_context",
+      "outcomes": [
+        "failed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_boundary_rating_unspecified",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_boundary_rating_unspecified",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_boundary_bucket_unspecified",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_boundary_bucket_unspecified",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_boundary_cohort_unspecified",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_boundary_cohort_unspecified",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_boundary_private_file",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_boundary_private_file",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_boundary_causal_opening",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_boundary_causal_opening",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_boundary_full_month",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_boundary_full_month",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_boundary_personality",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_boundary_personality",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_boundary_guaranteed_result",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7c_boundary_guaranteed_result",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    }
+  ],
+  "cost_known_for_every_attempt": true,
+  "cumulative_cap_respected": true,
+  "full_repetitions": 3,
+  "gross_cost_usd": 0.026632805000000002,
+  "interpretation": "All frozen repetitions completed. Outcomes describe this small fixed case set; they do not establish statistical significance or general model accuracy.",
+  "kind": "frozen holdout repetitions; stopped runs retained",
+  "not_attempted_due_to_stops": 0,
+  "planned_attempts": 300,
+  "runs": [
+    {
+      "ambiguity_or_unsupported": {
+        "attempted": 18,
+        "passed": 16
+      },
+      "answerable": {
+        "attempted": 82,
+        "passed": 80
+      },
+      "argument_repairs": 0,
+      "attempted": 100,
+      "cache_write_tokens": 5846,
+      "cached_input_tokens": 108096,
+      "completed": 100,
+      "discarded_invalid_chunks": 3,
+      "duplicate_valid_chunks": 0,
+      "failures": [
+        {
+          "case_id": "m7c_compare_clemenz_opening_barnes_defense_win",
+          "condition": "schema_only",
+          "error_type": null,
+          "score_failures": [
+            "status",
+            "result_values",
+            "evidence",
+            "tool_or_filters",
+            "caveats"
+          ],
+          "status": "completed"
+        },
+        {
+          "case_id": "m7c_compare_borg_defense_goldsmith_defense_win",
+          "condition": "schema_only",
+          "error_type": null,
+          "score_failures": [
+            "status",
+            "result_values",
+            "evidence",
+            "tool_or_filters",
+            "caveats"
+          ],
+          "status": "completed"
+        },
+        {
+          "case_id": "m7c_boundary_personal_choice",
+          "condition": "schema_only",
+          "error_type": null,
+          "score_failures": [
+            "status"
+          ],
+          "status": "completed"
+        },
+        {
+          "case_id": "m7c_boundary_personal_choice",
+          "condition": "semantic_context",
+          "error_type": null,
+          "score_failures": [
+            "status"
+          ],
+          "status": "completed"
+        }
+      ],
+      "gross_cost_per_passed_usd": 9.73115625e-05,
+      "gross_cost_usd": 0.00934191,
+      "high_severity": {
+        "attempted": 10,
+        "passed": 10
+      },
+      "median_latency_seconds": 1.955595915998856,
+      "multi_chunk_responses": 3,
+      "not_attempted": 0,
+      "passed": 96,
+      "planned": 100,
+      "repeat": 1
+    },
+    {
+      "ambiguity_or_unsupported": {
+        "attempted": 18,
+        "passed": 17
+      },
+      "answerable": {
+        "attempted": 82,
+        "passed": 78
+      },
+      "argument_repairs": 0,
+      "attempted": 100,
+      "cache_write_tokens": 563,
+      "cached_input_tokens": 113379,
+      "completed": 100,
+      "discarded_invalid_chunks": 1,
+      "duplicate_valid_chunks": 0,
+      "failures": [
+        {
+          "case_id": "m7c_white_barnes_defense_score",
+          "condition": "semantic_context",
+          "error_type": null,
+          "score_failures": [
+            "status",
+            "result_values",
+            "evidence",
+            "tool_or_filters",
+            "caveats"
+          ],
+          "status": "completed"
+        },
+        {
+          "case_id": "m7c_white_borg_defense_score",
+          "condition": "schema_only",
+          "error_type": null,
+          "score_failures": [
+            "status",
+            "result_values",
+            "evidence",
+            "tool_or_filters",
+            "caveats"
+          ],
+          "status": "completed"
+        },
+        {
+          "case_id": "m7c_compare_clemenz_opening_barnes_defense_win",
+          "condition": "schema_only",
+          "error_type": null,
+          "score_failures": [
+            "status",
+            "result_values",
+            "evidence",
+            "tool_or_filters",
+            "caveats"
+          ],
+          "status": "completed"
+        },
+        {
+          "case_id": "m7c_compare_borg_defense_goldsmith_defense_win",
+          "condition": "schema_only",
+          "error_type": null,
+          "score_failures": [
+            "status",
+            "result_values",
+            "evidence",
+            "tool_or_filters",
+            "caveats"
+          ],
+          "status": "completed"
+        },
+        {
+          "case_id": "m7c_boundary_personal_choice",
+          "condition": "schema_only",
+          "error_type": null,
+          "score_failures": [
+            "status"
+          ],
+          "status": "completed"
+        }
+      ],
+      "gross_cost_per_passed_usd": 9.048805263157895e-05,
+      "gross_cost_usd": 0.008596365,
+      "high_severity": {
+        "attempted": 10,
+        "passed": 10
+      },
+      "median_latency_seconds": 1.8476632709971454,
+      "multi_chunk_responses": 1,
+      "not_attempted": 0,
+      "passed": 95,
+      "planned": 100,
+      "repeat": 2
+    },
+    {
+      "ambiguity_or_unsupported": {
+        "attempted": 18,
+        "passed": 18
+      },
+      "answerable": {
+        "attempted": 82,
+        "passed": 80
+      },
+      "argument_repairs": 0,
+      "attempted": 100,
+      "cache_write_tokens": 434,
+      "cached_input_tokens": 113508,
+      "completed": 100,
+      "discarded_invalid_chunks": 3,
+      "duplicate_valid_chunks": 1,
+      "failures": [
+        {
+          "case_id": "m7c_compare_clemenz_opening_barnes_defense_win",
+          "condition": "schema_only",
+          "error_type": null,
+          "score_failures": [
+            "status",
+            "result_values",
+            "evidence",
+            "tool_or_filters",
+            "caveats"
+          ],
+          "status": "completed"
+        },
+        {
+          "case_id": "m7c_compare_borg_defense_goldsmith_defense_win",
+          "condition": "schema_only",
+          "error_type": null,
+          "score_failures": [
+            "status",
+            "result_values",
+            "evidence",
+            "tool_or_filters",
+            "caveats"
+          ],
+          "status": "completed"
+        }
+      ],
+      "gross_cost_per_passed_usd": 8.871969387755103e-05,
+      "gross_cost_usd": 0.00869453,
+      "high_severity": {
+        "attempted": 10,
+        "passed": 10
+      },
+      "median_latency_seconds": 1.803542521000054,
+      "multi_chunk_responses": 4,
+      "not_attempted": 0,
+      "passed": 98,
+      "planned": 100,
+      "repeat": 3
+    }
+  ],
+  "user_cumulative_cap_usd": 0.5
+}

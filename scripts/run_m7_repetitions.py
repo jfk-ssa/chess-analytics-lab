@@ -16,7 +16,7 @@ def main() -> None:
     parser.add_argument("--env-file", type=Path, required=True)
     parser.add_argument("--ledger", type=Path, required=True)
     parser.add_argument("--repeats", type=int, default=3)
-    parser.add_argument("--holdout-version", type=int, choices=(3, 4, 5), default=3)
+    parser.add_argument("--holdout-version", type=int, choices=(3, 4, 5, 6), default=3)
     parser.add_argument(
         "--prior-gross-usd",
         type=float,
