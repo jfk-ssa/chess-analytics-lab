@@ -160,8 +160,13 @@ def opening_comparison(
             "bootstrap_valid_repetitions": len(samples),
             "low_support": metric["eligible_player_games"] < 100,
         }
+    manifest = validate_analytical(snapshot)
+    observed = manifest["observed_date_coverage"]
+    first = observed["first_utc_date"]
+    last = observed["last_utc_date"]
+    dates = first if first == last else f"{first} through {last}"
     return {
-        "analytical_id": validate_analytical(snapshot)["analytical_id"],
+        "analytical_id": manifest["analytical_id"],
         "metric_id": "opening_adjusted_score",
         "metric_version": "1.0.0",
         "contract_sha256": digest(project / "contracts/opening_adjusted_score.json"),
@@ -178,7 +183,7 @@ def opening_comparison(
         "retained_player_games_with_opponent_rating": retained,
         "method": "common pooled rating-difference weights; seeded focal-player cluster bootstrap",
         "caveats": [
-            "Observed ordered August 1 prefix only; opening choice is confounded.",
+            f"Observed ordered {dates} prefix only; opening choice is confounded.",
             "Bootstrap describes within-prefix clustering, not monthly uncertainty.",
             "Opponent dependence and missing/anonymous player identifiers remain limitations.",
         ],

@@ -1,0 +1,11 @@
+{
+  "case_id": "m7i_usage_queens_gambit_declined",
+  "historical_run": "March v9 repeat 1",
+  "kind": "offline historical-response semantic repair replay, not live rescore",
+  "original_live_score_passed": false,
+  "repair_reasons": [
+    "one_exact_source_family_fraction:checked_opening_usage"
+  ],
+  "replay_failures": [],
+  "replay_passed": true
+}

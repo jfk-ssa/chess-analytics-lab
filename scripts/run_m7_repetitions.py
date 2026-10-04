@@ -13,10 +13,13 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--project", type=Path, default=Path.cwd())
     parser.add_argument("--preflight", type=Path, required=True)
+    parser.add_argument("--config", type=Path, help="explicit personal provider configuration")
     parser.add_argument("--env-file", type=Path, required=True)
     parser.add_argument("--ledger", type=Path, required=True)
     parser.add_argument("--repeats", type=int, default=3)
-    parser.add_argument("--holdout-version", type=int, choices=(3, 4, 5, 6), default=3)
+    parser.add_argument(
+        "--holdout-version", type=int, choices=(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14), default=3
+    )
     parser.add_argument(
         "--prior-gross-usd",
         type=float,
@@ -54,30 +57,35 @@ def main() -> None:
         "holdout_version": args.holdout_version,
         "completed_repeats": 0,
         "prior_gross_accounted_usd": args.prior_gross_usd,
-        "known_gross_cost_usd": args.prior_gross_usd,
+        "gross_accounted_usd": args.prior_gross_usd,
         "state": "ready",
         "summaries": [],
     }
     write_json(args.ledger, ledger)
     for repeat in range(1, args.repeats + 1):
-        if ledger["known_gross_cost_usd"] + quote > cap + 1e-12:
+        if ledger["gross_accounted_usd"] + quote > cap + 1e-12:
             ledger["state"] = "stopped_remaining_cap_insufficient"
             break
         ledger["state"] = f"running_repeat_{repeat}"
         write_json(args.ledger, ledger)
         summary = run(
             args.project,
-            None,
+            args.config,
             args.preflight,
-            max_run_usd=cap,
+            max_run_usd=None if args.config else cap,
             env_file=args.env_file,
             holdout=True,
             holdout_version=args.holdout_version,
+            conditions=preflight["conditions"],
         )
-        summary_path = args.ledger.parent / f"m7-holdout-run-{repeat}-summary.json"
+        summary_path = (
+            args.ledger.parent / f"m7-v{args.holdout_version - 2}-run-{repeat}-summary.json"
+        )
         write_json(summary_path, summary)
         ledger["summaries"].append(str(summary_path))
-        ledger["known_gross_cost_usd"] += summary["known_gross_cost_usd"]
+        ledger["gross_accounted_usd"] += summary.get(
+            "gross_cost_accounted_usd", summary["known_gross_cost_usd"]
+        )
         raw_budget_issue = any(
             json.loads(path.read_text()).get("budget_bound_exceeded")
             for path in Path(summary["records_dir"]).glob("[0-9][0-9]-*.json")
@@ -86,7 +94,7 @@ def main() -> None:
             not summary["cost_complete"]
             or summary["failed"]
             or raw_budget_issue
-            or ledger["known_gross_cost_usd"] > cap
+            or ledger["gross_accounted_usd"] > cap
         ):
             ledger["state"] = "stopped_failed_or_unknown_cost"
             write_json(args.ledger, ledger)
@@ -104,7 +112,7 @@ def main() -> None:
                     "repeat": repeat,
                     "attempts": summary["attempts"],
                     "scored_correct": summary["scored_correct"],
-                    "cumulative_gross_usd": ledger["known_gross_cost_usd"],
+                    "cumulative_gross_usd": ledger["gross_accounted_usd"],
                 }
             )
         )

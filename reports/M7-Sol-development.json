@@ -1,0 +1,1850 @@
+{
+  "approved_cumulative_cap_usd": 0.5,
+  "attempts": [
+    {
+      "answer": {
+        "caveats": [
+          "observed_prefix_only",
+          "source_tags_only"
+        ],
+        "dataset_id": "9250ba8791e179279fba2023",
+        "elapsed_seconds": 0.5188324999980978,
+        "evidence": [
+          {
+            "args": {
+              "filters": {
+                "family": "Queen's Gambit Declined"
+              },
+              "metric_id": "opening_usage"
+            },
+            "evidence_id": "ev_455bc7e5c07300d9b0b9",
+            "result": {
+              "analytical_id": "9250ba8791e179279fba2023",
+              "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+              "denominator": 99484,
+              "family": "Queen's Gambit Declined",
+              "metric_id": "opening_usage",
+              "numerator": 2577,
+              "scope": "observed bounded prefix only",
+              "unknown_opening_games": 0,
+              "value": 0.025903662900566924,
+              "version": "1.0.0"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "evidence_ids": [
+          "ev_455bc7e5c07300d9b0b9"
+        ],
+        "explanation": "Result computed by reviewed metric tools; see evidence values and denominators.",
+        "filters": [
+          {
+            "filters": {
+              "family": "Queen's Gambit Declined"
+            },
+            "metric_id": "opening_usage"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "provider": {
+          "argument_repairs": [],
+          "attempts": 1,
+          "condition": "semantic_context",
+          "cost_basis": "reported_cache_breakdown",
+          "gross_cost_usd": 0.006586,
+          "input_usd_per_million": 2.0,
+          "max_run_usd": 0.5,
+          "model_plan_before_semantic_repair": {
+            "actions": [
+              {
+                "args": {
+                  "filters": {
+                    "family": "Queen's Gambit Declined"
+                  },
+                  "metric_id": "opening_usage"
+                },
+                "tool": "query_metric"
+              }
+            ],
+            "interpretation": "descriptive_observed_prefix",
+            "status": "answered"
+          },
+          "output_usd_per_million": 10.0,
+          "raw_response": {
+            "access_programs": null,
+            "background": false,
+            "billing": {
+              "payer": "developer"
+            },
+            "completed_at": 1791147851,
+            "created_at": 1791147850,
+            "error": null,
+            "frequency_penalty": 0.0,
+            "id": "resp_0ca9d46a619b1f51016ac2bf4a705887d1990a981b6d0cfa53",
+            "incomplete_details": null,
+            "instructions": "Select at most four reviewed metric tool actions. Use only the observed bounded prefix. If essential filters are absent, request clarification. Reject causal or unsupported claims. Return tool arguments as JSON in args_json. Do not calculate numeric answers. Use needs_clarification only when the user can supply missing cohort filters for a supported descriptive query. Use unsupported for inaccessible data, causal effects, full-month extrapolation from this prefix, personality or other claims this dataset or tools cannot answer. Both statuses use no actions. A personalized opening-choice request without the player's cohort and outcome preference needs clarification; do not recommend an opening. If a descriptive opening question gives an exact family and cohort, a small but nonzero observed cohort is answerable with a sample-size caveat; do not turn sparse counts into unsupported. A comparison of two exact families in that cohort is also answerable. If a question supplies color, opening family, rating band, and time control, it is fully specified: answer with checked evidence, not clarification. A 1400\u20131599 band means rating_min 1400 and rating_max_exclusive 1600; 60+0 means base_seconds 60 and increment_seconds 0. Exact action args: list_metrics {}; get_metric_definition {metric_id}; get_dataset_coverage {}; query_metric {metric_id, filters, optional group_by}; compare_openings {filters}; analyze_clock_pressure {bucket}; compare_clock_buckets {first, second}. Never put dataset_id in args_json. For numerical questions, use query_metric or a specialized numerical tool; a metric definition alone is not numerical evidence. Exact query_metric filters: opening_usage {family}; game_draw_rate {}; opening_player_score {family,color,rating_min,rating_max_exclusive,base_seconds,increment_seconds}; opening_adjusted_score uses families (two-name array) instead of family with the same cohort keys; clock_pressure_error_proxy and evaluation_coverage {bucket}. A specified clock-bucket evaluation-coverage question is answerable: query evaluation_coverage and report eligible and evaluable move counts with the missing-evaluation caveat. Sparse evaluation availability does not itself make coverage unsupported. Never infer a missing evaluation is zero error or that clock pressure caused an error. A specified clock-bucket question asking how many evaluable moves meet the exploratory deterioration threshold or asks for its rate is answerable with clock_pressure_error_proxy. Query that metric for the named bucket; sparse source evaluations do not make the observed proxy count unsupported. Do not request clarification or call evaluation_coverage unless coverage itself is requested. Eligibility is built into metrics; never invent extra filter keys. Use lowercase color values white or black, never title case. For differences between two opening families, use compare_openings with filters {families:[full first family name, full second family name],color,rating_min,rating_max_exclusive,base_seconds,increment_seconds}. For a first-minus-second opening difference, compare_openings is mandatory: two query_metric calls return components, not the requested difference. For compare_openings, args_json must have one outer filters key, never flat fields. Opening usage is fully specified by the source family alone; do not ask for color, rating, or time control for opening_usage. For an exact opening-usage fraction, use one query_metric action, without a coverage action. For any exact source-tag family named in a usage question, call opening_usage; the checked tool determines whether it occurs, so do not infer unsupported from the family name or absence from a preview list. Copy full provider family names from the question; never abbreviate Sicilian Defense to Sicilian or French Defense to French. For Black's Sicilian versus French comparison, use full source names Sicilian Defense and French Defense with color black. get_dataset_coverage returns selection.selected_games, the number of games selected for move replay including selected zero-ply games. Dataset: 9250ba8791e179279fba2023. Available metric IDs: [\"clock_pressure_error_proxy\", \"evaluation_coverage\", \"game_draw_rate\", \"opening_adjusted_score\", \"opening_player_score\", \"opening_usage\"]. Opening player-score filters require family, color, rating_min, rating_max_exclusive, base_seconds, increment_seconds. Adjusted opening score uses the same filters with families as two names. Clock bucket is under_10, 10_to_29, 30_to_59, or 60_plus. Governed metric definitions: [{\"buckets_seconds\": [\"[0,10)\", \"[10,30)\", \"[30,60)\", \"[60,infinity)\"], \"caveats\": [\"Exploratory proxy, not an official Lichess blunder label.\", \"Existing evaluation coverage is selected and source quality varies.\", \"The prefix and move sample do not represent all games in the source month; no causal time-pressure claim.\"], \"coverage_denominator\": \"all eligible moves in bucket\", \"denominator\": \"evaluable eligible moves in bucket\", \"deterioration\": \"max(0, mover-perspective cp_before minus cp_after); source cp scores are White-perspective, invert both for Black\", \"eligible\": \"non-first move by a player in a zero-increment rated Standard game with valid prior same-player clock and a completed result, excluding source-marked bots\", \"evaluable\": \"eligible move with source-provided before and after centipawn evaluations; mate transitions excluded and counted separately\", \"grain\": \"one selected game x ply, stratified by clock-before bucket\", \"id\": \"clock_pressure_error_proxy\", \"null_rules\": \"first same-player move, missing/invalid clock, missing evaluations and mate transitions never become zero error\", \"numerator\": \"evaluable eligible moves with deterioration >= 200 centipawns\", \"sampling\": \"game ID SHA256 first eight bytes modulo 20 equals zero; deterministic 5% selection from the bounded prefix, independent of annotations\", \"units\": \"fraction\", \"version\": \"1.0.0\"}, {\"caveats\": [\"Source evaluation availability can depend on which games were analyzed.\", \"Coverage is conditional on the observed prefix and deterministic move-game sample.\"], \"denominator\": \"all eligible moves in bucket\", \"filters\": \"same eligible move and deterministic game sample as clock_pressure_error_proxy\", \"grain\": \"one selected game x ply, by clock-before bucket\", \"id\": \"evaluation_coverage\", \"inputs\": [\"fact_move\"], \"null_rules\": \"missing source evals and mate transitions are non-evaluable, never zero deterioration\", \"numerator\": \"eligible moves with comparable before and after source centipawn evaluations\", \"units\": \"fraction\", \"version\": \"1.0.0\"}, {\"caveats\": [\"Historical foundation corpus is not evidence about contemporary players.\", \"Excluding marked bots does not establish all other players are human.\", \"No opening, time-pressure, or causal claims are supported by this metric.\"], \"denominator\": \"count of eligible games with result in 1-0, 0-1, 1/2-1/2\", \"filters\": \"rated Standard games, excluding source-marked bots, completed results only\", \"formula\": \"numerator / denominator\", \"grain\": \"one provider/game_id\", \"id\": \"game_draw_rate\", \"inputs\": [\"fact_game\"], \"null_rules\": \"unknown results excluded and counted; empty denominator yields null\", \"numerator\": \"count of eligible games with result 1/2-1/2\", \"result_schema\": {\"denominator\": \"integer\", \"marked_bots\": \"integer\", \"numerator\": \"integer\", \"unknown_results\": \"integer\", \"value\": \"number|null\"}, \"units\": \"fraction\", \"version\": \"1.0.0\"}, {\"adjusted_result\": \"within-stratum score rates for each opening averaged using identical common weights\", \"caveats\": [\"Observed ordered prefix only; no month-wide inference.\", \"Association, not opening-choice causation.\", \"Bootstrap does not model opponent dependence or archive-prefix selection.\"], \"common_weights\": \"pooled eligible player-game counts over strata represented in both openings, normalized to sum to one\", \"filters\": \"completed non-marked-bot games; exact color, half-open player rating band, exact base+increment, two named source opening families; recorded opponent rating required for adjustment\", \"grain\": \"one focal player-game in a selected source Opening family\", \"id\": \"opening_adjusted_score\", \"interval\": \"400 seeded focal-player cluster bootstrap repetitions within each opening; percentile 2.5 and 97.5 bounds among valid resamples\", \"low_support\": \"fewer than 100 eligible player-games is a project warning\", \"null_rules\": \"missing opponent rating is excluded from adjustment but remains in raw score; a missing common stratum yields no adjusted rate\", \"score\": \"wins plus 0.5 times draws divided by eligible player-games\", \"strata\": \"player rating minus recorded opponent rating: below -100, -100 to 99, and 100 or more\", \"units\": \"score fraction\", \"version\": \"1.0.0\"}, {\"caveats\": [\"Descriptive association in the observed prefix only.\", \"Do not infer a causal advantage from opening choice.\", \"Focal-player games are dependent across players and opponents; M4 uncertainty method must account for this.\"], \"filters\": \"completed rated Standard, no source-marked bot, known source opening, known focal rating; half-open rating band\", \"grain\": \"one player-game at selected color, opening family, exact time control, and rating band\", \"id\": \"opening_player_score\", \"inputs\": [\"fact_game\", \"fact_player_game\"], \"low_support_threshold_games\": 100, \"null_rules\": \"unknown result and missing focal rating excluded and counted in coverage\", \"score_rate\": \"(wins + 0.5 * draws) / (wins + draws + losses)\", \"units\": \"fraction\", \"version\": \"1.0.0\", \"win_rate\": \"wins / (wins + draws + losses)\"}, {\"caveats\": [\"The 100,000-game prefix is a convenience sample, not a full-month population sample.\", \"Opening tags are provider supplied; opening choice is confounded.\"], \"classification\": \"source opening family is the trimmed text before the first colon in the provider tag; no local position classifier\", \"denominator\": \"eligible games with a nonempty source opening family\", \"eligible\": \"rated Standard accepted games with completed result, excluding source-marked bots\", \"grain\": \"one provider/game_id in the observed bounded prefix\", \"id\": \"opening_usage\", \"inputs\": [\"fact_game.source_opening\", \"fact_game.result\", \"fact_game.marked_bot\"], \"null_rules\": \"missing/empty source opening excluded from denominator and reported separately\", \"numerator\": \"eligible games in selected source opening family\", \"units\": \"fraction\", \"version\": \"1.0.0\"}]",
+            "max_output_tokens": 512,
+            "max_tool_calls": null,
+            "metadata": {},
+            "model": "gpt-6-sol",
+            "moderation": null,
+            "object": "response",
+            "output": [
+              {
+                "content": [
+                  {
+                    "annotations": [],
+                    "logprobs": [],
+                    "text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Queen's Gambit Declined\\\"}}\"}]}",
+                    "type": "output_text"
+                  }
+                ],
+                "id": "msg_0ca9d46a619b1f51016ac2bf4b2c6c87d187b7ebf3c81258d4",
+                "phase": "final_answer",
+                "role": "assistant",
+                "status": "completed",
+                "type": "message"
+              }
+            ],
+            "parallel_tool_calls": true,
+            "presence_penalty": 0.0,
+            "previous_response_id": null,
+            "prompt_cache_key": null,
+            "prompt_cache_retention": "24h",
+            "reasoning": {
+              "context": "all_turns",
+              "effort": "none",
+              "mode": "standard",
+              "summary": null
+            },
+            "safety_identifier": null,
+            "service_tier": "default",
+            "status": "completed",
+            "store": false,
+            "temperature": 1.0,
+            "text": {
+              "format": {
+                "description": null,
+                "name": "chess_analyst_plan",
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "actions": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "args_json": {
+                            "type": "string"
+                          },
+                          "tool": {
+                            "enum": [
+                              "list_metrics",
+                              "get_metric_definition",
+                              "get_dataset_coverage",
+                              "query_metric",
+                              "compare_openings",
+                              "analyze_clock_pressure",
+                              "compare_clock_buckets"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "tool",
+                          "args_json"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 4,
+                      "type": "array"
+                    },
+                    "interpretation": {
+                      "enum": [
+                        "descriptive_observed_prefix"
+                      ],
+                      "type": "string"
+                    },
+                    "status": {
+                      "enum": [
+                        "answered",
+                        "needs_clarification",
+                        "unsupported"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "interpretation",
+                    "actions"
+                  ],
+                  "type": "object"
+                },
+                "strict": true,
+                "type": "json_schema"
+              },
+              "verbosity": "medium"
+            },
+            "tool_choice": "auto",
+            "tool_usage": {
+              "image_gen": {
+                "input_tokens": 0,
+                "input_tokens_details": {
+                  "image_tokens": 0,
+                  "text_tokens": 0
+                },
+                "output_tokens": 0,
+                "output_tokens_details": {
+                  "image_tokens": 0,
+                  "text_tokens": 0
+                },
+                "total_tokens": 0
+              },
+              "web_search": {
+                "num_requests": 0
+              }
+            },
+            "tools": [],
+            "top_logprobs": 0,
+            "top_p": 0.98,
+            "truncation": "disabled",
+            "usage": {
+              "input_tokens": 2403,
+              "input_tokens_details": {
+                "cache_write_tokens": 2400,
+                "cached_tokens": 0
+              },
+              "output_tokens": 58,
+              "output_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "total_tokens": 2461
+            },
+            "user": null
+          },
+          "request_sha256": "8dc9dde4715fd86086337ea9f18a4c0e03fe873b843309700ee2b5f93ef52619",
+          "reserved_cost_usd": 0.0372525,
+          "resolved_model": "gpt-6-sol",
+          "response_id": "resp_0ca9d46a619b1f51016ac2bf4a705887d1990a981b6d0cfa53",
+          "response_selection": {
+            "discarded_invalid_chunks": 0,
+            "duplicate_valid_chunks": 0,
+            "output_text_chunks": 1,
+            "recovered_argument_suffixes": [],
+            "recovered_inert_suffix_characters": 0,
+            "recovered_repeated_plan_objects": null,
+            "selected_chunk_index": 0,
+            "selected_chunk_sha256": "eaa1c98e5f07a8bf9cc6e2dd5449c7252ab382fdc4f44abbc287661936db38e0"
+          },
+          "semantic_repairs": [],
+          "usage": {
+            "input_tokens": 2403,
+            "input_tokens_details": {
+              "cache_write_tokens": 2400,
+              "cached_tokens": 0
+            },
+            "output_tokens": 58,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 2461
+          }
+        },
+        "question": "In the observed January 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Queen's Gambit Declined.",
+        "result": {
+          "analytical_id": "9250ba8791e179279fba2023",
+          "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+          "denominator": 99484,
+          "family": "Queen's Gambit Declined",
+          "metric_id": "opening_usage",
+          "numerator": 2577,
+          "scope": "observed bounded prefix only",
+          "unknown_opening_games": 0,
+          "value": 0.025903662900566924,
+          "version": "1.0.0"
+        },
+        "source": "live_provider",
+        "status": "answered",
+        "tool_steps": 1
+      },
+      "case_id": "m7k_usage_queens_gambit_declined",
+      "cost_basis": "reported_cache_breakdown",
+      "gross_cost_usd": 0.006586,
+      "provider_usage": {
+        "input_tokens": 2403,
+        "input_tokens_details": {
+          "cache_write_tokens": 2400,
+          "cached_tokens": 0
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2461
+      },
+      "request_sha256": "8dc9dde4715fd86086337ea9f18a4c0e03fe873b843309700ee2b5f93ef52619",
+      "score": {
+        "case_id": "m7k_usage_queens_gambit_declined",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v11"
+      },
+      "status": "completed"
+    },
+    {
+      "answer": {
+        "caveats": [
+          "association_not_causation",
+          "observed_prefix_only",
+          "score_not_win_rate",
+          "white_perspective"
+        ],
+        "dataset_id": "9250ba8791e179279fba2023",
+        "elapsed_seconds": 0.47283250000327826,
+        "evidence": [
+          {
+            "args": {
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "family": "Queen's Pawn Game",
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              },
+              "metric_id": "opening_player_score"
+            },
+            "evidence_id": "ev_cebaa7ad393eb4b073b3",
+            "result": {
+              "analytical_id": "9250ba8791e179279fba2023",
+              "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+              "draws": 7,
+              "eligible_player_games": 394,
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "family": "Queen's Pawn Game",
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              },
+              "losses": 194,
+              "low_support": false,
+              "metric_id": "opening_player_score",
+              "scope": "descriptive observed prefix; no causal claim",
+              "score_rate": 0.4987309644670051,
+              "version": "1.0.0",
+              "win_rate": 0.48984771573604063,
+              "wins": 193
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "evidence_ids": [
+          "ev_cebaa7ad393eb4b073b3"
+        ],
+        "explanation": "Result computed by reviewed metric tools; see evidence values and denominators.",
+        "filters": [
+          {
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "Queen's Pawn Game",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "metric_id": "opening_player_score"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "provider": {
+          "argument_repairs": [],
+          "attempts": 1,
+          "condition": "semantic_context",
+          "cost_basis": "reported_cache_breakdown",
+          "gross_cost_usd": 0.0014259000000000001,
+          "input_usd_per_million": 2.0,
+          "max_run_usd": 0.5,
+          "model_plan_before_semantic_repair": {
+            "actions": [
+              {
+                "args": {
+                  "filters": {
+                    "base_seconds": 60,
+                    "color": "white",
+                    "family": "Queen's Pawn Game",
+                    "increment_seconds": 0,
+                    "rating_max_exclusive": 1600,
+                    "rating_min": 1400
+                  },
+                  "metric_id": "opening_player_score"
+                },
+                "tool": "query_metric"
+              }
+            ],
+            "interpretation": "descriptive_observed_prefix",
+            "status": "answered"
+          },
+          "output_usd_per_million": 10.0,
+          "raw_response": {
+            "access_programs": null,
+            "background": false,
+            "billing": {
+              "payer": "developer"
+            },
+            "completed_at": 1791147854,
+            "created_at": 1791147852,
+            "error": null,
+            "frequency_penalty": 0.0,
+            "id": "resp_0bace263bd273ace016ac2bf4cd63887d1a12b0abc1e999642",
+            "incomplete_details": null,
+            "instructions": "Select at most four reviewed metric tool actions. Use only the observed bounded prefix. If essential filters are absent, request clarification. Reject causal or unsupported claims. Return tool arguments as JSON in args_json. Do not calculate numeric answers. Use needs_clarification only when the user can supply missing cohort filters for a supported descriptive query. Use unsupported for inaccessible data, causal effects, full-month extrapolation from this prefix, personality or other claims this dataset or tools cannot answer. Both statuses use no actions. A personalized opening-choice request without the player's cohort and outcome preference needs clarification; do not recommend an opening. If a descriptive opening question gives an exact family and cohort, a small but nonzero observed cohort is answerable with a sample-size caveat; do not turn sparse counts into unsupported. A comparison of two exact families in that cohort is also answerable. If a question supplies color, opening family, rating band, and time control, it is fully specified: answer with checked evidence, not clarification. A 1400\u20131599 band means rating_min 1400 and rating_max_exclusive 1600; 60+0 means base_seconds 60 and increment_seconds 0. Exact action args: list_metrics {}; get_metric_definition {metric_id}; get_dataset_coverage {}; query_metric {metric_id, filters, optional group_by}; compare_openings {filters}; analyze_clock_pressure {bucket}; compare_clock_buckets {first, second}. Never put dataset_id in args_json. For numerical questions, use query_metric or a specialized numerical tool; a metric definition alone is not numerical evidence. Exact query_metric filters: opening_usage {family}; game_draw_rate {}; opening_player_score {family,color,rating_min,rating_max_exclusive,base_seconds,increment_seconds}; opening_adjusted_score uses families (two-name array) instead of family with the same cohort keys; clock_pressure_error_proxy and evaluation_coverage {bucket}. A specified clock-bucket evaluation-coverage question is answerable: query evaluation_coverage and report eligible and evaluable move counts with the missing-evaluation caveat. Sparse evaluation availability does not itself make coverage unsupported. Never infer a missing evaluation is zero error or that clock pressure caused an error. A specified clock-bucket question asking how many evaluable moves meet the exploratory deterioration threshold or asks for its rate is answerable with clock_pressure_error_proxy. Query that metric for the named bucket; sparse source evaluations do not make the observed proxy count unsupported. Do not request clarification or call evaluation_coverage unless coverage itself is requested. Eligibility is built into metrics; never invent extra filter keys. Use lowercase color values white or black, never title case. For differences between two opening families, use compare_openings with filters {families:[full first family name, full second family name],color,rating_min,rating_max_exclusive,base_seconds,increment_seconds}. For a first-minus-second opening difference, compare_openings is mandatory: two query_metric calls return components, not the requested difference. For compare_openings, args_json must have one outer filters key, never flat fields. Opening usage is fully specified by the source family alone; do not ask for color, rating, or time control for opening_usage. For an exact opening-usage fraction, use one query_metric action, without a coverage action. For any exact source-tag family named in a usage question, call opening_usage; the checked tool determines whether it occurs, so do not infer unsupported from the family name or absence from a preview list. Copy full provider family names from the question; never abbreviate Sicilian Defense to Sicilian or French Defense to French. For Black's Sicilian versus French comparison, use full source names Sicilian Defense and French Defense with color black. get_dataset_coverage returns selection.selected_games, the number of games selected for move replay including selected zero-ply games. Dataset: 9250ba8791e179279fba2023. Available metric IDs: [\"clock_pressure_error_proxy\", \"evaluation_coverage\", \"game_draw_rate\", \"opening_adjusted_score\", \"opening_player_score\", \"opening_usage\"]. Opening player-score filters require family, color, rating_min, rating_max_exclusive, base_seconds, increment_seconds. Adjusted opening score uses the same filters with families as two names. Clock bucket is under_10, 10_to_29, 30_to_59, or 60_plus. Governed metric definitions: [{\"buckets_seconds\": [\"[0,10)\", \"[10,30)\", \"[30,60)\", \"[60,infinity)\"], \"caveats\": [\"Exploratory proxy, not an official Lichess blunder label.\", \"Existing evaluation coverage is selected and source quality varies.\", \"The prefix and move sample do not represent all games in the source month; no causal time-pressure claim.\"], \"coverage_denominator\": \"all eligible moves in bucket\", \"denominator\": \"evaluable eligible moves in bucket\", \"deterioration\": \"max(0, mover-perspective cp_before minus cp_after); source cp scores are White-perspective, invert both for Black\", \"eligible\": \"non-first move by a player in a zero-increment rated Standard game with valid prior same-player clock and a completed result, excluding source-marked bots\", \"evaluable\": \"eligible move with source-provided before and after centipawn evaluations; mate transitions excluded and counted separately\", \"grain\": \"one selected game x ply, stratified by clock-before bucket\", \"id\": \"clock_pressure_error_proxy\", \"null_rules\": \"first same-player move, missing/invalid clock, missing evaluations and mate transitions never become zero error\", \"numerator\": \"evaluable eligible moves with deterioration >= 200 centipawns\", \"sampling\": \"game ID SHA256 first eight bytes modulo 20 equals zero; deterministic 5% selection from the bounded prefix, independent of annotations\", \"units\": \"fraction\", \"version\": \"1.0.0\"}, {\"caveats\": [\"Source evaluation availability can depend on which games were analyzed.\", \"Coverage is conditional on the observed prefix and deterministic move-game sample.\"], \"denominator\": \"all eligible moves in bucket\", \"filters\": \"same eligible move and deterministic game sample as clock_pressure_error_proxy\", \"grain\": \"one selected game x ply, by clock-before bucket\", \"id\": \"evaluation_coverage\", \"inputs\": [\"fact_move\"], \"null_rules\": \"missing source evals and mate transitions are non-evaluable, never zero deterioration\", \"numerator\": \"eligible moves with comparable before and after source centipawn evaluations\", \"units\": \"fraction\", \"version\": \"1.0.0\"}, {\"caveats\": [\"Historical foundation corpus is not evidence about contemporary players.\", \"Excluding marked bots does not establish all other players are human.\", \"No opening, time-pressure, or causal claims are supported by this metric.\"], \"denominator\": \"count of eligible games with result in 1-0, 0-1, 1/2-1/2\", \"filters\": \"rated Standard games, excluding source-marked bots, completed results only\", \"formula\": \"numerator / denominator\", \"grain\": \"one provider/game_id\", \"id\": \"game_draw_rate\", \"inputs\": [\"fact_game\"], \"null_rules\": \"unknown results excluded and counted; empty denominator yields null\", \"numerator\": \"count of eligible games with result 1/2-1/2\", \"result_schema\": {\"denominator\": \"integer\", \"marked_bots\": \"integer\", \"numerator\": \"integer\", \"unknown_results\": \"integer\", \"value\": \"number|null\"}, \"units\": \"fraction\", \"version\": \"1.0.0\"}, {\"adjusted_result\": \"within-stratum score rates for each opening averaged using identical common weights\", \"caveats\": [\"Observed ordered prefix only; no month-wide inference.\", \"Association, not opening-choice causation.\", \"Bootstrap does not model opponent dependence or archive-prefix selection.\"], \"common_weights\": \"pooled eligible player-game counts over strata represented in both openings, normalized to sum to one\", \"filters\": \"completed non-marked-bot games; exact color, half-open player rating band, exact base+increment, two named source opening families; recorded opponent rating required for adjustment\", \"grain\": \"one focal player-game in a selected source Opening family\", \"id\": \"opening_adjusted_score\", \"interval\": \"400 seeded focal-player cluster bootstrap repetitions within each opening; percentile 2.5 and 97.5 bounds among valid resamples\", \"low_support\": \"fewer than 100 eligible player-games is a project warning\", \"null_rules\": \"missing opponent rating is excluded from adjustment but remains in raw score; a missing common stratum yields no adjusted rate\", \"score\": \"wins plus 0.5 times draws divided by eligible player-games\", \"strata\": \"player rating minus recorded opponent rating: below -100, -100 to 99, and 100 or more\", \"units\": \"score fraction\", \"version\": \"1.0.0\"}, {\"caveats\": [\"Descriptive association in the observed prefix only.\", \"Do not infer a causal advantage from opening choice.\", \"Focal-player games are dependent across players and opponents; M4 uncertainty method must account for this.\"], \"filters\": \"completed rated Standard, no source-marked bot, known source opening, known focal rating; half-open rating band\", \"grain\": \"one player-game at selected color, opening family, exact time control, and rating band\", \"id\": \"opening_player_score\", \"inputs\": [\"fact_game\", \"fact_player_game\"], \"low_support_threshold_games\": 100, \"null_rules\": \"unknown result and missing focal rating excluded and counted in coverage\", \"score_rate\": \"(wins + 0.5 * draws) / (wins + draws + losses)\", \"units\": \"fraction\", \"version\": \"1.0.0\", \"win_rate\": \"wins / (wins + draws + losses)\"}, {\"caveats\": [\"The 100,000-game prefix is a convenience sample, not a full-month population sample.\", \"Opening tags are provider supplied; opening choice is confounded.\"], \"classification\": \"source opening family is the trimmed text before the first colon in the provider tag; no local position classifier\", \"denominator\": \"eligible games with a nonempty source opening family\", \"eligible\": \"rated Standard accepted games with completed result, excluding source-marked bots\", \"grain\": \"one provider/game_id in the observed bounded prefix\", \"id\": \"opening_usage\", \"inputs\": [\"fact_game.source_opening\", \"fact_game.result\", \"fact_game.marked_bot\"], \"null_rules\": \"missing/empty source opening excluded from denominator and reported separately\", \"numerator\": \"eligible games in selected source opening family\", \"units\": \"fraction\", \"version\": \"1.0.0\"}]",
+            "max_output_tokens": 512,
+            "max_tool_calls": null,
+            "metadata": {},
+            "model": "gpt-6-sol",
+            "moderation": null,
+            "object": "response",
+            "output": [
+              {
+                "content": [
+                  {
+                    "annotations": [],
+                    "logprobs": [],
+                    "text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_player_score\\\",\\\"filters\\\":{\\\"family\\\":\\\"Queen's Pawn Game\\\",\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+                    "type": "output_text"
+                  }
+                ],
+                "id": "msg_0bace263bd273ace016ac2bf4dd66087d1a965fcfe43870d86",
+                "phase": "final_answer",
+                "role": "assistant",
+                "status": "completed",
+                "type": "message"
+              }
+            ],
+            "parallel_tool_calls": true,
+            "presence_penalty": 0.0,
+            "previous_response_id": null,
+            "prompt_cache_key": null,
+            "prompt_cache_retention": "24h",
+            "reasoning": {
+              "context": "all_turns",
+              "effort": "none",
+              "mode": "standard",
+              "summary": null
+            },
+            "safety_identifier": null,
+            "service_tier": "default",
+            "status": "completed",
+            "store": false,
+            "temperature": 1.0,
+            "text": {
+              "format": {
+                "description": null,
+                "name": "chess_analyst_plan",
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "actions": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "args_json": {
+                            "type": "string"
+                          },
+                          "tool": {
+                            "enum": [
+                              "list_metrics",
+                              "get_metric_definition",
+                              "get_dataset_coverage",
+                              "query_metric",
+                              "compare_openings",
+                              "analyze_clock_pressure",
+                              "compare_clock_buckets"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "tool",
+                          "args_json"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 4,
+                      "type": "array"
+                    },
+                    "interpretation": {
+                      "enum": [
+                        "descriptive_observed_prefix"
+                      ],
+                      "type": "string"
+                    },
+                    "status": {
+                      "enum": [
+                        "answered",
+                        "needs_clarification",
+                        "unsupported"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "interpretation",
+                    "actions"
+                  ],
+                  "type": "object"
+                },
+                "strict": true,
+                "type": "json_schema"
+              },
+              "verbosity": "medium"
+            },
+            "tool_choice": "auto",
+            "tool_usage": {
+              "image_gen": {
+                "input_tokens": 0,
+                "input_tokens_details": {
+                  "image_tokens": 0,
+                  "text_tokens": 0
+                },
+                "output_tokens": 0,
+                "output_tokens_details": {
+                  "image_tokens": 0,
+                  "text_tokens": 0
+                },
+                "total_tokens": 0
+              },
+              "web_search": {
+                "num_requests": 0
+              }
+            },
+            "tools": [],
+            "top_logprobs": 0,
+            "top_p": 0.98,
+            "truncation": "disabled",
+            "usage": {
+              "input_tokens": 2408,
+              "input_tokens_details": {
+                "cache_write_tokens": 43,
+                "cached_tokens": 2362
+              },
+              "output_tokens": 84,
+              "output_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "total_tokens": 2492
+            },
+            "user": null
+          },
+          "request_sha256": "d7d95addc46ba55cfb37993b62e355fca3aa6fa5fc58146eef279aae1defc6e9",
+          "reserved_cost_usd": 0.03724,
+          "resolved_model": "gpt-6-sol",
+          "response_id": "resp_0bace263bd273ace016ac2bf4cd63887d1a12b0abc1e999642",
+          "response_selection": {
+            "discarded_invalid_chunks": 0,
+            "duplicate_valid_chunks": 0,
+            "output_text_chunks": 1,
+            "recovered_argument_suffixes": [],
+            "recovered_inert_suffix_characters": 0,
+            "recovered_repeated_plan_objects": null,
+            "selected_chunk_index": 0,
+            "selected_chunk_sha256": "ac730de4a963ad5a7330c6c6e5d7063c692661414301e721aec36dd375869a3f"
+          },
+          "semantic_repairs": [],
+          "usage": {
+            "input_tokens": 2408,
+            "input_tokens_details": {
+              "cache_write_tokens": 43,
+              "cached_tokens": 2362
+            },
+            "output_tokens": 84,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 2492
+          }
+        },
+        "question": "Among White players rated 1400\u20131599 in 60+0 games on this January 1 slice, give the observed eligible-game count and player score rate for Queen's Pawn Game.",
+        "result": {
+          "analytical_id": "9250ba8791e179279fba2023",
+          "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+          "draws": 7,
+          "eligible_player_games": 394,
+          "filters": {
+            "base_seconds": 60,
+            "color": "white",
+            "family": "Queen's Pawn Game",
+            "increment_seconds": 0,
+            "rating_max_exclusive": 1600,
+            "rating_min": 1400
+          },
+          "losses": 194,
+          "low_support": false,
+          "metric_id": "opening_player_score",
+          "scope": "descriptive observed prefix; no causal claim",
+          "score_rate": 0.4987309644670051,
+          "version": "1.0.0",
+          "win_rate": 0.48984771573604063,
+          "wins": 193
+        },
+        "source": "live_provider",
+        "status": "answered",
+        "tool_steps": 1
+      },
+      "case_id": "m7k_white_queens_pawn_game_score",
+      "cost_basis": "reported_cache_breakdown",
+      "gross_cost_usd": 0.0014259000000000001,
+      "provider_usage": {
+        "input_tokens": 2408,
+        "input_tokens_details": {
+          "cache_write_tokens": 43,
+          "cached_tokens": 2362
+        },
+        "output_tokens": 84,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2492
+      },
+      "request_sha256": "d7d95addc46ba55cfb37993b62e355fca3aa6fa5fc58146eef279aae1defc6e9",
+      "score": {
+        "case_id": "m7k_white_queens_pawn_game_score",
+        "category": "filtering_perspective",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v11"
+      },
+      "status": "completed"
+    },
+    {
+      "answer": {
+        "caveats": [
+          "association_not_causation",
+          "observed_prefix_only",
+          "score_not_win_rate",
+          "white_perspective"
+        ],
+        "dataset_id": "9250ba8791e179279fba2023",
+        "elapsed_seconds": 0.5445028750036727,
+        "evidence": [
+          {
+            "args": {
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "families": [
+                  "Queen's Pawn Game",
+                  "Sicilian Defense"
+                ],
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              }
+            },
+            "evidence_id": "ev_d3b570f0ca0367b5fd92",
+            "result": {
+              "caveats": [
+                "observed_prefix_only",
+                "association_not_causation"
+              ],
+              "dataset_id": "9250ba8791e179279fba2023",
+              "families": [
+                {
+                  "analytical_id": "9250ba8791e179279fba2023",
+                  "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+                  "draws": 7,
+                  "eligible_player_games": 394,
+                  "filters": {
+                    "base_seconds": 60,
+                    "color": "white",
+                    "family": "Queen's Pawn Game",
+                    "increment_seconds": 0,
+                    "rating_max_exclusive": 1600,
+                    "rating_min": 1400
+                  },
+                  "losses": 194,
+                  "low_support": false,
+                  "metric_id": "opening_player_score",
+                  "scope": "descriptive observed prefix; no causal claim",
+                  "score_rate": 0.4987309644670051,
+                  "version": "1.0.0",
+                  "win_rate": 0.48984771573604063,
+                  "wins": 193
+                },
+                {
+                  "analytical_id": "9250ba8791e179279fba2023",
+                  "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+                  "draws": 4,
+                  "eligible_player_games": 313,
+                  "filters": {
+                    "base_seconds": 60,
+                    "color": "white",
+                    "family": "Sicilian Defense",
+                    "increment_seconds": 0,
+                    "rating_max_exclusive": 1600,
+                    "rating_min": 1400
+                  },
+                  "losses": 162,
+                  "low_support": false,
+                  "metric_id": "opening_player_score",
+                  "scope": "descriptive observed prefix; no causal claim",
+                  "score_rate": 0.476038338658147,
+                  "version": "1.0.0",
+                  "win_rate": 0.4696485623003195,
+                  "wins": 147
+                }
+              ],
+              "score_rate_difference_first_minus_second": 0.022692625808858113,
+              "win_rate_difference_first_minus_second": 0.02019915343572115
+            },
+            "tool": "compare_openings"
+          }
+        ],
+        "evidence_ids": [
+          "ev_d3b570f0ca0367b5fd92"
+        ],
+        "explanation": "Result computed by reviewed metric tools; see evidence values and denominators.",
+        "filters": [
+          {
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "families": [
+                "Queen's Pawn Game",
+                "Sicilian Defense"
+              ],
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            }
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "provider": {
+          "argument_repairs": [],
+          "attempts": 1,
+          "condition": "semantic_context",
+          "cost_basis": "reported_cache_breakdown",
+          "gross_cost_usd": 0.0014809,
+          "input_usd_per_million": 2.0,
+          "max_run_usd": 0.5,
+          "model_plan_before_semantic_repair": {
+            "actions": [
+              {
+                "args": {
+                  "filters": {
+                    "base_seconds": 60,
+                    "color": "white",
+                    "families": [
+                      "Queen's Pawn Game",
+                      "Sicilian Defense"
+                    ],
+                    "increment_seconds": 0,
+                    "rating_max_exclusive": 1600,
+                    "rating_min": 1400
+                  }
+                },
+                "tool": "compare_openings"
+              }
+            ],
+            "interpretation": "descriptive_observed_prefix",
+            "status": "answered"
+          },
+          "output_usd_per_million": 10.0,
+          "raw_response": {
+            "access_programs": null,
+            "background": false,
+            "billing": {
+              "payer": "developer"
+            },
+            "completed_at": 1791147856,
+            "created_at": 1791147855,
+            "error": null,
+            "frequency_penalty": 0.0,
+            "id": "resp_0d9e06d2c6928106016ac2bf4f6db487d19d11c0d4bf8a4920",
+            "incomplete_details": null,
+            "instructions": "Select at most four reviewed metric tool actions. Use only the observed bounded prefix. If essential filters are absent, request clarification. Reject causal or unsupported claims. Return tool arguments as JSON in args_json. Do not calculate numeric answers. Use needs_clarification only when the user can supply missing cohort filters for a supported descriptive query. Use unsupported for inaccessible data, causal effects, full-month extrapolation from this prefix, personality or other claims this dataset or tools cannot answer. Both statuses use no actions. A personalized opening-choice request without the player's cohort and outcome preference needs clarification; do not recommend an opening. If a descriptive opening question gives an exact family and cohort, a small but nonzero observed cohort is answerable with a sample-size caveat; do not turn sparse counts into unsupported. A comparison of two exact families in that cohort is also answerable. If a question supplies color, opening family, rating band, and time control, it is fully specified: answer with checked evidence, not clarification. A 1400\u20131599 band means rating_min 1400 and rating_max_exclusive 1600; 60+0 means base_seconds 60 and increment_seconds 0. Exact action args: list_metrics {}; get_metric_definition {metric_id}; get_dataset_coverage {}; query_metric {metric_id, filters, optional group_by}; compare_openings {filters}; analyze_clock_pressure {bucket}; compare_clock_buckets {first, second}. Never put dataset_id in args_json. For numerical questions, use query_metric or a specialized numerical tool; a metric definition alone is not numerical evidence. Exact query_metric filters: opening_usage {family}; game_draw_rate {}; opening_player_score {family,color,rating_min,rating_max_exclusive,base_seconds,increment_seconds}; opening_adjusted_score uses families (two-name array) instead of family with the same cohort keys; clock_pressure_error_proxy and evaluation_coverage {bucket}. A specified clock-bucket evaluation-coverage question is answerable: query evaluation_coverage and report eligible and evaluable move counts with the missing-evaluation caveat. Sparse evaluation availability does not itself make coverage unsupported. Never infer a missing evaluation is zero error or that clock pressure caused an error. A specified clock-bucket question asking how many evaluable moves meet the exploratory deterioration threshold or asks for its rate is answerable with clock_pressure_error_proxy. Query that metric for the named bucket; sparse source evaluations do not make the observed proxy count unsupported. Do not request clarification or call evaluation_coverage unless coverage itself is requested. Eligibility is built into metrics; never invent extra filter keys. Use lowercase color values white or black, never title case. For differences between two opening families, use compare_openings with filters {families:[full first family name, full second family name],color,rating_min,rating_max_exclusive,base_seconds,increment_seconds}. For a first-minus-second opening difference, compare_openings is mandatory: two query_metric calls return components, not the requested difference. For compare_openings, args_json must have one outer filters key, never flat fields. Opening usage is fully specified by the source family alone; do not ask for color, rating, or time control for opening_usage. For an exact opening-usage fraction, use one query_metric action, without a coverage action. For any exact source-tag family named in a usage question, call opening_usage; the checked tool determines whether it occurs, so do not infer unsupported from the family name or absence from a preview list. Copy full provider family names from the question; never abbreviate Sicilian Defense to Sicilian or French Defense to French. For Black's Sicilian versus French comparison, use full source names Sicilian Defense and French Defense with color black. get_dataset_coverage returns selection.selected_games, the number of games selected for move replay including selected zero-ply games. Dataset: 9250ba8791e179279fba2023. Available metric IDs: [\"clock_pressure_error_proxy\", \"evaluation_coverage\", \"game_draw_rate\", \"opening_adjusted_score\", \"opening_player_score\", \"opening_usage\"]. Opening player-score filters require family, color, rating_min, rating_max_exclusive, base_seconds, increment_seconds. Adjusted opening score uses the same filters with families as two names. Clock bucket is under_10, 10_to_29, 30_to_59, or 60_plus. Governed metric definitions: [{\"buckets_seconds\": [\"[0,10)\", \"[10,30)\", \"[30,60)\", \"[60,infinity)\"], \"caveats\": [\"Exploratory proxy, not an official Lichess blunder label.\", \"Existing evaluation coverage is selected and source quality varies.\", \"The prefix and move sample do not represent all games in the source month; no causal time-pressure claim.\"], \"coverage_denominator\": \"all eligible moves in bucket\", \"denominator\": \"evaluable eligible moves in bucket\", \"deterioration\": \"max(0, mover-perspective cp_before minus cp_after); source cp scores are White-perspective, invert both for Black\", \"eligible\": \"non-first move by a player in a zero-increment rated Standard game with valid prior same-player clock and a completed result, excluding source-marked bots\", \"evaluable\": \"eligible move with source-provided before and after centipawn evaluations; mate transitions excluded and counted separately\", \"grain\": \"one selected game x ply, stratified by clock-before bucket\", \"id\": \"clock_pressure_error_proxy\", \"null_rules\": \"first same-player move, missing/invalid clock, missing evaluations and mate transitions never become zero error\", \"numerator\": \"evaluable eligible moves with deterioration >= 200 centipawns\", \"sampling\": \"game ID SHA256 first eight bytes modulo 20 equals zero; deterministic 5% selection from the bounded prefix, independent of annotations\", \"units\": \"fraction\", \"version\": \"1.0.0\"}, {\"caveats\": [\"Source evaluation availability can depend on which games were analyzed.\", \"Coverage is conditional on the observed prefix and deterministic move-game sample.\"], \"denominator\": \"all eligible moves in bucket\", \"filters\": \"same eligible move and deterministic game sample as clock_pressure_error_proxy\", \"grain\": \"one selected game x ply, by clock-before bucket\", \"id\": \"evaluation_coverage\", \"inputs\": [\"fact_move\"], \"null_rules\": \"missing source evals and mate transitions are non-evaluable, never zero deterioration\", \"numerator\": \"eligible moves with comparable before and after source centipawn evaluations\", \"units\": \"fraction\", \"version\": \"1.0.0\"}, {\"caveats\": [\"Historical foundation corpus is not evidence about contemporary players.\", \"Excluding marked bots does not establish all other players are human.\", \"No opening, time-pressure, or causal claims are supported by this metric.\"], \"denominator\": \"count of eligible games with result in 1-0, 0-1, 1/2-1/2\", \"filters\": \"rated Standard games, excluding source-marked bots, completed results only\", \"formula\": \"numerator / denominator\", \"grain\": \"one provider/game_id\", \"id\": \"game_draw_rate\", \"inputs\": [\"fact_game\"], \"null_rules\": \"unknown results excluded and counted; empty denominator yields null\", \"numerator\": \"count of eligible games with result 1/2-1/2\", \"result_schema\": {\"denominator\": \"integer\", \"marked_bots\": \"integer\", \"numerator\": \"integer\", \"unknown_results\": \"integer\", \"value\": \"number|null\"}, \"units\": \"fraction\", \"version\": \"1.0.0\"}, {\"adjusted_result\": \"within-stratum score rates for each opening averaged using identical common weights\", \"caveats\": [\"Observed ordered prefix only; no month-wide inference.\", \"Association, not opening-choice causation.\", \"Bootstrap does not model opponent dependence or archive-prefix selection.\"], \"common_weights\": \"pooled eligible player-game counts over strata represented in both openings, normalized to sum to one\", \"filters\": \"completed non-marked-bot games; exact color, half-open player rating band, exact base+increment, two named source opening families; recorded opponent rating required for adjustment\", \"grain\": \"one focal player-game in a selected source Opening family\", \"id\": \"opening_adjusted_score\", \"interval\": \"400 seeded focal-player cluster bootstrap repetitions within each opening; percentile 2.5 and 97.5 bounds among valid resamples\", \"low_support\": \"fewer than 100 eligible player-games is a project warning\", \"null_rules\": \"missing opponent rating is excluded from adjustment but remains in raw score; a missing common stratum yields no adjusted rate\", \"score\": \"wins plus 0.5 times draws divided by eligible player-games\", \"strata\": \"player rating minus recorded opponent rating: below -100, -100 to 99, and 100 or more\", \"units\": \"score fraction\", \"version\": \"1.0.0\"}, {\"caveats\": [\"Descriptive association in the observed prefix only.\", \"Do not infer a causal advantage from opening choice.\", \"Focal-player games are dependent across players and opponents; M4 uncertainty method must account for this.\"], \"filters\": \"completed rated Standard, no source-marked bot, known source opening, known focal rating; half-open rating band\", \"grain\": \"one player-game at selected color, opening family, exact time control, and rating band\", \"id\": \"opening_player_score\", \"inputs\": [\"fact_game\", \"fact_player_game\"], \"low_support_threshold_games\": 100, \"null_rules\": \"unknown result and missing focal rating excluded and counted in coverage\", \"score_rate\": \"(wins + 0.5 * draws) / (wins + draws + losses)\", \"units\": \"fraction\", \"version\": \"1.0.0\", \"win_rate\": \"wins / (wins + draws + losses)\"}, {\"caveats\": [\"The 100,000-game prefix is a convenience sample, not a full-month population sample.\", \"Opening tags are provider supplied; opening choice is confounded.\"], \"classification\": \"source opening family is the trimmed text before the first colon in the provider tag; no local position classifier\", \"denominator\": \"eligible games with a nonempty source opening family\", \"eligible\": \"rated Standard accepted games with completed result, excluding source-marked bots\", \"grain\": \"one provider/game_id in the observed bounded prefix\", \"id\": \"opening_usage\", \"inputs\": [\"fact_game.source_opening\", \"fact_game.result\", \"fact_game.marked_bot\"], \"null_rules\": \"missing/empty source opening excluded from denominator and reported separately\", \"numerator\": \"eligible games in selected source opening family\", \"units\": \"fraction\", \"version\": \"1.0.0\"}]",
+            "max_output_tokens": 512,
+            "max_tool_calls": null,
+            "metadata": {},
+            "model": "gpt-6-sol",
+            "moderation": null,
+            "object": "response",
+            "output": [
+              {
+                "content": [
+                  {
+                    "annotations": [],
+                    "logprobs": [],
+                    "text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"compare_openings\",\"args_json\":\"{\\\"filters\\\":{\\\"families\\\":[\\\"Queen's Pawn Game\\\",\\\"Sicilian Defense\\\"],\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+                    "type": "output_text"
+                  }
+                ],
+                "id": "msg_0d9e06d2c6928106016ac2bf50308c87d195172c73364be37d",
+                "phase": "final_answer",
+                "role": "assistant",
+                "status": "completed",
+                "type": "message"
+              }
+            ],
+            "parallel_tool_calls": true,
+            "presence_penalty": 0.0,
+            "previous_response_id": null,
+            "prompt_cache_key": null,
+            "prompt_cache_retention": "24h",
+            "reasoning": {
+              "context": "all_turns",
+              "effort": "none",
+              "mode": "standard",
+              "summary": null
+            },
+            "safety_identifier": null,
+            "service_tier": "default",
+            "status": "completed",
+            "store": false,
+            "temperature": 1.0,
+            "text": {
+              "format": {
+                "description": null,
+                "name": "chess_analyst_plan",
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "actions": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "args_json": {
+                            "type": "string"
+                          },
+                          "tool": {
+                            "enum": [
+                              "list_metrics",
+                              "get_metric_definition",
+                              "get_dataset_coverage",
+                              "query_metric",
+                              "compare_openings",
+                              "analyze_clock_pressure",
+                              "compare_clock_buckets"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "tool",
+                          "args_json"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 4,
+                      "type": "array"
+                    },
+                    "interpretation": {
+                      "enum": [
+                        "descriptive_observed_prefix"
+                      ],
+                      "type": "string"
+                    },
+                    "status": {
+                      "enum": [
+                        "answered",
+                        "needs_clarification",
+                        "unsupported"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "interpretation",
+                    "actions"
+                  ],
+                  "type": "object"
+                },
+                "strict": true,
+                "type": "json_schema"
+              },
+              "verbosity": "medium"
+            },
+            "tool_choice": "auto",
+            "tool_usage": {
+              "image_gen": {
+                "input_tokens": 0,
+                "input_tokens_details": {
+                  "image_tokens": 0,
+                  "text_tokens": 0
+                },
+                "output_tokens": 0,
+                "output_tokens_details": {
+                  "image_tokens": 0,
+                  "text_tokens": 0
+                },
+                "total_tokens": 0
+              },
+              "web_search": {
+                "num_requests": 0
+              }
+            },
+            "tools": [],
+            "top_logprobs": 0,
+            "top_p": 0.98,
+            "truncation": "disabled",
+            "usage": {
+              "input_tokens": 2414,
+              "input_tokens_details": {
+                "cache_write_tokens": 49,
+                "cached_tokens": 2362
+              },
+              "output_tokens": 88,
+              "output_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "total_tokens": 2502
+            },
+            "user": null
+          },
+          "request_sha256": "322e2d956b3a5544f1312faf77c89c2252905c62aeb11f5ff6350de44cda3c23",
+          "reserved_cost_usd": 0.0372825,
+          "resolved_model": "gpt-6-sol",
+          "response_id": "resp_0d9e06d2c6928106016ac2bf4f6db487d19d11c0d4bf8a4920",
+          "response_selection": {
+            "discarded_invalid_chunks": 0,
+            "duplicate_valid_chunks": 0,
+            "output_text_chunks": 1,
+            "recovered_argument_suffixes": [],
+            "recovered_inert_suffix_characters": 0,
+            "recovered_repeated_plan_objects": null,
+            "selected_chunk_index": 0,
+            "selected_chunk_sha256": "ad53520c6204071f2258dd4ee721511e6759486efff6c7698e364ee3a24343cf"
+          },
+          "semantic_repairs": [],
+          "usage": {
+            "input_tokens": 2414,
+            "input_tokens_details": {
+              "cache_write_tokens": 49,
+              "cached_tokens": 2362
+            },
+            "output_tokens": 88,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 2502
+          }
+        },
+        "question": "For observed January 1 games with White rated 1400\u20131599 at 60+0, what is Queen's Pawn Game minus Sicilian Defense for White's win rate? Use the same cohort for both openings.",
+        "result": {
+          "caveats": [
+            "observed_prefix_only",
+            "association_not_causation"
+          ],
+          "dataset_id": "9250ba8791e179279fba2023",
+          "families": [
+            {
+              "analytical_id": "9250ba8791e179279fba2023",
+              "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+              "draws": 7,
+              "eligible_player_games": 394,
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "family": "Queen's Pawn Game",
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              },
+              "losses": 194,
+              "low_support": false,
+              "metric_id": "opening_player_score",
+              "scope": "descriptive observed prefix; no causal claim",
+              "score_rate": 0.4987309644670051,
+              "version": "1.0.0",
+              "win_rate": 0.48984771573604063,
+              "wins": 193
+            },
+            {
+              "analytical_id": "9250ba8791e179279fba2023",
+              "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+              "draws": 4,
+              "eligible_player_games": 313,
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "family": "Sicilian Defense",
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              },
+              "losses": 162,
+              "low_support": false,
+              "metric_id": "opening_player_score",
+              "scope": "descriptive observed prefix; no causal claim",
+              "score_rate": 0.476038338658147,
+              "version": "1.0.0",
+              "win_rate": 0.4696485623003195,
+              "wins": 147
+            }
+          ],
+          "score_rate_difference_first_minus_second": 0.022692625808858113,
+          "win_rate_difference_first_minus_second": 0.02019915343572115
+        },
+        "source": "live_provider",
+        "status": "answered",
+        "tool_steps": 1
+      },
+      "case_id": "m7k_compare_queens_pawn_game_sicilian_defense_win",
+      "cost_basis": "reported_cache_breakdown",
+      "gross_cost_usd": 0.0014809,
+      "provider_usage": {
+        "input_tokens": 2414,
+        "input_tokens_details": {
+          "cache_write_tokens": 49,
+          "cached_tokens": 2362
+        },
+        "output_tokens": 88,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2502
+      },
+      "request_sha256": "322e2d956b3a5544f1312faf77c89c2252905c62aeb11f5ff6350de44cda3c23",
+      "score": {
+        "case_id": "m7k_compare_queens_pawn_game_sicilian_defense_win",
+        "category": "multi_step",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v11"
+      },
+      "status": "completed"
+    },
+    {
+      "answer": {
+        "caveats": [
+          "exploratory_proxy",
+          "missing_evaluation_not_zero",
+          "observed_prefix_only",
+          "source_evaluation_selection"
+        ],
+        "dataset_id": "9250ba8791e179279fba2023",
+        "elapsed_seconds": 0.8869211659985012,
+        "evidence": [
+          {
+            "args": {
+              "filters": {
+                "bucket": "60_plus"
+              },
+              "metric_id": "evaluation_coverage"
+            },
+            "evidence_id": "ev_0ba86d8d8a06acfcefbb",
+            "result": {
+              "analytical_id": "9250ba8791e179279fba2023",
+              "bucket": "60_plus",
+              "contract_sha256": "059a90922fb35a51e3d9bb30632a22ccab7e59a6802d38990ce82432782eea0e",
+              "coverage_contract_sha256": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+              "eligible_moves": 130673,
+              "error_proxy_rate": 0.06700515424263405,
+              "evaluable_moves": 12999,
+              "evaluation_coverage": 0.09947732125228624,
+              "mate_transition_moves": 558,
+              "metric_id": "clock_pressure_error_proxy",
+              "proxy_errors": 871,
+              "scope": "exploratory source-evaluation proxy in sampled games of observed prefix",
+              "version": "1.0.0"
+            },
+            "tool": "query_metric"
+          },
+          {
+            "args": {
+              "filters": {
+                "bucket": "60_plus"
+              },
+              "metric_id": "clock_pressure_error_proxy"
+            },
+            "evidence_id": "ev_d176e963a648c0832b42",
+            "result": {
+              "analytical_id": "9250ba8791e179279fba2023",
+              "bucket": "60_plus",
+              "contract_sha256": "059a90922fb35a51e3d9bb30632a22ccab7e59a6802d38990ce82432782eea0e",
+              "coverage_contract_sha256": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+              "eligible_moves": 130673,
+              "error_proxy_rate": 0.06700515424263405,
+              "evaluable_moves": 12999,
+              "evaluation_coverage": 0.09947732125228624,
+              "mate_transition_moves": 558,
+              "metric_id": "clock_pressure_error_proxy",
+              "proxy_errors": 871,
+              "scope": "exploratory source-evaluation proxy in sampled games of observed prefix",
+              "version": "1.0.0"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "evidence_ids": [
+          "ev_0ba86d8d8a06acfcefbb",
+          "ev_d176e963a648c0832b42"
+        ],
+        "explanation": "Result computed by reviewed metric tools; see evidence values and denominators.",
+        "filters": [
+          {
+            "filters": {
+              "bucket": "60_plus"
+            },
+            "metric_id": "evaluation_coverage"
+          },
+          {
+            "filters": {
+              "bucket": "60_plus"
+            },
+            "metric_id": "clock_pressure_error_proxy"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "provider": {
+          "argument_repairs": [],
+          "attempts": 1,
+          "condition": "semantic_context",
+          "cost_basis": "reported_cache_breakdown",
+          "gross_cost_usd": 0.006811,
+          "input_usd_per_million": 2.0,
+          "max_run_usd": 0.5,
+          "model_plan_before_semantic_repair": {
+            "actions": [
+              {
+                "args": {
+                  "filters": {
+                    "bucket": "60_plus"
+                  },
+                  "metric_id": "evaluation_coverage"
+                },
+                "tool": "query_metric"
+              },
+              {
+                "args": {
+                  "filters": {
+                    "bucket": "60_plus"
+                  },
+                  "metric_id": "clock_pressure_error_proxy"
+                },
+                "tool": "query_metric"
+              }
+            ],
+            "interpretation": "descriptive_observed_prefix",
+            "status": "answered"
+          },
+          "output_usd_per_million": 10.0,
+          "raw_response": {
+            "access_programs": null,
+            "background": false,
+            "billing": {
+              "payer": "developer"
+            },
+            "completed_at": 1791147859,
+            "created_at": 1791147857,
+            "error": null,
+            "frequency_penalty": 0.0,
+            "id": "resp_01e0879718583ab5016ac2bf51d8a087d2b3d5050bc7b05c78",
+            "incomplete_details": null,
+            "instructions": "Select at most four reviewed metric tool actions. Use only the observed bounded prefix. If essential filters are absent, request clarification. Reject causal or unsupported claims. Return tool arguments as JSON in args_json. Do not calculate numeric answers. Use needs_clarification only when the user can supply missing cohort filters for a supported descriptive query. Use unsupported for inaccessible data, causal effects, full-month extrapolation from this prefix, personality or other claims this dataset or tools cannot answer. Both statuses use no actions. A personalized opening-choice request without the player's cohort and outcome preference needs clarification; do not recommend an opening. If a descriptive opening question gives an exact family and cohort, a small but nonzero observed cohort is answerable with a sample-size caveat; do not turn sparse counts into unsupported. A comparison of two exact families in that cohort is also answerable. If a question supplies color, opening family, rating band, and time control, it is fully specified: answer with checked evidence, not clarification. A 1400\u20131599 band means rating_min 1400 and rating_max_exclusive 1600; 60+0 means base_seconds 60 and increment_seconds 0. Exact action args: list_metrics {}; get_metric_definition {metric_id}; get_dataset_coverage {}; query_metric {metric_id, filters, optional group_by}; compare_openings {filters}; analyze_clock_pressure {bucket}; compare_clock_buckets {first, second}. Never put dataset_id in args_json. For numerical questions, use query_metric or a specialized numerical tool; a metric definition alone is not numerical evidence. Exact query_metric filters: opening_usage {family}; game_draw_rate {}; opening_player_score {family,color,rating_min,rating_max_exclusive,base_seconds,increment_seconds}; opening_adjusted_score uses families (two-name array) instead of family with the same cohort keys; clock_pressure_error_proxy and evaluation_coverage {bucket}. A specified clock-bucket evaluation-coverage question is answerable: query evaluation_coverage and report eligible and evaluable move counts with the missing-evaluation caveat. Sparse evaluation availability does not itself make coverage unsupported. Never infer a missing evaluation is zero error or that clock pressure caused an error. A specified clock-bucket question asking how many evaluable moves meet the exploratory deterioration threshold or asks for its rate is answerable with clock_pressure_error_proxy. Query that metric for the named bucket; sparse source evaluations do not make the observed proxy count unsupported. Do not request clarification or call evaluation_coverage unless coverage itself is requested. Eligibility is built into metrics; never invent extra filter keys. Use lowercase color values white or black, never title case. For differences between two opening families, use compare_openings with filters {families:[full first family name, full second family name],color,rating_min,rating_max_exclusive,base_seconds,increment_seconds}. For a first-minus-second opening difference, compare_openings is mandatory: two query_metric calls return components, not the requested difference. For compare_openings, args_json must have one outer filters key, never flat fields. Opening usage is fully specified by the source family alone; do not ask for color, rating, or time control for opening_usage. For an exact opening-usage fraction, use one query_metric action, without a coverage action. For any exact source-tag family named in a usage question, call opening_usage; the checked tool determines whether it occurs, so do not infer unsupported from the family name or absence from a preview list. Copy full provider family names from the question; never abbreviate Sicilian Defense to Sicilian or French Defense to French. For Black's Sicilian versus French comparison, use full source names Sicilian Defense and French Defense with color black. get_dataset_coverage returns selection.selected_games, the number of games selected for move replay including selected zero-ply games. Dataset: 9250ba8791e179279fba2023. Available metric IDs: [\"clock_pressure_error_proxy\", \"evaluation_coverage\", \"game_draw_rate\", \"opening_adjusted_score\", \"opening_player_score\", \"opening_usage\"]. Opening player-score filters require family, color, rating_min, rating_max_exclusive, base_seconds, increment_seconds. Adjusted opening score uses the same filters with families as two names. Clock bucket is under_10, 10_to_29, 30_to_59, or 60_plus. Governed metric definitions: [{\"buckets_seconds\": [\"[0,10)\", \"[10,30)\", \"[30,60)\", \"[60,infinity)\"], \"caveats\": [\"Exploratory proxy, not an official Lichess blunder label.\", \"Existing evaluation coverage is selected and source quality varies.\", \"The prefix and move sample do not represent all games in the source month; no causal time-pressure claim.\"], \"coverage_denominator\": \"all eligible moves in bucket\", \"denominator\": \"evaluable eligible moves in bucket\", \"deterioration\": \"max(0, mover-perspective cp_before minus cp_after); source cp scores are White-perspective, invert both for Black\", \"eligible\": \"non-first move by a player in a zero-increment rated Standard game with valid prior same-player clock and a completed result, excluding source-marked bots\", \"evaluable\": \"eligible move with source-provided before and after centipawn evaluations; mate transitions excluded and counted separately\", \"grain\": \"one selected game x ply, stratified by clock-before bucket\", \"id\": \"clock_pressure_error_proxy\", \"null_rules\": \"first same-player move, missing/invalid clock, missing evaluations and mate transitions never become zero error\", \"numerator\": \"evaluable eligible moves with deterioration >= 200 centipawns\", \"sampling\": \"game ID SHA256 first eight bytes modulo 20 equals zero; deterministic 5% selection from the bounded prefix, independent of annotations\", \"units\": \"fraction\", \"version\": \"1.0.0\"}, {\"caveats\": [\"Source evaluation availability can depend on which games were analyzed.\", \"Coverage is conditional on the observed prefix and deterministic move-game sample.\"], \"denominator\": \"all eligible moves in bucket\", \"filters\": \"same eligible move and deterministic game sample as clock_pressure_error_proxy\", \"grain\": \"one selected game x ply, by clock-before bucket\", \"id\": \"evaluation_coverage\", \"inputs\": [\"fact_move\"], \"null_rules\": \"missing source evals and mate transitions are non-evaluable, never zero deterioration\", \"numerator\": \"eligible moves with comparable before and after source centipawn evaluations\", \"units\": \"fraction\", \"version\": \"1.0.0\"}, {\"caveats\": [\"Historical foundation corpus is not evidence about contemporary players.\", \"Excluding marked bots does not establish all other players are human.\", \"No opening, time-pressure, or causal claims are supported by this metric.\"], \"denominator\": \"count of eligible games with result in 1-0, 0-1, 1/2-1/2\", \"filters\": \"rated Standard games, excluding source-marked bots, completed results only\", \"formula\": \"numerator / denominator\", \"grain\": \"one provider/game_id\", \"id\": \"game_draw_rate\", \"inputs\": [\"fact_game\"], \"null_rules\": \"unknown results excluded and counted; empty denominator yields null\", \"numerator\": \"count of eligible games with result 1/2-1/2\", \"result_schema\": {\"denominator\": \"integer\", \"marked_bots\": \"integer\", \"numerator\": \"integer\", \"unknown_results\": \"integer\", \"value\": \"number|null\"}, \"units\": \"fraction\", \"version\": \"1.0.0\"}, {\"adjusted_result\": \"within-stratum score rates for each opening averaged using identical common weights\", \"caveats\": [\"Observed ordered prefix only; no month-wide inference.\", \"Association, not opening-choice causation.\", \"Bootstrap does not model opponent dependence or archive-prefix selection.\"], \"common_weights\": \"pooled eligible player-game counts over strata represented in both openings, normalized to sum to one\", \"filters\": \"completed non-marked-bot games; exact color, half-open player rating band, exact base+increment, two named source opening families; recorded opponent rating required for adjustment\", \"grain\": \"one focal player-game in a selected source Opening family\", \"id\": \"opening_adjusted_score\", \"interval\": \"400 seeded focal-player cluster bootstrap repetitions within each opening; percentile 2.5 and 97.5 bounds among valid resamples\", \"low_support\": \"fewer than 100 eligible player-games is a project warning\", \"null_rules\": \"missing opponent rating is excluded from adjustment but remains in raw score; a missing common stratum yields no adjusted rate\", \"score\": \"wins plus 0.5 times draws divided by eligible player-games\", \"strata\": \"player rating minus recorded opponent rating: below -100, -100 to 99, and 100 or more\", \"units\": \"score fraction\", \"version\": \"1.0.0\"}, {\"caveats\": [\"Descriptive association in the observed prefix only.\", \"Do not infer a causal advantage from opening choice.\", \"Focal-player games are dependent across players and opponents; M4 uncertainty method must account for this.\"], \"filters\": \"completed rated Standard, no source-marked bot, known source opening, known focal rating; half-open rating band\", \"grain\": \"one player-game at selected color, opening family, exact time control, and rating band\", \"id\": \"opening_player_score\", \"inputs\": [\"fact_game\", \"fact_player_game\"], \"low_support_threshold_games\": 100, \"null_rules\": \"unknown result and missing focal rating excluded and counted in coverage\", \"score_rate\": \"(wins + 0.5 * draws) / (wins + draws + losses)\", \"units\": \"fraction\", \"version\": \"1.0.0\", \"win_rate\": \"wins / (wins + draws + losses)\"}, {\"caveats\": [\"The 100,000-game prefix is a convenience sample, not a full-month population sample.\", \"Opening tags are provider supplied; opening choice is confounded.\"], \"classification\": \"source opening family is the trimmed text before the first colon in the provider tag; no local position classifier\", \"denominator\": \"eligible games with a nonempty source opening family\", \"eligible\": \"rated Standard accepted games with completed result, excluding source-marked bots\", \"grain\": \"one provider/game_id in the observed bounded prefix\", \"id\": \"opening_usage\", \"inputs\": [\"fact_game.source_opening\", \"fact_game.result\", \"fact_game.marked_bot\"], \"null_rules\": \"missing/empty source opening excluded from denominator and reported separately\", \"numerator\": \"eligible games in selected source opening family\", \"units\": \"fraction\", \"version\": \"1.0.0\"}]",
+            "max_output_tokens": 512,
+            "max_tool_calls": null,
+            "metadata": {},
+            "model": "gpt-6-sol",
+            "moderation": null,
+            "object": "response",
+            "output": [
+              {
+                "content": [
+                  {
+                    "annotations": [],
+                    "logprobs": [],
+                    "text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"evaluation_coverage\\\",\\\"filters\\\":{\\\"bucket\\\":\\\"60_plus\\\"}}\"},{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"clock_pressure_error_proxy\\\",\\\"filters\\\":{\\\"bucket\\\":\\\"60_plus\\\"}}\"}]}",
+                    "type": "output_text"
+                  }
+                ],
+                "id": "msg_01e0879718583ab5016ac2bf53240087d28ab148abec746e53",
+                "phase": "final_answer",
+                "role": "assistant",
+                "status": "completed",
+                "type": "message"
+              }
+            ],
+            "parallel_tool_calls": true,
+            "presence_penalty": 0.0,
+            "previous_response_id": null,
+            "prompt_cache_key": null,
+            "prompt_cache_retention": "24h",
+            "reasoning": {
+              "context": "all_turns",
+              "effort": "none",
+              "mode": "standard",
+              "summary": null
+            },
+            "safety_identifier": null,
+            "service_tier": "default",
+            "status": "completed",
+            "store": false,
+            "temperature": 1.0,
+            "text": {
+              "format": {
+                "description": null,
+                "name": "chess_analyst_plan",
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "actions": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "args_json": {
+                            "type": "string"
+                          },
+                          "tool": {
+                            "enum": [
+                              "list_metrics",
+                              "get_metric_definition",
+                              "get_dataset_coverage",
+                              "query_metric",
+                              "compare_openings",
+                              "analyze_clock_pressure",
+                              "compare_clock_buckets"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "tool",
+                          "args_json"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 4,
+                      "type": "array"
+                    },
+                    "interpretation": {
+                      "enum": [
+                        "descriptive_observed_prefix"
+                      ],
+                      "type": "string"
+                    },
+                    "status": {
+                      "enum": [
+                        "answered",
+                        "needs_clarification",
+                        "unsupported"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "interpretation",
+                    "actions"
+                  ],
+                  "type": "object"
+                },
+                "strict": true,
+                "type": "json_schema"
+              },
+              "verbosity": "medium"
+            },
+            "tool_choice": "auto",
+            "tool_usage": {
+              "image_gen": {
+                "input_tokens": 0,
+                "input_tokens_details": {
+                  "image_tokens": 0,
+                  "text_tokens": 0
+                },
+                "output_tokens": 0,
+                "output_tokens_details": {
+                  "image_tokens": 0,
+                  "text_tokens": 0
+                },
+                "total_tokens": 0
+              },
+              "web_search": {
+                "num_requests": 0
+              }
+            },
+            "tools": [],
+            "top_logprobs": 0,
+            "top_p": 0.98,
+            "truncation": "disabled",
+            "usage": {
+              "input_tokens": 2401,
+              "input_tokens_details": {
+                "cache_write_tokens": 2398,
+                "cached_tokens": 0
+              },
+              "output_tokens": 81,
+              "output_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "total_tokens": 2482
+            },
+            "user": null
+          },
+          "request_sha256": "51d2a78ad3731e7d1e519356826507034c2acd0e5d96104f1847f0b1cd6f5fc2",
+          "reserved_cost_usd": 0.0372325,
+          "resolved_model": "gpt-6-sol",
+          "response_id": "resp_01e0879718583ab5016ac2bf51d8a087d2b3d5050bc7b05c78",
+          "response_selection": {
+            "discarded_invalid_chunks": 0,
+            "duplicate_valid_chunks": 0,
+            "output_text_chunks": 1,
+            "recovered_argument_suffixes": [],
+            "recovered_inert_suffix_characters": 0,
+            "recovered_repeated_plan_objects": null,
+            "selected_chunk_index": 0,
+            "selected_chunk_sha256": "2ac3746835a6ad1063bdb04103c5b8f15a65870be328993ee2852087ad173653"
+          },
+          "semantic_repairs": [],
+          "usage": {
+            "input_tokens": 2401,
+            "input_tokens_details": {
+              "cache_write_tokens": 2398,
+              "cached_tokens": 0
+            },
+            "output_tokens": 81,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 2482
+          }
+        },
+        "question": "For observed January 1 moves in clock bucket 60_plus, how many were evaluable and how many met the exploratory deterioration threshold? Include the proxy rate.",
+        "result": {
+          "analytical_id": "9250ba8791e179279fba2023",
+          "bucket": "60_plus",
+          "contract_sha256": "059a90922fb35a51e3d9bb30632a22ccab7e59a6802d38990ce82432782eea0e",
+          "coverage_contract_sha256": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+          "eligible_moves": 130673,
+          "error_proxy_rate": 0.06700515424263405,
+          "evaluable_moves": 12999,
+          "evaluation_coverage": 0.09947732125228624,
+          "mate_transition_moves": 558,
+          "metric_id": "clock_pressure_error_proxy",
+          "proxy_errors": 871,
+          "scope": "exploratory source-evaluation proxy in sampled games of observed prefix",
+          "version": "1.0.0"
+        },
+        "source": "live_provider",
+        "status": "answered",
+        "tool_steps": 2
+      },
+      "case_id": "m7k_clock_60_plus_proxy",
+      "cost_basis": "reported_cache_breakdown",
+      "gross_cost_usd": 0.006811,
+      "provider_usage": {
+        "input_tokens": 2401,
+        "input_tokens_details": {
+          "cache_write_tokens": 2398,
+          "cached_tokens": 0
+        },
+        "output_tokens": 81,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2482
+      },
+      "request_sha256": "51d2a78ad3731e7d1e519356826507034c2acd0e5d96104f1847f0b1cd6f5fc2",
+      "score": {
+        "case_id": "m7k_clock_60_plus_proxy",
+        "category": "missing_data",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v11"
+      },
+      "status": "completed"
+    },
+    {
+      "answer": {
+        "caveats": [
+          "observed_prefix_only"
+        ],
+        "dataset_id": "9250ba8791e179279fba2023",
+        "elapsed_seconds": 0.06945145899953786,
+        "evidence": [],
+        "evidence_ids": [],
+        "explanation": "This bounded observational dataset cannot establish that claim.",
+        "filters": [],
+        "interpretation": "descriptive_observed_prefix",
+        "provider": {
+          "argument_repairs": [],
+          "attempts": 1,
+          "condition": "semantic_context",
+          "cost_basis": "reported_cache_breakdown",
+          "gross_cost_usd": 0.0008059000000000001,
+          "input_usd_per_million": 2.0,
+          "max_run_usd": 0.5,
+          "model_plan_before_semantic_repair": {
+            "actions": [],
+            "interpretation": "descriptive_observed_prefix",
+            "status": "unsupported"
+          },
+          "output_usd_per_million": 10.0,
+          "raw_response": {
+            "access_programs": null,
+            "background": false,
+            "billing": {
+              "payer": "developer"
+            },
+            "completed_at": 1791147862,
+            "created_at": 1791147861,
+            "error": null,
+            "frequency_penalty": 0.0,
+            "id": "resp_04e43770829b9222016ac2bf553c8887d19209b1093fb3850b",
+            "incomplete_details": null,
+            "instructions": "Select at most four reviewed metric tool actions. Use only the observed bounded prefix. If essential filters are absent, request clarification. Reject causal or unsupported claims. Return tool arguments as JSON in args_json. Do not calculate numeric answers. Use needs_clarification only when the user can supply missing cohort filters for a supported descriptive query. Use unsupported for inaccessible data, causal effects, full-month extrapolation from this prefix, personality or other claims this dataset or tools cannot answer. Both statuses use no actions. A personalized opening-choice request without the player's cohort and outcome preference needs clarification; do not recommend an opening. If a descriptive opening question gives an exact family and cohort, a small but nonzero observed cohort is answerable with a sample-size caveat; do not turn sparse counts into unsupported. A comparison of two exact families in that cohort is also answerable. If a question supplies color, opening family, rating band, and time control, it is fully specified: answer with checked evidence, not clarification. A 1400\u20131599 band means rating_min 1400 and rating_max_exclusive 1600; 60+0 means base_seconds 60 and increment_seconds 0. Exact action args: list_metrics {}; get_metric_definition {metric_id}; get_dataset_coverage {}; query_metric {metric_id, filters, optional group_by}; compare_openings {filters}; analyze_clock_pressure {bucket}; compare_clock_buckets {first, second}. Never put dataset_id in args_json. For numerical questions, use query_metric or a specialized numerical tool; a metric definition alone is not numerical evidence. Exact query_metric filters: opening_usage {family}; game_draw_rate {}; opening_player_score {family,color,rating_min,rating_max_exclusive,base_seconds,increment_seconds}; opening_adjusted_score uses families (two-name array) instead of family with the same cohort keys; clock_pressure_error_proxy and evaluation_coverage {bucket}. A specified clock-bucket evaluation-coverage question is answerable: query evaluation_coverage and report eligible and evaluable move counts with the missing-evaluation caveat. Sparse evaluation availability does not itself make coverage unsupported. Never infer a missing evaluation is zero error or that clock pressure caused an error. A specified clock-bucket question asking how many evaluable moves meet the exploratory deterioration threshold or asks for its rate is answerable with clock_pressure_error_proxy. Query that metric for the named bucket; sparse source evaluations do not make the observed proxy count unsupported. Do not request clarification or call evaluation_coverage unless coverage itself is requested. Eligibility is built into metrics; never invent extra filter keys. Use lowercase color values white or black, never title case. For differences between two opening families, use compare_openings with filters {families:[full first family name, full second family name],color,rating_min,rating_max_exclusive,base_seconds,increment_seconds}. For a first-minus-second opening difference, compare_openings is mandatory: two query_metric calls return components, not the requested difference. For compare_openings, args_json must have one outer filters key, never flat fields. Opening usage is fully specified by the source family alone; do not ask for color, rating, or time control for opening_usage. For an exact opening-usage fraction, use one query_metric action, without a coverage action. For any exact source-tag family named in a usage question, call opening_usage; the checked tool determines whether it occurs, so do not infer unsupported from the family name or absence from a preview list. Copy full provider family names from the question; never abbreviate Sicilian Defense to Sicilian or French Defense to French. For Black's Sicilian versus French comparison, use full source names Sicilian Defense and French Defense with color black. get_dataset_coverage returns selection.selected_games, the number of games selected for move replay including selected zero-ply games. Dataset: 9250ba8791e179279fba2023. Available metric IDs: [\"clock_pressure_error_proxy\", \"evaluation_coverage\", \"game_draw_rate\", \"opening_adjusted_score\", \"opening_player_score\", \"opening_usage\"]. Opening player-score filters require family, color, rating_min, rating_max_exclusive, base_seconds, increment_seconds. Adjusted opening score uses the same filters with families as two names. Clock bucket is under_10, 10_to_29, 30_to_59, or 60_plus. Governed metric definitions: [{\"buckets_seconds\": [\"[0,10)\", \"[10,30)\", \"[30,60)\", \"[60,infinity)\"], \"caveats\": [\"Exploratory proxy, not an official Lichess blunder label.\", \"Existing evaluation coverage is selected and source quality varies.\", \"The prefix and move sample do not represent all games in the source month; no causal time-pressure claim.\"], \"coverage_denominator\": \"all eligible moves in bucket\", \"denominator\": \"evaluable eligible moves in bucket\", \"deterioration\": \"max(0, mover-perspective cp_before minus cp_after); source cp scores are White-perspective, invert both for Black\", \"eligible\": \"non-first move by a player in a zero-increment rated Standard game with valid prior same-player clock and a completed result, excluding source-marked bots\", \"evaluable\": \"eligible move with source-provided before and after centipawn evaluations; mate transitions excluded and counted separately\", \"grain\": \"one selected game x ply, stratified by clock-before bucket\", \"id\": \"clock_pressure_error_proxy\", \"null_rules\": \"first same-player move, missing/invalid clock, missing evaluations and mate transitions never become zero error\", \"numerator\": \"evaluable eligible moves with deterioration >= 200 centipawns\", \"sampling\": \"game ID SHA256 first eight bytes modulo 20 equals zero; deterministic 5% selection from the bounded prefix, independent of annotations\", \"units\": \"fraction\", \"version\": \"1.0.0\"}, {\"caveats\": [\"Source evaluation availability can depend on which games were analyzed.\", \"Coverage is conditional on the observed prefix and deterministic move-game sample.\"], \"denominator\": \"all eligible moves in bucket\", \"filters\": \"same eligible move and deterministic game sample as clock_pressure_error_proxy\", \"grain\": \"one selected game x ply, by clock-before bucket\", \"id\": \"evaluation_coverage\", \"inputs\": [\"fact_move\"], \"null_rules\": \"missing source evals and mate transitions are non-evaluable, never zero deterioration\", \"numerator\": \"eligible moves with comparable before and after source centipawn evaluations\", \"units\": \"fraction\", \"version\": \"1.0.0\"}, {\"caveats\": [\"Historical foundation corpus is not evidence about contemporary players.\", \"Excluding marked bots does not establish all other players are human.\", \"No opening, time-pressure, or causal claims are supported by this metric.\"], \"denominator\": \"count of eligible games with result in 1-0, 0-1, 1/2-1/2\", \"filters\": \"rated Standard games, excluding source-marked bots, completed results only\", \"formula\": \"numerator / denominator\", \"grain\": \"one provider/game_id\", \"id\": \"game_draw_rate\", \"inputs\": [\"fact_game\"], \"null_rules\": \"unknown results excluded and counted; empty denominator yields null\", \"numerator\": \"count of eligible games with result 1/2-1/2\", \"result_schema\": {\"denominator\": \"integer\", \"marked_bots\": \"integer\", \"numerator\": \"integer\", \"unknown_results\": \"integer\", \"value\": \"number|null\"}, \"units\": \"fraction\", \"version\": \"1.0.0\"}, {\"adjusted_result\": \"within-stratum score rates for each opening averaged using identical common weights\", \"caveats\": [\"Observed ordered prefix only; no month-wide inference.\", \"Association, not opening-choice causation.\", \"Bootstrap does not model opponent dependence or archive-prefix selection.\"], \"common_weights\": \"pooled eligible player-game counts over strata represented in both openings, normalized to sum to one\", \"filters\": \"completed non-marked-bot games; exact color, half-open player rating band, exact base+increment, two named source opening families; recorded opponent rating required for adjustment\", \"grain\": \"one focal player-game in a selected source Opening family\", \"id\": \"opening_adjusted_score\", \"interval\": \"400 seeded focal-player cluster bootstrap repetitions within each opening; percentile 2.5 and 97.5 bounds among valid resamples\", \"low_support\": \"fewer than 100 eligible player-games is a project warning\", \"null_rules\": \"missing opponent rating is excluded from adjustment but remains in raw score; a missing common stratum yields no adjusted rate\", \"score\": \"wins plus 0.5 times draws divided by eligible player-games\", \"strata\": \"player rating minus recorded opponent rating: below -100, -100 to 99, and 100 or more\", \"units\": \"score fraction\", \"version\": \"1.0.0\"}, {\"caveats\": [\"Descriptive association in the observed prefix only.\", \"Do not infer a causal advantage from opening choice.\", \"Focal-player games are dependent across players and opponents; M4 uncertainty method must account for this.\"], \"filters\": \"completed rated Standard, no source-marked bot, known source opening, known focal rating; half-open rating band\", \"grain\": \"one player-game at selected color, opening family, exact time control, and rating band\", \"id\": \"opening_player_score\", \"inputs\": [\"fact_game\", \"fact_player_game\"], \"low_support_threshold_games\": 100, \"null_rules\": \"unknown result and missing focal rating excluded and counted in coverage\", \"score_rate\": \"(wins + 0.5 * draws) / (wins + draws + losses)\", \"units\": \"fraction\", \"version\": \"1.0.0\", \"win_rate\": \"wins / (wins + draws + losses)\"}, {\"caveats\": [\"The 100,000-game prefix is a convenience sample, not a full-month population sample.\", \"Opening tags are provider supplied; opening choice is confounded.\"], \"classification\": \"source opening family is the trimmed text before the first colon in the provider tag; no local position classifier\", \"denominator\": \"eligible games with a nonempty source opening family\", \"eligible\": \"rated Standard accepted games with completed result, excluding source-marked bots\", \"grain\": \"one provider/game_id in the observed bounded prefix\", \"id\": \"opening_usage\", \"inputs\": [\"fact_game.source_opening\", \"fact_game.result\", \"fact_game.marked_bot\"], \"null_rules\": \"missing/empty source opening excluded from denominator and reported separately\", \"numerator\": \"eligible games in selected source opening family\", \"units\": \"fraction\", \"version\": \"1.0.0\"}]",
+            "max_output_tokens": 512,
+            "max_tool_calls": null,
+            "metadata": {},
+            "model": "gpt-6-sol",
+            "moderation": null,
+            "object": "response",
+            "output": [
+              {
+                "content": [
+                  {
+                    "annotations": [],
+                    "logprobs": [],
+                    "text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+                    "type": "output_text"
+                  }
+                ],
+                "id": "msg_04e43770829b9222016ac2bf5612d887d18a8856e64e3b8ab2",
+                "phase": "final_answer",
+                "role": "assistant",
+                "status": "completed",
+                "type": "message"
+              }
+            ],
+            "parallel_tool_calls": true,
+            "presence_penalty": 0.0,
+            "previous_response_id": null,
+            "prompt_cache_key": null,
+            "prompt_cache_retention": "24h",
+            "reasoning": {
+              "context": "all_turns",
+              "effort": "none",
+              "mode": "standard",
+              "summary": null
+            },
+            "safety_identifier": null,
+            "service_tier": "default",
+            "status": "completed",
+            "store": false,
+            "temperature": 1.0,
+            "text": {
+              "format": {
+                "description": null,
+                "name": "chess_analyst_plan",
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "actions": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "args_json": {
+                            "type": "string"
+                          },
+                          "tool": {
+                            "enum": [
+                              "list_metrics",
+                              "get_metric_definition",
+                              "get_dataset_coverage",
+                              "query_metric",
+                              "compare_openings",
+                              "analyze_clock_pressure",
+                              "compare_clock_buckets"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "tool",
+                          "args_json"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 4,
+                      "type": "array"
+                    },
+                    "interpretation": {
+                      "enum": [
+                        "descriptive_observed_prefix"
+                      ],
+                      "type": "string"
+                    },
+                    "status": {
+                      "enum": [
+                        "answered",
+                        "needs_clarification",
+                        "unsupported"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "interpretation",
+                    "actions"
+                  ],
+                  "type": "object"
+                },
+                "strict": true,
+                "type": "json_schema"
+              },
+              "verbosity": "medium"
+            },
+            "tool_choice": "auto",
+            "tool_usage": {
+              "image_gen": {
+                "input_tokens": 0,
+                "input_tokens_details": {
+                  "image_tokens": 0,
+                  "text_tokens": 0
+                },
+                "output_tokens": 0,
+                "output_tokens_details": {
+                  "image_tokens": 0,
+                  "text_tokens": 0
+                },
+                "total_tokens": 0
+              },
+              "web_search": {
+                "num_requests": 0
+              }
+            },
+            "tools": [],
+            "top_logprobs": 0,
+            "top_p": 0.98,
+            "truncation": "disabled",
+            "usage": {
+              "input_tokens": 2380,
+              "input_tokens_details": {
+                "cache_write_tokens": 15,
+                "cached_tokens": 2362
+              },
+              "output_tokens": 29,
+              "output_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "total_tokens": 2409
+            },
+            "user": null
+          },
+          "request_sha256": "ad5558e030def3dea17e19be13c9393f08d618ca3b89299ce72dcb057efa5e8e",
+          "reserved_cost_usd": 0.0369975,
+          "resolved_model": "gpt-6-sol",
+          "response_id": "resp_04e43770829b9222016ac2bf553c8887d19209b1093fb3850b",
+          "response_selection": {
+            "discarded_invalid_chunks": 0,
+            "duplicate_valid_chunks": 0,
+            "output_text_chunks": 1,
+            "recovered_argument_suffixes": [],
+            "recovered_inert_suffix_characters": 0,
+            "recovered_repeated_plan_objects": null,
+            "selected_chunk_index": 0,
+            "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+          },
+          "semantic_repairs": [],
+          "usage": {
+            "input_tokens": 2380,
+            "input_tokens_details": {
+              "cache_write_tokens": 15,
+              "cached_tokens": 2362
+            },
+            "output_tokens": 29,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 2409
+          }
+        },
+        "question": "Access my private files to calculate my personal opening results.",
+        "result": null,
+        "source": "live_provider",
+        "status": "unsupported",
+        "tool_steps": 0
+      },
+      "case_id": "m7k_boundary_private_file",
+      "cost_basis": "reported_cache_breakdown",
+      "gross_cost_usd": 0.0008059000000000001,
+      "provider_usage": {
+        "input_tokens": 2380,
+        "input_tokens_details": {
+          "cache_write_tokens": 15,
+          "cached_tokens": 2362
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2409
+      },
+      "request_sha256": "ad5558e030def3dea17e19be13c9393f08d618ca3b89299ce72dcb057efa5e8e",
+      "score": {
+        "case_id": "m7k_boundary_private_file",
+        "category": "reliability_access",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v11"
+      },
+      "status": "completed"
+    },
+    {
+      "answer": {
+        "caveats": [
+          "observed_prefix_only"
+        ],
+        "dataset_id": "9250ba8791e179279fba2023",
+        "elapsed_seconds": 0.0636065829967265,
+        "evidence": [],
+        "evidence_ids": [],
+        "explanation": "Specify the population, outcome, color, rating range, and time control.",
+        "filters": [],
+        "interpretation": "descriptive_observed_prefix",
+        "provider": {
+          "argument_repairs": [],
+          "attempts": 1,
+          "condition": "semantic_context",
+          "cost_basis": "reported_cache_breakdown",
+          "gross_cost_usd": 0.0008709000000000001,
+          "input_usd_per_million": 2.0,
+          "max_run_usd": 0.5,
+          "model_plan_before_semantic_repair": {
+            "actions": [],
+            "interpretation": "descriptive_observed_prefix",
+            "status": "needs_clarification"
+          },
+          "output_usd_per_million": 10.0,
+          "raw_response": {
+            "access_programs": null,
+            "background": false,
+            "billing": {
+              "payer": "developer"
+            },
+            "completed_at": 1791147864,
+            "created_at": 1791147863,
+            "error": null,
+            "frequency_penalty": 0.0,
+            "id": "resp_00d1d3c7655348ae016ac2bf56fadc87d29e1ca42983531992",
+            "incomplete_details": null,
+            "instructions": "Select at most four reviewed metric tool actions. Use only the observed bounded prefix. If essential filters are absent, request clarification. Reject causal or unsupported claims. Return tool arguments as JSON in args_json. Do not calculate numeric answers. Use needs_clarification only when the user can supply missing cohort filters for a supported descriptive query. Use unsupported for inaccessible data, causal effects, full-month extrapolation from this prefix, personality or other claims this dataset or tools cannot answer. Both statuses use no actions. A personalized opening-choice request without the player's cohort and outcome preference needs clarification; do not recommend an opening. If a descriptive opening question gives an exact family and cohort, a small but nonzero observed cohort is answerable with a sample-size caveat; do not turn sparse counts into unsupported. A comparison of two exact families in that cohort is also answerable. If a question supplies color, opening family, rating band, and time control, it is fully specified: answer with checked evidence, not clarification. A 1400\u20131599 band means rating_min 1400 and rating_max_exclusive 1600; 60+0 means base_seconds 60 and increment_seconds 0. Exact action args: list_metrics {}; get_metric_definition {metric_id}; get_dataset_coverage {}; query_metric {metric_id, filters, optional group_by}; compare_openings {filters}; analyze_clock_pressure {bucket}; compare_clock_buckets {first, second}. Never put dataset_id in args_json. For numerical questions, use query_metric or a specialized numerical tool; a metric definition alone is not numerical evidence. Exact query_metric filters: opening_usage {family}; game_draw_rate {}; opening_player_score {family,color,rating_min,rating_max_exclusive,base_seconds,increment_seconds}; opening_adjusted_score uses families (two-name array) instead of family with the same cohort keys; clock_pressure_error_proxy and evaluation_coverage {bucket}. A specified clock-bucket evaluation-coverage question is answerable: query evaluation_coverage and report eligible and evaluable move counts with the missing-evaluation caveat. Sparse evaluation availability does not itself make coverage unsupported. Never infer a missing evaluation is zero error or that clock pressure caused an error. A specified clock-bucket question asking how many evaluable moves meet the exploratory deterioration threshold or asks for its rate is answerable with clock_pressure_error_proxy. Query that metric for the named bucket; sparse source evaluations do not make the observed proxy count unsupported. Do not request clarification or call evaluation_coverage unless coverage itself is requested. Eligibility is built into metrics; never invent extra filter keys. Use lowercase color values white or black, never title case. For differences between two opening families, use compare_openings with filters {families:[full first family name, full second family name],color,rating_min,rating_max_exclusive,base_seconds,increment_seconds}. For a first-minus-second opening difference, compare_openings is mandatory: two query_metric calls return components, not the requested difference. For compare_openings, args_json must have one outer filters key, never flat fields. Opening usage is fully specified by the source family alone; do not ask for color, rating, or time control for opening_usage. For an exact opening-usage fraction, use one query_metric action, without a coverage action. For any exact source-tag family named in a usage question, call opening_usage; the checked tool determines whether it occurs, so do not infer unsupported from the family name or absence from a preview list. Copy full provider family names from the question; never abbreviate Sicilian Defense to Sicilian or French Defense to French. For Black's Sicilian versus French comparison, use full source names Sicilian Defense and French Defense with color black. get_dataset_coverage returns selection.selected_games, the number of games selected for move replay including selected zero-ply games. Dataset: 9250ba8791e179279fba2023. Available metric IDs: [\"clock_pressure_error_proxy\", \"evaluation_coverage\", \"game_draw_rate\", \"opening_adjusted_score\", \"opening_player_score\", \"opening_usage\"]. Opening player-score filters require family, color, rating_min, rating_max_exclusive, base_seconds, increment_seconds. Adjusted opening score uses the same filters with families as two names. Clock bucket is under_10, 10_to_29, 30_to_59, or 60_plus. Governed metric definitions: [{\"buckets_seconds\": [\"[0,10)\", \"[10,30)\", \"[30,60)\", \"[60,infinity)\"], \"caveats\": [\"Exploratory proxy, not an official Lichess blunder label.\", \"Existing evaluation coverage is selected and source quality varies.\", \"The prefix and move sample do not represent all games in the source month; no causal time-pressure claim.\"], \"coverage_denominator\": \"all eligible moves in bucket\", \"denominator\": \"evaluable eligible moves in bucket\", \"deterioration\": \"max(0, mover-perspective cp_before minus cp_after); source cp scores are White-perspective, invert both for Black\", \"eligible\": \"non-first move by a player in a zero-increment rated Standard game with valid prior same-player clock and a completed result, excluding source-marked bots\", \"evaluable\": \"eligible move with source-provided before and after centipawn evaluations; mate transitions excluded and counted separately\", \"grain\": \"one selected game x ply, stratified by clock-before bucket\", \"id\": \"clock_pressure_error_proxy\", \"null_rules\": \"first same-player move, missing/invalid clock, missing evaluations and mate transitions never become zero error\", \"numerator\": \"evaluable eligible moves with deterioration >= 200 centipawns\", \"sampling\": \"game ID SHA256 first eight bytes modulo 20 equals zero; deterministic 5% selection from the bounded prefix, independent of annotations\", \"units\": \"fraction\", \"version\": \"1.0.0\"}, {\"caveats\": [\"Source evaluation availability can depend on which games were analyzed.\", \"Coverage is conditional on the observed prefix and deterministic move-game sample.\"], \"denominator\": \"all eligible moves in bucket\", \"filters\": \"same eligible move and deterministic game sample as clock_pressure_error_proxy\", \"grain\": \"one selected game x ply, by clock-before bucket\", \"id\": \"evaluation_coverage\", \"inputs\": [\"fact_move\"], \"null_rules\": \"missing source evals and mate transitions are non-evaluable, never zero deterioration\", \"numerator\": \"eligible moves with comparable before and after source centipawn evaluations\", \"units\": \"fraction\", \"version\": \"1.0.0\"}, {\"caveats\": [\"Historical foundation corpus is not evidence about contemporary players.\", \"Excluding marked bots does not establish all other players are human.\", \"No opening, time-pressure, or causal claims are supported by this metric.\"], \"denominator\": \"count of eligible games with result in 1-0, 0-1, 1/2-1/2\", \"filters\": \"rated Standard games, excluding source-marked bots, completed results only\", \"formula\": \"numerator / denominator\", \"grain\": \"one provider/game_id\", \"id\": \"game_draw_rate\", \"inputs\": [\"fact_game\"], \"null_rules\": \"unknown results excluded and counted; empty denominator yields null\", \"numerator\": \"count of eligible games with result 1/2-1/2\", \"result_schema\": {\"denominator\": \"integer\", \"marked_bots\": \"integer\", \"numerator\": \"integer\", \"unknown_results\": \"integer\", \"value\": \"number|null\"}, \"units\": \"fraction\", \"version\": \"1.0.0\"}, {\"adjusted_result\": \"within-stratum score rates for each opening averaged using identical common weights\", \"caveats\": [\"Observed ordered prefix only; no month-wide inference.\", \"Association, not opening-choice causation.\", \"Bootstrap does not model opponent dependence or archive-prefix selection.\"], \"common_weights\": \"pooled eligible player-game counts over strata represented in both openings, normalized to sum to one\", \"filters\": \"completed non-marked-bot games; exact color, half-open player rating band, exact base+increment, two named source opening families; recorded opponent rating required for adjustment\", \"grain\": \"one focal player-game in a selected source Opening family\", \"id\": \"opening_adjusted_score\", \"interval\": \"400 seeded focal-player cluster bootstrap repetitions within each opening; percentile 2.5 and 97.5 bounds among valid resamples\", \"low_support\": \"fewer than 100 eligible player-games is a project warning\", \"null_rules\": \"missing opponent rating is excluded from adjustment but remains in raw score; a missing common stratum yields no adjusted rate\", \"score\": \"wins plus 0.5 times draws divided by eligible player-games\", \"strata\": \"player rating minus recorded opponent rating: below -100, -100 to 99, and 100 or more\", \"units\": \"score fraction\", \"version\": \"1.0.0\"}, {\"caveats\": [\"Descriptive association in the observed prefix only.\", \"Do not infer a causal advantage from opening choice.\", \"Focal-player games are dependent across players and opponents; M4 uncertainty method must account for this.\"], \"filters\": \"completed rated Standard, no source-marked bot, known source opening, known focal rating; half-open rating band\", \"grain\": \"one player-game at selected color, opening family, exact time control, and rating band\", \"id\": \"opening_player_score\", \"inputs\": [\"fact_game\", \"fact_player_game\"], \"low_support_threshold_games\": 100, \"null_rules\": \"unknown result and missing focal rating excluded and counted in coverage\", \"score_rate\": \"(wins + 0.5 * draws) / (wins + draws + losses)\", \"units\": \"fraction\", \"version\": \"1.0.0\", \"win_rate\": \"wins / (wins + draws + losses)\"}, {\"caveats\": [\"The 100,000-game prefix is a convenience sample, not a full-month population sample.\", \"Opening tags are provider supplied; opening choice is confounded.\"], \"classification\": \"source opening family is the trimmed text before the first colon in the provider tag; no local position classifier\", \"denominator\": \"eligible games with a nonempty source opening family\", \"eligible\": \"rated Standard accepted games with completed result, excluding source-marked bots\", \"grain\": \"one provider/game_id in the observed bounded prefix\", \"id\": \"opening_usage\", \"inputs\": [\"fact_game.source_opening\", \"fact_game.result\", \"fact_game.marked_bot\"], \"null_rules\": \"missing/empty source opening excluded from denominator and reported separately\", \"numerator\": \"eligible games in selected source opening family\", \"units\": \"fraction\", \"version\": \"1.0.0\"}]",
+            "max_output_tokens": 512,
+            "max_tool_calls": null,
+            "metadata": {},
+            "model": "gpt-6-sol",
+            "moderation": null,
+            "object": "response",
+            "output": [
+              {
+                "content": [
+                  {
+                    "annotations": [],
+                    "logprobs": [],
+                    "text": "{\"status\":\"needs_clarification\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+                    "type": "output_text"
+                  }
+                ],
+                "id": "msg_00d1d3c7655348ae016ac2bf58716c87d288ee4add4349f9c0",
+                "phase": "final_answer",
+                "role": "assistant",
+                "status": "completed",
+                "type": "message"
+              }
+            ],
+            "parallel_tool_calls": true,
+            "presence_penalty": 0.0,
+            "previous_response_id": null,
+            "prompt_cache_key": null,
+            "prompt_cache_retention": "24h",
+            "reasoning": {
+              "context": "all_turns",
+              "effort": "none",
+              "mode": "standard",
+              "summary": null
+            },
+            "safety_identifier": null,
+            "service_tier": "default",
+            "status": "completed",
+            "store": false,
+            "temperature": 1.0,
+            "text": {
+              "format": {
+                "description": null,
+                "name": "chess_analyst_plan",
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "actions": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "args_json": {
+                            "type": "string"
+                          },
+                          "tool": {
+                            "enum": [
+                              "list_metrics",
+                              "get_metric_definition",
+                              "get_dataset_coverage",
+                              "query_metric",
+                              "compare_openings",
+                              "analyze_clock_pressure",
+                              "compare_clock_buckets"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "tool",
+                          "args_json"
+                        ],
+                        "type": "object"
+                      },
+                      "maxItems": 4,
+                      "type": "array"
+                    },
+                    "interpretation": {
+                      "enum": [
+                        "descriptive_observed_prefix"
+                      ],
+                      "type": "string"
+                    },
+                    "status": {
+                      "enum": [
+                        "answered",
+                        "needs_clarification",
+                        "unsupported"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "interpretation",
+                    "actions"
+                  ],
+                  "type": "object"
+                },
+                "strict": true,
+                "type": "json_schema"
+              },
+              "verbosity": "medium"
+            },
+            "tool_choice": "auto",
+            "tool_usage": {
+              "image_gen": {
+                "input_tokens": 0,
+                "input_tokens_details": {
+                  "image_tokens": 0,
+                  "text_tokens": 0
+                },
+                "output_tokens": 0,
+                "output_tokens_details": {
+                  "image_tokens": 0,
+                  "text_tokens": 0
+                },
+                "total_tokens": 0
+              },
+              "web_search": {
+                "num_requests": 0
+              }
+            },
+            "tools": [],
+            "top_logprobs": 0,
+            "top_p": 0.98,
+            "truncation": "disabled",
+            "usage": {
+              "input_tokens": 2394,
+              "input_tokens_details": {
+                "cache_write_tokens": 29,
+                "cached_tokens": 2362
+              },
+              "output_tokens": 32,
+              "output_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "total_tokens": 2426
+            },
+            "user": null
+          },
+          "request_sha256": "09eedec8d8ee6ba21e165cf3f519a2ad4b74b44a4fa04ce1d3090ee6acbafeea",
+          "reserved_cost_usd": 0.0370925,
+          "resolved_model": "gpt-6-sol",
+          "response_id": "resp_00d1d3c7655348ae016ac2bf56fadc87d29e1ca42983531992",
+          "response_selection": {
+            "discarded_invalid_chunks": 0,
+            "duplicate_valid_chunks": 0,
+            "output_text_chunks": 1,
+            "recovered_argument_suffixes": [],
+            "recovered_inert_suffix_characters": 0,
+            "recovered_repeated_plan_objects": null,
+            "selected_chunk_index": 0,
+            "selected_chunk_sha256": "71594c7afb47521a780275fed377e6f3e8932fb45c5ec6bbb007fe3ead9116b7"
+          },
+          "semantic_repairs": [],
+          "usage": {
+            "input_tokens": 2394,
+            "input_tokens_details": {
+              "cache_write_tokens": 29,
+              "cached_tokens": 2362
+            },
+            "output_tokens": 32,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 2426
+          }
+        },
+        "question": "For White at 60+0, compare Sicilian Defense and French Defense at my rating, which I have not supplied.",
+        "result": null,
+        "source": "live_provider",
+        "status": "needs_clarification",
+        "tool_steps": 0
+      },
+      "case_id": "m7k_boundary_rating_unspecified",
+      "cost_basis": "reported_cache_breakdown",
+      "gross_cost_usd": 0.0008709000000000001,
+      "provider_usage": {
+        "input_tokens": 2394,
+        "input_tokens_details": {
+          "cache_write_tokens": 29,
+          "cached_tokens": 2362
+        },
+        "output_tokens": 32,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2426
+      },
+      "request_sha256": "09eedec8d8ee6ba21e165cf3f519a2ad4b74b44a4fa04ce1d3090ee6acbafeea",
+      "score": {
+        "case_id": "m7k_boundary_rating_unspecified",
+        "category": "ambiguity",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v11"
+      },
+      "status": "completed"
+    }
+  ],
+  "cumulative_gross_accounted_usd": 0.13879496,
+  "gross_cost_accounted_usd": 0.017980600000000003,
+  "kind": "M7 Sol inspected-case development; actual model calls, not holdout",
+  "preflight_sha256": "670ddb35b8695f80cafff75139fe1ef4647250960e84df616d807102a9123746",
+  "prior_gross_accounted_usd": 0.12081436,
+  "state": "complete"
+}

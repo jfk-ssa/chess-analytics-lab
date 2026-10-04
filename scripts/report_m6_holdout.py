@@ -83,6 +83,12 @@ def build(project: Path, summary_path: Path, preflight_path: Path) -> dict:
                 "model_text": _selected_model_text(response, selection),
                 "response_selection": selection,
                 "argument_repairs": answer.get("provider", {}).get("argument_repairs", []),
+                "semantic_repairs": answer.get("provider", {}).get("semantic_repairs", []),
+                "model_plan_before_semantic_repair": answer.get("provider", {}).get(
+                    "model_plan_before_semantic_repair"
+                ),
+                "transport_retries": raw.get("transport_retries", []),
+                "unknown_cost_reservation_usd": raw.get("unknown_cost_reservation_usd", 0),
                 "tool_steps": answer.get("tool_steps"),
                 "answer_status": answer.get("status"),
                 "result": answer.get("result"),
@@ -127,6 +133,10 @@ def build(project: Path, summary_path: Path, preflight_path: Path) -> dict:
             for name in sorted({a["category"] for a in attempts})
         },
         "known_gross_cost_usd": sum(a["gross_cost_usd"] or 0 for a in attempts),
+        "unknown_cost_reservations_usd": summary.get("unknown_cost_reservations_usd", 0),
+        "gross_cost_accounted_usd": summary.get(
+            "gross_cost_accounted_usd", summary["known_gross_cost_usd"]
+        ),
         "cost_known_for_every_attempt": all(a["gross_cost_usd"] is not None for a in attempts),
         "max_run_usd": preflight["max_run_usd"],
         "one_shot_no_repeatability_claim": True,

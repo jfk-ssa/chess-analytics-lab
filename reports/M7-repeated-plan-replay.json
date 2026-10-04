@@ -1,0 +1,13 @@
+{
+  "case_id": "m7h_usage_indian_defense",
+  "historical_run": "April v8 repeat 3",
+  "kind": "offline historical-response parser replay, not live rescore",
+  "original_live_error": "provider returned no unique structured plan",
+  "original_live_status": "failed",
+  "recovery": {
+    "identical_complete_objects": 10,
+    "truncated_duplicate_suffix_characters": 188
+  },
+  "replay_failures": [],
+  "replay_passed": true
+}

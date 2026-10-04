@@ -1,0 +1,36 @@
+{
+  "approved_cumulative_cap_usd": 0.5,
+  "complete_repetitions": 1,
+  "cumulative_M7_accounted_usd": 0.11524751000000001,
+  "first_run": {
+    "answerable": {
+      "attempted": 41,
+      "passed": 38
+    },
+    "attempted": 50,
+    "boundary": {
+      "attempted": 9,
+      "passed": 9
+    },
+    "completed": 50,
+    "gross_cost_accounted_usd": 0.005584985000000001,
+    "high_severity": {
+      "attempted": 5,
+      "passed": 5
+    }
+  },
+  "kind": "M7 February v10 stopped live gate; no release claim",
+  "live_gates_passed": false,
+  "planned_repetitions": 3,
+  "second_run": {
+    "answerable": {
+      "attempted": 26,
+      "passed": 25
+    },
+    "attempted": 26,
+    "completed": 25,
+    "error": "provider returned no unique structured plan",
+    "gross_cost_accounted_usd": 0.002023355,
+    "unattempted": 24
+  }
+}

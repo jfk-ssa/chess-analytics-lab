@@ -1,0 +1,134 @@
+{
+  "analytical_id": "ed7393d948b6fb57f5b0562a",
+  "analytics_implementation_sha256": "2c500f119831990d017598b30d848863d156bd034f95fbe0953f2b457c634365",
+  "artifacts": {
+    "fact_move.parquet": "d31e1994146308e1446df23a7d47b6f18f283e8a7beacfb94d5abf688121c349",
+    "warehouse.duckdb": "16950863b5b6d528365e7a80ca63ac5fe5a3327a4c40c8fbba4ff7e0a09f5427"
+  },
+  "compressed_prefix_sha256": "28957e6fcb58df5813c60d3617063ea45853b18298af6c74725f0fb333726020",
+  "observed_date_coverage": {
+    "first_utc_date": "2026-03-01",
+    "last_utc_date": "2026-03-01",
+    "missing": {
+      "participant_rating": 0,
+      "played_at": 0,
+      "source_opening": 0,
+      "utc_date": 0
+    }
+  },
+  "partial_archive": true,
+  "published_at": "2026-10-04T20:29:37.829350+00:00",
+  "selection": {
+    "move_rows": 333505,
+    "selected_games": 5048,
+    "selected_zero_ply_games": 9,
+    "selection": "SHA256(game_id) first 8 bytes mod 20 == 0"
+  },
+  "source_period": "2026-03",
+  "source_sha256": "07c341ed2c8ac01230006ebb796fed2ea9ae2d40c850845ca8fcd5858c226d97",
+  "source_snapshot_id": "16da594543bc7d4760878d54",
+  "status": "published",
+  "summary": {
+    "clock_buckets": [
+      {
+        "bucket": "10_to_29",
+        "eligible_moves": 30727,
+        "error_proxy_rate": 0.10514786418400876,
+        "evaluable_moves": 1826,
+        "evaluation_coverage": 0.059426562957659385,
+        "mate_transition_moves": 288,
+        "proxy_errors": 192
+      },
+      {
+        "bucket": "30_to_59",
+        "eligible_moves": 62649,
+        "error_proxy_rate": 0.06958648288128057,
+        "evaluable_moves": 4498,
+        "evaluation_coverage": 0.07179683634216029,
+        "mate_transition_moves": 232,
+        "proxy_errors": 313
+      },
+      {
+        "bucket": "60_plus",
+        "eligible_moves": 135825,
+        "error_proxy_rate": 0.07438869000667435,
+        "evaluable_moves": 16481,
+        "evaluation_coverage": 0.1213399595067182,
+        "mate_transition_moves": 1264,
+        "proxy_errors": 1226
+      },
+      {
+        "bucket": "under_10",
+        "eligible_moves": 15763,
+        "error_proxy_rate": 0.11775043936731107,
+        "evaluable_moves": 569,
+        "evaluation_coverage": 0.036097189621264986,
+        "mate_transition_moves": 190,
+        "proxy_errors": 67
+      }
+    ],
+    "move_coverage": {
+      "after_clock_moves": 333140,
+      "before_clock_moves": 323082,
+      "cp_eval_moves": 36034,
+      "mate_eval_moves": 2225,
+      "moves": 333505,
+      "selected_games": 5039
+    },
+    "opening_coverage": {
+      "eligible_games": 99202,
+      "known_opening_games": 99202,
+      "missing_source_opening": 0
+    },
+    "top_opening_families": [
+      {
+        "eligible_games": 9879,
+        "family": "Sicilian Defense"
+      },
+      {
+        "eligible_games": 9375,
+        "family": "Queen's Pawn Game"
+      },
+      {
+        "eligible_games": 5871,
+        "family": "French Defense"
+      },
+      {
+        "eligible_games": 5442,
+        "family": "Caro-Kann Defense"
+      },
+      {
+        "eligible_games": 5273,
+        "family": "Scandinavian Defense"
+      },
+      {
+        "eligible_games": 3876,
+        "family": "Italian Game"
+      },
+      {
+        "eligible_games": 3076,
+        "family": "English Opening"
+      },
+      {
+        "eligible_games": 3004,
+        "family": "King's Pawn Game"
+      },
+      {
+        "eligible_games": 2623,
+        "family": "Zukertort Opening"
+      },
+      {
+        "eligible_games": 2609,
+        "family": "Queen's Gambit Declined"
+      },
+      {
+        "eligible_games": 2331,
+        "family": "Modern Defense"
+      },
+      {
+        "eligible_games": 2139,
+        "family": "Indian Defense"
+      }
+    ]
+  }
+}

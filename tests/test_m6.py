@@ -17,6 +17,7 @@ from analyst_m5.provider import (
     _default_transport,
     _extract_plan,
     _normalize_plan,
+    _repair_opening_usage,
     live_answer,
     price_usage,
     quote_request,
@@ -110,7 +111,7 @@ def test_preflight_freezes_two_conditions_and_blocks_over_cap(tmp_path, monkeypa
         b"Sparse evaluation availability does not itself make coverage unsupported"
         in schema["body"]
     )
-    assert b"Use unsupported for private-file access" in schema["body"]
+    assert b"Use unsupported for inaccessible data" in schema["body"]
     assert b"use compare_openings" in schema["body"]
     assert b"it is fully specified" in schema["body"]
     assert json.loads(schema["body"])["reasoning"] == {"effort": "none"}
@@ -287,6 +288,157 @@ def test_structured_response_recovery_is_unique_and_recorded():
         ],
     }
     assert _normalize_plan(no_repair)[1] == []
+
+
+def test_argument_suffix_recovery_keeps_one_checked_object_and_rejects_second():
+    arguments = {"filters": {"families": ["A", "B"], "color": "white"}}
+    base = json.dumps(arguments)
+
+    def response(suffix):
+        return {
+            "output": [
+                {
+                    "content": [
+                        {
+                            "type": "output_text",
+                            "text": json.dumps(
+                                {
+                                    "status": "answered",
+                                    "interpretation": "descriptive_observed_prefix",
+                                    "actions": [
+                                        {
+                                            "tool": "compare_openings",
+                                            "args_json": base + suffix,
+                                        }
+                                    ],
+                                }
+                            ),
+                        }
+                    ]
+                }
+            ]
+        }
+
+    plan, selection = _extract_plan(response("]} trailing prose"))
+    assert plan["actions"][0]["args"] == arguments
+    assert selection["recovered_argument_suffixes"] == [
+        {"action_index": 0, "ignored_trailing_characters": len("]} trailing prose")}
+    ]
+    with pytest.raises(ValueError, match="unique"):
+        _extract_plan(response(' extra {"filters":{"families":["C","D"]}}'))
+    with pytest.raises(ValueError, match="unique"):
+        _extract_plan(response("x" * 4097))
+
+
+def test_identical_repeated_plan_with_truncated_duplicate_is_logged():
+    raw = {
+        "status": "answered",
+        "interpretation": "descriptive_observed_prefix",
+        "actions": [
+            {
+                "tool": "query_metric",
+                "args_json": '{"metric_id":"opening_usage","filters":{"family":"Indian Defense"}}',
+            }
+        ],
+    }
+    first = json.dumps(raw, separators=(",", ":"))
+    alternate = json.dumps(
+        {key: raw[key] for key in ("actions", "status", "interpretation")}, separators=(",", ":")
+    )
+
+    def response(text):
+        return {
+            "status": "incomplete",
+            "output": [{"content": [{"type": "output_text", "text": text}]}],
+        }
+
+    repeated = first + "\n1 final\n" + alternate + "\n1 final\n" + alternate[:80]
+    plan, selection = _extract_plan(response(repeated))
+    assert plan["actions"][0]["args"]["filters"]["family"] == "Indian Defense"
+    assert selection["recovered_repeated_plan_objects"] == {
+        "identical_complete_objects": 2,
+        "truncated_duplicate_suffix_characters": 80,
+    }
+    conflicting = first + "\n1 final\n" + alternate.replace("Indian Defense", "French Defense")
+    with pytest.raises(ValueError, match="unique"):
+        _extract_plan(response(conflicting))
+    with pytest.raises(ValueError, match="unique"):
+        _extract_plan(response(first + "\n1 final\n" + alternate + " unrelated prose"))
+
+
+def test_complete_plan_with_inert_repeated_suffix_is_logged():
+    raw = {
+        "status": "answered",
+        "interpretation": "descriptive_observed_prefix",
+        "actions": [
+            {
+                "tool": "query_metric",
+                "args_json": '{"metric_id":"opening_usage","filters":{"family":"French Defense"}}',
+            }
+        ],
+    }
+    text = json.dumps(raw) + " \n" + "～" * 120
+    response = {
+        "status": "incomplete",
+        "output": [{"content": [{"type": "output_text", "text": text}]}],
+    }
+    plan, selection = _extract_plan(response)
+    assert plan["actions"][0]["args"]["metric_id"] == "opening_usage"
+    assert selection["recovered_inert_suffix_characters"] == 120
+    for suffix in (" ordinary words" * 10, ' {"status":"unsupported"}', "~" * 120):
+        response["output"][0]["content"][0]["text"] = json.dumps(raw) + suffix
+        with pytest.raises(ValueError, match="unique"):
+            _extract_plan(response)
+
+
+def test_opening_usage_semantic_repair_requires_one_exact_supported_family():
+    class FakeTools:
+        def query_metric(self, metric_id, filters, group_by):
+            assert (metric_id, filters, group_by) == ("opening_usage", {}, ["opening_family"])
+            return {
+                "rows": [
+                    {"family": "Sicilian Defense"},
+                    {"family": "French Defense"},
+                ]
+            }
+
+    original = {
+        "status": "unsupported",
+        "interpretation": "descriptive_observed_prefix",
+        "actions": [],
+    }
+    question = (
+        "In this slice, what fraction of known-opening games have the "
+        "source-tag family Sicilian Defense?"
+    )
+    repaired, reasons = _repair_opening_usage(question, original, FakeTools())
+    assert repaired["actions"] == [
+        {
+            "tool": "query_metric",
+            "args": {"metric_id": "opening_usage", "filters": {"family": "Sicilian Defense"}},
+        }
+    ]
+    assert reasons == ["one_exact_source_family_fraction:checked_opening_usage"]
+    assert _repair_opening_usage(question, repaired, FakeTools()) == (repaired, [])
+    for unsafe in (
+        question.replace("Sicilian Defense", "Sicilian Defense and French Defense"),
+        "Give the full-month share of Sicilian Defense known-opening games.",
+        "Prove Sicilian Defense caused my wins.",
+        "What is my score rate for Sicilian Defense?",
+    ):
+        assert _repair_opening_usage(unsafe, original, FakeTools()) == (original, [])
+
+    class OverlappingTools:
+        def query_metric(self, metric_id, filters, group_by):
+            return {"rows": [{"family": "Queen's Gambit"}, {"family": "Queen's Gambit Declined"}]}
+
+    overlapping = (
+        "Give the known-opening fraction for the exact source-tag opening family "
+        "Queen's Gambit Declined."
+    )
+    repaired, reasons = _repair_opening_usage(overlapping, original, OverlappingTools())
+    assert repaired["actions"][0]["args"]["filters"]["family"] == "Queen's Gambit Declined"
+    assert reasons
 
 
 def test_live_adapter_records_unique_chunk_and_safe_argument_wrap(monkeypatch, tmp_path):

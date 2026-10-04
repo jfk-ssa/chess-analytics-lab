@@ -1,0 +1,150 @@
+{
+  "benefit": "Eight independently dated first-day source prefixes beyond accepted August 1 data; no within-month trend or representative monthly estimate follows.",
+  "engine_decision": "No Stockfish addition: the new-data/date and cohort-support benefit was measured without engine cost; source-evaluation selection bias remains. A separate fixed-node engine pilot needs a specific analytical question.",
+  "kind": "M7 measured bounded new-data value and local resource cost; no model result",
+  "partial_prefixes_not_monthly_samples": true,
+  "slices": {
+    "april": {
+      "accepted_games": 99578,
+      "analytical_id": "e0043932320cab55d2da34d0",
+      "extracted_pgn_bytes": 234642597,
+      "move_rows": 333642,
+      "observed_utc_dates": [
+        "2026-04-01",
+        "2026-04-01"
+      ],
+      "period": "2026-04",
+      "prefix_bytes": 40000000,
+      "prefix_sha256": "b74ab82a952a5bd38410bedbce7ac6032b94e4c186b55e0ea50f6d10a2083a48",
+      "quarantined": 0,
+      "selected_games": 5016,
+      "source_ingest_elapsed_seconds": 111.94154129100207,
+      "source_snapshot_id": "276aeae80962482673c7da80"
+    },
+    "december_2025": {
+      "accepted_games": 99307,
+      "analytical_id": "bf2d56649b944934d9c2ec4c",
+      "extracted_pgn_bytes": 233989696,
+      "move_rows": 325870,
+      "observed_utc_dates": [
+        "2025-12-01",
+        "2025-12-01"
+      ],
+      "period": "2025-12",
+      "prefix_bytes": 40000000,
+      "prefix_sha256": "b40e350772675604bf02afdf82897b66854fb27e6539441e30394426e79b4b78",
+      "quarantined": 0,
+      "selected_games": 4942,
+      "source_ingest_elapsed_seconds": 111.34429441700195,
+      "source_snapshot_id": "cb81c3aa96877be7db5ae552"
+    },
+    "february": {
+      "accepted_games": 99585,
+      "analytical_id": "f0dfe7eb75a55c216bea8a26",
+      "extracted_pgn_bytes": 235326041,
+      "move_rows": 335854,
+      "observed_utc_dates": [
+        "2026-02-01",
+        "2026-02-01"
+      ],
+      "period": "2026-02",
+      "prefix_bytes": 40000000,
+      "prefix_sha256": "f601d4c9516f9eb5035c20b168135ae7caa255353aee60ea75b4f977dacd5a11",
+      "quarantined": 0,
+      "selected_games": 5020,
+      "source_ingest_elapsed_seconds": 111.77189754100255,
+      "source_snapshot_id": "a5fe34904b99d05ac5bca315"
+    },
+    "january": {
+      "accepted_games": 99799,
+      "analytical_id": "9250ba8791e179279fba2023",
+      "extracted_pgn_bytes": 231826603,
+      "move_rows": 331779,
+      "observed_utc_dates": [
+        "2026-01-01",
+        "2026-01-01"
+      ],
+      "period": "2026-01",
+      "prefix_bytes": 40000000,
+      "prefix_sha256": "5092e3877820646e4a844059d155e29895c19e4e0c97b70c3051e5821ac01077",
+      "quarantined": 0,
+      "selected_games": 4996,
+      "source_ingest_elapsed_seconds": 110.4538419169985,
+      "source_snapshot_id": "ac29d2596b9592d06a6f0c02"
+    },
+    "july": {
+      "accepted_games": 99740,
+      "analytical_id": "00c88e6f9a1e327ede8e0406",
+      "disk_measurement_includes_failed_staging_and_attempt_logs": true,
+      "extracted_pgn_bytes": 233027693,
+      "local_workspace_allocated_bytes_at_measurement": 671395840,
+      "local_workspace_logical_bytes_at_measurement": 648271333,
+      "move_rows": 329672,
+      "observed_utc_dates": [
+        "2026-07-01",
+        "2026-07-01"
+      ],
+      "period": "2026-07",
+      "prefix_bytes": 40000000,
+      "prefix_sha256": "126392adf81ac7e0306e0927a09a22ecf7159ce17e21f9ab63fc49f37bee2ebe",
+      "quarantined": 0,
+      "selected_games": 4982,
+      "source_ingest_elapsed_seconds": 116.01458750000165,
+      "source_snapshot_id": "3f6265ca957d11f6454ca708"
+    },
+    "june": {
+      "accepted_games": 99530,
+      "analytical_id": "720c0dbe7e7ff11a42d318b1",
+      "disk_measurement_includes_failed_staging_and_attempt_logs": true,
+      "extracted_pgn_bytes": 234632909,
+      "local_workspace_allocated_bytes_at_measurement": 831594496,
+      "local_workspace_logical_bytes_at_measurement": 787422147,
+      "move_rows": 341250,
+      "observed_utc_dates": [
+        "2026-06-01",
+        "2026-06-01"
+      ],
+      "period": "2026-06",
+      "prefix_bytes": 40000000,
+      "prefix_sha256": "fb38c081cc63b0198ced0d4e894a91d2857616a3ad211078d30029a6022b0b6d",
+      "quarantined": 0,
+      "selected_games": 5087,
+      "source_ingest_elapsed_seconds": 125.76816862499982,
+      "source_snapshot_id": "f571e46ce156f9badfe49096"
+    },
+    "march": {
+      "accepted_games": 99555,
+      "analytical_id": "ed7393d948b6fb57f5b0562a",
+      "extracted_pgn_bytes": 234908214,
+      "move_rows": 333505,
+      "observed_utc_dates": [
+        "2026-03-01",
+        "2026-03-01"
+      ],
+      "period": "2026-03",
+      "prefix_bytes": 40000000,
+      "prefix_sha256": "28957e6fcb58df5813c60d3617063ea45853b18298af6c74725f0fb333726020",
+      "quarantined": 0,
+      "selected_games": 5048,
+      "source_ingest_elapsed_seconds": 111.80416837499797,
+      "source_snapshot_id": "16da594543bc7d4760878d54"
+    },
+    "may": {
+      "accepted_games": 99505,
+      "analytical_id": "5898f6ee9ec640c34db811bc",
+      "extracted_pgn_bytes": 232642125,
+      "move_rows": 325259,
+      "observed_utc_dates": [
+        "2026-05-01",
+        "2026-05-01"
+      ],
+      "period": "2026-05",
+      "prefix_bytes": 40000000,
+      "prefix_sha256": "52744206834a63a5ae63a1e1bc57f842e3952c8052846af713e88fa0282bd255",
+      "quarantined": 0,
+      "selected_games": 4927,
+      "source_ingest_elapsed_seconds": 114.81538437500421,
+      "source_snapshot_id": "99053359d8e18d0c8d5906e9"
+    }
+  }
+}

@@ -96,13 +96,21 @@ def prepare(
     max_run_usd=None,
     holdout=False,
     holdout_version=1,
+    conditions=None,
 ) -> dict:
     """Quote all cells and freeze code/data/question inputs without a key."""
     config = _resolve_config(config_path, max_run_usd)
+    selected_conditions = tuple(conditions or CONDITIONS)
+    if not selected_conditions or any(c not in CONDITIONS for c in selected_conditions):
+        raise ValueError("unknown or empty experiment condition")
+    if holdout_version in {7, 8, 9, 10, 11, 12, 13, 14} and selected_conditions != (
+        "semantic_context",
+    ):
+        raise ValueError("M7 new-data release gate uses the product semantic-context condition")
     if holdout:
-        if holdout_version not in {1, 2, 3, 4, 5, 6}:
+        if holdout_version not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14}:
             raise ValueError("unknown holdout version")
-        if holdout_version in {3, 4, 5, 6}:
+        if holdout_version in {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14}:
             suffix = "" if holdout_version == 3 else f"_v{holdout_version - 2}"
             case_file = f"evals/cases/m7_holdout{suffix}.json"
             manifest_file = f"evals/cases/m7_holdout{suffix}_manifest.json"
@@ -134,7 +142,7 @@ def prepare(
         raise ValueError("holdout case count or identities changed")
     cells = []
     for case in selected:
-        for condition in CONDITIONS:
+        for condition in selected_conditions:
             quote = quote_request(project, case["question"], config, condition)
             cells.append(
                 {
@@ -144,7 +152,15 @@ def prepare(
                     "reserved_cost_usd": quote["reserved_cost_usd"],
                 }
             )
-    upper_bound = sum(cell["reserved_cost_usd"] for cell in cells)
+    max_transport_retries_per_run = (
+        3 if holdout_version in {12, 13} else 1 if holdout_version in {10, 11} else 0
+    )
+    retry_reservation = (
+        max(cell["reserved_cost_usd"] for cell in cells) * max_transport_retries_per_run
+        if max_transport_retries_per_run
+        else 0.0
+    )
+    upper_bound = sum(cell["reserved_cost_usd"] for cell in cells) + retry_reservation
     frozen_files = [
         "analyst_m5/provider.py",
         "analyst_m5/core.py",
@@ -160,7 +176,103 @@ def prepare(
         "uv.lock",
     ]
     if holdout:
-        if holdout_version in {3, 4, 5, 6}:
+        if holdout_version == 7:
+            frozen_files.extend(
+                (
+                    "config/datasets.json",
+                    "config/m7_july_source.json",
+                    "reports/M3-analytical-manifest.json",
+                    "reports/M3-independent-reference.json",
+                    "reports/M7-independent-reference-v5.json",
+                    "scripts/reference_m7_july.py",
+                    "scripts/build_m7_july.py",
+                )
+            )
+        elif holdout_version == 8:
+            frozen_files.extend(
+                (
+                    "config/datasets.json",
+                    "config/m7_june_source.json",
+                    "reports/M3-analytical-manifest.json",
+                    "reports/M3-independent-reference.json",
+                    "reports/M7-independent-reference-v6.json",
+                    "scripts/reference_m7_june.py",
+                    "scripts/build_m7_june.py",
+                )
+            )
+        elif holdout_version == 9:
+            frozen_files.extend(
+                (
+                    "config/datasets.json",
+                    "config/m7_may_source.json",
+                    "reports/M3-analytical-manifest.json",
+                    "reports/M3-independent-reference.json",
+                    "reports/M7-independent-reference-v7.json",
+                    "scripts/reference_m7_may.py",
+                    "scripts/build_m7_may.py",
+                )
+            )
+        elif holdout_version == 10:
+            frozen_files.extend(
+                (
+                    "config/datasets.json",
+                    "config/m7_april_source.json",
+                    "reports/M3-analytical-manifest.json",
+                    "reports/M3-independent-reference.json",
+                    "reports/M7-independent-reference-v8.json",
+                    "scripts/reference_m7_april.py",
+                    "scripts/build_m7_april.py",
+                )
+            )
+        elif holdout_version == 11:
+            frozen_files.extend(
+                (
+                    "config/datasets.json",
+                    "config/m7_march_source.json",
+                    "reports/M3-analytical-manifest.json",
+                    "reports/M3-independent-reference.json",
+                    "reports/M7-independent-reference-v9.json",
+                    "scripts/reference_m7_march.py",
+                    "scripts/build_m7_march.py",
+                )
+            )
+        elif holdout_version == 12:
+            frozen_files.extend(
+                (
+                    "config/datasets.json",
+                    "config/m7_february_source.json",
+                    "reports/M3-analytical-manifest.json",
+                    "reports/M3-independent-reference.json",
+                    "reports/M7-independent-reference-v10.json",
+                    "scripts/reference_m7_february.py",
+                    "scripts/build_m7_february.py",
+                )
+            )
+        elif holdout_version == 13:
+            frozen_files.extend(
+                (
+                    "config/datasets.json",
+                    "config/m7_january_source.json",
+                    "reports/M3-analytical-manifest.json",
+                    "reports/M3-independent-reference.json",
+                    "reports/M7-independent-reference-v11.json",
+                    "scripts/reference_m7_january.py",
+                    "scripts/build_m7_january.py",
+                )
+            )
+        elif holdout_version == 14:
+            frozen_files.extend(
+                (
+                    "config/datasets.json",
+                    "config/m7_december_source.json",
+                    "reports/M3-analytical-manifest.json",
+                    "reports/M3-independent-reference.json",
+                    "reports/M7-independent-reference-v12.json",
+                    "scripts/reference_m7_december.py",
+                    "scripts/build_m7_december.py",
+                )
+            )
+        elif holdout_version in {3, 4, 5, 6}:
             suffix = "" if holdout_version == 3 else f"_v{holdout_version - 2}"
             report_suffix = "" if holdout_version == 3 else f"-v{holdout_version - 2}"
             frozen_files.extend(
@@ -190,11 +302,21 @@ def prepare(
     frozen_files.extend(
         str(path.relative_to(project)) for path in sorted((project / "contracts").glob("*.json"))
     )
+    new_data_month = {
+        7: "July",
+        8: "June",
+        9: "May",
+        10: "April",
+        11: "March",
+        12: "February",
+        13: "January",
+        14: "December",
+    }.get(holdout_version)
     return {
         "kind": (
             (
                 "m7_typed_planner_holdout_preflight_no_model_calls"
-                if holdout_version in {3, 4, 5, 6}
+                if holdout_version in {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14}
                 else "m6_typed_planner_holdout_preflight_no_model_calls"
             )
             if holdout
@@ -205,17 +327,24 @@ def prepare(
         "case_set_sha256": manifest["case_set_sha256"],
         "selection": (
             (
-                f"50 new-family M7 holdout v{holdout_version - 2} cases; one-shot"
-                if holdout_version in {3, 4, 5, 6}
+                (
+                    f"50 new-dataset {new_data_month} "
+                    f"M7 v{holdout_version - 2} cases; product semantic context; one shot per run"
+                    if holdout_version in {7, 8, 9, 10, 11, 12, 13, 14}
+                    else f"50 new-family M7 holdout v{holdout_version - 2} cases; one-shot"
+                )
+                if holdout_version in {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14}
                 else f"20 family-split holdout v{holdout_version} cases; one-shot"
             )
             if holdout
             else "12 inspected development cases; not untouched holdout"
         ),
         "case_file": case_file,
-        "conditions": list(CONDITIONS),
+        "conditions": list(selected_conditions),
         "comparison": (
-            "typed planner with versus without governed metric definitions; not SQL baseline"
+            "product semantic-context condition only; no paired baseline"
+            if holdout_version in {7, 8, 9, 10, 11, 12, 13, 14}
+            else "typed planner with versus without governed metric definitions; not SQL baseline"
         ),
         "model": config["model"],
         "max_output_tokens": config["max_output_tokens"],
@@ -227,6 +356,8 @@ def prepare(
         "price_source": DEFAULT_PRICE_SOURCE if config_path is None else "user_configured",
         "price_checked_utc_date": (DEFAULT_PRICE_CHECKED_UTC_DATE if config_path is None else None),
         "attempts_planned": len(cells),
+        "max_transport_retries_per_run": max_transport_retries_per_run,
+        "transport_retry_reservation_usd": retry_reservation,
         "conservative_total_usd": upper_bound,
         "fits_cap": upper_bound <= config["max_run_usd"],
         "frozen_file_sha256": {name: _sha(project / name) for name in frozen_files},
@@ -244,6 +375,7 @@ def run(
     transport=None,
     holdout=False,
     holdout_version=1,
+    conditions=None,
 ) -> dict:
     """One attempt per frozen cell, reserving the whole run before transport."""
     preflight = json.loads(preflight_path.read_text())
@@ -254,6 +386,7 @@ def run(
         max_run_usd=max_run_usd,
         holdout=holdout,
         holdout_version=holdout_version,
+        conditions=conditions,
     )
     frozen_keys = (
         "dataset_id",
@@ -271,6 +404,8 @@ def run(
         "price_source",
         "price_checked_utc_date",
         "attempts_planned",
+        "max_transport_retries_per_run",
+        "transport_retry_reservation_usd",
         "conservative_total_usd",
         "frozen_file_sha256",
         "cells",
@@ -289,6 +424,8 @@ def run(
     directory.mkdir(parents=True, exist_ok=False)
     reserved = 0.0
     spent = 0.0
+    unknown_reservations = 0.0
+    transport_retries_used = 0
     outcomes = []
     for index, cell in enumerate(current["cells"]):
         case = cases[cell["case_id"]]
@@ -297,8 +434,34 @@ def run(
             raise ValueError("whole-run reservation exceeded cap")
         captured = {}
 
-        def capture(body, key, captured=captured):
-            captured["response"] = (transport or _default_transport)(body, key)
+        def capture(body, key, captured=captured, cell=cell):
+            nonlocal reserved, unknown_reservations, transport_retries_used
+            try:
+                captured["response"] = (transport or _default_transport)(body, key)
+            except RuntimeError as exc:
+                message = str(exc)
+                retryable = message.startswith(
+                    "provider HTTP 400: invalid_request_error: Invalid prompt"
+                )
+                if (
+                    not retryable
+                    or transport_retries_used >= current["max_transport_retries_per_run"]
+                ):
+                    raise
+                extra = cell["reserved_cost_usd"]
+                if reserved + extra > current["max_run_usd"] + 1e-12:
+                    raise ValueError("transport retry reservation exceeds run cap") from exc
+                captured["transport_retries"] = [
+                    {
+                        "error_type": type(exc).__name__,
+                        "error": message.replace(key, "[redacted]"),
+                        "reserved_cost_usd": extra,
+                    }
+                ]
+                reserved += extra
+                unknown_reservations += extra
+                transport_retries_used += 1
+                captured["response"] = (transport or _default_transport)(body, key)
             return captured["response"]
 
         started = time.monotonic()
@@ -314,7 +477,11 @@ def run(
                 remaining_usd=current["max_run_usd"] - reserved + cell["reserved_cost_usd"],
             )
             scorer = (
-                (score_case_m7 if holdout_version in {3, 4, 5, 6} else score_case_m6_holdout)
+                (
+                    score_case_m7
+                    if holdout_version in {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14}
+                    else score_case_m6_holdout
+                )
                 if holdout
                 else score_case_m6
             )
@@ -329,6 +496,7 @@ def run(
                 provider_response=captured.get("response"),
             )
         record["elapsed_seconds"] = time.monotonic() - started
+        record["transport_retries"] = captured.get("transport_retries", [])
         response = captured.get("response")
         usage = response.get("usage") if isinstance(response, dict) else None
         if usage is not None:
@@ -343,8 +511,14 @@ def run(
             record["gross_cost_usd"] = cost
             record["cost_basis"] = basis
             spent += cost
-            if cost > cell["reserved_cost_usd"] + 1e-12 or spent > current["max_run_usd"] + 1e-12:
+            if (
+                cost > cell["reserved_cost_usd"] + 1e-12
+                or spent + unknown_reservations > current["max_run_usd"] + 1e-12
+            ):
                 record["budget_bound_exceeded"] = True
+        elif holdout_version in {10, 11, 12, 13, 14}:
+            unknown_reservations += cell["reserved_cost_usd"]
+            record["unknown_cost_reservation_usd"] = cell["reserved_cost_usd"]
         write_json(directory / f"{index:02d}-{cell['case_id']}-{cell['condition']}.json", record)
         outcomes.append(record)
         # A failed/unknown-cost request may have been billed. No retry or later cell.
@@ -377,6 +551,9 @@ def run(
         "scored_correct": sum(row.get("score", {}).get("passed", False) for row in outcomes),
         "reserved_usd": reserved,
         "known_gross_cost_usd": sum(row.get("gross_cost_usd", 0) for row in outcomes),
+        "unknown_cost_reservations_usd": unknown_reservations,
+        "gross_cost_accounted_usd": spent + unknown_reservations,
+        "transport_retries": transport_retries_used,
         "cost_complete": all("gross_cost_usd" in row for row in outcomes),
         "categories": categories,
         "paired_by_case": pairs,
@@ -397,7 +574,13 @@ def main(argv=None):
     parser.add_argument("--env-file", type=Path, help="run mode only; reads only the named key")
     parser.add_argument("--preflight", type=Path, required=True)
     parser.add_argument("--holdout", action="store_true", help="use frozen M6/M7 family split")
-    parser.add_argument("--holdout-version", type=int, choices=(1, 2, 3, 4, 5, 6), default=1)
+    parser.add_argument(
+        "--holdout-version",
+        type=int,
+        choices=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14),
+        default=1,
+    )
+    parser.add_argument("--condition", choices=CONDITIONS, action="append")
     args = parser.parse_args(argv)
     if args.mode == "prepare":
         if args.env_file is not None:
@@ -408,6 +591,7 @@ def main(argv=None):
             max_run_usd=args.max_run_usd,
             holdout=args.holdout,
             holdout_version=args.holdout_version,
+            conditions=args.condition,
         )
         write_json(args.preflight, result)
     else:
@@ -419,6 +603,7 @@ def main(argv=None):
             env_file=args.env_file,
             holdout=args.holdout,
             holdout_version=args.holdout_version,
+            conditions=args.condition,
         )
     print(json.dumps(result, indent=2, sort_keys=True))
 

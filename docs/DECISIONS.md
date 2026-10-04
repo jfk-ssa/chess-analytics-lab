@@ -551,3 +551,189 @@ accepted release. No more calls on inspected cases. The next credible
 quality gate needs independently referenced new data, a new untouched
 holdout, and a bounded acquisition method. M8 Jev remains follow-up and
 the recommender remains backlog.
+
+## 2026-10-04 — Bounded cross-month M7 data and product-condition gate
+
+Use exact 40,000,000-byte HTTP 206 prefixes from separate completed monthly
+standard-rated archives, each capped at 100,000 complete games, to obtain
+new source dates without scanning gigabytes farther into August. July, June
+and May 2026 prefixes are each observed only on their first UTC day. Pin
+their byte hashes and publisher listing values; do not claim full-archive
+checksums, random samples, monthwide estimates or within-month trends.
+Keep each candidate's data pointers in an ignored isolated project view and
+retain the accepted August dashboard and snapshots. This adds local disk
+use and ingestion time but no cloud service. Independent raw-PGN references
+and checked-tool oracles must pass before any live holdout.
+
+The product uses governed `semantic_context`, so M7's new-data release gate
+tests that condition alone. The earlier paired `schema_only` results remain
+an ablation. Precommit 50 cases, three complete repetitions, per-run
+answerable >=37/41, boundary 9/9, high-severity 5/5, all evidence audits,
+known gross cost and the existing $0.50 cumulative cap. This finite gate
+does not estimate general model accuracy. Repeated opening family names
+across months are transparent; new data/date identity, not family
+disjointness, is the independence claim.
+
+July v5 failed the first complete quality gate and later stopped on provider
+HTTP 400; retain both. Its governed metric definitions contained August-only
+caveats, a concrete incompatibility with July questions. Use month-neutral
+opening and clock caveats in the isolated subsequent workspaces, without
+rewriting the historical August contracts or altering accepted snapshot IDs.
+Six inspected development templates passed twice on June data; they are
+not held-out results. June v6 then stopped twice after provider-completed
+plans placed a valid leading argument object followed by unrelated text
+inside `args_json`. Keep the original live failures. Add a bounded parser
+recovery that logs ignored suffix length, rejects an additional structured
+object or an oversized suffix, and still requires allowlisted typed-tool
+validation. The retained responses pass a separately labeled offline replay;
+this does not retroactively change their live scores. Freeze this code on
+a fresh May date/case set before evaluating again.
+
+Stockfish remains unadopted: new source-date and cohort-support benefit is
+measured without an engine, while selected source evaluations still limit
+clock interpretation. A future fixed-node pilot needs a separate question
+and measured accuracy/resource benefit before adoption.
+
+## 2026-10-04 — M8 Jev route selection deferred to a narrow measured task
+
+The user flagged Jev, `pg_jev`, and DuckDB's Jev support for M8. Record the
+comparison in [M8.md](M8.md). After M7 acceptance and a concrete row-level
+decision task, test a direct typed Jev adapter first, then the DuckDB
+community extension as the natural SQL route in this local stack. Consider
+`pg_jev` only if a PostgreSQL learning slice offers enough benefit to justify
+operating a second database and its `plpython3u`/superuser setup. Check
+current extension compatibility, API entitlement, prices and credential
+behavior before any live M8 experiment. Recommend a specific gross cap with
+a conservative quote then; do not infer access from a login or the existing
+OpenAI credit. The personalized recommender remains backlog.
+
+## 2026-10-04 — Preserve May/April failed gates; repair only unambiguous plans
+
+The May v7 complete run scored 36/41 answerable, below the 37/41 gate; its
+second run stopped on provider HTTP 400. Five exact source-family usage misses
+pass a narrowly specified checked-tool routing **offline replay**. June's two
+malformed `args_json` responses pass bounded leading-object recovery offline.
+The April v8 new-date run scored 50/50 and 49/50 in its first two repetitions,
+then stopped at cell 13 of the third when a provider response repeated the
+same valid plan ten times and truncated another copy. Keep all original live
+scores and failures. The April parser fix accepts only identical complete
+objects, optionally followed by a duplicate prefix when the provider marks
+an incomplete response. Reject conflicting objects, unrelated suffixes,
+oversized text or excess repetitions; log recovery. The retained April
+response passes offline replay. This is not live release evidence.
+
+Use the March v9 bounded first-day source prefix and independently referenced
+50-case freeze to test the parser in a new live run. The exact March range is
+40,000,000 bytes of the 29,351,713,061-byte publisher listing; `counts.txt`
+lists 90,074,196 games for the full archive. The original 5 GB *aggregate
+local work* allowance rejected a new download before writing bytes because
+retained historical workspaces used about 4.8 GB. Keep that zero-byte failed
+attempt, raise only this acquisition allowance to 6 GB, and retain the 40 MB
+fetch and 100,000-complete-PGN caps. The machine had about 69 GiB free.
+
+Prior M7 accounted gross through April is $0.102386695. The March preflight
+reserves $0.094273125 per 50-cell repetition, including one logged and fully
+charged transport retry; three plus prior reserve $0.385206070 under the
+existing $0.50 cumulative gross approval. The gate remains three complete
+runs, answerable >=37/41 each, boundaries 9/9, high severity 5/5, all
+integrity checks, no final failure or unknown cost. Report any deterministic
+semantic repairs and text recoveries separately from unmodified model plans.
+
+## 2026-10-04 — Retire stopped March v9; freeze February v10 under the same cap
+
+March v9 stopped after 16 attempts: 15 completed, 14 scored passes, with
+one HTTP 400 rescued by the single logged retry and a later HTTP 400 stopping
+the run. Two unknown-cost subattempts are charged at full reservations.
+Cumulative M7 accounted gross is $0.107639170. The overlapping Queen's
+Gambit Declined family repair passes offline replay, but the original live
+miss remains. Do not claim a three-run gate from partial results.
+
+For the February v10 freeze, retain the same checked-tool boundary behavior
+while shortening the planner's inaccessible-data phrase. Allow at most three
+logged HTTP 400 transport retries on distinct cells per run, one retry per
+cell. This is a measured response to repeated provider rejections on ordinary
+opening questions; every rejected subattempt is charged at its full
+reservation, and any final failed request stops. The fresh February first-day
+40 MB source prefix yielded 99,585 accepted of 100,000 complete PGNs,
+5,020 selected games and 335,854 move rows. Independent raw-PGN and 50/50
+offline oracle checks passed. Its preflight reserves $0.098598875 per run
+including three retries, or $0.403435795 for three plus all prior M7 spend,
+under the existing $0.50 cumulative gross cap. Preserve failures and
+separate model results from offline replay and deterministic repairs.
+
+## 2026-10-04 — Retire February v10 and prepare new January source
+
+February v10 repetition 1 met all per-run gates (47/50 total, 38/41
+answerable, 9/9 boundary, 5/5 high severity, 50/50 evidence integrity),
+with one logged HTTP 400 retry and one deterministic semantic repair.
+Repetition 2 stopped at cell 26 after 25 completed scored passes: the
+provider returned a complete plan plus 870 repeated non-ASCII punctuation
+characters and marked the response incomplete at the output cap. Preserve
+the original stopped result. The new parser accepts a complete plan followed
+only by a bounded single non-ASCII punctuation/symbol repetition when the
+provider declares the response incomplete; all other suffixes fail closed.
+The retained response passes offline replay, not a live rescore. Cumulative
+M7 accounted gross through February is $0.115247510. The new January first-day
+40 MB source prefix will receive independent references and a new frozen
+holdout before any further live evaluation. The aggregate local work-data
+allowance for January acquisition was raised to 8 GB to retain historical
+failed workspaces; the network range remains exactly 40 MB and free disk was
+about 68 GiB.
+
+## 2026-10-04 — Freeze January v11 after bounded suffix recovery
+
+January's 40 MB first-day prefix yielded 99,799 accepted games from 100,000
+complete PGNs, 4,996 selected games and 331,779 move rows. Independent
+raw-PGN and 50/50 offline oracle checks passed. Freeze the 50-case new-date
+holdout and product semantic-context requests before live calls. The same
+three-complete-run gate applies, with answerable >=37/41, boundaries 9/9,
+high severity 5/5, all evidence audits and known final usage. At most three
+logged exact HTTP 400 retries on distinct cells per run may occur; reserve
+and account each at full cell cost. Prior M7 accounted gross is $0.115247510.
+The January preflight conservatively reserves $0.098593250 per run, or
+$0.411027260 for three plus all prior spend, under the existing $0.50
+cumulative gross approval. Historical February scores remain unchanged by
+its separate offline suffix replay.
+
+## 2026-10-04 — Retire January Luna gate; test Sol on inspected cases
+
+January v11 repetition 1 met all per-run gates: 48/50 scored,
+39/41 answerable, 9/9 boundary, 5/5 high severity, 50/50 evidence audit,
+no retry or semantic repair. Repetition 2 stopped at cell 26 after 25
+completed scored passes. The provider mixed a valid opening-score plan with
+a fabricated tool transcript, then a separate evidence-free `answered`
+plan. The checked core rejected it. Keep the original result stopped rather
+than choosing a plan arbitrarily. Cumulative M7 accounted gross through the
+January gate is $0.120814360.
+
+Official OpenAI documentation lists `gpt-6-sol` with Responses structured
+outputs and per-million-token prices of $2 input, $0.20 cached input,
+$2.50 cache writes and $10 output. A six-case inspected January diagnostic
+was frozen with a $0.223097500 whole-run reservation under the existing
+$0.50 cumulative cap. All six actual calls completed and scored passes,
+including the previously troublesome opening-score and boundary requests,
+with $0.017980600 gross and no malformed response. This is development
+evidence only. Cumulative M7 accounted gross is now $0.138794960. Prepare
+a new December dataset, independent references and full Sol preflight
+before requesting a higher cumulative cap; make no full-holdout Sol calls
+under the current approval.
+
+## 2026-10-04 — Freeze December Sol v12; request a cumulative cap only after offline checks
+
+The exact 40 MB December 2025 source prefix contains 100,000 complete PGNs,
+99,307 accepted games and one observed date, December 1. Independent raw-PGN
+source/cohort references and all 50 checked-tool oracle cases passed. Freeze
+50 new-date cases and the single product semantic-context condition with
+zero transport retries. Three complete repetitions must each meet 37/41
+answerable, 9/9 boundary and 5/5 high-severity thresholds with full evidence
+audits. Any failed, unknown-cost or unattempted cell fails the gate. Retain
+all raw attempts and distinguish deterministic repairs from model plans.
+
+The frozen Sol preflight reserves $1.859967500 per run; three plus prior
+$0.138794960 accounted M7 gross require at most $5.718697460. Recommend a
+$6.00 **cumulative gross** ceiling, subject to explicit user approval. The
+six-case development diagnostic cost $0.017980600; its simple scaled estimate
+for 150 calls is about $0.449515, but that is not a guaranteed upper bound.
+The existing $0.50 cap remains in force until approval; no December live call
+has been made. A local provider file contains the proposed cap and prices but
+no secret, and the named personal key remains in an ignored env file.

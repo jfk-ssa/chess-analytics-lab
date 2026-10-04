@@ -1,0 +1,357 @@
+{
+  "attempts_planned": 50,
+  "cache_write_usd_per_million": 0.125,
+  "cached_input_usd_per_million": 0.01,
+  "case_file": "evals/cases/m7_holdout_v10.json",
+  "case_set_sha256": "5894ce19bd566f06b1cfb36008aa08d844194274771450409278323cd2eede31",
+  "cells": [
+    {
+      "case_id": "m7j_usage_sicilian_defense",
+      "condition": "semantic_context",
+      "request_sha256": "cc3d67e56652252f61255107f6fb4b1cea91d1108b317e0c4bc90b880c92d447",
+      "reserved_cost_usd": 0.001862
+    },
+    {
+      "case_id": "m7j_usage_queens_pawn_game",
+      "condition": "semantic_context",
+      "request_sha256": "46ac90196e927953dea7eac7487f55f2a67576d8b9a4a509b0b5e50303fa90f0",
+      "reserved_cost_usd": 0.001862125
+    },
+    {
+      "case_id": "m7j_usage_french_defense",
+      "condition": "semantic_context",
+      "request_sha256": "b90247d2da9e764b60f79afccf1b2591f900b972862e7e3aa584e80921686e8a",
+      "reserved_cost_usd": 0.00186175
+    },
+    {
+      "case_id": "m7j_usage_caro_kann_defense",
+      "condition": "semantic_context",
+      "request_sha256": "5aa429539379808c776cc61044c34547d33048a7cb6f6bc7afdbfedaed45a237",
+      "reserved_cost_usd": 0.001862125
+    },
+    {
+      "case_id": "m7j_usage_scandinavian_defense",
+      "condition": "semantic_context",
+      "request_sha256": "9e18f542f99371fad3486fb46010e28583b46bbd68cef8d862b84d723dd88b82",
+      "reserved_cost_usd": 0.0018625
+    },
+    {
+      "case_id": "m7j_usage_italian_game",
+      "condition": "semantic_context",
+      "request_sha256": "17558893d2784120c438170102152c7122a163fdfcaf35eaf0b5e0af89dfe9d7",
+      "reserved_cost_usd": 0.0018615
+    },
+    {
+      "case_id": "m7j_usage_english_opening",
+      "condition": "semantic_context",
+      "request_sha256": "e30687a7adf64dcee59d3c47c3d3a61197dfca57264cd9e42a08cb60f309137a",
+      "reserved_cost_usd": 0.001861875
+    },
+    {
+      "case_id": "m7j_usage_kings_pawn_game",
+      "condition": "semantic_context",
+      "request_sha256": "02eac0559db7a75f29dd8d5937ed85a7a47ba92ff866f326ddb24638389343b5",
+      "reserved_cost_usd": 0.001862
+    },
+    {
+      "case_id": "m7j_usage_zukertort_opening",
+      "condition": "semantic_context",
+      "request_sha256": "bbb0105e37240437b440b23985738138a5a42ea4efaa7bac217d1aad9fa341bc",
+      "reserved_cost_usd": 0.001862125
+    },
+    {
+      "case_id": "m7j_usage_queens_gambit_declined",
+      "condition": "semantic_context",
+      "request_sha256": "c9ebfe13a2d2a025336c3f75efeb5f96454bb7128b75af6a1962df5be3e2e19e",
+      "reserved_cost_usd": 0.001862875
+    },
+    {
+      "case_id": "m7j_usage_modern_defense",
+      "condition": "semantic_context",
+      "request_sha256": "ff649cecf0800c3de623ec4c5503515b7118120f1e6ddcd8c4dad3b1aa45f950",
+      "reserved_cost_usd": 0.00186175
+    },
+    {
+      "case_id": "m7j_usage_pirc_defense",
+      "condition": "semantic_context",
+      "request_sha256": "a3ed2a655d885822413dadb35eeb6577a4f811e0f2b6ce88c2c2bc895f1a35ee",
+      "reserved_cost_usd": 0.0018615
+    },
+    {
+      "case_id": "m7j_usage_indian_defense",
+      "condition": "semantic_context",
+      "request_sha256": "d91ad8977b08172873ee151541425715f7255bd9cac5ae224133b4d70e2a562d",
+      "reserved_cost_usd": 0.00186175
+    },
+    {
+      "case_id": "m7j_usage_philidor_defense",
+      "condition": "semantic_context",
+      "request_sha256": "78b883195552dba139bc8504b3d663a71673e7f45e55e0cc6ecb800b3a13f32a",
+      "reserved_cost_usd": 0.001862
+    },
+    {
+      "case_id": "m7j_usage_scotch_game",
+      "condition": "semantic_context",
+      "request_sha256": "ed1a3b78f630575bfc4c4187b0867989eaacf63ddf585bb59ad20b3ca75bbae9",
+      "reserved_cost_usd": 0.001861375
+    },
+    {
+      "case_id": "m7j_usage_nimzo_larsen_attack",
+      "condition": "semantic_context",
+      "request_sha256": "88647edcf31c26f0b13e86505af678d453b5a5b7e176342b2a962d1db6084bd8",
+      "reserved_cost_usd": 0.001862375
+    },
+    {
+      "case_id": "m7j_usage_vant_kruijs_opening",
+      "condition": "semantic_context",
+      "request_sha256": "92bba2afe589176254f728eb6df510822f829fd2516693836456f206d14cd014",
+      "reserved_cost_usd": 0.0018625
+    },
+    {
+      "case_id": "m7j_usage_ruy_lopez",
+      "condition": "semantic_context",
+      "request_sha256": "845ca28523910ae2c030d059354f405a421c218124848637d70f7fc91055c7f6",
+      "reserved_cost_usd": 0.001861125
+    },
+    {
+      "case_id": "m7j_usage_hungarian_opening",
+      "condition": "semantic_context",
+      "request_sha256": "0fa3668eb43410bc8e1452067ce78858b7f6503e51940cdb0b53c1e10ff23ca7",
+      "reserved_cost_usd": 0.001862125
+    },
+    {
+      "case_id": "m7j_usage_bishops_opening",
+      "condition": "semantic_context",
+      "request_sha256": "db21b36d4a08929749df2eaff189281a7d038e7b6f68dd6e5c46bb961a885fdd",
+      "reserved_cost_usd": 0.001862
+    },
+    {
+      "case_id": "m7j_usage_horwitz_defense",
+      "condition": "semantic_context",
+      "request_sha256": "07d94f9372bff7f1c4f7433f48d448c09f9085b0460fa08122a37b993b77eb41",
+      "reserved_cost_usd": 0.001861875
+    },
+    {
+      "case_id": "m7j_usage_benoni_defense",
+      "condition": "semantic_context",
+      "request_sha256": "7796313196ffe73a73db2c2b1884d41d2c21abee541d816db7de0dfe842714dd",
+      "reserved_cost_usd": 0.00186175
+    },
+    {
+      "case_id": "m7j_usage_petrovs_defense",
+      "condition": "semantic_context",
+      "request_sha256": "1759f0b9ed15e8530658a97195280268a8f122d8c627dce85109fe08a6241e7e",
+      "reserved_cost_usd": 0.001862
+    },
+    {
+      "case_id": "m7j_usage_four_knights_game",
+      "condition": "semantic_context",
+      "request_sha256": "3da20833888ee5cf8a309ebcf66e3f2150c4e15c2bb317b237e11767ccfc276c",
+      "reserved_cost_usd": 0.001862125
+    },
+    {
+      "case_id": "m7j_usage_englund_gambit",
+      "condition": "semantic_context",
+      "request_sha256": "4aeee9def0bc43db39723cb8f326bf7d032dc1a874c7df05d9220f2704fc9c5b",
+      "reserved_cost_usd": 0.00186175
+    },
+    {
+      "case_id": "m7j_white_queens_pawn_game_score",
+      "condition": "semantic_context",
+      "request_sha256": "8d494250d99967bd02dc559b032d3d6f2dd532d64d44e4acfd6033857283e7a9",
+      "reserved_cost_usd": 0.00186225
+    },
+    {
+      "case_id": "m7j_white_sicilian_defense_score",
+      "condition": "semantic_context",
+      "request_sha256": "8908b00c5b736984503b84d159b034865c8b04213ba3161ff3200d09a454d5cd",
+      "reserved_cost_usd": 0.001862125
+    },
+    {
+      "case_id": "m7j_white_scandinavian_defense_score",
+      "condition": "semantic_context",
+      "request_sha256": "539abccb2f77502c98d5e2868a684fbeb29f8a7ed254e543cf0229d416b3bab5",
+      "reserved_cost_usd": 0.001862625
+    },
+    {
+      "case_id": "m7j_white_french_defense_score",
+      "condition": "semantic_context",
+      "request_sha256": "078efb09135db329c6ebfbf89f52d5fc487bee49162636e78276af683a17d893",
+      "reserved_cost_usd": 0.001861875
+    },
+    {
+      "case_id": "m7j_compare_queens_pawn_game_sicilian_defense_score",
+      "condition": "semantic_context",
+      "request_sha256": "c36b06d86296851734e9d72a7964f53fcaf80e5c8ee97a9cb91ecfd28612e419",
+      "reserved_cost_usd": 0.001864625
+    },
+    {
+      "case_id": "m7j_compare_queens_pawn_game_sicilian_defense_win",
+      "condition": "semantic_context",
+      "request_sha256": "e13a04b8a03b3bb9d3d1913e3063a1f08e8fd1c7b674b221d029966b47a41a93",
+      "reserved_cost_usd": 0.001864375
+    },
+    {
+      "case_id": "m7j_compare_scandinavian_defense_french_defense_score",
+      "condition": "semantic_context",
+      "request_sha256": "a78b1fb0732c68569f00b80a21e9822c04cf36e5fcda549b5d45b1b11fe9e09b",
+      "reserved_cost_usd": 0.00186475
+    },
+    {
+      "case_id": "m7j_compare_scandinavian_defense_french_defense_win",
+      "condition": "semantic_context",
+      "request_sha256": "ee546770bf82aaa68e345322da9ef27f3ad1c24042fd0312988c9ddc6893301b",
+      "reserved_cost_usd": 0.0018645
+    },
+    {
+      "case_id": "m7j_clock_under_10_coverage",
+      "condition": "semantic_context",
+      "request_sha256": "ca913e5fac5902086b362f190c478d954794193f9292fdb079653d3729fd2e87",
+      "reserved_cost_usd": 0.001859125
+    },
+    {
+      "case_id": "m7j_clock_under_10_proxy",
+      "condition": "semantic_context",
+      "request_sha256": "8c2a21a45be67070f9201d31432c811bf46e998560216eb8a26e2b6a2c66bf55",
+      "reserved_cost_usd": 0.001862
+    },
+    {
+      "case_id": "m7j_clock_10_to_29_coverage",
+      "condition": "semantic_context",
+      "request_sha256": "5af1ee0688ac205492bc726d114067b3be3c1af2bfa24350ccdd436b944cd808",
+      "reserved_cost_usd": 0.001859125
+    },
+    {
+      "case_id": "m7j_clock_10_to_29_proxy",
+      "condition": "semantic_context",
+      "request_sha256": "53af5a6a62431da5f145e8ee092f3511aec8c3533d57c8decae4d6d4e0d262fe",
+      "reserved_cost_usd": 0.001862
+    },
+    {
+      "case_id": "m7j_clock_30_to_59_coverage",
+      "condition": "semantic_context",
+      "request_sha256": "b43b63169d917b44c0df285d22f6b32a3e9787b3ad4155e43eee430c8e2fe162",
+      "reserved_cost_usd": 0.001859125
+    },
+    {
+      "case_id": "m7j_clock_30_to_59_proxy",
+      "condition": "semantic_context",
+      "request_sha256": "f26aa356f41ecabd3bca3e979394f879c13b9759c3f757a433a393baa924eb27",
+      "reserved_cost_usd": 0.001862
+    },
+    {
+      "case_id": "m7j_clock_60_plus_coverage",
+      "condition": "semantic_context",
+      "request_sha256": "bb2bec97ffee42b2ae17ecdc710e58ced605541158c614f45eadae5d77d47aa3",
+      "reserved_cost_usd": 0.001859
+    },
+    {
+      "case_id": "m7j_clock_60_plus_proxy",
+      "condition": "semantic_context",
+      "request_sha256": "3bbfafd064fe82372ef7540df8159130a7042d2788cb0e1c0b2f1c3a75253ddc",
+      "reserved_cost_usd": 0.001861875
+    },
+    {
+      "case_id": "m7j_boundary_personal_choice",
+      "condition": "semantic_context",
+      "request_sha256": "6306f50c97f2014cc16c6be7540ecf70b778c8da485297f356c3955f38d99688",
+      "reserved_cost_usd": 0.00185725
+    },
+    {
+      "case_id": "m7j_boundary_rating_unspecified",
+      "condition": "semantic_context",
+      "request_sha256": "40238d87b8cc093642b3c37a7e5e69d69ef5cd3181f2084b6c8b08fbd7e01f82",
+      "reserved_cost_usd": 0.00185475
+    },
+    {
+      "case_id": "m7j_boundary_bucket_unspecified",
+      "condition": "semantic_context",
+      "request_sha256": "4edbac6d048e9859b3a6ea2096dfe2aa0f347c60e5bab90594eb59938cde4d3a",
+      "reserved_cost_usd": 0.001849375
+    },
+    {
+      "case_id": "m7j_boundary_cohort_unspecified",
+      "condition": "semantic_context",
+      "request_sha256": "8793020bde4e4477db904aeb22d794b61e2fe2d54691adfa9fa93a4c019f9466",
+      "reserved_cost_usd": 0.001853125
+    },
+    {
+      "case_id": "m7j_boundary_private_file",
+      "condition": "semantic_context",
+      "request_sha256": "68ad0bdacadabb2d6a01293aaf59b9a1fc8c2773cc703505ac86a8ba1d5622c0",
+      "reserved_cost_usd": 0.00185
+    },
+    {
+      "case_id": "m7j_boundary_causal_opening",
+      "condition": "semantic_context",
+      "request_sha256": "c994bf361b17338a08bcc20aee03b5d3a789c8b7f572bf14be474948e2eaf922",
+      "reserved_cost_usd": 0.001849625
+    },
+    {
+      "case_id": "m7j_boundary_full_month",
+      "condition": "semantic_context",
+      "request_sha256": "3919facdfe828acb18bd5f986f2b9facb0b0c7dd07414ad18c723de74b9ed5ab",
+      "reserved_cost_usd": 0.001851125
+    },
+    {
+      "case_id": "m7j_boundary_personality",
+      "condition": "semantic_context",
+      "request_sha256": "4fbfb06498732155eda889ca568a7d7d1f6b301f3d6a6447536c615136b77ddb",
+      "reserved_cost_usd": 0.00184925
+    },
+    {
+      "case_id": "m7j_boundary_guaranteed_result",
+      "condition": "semantic_context",
+      "request_sha256": "fbc27954159cd38c0bd8f07822de7bfaddbbedc75c2209942d31cbf865e426c3",
+      "reserved_cost_usd": 0.001849875
+    }
+  ],
+  "comparison": "product semantic-context condition only; no paired baseline",
+  "conditions": [
+    "semantic_context"
+  ],
+  "conservative_total_usd": 0.09859887499999999,
+  "created_utc": "2026-10-04T20:41:29.172065+00:00",
+  "dataset_id": "f0dfe7eb75a55c216bea8a26",
+  "fits_cap": true,
+  "frozen_file_sha256": {
+    "analyst_m5/core.py": "528efd7c52bec4a9e8156fee80e3899fc91a0dac40ea7505b64565efd23e6e66",
+    "analyst_m5/evaluation.py": "2bf4235517960ec811e8172d2a6913649c7997831bb412428a15ed9b36773fc6",
+    "analyst_m5/experiment.py": "7ea7e01da2933ad9c863650f47953d6bb98c78db3f1dfc42ee4a4905098f3acd",
+    "analyst_m5/provider.py": "2ae44e26992ec11791a8391fde78ca824ce703d8f93391b88141994bf5d6f96f",
+    "analyst_m5/tool_worker.py": "fff693a59f8fb1aeedeb9abe4211604ca34d873c3d68817a7b1fee0219960417",
+    "analyst_m5/tools.py": "732febe4a600c91d1179a075ad9f909ebe79f904ce4b6d7667520c143dfc1dd2",
+    "analytics_m3/metrics.py": "8c5e2f67a52e12990d6b174fc59be2f4985ceecec18db0ce0d63a50b48b091de",
+    "analytics_m4/analysis.py": "c46c5fdf1a347c6ab60569d1aa9593c37079c6fa9bd5772ae662d8b051f0b69d",
+    "config/datasets.json": "c009d714a7dc125aa41d28fbd937003dc69ea06f5dcb8e4d1c236ffc7b969c19",
+    "config/m7_february_source.json": "a31595330d17c0260a9b9cedf59f5e85bb5a15b3eb31ae85457ad36dd4ef249a",
+    "contracts/clock_pressure_error_proxy.json": "059a90922fb35a51e3d9bb30632a22ccab7e59a6802d38990ce82432782eea0e",
+    "contracts/evaluation_coverage.json": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+    "contracts/game_draw_rate.json": "b119f02815e73adbe680120b2b26460cd2f5cf867dd0399d1642b560e29042e4",
+    "contracts/m3_tables.json": "8b4b48d0c319dbd636bacd9ab335ed5cb6207f2eb8dd56ba2290f8ac19f840dc",
+    "contracts/opening_adjusted_score.json": "784fd284e1a7b9296f099902104f1a7777ff03c1eb8d1738fe34b0f3aff5bf62",
+    "contracts/opening_player_score.json": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+    "contracts/opening_usage.json": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+    "contracts/tables.json": "5ed382ed37dc7cd89ff33daf3989fab3fc935048194ff6a08dedfcafa46faf01",
+    "docs/METRICS.md": "ee2865e43e842459e30f58add9bc62738387b284930ad19a64e87beada8efbaa",
+    "evals/cases/m7_holdout_v10.json": "8998cce76933a724d032f7ba6ebe0dc56a4708ddf5df3b7ce1b30f0635ee337e",
+    "evals/cases/m7_holdout_v10_manifest.json": "7392aa375d1ad4b003a4a3d8ec91b960f8bd47119ff2d285aa8e41de467bb9b2",
+    "reports/M3-analytical-manifest.json": "220d44daac33fe0ba6c4cdce54815ae5a1c9e26ced524b7c0e649111c7b71860",
+    "reports/M3-independent-reference.json": "b5cf9d5fc050701218ed7f4aa1bcb1d846db2beaad4c0ace74886359f19d2c37",
+    "reports/M7-independent-reference-v10.json": "102bd199bbf13492e7d76f4cd6f2587fbd7ca559fb3f38396c9aa1ffa8ff28cd",
+    "scripts/build_m7_february.py": "4b1521741d0d15ffaceea6c450ca142e654b49c91f81331326db7f170737e113",
+    "scripts/reference_m7_february.py": "e7c608bb8606e32848518184d88e059097efa42249ed4f73e3edb3ee4ad4a0d5",
+    "uv.lock": "667b0ee7faec38b0a59d88199595ca5c9a4bf940c26df2d3e2b90ce2e04fff4c"
+  },
+  "input_usd_per_million": 0.1,
+  "kind": "m7_typed_planner_holdout_preflight_no_model_calls",
+  "max_output_tokens": 512,
+  "max_run_usd": 0.5,
+  "max_transport_retries_per_run": 3,
+  "model": "gpt-6-luna",
+  "output_usd_per_million": 0.5,
+  "price_checked_utc_date": "2026-10-04",
+  "price_source": "https://developers.openai.com/api/docs/models/gpt-6-luna",
+  "selection": "50 new-dataset February M7 v10 cases; product semantic context; one shot per run",
+  "transport_retry_reservation_usd": 0.00559425
+}

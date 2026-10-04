@@ -1,0 +1,88 @@
+{
+  "clock_buckets_reference": "reports/M3-independent-reference.json",
+  "dataset_id": "00c88e6f9a1e327ede8e0406",
+  "families": [
+    "Sicilian Defense",
+    "Queen's Pawn Game",
+    "French Defense",
+    "Caro-Kann Defense",
+    "Scandinavian Defense",
+    "Italian Game",
+    "English Opening",
+    "King's Pawn Game",
+    "Zukertort Opening",
+    "Queen's Gambit Declined",
+    "Modern Defense",
+    "Pirc Defense",
+    "Indian Defense",
+    "Philidor Defense",
+    "Scotch Game",
+    "Nimzo-Larsen Attack",
+    "Van't Kruijs Opening",
+    "Ruy Lopez",
+    "Hungarian Opening",
+    "Bishop's Opening",
+    "Horwitz Defense",
+    "Benoni Defense",
+    "Petrov's Defense",
+    "Four Knights Game",
+    "Englund Gambit"
+  ],
+  "kind": "independent raw-PGN M7 July v5 reference; no model responses",
+  "known_opening_games": 99191,
+  "opening_usage": {
+    "Benoni Defense": 1346,
+    "Bishop's Opening": 1563,
+    "Caro-Kann Defense": 5775,
+    "English Opening": 3064,
+    "Englund Gambit": 1232,
+    "Four Knights Game": 1257,
+    "French Defense": 6076,
+    "Horwitz Defense": 1408,
+    "Hungarian Opening": 1584,
+    "Indian Defense": 2078,
+    "Italian Game": 3872,
+    "King's Pawn Game": 2914,
+    "Modern Defense": 2213,
+    "Nimzo-Larsen Attack": 1817,
+    "Petrov's Defense": 1261,
+    "Philidor Defense": 1967,
+    "Pirc Defense": 2109,
+    "Queen's Gambit Declined": 2395,
+    "Queen's Pawn Game": 9858,
+    "Ruy Lopez": 1652,
+    "Scandinavian Defense": 5264,
+    "Scotch Game": 1881,
+    "Sicilian Defense": 9945,
+    "Van't Kruijs Opening": 1658,
+    "Zukertort Opening": 2562
+  },
+  "source": "data/analytical/complete-2026-07-first-100000.pgn",
+  "source_snapshot_id": "3f6265ca957d11f6454ca708",
+  "white_rating_1400_1599_60_plus_0": {
+    "French Defense": {
+      "draws": 3,
+      "games": 220,
+      "losses": 118,
+      "wins": 99
+    },
+    "Queen's Pawn Game": {
+      "draws": 7,
+      "games": 411,
+      "losses": 197,
+      "wins": 207
+    },
+    "Scandinavian Defense": {
+      "draws": 5,
+      "games": 277,
+      "losses": 133,
+      "wins": 139
+    },
+    "Sicilian Defense": {
+      "draws": 4,
+      "games": 284,
+      "losses": 150,
+      "wins": 130
+    }
+  }
+}

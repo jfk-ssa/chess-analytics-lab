@@ -1,0 +1,37 @@
+{
+  "kind": "offline replay of retained malformed model responses after parser change; does not rescore historical live attempts",
+  "rows": [
+    {
+      "case_id": "m7f_compare_scandinavian_defense_french_defense_score",
+      "checked_tool_replay_passed": true,
+      "normalization_repairs": [],
+      "original_attempt_status": "failed",
+      "original_error_type": "ValueError",
+      "original_scored_as_passed": false,
+      "recovery": [
+        {
+          "action_index": 0,
+          "ignored_trailing_characters": 2122
+        }
+      ],
+      "replay_failures": [],
+      "response_sha256": "24c6d5b70e3a8dc7baf3cf062828ba732d60a74ad53c032827e3d64250fcdb68"
+    },
+    {
+      "case_id": "m7f_compare_scandinavian_defense_french_defense_win",
+      "checked_tool_replay_passed": true,
+      "normalization_repairs": [],
+      "original_attempt_status": "failed",
+      "original_error_type": "ValueError",
+      "original_scored_as_passed": false,
+      "recovery": [
+        {
+          "action_index": 0,
+          "ignored_trailing_characters": 530
+        }
+      ],
+      "replay_failures": [],
+      "response_sha256": "2f1fbc500381e5904d840cbd00d335f8d09eb3e2c11040e3083a93be44fd3598"
+    }
+  ]
+}

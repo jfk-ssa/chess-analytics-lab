@@ -1,0 +1,19 @@
+{
+  "archive_listed_bytes": 27755967701,
+  "archive_listed_games": 84600043,
+  "complete_archive": false,
+  "compressed_prefix_sha256": "f601d4c9516f9eb5035c20b168135ae7caa255353aee60ea75b4f977dacd5a11",
+  "listing_verified_on": "2026-10-04",
+  "max_decompressed_bytes": 500000000,
+  "max_download_bytes": 40000000,
+  "max_games": 100000,
+  "max_generated_bytes": 5000000000,
+  "max_record_bytes": 1000000,
+  "max_source_bytes": 500000000,
+  "period": "2026-02",
+  "range_end_inclusive": 39999999,
+  "range_start": 0,
+  "source_kind": "bounded_standard_rated_prefix",
+  "timeout_seconds": 30,
+  "url": "https://database.lichess.org/standard/lichess_db_standard_rated_2026-02.pgn.zst"
+}

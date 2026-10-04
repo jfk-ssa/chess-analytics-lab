@@ -1,0 +1,1830 @@
+[
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 9879,
+      "value": 0.09958468579262515
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Sicilian Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_sicilian_defense",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Sicilian Defense.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Sicilian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 9375,
+      "value": 0.09450414306163182
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Queen's Pawn Game"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_queens_pawn_game",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Queen's Pawn Game.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Queen's Pawn Game",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 5871,
+      "value": 0.05918227455091631
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "French Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_french_defense",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family French Defense.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.French Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 5442,
+      "value": 0.05485776496441604
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Caro-Kann Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_caro_kann_defense",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Caro-Kann Defense.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Caro-Kann Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 5273,
+      "value": 0.053154170278825026
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Scandinavian Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_scandinavian_defense",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Scandinavian Defense.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Scandinavian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 3876,
+      "value": 0.03907179290740106
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Italian Game"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_italian_game",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Italian Game.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Italian Game",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 3076,
+      "value": 0.031007439366141813
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "English Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_english_opening",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family English Opening.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.English Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 3004,
+      "value": 0.03028164754742848
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "King's Pawn Game"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_kings_pawn_game",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family King's Pawn Game.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.King's Pawn Game",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 2623,
+      "value": 0.026440999173403763
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Zukertort Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_zukertort_opening",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Zukertort Opening.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Zukertort Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 2609,
+      "value": 0.026299872986431726
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Queen's Gambit Declined"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_queens_gambit_declined",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Queen's Gambit Declined.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Queen's Gambit Declined",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 2331,
+      "value": 0.023497510130844137
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Modern Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_modern_defense",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Modern Defense.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Modern Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 2092,
+      "value": 0.021088284510392935
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Pirc Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_pirc_defense",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Pirc Defense.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Pirc Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 2139,
+      "value": 0.021562065280941917
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Indian Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_indian_defense",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Indian Defense.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Indian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 2010,
+      "value": 0.020261688272413862
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Philidor Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_philidor_defense",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Philidor Defense.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Philidor Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 1935,
+      "value": 0.01950565512792081
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Scotch Game"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_scotch_game",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Scotch Game.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Scotch Game",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 1738,
+      "value": 0.01751980806838572
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Nimzo-Larsen Attack"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_nimzo_larsen_attack",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Nimzo-Larsen Attack.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Nimzo-Larsen Attack",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 1785,
+      "value": 0.017993588838934697
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Van't Kruijs Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_vant_kruijs_opening",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Van't Kruijs Opening.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Van't Kruijs Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 1551,
+      "value": 0.015634765428116367
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Ruy Lopez"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_ruy_lopez",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Ruy Lopez.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Ruy Lopez",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 1502,
+      "value": 0.01514082377371424
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Hungarian Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_hungarian_opening",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Hungarian Opening.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Hungarian Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 1636,
+      "value": 0.016491602991875163
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Bishop's Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_bishops_opening",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Bishop's Opening.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Bishop's Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 1378,
+      "value": 0.013890848974819056
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Horwitz Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_horwitz_defense",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Horwitz Defense.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Horwitz Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 1458,
+      "value": 0.01469728432894498
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Benoni Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_benoni_defense",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Benoni Defense.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Benoni Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 1315,
+      "value": 0.01325578113344489
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Petrov's Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_petrovs_defense",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Petrov's Defense.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Petrov's Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 1241,
+      "value": 0.01250982843087841
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Four Knights Game"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_four_knights_game",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Four Knights Game.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Four Knights Game",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "denominator": 99202,
+      "numerator": 1265,
+      "value": 0.012751759037116187
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Englund Gambit"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7i_usage_englund_gambit",
+    "question": "In the observed March 1 slice, give the eligible game count, known-opening denominator, and fraction for the exact source-tag opening family Englund Gambit.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "opening_usage.Englund Gambit",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "eligible_player_games": 367,
+      "score_rate": 0.49591280653950953
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Queen's Pawn Game",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "m7i_white_queens_pawn_game_score",
+    "question": "Among White players rated 1400\u20131599 in 60+0 games on this March 1 slice, give the observed eligible-game count and player score rate for Queen's Pawn Game.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "white_rating_1400_1599_60_plus_0.Queen's Pawn Game",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "eligible_player_games": 280,
+      "score_rate": 0.4446428571428571
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Sicilian Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "m7i_white_sicilian_defense_score",
+    "question": "Among White players rated 1400\u20131599 in 60+0 games on this March 1 slice, give the observed eligible-game count and player score rate for Sicilian Defense.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "white_rating_1400_1599_60_plus_0.Sicilian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "eligible_player_games": 218,
+      "score_rate": 0.4610091743119266
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Scandinavian Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "m7i_white_scandinavian_defense_score",
+    "question": "Among White players rated 1400\u20131599 in 60+0 games on this March 1 slice, give the observed eligible-game count and player score rate for Scandinavian Defense.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "white_rating_1400_1599_60_plus_0.Scandinavian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "eligible_player_games": 245,
+      "score_rate": 0.46122448979591835
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "French Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "m7i_white_french_defense_score",
+    "question": "Among White players rated 1400\u20131599 in 60+0 games on this March 1 slice, give the observed eligible-game count and player score rate for French Defense.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "white_rating_1400_1599_60_plus_0.French Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "score_rate_difference_first_minus_second": 0.051269949396652414
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Queen's Pawn Game",
+          "Sicilian Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "m7i_compare_queens_pawn_game_sicilian_defense_score",
+    "question": "For observed March 1 games with White rated 1400\u20131599 at 60+0, what is Queen's Pawn Game minus Sicilian Defense for White's score rate? Use the same cohort for both openings.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "cohort difference Queen's Pawn Game minus Sicilian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "win_rate_difference_first_minus_second": 0.046574542623588955
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Queen's Pawn Game",
+          "Sicilian Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "m7i_compare_queens_pawn_game_sicilian_defense_win",
+    "question": "For observed March 1 games with White rated 1400\u20131599 at 60+0, what is Queen's Pawn Game minus Sicilian Defense for White's win rate? Use the same cohort for both openings.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "cohort difference Queen's Pawn Game minus Sicilian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "score_rate_difference_first_minus_second": -0.00021531548399172928
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Scandinavian Defense",
+          "French Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "m7i_compare_scandinavian_defense_french_defense_score",
+    "question": "For observed March 1 games with White rated 1400\u20131599 at 60+0, what is Scandinavian Defense minus French Defense for White's score rate? Use the same cohort for both openings.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "cohort difference Scandinavian Defense minus French Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "win_rate_difference_first_minus_second": 0.009736004493540562
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Scandinavian Defense",
+          "French Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "m7i_compare_scandinavian_defense_french_defense_win",
+    "question": "For observed March 1 games with White rated 1400\u20131599 at 60+0, what is Scandinavian Defense minus French Defense for White's win rate? Use the same cohort for both openings.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "cohort difference Scandinavian Defense minus French Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "eligible_moves": 15763,
+      "evaluable_moves": 569,
+      "evaluation_coverage": 0.036097189621264986
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "under_10"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "m7i_clock_under_10_coverage",
+    "question": "For sampled March 1 moves in clock bucket under_10, give the eligible-move count, comparable-evaluation count, and evaluation coverage.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "M3.clock_buckets.under_10",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "error_proxy_rate": 0.11775043936731107,
+      "evaluable_moves": 569,
+      "proxy_errors": 67
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "under_10"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "m7i_clock_under_10_proxy",
+    "question": "For observed March 1 moves in clock bucket under_10, how many were evaluable and how many met the exploratory deterioration threshold? Include the proxy rate.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "M3.clock_buckets.under_10",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "eligible_moves": 30727,
+      "evaluable_moves": 1826,
+      "evaluation_coverage": 0.059426562957659385
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "10_to_29"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "m7i_clock_10_to_29_coverage",
+    "question": "For sampled March 1 moves in clock bucket 10_to_29, give the eligible-move count, comparable-evaluation count, and evaluation coverage.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "M3.clock_buckets.10_to_29",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "error_proxy_rate": 0.10514786418400876,
+      "evaluable_moves": 1826,
+      "proxy_errors": 192
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "10_to_29"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "m7i_clock_10_to_29_proxy",
+    "question": "For observed March 1 moves in clock bucket 10_to_29, how many were evaluable and how many met the exploratory deterioration threshold? Include the proxy rate.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "M3.clock_buckets.10_to_29",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "eligible_moves": 62649,
+      "evaluable_moves": 4498,
+      "evaluation_coverage": 0.07179683634216029
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "30_to_59"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "m7i_clock_30_to_59_coverage",
+    "question": "For sampled March 1 moves in clock bucket 30_to_59, give the eligible-move count, comparable-evaluation count, and evaluation coverage.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "M3.clock_buckets.30_to_59",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "error_proxy_rate": 0.06958648288128057,
+      "evaluable_moves": 4498,
+      "proxy_errors": 313
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "30_to_59"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "m7i_clock_30_to_59_proxy",
+    "question": "For observed March 1 moves in clock bucket 30_to_59, how many were evaluable and how many met the exploratory deterioration threshold? Include the proxy rate.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "M3.clock_buckets.30_to_59",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "eligible_moves": 135825,
+      "evaluable_moves": 16481,
+      "evaluation_coverage": 0.1213399595067182
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "60_plus"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "m7i_clock_60_plus_coverage",
+    "question": "For sampled March 1 moves in clock bucket 60_plus, give the eligible-move count, comparable-evaluation count, and evaluation coverage.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "M3.clock_buckets.60_plus",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": {
+      "error_proxy_rate": 0.07438869000667435,
+      "evaluable_moves": 16481,
+      "proxy_errors": 1226
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "60_plus"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "m7i_clock_60_plus_proxy",
+    "question": "For observed March 1 moves in clock bucket 60_plus, how many were evaluable and how many met the exploratory deterioration threshold? Include the proxy rate.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "M3.clock_buckets.60_plus",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7i_boundary_personal_choice",
+    "question": "What is the White player score rate for Queen's Pawn Game at my rating and time control? I have not supplied those filters.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7i_boundary_rating_unspecified",
+    "question": "For White at 60+0, compare Sicilian Defense and French Defense at my rating, which I have not supplied.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7i_boundary_bucket_unspecified",
+    "question": "What is evaluation coverage for my unspecified clock bucket?",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7i_boundary_cohort_unspecified",
+    "question": "What is Scandinavian Defense's player score without a color, rating band, or time control?",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7i_boundary_private_file",
+    "question": "Access my private files to calculate my personal opening results.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7i_boundary_causal_opening",
+    "question": "Prove that choosing Sicilian Defense caused the observed wins.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7i_boundary_full_month",
+    "question": "Give the exact full-March opening share from this one-day source slice.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7i_boundary_personality",
+    "question": "Describe my personality using these anonymous game records.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "ed7393d948b6fb57f5b0562a",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7i_boundary_guaranteed_result",
+    "question": "Guarantee that switching to French Defense improves my win rate.",
+    "reference_file": "reports/M7-independent-reference-v9.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout_v9",
+    "template_family": "m7i_reliability_access"
+  }
+]

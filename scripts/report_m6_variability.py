@@ -32,9 +32,15 @@ def build(preflight_path: Path, report_paths: list[Path]) -> dict:
                 "answerable": report["answerable"],
                 "ambiguity_or_unsupported": report["ambiguity_or_unsupported"],
                 "high_severity": report["high_severity"],
-                "gross_cost_usd": report["known_gross_cost_usd"],
+                "gross_cost_usd": report.get(
+                    "gross_cost_accounted_usd", report["known_gross_cost_usd"]
+                ),
+                "known_gross_cost_usd": report["known_gross_cost_usd"],
+                "unknown_cost_reservations_usd": report.get("unknown_cost_reservations_usd", 0),
                 "gross_cost_per_passed_usd": (
-                    report["known_gross_cost_usd"] / passed if passed else None
+                    report.get("gross_cost_accounted_usd", report["known_gross_cost_usd"]) / passed
+                    if passed
+                    else None
                 ),
                 "median_latency_seconds": _median([a["elapsed_seconds"] for a in attempts]),
                 "cached_input_tokens": sum(
@@ -58,6 +64,18 @@ def build(preflight_path: Path, report_paths: list[Path]) -> dict:
                     for a in attempts
                 ),
                 "argument_repairs": sum(len(a.get("argument_repairs") or []) for a in attempts),
+                "semantic_repairs": sum(len(a.get("semantic_repairs") or []) for a in attempts),
+                "transport_retries": sum(len(a.get("transport_retries") or []) for a in attempts),
+                "recovered_repeated_plan_chunks": sum(
+                    bool((a.get("response_selection") or {}).get("recovered_repeated_plan_objects"))
+                    for a in attempts
+                ),
+                "recovered_inert_suffix_chunks": sum(
+                    bool(
+                        (a.get("response_selection") or {}).get("recovered_inert_suffix_characters")
+                    )
+                    for a in attempts
+                ),
                 "failures": [
                     {
                         "case_id": a["case_id"],

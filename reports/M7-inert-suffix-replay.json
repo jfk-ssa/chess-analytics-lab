@@ -1,0 +1,10 @@
+{
+  "case_id": "m7j_white_queens_pawn_game_score",
+  "historical_run": "February v10 repeat 2",
+  "ignored_inert_suffix_characters": 870,
+  "kind": "offline historical-response inert-suffix replay, not live rescore",
+  "original_live_error": "provider returned no unique structured plan",
+  "original_live_status": "failed",
+  "replay_failures": [],
+  "replay_passed": true
+}

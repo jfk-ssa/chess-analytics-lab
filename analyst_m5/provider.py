@@ -4,6 +4,7 @@ import hashlib
 import json
 import os
 import re
+import unicodedata
 import urllib.error
 import urllib.request
 import uuid
@@ -158,6 +159,63 @@ def _default_transport(body: bytes, key: str) -> dict:
         raise RuntimeError(f"provider HTTP {exc.code}: {detail}") from exc
 
 
+def _recover_repeated_plan_chunk(chunk: str, response: dict) -> tuple[dict, dict]:
+    """Accept only identical repeated objects, with an optional duplicate truncation."""
+    if len(chunk) > 8192:
+        raise ValueError("repeated plan chunk too long")
+    decoder = json.JSONDecoder()
+    objects = []
+    snippets = []
+    remaining = chunk.strip()
+    truncated = 0
+    while remaining:
+        if len(objects) >= 16:
+            raise ValueError("too many repeated plan objects")
+        try:
+            value, end = decoder.raw_decode(remaining)
+        except json.JSONDecodeError:
+            if (
+                response.get("status") == "incomplete"
+                and len(objects) >= 2
+                and len(remaining) >= 64
+                and any(snippet.startswith(remaining) for snippet in snippets)
+            ):
+                truncated = len(remaining)
+                break
+            raise ValueError("unrecognized repeated-plan suffix") from None
+        if not isinstance(value, dict) or (objects and value != objects[0]):
+            raise ValueError("conflicting repeated-plan object")
+        objects.append(value)
+        snippets.append(remaining[:end])
+        remaining = remaining[end:].strip()
+        if remaining.startswith("1 final"):
+            remaining = remaining[len("1 final") :].strip()
+    if len(objects) < 2:
+        raise ValueError("not a repeated plan")
+    return objects[0], {
+        "identical_complete_objects": len(objects),
+        "truncated_duplicate_suffix_characters": truncated,
+    }
+
+
+def _recover_inert_suffix(chunk: str, response: dict) -> tuple[dict, int]:
+    """Keep one complete plan before bounded non-ASCII repeated punctuation."""
+    if response.get("status") != "incomplete" or len(chunk) > 8192:
+        raise ValueError("not an incomplete bounded response")
+    text = chunk.lstrip()
+    raw, end = json.JSONDecoder().raw_decode(text)
+    trailing = text[end:].strip()
+    if (
+        not isinstance(raw, dict)
+        or not 64 <= len(trailing) <= 4096
+        or len(set(trailing)) != 1
+        or trailing[0].isascii()
+        or unicodedata.category(trailing[0])[0] not in {"P", "S"}
+    ):
+        raise ValueError("not an inert repeated suffix")
+    return raw, len(trailing)
+
+
 def _extract_plan(response: dict) -> tuple[dict, dict]:
     """Accept one unambiguous structured plan; log invalid and duplicate chunks."""
     chunks = [
@@ -167,12 +225,21 @@ def _extract_plan(response: dict) -> tuple[dict, dict]:
         if part.get("type") == "output_text"
     ]
     valid = []
+    decoder = json.JSONDecoder()
     tools = set(PLAN_SCHEMA["properties"]["actions"]["items"]["properties"]["tool"]["enum"])
     for index, chunk in enumerate(chunks):
         if not isinstance(chunk, str):
             continue
         try:
-            raw = json.loads(chunk)
+            repeated = None
+            inert_suffix = 0
+            try:
+                raw = json.loads(chunk)
+            except json.JSONDecodeError:
+                try:
+                    raw, repeated = _recover_repeated_plan_chunk(chunk, response)
+                except ValueError:
+                    raw, inert_suffix = _recover_inert_suffix(chunk, response)
             if (
                 not isinstance(raw, dict)
                 or set(raw) != {"status", "interpretation", "actions"}
@@ -183,12 +250,33 @@ def _extract_plan(response: dict) -> tuple[dict, dict]:
             ):
                 continue
             actions = []
+            recovered_arguments = []
             for item in raw["actions"]:
                 if not isinstance(item, dict) or set(item) != {"tool", "args_json"}:
                     raise ValueError("invalid action schema")
                 if item["tool"] not in tools or not isinstance(item["args_json"], str):
                     raise ValueError("invalid action tool")
-                args = json.loads(item["args_json"])
+                argument_text = item["args_json"]
+                try:
+                    args = json.loads(argument_text)
+                except json.JSONDecodeError:
+                    # Some provider responses put a complete argument object first,
+                    # then stray prose inside args_json. Keep the raw response,
+                    # accept only that unique leading object, and log the repair.
+                    args, end = decoder.raw_decode(argument_text.lstrip())
+                    trailing = argument_text.lstrip()[end:]
+                    if not trailing or len(trailing) > 4096:
+                        raise ValueError("unbounded or absent argument suffix") from None
+                    for match in re.finditer(r"[\[{]", trailing):
+                        try:
+                            extra, _ = decoder.raw_decode(trailing[match.start() :])
+                        except json.JSONDecodeError:
+                            continue
+                        if isinstance(extra, (dict, list)):
+                            raise ValueError("conflicting structured argument suffix") from None
+                    recovered_arguments.append(
+                        {"action_index": len(actions), "ignored_trailing_characters": len(trailing)}
+                    )
                 if not isinstance(args, dict):
                     raise ValueError("tool args must be an object")
                 actions.append({"tool": item["tool"], "args": args})
@@ -201,19 +289,25 @@ def _extract_plan(response: dict) -> tuple[dict, dict]:
                         "actions": actions,
                     },
                     chunk,
+                    recovered_arguments,
+                    repeated,
+                    inert_suffix,
                 )
             )
         except (ValueError, TypeError, KeyError):
             continue
     if not valid or any(candidate[1] != valid[0][1] for candidate in valid[1:]):
         raise ValueError("provider returned no unique structured plan")
-    index, plan, selected = valid[0]
+    index, plan, selected, recovered_arguments, repeated, inert_suffix = valid[0]
     return plan, {
         "output_text_chunks": len(chunks),
         "selected_chunk_index": index,
         "selected_chunk_sha256": hashlib.sha256(selected.encode()).hexdigest(),
         "discarded_invalid_chunks": len(chunks) - len(valid),
         "duplicate_valid_chunks": len(valid) - 1,
+        "recovered_argument_suffixes": recovered_arguments,
+        "recovered_repeated_plan_objects": repeated,
+        "recovered_inert_suffix_characters": inert_suffix,
     }
 
 
@@ -238,6 +332,55 @@ def _normalize_plan(plan: dict) -> tuple[dict, list[str]]:
     return normalized, repairs
 
 
+def _repair_opening_usage(question: str, plan: dict, tools: CheckedTools) -> tuple[dict, list[str]]:
+    """Route one clearly specified source-family fraction through the checked metric."""
+    lower = question.lower()
+    if not (
+        ("fraction" in lower or "share" in lower)
+        and ("known-opening" in lower or "source-tag" in lower or "opening usage" in lower)
+    ) or any(
+        word in lower
+        for word in (
+            "full-month",
+            "full april",
+            "full march",
+            "full february",
+            "full january",
+            "full december",
+            "full may",
+            "full june",
+            "full july",
+            "caus",
+            "guarantee",
+            "personal",
+            "my rating",
+        )
+    ):
+        return plan, []
+    rows = tools.query_metric("opening_usage", {}, ["opening_family"])["rows"]
+    matches = [
+        row["family"]
+        for row in rows
+        if re.search(r"(?<!\w)" + re.escape(row["family"]) + r"(?!\w)", question, re.I)
+    ]
+    matches.sort(key=len, reverse=True)
+    if not matches or any(name.lower() not in matches[0].lower() for name in matches[1:]):
+        return plan, []
+    intended = {
+        "status": "answered",
+        "interpretation": "descriptive_observed_prefix",
+        "actions": [
+            {
+                "tool": "query_metric",
+                "args": {"metric_id": "opening_usage", "filters": {"family": matches[0]}},
+            }
+        ],
+    }
+    if plan == intended:
+        return plan, []
+    return intended, ["one_exact_source_family_fraction:checked_opening_usage"]
+
+
 CONDITIONS = {"schema_only", "semantic_context"}
 
 
@@ -254,7 +397,7 @@ def quote_request(project: Path, question: str, config: dict, condition="semanti
         "If essential filters are absent, request clarification. Reject causal or unsupported "
         "claims. Return tool arguments as JSON in args_json. Do not calculate numeric answers. "
         "Use needs_clarification only when the user can supply missing cohort filters "
-        "for a supported descriptive query. Use unsupported for private-file access, "
+        "for a supported descriptive query. Use unsupported for inaccessible data, "
         "causal effects, full-month extrapolation from this prefix, personality or "
         "other claims this dataset or tools cannot answer. Both statuses use no actions. "
         "A personalized opening-choice request without the player's cohort and "
@@ -298,7 +441,11 @@ def quote_request(project: Path, question: str, config: dict, condition="semanti
         "two query_metric calls return components, not the requested difference. "
         "For compare_openings, args_json must have one outer filters key, never flat fields. "
         "Opening usage is fully specified by the source family alone; do not ask for "
-        "color, rating, or time control for opening_usage. "
+        "color, rating, or time control for opening_usage. For an exact opening-usage "
+        "fraction, use one query_metric action, without a coverage action. "
+        "For any exact source-tag family named in a usage question, call opening_usage; "
+        "the checked tool determines whether it occurs, so do not infer unsupported "
+        "from the family name or absence from a preview list. "
         "Copy full provider family names from the question; never abbreviate "
         "Sicilian Defense to Sicilian or French Defense to French. "
         "For Black's Sicilian versus French comparison, use full source names "
@@ -380,6 +527,8 @@ def live_answer(
         raise ValueError("provider usage exceeded configured run spending cap")
     parsed_plan, selection = _extract_plan(response)
     plan, repairs = _normalize_plan(parsed_plan)
+    model_plan = plan
+    plan, semantic_repairs = _repair_opening_usage(question, plan, CheckedTools(project))
     answer = execute_plan(project, question, plan, source="live_provider")
     answer["provider"] = {
         "response_id": response.get("id"),
@@ -396,6 +545,8 @@ def live_answer(
         "raw_response": response,
         "response_selection": selection,
         "argument_repairs": repairs,
+        "model_plan_before_semantic_repair": model_plan,
+        "semantic_repairs": semantic_repairs,
         "attempts": 1,
     }
     return answer

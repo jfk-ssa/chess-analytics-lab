@@ -1,0 +1,64 @@
+{
+  "approved_cumulative_cap_usd": 0.5,
+  "cells": [
+    {
+      "case_id": "m7k_usage_queens_gambit_declined",
+      "request_sha256": "8dc9dde4715fd86086337ea9f18a4c0e03fe873b843309700ee2b5f93ef52619",
+      "reserved_cost_usd": 0.0372525
+    },
+    {
+      "case_id": "m7k_white_queens_pawn_game_score",
+      "request_sha256": "d7d95addc46ba55cfb37993b62e355fca3aa6fa5fc58146eef279aae1defc6e9",
+      "reserved_cost_usd": 0.03724
+    },
+    {
+      "case_id": "m7k_compare_queens_pawn_game_sicilian_defense_win",
+      "request_sha256": "322e2d956b3a5544f1312faf77c89c2252905c62aeb11f5ff6350de44cda3c23",
+      "reserved_cost_usd": 0.0372825
+    },
+    {
+      "case_id": "m7k_clock_60_plus_proxy",
+      "request_sha256": "51d2a78ad3731e7d1e519356826507034c2acd0e5d96104f1847f0b1cd6f5fc2",
+      "reserved_cost_usd": 0.0372325
+    },
+    {
+      "case_id": "m7k_boundary_private_file",
+      "request_sha256": "ad5558e030def3dea17e19be13c9393f08d618ca3b89299ce72dcb057efa5e8e",
+      "reserved_cost_usd": 0.0369975
+    },
+    {
+      "case_id": "m7k_boundary_rating_unspecified",
+      "request_sha256": "09eedec8d8ee6ba21e165cf3f519a2ad4b74b44a4fa04ce1d3090ee6acbafeea",
+      "reserved_cost_usd": 0.0370925
+    }
+  ],
+  "config": {
+    "api_key_env": "CHESSLAB_OPENAI_API_KEY",
+    "cache_write_usd_per_million": 2.5,
+    "cached_input_usd_per_million": 0.2,
+    "enabled": true,
+    "input_usd_per_million": 2.0,
+    "max_output_tokens": 512,
+    "max_run_usd": 0.5,
+    "model": "gpt-6-sol",
+    "output_usd_per_million": 10.0,
+    "personal_account_acknowledged": true
+  },
+  "conservative_total_usd": 0.2230975,
+  "dataset_id": "9250ba8791e179279fba2023",
+  "fits_cumulative_cap": true,
+  "frozen_file_sha256": {
+    "analyst_m5/core.py": "528efd7c52bec4a9e8156fee80e3899fc91a0dac40ea7505b64565efd23e6e66",
+    "analyst_m5/evaluation.py": "2bf4235517960ec811e8172d2a6913649c7997831bb412428a15ed9b36773fc6",
+    "analyst_m5/provider.py": "1710aeda70ae239db36773489a5df8970a7f6356ea7cf8de59e2522004362762",
+    "analyst_m5/tools.py": "732febe4a600c91d1179a075ad9f909ebe79f904ce4b6d7667520c143dfc1dd2",
+    "evals/cases/m7_holdout_v11.json": "8c442c2d497c0e89a0601774ab7e3de429e52d808517a051dfd95e40592f623d",
+    "reports/M3-analytical-manifest.json": "353d0b9bf93464ec7b7a65629edc136a84f0d53f3c0ae1a1e8a4f3b512f5fb2d",
+    "scripts/dev_m7_sol.py": "f5df0b45f0070c189178f994057f316cc6ad9b3a4a583367611b56b7b45c4c12"
+  },
+  "kind": "M7 inspected-case Sol development preflight; no model calls",
+  "model": "gpt-6-sol",
+  "price_checked_utc_date": "2026-10-04",
+  "price_source": "https://developers.openai.com/api/docs/models/gpt-6-sol",
+  "prior_gross_accounted_usd": 0.12081436
+}

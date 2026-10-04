@@ -1,0 +1,3333 @@
+{
+  "ambiguity_or_unsupported": {
+    "attempted": 9,
+    "passed": 9
+  },
+  "answerable": {
+    "attempted": 41,
+    "passed": 23
+  },
+  "attempted": 50,
+  "attempts": [
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_sicilian_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 3.2064903339996818,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_0af757301a99dfad2128"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.000320175,
+      "model_response_id": "resp_0838adf9ac62b38c016ac27b0538c087d2a1814f582db97ea7",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Sicilian Defense\\\"}}\"}]}",
+      "request_sha256": "f7b3bbcc7a819a403e94b6c0eeb06ea1cb5e0123ed43359232adab65a1e38592",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "8c55b09a25974fa3ddd81095c8f410e782be317a01c14640b797eeb1f3b2d096"
+      },
+      "result": {
+        "analytical_id": "00c88e6f9a1e327ede8e0406",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99191,
+        "family": "Sicilian Defense",
+        "metric_id": "opening_usage",
+        "numerator": 9945,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.10026111239931042,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7e_usage_sicilian_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2338,
+        "input_tokens_details": {
+          "cache_write_tokens": 2335,
+          "cached_tokens": 0
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2394
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_queens_pawn_game",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.313026499999978,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_cfc58ee55d99eec52d37"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 5.4995000000000005e-05,
+      "model_response_id": "resp_03c5f3802b83fa51016ac27b07e0bc87d2bc766de89274ac3c",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Queen's Pawn Game\\\"}}\"}]}",
+      "request_sha256": "7c6064efcc29030c37b349b71583a4af34360102576be5c8bc2462fdeb20ecd7",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "0f9a94b7eed72f439a368e44e0e62ee6685506a077b303d7aa2fb2790a436feb"
+      },
+      "result": {
+        "analytical_id": "00c88e6f9a1e327ede8e0406",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99191,
+        "family": "Queen's Pawn Game",
+        "metric_id": "opening_usage",
+        "numerator": 9858,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.09938401669506305,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7e_usage_queens_pawn_game",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2339,
+        "input_tokens_details": {
+          "cache_write_tokens": 29,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2395
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_french_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 3.5582824169978267,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_510c0c7d897d78d68d30"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 9.674500000000001e-05,
+      "model_response_id": "resp_03417168e10dfffd016ac27b0a350887d29a31c4cec6fa2b18",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"French Defense\\\"}}\"}]}",
+      "request_sha256": "8a584f53cf6b74bf15f6ad6a5b6bc83f3384db9a98bd5235f11f02bd7719b197",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 1,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 2,
+        "selected_chunk_index": 1,
+        "selected_chunk_sha256": "8fdde8e39d388f4ffac7c91f83a6ba1930e9e1169fbe5540139f3c4482dddf03"
+      },
+      "result": {
+        "analytical_id": "00c88e6f9a1e327ede8e0406",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99191,
+        "family": "French Defense",
+        "metric_id": "opening_usage",
+        "numerator": 6076,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.06125555745985019,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7e_usage_french_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2337,
+        "input_tokens_details": {
+          "cache_write_tokens": 27,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 140,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2477
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_caro_kann_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.4613181669992628,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_852700a54c3e99a65608"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 5.5620000000000006e-05,
+      "model_response_id": "resp_04b6000684b36ca7016ac27b0dc5e487d2b366b028e8033202",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Caro-Kann Defense\\\"}}\"}]}",
+      "request_sha256": "dcd5d404b9d73d448298059c98522553294ae628aa2e11f25119bb422040f17a",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "7267ddd46dd11601b818a76d12a283373d962221f6e8da0d420a2c8aea98cd1b"
+      },
+      "result": {
+        "analytical_id": "00c88e6f9a1e327ede8e0406",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99191,
+        "family": "Caro-Kann Defense",
+        "metric_id": "opening_usage",
+        "numerator": 5775,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.058221007954350694,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7e_usage_caro_kann_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2340,
+        "input_tokens_details": {
+          "cache_write_tokens": 30,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 57,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2397
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_scandinavian_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.3751645000011194,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.00030655,
+      "model_response_id": "resp_094c0ec81b68d126016ac27b10db7c87d18655ac87eb1a4b17",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "b8568ceccd3c314006fef1331e1d99da48c7ddb98f67c62d2d53fafde8300546",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_usage_scandinavian_defense",
+        "category": "basic_calculation",
+        "failures": [
+          "status",
+          "result_values",
+          "evidence",
+          "tool_or_filters",
+          "caveats"
+        ],
+        "passed": false,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2337,
+        "input_tokens_details": {
+          "cache_write_tokens": 2334,
+          "cached_tokens": 0
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2366
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_italian_game",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.942369708995102,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.1245e-05,
+      "model_response_id": "resp_0cbf826ce5488fe9016ac27b12977887d28bcaa81e2f8d2760",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "e1a93318d61d2b6e21408b8650edb470ce703d4a276ca4eb5210059413b1b80c",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_usage_italian_game",
+        "category": "basic_calculation",
+        "failures": [
+          "status",
+          "result_values",
+          "evidence",
+          "tool_or_filters",
+          "caveats"
+        ],
+        "passed": false,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2337,
+        "input_tokens_details": {
+          "cache_write_tokens": 27,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2366
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_english_opening",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.419387166002707,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_8d52ca3667d48e897d22"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 7.1745e-05,
+      "model_response_id": "resp_04fd061f5e1868a5016ac27b1486f487d29e4e31528ae99447",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"English Opening\\\"}}\"}]}",
+      "request_sha256": "8002c00004ff30f4824000ac7a25e036de44dac9f36b277ef767c826f1bf273a",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 1,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 2,
+        "selected_chunk_index": 1,
+        "selected_chunk_sha256": "9666916a83ccd68ee05f9103f9dd837795251d5f7e4bd45cdeb6b878033998a2"
+      },
+      "result": {
+        "analytical_id": "00c88e6f9a1e327ede8e0406",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99191,
+        "family": "English Opening",
+        "metric_id": "opening_usage",
+        "numerator": 3064,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.030889899285217407,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7e_usage_english_opening",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2337,
+        "input_tokens_details": {
+          "cache_write_tokens": 27,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 90,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2427
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_kings_pawn_game",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.4409264589994564,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.1370000000000005e-05,
+      "model_response_id": "resp_08804c09f16df7ef016ac27b17019887d1977dc8b052761a9c",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "6837d1796f054a4f4486763e48dcf5f552e0262f775c89c170691f855b2db317",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_usage_kings_pawn_game",
+        "category": "basic_calculation",
+        "failures": [
+          "status",
+          "result_values",
+          "evidence",
+          "tool_or_filters",
+          "caveats"
+        ],
+        "passed": false,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2338,
+        "input_tokens_details": {
+          "cache_write_tokens": 28,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2367
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_zukertort_opening",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.3607911660001264,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_a88be8ad619eb73d07a8"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 5.5620000000000006e-05,
+      "model_response_id": "resp_07d5520fbbb72e61016ac27b186b7487d1854c5d24592f71a4",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Zukertort Opening\\\"}}\"}]}",
+      "request_sha256": "7b082889f797a88047e7c3d8cf51a7c45c6f315b9aeafed16dfa983e60f8f1e6",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "3b4031ea8ef842c5b05e07af778831facd6ed5b961df179c7b557b47ce7e9894"
+      },
+      "result": {
+        "analytical_id": "00c88e6f9a1e327ede8e0406",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99191,
+        "family": "Zukertort Opening",
+        "metric_id": "opening_usage",
+        "numerator": 2562,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.025828956256111944,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7e_usage_zukertort_opening",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2340,
+        "input_tokens_details": {
+          "cache_write_tokens": 30,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 57,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2397
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_queens_gambit_declined",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.0862635410012444,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.174500000000001e-05,
+      "model_response_id": "resp_0fe23a7ea3432622016ac27b1ac30887d289180211c9f3bd92",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "1b75d98ade3b514ec10371fd2de298e5479878af1d0a502f1da026d197111fd3",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_usage_queens_gambit_declined",
+        "category": "basic_calculation",
+        "failures": [
+          "status",
+          "result_values",
+          "evidence",
+          "tool_or_filters",
+          "caveats"
+        ],
+        "passed": false,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2341,
+        "input_tokens_details": {
+          "cache_write_tokens": 31,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2370
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_modern_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.7175207499967655,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_ba26b31d2e876a272eab"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 5.3745e-05,
+      "model_response_id": "resp_0bd1382568bc2088016ac27b1cf65c87d18079f57b36cf5d46",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Modern Defense\\\"}}\"}]}",
+      "request_sha256": "33a17ece2f1bfd3b496a4c535d475f949d05e4695b74730bd8e8e81516d2fa91",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f44aec26b4b52410667b39ec871e0263ff8dd45ad9b10eeb568baacc7ac250dc"
+      },
+      "result": {
+        "analytical_id": "00c88e6f9a1e327ede8e0406",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99191,
+        "family": "Modern Defense",
+        "metric_id": "opening_usage",
+        "numerator": 2213,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.022310491879303566,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7e_usage_modern_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2337,
+        "input_tokens_details": {
+          "cache_write_tokens": 27,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 54,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2391
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_pirc_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.075032000000647,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_0e8b1a627e964971a12f"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 5.437e-05,
+      "model_response_id": "resp_0638667906d9016c016ac27b1fa04487d1af076a8dd7894cd8",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Pirc Defense\\\"}}\"}]}",
+      "request_sha256": "0c9e923e047519bffa0147eaec947bc0d5504e1b7edc7e58b0f6e9425e57b199",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "22caa2f8f8a0ccb63bc7205e5f54145e80da3fdff65a2432b4d8a113035ae608"
+      },
+      "result": {
+        "analytical_id": "00c88e6f9a1e327ede8e0406",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99191,
+        "family": "Pirc Defense",
+        "metric_id": "opening_usage",
+        "numerator": 2109,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.021262009658134306,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7e_usage_pirc_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2338,
+        "input_tokens_details": {
+          "cache_write_tokens": 28,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2393
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_indian_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.692458749996149,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.1245e-05,
+      "model_response_id": "resp_0229709b913d6c29016ac27b21c22c87d1a975f2cdac91ccc3",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "f4be09cb01af5465be8ff7c84b14c655804b8ab536e254a9813e06f53f5ada7d",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_usage_indian_defense",
+        "category": "basic_calculation",
+        "failures": [
+          "status",
+          "result_values",
+          "evidence",
+          "tool_or_filters",
+          "caveats"
+        ],
+        "passed": false,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2337,
+        "input_tokens_details": {
+          "cache_write_tokens": 27,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2366
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_philidor_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.5957959170045797,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_a9728516f653a35ea5a1"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 5.437e-05,
+      "model_response_id": "resp_04f72f9d8c15ab74016ac27b2360fc87d19b764111153964f6",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Philidor Defense\\\"}}\"}]}",
+      "request_sha256": "972c02a04e5a106ef41d68c339d387c5481d40474aea7dbccc2faf47c1225732",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "30f4511f5608ee3ff165e6dde00bd4eb095b9c8ab4bd22569c30274919d31181"
+      },
+      "result": {
+        "analytical_id": "00c88e6f9a1e327ede8e0406",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99191,
+        "family": "Philidor Defense",
+        "metric_id": "opening_usage",
+        "numerator": 1967,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.01983042816384551,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7e_usage_philidor_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2338,
+        "input_tokens_details": {
+          "cache_write_tokens": 28,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2393
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_scotch_game",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.3572540000022855,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.1245e-05,
+      "model_response_id": "resp_04f9996b88a15479016ac27b25f01487d18f2d981b7d57178b",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "c89572a7382fa9503d4d3c2a70fa3f7f497c8ebd5c5fb5c26ac36975b5544982",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_usage_scotch_game",
+        "category": "basic_calculation",
+        "failures": [
+          "status",
+          "result_values",
+          "evidence",
+          "tool_or_filters",
+          "caveats"
+        ],
+        "passed": false,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2337,
+        "input_tokens_details": {
+          "cache_write_tokens": 27,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2366
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_nimzo_larsen_attack",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.262253166998562,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.174500000000001e-05,
+      "model_response_id": "resp_00eaf7f807b5b70c016ac27b27531487d2aa55b7082974d85c",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "3b1f3a5e5f764c2276727f1c4a9f43ba523ac5a9355aaa839e74511c9afc5ded",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_usage_nimzo_larsen_attack",
+        "category": "basic_calculation",
+        "failures": [
+          "status",
+          "result_values",
+          "evidence",
+          "tool_or_filters",
+          "caveats"
+        ],
+        "passed": false,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2341,
+        "input_tokens_details": {
+          "cache_write_tokens": 31,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2370
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_vant_kruijs_opening",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.610188749997178,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.1620000000000005e-05,
+      "model_response_id": "resp_0768c4269f961419016ac27b289d9c87d18710abba762df518",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "075118c430dd434b18e66cb2a6dcc2cb7d6707bfd9e7ca87590b6d0138b4e6e6",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_usage_vant_kruijs_opening",
+        "category": "basic_calculation",
+        "failures": [
+          "status",
+          "result_values",
+          "evidence",
+          "tool_or_filters",
+          "caveats"
+        ],
+        "passed": false,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2340,
+        "input_tokens_details": {
+          "cache_write_tokens": 30,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2369
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_ruy_lopez",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.1959231669970904,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.1370000000000005e-05,
+      "model_response_id": "resp_0410c0b17aff5a87016ac27b2a2d9c87d18a275c537cd5145d",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "822ea2a8f8304fcf16a2f430b645a48b103f5315ffaffbb608f59fba027fc36a",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_usage_ruy_lopez",
+        "category": "basic_calculation",
+        "failures": [
+          "status",
+          "result_values",
+          "evidence",
+          "tool_or_filters",
+          "caveats"
+        ],
+        "passed": false,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2338,
+        "input_tokens_details": {
+          "cache_write_tokens": 28,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2367
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_hungarian_opening",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.9536385419996805,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.1245e-05,
+      "model_response_id": "resp_04f3f450880030f3016ac27b2c001487d287d5092cb5f22fa7",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "1813ff9f5e41e4ea8ffa05eb44080d66e36eabfb7eeff275b220d93a9e72b68d",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_usage_hungarian_opening",
+        "category": "basic_calculation",
+        "failures": [
+          "status",
+          "result_values",
+          "evidence",
+          "tool_or_filters",
+          "caveats"
+        ],
+        "passed": false,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2337,
+        "input_tokens_details": {
+          "cache_write_tokens": 27,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2366
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_bishops_opening",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.1344612920001964,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_700b6a1af99b330dcc0b"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 5.487e-05,
+      "model_response_id": "resp_04b5fe83e825c2c9016ac27b2d516487d2acd8e047650bdf91",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Bishop's Opening\\\"}}\"}]}",
+      "request_sha256": "7317d05d2fb34870f9082d43fc843b98c22e71211d528cd72f9c02fb8ffc1a20",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "d97083f3fc95d4d5c2eae1e0adff5f7c0f7c5b1ef88af26983adf63e62213335"
+      },
+      "result": {
+        "analytical_id": "00c88e6f9a1e327ede8e0406",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99191,
+        "family": "Bishop's Opening",
+        "metric_id": "opening_usage",
+        "numerator": 1563,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.015757477996995697,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7e_usage_bishops_opening",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2338,
+        "input_tokens_details": {
+          "cache_write_tokens": 28,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2394
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_horwitz_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.1700054999964777,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.1370000000000005e-05,
+      "model_response_id": "resp_09544dc6e2d1cef2016ac27b2f793c87d2bcb9d0d97996b57d",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "6d8ebe18aa2616f009375735b5a0c8b6e4ac2c8f8d2b1ced75c92ed9551ad4b7",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_usage_horwitz_defense",
+        "category": "basic_calculation",
+        "failures": [
+          "status",
+          "result_values",
+          "evidence",
+          "tool_or_filters",
+          "caveats"
+        ],
+        "passed": false,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2338,
+        "input_tokens_details": {
+          "cache_write_tokens": 28,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2367
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_benoni_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.848304458995699,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_149a4971b8bff1f1a3ea"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 8.187e-05,
+      "model_response_id": "resp_0d77463198ca8cd3016ac27b30c51887d2a0400e0e4fabbeed",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Benoni Defense\\\"}}\"}]}",
+      "request_sha256": "b4daa5cacce42ec393de730d07fb97ae34b26157037ba82f518a1c17c7e2a3e3",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 1,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 2,
+        "selected_chunk_index": 1,
+        "selected_chunk_sha256": "00ba445b8153281dd8c1b6e870f2bc7cf4a85a9c65a804259be34bb3bd5ff162"
+      },
+      "result": {
+        "analytical_id": "00c88e6f9a1e327ede8e0406",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99191,
+        "family": "Benoni Defense",
+        "metric_id": "opening_usage",
+        "numerator": 1346,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.01356977951628676,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7e_usage_benoni_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2338,
+        "input_tokens_details": {
+          "cache_write_tokens": 28,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 110,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2448
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_petrovs_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.5934761250027805,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.1495e-05,
+      "model_response_id": "resp_04df8b21179c7380016ac27b33a39887d2bce67009085b4c44",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "578e6b86f44596ec2d6ce4aef9f1fdaa114a9c9a57bc69d0e796f4b353969c95",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_usage_petrovs_defense",
+        "category": "basic_calculation",
+        "failures": [
+          "status",
+          "result_values",
+          "evidence",
+          "tool_or_filters",
+          "caveats"
+        ],
+        "passed": false,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2339,
+        "input_tokens_details": {
+          "cache_write_tokens": 29,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2368
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_four_knights_game",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.655463665993011,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_255336a2df6fd9d3058b"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 5.437e-05,
+      "model_response_id": "resp_04dca7608d699462016ac27b3527f487d18d0879396b27ada3",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Four Knights Game\\\"}}\"}]}",
+      "request_sha256": "7aca4f40fb71c674f556a05c3e2b661fda3703b8d6af7d4af5da15169f4fa78e",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "abf7788172e31b95406b91ebd8d189354a747e761655a91a87d92bcc5fab89ec"
+      },
+      "result": {
+        "analytical_id": "00c88e6f9a1e327ede8e0406",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99191,
+        "family": "Four Knights Game",
+        "metric_id": "opening_usage",
+        "numerator": 1257,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.012672520692401528,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7e_usage_four_knights_game",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2338,
+        "input_tokens_details": {
+          "cache_write_tokens": 28,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2393
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_usage_englund_gambit",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.2502283329959027,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.1495e-05,
+      "model_response_id": "resp_0e033587cc15fd79016ac27b37ca1487d18f77c6cdc5889c5a",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "57c84010c0567102c221d4ba12c1b111e75f8c9395d9f923ca6b28b479dba218",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_usage_englund_gambit",
+        "category": "basic_calculation",
+        "failures": [
+          "status",
+          "result_values",
+          "evidence",
+          "tool_or_filters",
+          "caveats"
+        ],
+        "passed": false,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2339,
+        "input_tokens_details": {
+          "cache_write_tokens": 29,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2368
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_white_queens_pawn_game_score",
+      "category": "filtering_perspective",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.929486792003445,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_a1294caf4d705819af2d"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.00011212,
+      "model_response_id": "resp_0d47d09978efb588016ac27b38f24c87d28de07d0076675ff4",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_player_score\\\",\\\"filters\\\":{\\\"family\\\":\\\"Queen's Pawn Game\\\",\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "ecd03f3ce1baef5b4b72976846ee591b12f380614b05c06a2e5da7d68ea3adc7",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 1,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 2,
+        "selected_chunk_index": 1,
+        "selected_chunk_sha256": "ac730de4a963ad5a7330c6c6e5d7063c692661414301e721aec36dd375869a3f"
+      },
+      "result": {
+        "analytical_id": "00c88e6f9a1e327ede8e0406",
+        "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+        "draws": 7,
+        "eligible_player_games": 411,
+        "filters": {
+          "base_seconds": 60,
+          "color": "white",
+          "family": "Queen's Pawn Game",
+          "increment_seconds": 0,
+          "rating_max_exclusive": 1600,
+          "rating_min": 1400
+        },
+        "losses": 197,
+        "low_support": false,
+        "metric_id": "opening_player_score",
+        "scope": "descriptive observed prefix; no causal claim",
+        "score_rate": 0.5121654501216545,
+        "version": "1.0.0",
+        "win_rate": 0.5036496350364964,
+        "wins": 207
+      },
+      "score": {
+        "case_id": "m7e_white_queens_pawn_game_score",
+        "category": "filtering_perspective",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2348,
+        "input_tokens_details": {
+          "cache_write_tokens": 38,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 168,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2516
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_white_sicilian_defense_score",
+      "category": "filtering_perspective",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 4.465176416997565,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_009880c2b9cbee6fd2f3"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.000158995,
+      "model_response_id": "resp_0878b6b247568d83016ac27b3beff487d29b9018625a682deb",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_player_score\\\",\\\"filters\\\":{\\\"family\\\":\\\"Sicilian Defense\\\",\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "49319dd8c966b2d7e69646905d8e8cd17778a9f66eac20e9df06cfe2a8bccd7f",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 1,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 2,
+        "selected_chunk_index": 1,
+        "selected_chunk_sha256": "6bb7bf8a499408ad6bf7b7647070da329e4be36623af3ee40c0bb5b120343227"
+      },
+      "result": {
+        "analytical_id": "00c88e6f9a1e327ede8e0406",
+        "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+        "draws": 4,
+        "eligible_player_games": 284,
+        "filters": {
+          "base_seconds": 60,
+          "color": "white",
+          "family": "Sicilian Defense",
+          "increment_seconds": 0,
+          "rating_max_exclusive": 1600,
+          "rating_min": 1400
+        },
+        "losses": 150,
+        "low_support": false,
+        "metric_id": "opening_player_score",
+        "scope": "descriptive observed prefix; no causal claim",
+        "score_rate": 0.4647887323943662,
+        "version": "1.0.0",
+        "win_rate": 0.45774647887323944,
+        "wins": 130
+      },
+      "score": {
+        "case_id": "m7e_white_sicilian_defense_score",
+        "category": "filtering_perspective",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2347,
+        "input_tokens_details": {
+          "cache_write_tokens": 37,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 262,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2609
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_white_scandinavian_defense_score",
+      "category": "filtering_perspective",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.7037940840018564,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_5fc2b93d817d2cc20c9f"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 6.987000000000001e-05,
+      "model_response_id": "resp_00e051dc5a7d4211016ac27b40596087d2bb921863bc57bd31",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_player_score\\\",\\\"filters\\\":{\\\"family\\\":\\\"Scandinavian Defense\\\",\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "d3da50ec3a1d50605f86e87ce2796283c6fd02a85c41c10a9cc22ff8486ed535",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "20601b77c383698499cd3c7a4e8552fdf2d4d9a5f2ceed95ce672af15dfe7e85"
+      },
+      "result": {
+        "analytical_id": "00c88e6f9a1e327ede8e0406",
+        "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+        "draws": 5,
+        "eligible_player_games": 277,
+        "filters": {
+          "base_seconds": 60,
+          "color": "white",
+          "family": "Scandinavian Defense",
+          "increment_seconds": 0,
+          "rating_max_exclusive": 1600,
+          "rating_min": 1400
+        },
+        "losses": 133,
+        "low_support": false,
+        "metric_id": "opening_player_score",
+        "scope": "descriptive observed prefix; no causal claim",
+        "score_rate": 0.5108303249097473,
+        "version": "1.0.0",
+        "win_rate": 0.5018050541516246,
+        "wins": 139
+      },
+      "score": {
+        "case_id": "m7e_white_scandinavian_defense_score",
+        "category": "filtering_perspective",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2346,
+        "input_tokens_details": {
+          "cache_write_tokens": 36,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 84,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2430
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_white_french_defense_score",
+      "category": "filtering_perspective",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.7532866670007934,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_f93e4c8b7c818abee2b8"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.00010737000000000001,
+      "model_response_id": "resp_003ee87eceb1d7a1016ac27b4319ac87d194cad9869bdc565d",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_player_score\\\",\\\"filters\\\":{\\\"family\\\":\\\"French Defense\\\",\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "bb7ce38cfef71dac806d5b3893b0f4f2bee2168f6133cb85ab2638e896065b2c",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 1,
+        "output_text_chunks": 2,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "eea1e2b3ebef0256a7160893d1cacee2a554392fc926ca13b5be6fa1b4c0d8ee"
+      },
+      "result": {
+        "analytical_id": "00c88e6f9a1e327ede8e0406",
+        "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+        "draws": 3,
+        "eligible_player_games": 220,
+        "filters": {
+          "base_seconds": 60,
+          "color": "white",
+          "family": "French Defense",
+          "increment_seconds": 0,
+          "rating_max_exclusive": 1600,
+          "rating_min": 1400
+        },
+        "losses": 118,
+        "low_support": false,
+        "metric_id": "opening_player_score",
+        "scope": "descriptive observed prefix; no causal claim",
+        "score_rate": 0.45681818181818185,
+        "version": "1.0.0",
+        "win_rate": 0.45,
+        "wins": 99
+      },
+      "score": {
+        "case_id": "m7e_white_french_defense_score",
+        "category": "filtering_perspective",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2346,
+        "input_tokens_details": {
+          "cache_write_tokens": 36,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 159,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2505
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_compare_queens_pawn_game_sicilian_defense_score",
+      "category": "multi_step",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 3.6131334169986076,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_5445ec9144962d2d84b7"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.000133745,
+      "model_response_id": "resp_020cab5461a59a6a016ac27b45dc3487d1a76e96a13587c301",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"compare_openings\",\"args_json\":\"{\\\"filters\\\":{\\\"families\\\":[\\\"Queen's Pawn Game\\\",\\\"Sicilian Defense\\\"],\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "b73c6296e068bec6105d344571f18d123984621eb85eefbd7511b01bd73a4e97",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 1,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 2,
+        "selected_chunk_index": 1,
+        "selected_chunk_sha256": "ad53520c6204071f2258dd4ee721511e6759486efff6c7698e364ee3a24343cf"
+      },
+      "result": {
+        "caveats": [
+          "observed_prefix_only",
+          "association_not_causation"
+        ],
+        "dataset_id": "00c88e6f9a1e327ede8e0406",
+        "families": [
+          {
+            "analytical_id": "00c88e6f9a1e327ede8e0406",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 7,
+            "eligible_player_games": 411,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "Queen's Pawn Game",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 197,
+            "low_support": false,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.5121654501216545,
+            "version": "1.0.0",
+            "win_rate": 0.5036496350364964,
+            "wins": 207
+          },
+          {
+            "analytical_id": "00c88e6f9a1e327ede8e0406",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 4,
+            "eligible_player_games": 284,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "Sicilian Defense",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 150,
+            "low_support": false,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.4647887323943662,
+            "version": "1.0.0",
+            "win_rate": 0.45774647887323944,
+            "wins": 130
+          }
+        ],
+        "score_rate_difference_first_minus_second": 0.0473767177272883,
+        "win_rate_difference_first_minus_second": 0.045903156163256964
+      },
+      "score": {
+        "case_id": "m7e_compare_queens_pawn_game_sicilian_defense_score",
+        "category": "multi_step",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2349,
+        "input_tokens_details": {
+          "cache_write_tokens": 39,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 211,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2560
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_compare_queens_pawn_game_sicilian_defense_win",
+      "category": "multi_step",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.467351624996809,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_5445ec9144962d2d84b7"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 7.224500000000001e-05,
+      "model_response_id": "resp_04c33820d46a4eb4016ac27b49825c87d184c2219f9a20ee80",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"compare_openings\",\"args_json\":\"{\\\"filters\\\":{\\\"families\\\":[\\\"Queen's Pawn Game\\\",\\\"Sicilian Defense\\\"],\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "1b26565e98075dd2f5bd5f894830c4539ae3dd354a0ec864aaf28471625f7487",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "ad53520c6204071f2258dd4ee721511e6759486efff6c7698e364ee3a24343cf"
+      },
+      "result": {
+        "caveats": [
+          "observed_prefix_only",
+          "association_not_causation"
+        ],
+        "dataset_id": "00c88e6f9a1e327ede8e0406",
+        "families": [
+          {
+            "analytical_id": "00c88e6f9a1e327ede8e0406",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 7,
+            "eligible_player_games": 411,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "Queen's Pawn Game",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 197,
+            "low_support": false,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.5121654501216545,
+            "version": "1.0.0",
+            "win_rate": 0.5036496350364964,
+            "wins": 207
+          },
+          {
+            "analytical_id": "00c88e6f9a1e327ede8e0406",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 4,
+            "eligible_player_games": 284,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "Sicilian Defense",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 150,
+            "low_support": false,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.4647887323943662,
+            "version": "1.0.0",
+            "win_rate": 0.45774647887323944,
+            "wins": 130
+          }
+        ],
+        "score_rate_difference_first_minus_second": 0.0473767177272883,
+        "win_rate_difference_first_minus_second": 0.045903156163256964
+      },
+      "score": {
+        "case_id": "m7e_compare_queens_pawn_game_sicilian_defense_win",
+        "category": "multi_step",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2349,
+        "input_tokens_details": {
+          "cache_write_tokens": 39,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 88,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2437
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_compare_scandinavian_defense_french_defense_score",
+      "category": "multi_step",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.3351506250037346,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_2131d1cf5a3dd74ddd8b"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 7.087e-05,
+      "model_response_id": "resp_08e20f002d8ff197016ac27b4be12c87d29ff10b9ad0abd005",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"compare_openings\",\"args_json\":\"{\\\"filters\\\":{\\\"families\\\":[\\\"Scandinavian Defense\\\",\\\"French Defense\\\"],\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "feb0563d7ee3ead528a12191936fe4f85aa2fa131709673acbcd560755c7c7e2",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "815d75d2df7d075da788acd31db69734e6a3e9a4a079e6eda598a88b9f01ed41"
+      },
+      "result": {
+        "caveats": [
+          "observed_prefix_only",
+          "association_not_causation"
+        ],
+        "dataset_id": "00c88e6f9a1e327ede8e0406",
+        "families": [
+          {
+            "analytical_id": "00c88e6f9a1e327ede8e0406",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 5,
+            "eligible_player_games": 277,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "Scandinavian Defense",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 133,
+            "low_support": false,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.5108303249097473,
+            "version": "1.0.0",
+            "win_rate": 0.5018050541516246,
+            "wins": 139
+          },
+          {
+            "analytical_id": "00c88e6f9a1e327ede8e0406",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 3,
+            "eligible_player_games": 220,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "French Defense",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 118,
+            "low_support": false,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.45681818181818185,
+            "version": "1.0.0",
+            "win_rate": 0.45,
+            "wins": 99
+          }
+        ],
+        "score_rate_difference_first_minus_second": 0.05401214309156549,
+        "win_rate_difference_first_minus_second": 0.05180505415162456
+      },
+      "score": {
+        "case_id": "m7e_compare_scandinavian_defense_french_defense_score",
+        "category": "multi_step",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2346,
+        "input_tokens_details": {
+          "cache_write_tokens": 36,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 86,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2432
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_compare_scandinavian_defense_french_defense_win",
+      "category": "multi_step",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.2375682500060066,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_2131d1cf5a3dd74ddd8b"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 7.087e-05,
+      "model_response_id": "resp_094680fe7ee2e933016ac27b4e4d2487d2a20060755afe7d68",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"compare_openings\",\"args_json\":\"{\\\"filters\\\":{\\\"families\\\":[\\\"Scandinavian Defense\\\",\\\"French Defense\\\"],\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "c9b6d293c5c22c235f790b2ad8eb8eefd971e4ff3cb198c57bce70ad375d4525",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "815d75d2df7d075da788acd31db69734e6a3e9a4a079e6eda598a88b9f01ed41"
+      },
+      "result": {
+        "caveats": [
+          "observed_prefix_only",
+          "association_not_causation"
+        ],
+        "dataset_id": "00c88e6f9a1e327ede8e0406",
+        "families": [
+          {
+            "analytical_id": "00c88e6f9a1e327ede8e0406",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 5,
+            "eligible_player_games": 277,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "Scandinavian Defense",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 133,
+            "low_support": false,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.5108303249097473,
+            "version": "1.0.0",
+            "win_rate": 0.5018050541516246,
+            "wins": 139
+          },
+          {
+            "analytical_id": "00c88e6f9a1e327ede8e0406",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 3,
+            "eligible_player_games": 220,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "French Defense",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 118,
+            "low_support": false,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.45681818181818185,
+            "version": "1.0.0",
+            "win_rate": 0.45,
+            "wins": 99
+          }
+        ],
+        "score_rate_difference_first_minus_second": 0.05401214309156549,
+        "win_rate_difference_first_minus_second": 0.05180505415162456
+      },
+      "score": {
+        "case_id": "m7e_compare_scandinavian_defense_french_defense_win",
+        "category": "multi_step",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2346,
+        "input_tokens_details": {
+          "cache_write_tokens": 36,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 86,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2432
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_clock_under_10_coverage",
+      "category": "missing_data",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.2502861250031856,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_b0603c44c725af91ed1e"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 6.487000000000001e-05,
+      "model_response_id": "resp_0a78dea90fb12945016ac27b50780c87d286b2caf433cb819a",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"evaluation_coverage\\\",\\\"filters\\\":{\\\"bucket\\\":\\\"under_10\\\"}}\"}]}",
+      "request_sha256": "07cb1a3383a4ef4e236432020e0335eb0a0f38b2cf85b8806a4fad535c8c9cb3",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 1,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 2,
+        "selected_chunk_index": 1,
+        "selected_chunk_sha256": "a54315d4a146224e9a006505721d391a1a830029f7b3cb3147ec51eb385f8fa3"
+      },
+      "result": {
+        "analytical_id": "00c88e6f9a1e327ede8e0406",
+        "bucket": "under_10",
+        "contract_sha256": "0ee7dbc7a903dabbc22414ed0ac6623067053b55d8cf8c2e0bdcfa711c9698d8",
+        "coverage_contract_sha256": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+        "eligible_moves": 15835,
+        "error_proxy_rate": 0.10277324632952692,
+        "evaluable_moves": 613,
+        "evaluation_coverage": 0.038711714556362485,
+        "mate_transition_moves": 264,
+        "metric_id": "clock_pressure_error_proxy",
+        "proxy_errors": 63,
+        "scope": "exploratory source-evaluation proxy in sampled games of observed prefix",
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7e_clock_under_10_coverage",
+        "category": "missing_data",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2342,
+        "input_tokens_details": {
+          "cache_write_tokens": 32,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 75,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2417
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_clock_under_10_proxy",
+      "category": "missing_data",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 3.286505666997982,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.000134245,
+      "model_response_id": "resp_0884f12abe628034016ac27b52b5e887d2b712903a81f674a7",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "1e48f8c09ea0be4af9cd5ecaf92f81be337aafee9fc90c50ae3c61e94a2d33c8",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 1,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 2,
+        "selected_chunk_index": 1,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_clock_under_10_proxy",
+        "category": "missing_data",
+        "failures": [
+          "status",
+          "result_values",
+          "evidence",
+          "tool_or_filters",
+          "caveats"
+        ],
+        "passed": false,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2341,
+        "input_tokens_details": {
+          "cache_write_tokens": 31,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 214,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2555
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_clock_10_to_29_coverage",
+      "category": "missing_data",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.3292507500009378,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.212e-05,
+      "model_response_id": "resp_053962af91c7ce4a016ac27b560cd487d1b6d0634fb68dfcfd",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "ec95be03a1fec900c8d298af69293a32d4787f5c12473a404adf1d0506cf0152",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_clock_10_to_29_coverage",
+        "category": "missing_data",
+        "failures": [
+          "status",
+          "result_values",
+          "evidence",
+          "tool_or_filters",
+          "caveats"
+        ],
+        "passed": false,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2344,
+        "input_tokens_details": {
+          "cache_write_tokens": 34,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2373
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_clock_10_to_29_proxy",
+      "category": "missing_data",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.3599099580023903,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.199500000000001e-05,
+      "model_response_id": "resp_0c71b89dd0d455fc016ac27b5761b887d2b2003355cfe6fff1",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "2731bc754e5309722194dd591c8041b8a676c67c4c266af9b74556c6d270837e",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_clock_10_to_29_proxy",
+        "category": "missing_data",
+        "failures": [
+          "status",
+          "result_values",
+          "evidence",
+          "tool_or_filters",
+          "caveats"
+        ],
+        "passed": false,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2343,
+        "input_tokens_details": {
+          "cache_write_tokens": 33,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2372
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_clock_30_to_59_coverage",
+      "category": "missing_data",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.8988370000006398,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_50a060e54238d94e3d9d"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 5.6120000000000005e-05,
+      "model_response_id": "resp_03ae862b129bd4c5016ac27b58b07c87d297d3cdcd564ab920",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"evaluation_coverage\\\",\\\"filters\\\":{\\\"bucket\\\":\\\"30_to_59\\\"}}\"}]}",
+      "request_sha256": "911743a275481d7c5ad12871ee75fc231919647694137f0ee01ed8e75e1a66cf",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "b0161729a86d9bbddd422e1a02d85d5ad3f4621b57a4a7b247a8dc6bb431cdd4"
+      },
+      "result": {
+        "analytical_id": "00c88e6f9a1e327ede8e0406",
+        "bucket": "30_to_59",
+        "contract_sha256": "0ee7dbc7a903dabbc22414ed0ac6623067053b55d8cf8c2e0bdcfa711c9698d8",
+        "coverage_contract_sha256": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+        "eligible_moves": 58881,
+        "error_proxy_rate": 0.0721948390837924,
+        "evaluable_moves": 3449,
+        "evaluation_coverage": 0.05857577147127257,
+        "mate_transition_moves": 266,
+        "metric_id": "clock_pressure_error_proxy",
+        "proxy_errors": 249,
+        "scope": "exploratory source-evaluation proxy in sampled games of observed prefix",
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7e_clock_30_to_59_coverage",
+        "category": "missing_data",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2344,
+        "input_tokens_details": {
+          "cache_write_tokens": 34,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 57,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2401
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_clock_30_to_59_proxy",
+      "category": "missing_data",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.1896717089985032,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.199500000000001e-05,
+      "model_response_id": "resp_0193d99715f4a2b0016ac27b5ab17487d19da80f1c77023b2f",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "711184fcbf2b15f5329d29448b64b3ba6bdea52d12ab2ddac266b30759b59203",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_clock_30_to_59_proxy",
+        "category": "missing_data",
+        "failures": [
+          "status",
+          "result_values",
+          "evidence",
+          "tool_or_filters",
+          "caveats"
+        ],
+        "passed": false,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2343,
+        "input_tokens_details": {
+          "cache_write_tokens": 33,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2372
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7e_clock_60_plus_coverage",
+      "category": "missing_data",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.0628084169948124,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_bd5c30ca97f2727b3f24"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 5.487e-05,
+      "model_response_id": "resp_0d3a2781228acb1c016ac27b5bca5887d29d14891a289488b1",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"evaluation_coverage\\\",\\\"filters\\\":{\\\"bucket\\\":\\\"60_plus\\\"}}\"}]}",
+      "request_sha256": "9ecc709c9d6f5c0d13c40a7eaecac5b106485b3b92935e5e52c2bf9a67fb8f88",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "4728994cbb44d524775a80db84412cc17efea4905515f7828b231be77609cfb2"
+      },
+      "result": {
+        "analytical_id": "00c88e6f9a1e327ede8e0406",
+        "bucket": "60_plus",
+        "contract_sha256": "0ee7dbc7a903dabbc22414ed0ac6623067053b55d8cf8c2e0bdcfa711c9698d8",
+        "coverage_contract_sha256": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+        "eligible_moves": 137343,
+        "error_proxy_rate": 0.07423103212576897,
+        "evaluable_moves": 14630,
+        "evaluation_coverage": 0.10652162833198633,
+        "mate_transition_moves": 955,
+        "metric_id": "clock_pressure_error_proxy",
+        "proxy_errors": 1086,
+        "scope": "exploratory source-evaluation proxy in sampled games of observed prefix",
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7e_clock_60_plus_coverage",
+        "category": "missing_data",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2342,
+        "input_tokens_details": {
+          "cache_write_tokens": 32,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2397
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_clock_60_plus_proxy",
+      "category": "missing_data",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.4482984579954064,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.174500000000001e-05,
+      "model_response_id": "resp_06e7478c759d0666016ac27b5de8b487d1a4734978ac346016",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[] }",
+      "request_sha256": "3076f448aef31d1e02486cf4383526f26987e72f2997be24df77ce824792a7dc",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "5e86ca712988dd2bec981084ccfc39999e4d481822f4fdd9e86f7e34ac9b574e"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_clock_60_plus_proxy",
+        "category": "missing_data",
+        "failures": [
+          "status",
+          "result_values",
+          "evidence",
+          "tool_or_filters",
+          "caveats"
+        ],
+        "passed": false,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2341,
+        "input_tokens_details": {
+          "cache_write_tokens": 31,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2370
+      }
+    },
+    {
+      "answer_status": "needs_clarification",
+      "argument_repairs": [],
+      "case_id": "m7e_boundary_personal_choice",
+      "category": "ambiguity",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.3383752500012633,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "needs_clarification",
+      "gross_cost_usd": 4.312000000000001e-05,
+      "model_response_id": "resp_0705fe3a87d52bf0016ac27b5f51e487d2afba62a6f0c8553a",
+      "model_text": "{\"status\":\"needs_clarification\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "7115ae030f195067e2c15ec303b2f86b0fdff06d02c79afc24a3e47b9f3a1193",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "71594c7afb47521a780275fed377e6f3e8932fb45c5ec6bbb007fe3ead9116b7"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_boundary_personal_choice",
+        "category": "ambiguity",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2340,
+        "input_tokens_details": {
+          "cache_write_tokens": 30,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 32,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2372
+      }
+    },
+    {
+      "answer_status": "needs_clarification",
+      "argument_repairs": [],
+      "case_id": "m7e_boundary_rating_unspecified",
+      "category": "ambiguity",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.2655012079994776,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "needs_clarification",
+      "gross_cost_usd": 4.2995000000000004e-05,
+      "model_response_id": "resp_05d17c993aad5646016ac27b60a20087d288b4458fddffec39",
+      "model_text": "{\"status\":\"needs_clarification\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "0123de35420e872d33e26fd72691aadf134af05d0ae60f7a0de227dd01820744",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "71594c7afb47521a780275fed377e6f3e8932fb45c5ec6bbb007fe3ead9116b7"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_boundary_rating_unspecified",
+        "category": "ambiguity",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2339,
+        "input_tokens_details": {
+          "cache_write_tokens": 29,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 32,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2371
+      }
+    },
+    {
+      "answer_status": "needs_clarification",
+      "argument_repairs": [],
+      "case_id": "m7e_boundary_bucket_unspecified",
+      "category": "ambiguity",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.6204476249986328,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "needs_clarification",
+      "gross_cost_usd": 4.1120000000000006e-05,
+      "model_response_id": "resp_051101b9c2a0f046016ac27b61eaec87d2955404a2124d805c",
+      "model_text": "{\"status\":\"needs_clarification\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "40000d5e21a96c285b52e18362d17aaacddfc0842be8988410248e014b4db357",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "71594c7afb47521a780275fed377e6f3e8932fb45c5ec6bbb007fe3ead9116b7"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_boundary_bucket_unspecified",
+        "category": "ambiguity",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2324,
+        "input_tokens_details": {
+          "cache_write_tokens": 14,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 32,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2356
+      }
+    },
+    {
+      "answer_status": "needs_clarification",
+      "argument_repairs": [],
+      "case_id": "m7e_boundary_cohort_unspecified",
+      "category": "ambiguity",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.5534291660005692,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "needs_clarification",
+      "gross_cost_usd": 4.212e-05,
+      "model_response_id": "resp_0166fff1a75503ea016ac27b6393b087d1aa4328640a8b26e9",
+      "model_text": "{\"status\":\"needs_clarification\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "080b8827a70041dd8d559555a24d186b83db222746c51b44b852fa0a0f12c47f",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "71594c7afb47521a780275fed377e6f3e8932fb45c5ec6bbb007fe3ead9116b7"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_boundary_cohort_unspecified",
+        "category": "ambiguity",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2332,
+        "input_tokens_details": {
+          "cache_write_tokens": 22,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 32,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2364
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_boundary_private_file",
+      "category": "reliability_access",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.3087548750045244,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "unsupported",
+      "gross_cost_usd": 3.9745000000000007e-05,
+      "model_response_id": "resp_0a9e19088238678d016ac27b65184887d2b51fe35dc95629e9",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "eaa4aa1f259cb8aa5488d048ec9b9f7f17d7866580183a9304fc39209cb7dea9",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_boundary_private_file",
+        "category": "reliability_access",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "high",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2325,
+        "input_tokens_details": {
+          "cache_write_tokens": 15,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2354
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_boundary_causal_opening",
+      "category": "reliability_access",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.5316511670025648,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "unsupported",
+      "gross_cost_usd": 3.987e-05,
+      "model_response_id": "resp_00cdfc8f6605d1b3016ac27b66743887d1b689555097860244",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "7f46db12478475141c7fb44554939a7a915100eec6c53a79df8f58394beabdfe",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_boundary_causal_opening",
+        "category": "reliability_access",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "high",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2326,
+        "input_tokens_details": {
+          "cache_write_tokens": 16,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2355
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_boundary_full_month",
+      "category": "reliability_access",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.249573707995296,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "unsupported",
+      "gross_cost_usd": 4.0245000000000005e-05,
+      "model_response_id": "resp_05d920686d3bd7dd016ac27b67f23087d2bd835acb16097968",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "4845fc7807fe668907717698e385de4fe62097893f49d3015596f23908a703a8",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_boundary_full_month",
+        "category": "reliability_access",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "high",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2329,
+        "input_tokens_details": {
+          "cache_write_tokens": 19,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2358
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_boundary_personality",
+      "category": "reliability_access",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.148209457998746,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "unsupported",
+      "gross_cost_usd": 3.949500000000001e-05,
+      "model_response_id": "resp_0ae53a0d9dafcd5e016ac27b6934d087d1b6010c07cf2b7a02",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "cffecf731c7b1ef9ede2e6bf36e0435250f393e172a7c5ae6ac0b48995b1d3f4",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_boundary_personality",
+        "category": "reliability_access",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "high",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2323,
+        "input_tokens_details": {
+          "cache_write_tokens": 13,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2352
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7e_boundary_guaranteed_result",
+      "category": "reliability_access",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.3623328340036096,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "unsupported",
+      "gross_cost_usd": 3.987e-05,
+      "model_response_id": "resp_040c8e4ae089629c016ac27b6a739c87d28d5d0e97ef460786",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "513d2cf0747bb6dbc7fe9ebf940c163ff7b0e7befedb024ee6cad39197f8e1d2",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7e_boundary_guaranteed_result",
+        "category": "reliability_access",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v5"
+      },
+      "severity": "high",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2326,
+        "input_tokens_details": {
+          "cache_write_tokens": 16,
+          "cached_tokens": 2307
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2355
+      }
+    }
+  ],
+  "by_category": {
+    "ambiguity": {
+      "attempted": 4,
+      "passed": 4
+    },
+    "basic_calculation": {
+      "attempted": 25,
+      "passed": 12
+    },
+    "filtering_perspective": {
+      "attempted": 4,
+      "passed": 4
+    },
+    "missing_data": {
+      "attempted": 8,
+      "passed": 3
+    },
+    "multi_step": {
+      "attempted": 4,
+      "passed": 4
+    },
+    "reliability_access": {
+      "attempted": 5,
+      "passed": 5
+    }
+  },
+  "by_condition": {
+    "semantic_context": {
+      "attempted": 50,
+      "passed": 32
+    }
+  },
+  "case_set_sha256": "8c2d30fa0e3a260b2a75e0368262ad5c0ac4a594b9698f5eb40560f2e224846e",
+  "completed": 50,
+  "cost_known_for_every_attempt": true,
+  "high_severity": {
+    "attempted": 5,
+    "passed": 5
+  },
+  "kind": "one_shot_frozen_family_split_holdout_actual_model_responses",
+  "known_gross_cost_usd": 0.00345486,
+  "max_run_usd": 0.5,
+  "model": "gpt-6-luna",
+  "one_shot_no_repeatability_claim": true,
+  "planned": 50,
+  "preflight_sha256": "8c8746fbfbd18a5f9879affb4b81fbb57d38b4d8f127fc1138fcf1ef36c00663",
+  "scorer": "m7-1.0 frozen before model calls"
+}

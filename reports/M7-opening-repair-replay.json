@@ -1,0 +1,50 @@
+{
+  "kind": "offline replay of inspected May failures after semantic repair; not live rescore",
+  "rows": [
+    {
+      "case_id": "m7g_usage_english_opening",
+      "offline_replay_failures": [],
+      "offline_replay_passed": true,
+      "original_live_passed": false,
+      "semantic_repair": [
+        "one_exact_source_family_fraction:checked_opening_usage"
+      ]
+    },
+    {
+      "case_id": "m7g_usage_kings_pawn_game",
+      "offline_replay_failures": [],
+      "offline_replay_passed": true,
+      "original_live_passed": false,
+      "semantic_repair": [
+        "one_exact_source_family_fraction:checked_opening_usage"
+      ]
+    },
+    {
+      "case_id": "m7g_usage_zukertort_opening",
+      "offline_replay_failures": [],
+      "offline_replay_passed": true,
+      "original_live_passed": false,
+      "semantic_repair": [
+        "one_exact_source_family_fraction:checked_opening_usage"
+      ]
+    },
+    {
+      "case_id": "m7g_usage_horwitz_defense",
+      "offline_replay_failures": [],
+      "offline_replay_passed": true,
+      "original_live_passed": false,
+      "semantic_repair": [
+        "one_exact_source_family_fraction:checked_opening_usage"
+      ]
+    },
+    {
+      "case_id": "m7g_usage_englund_gambit",
+      "offline_replay_failures": [],
+      "offline_replay_passed": true,
+      "original_live_passed": false,
+      "semantic_repair": [
+        "one_exact_source_family_fraction:checked_opening_usage"
+      ]
+    }
+  ]
+}

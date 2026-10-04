@@ -1,0 +1,11 @@
+{
+  "analytical_id": "f0dfe7eb75a55c216bea8a26",
+  "clock_buckets_checked": 4,
+  "kind": "offline raw-PGN reference comparison; no model response",
+  "opening_families_checked": 12,
+  "opening_player_cohorts_checked": 4,
+  "selected_games": 5020,
+  "selected_move_rows": 335854,
+  "source_snapshot_id": "a5fe34904b99d05ac5bca315",
+  "status": "passed"
+}

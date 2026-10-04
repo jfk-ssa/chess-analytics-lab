@@ -1,0 +1,102 @@
+{
+  "artifacts": {
+    "fact_game.parquet": "793af953255919866df47173b523a54497fc89822ce6911e61c66c308e574d7a",
+    "fact_player_game.parquet": "079f857f5f41f366cc9145166634afef3daef9454edcd0177958d4cf0ffb904a",
+    "warehouse.duckdb": "50970514ec7bebe7997f71a98cbcbcdb93eda32b78a42210c389b042cf1f1b4c"
+  },
+  "counts": {
+    "accepted": 99585,
+    "conflict": 0,
+    "duplicate": 0,
+    "excluded": 415,
+    "quarantine": 0,
+    "seen": 100000
+  },
+  "coverage": {
+    "first_utc_date": "2026-02-01",
+    "last_utc_date": "2026-02-01",
+    "missing": {
+      "participant_rating": 0,
+      "played_at": 0,
+      "source_opening": 0,
+      "utc_date": 0
+    }
+  },
+  "dataset": "analytical",
+  "decompressed_bytes_scanned": 235326041,
+  "elapsed_seconds": 111.77189754100255,
+  "finished_at": "2026-10-04T20:39:53.458592+00:00",
+  "git_commit": "c030894f7f86384fc6130b741a1dcee5cb4e42ff",
+  "implementation_sha256": "206f48ec80440d9a32f4735d4fdd14efd5345650c318dd2793617fe0ad117b00",
+  "lock_sha256": "667b0ee7faec38b0a59d88199595ca5c9a4bf940c26df2d3e2b90ce2e04fff4c",
+  "metric": {
+    "caveats": [
+      "Historical foundation corpus is not evidence about contemporary players.",
+      "Excluding marked bots does not establish all other players are human.",
+      "No opening, time-pressure, or causal claims are supported by this metric."
+    ],
+    "contract_sha256": "b119f02815e73adbe680120b2b26460cd2f5cf867dd0399d1642b560e29042e4",
+    "denominator": 99154,
+    "grain": "one provider/game_id",
+    "marked_bots": 425,
+    "metric_id": "game_draw_rate",
+    "metric_version": "1.0.0",
+    "numerator": 3574,
+    "unknown_results": 6,
+    "value": 0.03604494019404159
+  },
+  "partial": true,
+  "plan": {
+    "archive_listed_bytes": 27755967701,
+    "archive_listed_games": 84600043,
+    "complete_archive": false,
+    "compressed_prefix_sha256": "f601d4c9516f9eb5035c20b168135ae7caa255353aee60ea75b4f977dacd5a11",
+    "expected_records": 100000,
+    "listing_verified_on": "2026-10-04",
+    "max_decompressed_bytes": 500000000,
+    "max_download_bytes": 40000000,
+    "max_games": 100000,
+    "max_generated_bytes": 5000000000,
+    "max_record_bytes": 1000000,
+    "max_source_bytes": 500000000,
+    "period": "2026-02",
+    "range_end_inclusive": 39999999,
+    "range_start": 0,
+    "source_kind": "bounded_standard_rated_prefix",
+    "timeout_seconds": 30,
+    "url": "https://database.lichess.org/standard/lichess_db_standard_rated_2026-02.pgn.zst"
+  },
+  "published_at": "2026-10-04T20:39:54.231764+00:00",
+  "publisher_checksum_verified": false,
+  "quality_checks": {
+    "accepted_count": 0,
+    "game_keys": 0,
+    "no_orphans": 0,
+    "participant_scores": 0,
+    "player_keys": 0,
+    "rating_symmetry": 0,
+    "reconciliation": 0,
+    "required_game_fields": 0,
+    "score_conservation": 0,
+    "two_participants": 0,
+    "wins_equal_losses": 0
+  },
+  "reasons": {
+    "not_rated": 415
+  },
+  "run_id": "bbc3a9a2e44648f98be13e07559931b8",
+  "snapshot_id": "a5fe34904b99d05ac5bca315",
+  "software": {
+    "chess": "1.11.2",
+    "chesslab": "0.1.0",
+    "duckdb": "1.4.1",
+    "python": "3.12.14",
+    "zstandard": "0.25.0"
+  },
+  "source_bytes": 235326041,
+  "source_file": "complete-2026-02-first-100000.pgn",
+  "source_sha256": "9940f0dc258af355714e201604bd85456cb8aa55a694b3cd874d953f0f74e657",
+  "started_at": "2026-10-04T20:38:01.687161+00:00",
+  "status": "published",
+  "working_tree_dirty": true
+}

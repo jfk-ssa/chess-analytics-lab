@@ -1,0 +1,73 @@
+{
+  "answerable_per_repeat": [
+    {
+      "attempted": 41,
+      "passed": 41
+    },
+    {
+      "attempted": 41,
+      "passed": 40
+    },
+    {
+      "attempted": 13,
+      "passed": 12
+    }
+  ],
+  "approved_cumulative_cap_usd": 0.5,
+  "boundary_per_repeat": [
+    {
+      "attempted": 9,
+      "passed": 9
+    },
+    {
+      "attempted": 9,
+      "passed": 9
+    },
+    {
+      "attempted": 0,
+      "passed": 0
+    }
+  ],
+  "case_set_sha256": "ccd7ce4cafcd467942ad20a5cb9f7494f5cc982155e727ff3e30dad8c4852279",
+  "cumulative_gross_accounted_usd": 0.102386695,
+  "failures": [
+    {
+      "answer_status": "answered",
+      "case_id": "m7h_clock_10_to_29_proxy",
+      "execution_error": null,
+      "repeat": 2,
+      "score_failures": [
+        "tool_or_filters"
+      ]
+    },
+    {
+      "answer_status": null,
+      "case_id": "m7h_usage_indian_defense",
+      "execution_error": "provider returned no unique structured plan",
+      "repeat": 3,
+      "score_failures": null
+    }
+  ],
+  "gates": {
+    "all_high_severity_correct": false,
+    "answerable_at_least_90_percent_each": false,
+    "boundary_at_least_90_percent_each": false,
+    "bounded_logged_transport_retry": true,
+    "cumulative_gross_cap": true,
+    "evidence_and_access_integrity": false,
+    "frozen_complete_runs": false,
+    "no_execution_failure_or_unknown_cost": false,
+    "totals_match_raw_attempts": true
+  },
+  "gross_cost_usd": 0.0077662799999999995,
+  "kind": "M7 April v8 independent-data semantic-context checkpoint",
+  "live_gates_passed": false,
+  "preflight_sha256": "fc7f6fdd65f848f50e4e76a8d1f721f82f09d2155b8a2ca2abade0c13bb4b2d3",
+  "prior_gross_accounted_usd": 0.094620415,
+  "scope": "50 frozen cases on an observed April 1 prefix; product semantic-context mode",
+  "scored_per_repeat": [
+    50,
+    49,
+    12
+  ]
+}

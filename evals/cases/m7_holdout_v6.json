@@ -1,0 +1,1830 @@
+[
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 9966,
+      "value": 0.10047485104195021
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Sicilian Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_sicilian_defense",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Sicilian Defense family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Sicilian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 9546,
+      "value": 0.09624051054048333
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Queen's Pawn Game"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_queens_pawn_game",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Queen's Pawn Game family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Queen's Pawn Game",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 6067,
+      "value": 0.061166056719999196
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "French Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_french_defense",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full French Defense family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.French Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 5850,
+      "value": 0.05897831412757463
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Caro-Kann Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_caro_kann_defense",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Caro-Kann Defense family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Caro-Kann Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 5016,
+      "value": 0.05057012370323322
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Scandinavian Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_scandinavian_defense",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Scandinavian Defense family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Scandinavian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 4110,
+      "value": 0.041436046335783204
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Italian Game"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_italian_game",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Italian Game family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Italian Game",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 3133,
+      "value": 0.0315861637883233
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "English Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_english_opening",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full English Opening family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.English Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 2972,
+      "value": 0.029962999929427657
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "King's Pawn Game"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_kings_pawn_game",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full King's Pawn Game family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.King's Pawn Game",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 2484,
+      "value": 0.025043099537247072
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Zukertort Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_zukertort_opening",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Zukertort Opening family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Zukertort Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 2493,
+      "value": 0.02513383540513565
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Queen's Gambit Declined"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_queens_gambit_declined",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Queen's Gambit Declined family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Queen's Gambit Declined",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 2262,
+      "value": 0.02280494812932886
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Modern Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_modern_defense",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Modern Defense family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Modern Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 2082,
+      "value": 0.02099023077155733
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Pirc Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_pirc_defense",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Pirc Defense family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Pirc Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 2050,
+      "value": 0.02066761435239795
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Indian Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_indian_defense",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Indian Defense family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Indian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 2016,
+      "value": 0.020324834407041102
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Philidor Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_philidor_defense",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Philidor Defense family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Philidor Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 1790,
+      "value": 0.018046355946727963
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Scotch Game"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_scotch_game",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Scotch Game family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Scotch Game",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 1786,
+      "value": 0.018006028894333042
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Nimzo-Larsen Attack"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_nimzo_larsen_attack",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Nimzo-Larsen Attack family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Nimzo-Larsen Attack",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 1726,
+      "value": 0.0174011231084092
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Van't Kruijs Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_vant_kruijs_opening",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Van't Kruijs Opening family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Van't Kruijs Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 1710,
+      "value": 0.017239814898829506
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Ruy Lopez"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_ruy_lopez",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Ruy Lopez family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Ruy Lopez",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 1437,
+      "value": 0.014487493572876025
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Hungarian Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_hungarian_opening",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Hungarian Opening family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Hungarian Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 1582,
+      "value": 0.015949349222191978
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Bishop's Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_bishops_opening",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Bishop's Opening family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Bishop's Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 1483,
+      "value": 0.014951254675417637
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Horwitz Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_horwitz_defense",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Horwitz Defense family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Horwitz Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 1306,
+      "value": 0.013166782606942302
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Benoni Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_benoni_defense",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Benoni Defense family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Benoni Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 1179,
+      "value": 0.011886398693403502
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Petrov's Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_petrovs_defense",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Petrov's Defense family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Petrov's Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 1251,
+      "value": 0.012612285636512113
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Four Knights Game"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_four_knights_game",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Four Knights Game family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Four Knights Game",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "denominator": 99189,
+      "numerator": 1290,
+      "value": 0.013005474397362611
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Englund Gambit"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7f_usage_englund_gambit",
+    "question": "For the observed June 1 source slice, what share of known-opening games carry the full Englund Gambit family tag?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "opening_usage.Englund Gambit",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "eligible_player_games": 393,
+      "score_rate": 0.5063613231552163
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Queen's Pawn Game",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "m7f_white_queens_pawn_game_score",
+    "question": "In this June slice, among White players rated 1400\u20131599 at 60+0, what is the observed player score rate for Queen's Pawn Game?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "white_rating_1400_1599_60_plus_0.Queen's Pawn Game",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "eligible_player_games": 271,
+      "score_rate": 0.507380073800738
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Sicilian Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "m7f_white_sicilian_defense_score",
+    "question": "In this June slice, among White players rated 1400\u20131599 at 60+0, what is the observed player score rate for Sicilian Defense?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "white_rating_1400_1599_60_plus_0.Sicilian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "eligible_player_games": 228,
+      "score_rate": 0.48464912280701755
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Scandinavian Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "m7f_white_scandinavian_defense_score",
+    "question": "In this June slice, among White players rated 1400\u20131599 at 60+0, what is the observed player score rate for Scandinavian Defense?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "white_rating_1400_1599_60_plus_0.Scandinavian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "eligible_player_games": 214,
+      "score_rate": 0.42990654205607476
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "French Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "m7f_white_french_defense_score",
+    "question": "In this June slice, among White players rated 1400\u20131599 at 60+0, what is the observed player score rate for French Defense?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "white_rating_1400_1599_60_plus_0.French Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "score_rate_difference_first_minus_second": -0.0010187506455217044
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Queen's Pawn Game",
+          "Sicilian Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "m7f_compare_queens_pawn_game_sicilian_defense_score",
+    "question": "For White 1400\u20131599 at exactly 60+0, compare Queen's Pawn Game and Sicilian Defense. Give the first-minus-second observed score-rate difference.",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "cohort difference Queen's Pawn Game minus Sicilian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "win_rate_difference_first_minus_second": -0.010750870867487272
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Queen's Pawn Game",
+          "Sicilian Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "m7f_compare_queens_pawn_game_sicilian_defense_win",
+    "question": "For White 1400\u20131599 at exactly 60+0, compare Queen's Pawn Game and Sicilian Defense. Give the first-minus-second observed win-rate difference.",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "cohort difference Queen's Pawn Game minus Sicilian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "score_rate_difference_first_minus_second": 0.05474258075094279
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Scandinavian Defense",
+          "French Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "m7f_compare_scandinavian_defense_french_defense_score",
+    "question": "For White 1400\u20131599 at exactly 60+0, compare Scandinavian Defense and French Defense. Give the first-minus-second observed score-rate difference.",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "cohort difference Scandinavian Defense minus French Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "win_rate_difference_first_minus_second": 0.03967863584194131
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Scandinavian Defense",
+          "French Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "m7f_compare_scandinavian_defense_french_defense_win",
+    "question": "For White 1400\u20131599 at exactly 60+0, compare Scandinavian Defense and French Defense. Give the first-minus-second observed win-rate difference.",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "cohort difference Scandinavian Defense minus French Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "eligible_moves": 16042,
+      "evaluable_moves": 831,
+      "evaluation_coverage": 0.05180152100735569
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "under_10"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "m7f_clock_under_10_coverage",
+    "question": "Within the June sample's under_10 clock bucket, how many moves were eligible, how many had comparable evaluations, and what was coverage?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "M3.clock_buckets.under_10",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "error_proxy_rate": 0.1552346570397112,
+      "evaluable_moves": 831,
+      "proxy_errors": 129
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "under_10"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "m7f_clock_under_10_proxy",
+    "question": "For June sampled moves in under_10, report the evaluable-move count, the exploratory deterioration-proxy count and its rate.",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "M3.clock_buckets.under_10",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "eligible_moves": 32720,
+      "evaluable_moves": 1991,
+      "evaluation_coverage": 0.06084963325183374
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "10_to_29"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "m7f_clock_10_to_29_coverage",
+    "question": "Within the June sample's 10_to_29 clock bucket, how many moves were eligible, how many had comparable evaluations, and what was coverage?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "M3.clock_buckets.10_to_29",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "error_proxy_rate": 0.10597689603214465,
+      "evaluable_moves": 1991,
+      "proxy_errors": 211
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "10_to_29"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "m7f_clock_10_to_29_proxy",
+    "question": "For June sampled moves in 10_to_29, report the evaluable-move count, the exploratory deterioration-proxy count and its rate.",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "M3.clock_buckets.10_to_29",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "eligible_moves": 61238,
+      "evaluable_moves": 4124,
+      "evaluation_coverage": 0.06734380613344655
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "30_to_59"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "m7f_clock_30_to_59_coverage",
+    "question": "Within the June sample's 30_to_59 clock bucket, how many moves were eligible, how many had comparable evaluations, and what was coverage?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "M3.clock_buckets.30_to_59",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "error_proxy_rate": 0.07444228903976721,
+      "evaluable_moves": 4124,
+      "proxy_errors": 307
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "30_to_59"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "m7f_clock_30_to_59_proxy",
+    "question": "For June sampled moves in 30_to_59, report the evaluable-move count, the exploratory deterioration-proxy count and its rate.",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "M3.clock_buckets.30_to_59",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "eligible_moves": 142624,
+      "evaluable_moves": 16399,
+      "evaluation_coverage": 0.11498064841821853
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "60_plus"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "m7f_clock_60_plus_coverage",
+    "question": "Within the June sample's 60_plus clock bucket, how many moves were eligible, how many had comparable evaluations, and what was coverage?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "M3.clock_buckets.60_plus",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": {
+      "error_proxy_rate": 0.06908957863284347,
+      "evaluable_moves": 16399,
+      "proxy_errors": 1133
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "60_plus"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "m7f_clock_60_plus_proxy",
+    "question": "For June sampled moves in 60_plus, report the evaluable-move count, the exploratory deterioration-proxy count and its rate.",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "M3.clock_buckets.60_plus",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7f_boundary_personal_choice",
+    "question": "What is the White player score rate for Queen's Pawn Game at my rating and time control? I have not supplied those filters.",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7f_boundary_rating_unspecified",
+    "question": "For White at 60+0, compare Sicilian Defense and French Defense at my rating, which I have not supplied.",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7f_boundary_bucket_unspecified",
+    "question": "What is evaluation coverage for my unspecified clock bucket?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7f_boundary_cohort_unspecified",
+    "question": "What is Scandinavian Defense's player score without a color, rating band, or time control?",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7f_boundary_private_file",
+    "question": "Access my private files to calculate my personal opening results.",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7f_boundary_causal_opening",
+    "question": "Prove that choosing Sicilian Defense caused the observed wins.",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7f_boundary_full_month",
+    "question": "Give the exact full-June opening share from this one-day source slice.",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7f_boundary_personality",
+    "question": "Describe my personality using these anonymous game records.",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "720c0dbe7e7ff11a42d318b1",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7f_boundary_guaranteed_result",
+    "question": "Guarantee that switching to French Defense improves my win rate.",
+    "reference_file": "reports/M7-independent-reference-v6.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout_v6",
+    "template_family": "m7f_reliability_access"
+  }
+]

@@ -1,0 +1,43 @@
+{
+  "answerable": {
+    "attempted": 16,
+    "passed": 14
+  },
+  "approved_cumulative_cap_usd": 0.5,
+  "attempted": 16,
+  "boundary": {
+    "attempted": 0,
+    "passed": 0
+  },
+  "complete_repetitions": 0,
+  "completed": 15,
+  "cumulative_M7_accounted_usd": 0.10763917,
+  "evidence_integrity_passed": 15,
+  "failures": [
+    {
+      "case_id": "m7i_usage_queens_gambit_declined",
+      "error": null,
+      "score_failures": [
+        "result_values",
+        "tool_or_filters"
+      ]
+    },
+    {
+      "case_id": "m7i_usage_nimzo_larsen_attack",
+      "error": "provider HTTP 400: invalid_request_error: Invalid prompt: your prompt was flagged as potentially violating our usage policy. Please try again with a different prompt: https://platform.openai.com/docs/guides/reasoning#advice-on-prompting",
+      "score_failures": null
+    }
+  ],
+  "gross_cost_accounted_usd": 0.005252475,
+  "high_severity": {
+    "attempted": 0,
+    "passed": 0
+  },
+  "kind": "M7 March v9 stopped live gate; no release claim",
+  "known_gross_cost_usd": 0.001551475,
+  "live_gates_passed": false,
+  "planned_repetitions": 3,
+  "transport_retries": 1,
+  "unattempted_in_first_run": 34,
+  "unknown_cost_reservations_usd": 0.0037010000000000003
+}
