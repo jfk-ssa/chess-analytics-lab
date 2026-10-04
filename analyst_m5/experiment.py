@@ -14,6 +14,7 @@ from analyst_m5.provider import (
     KEY_ENV,
     _default_transport,
     live_answer,
+    price_usage,
     quote_request,
     validate_personal_config,
 )
@@ -37,6 +38,8 @@ CONDITIONS = ("schema_only", "semantic_context")
 DEFAULT_MODEL = "gpt-6-luna"
 DEFAULT_INPUT_USD_PER_MILLION = 0.10
 DEFAULT_OUTPUT_USD_PER_MILLION = 0.50
+DEFAULT_CACHE_WRITE_USD_PER_MILLION = 0.125
+DEFAULT_CACHED_INPUT_USD_PER_MILLION = 0.01
 DEFAULT_MAX_OUTPUT_TOKENS = 512
 DEFAULT_PRICE_SOURCE = "https://developers.openai.com/api/docs/models/gpt-6-luna"
 DEFAULT_PRICE_CHECKED_UTC_DATE = "2026-10-03"
@@ -78,6 +81,8 @@ def _resolve_config(config_path: Path | None, max_run_usd: float | None) -> dict
             "max_run_usd": max_run_usd,
             "input_usd_per_million": DEFAULT_INPUT_USD_PER_MILLION,
             "output_usd_per_million": DEFAULT_OUTPUT_USD_PER_MILLION,
+            "cache_write_usd_per_million": DEFAULT_CACHE_WRITE_USD_PER_MILLION,
+            "cached_input_usd_per_million": DEFAULT_CACHED_INPUT_USD_PER_MILLION,
             "max_output_tokens": DEFAULT_MAX_OUTPUT_TOKENS,
             "api_key_env": KEY_ENV,
         }
@@ -143,6 +148,8 @@ def prepare(project: Path, config_path: Path | None = None, *, max_run_usd=None)
         "max_output_tokens": config["max_output_tokens"],
         "input_usd_per_million": config["input_usd_per_million"],
         "output_usd_per_million": config["output_usd_per_million"],
+        "cache_write_usd_per_million": config.get("cache_write_usd_per_million"),
+        "cached_input_usd_per_million": config.get("cached_input_usd_per_million"),
         "max_run_usd": config["max_run_usd"],
         "price_source": DEFAULT_PRICE_SOURCE if config_path is None else "user_configured",
         "price_checked_utc_date": (DEFAULT_PRICE_CHECKED_UTC_DATE if config_path is None else None),
@@ -175,6 +182,8 @@ def run(
         "max_output_tokens",
         "input_usd_per_million",
         "output_usd_per_million",
+        "cache_write_usd_per_million",
+        "cached_input_usd_per_million",
         "max_run_usd",
         "price_source",
         "price_checked_utc_date",
@@ -196,6 +205,7 @@ def run(
     directory = project / "data/analyst_attempts" / experiment_id
     directory.mkdir(parents=True, exist_ok=False)
     reserved = 0.0
+    spent = 0.0
     outcomes = []
     for index, cell in enumerate(current["cells"]):
         case = cases[cell["case_id"]]
@@ -233,18 +243,24 @@ def run(
         record["elapsed_seconds"] = time.monotonic() - started
         response = captured.get("response")
         usage = response.get("usage") if isinstance(response, dict) else None
-        if isinstance(usage, dict) and all(
-            type(usage.get(name)) is int for name in ("input_tokens", "output_tokens")
-        ):
+        if usage is not None:
+            try:
+                cost, basis = price_usage(config, usage)
+            except ValueError:
+                cost = basis = None
+        else:
+            cost = basis = None
+        if cost is not None:
             record["provider_usage"] = usage
-            record["gross_cost_usd"] = (
-                usage["input_tokens"] * config["input_usd_per_million"]
-                + usage["output_tokens"] * config["output_usd_per_million"]
-            ) / 1_000_000
+            record["gross_cost_usd"] = cost
+            record["cost_basis"] = basis
+            spent += cost
+            if cost > cell["reserved_cost_usd"] + 1e-12 or spent > current["max_run_usd"] + 1e-12:
+                record["budget_bound_exceeded"] = True
         write_json(directory / f"{index:02d}-{cell['case_id']}-{cell['condition']}.json", record)
         outcomes.append(record)
         # A failed/unknown-cost request may have been billed. No retry or later cell.
-        if record["status"] == "failed":
+        if record["status"] == "failed" or record.get("budget_bound_exceeded"):
             break
     categories = {}
     pairs = {}

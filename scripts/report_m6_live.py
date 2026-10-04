@@ -6,6 +6,7 @@ import statistics
 from collections import defaultdict
 from pathlib import Path
 
+from analyst_m5.provider import price_usage
 from chess_analytics.common import write_json
 
 
@@ -45,16 +46,18 @@ def build(
                 "provider", {}
             ).get("raw_response")
             usage = raw.get("provider_usage") or (response or {}).get("usage")
-            cost = raw.get("gross_cost_usd")
-            if (
-                cost is None
-                and isinstance(usage, dict)
-                and all(type(usage.get(key)) is int for key in ("input_tokens", "output_tokens"))
-            ):
-                cost = (
-                    usage["input_tokens"] * preflight["input_usd_per_million"]
-                    + usage["output_tokens"] * preflight["output_usd_per_million"]
-                ) / 1_000_000
+            rates = {
+                "input_usd_per_million": preflight["input_usd_per_million"],
+                "output_usd_per_million": preflight["output_usd_per_million"],
+            }
+            if preflight["model"] == "gpt-6-luna":
+                rates["cache_write_usd_per_million"] = preflight.get(
+                    "cache_write_usd_per_million", 0.125
+                )
+                rates["cached_input_usd_per_million"] = preflight.get(
+                    "cached_input_usd_per_million", 0.01
+                )
+            cost, cost_basis = price_usage(rates, usage) if usage else (None, "missing_usage")
             answer = raw.get("answer") or {}
             attempt = {
                 "case_id": case["id"],
@@ -68,7 +71,9 @@ def build(
                 "model_response_id": (response or {}).get("id"),
                 "resolved_model": (response or {}).get("model"),
                 "usage": usage,
+                "previous_recorded_cost_usd": raw.get("gross_cost_usd"),
                 "gross_cost_usd": cost,
+                "cost_basis": cost_basis,
                 "elapsed_seconds": raw["elapsed_seconds"],
                 "model_text": _model_text(response),
                 "answer_status": answer.get("status"),
@@ -105,7 +110,7 @@ def build(
         rows = [a for a in final if a["condition"] == condition]
         by_condition[condition] = {
             "attempted": len(rows),
-            "passed": sum(bool(a.get("score", {}).get("passed")) for a in rows),
+            "passed": sum(bool((a.get("score") or {}).get("passed")) for a in rows),
             "gross_cost_usd": sum(a["gross_cost_usd"] or 0 for a in rows),
             "median_latency_seconds": statistics.median(a["elapsed_seconds"] for a in rows),
         }
@@ -115,7 +120,7 @@ def build(
     categories = {
         category: {
             "attempted": len(rows),
-            "passed": sum(bool(a.get("score", {}).get("passed")) for a in rows),
+            "passed": sum(bool((a.get("score") or {}).get("passed")) for a in rows),
         }
         for category, rows in sorted(grouped.items())
     }
@@ -126,8 +131,8 @@ def build(
         rows = [a for a in final if a["case_id"] == case_id]
         pairs[case_id] = {
             a["condition"]: {
-                "passed": a["score"]["passed"],
-                "failures": a["score"]["failures"],
+                "passed": (a.get("score") or {}).get("passed", False),
+                "failures": (a.get("score") or {}).get("failures", [a.get("error_type")]),
             }
             for a in rows
         }
@@ -143,13 +148,13 @@ def build(
         "final_pilot": {
             "attempted": len(final),
             "completed": sum(a["status"] == "completed" for a in final),
-            "scored_passed": sum(bool(a.get("score", {}).get("passed")) for a in final),
+            "scored_passed": sum(bool((a.get("score") or {}).get("passed")) for a in final),
             "answerable": {
-                "passed": sum(bool(a["score"]["passed"]) for a in answerable),
+                "passed": sum(bool((a.get("score") or {}).get("passed")) for a in answerable),
                 "total": len(answerable),
             },
             "ambiguity_or_unsupported": {
-                "passed": sum(bool(a["score"]["passed"]) for a in non_answerable),
+                "passed": sum(bool((a.get("score") or {}).get("passed")) for a in non_answerable),
                 "total": len(non_answerable),
             },
             "by_condition": by_condition,

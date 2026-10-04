@@ -13,7 +13,7 @@ repository; projects 1–3 remain together. No remote repository or hosting crea
 | M3 analytical corpus and metrics | Done | Accepted bounded prefix, observed coverage, independent checks, 12 draft dev cases |
 | M4 analytics product | Done | Accepted local six-view dashboard and two reproducible memos |
 | M5 analyst/eval harness | Done | Accepted checked typed tools, fixture replay and 50-case harness; no model result |
-| M6 measured release | In progress; gates missed | Actual 24-cell development pilot completed; 90% numerical and abstention targets missed. Diagnose, revise on development cases, then create a new unseen family split for held-out release evidence. |
+| M6 measured release | In progress; development gate reached | Latest inspected development revision reached 23/24; create and freeze a new unseen family split for release evidence. |
 | M7 depth | Later | Select only measured improvements |
 | M8 Jev | Follow-up | Fair, measured integration experiment |
 | Personalized recommender | Backlog | Outside first-release scope |
@@ -36,7 +36,8 @@ repository; projects 1–3 remain together. No remote repository or hosting crea
 | M5 offline analyst | Allowlisted read-only typed tools, four-step state machine, evidence IDs, fixture replay and separate scoring; disabled-by-default personal Responses adapter | 50 cases frozen (30 dev/20 test) across six categories; fixture-replay/scorer check 50/50. Ten plausible wrong-answer mutations rejected; raw SQL/file/network/extension attempts have no enabled tool. These are harness tests, **not model accuracy**. |
 | M5 live gate | Personal config and positive cap required; only named personal key variable permitted | Disabled example config rejected a CLI live attempt before transport; failure retained in ignored local attempt log. No provider request occurred. |
 | M6 offline preparation | Hard-deadline credential-free tool worker; 12-case/two-condition typed-planner pilot with whole-run budget reservation and frozen request hashes | Worker ran against the real checked snapshot; proposed 24-cell quote is $0.0198638 under hypothetical $1 cap. Fresh clone and cached offline tiny demo passed after filling missing macOS wheels. These are offline checks, not model outcomes. [M6 evidence](M6.md). |
-| M6 actual development pilot | Four frozen prompt revisions; 32 API requests including stopped attempts; final two-condition run completed 24/24 | Final scorer 16/24: 8/12 answerable and 8/12 ambiguity/unsupported; both conditions 8/12. Gross API cost across attempts $0.0046302 under the user's $0.10 cap. Release gates **not met**. [Actual model results](../reports/M6-live-pilot.json). |
+| M6 actual development pilot | Four frozen prompt revisions; 32 API requests including stopped attempts; final two-condition run completed 24/24 | Frozen scorer 16/24: 8/12 answerable and 8/12 ambiguity/unsupported; both conditions 8/12. Corrected gross cost across attempts $0.0028105 under the first $0.10 cap. Release gates **not met**. [Actual model results](../reports/M6-live-pilot.json). |
+| M6 development revisions | M6 2.0 scorer accepts an equivalent checked clock-pressure tool; prompt clarifies abstention and opening filters; 64 further actual requests | Revisions: 20/24, stopped at 16 after a two-chunk response, then 23/24 (11/12 answerable, 12/12 abstention). Corrected gross cost $0.00528149 under the separate $0.10 cap. One-shot development success is not held-out release evidence. [Progress and failures](../reports/M6-development-progress.json). |
 
 Acceptance details: [reports/M0-M1.md](../reports/M0-M1.md), machine-readable
 [acceptance.json](../reports/acceptance.json), [foundation manifest](../reports/foundation-manifest.json).
@@ -69,8 +70,8 @@ CI workflow exists; equivalent commands ran locally. No hosted CI run is claimed
 
 ## Limitations and blockers
 
-The personal key was loaded only by the named live adapter after an explicit
-$0.10 cap. Model/pricing defaults were checked against the official model page
+The personal key was loaded only by the named live adapter after explicit
+$0.10 caps for two evaluation rounds. Model/pricing defaults were checked against the official model page
 on 2026-10-03; account credit use itself was not independently verified.
 Normal wheel installation (`--no-editable`) resolves the observed
 macOS hidden editable `.pth` issue; see DECISIONS.md. Initial package/bootstrap
@@ -108,8 +109,8 @@ snapshot still reports 3,982/121,332. No hosted CI run is claimed.
 1. Diagnose the actual multi-step and abstention failures. Keep the failed
    model responses and the frozen scorer results visible. Do not lower release
    targets after seeing the results.
-2. Improve on development cases, then create a fresh unseen family split before
-   any held-out performance claim. The inspected M5 test split is retired for
+2. Create a fresh unseen family split before any held-out performance claim.
+   The inspected M5 test split is retired for
    that purpose; a single 12-case pilot establishes no repeatability.
 3. Complete release evidence only when gates pass. The fresh-clone tiny demo
    has passed. Keep optional Airflow deferred unless its extra local stack has
@@ -117,7 +118,7 @@ snapshot still reports 3,982/121,332. No hosted CI run is claimed.
 
 Then M7 measured depth and M8 Jev. The recommender remains backlog.
 
-**Actual model responses exist only for this inspected development pilot.**
+**Actual model responses exist only for inspected development revisions.**
 M5's 50/50 fixture replay remains harness validation. The provider example is
 still disabled; no workplace credential was used. Actual gross cost is reported
 even if account credit covers it. No held-out benchmark or release claim exists.

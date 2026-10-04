@@ -10,7 +10,7 @@ import pytest
 from analyst_m5.core import run_killable_tool
 from analyst_m5.evaluation import score_case, score_case_m6
 from analyst_m5.experiment import _load_named_key, prepare, run
-from analyst_m5.provider import quote_request
+from analyst_m5.provider import price_usage, quote_request
 
 PROJECT = Path(__file__).resolve().parents[1]
 
@@ -173,3 +173,24 @@ def test_m6_rubric_accepts_only_equivalent_checked_clock_call():
     answer["evidence"][0]["args"]["bucket"] = "under_10"
     answer["result"]["error_proxy_rate"] = 0.1
     assert not score_case_m6(case, answer)["passed"]
+
+
+def test_cache_write_and_hit_costs_are_separate():
+    config = {
+        "input_usd_per_million": 0.10,
+        "output_usd_per_million": 0.50,
+        "cache_write_usd_per_million": 0.125,
+        "cached_input_usd_per_million": 0.01,
+    }
+    usage = {
+        "input_tokens": 1000,
+        "output_tokens": 100,
+        "input_tokens_details": {"cache_write_tokens": 200, "cached_tokens": 300},
+    }
+    cost, basis = price_usage(config, usage)
+    assert basis == "reported_cache_breakdown"
+    assert cost == pytest.approx(0.000128)
+    del usage["input_tokens_details"]
+    cost, basis = price_usage(config, usage)
+    assert basis == "conservative_missing_cache_breakdown"
+    assert cost == pytest.approx(0.000175)

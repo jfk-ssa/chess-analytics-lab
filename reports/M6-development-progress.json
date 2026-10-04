@@ -1,0 +1,237 @@
+{
+  "kind": "inspected_m6_development_revisions_not_release_holdout",
+  "runs": [
+    {
+      "abstention_attempted": 12,
+      "abstention_passed": 11,
+      "answered_attempted": 12,
+      "answered_passed": 9,
+      "attempted": 24,
+      "completed": 24,
+      "corrected_gross_cost_usd": 0.0019201,
+      "cost_known_for_every_attempt": true,
+      "experiment_id": "a27aad5bdd7f4d7589d5a96e9bff1c0d",
+      "failures": [
+        {
+          "case_id": "black_sicilian_score",
+          "condition": "schema_only",
+          "error_type": null,
+          "model_response_id": "resp_09baea0c2b64dab6016ac1b313662887d2973b255c3ba19b10",
+          "score_failures": [
+            "status",
+            "result_values",
+            "evidence",
+            "tool_or_filters",
+            "caveats"
+          ],
+          "status": "completed"
+        },
+        {
+          "case_id": "black_opening_score_difference",
+          "condition": "schema_only",
+          "error_type": null,
+          "model_response_id": "resp_06a8a5846328aa7b016ac1b317899c87d1b94bf600e4ab6e2c",
+          "score_failures": [
+            "status",
+            "result_values",
+            "evidence",
+            "tool_or_filters",
+            "caveats"
+          ],
+          "status": "completed"
+        },
+        {
+          "case_id": "black_opening_score_difference",
+          "condition": "semantic_context",
+          "error_type": null,
+          "model_response_id": "resp_08fb76ae2c2ad24c016ac1b319774087d194fcde01b81c06fe",
+          "score_failures": [
+            "status",
+            "result_values",
+            "evidence",
+            "tool_or_filters",
+            "caveats"
+          ],
+          "status": "completed"
+        },
+        {
+          "case_id": "best_for_me",
+          "condition": "schema_only",
+          "error_type": null,
+          "model_response_id": "resp_0e75b7fcf180d38e016ac1b31e526887d1bd11167831928690",
+          "score_failures": [
+            "status"
+          ],
+          "status": "completed"
+        }
+      ],
+      "passed": 20,
+      "planned": 24,
+      "preflight": {
+        "attempts_planned": 24,
+        "case_set_sha256": "64bf83183a8729898fbfd2f355701b54d1ad4beecef9cade5a79bd735c97c78a",
+        "conservative_total_usd": 0.024003800000000002,
+        "dataset_id": "84a38a404815ed2729917d76",
+        "frozen_file_sha256": {
+          "analyst_m5/core.py": "528efd7c52bec4a9e8156fee80e3899fc91a0dac40ea7505b64565efd23e6e66",
+          "analyst_m5/evaluation.py": "1a0e496153f40b95b0f4a7710872b163b83fe043c30b6dc9bdbb79951199ef26",
+          "analyst_m5/experiment.py": "807229589a1df478381f8d5873255f804baa7982b78ea33780f3988039385c89",
+          "analyst_m5/provider.py": "969aee7862c7532dc0ddfced5b0a73a0d6292fdb596b06b67d9741550997d5b7",
+          "analyst_m5/tool_worker.py": "fff693a59f8fb1aeedeb9abe4211604ca34d873c3d68817a7b1fee0219960417",
+          "analyst_m5/tools.py": "732febe4a600c91d1179a075ad9f909ebe79f904ce4b6d7667520c143dfc1dd2",
+          "analytics_m3/metrics.py": "8c5e2f67a52e12990d6b174fc59be2f4985ceecec18db0ce0d63a50b48b091de",
+          "analytics_m4/analysis.py": "0d5b1e9fab995739cb382a714454ed64b3c86465f495f9ac25e457c4fb9ecbea",
+          "contracts/clock_pressure_error_proxy.json": "0ee7dbc7a903dabbc22414ed0ac6623067053b55d8cf8c2e0bdcfa711c9698d8",
+          "contracts/evaluation_coverage.json": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+          "contracts/game_draw_rate.json": "b119f02815e73adbe680120b2b26460cd2f5cf867dd0399d1642b560e29042e4",
+          "contracts/m3_tables.json": "8b4b48d0c319dbd636bacd9ab335ed5cb6207f2eb8dd56ba2290f8ac19f840dc",
+          "contracts/opening_adjusted_score.json": "784fd284e1a7b9296f099902104f1a7777ff03c1eb8d1738fe34b0f3aff5bf62",
+          "contracts/opening_player_score.json": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+          "contracts/opening_usage.json": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+          "contracts/tables.json": "5ed382ed37dc7cd89ff33daf3989fab3fc935048194ff6a08dedfcafa46faf01",
+          "docs/METRICS.md": "ee2865e43e842459e30f58add9bc62738387b284930ad19a64e87beada8efbaa",
+          "evals/cases/m5_dev.json": "152096ab7a2fcfed4017b8b80223b7e8902be8842d2a78aca25bb672b0552be8",
+          "evals/cases/m5_manifest.json": "fe4fc2fa39560f097030e105f514a55e81356353b5c0cd4f8f814ce52fa08be1",
+          "evals/cases/m5_test.json": "2e81c0d76d9f70f6978b1d92f305cbcaab02c17b1af136e94dc5518ed11bb2b0",
+          "uv.lock": "667b0ee7faec38b0a59d88199595ca5c9a4bf940c26df2d3e2b90ce2e04fff4c"
+        },
+        "max_run_usd": 0.05,
+        "model": "gpt-6-luna"
+      },
+      "previous_recorded_cost_usd": 0.0035691000000000004
+    },
+    {
+      "abstention_attempted": 4,
+      "abstention_passed": 4,
+      "answered_attempted": 12,
+      "answered_passed": 10,
+      "attempted": 16,
+      "completed": 15,
+      "corrected_gross_cost_usd": 0.0016985700000000002,
+      "cost_known_for_every_attempt": true,
+      "experiment_id": "67cef2d2165b4fe6a19bcc254c273467",
+      "failures": [
+        {
+          "case_id": "black_opening_score_difference",
+          "condition": "semantic_context",
+          "error_type": null,
+          "model_response_id": "resp_09621b97b3002b0f016ac1b3d74f0c87d18835d84752cf7e9a",
+          "score_failures": [
+            "status",
+            "result_values",
+            "evidence",
+            "tool_or_filters",
+            "caveats"
+          ],
+          "status": "completed"
+        },
+        {
+          "case_id": "proxy_60_plus",
+          "condition": "semantic_context",
+          "error_type": "ValueError",
+          "model_response_id": "resp_0a9b598a562b08be016ac1b3e51f3887d186eb486d9018593d",
+          "score_failures": null,
+          "status": "failed"
+        }
+      ],
+      "passed": 14,
+      "planned": 24,
+      "preflight": {
+        "attempts_planned": 24,
+        "case_set_sha256": "64bf83183a8729898fbfd2f355701b54d1ad4beecef9cade5a79bd735c97c78a",
+        "conservative_total_usd": 0.025295,
+        "dataset_id": "84a38a404815ed2729917d76",
+        "frozen_file_sha256": {
+          "analyst_m5/core.py": "528efd7c52bec4a9e8156fee80e3899fc91a0dac40ea7505b64565efd23e6e66",
+          "analyst_m5/evaluation.py": "1a0e496153f40b95b0f4a7710872b163b83fe043c30b6dc9bdbb79951199ef26",
+          "analyst_m5/experiment.py": "807229589a1df478381f8d5873255f804baa7982b78ea33780f3988039385c89",
+          "analyst_m5/provider.py": "8ff88f4a3cb2a736131d9ca94d03523c5caf24110016fdef050deb23f0e3cbbc",
+          "analyst_m5/tool_worker.py": "fff693a59f8fb1aeedeb9abe4211604ca34d873c3d68817a7b1fee0219960417",
+          "analyst_m5/tools.py": "732febe4a600c91d1179a075ad9f909ebe79f904ce4b6d7667520c143dfc1dd2",
+          "analytics_m3/metrics.py": "8c5e2f67a52e12990d6b174fc59be2f4985ceecec18db0ce0d63a50b48b091de",
+          "analytics_m4/analysis.py": "0d5b1e9fab995739cb382a714454ed64b3c86465f495f9ac25e457c4fb9ecbea",
+          "contracts/clock_pressure_error_proxy.json": "0ee7dbc7a903dabbc22414ed0ac6623067053b55d8cf8c2e0bdcfa711c9698d8",
+          "contracts/evaluation_coverage.json": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+          "contracts/game_draw_rate.json": "b119f02815e73adbe680120b2b26460cd2f5cf867dd0399d1642b560e29042e4",
+          "contracts/m3_tables.json": "8b4b48d0c319dbd636bacd9ab335ed5cb6207f2eb8dd56ba2290f8ac19f840dc",
+          "contracts/opening_adjusted_score.json": "784fd284e1a7b9296f099902104f1a7777ff03c1eb8d1738fe34b0f3aff5bf62",
+          "contracts/opening_player_score.json": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+          "contracts/opening_usage.json": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+          "contracts/tables.json": "5ed382ed37dc7cd89ff33daf3989fab3fc935048194ff6a08dedfcafa46faf01",
+          "docs/METRICS.md": "ee2865e43e842459e30f58add9bc62738387b284930ad19a64e87beada8efbaa",
+          "evals/cases/m5_dev.json": "152096ab7a2fcfed4017b8b80223b7e8902be8842d2a78aca25bb672b0552be8",
+          "evals/cases/m5_manifest.json": "fe4fc2fa39560f097030e105f514a55e81356353b5c0cd4f8f814ce52fa08be1",
+          "evals/cases/m5_test.json": "2e81c0d76d9f70f6978b1d92f305cbcaab02c17b1af136e94dc5518ed11bb2b0",
+          "uv.lock": "667b0ee7faec38b0a59d88199595ca5c9a4bf940c26df2d3e2b90ce2e04fff4c"
+        },
+        "max_run_usd": 0.045,
+        "model": "gpt-6-luna"
+      },
+      "previous_recorded_cost_usd": 0.0027027
+    },
+    {
+      "abstention_attempted": 12,
+      "abstention_passed": 12,
+      "answered_attempted": 12,
+      "answered_passed": 11,
+      "attempted": 24,
+      "completed": 24,
+      "corrected_gross_cost_usd": 0.0016628200000000002,
+      "cost_known_for_every_attempt": true,
+      "experiment_id": "8e5ac2b33ba64dce8f98bf5a589c943f",
+      "failures": [
+        {
+          "case_id": "black_opening_score_difference",
+          "condition": "semantic_context",
+          "error_type": null,
+          "model_response_id": "resp_04955f9fcba9ab9c016ac1b6249b7087d184dbd8757ead4961",
+          "score_failures": [
+            "status",
+            "result_values",
+            "evidence",
+            "tool_or_filters",
+            "caveats"
+          ],
+          "status": "completed"
+        }
+      ],
+      "passed": 23,
+      "planned": 24,
+      "preflight": {
+        "attempts_planned": 24,
+        "case_set_sha256": "64bf83183a8729898fbfd2f355701b54d1ad4beecef9cade5a79bd735c97c78a",
+        "conservative_total_usd": 0.030082750000000002,
+        "dataset_id": "84a38a404815ed2729917d76",
+        "frozen_file_sha256": {
+          "analyst_m5/core.py": "528efd7c52bec4a9e8156fee80e3899fc91a0dac40ea7505b64565efd23e6e66",
+          "analyst_m5/evaluation.py": "1a0e496153f40b95b0f4a7710872b163b83fe043c30b6dc9bdbb79951199ef26",
+          "analyst_m5/experiment.py": "2fbb132f8c2e2d825d1fdb6c921d7d0fb876e3ce68135ff0eeb733bfe4a7ddb1",
+          "analyst_m5/provider.py": "2f25e0b6c561e100e74a430a0e19758eae911a84f29d2f2b10328cc1c757052e",
+          "analyst_m5/tool_worker.py": "fff693a59f8fb1aeedeb9abe4211604ca34d873c3d68817a7b1fee0219960417",
+          "analyst_m5/tools.py": "732febe4a600c91d1179a075ad9f909ebe79f904ce4b6d7667520c143dfc1dd2",
+          "analytics_m3/metrics.py": "8c5e2f67a52e12990d6b174fc59be2f4985ceecec18db0ce0d63a50b48b091de",
+          "analytics_m4/analysis.py": "0d5b1e9fab995739cb382a714454ed64b3c86465f495f9ac25e457c4fb9ecbea",
+          "contracts/clock_pressure_error_proxy.json": "0ee7dbc7a903dabbc22414ed0ac6623067053b55d8cf8c2e0bdcfa711c9698d8",
+          "contracts/evaluation_coverage.json": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+          "contracts/game_draw_rate.json": "b119f02815e73adbe680120b2b26460cd2f5cf867dd0399d1642b560e29042e4",
+          "contracts/m3_tables.json": "8b4b48d0c319dbd636bacd9ab335ed5cb6207f2eb8dd56ba2290f8ac19f840dc",
+          "contracts/opening_adjusted_score.json": "784fd284e1a7b9296f099902104f1a7777ff03c1eb8d1738fe34b0f3aff5bf62",
+          "contracts/opening_player_score.json": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+          "contracts/opening_usage.json": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+          "contracts/tables.json": "5ed382ed37dc7cd89ff33daf3989fab3fc935048194ff6a08dedfcafa46faf01",
+          "docs/METRICS.md": "ee2865e43e842459e30f58add9bc62738387b284930ad19a64e87beada8efbaa",
+          "evals/cases/m5_dev.json": "152096ab7a2fcfed4017b8b80223b7e8902be8842d2a78aca25bb672b0552be8",
+          "evals/cases/m5_manifest.json": "fe4fc2fa39560f097030e105f514a55e81356353b5c0cd4f8f814ce52fa08be1",
+          "evals/cases/m5_test.json": "2e81c0d76d9f70f6978b1d92f305cbcaab02c17b1af136e94dc5518ed11bb2b0",
+          "uv.lock": "667b0ee7faec38b0a59d88199595ca5c9a4bf940c26df2d3e2b90ce2e04fff4c"
+        },
+        "max_run_usd": 0.04,
+        "model": "gpt-6-luna"
+      },
+      "previous_recorded_cost_usd": 0.0016628200000000002
+    }
+  ],
+  "scorer": "M6 2.0; equivalent checked clock-pressure tool accepted",
+  "total_corrected_gross_cost_usd": 0.005281490000000001,
+  "user_cap_usd_across_these_revisions": 0.1
+}

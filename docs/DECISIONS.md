@@ -260,6 +260,16 @@ zero execution exceptions and 16/24 frozen-scorer passes. Across all 32 API
 requests the gross recorded cost was $0.0046302. This is not an untouched
 holdout or a repeatability result.
 
+The $0.0046302 figure above is the originally recorded simple-rate estimate,
+preserved as historical evidence. A cache-aware recalculation from every
+retained provider usage record gives **$0.0028105** gross for the same 32
+requests, including $0.0018115 for the final 24 cells. The frozen 16/24 score
+does not change. GPT-6 Luna's official Standard rates checked on 2026-10-03
+are $0.10/M regular input, $0.125/M cache writes, $0.01/M cached input and
+$0.50/M output. If cache detail is absent, charge all input at the highest
+applicable input rate for conservative accounting. Future preflights freeze
+all four rates, and the runner stops if reported cost exceeds a reservation.
+
 Do not adjust the frozen 16/24 result after inspection. Two proxy answers used
 an equivalent checked tool and produced the expected numbers, but failed the
 strict tool-choice rubric; discuss this discrepancy alongside, not in place
@@ -269,3 +279,31 @@ in progress and the analyst stays experimental. A later release evaluation
 requires development fixes, an unseen family-based split and manual review of
 analytical failures. See `reports/M6-live-pilot.json` for response and cost
 evidence and `reports/M6-live-preflight.json` for final frozen requests.
+
+## 2026-10-03 — Further M6 development, still below release gate
+
+The user approved a separate $0.10 gross cap for the next M6 evaluation.
+Use the M6 2.0 scorer on subsequent runs to accept the equivalent checked
+clock-pressure wrapper when numerical evidence matches; keep the original
+M5-frozen 16/24 result. Clarify supported filters and refusal categories in
+the planner instructions, without expanding the tool allowlist. A complete
+24-cell revision scored 20/24, but answerable cases were only 9/12, below the
+90% release target. The next revision stopped at 16 cells after a provider
+response contained two output-text chunks, one malformed. Retain that full
+response as a failed attempt and do not select a favorable chunk. These
+40 requests cost $0.00361867 gross using cache-aware usage accounting, well
+under the new $0.10 cap. The results are inspected development data, not a
+held-out benchmark. M6 remains in progress; a new family-split holdout is
+still needed after development quality reaches the gate.
+
+## 2026-10-03 — Development gate reached, release gate untested
+
+After correcting price accounting and freezing all four token rates, run one
+further 24-cell development revision with a $0.04 per-run cap inside the
+separate user-authorized $0.10 evaluation cap. It completed 24/24 with no
+execution failures: 23/24 total, 11/12 answerable and 12/12
+ambiguity/unsupported. Gross API cost was $0.00166282. The semantic-context
+opening comparison still asked for clarification and failed. Do not claim
+repeatability or held-out accuracy from this inspected set. The next M6 step
+is a fresh unseen opening-family split, frozen before model execution, with
+independent references and separate reporting of all failed attempts.
