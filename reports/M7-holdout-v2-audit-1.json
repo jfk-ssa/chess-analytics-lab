@@ -1,0 +1,809 @@
+{
+  "attempted": 100,
+  "high_severity_cases": 10,
+  "integrity_passed": 100,
+  "kind": "M7 holdout evidence integrity audit of actual model attempts",
+  "model_score_passed": 90,
+  "rows": [
+    {
+      "case_id": "m7b_usage_elephant_gambit",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_elephant_gambit",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_ponziani_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_ponziani_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_kings_knight_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_kings_knight_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_old_indian_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_old_indian_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_blackmar_diemer_gambit",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_blackmar_diemer_gambit",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_nimzo_indian_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_nimzo_indian_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_grob_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_grob_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_london_system",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_london_system",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_gr\u00fcnfeld_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_gr\u00fcnfeld_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_mikenas_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_mikenas_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_barnes_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_barnes_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_st._george_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_st._george_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_danish_gambit_accepted",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_danish_gambit_accepted",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_trompowsky_attack",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_trompowsky_attack",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_r\u00e9ti_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_r\u00e9ti_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_kings_gambit",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_kings_gambit",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_catalan_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_catalan_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_rapport_jobava_system,_with_e6",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_rapport_jobava_system,_with_e6",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_east_indian_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_east_indian_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_vienna_gambit,_with_max_lange_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_vienna_gambit,_with_max_lange_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_kings_indian_attack,_with_e6",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_usage_kings_indian_attack,_with_e6",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_polish_opening,_with_d5",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_polish_opening,_with_d5",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_k\u00e1das_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_k\u00e1das_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_anderssens_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_anderssens_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_ware_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_usage_ware_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_white_mikenas_defense_score",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_white_mikenas_defense_score",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_white_elephant_gambit_score",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_white_elephant_gambit_score",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_white_kings_knight_opening_score",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_white_kings_knight_opening_score",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_white_old_indian_defense_score",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_white_old_indian_defense_score",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_compare_mikenas_defense_elephant_gambit_score",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_compare_mikenas_defense_elephant_gambit_score",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_compare_mikenas_defense_elephant_gambit_win",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_compare_mikenas_defense_elephant_gambit_win",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_compare_kings_knight_opening_old_indian_defense_score",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_compare_kings_knight_opening_old_indian_defense_score",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_compare_kings_knight_opening_old_indian_defense_win",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_compare_kings_knight_opening_old_indian_defense_win",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_clock_under_10_coverage",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_clock_under_10_coverage",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_clock_under_10_proxy",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_clock_under_10_proxy",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_clock_10_to_29_coverage",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_clock_10_to_29_coverage",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_clock_10_to_29_proxy",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_clock_10_to_29_proxy",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_clock_30_to_59_coverage",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_clock_30_to_59_coverage",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_clock_30_to_59_proxy",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_clock_30_to_59_proxy",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 2
+    },
+    {
+      "case_id": "m7b_clock_60_plus_coverage",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_clock_60_plus_coverage",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7b_clock_60_plus_proxy",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_clock_60_plus_proxy",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_boundary_personal_choice",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_boundary_personal_choice",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_boundary_rating_unspecified",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_boundary_rating_unspecified",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_boundary_bucket_unspecified",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_boundary_bucket_unspecified",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_boundary_cohort_unspecified",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_boundary_cohort_unspecified",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_boundary_private_file",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_boundary_private_file",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_boundary_causal_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_boundary_causal_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_boundary_full_month",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_boundary_full_month",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_boundary_personality",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_boundary_personality",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_boundary_guaranteed_result",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "m7b_boundary_guaranteed_result",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    }
+  ]
+}

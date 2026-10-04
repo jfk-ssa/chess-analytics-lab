@@ -1,0 +1,88 @@
+{
+  "clock_buckets_reference": "reports/M3-independent-reference.json",
+  "dataset_id": "84a38a404815ed2729917d76",
+  "families": [
+    "Amar Opening",
+    "Amazon Attack",
+    "Barnes Defense",
+    "Benko Gambit",
+    "Benko Gambit Accepted",
+    "Blackmar-Diemer Gambit Accepted",
+    "Blackmar-Diemer Gambit Declined",
+    "Bogo-Indian Defense",
+    "Borg Defense",
+    "Carr Defense",
+    "Clemenz Opening",
+    "Czech Defense",
+    "Danish Gambit",
+    "Duras Gambit",
+    "Goldsmith Defense",
+    "Gunderam Defense",
+    "Latvian Gambit",
+    "Latvian Gambit Accepted",
+    "Lion Defense",
+    "Neo-Gr\u00fcnfeld Defense",
+    "Polish Defense",
+    "Tarrasch Defense",
+    "Torre Attack",
+    "Ware Opening",
+    "Yusupov-Rubinstein System"
+  ],
+  "kind": "independent raw-PGN M7 v3 reference; no model responses",
+  "known_opening_games": 99117,
+  "opening_usage": {
+    "Amar Opening": 27,
+    "Amazon Attack": 31,
+    "Barnes Defense": 65,
+    "Benko Gambit": 30,
+    "Benko Gambit Accepted": 26,
+    "Blackmar-Diemer Gambit Accepted": 80,
+    "Blackmar-Diemer Gambit Declined": 54,
+    "Bogo-Indian Defense": 30,
+    "Borg Defense": 83,
+    "Carr Defense": 49,
+    "Clemenz Opening": 72,
+    "Czech Defense": 66,
+    "Danish Gambit": 59,
+    "Duras Gambit": 84,
+    "Goldsmith Defense": 59,
+    "Gunderam Defense": 39,
+    "Latvian Gambit": 80,
+    "Latvian Gambit Accepted": 52,
+    "Lion Defense": 39,
+    "Neo-Gr\u00fcnfeld Defense": 50,
+    "Polish Defense": 45,
+    "Tarrasch Defense": 69,
+    "Torre Attack": 93,
+    "Ware Opening": 90,
+    "Yusupov-Rubinstein System": 64
+  },
+  "source": "data/analytical/complete-2026-08-first-100000.pgn",
+  "source_snapshot_id": "6cf51473f8da6ae6b12ea5c2",
+  "white_rating_1400_1599_60_plus_0": {
+    "Barnes Defense": {
+      "draws": 0,
+      "games": 7,
+      "losses": 6,
+      "wins": 1
+    },
+    "Borg Defense": {
+      "draws": 0,
+      "games": 5,
+      "losses": 4,
+      "wins": 1
+    },
+    "Clemenz Opening": {
+      "draws": 0,
+      "games": 10,
+      "losses": 6,
+      "wins": 4
+    },
+    "Goldsmith Defense": {
+      "draws": 0,
+      "games": 5,
+      "losses": 3,
+      "wins": 2
+    }
+  }
+}

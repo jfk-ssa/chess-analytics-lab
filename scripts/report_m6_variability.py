@@ -45,8 +45,16 @@ def build(preflight_path: Path, report_paths: list[Path]) -> dict:
                     (a["usage"] or {}).get("input_tokens_details", {}).get("cache_write_tokens", 0)
                     for a in attempts
                 ),
-                "unique_chunk_recoveries": sum(
+                "multi_chunk_responses": sum(
                     (a.get("response_selection") or {}).get("output_text_chunks", 0) > 1
+                    for a in attempts
+                ),
+                "duplicate_valid_chunks": sum(
+                    (a.get("response_selection") or {}).get("duplicate_valid_chunks", 0)
+                    for a in attempts
+                ),
+                "discarded_invalid_chunks": sum(
+                    (a.get("response_selection") or {}).get("discarded_invalid_chunks", 0)
                     for a in attempts
                 ),
                 "argument_repairs": sum(len(a.get("argument_repairs") or []) for a in attempts),

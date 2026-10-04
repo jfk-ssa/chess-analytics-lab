@@ -1,0 +1,1830 @@
+[
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 27,
+      "value": 0.00027240533914464724
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Amar Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_amar_opening",
+    "question": "For the observed archive prefix, find Amar Opening's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Amar Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 31,
+      "value": 0.000312761685684595
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Amazon Attack"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_amazon_attack",
+    "question": "For the observed archive prefix, find Amazon Attack's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Amazon Attack",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 65,
+      "value": 0.0006557906312741507
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Barnes Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_barnes_defense",
+    "question": "For the observed archive prefix, find Barnes Defense's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Barnes Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 30,
+      "value": 0.000302672599049608
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Benko Gambit"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_benko_gambit",
+    "question": "For the observed archive prefix, find Benko Gambit's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Benko Gambit",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 26,
+      "value": 0.0002623162525096603
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Benko Gambit Accepted"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_benko_gambit_accepted",
+    "question": "For the observed archive prefix, find Benko Gambit Accepted's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Benko Gambit Accepted",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 80,
+      "value": 0.0008071269307989548
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Blackmar-Diemer Gambit Accepted"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_blackmar_diemer_gambit_accepted",
+    "question": "For the observed archive prefix, find Blackmar-Diemer Gambit Accepted's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Blackmar-Diemer Gambit Accepted",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 54,
+      "value": 0.0005448106782892945
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Blackmar-Diemer Gambit Declined"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_blackmar_diemer_gambit_declined",
+    "question": "For the observed archive prefix, find Blackmar-Diemer Gambit Declined's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Blackmar-Diemer Gambit Declined",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 30,
+      "value": 0.000302672599049608
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Bogo-Indian Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_bogo_indian_defense",
+    "question": "For the observed archive prefix, find Bogo-Indian Defense's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Bogo-Indian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 83,
+      "value": 0.0008373941907039155
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Borg Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_borg_defense",
+    "question": "For the observed archive prefix, find Borg Defense's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Borg Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 49,
+      "value": 0.0004943652451143598
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Carr Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_carr_defense",
+    "question": "For the observed archive prefix, find Carr Defense's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Carr Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 72,
+      "value": 0.0007264142377190593
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Clemenz Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_clemenz_opening",
+    "question": "For the observed archive prefix, find Clemenz Opening's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Clemenz Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 66,
+      "value": 0.0006658797179091377
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Czech Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_czech_defense",
+    "question": "For the observed archive prefix, find Czech Defense's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Czech Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 59,
+      "value": 0.0005952561114642292
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Danish Gambit"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_danish_gambit",
+    "question": "For the observed archive prefix, find Danish Gambit's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Danish Gambit",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 84,
+      "value": 0.0008474832773389025
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Duras Gambit"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_duras_gambit",
+    "question": "For the observed archive prefix, find Duras Gambit's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Duras Gambit",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 59,
+      "value": 0.0005952561114642292
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Goldsmith Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_goldsmith_defense",
+    "question": "For the observed archive prefix, find Goldsmith Defense's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Goldsmith Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 39,
+      "value": 0.00039347437876449047
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Gunderam Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_gunderam_defense",
+    "question": "For the observed archive prefix, find Gunderam Defense's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Gunderam Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 80,
+      "value": 0.0008071269307989548
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Latvian Gambit"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_latvian_gambit",
+    "question": "For the observed archive prefix, find Latvian Gambit's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Latvian Gambit",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 52,
+      "value": 0.0005246325050193206
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Latvian Gambit Accepted"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_latvian_gambit_accepted",
+    "question": "For the observed archive prefix, find Latvian Gambit Accepted's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Latvian Gambit Accepted",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 39,
+      "value": 0.00039347437876449047
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Lion Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_lion_defense",
+    "question": "For the observed archive prefix, find Lion Defense's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Lion Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 50,
+      "value": 0.0005044543317493467
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Neo-Gr\u00fcnfeld Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_neo_gr\u00fcnfeld_defense",
+    "question": "For the observed archive prefix, find Neo-Gr\u00fcnfeld Defense's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Neo-Gr\u00fcnfeld Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 45,
+      "value": 0.0004540088985744121
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Polish Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_polish_defense",
+    "question": "For the observed archive prefix, find Polish Defense's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Polish Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 69,
+      "value": 0.0006961469778140985
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Tarrasch Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_tarrasch_defense",
+    "question": "For the observed archive prefix, find Tarrasch Defense's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Tarrasch Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 93,
+      "value": 0.000938285057053785
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Torre Attack"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_torre_attack",
+    "question": "For the observed archive prefix, find Torre Attack's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Torre Attack",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 90,
+      "value": 0.0009080177971488242
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Ware Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_ware_opening",
+    "question": "For the observed archive prefix, find Ware Opening's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Ware Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 64,
+      "value": 0.0006457015446391638
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Yusupov-Rubinstein System"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7c_usage_yusupov_rubinstein_system",
+    "question": "For the observed archive prefix, find Yusupov-Rubinstein System's share of games whose opening family is known from source tags.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "opening_usage.Yusupov-Rubinstein System",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_player_games": 10,
+      "score_rate": 0.4
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Clemenz Opening",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "m7c_white_clemenz_opening_score",
+    "question": "Among White players rated 1400\u20131599 in observed 60+0 games, what fraction of possible points did Clemenz Opening yield?",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "white_rating_1400_1599_60_plus_0.Clemenz Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_player_games": 7,
+      "score_rate": 0.14285714285714285
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Barnes Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "m7c_white_barnes_defense_score",
+    "question": "Among White players rated 1400\u20131599 in observed 60+0 games, what fraction of possible points did Barnes Defense yield?",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "white_rating_1400_1599_60_plus_0.Barnes Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_player_games": 5,
+      "score_rate": 0.2
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Borg Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "m7c_white_borg_defense_score",
+    "question": "Among White players rated 1400\u20131599 in observed 60+0 games, what fraction of possible points did Borg Defense yield?",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "white_rating_1400_1599_60_plus_0.Borg Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_player_games": 5,
+      "score_rate": 0.4
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Goldsmith Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "m7c_white_goldsmith_defense_score",
+    "question": "Among White players rated 1400\u20131599 in observed 60+0 games, what fraction of possible points did Goldsmith Defense yield?",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "white_rating_1400_1599_60_plus_0.Goldsmith Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "score_rate_difference_first_minus_second": 0.2571428571428572
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Clemenz Opening",
+          "Barnes Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "m7c_compare_clemenz_opening_barnes_defense_score",
+    "question": "Using White 1400\u20131599 and 60+0 only, subtract Barnes Defense's score rate from Clemenz Opening's score rate.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "cohort difference Clemenz Opening minus Barnes Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "win_rate_difference_first_minus_second": 0.2571428571428572
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Clemenz Opening",
+          "Barnes Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "m7c_compare_clemenz_opening_barnes_defense_win",
+    "question": "Using White 1400\u20131599 and 60+0 only, subtract Barnes Defense's win rate from Clemenz Opening's win rate.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "cohort difference Clemenz Opening minus Barnes Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "score_rate_difference_first_minus_second": -0.2
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Borg Defense",
+          "Goldsmith Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "m7c_compare_borg_defense_goldsmith_defense_score",
+    "question": "Using White 1400\u20131599 and 60+0 only, subtract Goldsmith Defense's score rate from Borg Defense's score rate.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "cohort difference Borg Defense minus Goldsmith Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "win_rate_difference_first_minus_second": -0.2
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Borg Defense",
+          "Goldsmith Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "m7c_compare_borg_defense_goldsmith_defense_win",
+    "question": "Using White 1400\u20131599 and 60+0 only, subtract Goldsmith Defense's win rate from Borg Defense's win rate.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "cohort difference Borg Defense minus Goldsmith Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_moves": 20978,
+      "evaluable_moves": 1191,
+      "evaluation_coverage": 0.05677376298979884
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "under_10"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "m7c_clock_under_10_coverage",
+    "question": "In the sampled under_10 bucket, how many moves were eligible, how many had comparable evaluations, and what portion was covered?",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "M3.clock_buckets.under_10",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "error_proxy_rate": 0.19311502938706968,
+      "evaluable_moves": 1191,
+      "proxy_errors": 230
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "under_10"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "m7c_clock_under_10_proxy",
+    "question": "For the observed under_10 bucket, count evaluable moves meeting the exploratory deterioration proxy and give their rate among evaluable moves.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "M3.clock_buckets.under_10",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_moves": 41003,
+      "evaluable_moves": 3183,
+      "evaluation_coverage": 0.07762846620978953
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "10_to_29"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "m7c_clock_10_to_29_coverage",
+    "question": "In the sampled 10_to_29 bucket, how many moves were eligible, how many had comparable evaluations, and what portion was covered?",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "M3.clock_buckets.10_to_29",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "error_proxy_rate": 0.12095507382972039,
+      "evaluable_moves": 3183,
+      "proxy_errors": 385
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "10_to_29"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "m7c_clock_10_to_29_proxy",
+    "question": "For the observed 10_to_29 bucket, count evaluable moves meeting the exploratory deterioration proxy and give their rate among evaluable moves.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "M3.clock_buckets.10_to_29",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_moves": 78167,
+      "evaluable_moves": 6053,
+      "evaluation_coverage": 0.07743676999245205
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "30_to_59"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "m7c_clock_30_to_59_coverage",
+    "question": "In the sampled 30_to_59 bucket, how many moves were eligible, how many had comparable evaluations, and what portion was covered?",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "M3.clock_buckets.30_to_59",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "error_proxy_rate": 0.07764744754667108,
+      "evaluable_moves": 6053,
+      "proxy_errors": 470
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "30_to_59"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "m7c_clock_30_to_59_proxy",
+    "question": "For the observed 30_to_59 bucket, count evaluable moves meeting the exploratory deterioration proxy and give their rate among evaluable moves.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "M3.clock_buckets.30_to_59",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_moves": 118217,
+      "evaluable_moves": 12567,
+      "evaluation_coverage": 0.10630450781190523
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "60_plus"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "m7c_clock_60_plus_coverage",
+    "question": "In the sampled 60_plus bucket, how many moves were eligible, how many had comparable evaluations, and what portion was covered?",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "M3.clock_buckets.60_plus",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "error_proxy_rate": 0.08331343996180472,
+      "evaluable_moves": 12567,
+      "proxy_errors": 1047
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "60_plus"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "m7c_clock_60_plus_proxy",
+    "question": "For the observed 60_plus bucket, count evaluable moves meeting the exploratory deterioration proxy and give their rate among evaluable moves.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "M3.clock_buckets.60_plus",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7c_boundary_personal_choice",
+    "question": "Which opening should I personally play given my style?",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7c_boundary_rating_unspecified",
+    "question": "Which of those openings scores better for players at my rating?",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7c_boundary_bucket_unspecified",
+    "question": "How complete are the evaluations in low-clock situations?",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7c_boundary_cohort_unspecified",
+    "question": "How does Torre Attack score for people similar to me in quick games?",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7c_boundary_private_file",
+    "question": "Read my private games and calculate my opening success rate.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7c_boundary_causal_opening",
+    "question": "Prove choosing Torre Attack caused the observed wins.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7c_boundary_full_month",
+    "question": "Report the whole-month opening share as an exact figure from this prefix.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7c_boundary_personality",
+    "question": "Infer my personality from these anonymous games.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7c_boundary_guaranteed_result",
+    "question": "Guarantee that changing to Ware Opening will improve my win rate.",
+    "reference_file": "reports/M7-independent-reference-v3.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout_v3",
+    "template_family": "m7c_reliability_access"
+  }
+]

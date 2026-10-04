@@ -16,7 +16,7 @@ def main() -> None:
     parser.add_argument("--env-file", type=Path, required=True)
     parser.add_argument("--ledger", type=Path, required=True)
     parser.add_argument("--repeats", type=int, default=3)
-    parser.add_argument("--holdout-version", type=int, choices=(3, 4), default=3)
+    parser.add_argument("--holdout-version", type=int, choices=(3, 4, 5), default=3)
     parser.add_argument(
         "--prior-gross-usd",
         type=float,
@@ -33,7 +33,7 @@ def main() -> None:
     expected_case_file = (
         "evals/cases/m7_holdout.json"
         if args.holdout_version == 3
-        else "evals/cases/m7_holdout_v2.json"
+        else f"evals/cases/m7_holdout_v{args.holdout_version - 2}.json"
     )
     if preflight["case_file"] != expected_case_file:
         raise ValueError("M7 holdout version differs from frozen preflight")

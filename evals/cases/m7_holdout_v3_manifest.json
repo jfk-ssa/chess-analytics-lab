@@ -1,0 +1,43 @@
+{
+  "ambiguity_or_unsupported": 9,
+  "answerable": 41,
+  "case_set_sha256": "7187379fd48fb2ae72d5f934d8073ecf93df8cbab5f18febc69ed7b33c6f9f6a",
+  "cases": 50,
+  "dataset_id": "84a38a404815ed2729917d76",
+  "families_not_in_inspected_cases": [
+    "Amar Opening",
+    "Amazon Attack",
+    "Barnes Defense",
+    "Benko Gambit",
+    "Benko Gambit Accepted",
+    "Blackmar-Diemer Gambit Accepted",
+    "Blackmar-Diemer Gambit Declined",
+    "Bogo-Indian Defense",
+    "Borg Defense",
+    "Carr Defense",
+    "Clemenz Opening",
+    "Czech Defense",
+    "Danish Gambit",
+    "Duras Gambit",
+    "Goldsmith Defense",
+    "Gunderam Defense",
+    "Latvian Gambit",
+    "Latvian Gambit Accepted",
+    "Lion Defense",
+    "Neo-Gr\u00fcnfeld Defense",
+    "Polish Defense",
+    "Tarrasch Defense",
+    "Torre Attack",
+    "Ware Opening",
+    "Yusupov-Rubinstein System"
+  ],
+  "high_severity": 5,
+  "kind": "frozen M7 v3 family-disjoint opening holdout; no model response",
+  "no_model_response_scored": true,
+  "offline_oracle_failures": [],
+  "offline_oracle_passed": 50,
+  "reference_files": [
+    "reports/M3-independent-reference.json",
+    "reports/M7-independent-reference-v3.json"
+  ]
+}

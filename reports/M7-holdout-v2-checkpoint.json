@@ -1,0 +1,308 @@
+{
+  "ambiguity_or_unsupported": {
+    "attempted": 54,
+    "passed": 54
+  },
+  "answerable": {
+    "attempted": 246,
+    "passed": 224
+  },
+  "approved_cumulative_cap_usd": 0.5,
+  "attempted": 300,
+  "case_set_sha256": "5df723d37533cc6556e0a697a1dcf35ef12f463712141fc75383a98b56310643",
+  "comparison_scope": "Two typed-planner prompt conditions; no restricted-SQL baseline",
+  "cumulative_gross_accounted_usd": 0.04099408,
+  "failures": [
+    {
+      "answer_status": "needs_clarification",
+      "case_id": "m7b_usage_kings_indian_attack,_with_e6",
+      "condition": "schema_only",
+      "repeat": 1,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7b_compare_mikenas_defense_elephant_gambit_win",
+      "condition": "schema_only",
+      "repeat": 1,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7b_compare_kings_knight_opening_old_indian_defense_win",
+      "condition": "semantic_context",
+      "repeat": 1,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7b_clock_under_10_proxy",
+      "condition": "schema_only",
+      "repeat": 1,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "needs_clarification",
+      "case_id": "m7b_clock_under_10_proxy",
+      "condition": "semantic_context",
+      "repeat": 1,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7b_clock_10_to_29_proxy",
+      "condition": "schema_only",
+      "repeat": 1,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7b_clock_30_to_59_proxy",
+      "condition": "schema_only",
+      "repeat": 1,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "answered",
+      "case_id": "m7b_clock_30_to_59_proxy",
+      "condition": "semantic_context",
+      "repeat": 1,
+      "score_failures": [
+        "tool_or_filters"
+      ]
+    },
+    {
+      "answer_status": "needs_clarification",
+      "case_id": "m7b_clock_60_plus_proxy",
+      "condition": "schema_only",
+      "repeat": 1,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7b_clock_60_plus_proxy",
+      "condition": "semantic_context",
+      "repeat": 1,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7b_compare_mikenas_defense_elephant_gambit_win",
+      "condition": "schema_only",
+      "repeat": 2,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7b_clock_under_10_proxy",
+      "condition": "schema_only",
+      "repeat": 2,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7b_clock_10_to_29_proxy",
+      "condition": "schema_only",
+      "repeat": 2,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "needs_clarification",
+      "case_id": "m7b_clock_30_to_59_proxy",
+      "condition": "schema_only",
+      "repeat": 2,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7b_usage_rapport_jobava_system,_with_e6",
+      "condition": "schema_only",
+      "repeat": 3,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7b_compare_mikenas_defense_elephant_gambit_win",
+      "condition": "schema_only",
+      "repeat": 3,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "needs_clarification",
+      "case_id": "m7b_clock_under_10_proxy",
+      "condition": "schema_only",
+      "repeat": 3,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "m7b_clock_10_to_29_proxy",
+      "condition": "schema_only",
+      "repeat": 3,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "answered",
+      "case_id": "m7b_clock_10_to_29_proxy",
+      "condition": "semantic_context",
+      "repeat": 3,
+      "score_failures": [
+        "tool_or_filters"
+      ]
+    },
+    {
+      "answer_status": "answered",
+      "case_id": "m7b_clock_30_to_59_proxy",
+      "condition": "semantic_context",
+      "repeat": 3,
+      "score_failures": [
+        "tool_or_filters"
+      ]
+    },
+    {
+      "answer_status": "needs_clarification",
+      "case_id": "m7b_clock_60_plus_proxy",
+      "condition": "schema_only",
+      "repeat": 3,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "needs_clarification",
+      "case_id": "m7b_clock_60_plus_proxy",
+      "condition": "semantic_context",
+      "repeat": 3,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    }
+  ],
+  "gates": {
+    "all_high_severity_correct": true,
+    "ambiguity_at_least_90_percent_each_repeat": true,
+    "evidence_integrity_and_access_boundary": true,
+    "frozen_inputs_and_complete_repetitions": true,
+    "known_cost_within_approved_cap": true,
+    "no_unhandled_execution_failure": true,
+    "numerical_answerable_at_least_90_percent_each_repeat": false,
+    "report_totals_match_attempts": true
+  },
+  "gross_cost_usd": 0.025244195,
+  "kind": "M7 v2 typed-analyst depth checkpoint check",
+  "live_gates_passed": false,
+  "model": "gpt-6-luna",
+  "passed": 278,
+  "preflight_sha256": "ea44e23a2da21a28ebdbf226022ac607ceff56ff140b4a86e495fff719ed777d",
+  "prior_gross_accounted_usd": 0.015749885
+}

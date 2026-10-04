@@ -100,10 +100,10 @@ def prepare(
     """Quote all cells and freeze code/data/question inputs without a key."""
     config = _resolve_config(config_path, max_run_usd)
     if holdout:
-        if holdout_version not in {1, 2, 3, 4}:
+        if holdout_version not in {1, 2, 3, 4, 5}:
             raise ValueError("unknown holdout version")
-        if holdout_version in {3, 4}:
-            suffix = "" if holdout_version == 3 else "_v2"
+        if holdout_version in {3, 4, 5}:
+            suffix = "" if holdout_version == 3 else f"_v{holdout_version - 2}"
             case_file = f"evals/cases/m7_holdout{suffix}.json"
             manifest_file = f"evals/cases/m7_holdout{suffix}_manifest.json"
         else:
@@ -160,9 +160,9 @@ def prepare(
         "uv.lock",
     ]
     if holdout:
-        if holdout_version in {3, 4}:
-            suffix = "" if holdout_version == 3 else "_v2"
-            report_suffix = "" if holdout_version == 3 else "-v2"
+        if holdout_version in {3, 4, 5}:
+            suffix = "" if holdout_version == 3 else f"_v{holdout_version - 2}"
+            report_suffix = "" if holdout_version == 3 else f"-v{holdout_version - 2}"
             frozen_files.extend(
                 (
                     "reports/M3-independent-reference.json",
@@ -194,7 +194,7 @@ def prepare(
         "kind": (
             (
                 "m7_typed_planner_holdout_preflight_no_model_calls"
-                if holdout_version in {3, 4}
+                if holdout_version in {3, 4, 5}
                 else "m6_typed_planner_holdout_preflight_no_model_calls"
             )
             if holdout
@@ -206,7 +206,7 @@ def prepare(
         "selection": (
             (
                 f"50 new-family M7 holdout v{holdout_version - 2} cases; one-shot"
-                if holdout_version in {3, 4}
+                if holdout_version in {3, 4, 5}
                 else f"20 family-split holdout v{holdout_version} cases; one-shot"
             )
             if holdout
@@ -314,7 +314,7 @@ def run(
                 remaining_usd=current["max_run_usd"] - reserved + cell["reserved_cost_usd"],
             )
             scorer = (
-                (score_case_m7 if holdout_version in {3, 4} else score_case_m6_holdout)
+                (score_case_m7 if holdout_version in {3, 4, 5} else score_case_m6_holdout)
                 if holdout
                 else score_case_m6
             )
@@ -397,7 +397,7 @@ def main(argv=None):
     parser.add_argument("--env-file", type=Path, help="run mode only; reads only the named key")
     parser.add_argument("--preflight", type=Path, required=True)
     parser.add_argument("--holdout", action="store_true", help="use frozen M6/M7 family split")
-    parser.add_argument("--holdout-version", type=int, choices=(1, 2, 3, 4), default=1)
+    parser.add_argument("--holdout-version", type=int, choices=(1, 2, 3, 4, 5), default=1)
     args = parser.parse_args(argv)
     if args.mode == "prepare":
         if args.env_file is not None:

@@ -32,10 +32,10 @@ def test_clock_coverage_abstention_remains_a_scored_failure():
 def test_full_m7_preflight_fits_approved_cumulative_cap():
     if not (PROJECT / "data/analytical-current.json").exists():
         pytest.skip("optional real analytical snapshot not in clean checkout")
-    frozen = json.loads((PROJECT / "reports/M7-holdout-v2-preflight.json").read_text())
-    current = prepare(PROJECT, max_run_usd=0.5, holdout=True, holdout_version=4)
+    frozen = json.loads((PROJECT / "reports/M7-holdout-v3-preflight.json").read_text())
+    current = prepare(PROJECT, max_run_usd=0.5, holdout=True, holdout_version=5)
     for key in ("case_set_sha256", "dataset_id", "frozen_file_sha256", "cells"):
         assert current[key] == frozen[key]
     assert frozen["attempts_planned"] == 100
     assert len(frozen["cells"]) == 100
-    assert 0.015749885 + 3 * frozen["conservative_total_usd"] <= 0.5
+    assert 0.04099408 + 3 * frozen["conservative_total_usd"] <= 0.5
