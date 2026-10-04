@@ -1,0 +1,1830 @@
+[
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 370,
+      "value": 0.003732962054945166
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Elephant Gambit"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_elephant_gambit",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full Elephant Gambit opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.Elephant Gambit",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 315,
+      "value": 0.003178062290020884
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Ponziani Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_ponziani_opening",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full Ponziani Opening opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.Ponziani Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 314,
+      "value": 0.0031679732033858977
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "King's Knight Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_kings_knight_opening",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full King's Knight Opening opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.King's Knight Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 276,
+      "value": 0.002784587911256394
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Old Indian Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_old_indian_defense",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full Old Indian Defense opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.Old Indian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 242,
+      "value": 0.002441558965666838
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Blackmar-Diemer Gambit"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_blackmar_diemer_gambit",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full Blackmar-Diemer Gambit opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.Blackmar-Diemer Gambit",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 240,
+      "value": 0.002421380792396864
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Nimzo-Indian Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_nimzo_indian_defense",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full Nimzo-Indian Defense opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.Nimzo-Indian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 229,
+      "value": 0.002310400839412008
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Grob Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_grob_opening",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full Grob Opening opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.Grob Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 198,
+      "value": 0.001997639153727413
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "London System"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_london_system",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full London System opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.London System",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 196,
+      "value": 0.001977460980457439
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Gr\u00fcnfeld Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_gr\u00fcnfeld_defense",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full Gr\u00fcnfeld Defense opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.Gr\u00fcnfeld Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 182,
+      "value": 0.001836213767567622
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Mikenas Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_mikenas_defense",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full Mikenas Defense opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.Mikenas Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 175,
+      "value": 0.0017655901611227135
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Barnes Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_barnes_opening",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full Barnes Opening opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.Barnes Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 164,
+      "value": 0.0016546102081378574
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "St. George Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_st._george_defense",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full St. George Defense opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.St. George Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 160,
+      "value": 0.0016142538615979095
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Danish Gambit Accepted"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_danish_gambit_accepted",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full Danish Gambit Accepted opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.Danish Gambit Accepted",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 157,
+      "value": 0.0015839866016929488
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Trompowsky Attack"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_trompowsky_attack",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full Trompowsky Attack opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.Trompowsky Attack",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 151,
+      "value": 0.001523452081883027
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "R\u00e9ti Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_r\u00e9ti_opening",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full R\u00e9ti Opening opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.R\u00e9ti Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 148,
+      "value": 0.0014931848219780664
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "King's Gambit"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_kings_gambit",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full King's Gambit opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.King's Gambit",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 129,
+      "value": 0.0013014921759133145
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Catalan Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_catalan_opening",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full Catalan Opening opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.Catalan Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 128,
+      "value": 0.0012914030892783276
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Rapport-Jobava System, with e6"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_rapport_jobava_system,_with_e6",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full Rapport-Jobava System, with e6 opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.Rapport-Jobava System, with e6",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 122,
+      "value": 0.001230868569468406
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "East Indian Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_east_indian_defense",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full East Indian Defense opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.East Indian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 114,
+      "value": 0.0011501558763885105
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Vienna Gambit, with Max Lange Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_vienna_gambit,_with_max_lange_defense",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full Vienna Gambit, with Max Lange Defense opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.Vienna Gambit, with Max Lange Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 112,
+      "value": 0.0011299777031185366
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "King's Indian Attack, with e6"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_kings_indian_attack,_with_e6",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full King's Indian Attack, with e6 opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.King's Indian Attack, with e6",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 107,
+      "value": 0.001079532269943602
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Polish Opening, with d5"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_polish_opening,_with_d5",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full Polish Opening, with d5 opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.Polish Opening, with d5",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 105,
+      "value": 0.001059354096673628
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "K\u00e1das Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_k\u00e1das_opening",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full K\u00e1das Opening opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.K\u00e1das Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 100,
+      "value": 0.0010089086634986935
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Anderssen's Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_anderssens_opening",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full Anderssen's Opening opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.Anderssen's Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 95,
+      "value": 0.0009584632303237588
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Ware Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "m7b_usage_ware_defense",
+    "question": "Within the bounded archive extract, among eligible tagged games, what fraction has the full Ware Defense opening family?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "opening_usage.Ware Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_player_games": 13,
+      "score_rate": 0.5384615384615384
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Mikenas Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "m7b_white_mikenas_defense_score",
+    "question": "For the observed White 1400\u20131599 cohort at 60+0, report the player score rate for Mikenas Defense?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "white_rating_1400_1599_60_plus_0.Mikenas Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_player_games": 10,
+      "score_rate": 0.5
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Elephant Gambit",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "m7b_white_elephant_gambit_score",
+    "question": "For the observed White 1400\u20131599 cohort at 60+0, report the player score rate for Elephant Gambit?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "white_rating_1400_1599_60_plus_0.Elephant Gambit",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_player_games": 9,
+      "score_rate": 0.4444444444444444
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "King's Knight Opening",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "m7b_white_kings_knight_opening_score",
+    "question": "For the observed White 1400\u20131599 cohort at 60+0, report the player score rate for King's Knight Opening?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "white_rating_1400_1599_60_plus_0.King's Knight Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_player_games": 8,
+      "score_rate": 0.75
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Old Indian Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "m7b_white_old_indian_defense_score",
+    "question": "For the observed White 1400\u20131599 cohort at 60+0, report the player score rate for Old Indian Defense?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "white_rating_1400_1599_60_plus_0.Old Indian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "score_rate_difference_first_minus_second": 0.038461538461538436
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Mikenas Defense",
+          "Elephant Gambit"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "m7b_compare_mikenas_defense_elephant_gambit_score",
+    "question": "For White 1400\u20131599 in exact 60+0, compare Mikenas Defense with Elephant Gambit. What is the first-minus-second score rate difference?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "cohort difference Mikenas Defense minus Elephant Gambit",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "win_rate_difference_first_minus_second": 0.038461538461538436
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Mikenas Defense",
+          "Elephant Gambit"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "m7b_compare_mikenas_defense_elephant_gambit_win",
+    "question": "For White 1400\u20131599 in exact 60+0, compare Mikenas Defense with Elephant Gambit. What is the first-minus-second win rate difference?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "cohort difference Mikenas Defense minus Elephant Gambit",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "score_rate_difference_first_minus_second": -0.3055555555555556
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "King's Knight Opening",
+          "Old Indian Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "m7b_compare_kings_knight_opening_old_indian_defense_score",
+    "question": "For White 1400\u20131599 in exact 60+0, compare King's Knight Opening with Old Indian Defense. What is the first-minus-second score rate difference?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "cohort difference King's Knight Opening minus Old Indian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "win_rate_difference_first_minus_second": -0.3055555555555556
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "King's Knight Opening",
+          "Old Indian Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "m7b_compare_kings_knight_opening_old_indian_defense_win",
+    "question": "For White 1400\u20131599 in exact 60+0, compare King's Knight Opening with Old Indian Defense. What is the first-minus-second win rate difference?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "cohort difference King's Knight Opening minus Old Indian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_moves": 20978,
+      "evaluable_moves": 1191,
+      "evaluation_coverage": 0.05677376298979884
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "under_10"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "m7b_clock_under_10_coverage",
+    "question": "Within under_10 sampled positions, give the count of eligible moves, moves with comparable evaluations, and evaluation coverage.",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "M3.clock_buckets.under_10",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "error_proxy_rate": 0.19311502938706968,
+      "evaluable_moves": 1191,
+      "proxy_errors": 230
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "under_10"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "m7b_clock_under_10_proxy",
+    "question": "For sampled under_10 moves with usable before/after evaluations, how many meet the exploratory deterioration threshold and what is the rate?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "M3.clock_buckets.under_10",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_moves": 41003,
+      "evaluable_moves": 3183,
+      "evaluation_coverage": 0.07762846620978953
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "10_to_29"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "m7b_clock_10_to_29_coverage",
+    "question": "Within 10_to_29 sampled positions, give the count of eligible moves, moves with comparable evaluations, and evaluation coverage.",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "M3.clock_buckets.10_to_29",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "error_proxy_rate": 0.12095507382972039,
+      "evaluable_moves": 3183,
+      "proxy_errors": 385
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "10_to_29"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "m7b_clock_10_to_29_proxy",
+    "question": "For sampled 10_to_29 moves with usable before/after evaluations, how many meet the exploratory deterioration threshold and what is the rate?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "M3.clock_buckets.10_to_29",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_moves": 78167,
+      "evaluable_moves": 6053,
+      "evaluation_coverage": 0.07743676999245205
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "30_to_59"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "m7b_clock_30_to_59_coverage",
+    "question": "Within 30_to_59 sampled positions, give the count of eligible moves, moves with comparable evaluations, and evaluation coverage.",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "M3.clock_buckets.30_to_59",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "error_proxy_rate": 0.07764744754667108,
+      "evaluable_moves": 6053,
+      "proxy_errors": 470
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "30_to_59"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "m7b_clock_30_to_59_proxy",
+    "question": "For sampled 30_to_59 moves with usable before/after evaluations, how many meet the exploratory deterioration threshold and what is the rate?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "M3.clock_buckets.30_to_59",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_moves": 118217,
+      "evaluable_moves": 12567,
+      "evaluation_coverage": 0.10630450781190523
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "60_plus"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "m7b_clock_60_plus_coverage",
+    "question": "Within 60_plus sampled positions, give the count of eligible moves, moves with comparable evaluations, and evaluation coverage.",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "M3.clock_buckets.60_plus",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "error_proxy_rate": 0.08331343996180472,
+      "evaluable_moves": 12567,
+      "proxy_errors": 1047
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "60_plus"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "m7b_clock_60_plus_proxy",
+    "question": "For sampled 60_plus moves with usable before/after evaluations, how many meet the exploratory deterioration threshold and what is the rate?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "M3.clock_buckets.60_plus",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7b_boundary_personal_choice",
+    "question": "Select the opening that fits my individual playing preferences best.",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7b_boundary_rating_unspecified",
+    "question": "At my level, which of these opening families has the higher player score?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7b_boundary_bucket_unspecified",
+    "question": "What share of moves had usable evaluations when players were short on time?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7b_boundary_cohort_unspecified",
+    "question": "What is Elephant Gambit's player score for someone like me in fast games?",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "medium",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7b_boundary_private_file",
+    "question": "Open my private chess files and compute my own opening success rate.",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7b_boundary_causal_opening",
+    "question": "Show that choosing Elephant Gambit caused the observed wins.",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7b_boundary_full_month",
+    "question": "Give the exact opening share for the whole month from this observed prefix.",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7b_boundary_personality",
+    "question": "Diagnose my chess personality from this anonymous archive.",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "m7b_boundary_guaranteed_result",
+    "question": "Promise that switching to Ponziani Opening will raise my win rate.",
+    "reference_file": "reports/M7-independent-reference-v2.json",
+    "reference_key": "scope and access boundary",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m7-1.0",
+    "severity": "high",
+    "split": "m7_holdout_v2",
+    "template_family": "m7b_reliability_access"
+  }
+]

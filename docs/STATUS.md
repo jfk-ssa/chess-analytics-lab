@@ -14,7 +14,7 @@ repository; projects 1–3 remain together. No remote repository or hosting crea
 | M4 analytics product | Done | Accepted local six-view dashboard and two reproducible memos |
 | M5 analyst/eval harness | Done | Accepted checked typed tools, fixture replay and 50-case harness; no model result |
 | M6 measured release | Done; typed-analyst release gates met | Three complete frozen v2 repetitions, 118/120 scored passes, all evidence audits and offline checks passed. See [release checkpoint](M6-RELEASE.md). |
-| M7 depth | In progress; 50-case live preflight frozen | Three 100-request repetitions fit the user-approved $0.50 cumulative gross cap conservatively. Score and audit actual responses before accepting. Provider alternatives only if inference costs rise. [Plan](M7.md). |
+| M7 depth | In progress; v1 inspected, v2 frozen | v1 has a 95/100 complete run and two stopped partial runs. The fresh v2 split reserves $0.420039635 for three repeats including prior accounted gross, under the approved $0.50 cumulative cap. [Evidence and plan](M7.md). |
 | M8 Jev | Follow-up | Fair, measured integration experiment |
 | Personalized recommender | Backlog | Outside first-release scope |
 
@@ -41,8 +41,9 @@ repository; projects 1–3 remain together. No remote repository or hosting crea
 | M6 new holdout preparation | 20 frozen cases (14 answerable, 6 ambiguity/unsupported) using eight opening families absent from M5 usage cases; raw-PGN cohort reference for two new families; separate M6 2.1 scorer | All 20 deterministic checked-tool answers matched independent references offline before live calls; 40 request hashes and 24 file hashes frozen. Conservative [preflight](../reports/M6-holdout-preflight.json) quote $0.0503635 at the documented Luna rates. |
 | M6 actual family-split holdout | Three authorized repetitions of the same frozen 40-cell preflight; 72/120 planned requests attempted, all raw failures retained | First complete run 39/40: 27/28 answerable, 12/12 ambiguity/unsupported, 6/6 high-severity. Repeat 2 stopped at 10 (9 scored passes); repeat 3 stopped at 22 (20 scored passes). Gross total $0.0060692 below the $0.10 cumulative cap. Evidence integrity passed for all 70 completed answers; two attempts failed closed. **No repeatable release performance claim.** [Runs and censored cells](../reports/M6-holdout-variability.json). |
 | M6 v2 measured release | Explicit unique-structured-chunk recovery and exact compare-opening wrapper normalization, both logged; new eight-family case split and raw-PGN cohort reference | 20/20 deterministic checked-tool/reference checks; 43/43 offline tests with optional dbt/dashboard extras; three complete 40-cell live repetitions: 40/40, 38/40, 40/40. Answerable 82/84; ambiguity/unsupported 36/36; high-severity 18/18; evidence integrity 120/120. Gross $0.009968525 under approved $0.10 cap. Two safe but incorrect abstentions retained. [Checkpoint](M6-RELEASE.md). |
-| M7 first offline slice | Explicit prompt guidance for answerable clock evaluation coverage; 12 new development paraphrases and negative controls from the independent raw-PGN tally | Checked-tool/oracle replay 12/12: 8 answerable, 1 clarification, 3 unsupported. No M7 model response or larger holdout yet. [M7 plan and evidence](M7.md). |
-| M7 larger holdout preflight | 50 new cases: 41 answerable, 9 clarification/unsupported, 5 high-severity; 25 opening families absent from inspected M5/M6 cases; new raw-PGN cohort reference | 50/50 checked-tool/oracle answers match independent references. Frozen [100-request preflight](../reports/M7-holdout-preflight.json) reserves $0.13475275 per run or $0.40425825 for three, under approved $0.50 cumulative cap. No M7 model response yet. |
+| M7 first offline slice | Explicit prompt guidance for answerable clock evaluation coverage; 12 new development paraphrases and negative controls from the independent raw-PGN tally | Checked-tool/oracle replay 12/12: 8 answerable, 1 clarification, 3 unsupported. [M7 plan and evidence](M7.md). |
+| M7 v1 live development | 50-case split, 100 cells per full run | First run stopped at 49 attempts with 48/48 completed passes; one HTTP 400 had unknown cost. Retry run completed 95/100 with 100/100 evidence integrity; next retry stopped at 20 attempts with 18/19 completed passes after duplicate valid chunks. Known gross $0.014789635; accounted gross $0.015749885 including full reservation for unknown cost. [Full run](../reports/M7-holdout-v1-complete-1.json). |
+| M7 v2 fresh freeze | 50 new cases, 25 opening families absent from inspected M5/M6/M7 v1 cases; independent raw-PGN references | 50/50 checked-tool/oracle answers match. [Preflight](../reports/M7-holdout-v2-preflight.json) reserves $0.13476325 per 100-request run; three plus prior accounted gross total $0.420039635 of the approved $0.50 cap. No v2 model call at freeze. |
 
 Acceptance details: [reports/M0-M1.md](../reports/M0-M1.md), machine-readable
 [acceptance.json](../reports/acceptance.json), [foundation manifest](../reports/foundation-manifest.json).
@@ -76,8 +77,8 @@ CI workflow exists; equivalent commands ran locally. No hosted CI run is claimed
 ## Limitations and blockers
 
 The personal key was loaded only by the named live adapter after explicit
-$0.10 caps for the completed evaluation rounds. The v2 authorization is fully
-used and closed; any further live run needs a new explicit cap. Model/pricing defaults were last checked
+caps. The M7 $0.50 cumulative cap is active only for its frozen evaluation;
+the M6 caps are closed. Model/pricing defaults were last checked
 against the official model page on 2026-10-04; account credit use itself was
 not independently verified.
 Normal wheel installation (`--no-editable`) resolves the observed
@@ -114,10 +115,7 @@ snapshot still reports 3,982/121,332. No hosted CI run is claimed.
 
 ## Next concrete work — M7
 
-Strengthen clock-coverage routing without sacrificing unsupported-case
-abstention. The prompt refinement, 12-case development replay, and 50-case
-family split are offline only so far; no new model quality claim exists. Run
-the frozen evaluation under the approved cap, then audit every failure and
+Run the fresh frozen M7 v2 evaluation under the approved cumulative cap, then audit every failure and
 paired result. Study bounded source and
 engine depth only with measured coverage, runtime and disk benefit. Evaluate
 OpenRouter or CheaperInference only if inference costs rise materially. The
@@ -127,8 +125,8 @@ is follow-up; the recommender remains backlog.
 
 Every future live-cap request will include a specific recommended gross cap,
 fresh conservative preflight and prior actual-cost evidence. The user approved
-$0.50 cumulative for the frozen M7 evaluation; the exact three-repeat
-reservation is $0.40425825. This cap does not authorize any other live run.
+$0.50 cumulative for the M7 evaluation; the fresh three-repeat reservation
+plus prior accounted gross is $0.420039635. This cap does not authorize any other live run.
 
 The actual v2 model responses and two scored failures are retained. M5's 50/50
 fixture replay is harness validation, not model accuracy. The provider example

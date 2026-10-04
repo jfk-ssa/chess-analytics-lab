@@ -1,0 +1,403 @@
+{
+  "attempted": 49,
+  "high_severity_cases": 0,
+  "integrity_passed": 48,
+  "kind": "M7 holdout evidence integrity audit of actual model attempts",
+  "model_score_passed": 48,
+  "rows": [
+    {
+      "case_id": "m7_usage_vant_kruijs_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_vant_kruijs_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_nimzo_larsen_attack",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_nimzo_larsen_attack",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_englund_gambit",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_englund_gambit",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_nimzowitsch_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_nimzowitsch_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_owen_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_owen_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_slav_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_slav_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_alekhine_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 2
+    },
+    {
+      "case_id": "m7_usage_alekhine_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_bird_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_bird_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_kings_indian_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_kings_indian_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_mieses_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_mieses_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_queens_gambit_accepted",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_queens_gambit_accepted",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_dutch_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_dutch_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_english_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_english_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_three_knights_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_three_knights_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_kings_gambit_accepted",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_kings_gambit_accepted",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_englund_gambit_declined",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_englund_gambit_declined",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_center_game",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_center_game",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_kings_indian_attack",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_kings_indian_attack",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_van_geet_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_van_geet_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_rat_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_rat_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_kings_gambit_declined",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_kings_gambit_declined",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_semi_slav_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_semi_slav_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_saragossa_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_saragossa_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_polish_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_polish_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "m7_usage_rapport_jobava_system",
+      "condition": "schema_only",
+      "issues": [
+        "execution_failure"
+      ],
+      "score_passed": false,
+      "status": "failed",
+      "trace_steps": 0
+    }
+  ]
+}

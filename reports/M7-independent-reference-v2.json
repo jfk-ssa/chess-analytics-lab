@@ -1,0 +1,88 @@
+{
+  "clock_buckets_reference": "reports/M3-independent-reference.json",
+  "dataset_id": "84a38a404815ed2729917d76",
+  "families": [
+    "Elephant Gambit",
+    "Ponziani Opening",
+    "King's Knight Opening",
+    "Old Indian Defense",
+    "Blackmar-Diemer Gambit",
+    "Nimzo-Indian Defense",
+    "Grob Opening",
+    "London System",
+    "Gr\u00fcnfeld Defense",
+    "Mikenas Defense",
+    "Barnes Opening",
+    "St. George Defense",
+    "Danish Gambit Accepted",
+    "Trompowsky Attack",
+    "R\u00e9ti Opening",
+    "King's Gambit",
+    "Catalan Opening",
+    "Rapport-Jobava System, with e6",
+    "East Indian Defense",
+    "Vienna Gambit, with Max Lange Defense",
+    "King's Indian Attack, with e6",
+    "Polish Opening, with d5",
+    "K\u00e1das Opening",
+    "Anderssen's Opening",
+    "Ware Defense"
+  ],
+  "kind": "independent raw-PGN M7 v2 reference; no model responses",
+  "known_opening_games": 99117,
+  "opening_usage": {
+    "Anderssen's Opening": 100,
+    "Barnes Opening": 175,
+    "Blackmar-Diemer Gambit": 242,
+    "Catalan Opening": 129,
+    "Danish Gambit Accepted": 160,
+    "East Indian Defense": 122,
+    "Elephant Gambit": 370,
+    "Grob Opening": 229,
+    "Gr\u00fcnfeld Defense": 196,
+    "King's Gambit": 148,
+    "King's Indian Attack, with e6": 112,
+    "King's Knight Opening": 314,
+    "K\u00e1das Opening": 105,
+    "London System": 198,
+    "Mikenas Defense": 182,
+    "Nimzo-Indian Defense": 240,
+    "Old Indian Defense": 276,
+    "Polish Opening, with d5": 107,
+    "Ponziani Opening": 315,
+    "Rapport-Jobava System, with e6": 128,
+    "R\u00e9ti Opening": 151,
+    "St. George Defense": 164,
+    "Trompowsky Attack": 157,
+    "Vienna Gambit, with Max Lange Defense": 114,
+    "Ware Defense": 95
+  },
+  "source": "data/analytical/complete-2026-08-first-100000.pgn",
+  "source_snapshot_id": "6cf51473f8da6ae6b12ea5c2",
+  "white_rating_1400_1599_60_plus_0": {
+    "Elephant Gambit": {
+      "draws": 0,
+      "games": 10,
+      "losses": 5,
+      "wins": 5
+    },
+    "King's Knight Opening": {
+      "draws": 0,
+      "games": 9,
+      "losses": 5,
+      "wins": 4
+    },
+    "Mikenas Defense": {
+      "draws": 0,
+      "games": 13,
+      "losses": 6,
+      "wins": 7
+    },
+    "Old Indian Defense": {
+      "draws": 0,
+      "games": 8,
+      "losses": 2,
+      "wins": 6
+    }
+  }
+}

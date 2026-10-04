@@ -1,9 +1,11 @@
 """M6 budget and process-boundary acceptance without provider calls."""
 
 import importlib.util
+import io
 import json
 import os
 import subprocess
+import urllib.error
 from pathlib import Path
 
 import pytest
@@ -12,6 +14,7 @@ from analyst_m5.core import execute_plan, run_killable_tool
 from analyst_m5.evaluation import score_case, score_case_m6, score_case_m6_holdout
 from analyst_m5.experiment import _load_named_key, prepare, run
 from analyst_m5.provider import (
+    _default_transport,
     _extract_plan,
     _normalize_plan,
     live_answer,
@@ -20,6 +23,21 @@ from analyst_m5.provider import (
 )
 
 PROJECT = Path(__file__).resolve().parents[1]
+
+
+def test_provider_http_error_records_bounded_reason_without_key(monkeypatch):
+    body = io.BytesIO(b'{"error":{"type":"invalid_request_error","message":"temporary issue"}}')
+
+    def fail(*_args, **_kwargs):
+        raise urllib.error.HTTPError(
+            "https://api.openai.com/v1/responses", 400, "Bad Request", {}, body
+        )
+
+    monkeypatch.setattr("analyst_m5.provider.urllib.request.urlopen", fail)
+    with pytest.raises(
+        RuntimeError, match="provider HTTP 400: invalid_request_error: temporary issue"
+    ):
+        _default_transport(b"{}", "test-personal-key")
 
 
 def _personal_config(tmp_path, cap=1.0):
@@ -247,6 +265,13 @@ def test_structured_response_recovery_is_unique_and_recorded():
     assert repairs == ["action_0:wrapped_compare_openings_filters"]
     assert normalized["actions"][0]["args"] == {"filters": plan["actions"][0]["args"]}
     response["output"][0]["content"][0]["text"] = valid
+    duplicate_plan, duplicate_selection = _extract_plan(response)
+    assert duplicate_plan == plan
+    assert duplicate_selection["duplicate_valid_chunks"] == 1
+    assert duplicate_selection["discarded_invalid_chunks"] == 0
+    response["output"][0]["content"][0]["text"] = json.dumps(
+        {"status": "unsupported", "interpretation": "descriptive_observed_prefix", "actions": []}
+    )
     with pytest.raises(ValueError, match="unique"):
         _extract_plan(response)
     response["output"][0]["content"][0]["text"] = json.dumps({**raw, "extra": 1})

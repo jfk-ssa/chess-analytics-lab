@@ -16,6 +16,13 @@ def main() -> None:
     parser.add_argument("--env-file", type=Path, required=True)
     parser.add_argument("--ledger", type=Path, required=True)
     parser.add_argument("--repeats", type=int, default=3)
+    parser.add_argument("--holdout-version", type=int, choices=(3, 4), default=3)
+    parser.add_argument(
+        "--prior-gross-usd",
+        type=float,
+        default=0.0,
+        help="known previous gross plus full reservation for unknown-cost attempts",
+    )
     args = parser.parse_args()
     if args.ledger.exists():
         raise ValueError("existing ledger requires manual audit before another run")
@@ -23,11 +30,20 @@ def main() -> None:
     preflight = json.loads(preflight_bytes)
     if preflight["kind"] != "m7_typed_planner_holdout_preflight_no_model_calls":
         raise ValueError("M7 frozen preflight required")
+    expected_case_file = (
+        "evals/cases/m7_holdout.json"
+        if args.holdout_version == 3
+        else "evals/cases/m7_holdout_v2.json"
+    )
+    if preflight["case_file"] != expected_case_file:
+        raise ValueError("M7 holdout version differs from frozen preflight")
     if not 1 <= args.repeats <= 3:
         raise ValueError("one to three repetitions required")
+    if not 0 <= args.prior_gross_usd < preflight["max_run_usd"]:
+        raise ValueError("invalid cumulative prior gross amount")
     cap = preflight["max_run_usd"]
     quote = preflight["conservative_total_usd"]
-    if args.repeats * quote > cap:
+    if args.prior_gross_usd + args.repeats * quote > cap:
         raise ValueError("three-repeat conservative reservation exceeds cumulative cap")
     ledger = {
         "kind": "M7 live cumulative gross budget ledger",
@@ -35,8 +51,10 @@ def main() -> None:
         "approved_cumulative_cap_usd": cap,
         "per_repeat_conservative_reservation_usd": quote,
         "planned_repeats": args.repeats,
+        "holdout_version": args.holdout_version,
         "completed_repeats": 0,
-        "known_gross_cost_usd": 0.0,
+        "prior_gross_accounted_usd": args.prior_gross_usd,
+        "known_gross_cost_usd": args.prior_gross_usd,
         "state": "ready",
         "summaries": [],
     }
@@ -54,7 +72,7 @@ def main() -> None:
             max_run_usd=cap,
             env_file=args.env_file,
             holdout=True,
-            holdout_version=3,
+            holdout_version=args.holdout_version,
         )
         summary_path = args.ledger.parent / f"m7-holdout-run-{repeat}-summary.json"
         write_json(summary_path, summary)

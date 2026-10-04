@@ -4,6 +4,7 @@ import hashlib
 import json
 import os
 import re
+import urllib.error
 import urllib.request
 import uuid
 from pathlib import Path
@@ -144,12 +145,21 @@ def _default_transport(body: bytes, key: str) -> dict:
         headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
         method="POST",
     )
-    with urllib.request.urlopen(request, timeout=30) as response:
-        return json.load(response)
+    try:
+        with urllib.request.urlopen(request, timeout=30) as response:
+            return json.load(response)
+    except urllib.error.HTTPError as exc:
+        try:
+            payload = json.loads(exc.read(8192))
+            error = payload.get("error", {})
+            detail = f"{error.get('type', 'unknown')}: {str(error.get('message', ''))[:500]}"
+        except (ValueError, AttributeError):
+            detail = "unavailable"
+        raise RuntimeError(f"provider HTTP {exc.code}: {detail}") from exc
 
 
 def _extract_plan(response: dict) -> tuple[dict, dict]:
-    """Accept one valid structured candidate; expose discarded chunks explicitly."""
+    """Accept one unambiguous structured plan; log invalid and duplicate chunks."""
     chunks = [
         part.get("text")
         for item in response.get("output", [])
@@ -195,14 +205,15 @@ def _extract_plan(response: dict) -> tuple[dict, dict]:
             )
         except (ValueError, TypeError, KeyError):
             continue
-    if len(valid) != 1:
+    if not valid or any(candidate[1] != valid[0][1] for candidate in valid[1:]):
         raise ValueError("provider returned no unique structured plan")
     index, plan, selected = valid[0]
     return plan, {
         "output_text_chunks": len(chunks),
         "selected_chunk_index": index,
         "selected_chunk_sha256": hashlib.sha256(selected.encode()).hexdigest(),
-        "discarded_invalid_chunks": len(chunks) - 1,
+        "discarded_invalid_chunks": len(chunks) - len(valid),
+        "duplicate_valid_chunks": len(valid) - 1,
     }
 
 

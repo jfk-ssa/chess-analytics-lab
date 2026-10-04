@@ -1,0 +1,43 @@
+{
+  "ambiguity_or_unsupported": 9,
+  "answerable": 41,
+  "case_set_sha256": "5df723d37533cc6556e0a697a1dcf35ef12f463712141fc75383a98b56310643",
+  "cases": 50,
+  "dataset_id": "84a38a404815ed2729917d76",
+  "families_not_in_inspected_cases": [
+    "Elephant Gambit",
+    "Ponziani Opening",
+    "King's Knight Opening",
+    "Old Indian Defense",
+    "Blackmar-Diemer Gambit",
+    "Nimzo-Indian Defense",
+    "Grob Opening",
+    "London System",
+    "Gr\u00fcnfeld Defense",
+    "Mikenas Defense",
+    "Barnes Opening",
+    "St. George Defense",
+    "Danish Gambit Accepted",
+    "Trompowsky Attack",
+    "R\u00e9ti Opening",
+    "King's Gambit",
+    "Catalan Opening",
+    "Rapport-Jobava System, with e6",
+    "East Indian Defense",
+    "Vienna Gambit, with Max Lange Defense",
+    "King's Indian Attack, with e6",
+    "Polish Opening, with d5",
+    "K\u00e1das Opening",
+    "Anderssen's Opening",
+    "Ware Defense"
+  ],
+  "high_severity": 5,
+  "kind": "frozen M7 v2 family-disjoint opening holdout; no model response",
+  "no_model_response_scored": true,
+  "offline_oracle_failures": [],
+  "offline_oracle_passed": 50,
+  "reference_files": [
+    "reports/M3-independent-reference.json",
+    "reports/M7-independent-reference-v2.json"
+  ]
+}
