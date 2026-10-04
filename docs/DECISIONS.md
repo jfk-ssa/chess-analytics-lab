@@ -247,3 +247,25 @@ mandatory: an account credit balance is not a run budget, and gross API cost
 is recorded even if credit covers it. The live command can load only the named
 key from `work/.env` without sourcing other variables or shell code. Keep
 `--config` for later model/pricing overrides. No request has occurred yet.
+
+## 2026-10-03 — First actual M6 development pilot
+
+The user chose a $0.10 gross-spend cap; the account's stated $9 credit did not
+set the cap. The named personal key in ignored `work/.env` was loaded for the
+live run without printing or committing it. Four prompt revisions were frozen
+separately. The first three stopped after an unsupported extra tool argument,
+invented filter keys, and a title-case color value, respectively. Their actual
+responses and failures were retained. The final 24-cell run completed with
+zero execution exceptions and 16/24 frozen-scorer passes. Across all 32 API
+requests the gross recorded cost was $0.0046302. This is not an untouched
+holdout or a repeatability result.
+
+Do not adjust the frozen 16/24 result after inspection. Two proxy answers used
+an equivalent checked tool and produced the expected numbers, but failed the
+strict tool-choice rubric; discuss this discrepancy alongside, not in place
+of, the original score. Multi-step comparison and unsupported-status handling
+also failed. The 90% numerical and ambiguity gates are unmet, so M6 remains
+in progress and the analyst stays experimental. A later release evaluation
+requires development fixes, an unseen family-based split and manual review of
+analytical failures. See `reports/M6-live-pilot.json` for response and cost
+evidence and `reports/M6-live-preflight.json` for final frozen requests.
