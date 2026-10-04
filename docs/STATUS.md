@@ -15,7 +15,7 @@ repository; projects 1–3 remain together. No remote repository or hosting crea
 | M5 analyst/eval harness | Done | Accepted checked typed tools, fixture replay and 50-case harness; no model result |
 | M6 measured release | Done; typed-analyst release gates met | Three complete frozen v2 repetitions, 118/120 scored passes, all evidence audits and offline checks passed. See [release checkpoint](M6-RELEASE.md). |
 | M7 depth | Done; December Sol v12 gate accepted | Three complete frozen repetitions scored 50/50 each with 150/150 evidence audits, no repairs/retries, and $0.35392836 cumulative accounted gross under the approved $6 cap. Earlier failed/stopped gates remain retained. See [December checkpoint](M7-DECEMBER.md). |
-| M8 Jev | Next, queued | Fair, measured Jev/pg_jev/DuckDB integration experiment after selecting a narrow decision task |
+| M8 Jev | Research done; implementation queued | [Ranked opportunities](M8.md): question intent/boundary routing first, then answer review, evidence relevance, and cost-aware routing. Direct API first; DuckDB SQL experiment next; pg_jev optional. Fresh labels and offline baselines precede any live cap. |
 | Personalized recommender | Backlog | Outside first-release scope |
 
 ## Completed acceptance
@@ -133,10 +133,11 @@ snapshot still reports 3,982/121,332. No hosted CI run is claimed.
 Do not reuse inspected splits for an untouched quality claim. The December
 Sol new-date gate is accepted with three complete 50-case repetitions and
 **$0.353928360** cumulative accounted M7 gross. Earlier Luna failures and
-offline replays remain retained separately from live results. M8 next
-compares a narrow Jev task with direct API, DuckDB extension and pg_jev
-routes on independently labeled data, with a new preflight and recommended
-cap if live calls are warranted. Stockfish enrichment remains conditional
+offline replays remain retained separately from live results. M8 research
+ranks question intent/boundary routing first; implementation next needs new
+independent labels and fair baselines before a live preflight. The direct
+API is the first product route, with DuckDB and optional pg_jev comparisons.
+Stockfish enrichment remains conditional
 on a measured value test. Consider OpenRouter or CheaperInference only if
 inference costs rise materially. Restricted SQL and optional Airflow remain
 follow-ups; the recommender stays backlog.
