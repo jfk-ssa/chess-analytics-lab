@@ -18,7 +18,7 @@ PLAN_SCHEMA = {
     "type": "object",
     "properties": {
         "status": {"type": "string", "enum": ["answered", "needs_clarification", "unsupported"]},
-        "interpretation": {"type": "string"},
+        "interpretation": {"type": "string", "enum": ["descriptive_observed_prefix"]},
         "actions": {
             "type": "array",
             "maxItems": 4,
@@ -134,6 +134,9 @@ def quote_request(project: Path, question: str, config: dict, condition="semanti
         "(two-name array) instead of family with the same cohort keys; "
         "clock_pressure_error_proxy and evaluation_coverage {bucket}. "
         "Eligibility is built into metrics; never invent extra filter keys. "
+        "Use lowercase color values white or black, never title case. "
+        "get_dataset_coverage returns selection.selected_games, the number of games "
+        "selected for move replay including selected zero-ply games. "
         f"Dataset: {tools.dataset_id}. Available metric IDs: "
         f"{json.dumps(tools.list_metrics()['metric_ids'])}. "
         "Opening player-score filters require family, color, rating_min, "

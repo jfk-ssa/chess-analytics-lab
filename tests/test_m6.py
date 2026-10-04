@@ -77,7 +77,12 @@ def test_preflight_freezes_two_conditions_and_blocks_over_cap(tmp_path, monkeypa
     assert b"Governed metric definitions" in semantic["body"]
     assert b"Never put dataset_id in args_json" in schema["body"]
     assert b"opening_usage {family}" in schema["body"]
+    assert b"Use lowercase color values white or black" in schema["body"]
+    assert b"selection.selected_games" in schema["body"]
     assert json.loads(schema["body"])["reasoning"] == {"effort": "none"}
+    assert json.loads(schema["body"])["text"]["format"]["schema"]["properties"]["interpretation"][
+        "enum"
+    ] == ["descriptive_observed_prefix"]
     frozen_path = tmp_path / "frozen.json"
     frozen_path.write_text(json.dumps(preflight))
     monkeypatch.setenv("CHESSLAB_OPENAI_API_KEY", "test-only")
