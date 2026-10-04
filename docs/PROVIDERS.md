@@ -23,12 +23,13 @@ can change; its key-filtered catalog and settled dashboard charge are needed
 for a real quote. Its [live catalog](https://platform.cheaperinference.com/)
 displayed a GPT-6 Luna discount when checked, but that is not a guaranteed
 rate for this workload. CheaperInference is worth a controlled test when
-inference spend becomes material or a model unavailable on the direct adapter
-has a measured quality advantage.
+inference spend becomes material.
 
-The decision point is after M6's direct-provider accuracy and completion gates
-are met on a fresh holdout. In M7, if monthly spend reaches several dollars or
-cross-provider choice becomes a product requirement, run a small paired test
+The user narrowed the decision point: consider alternatives **only when costs
+rise materially**. M6's direct-provider accuracy and completion gates are met,
+but gross spend on its accepted holdout was only $0.009968525. Do not add a
+provider-routing experiment to M7 merely for model choice. If recurring spend
+eventually reaches several dollars, run a small paired test
 with the same frozen cases, model version, prompts and output schema. Record
 actual route, gross settled cost including platform fees, cache behavior,
 latency, structured-output and usage-field compatibility, failures and score.

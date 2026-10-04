@@ -3,7 +3,7 @@
 A local portfolio connecting reliable chess data, defensible analytics, and an
 evaluated AI analyst in one repository. Target recurring infrastructure cost: $0.
 
-**Current scope: M0–M6 accepted locally; M7 next.** The CLI acquires the fixed January 2013 Lichess archive,
+**Current scope: M0–M6 accepted locally; M7 in progress.** The CLI acquires the fixed January 2013 Lichess archive,
 validates and normalizes games, publishes Parquet and DuckDB snapshots, and reports
 one governed draw-rate metric. A tiny synthetic fixture runs entirely offline.
 See [status](docs/STATUS.md) for measured acceptance evidence and remaining work.
@@ -72,7 +72,7 @@ The foundation archive is historical ingestion evidence. It cannot establish
 contemporary player behavior or clock-pressure findings. Source-marked bots and
 unknown results are counted explicitly and excluded from the draw-rate denominator.
 
-**Roadmap:** M7 measured depth; use a new unseen holdout for future model claims;
+**Roadmap:** [M7 measured depth](docs/M7.md); use a new unseen holdout for future model claims;
 M8 Jev. Recommendations stay backlog.
 
 The M5 provider adapter remains disabled by default. An explicit run spending

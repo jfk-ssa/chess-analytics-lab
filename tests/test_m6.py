@@ -87,6 +87,11 @@ def test_preflight_freezes_two_conditions_and_blocks_over_cap(tmp_path, monkeypa
     assert b"opening_usage {family}" in schema["body"]
     assert b"Use lowercase color values white or black" in schema["body"]
     assert b"selection.selected_games" in schema["body"]
+    assert b"A specified clock-bucket evaluation-coverage question is answerable" in schema["body"]
+    assert (
+        b"Sparse evaluation availability does not itself make coverage unsupported"
+        in schema["body"]
+    )
     assert b"Use unsupported for private-file access" in schema["body"]
     assert b"use compare_openings" in schema["body"]
     assert b"it is fully specified" in schema["body"]

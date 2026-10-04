@@ -1,0 +1,12 @@
+{
+  "answerable": 8,
+  "case_set_sha256": "8ed3e6e13c8f16261b835f2825d021304a9f508c55dd350e06da25581d36aaf3",
+  "cases": 12,
+  "clarification": 1,
+  "dataset_id": "84a38a404815ed2729917d76",
+  "failures": [],
+  "kind": "M7 offline checked-tool/oracle development validation; no model responses",
+  "oracle_passed": 12,
+  "reference_sha256": "bdbfa5505160e00bc9d2a5211ccbb9410dc83f890cfc5be3f84488ebb73a6268",
+  "unsupported": 3
+}
