@@ -1,0 +1,488 @@
+{
+  "attempted": 120,
+  "case_set_sha256": "97ea934e63bbab1491fd91f1e565a2e343d78e548db13511bc8947f8ec97267a",
+  "cells": [
+    {
+      "case_id": "h2_usage_hungarian_opening",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_usage_hungarian_opening",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_usage_ruy_lopez",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_usage_ruy_lopez",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_usage_bishops_opening",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_usage_bishops_opening",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_usage_benoni_defense",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_usage_benoni_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_usage_horwitz_defense",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_usage_horwitz_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_usage_four_knights_game",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_usage_four_knights_game",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_usage_petrovs_defense",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_usage_petrovs_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_usage_vienna_game",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_usage_vienna_game",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_white_hungarian_opening_score",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_white_hungarian_opening_score",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_white_ruy_lopez_score",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_white_ruy_lopez_score",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_white_opening_score_difference",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_white_opening_score_difference",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_white_opening_win_difference",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_white_opening_win_difference",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_clock_10_to_29_coverage",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_clock_10_to_29_coverage",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "failed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_clock_30_to_59_coverage",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_clock_30_to_59_coverage",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "failed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_best_for_my_style",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_best_for_my_style",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_best_fast_white",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_best_fast_white",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_better_cohort_unspecified",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_better_cohort_unspecified",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_full_month_projection",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_full_month_projection",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_private_account_access",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_private_account_access",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_causal_opening",
+      "condition": "schema_only",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "h2_causal_opening",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    }
+  ],
+  "cost_known_for_every_attempt": true,
+  "cumulative_cap_respected": true,
+  "full_repetitions": 3,
+  "gross_cost_usd": 0.009968525,
+  "interpretation": "All frozen repetitions completed. Outcomes describe this small fixed case set; they do not establish statistical significance or general model accuracy.",
+  "kind": "frozen holdout repetitions; stopped runs retained",
+  "not_attempted_due_to_stops": 0,
+  "planned_attempts": 120,
+  "runs": [
+    {
+      "ambiguity_or_unsupported": {
+        "attempted": 12,
+        "passed": 12
+      },
+      "answerable": {
+        "attempted": 28,
+        "passed": 28
+      },
+      "argument_repairs": 0,
+      "attempted": 40,
+      "cache_write_tokens": 4761,
+      "cached_input_tokens": 38286,
+      "completed": 40,
+      "failures": [],
+      "gross_cost_per_passed_usd": 9.1592125e-05,
+      "gross_cost_usd": 0.0036636850000000003,
+      "high_severity": {
+        "attempted": 6,
+        "passed": 6
+      },
+      "median_latency_seconds": 2.179389187502238,
+      "not_attempted": 0,
+      "passed": 40,
+      "planned": 40,
+      "repeat": 1,
+      "unique_chunk_recoveries": 0
+    },
+    {
+      "ambiguity_or_unsupported": {
+        "attempted": 12,
+        "passed": 12
+      },
+      "answerable": {
+        "attempted": 28,
+        "passed": 26
+      },
+      "argument_repairs": 0,
+      "attempted": 40,
+      "cache_write_tokens": 239,
+      "cached_input_tokens": 42808,
+      "completed": 40,
+      "failures": [
+        {
+          "case_id": "h2_clock_10_to_29_coverage",
+          "condition": "semantic_context",
+          "error_type": null,
+          "score_failures": [
+            "status",
+            "result_values",
+            "evidence",
+            "tool_or_filters",
+            "caveats"
+          ],
+          "status": "completed"
+        },
+        {
+          "case_id": "h2_clock_30_to_59_coverage",
+          "condition": "semantic_context",
+          "error_type": null,
+          "score_failures": [
+            "status",
+            "result_values",
+            "evidence",
+            "tool_or_filters",
+            "caveats"
+          ],
+          "status": "completed"
+        }
+      ],
+      "gross_cost_per_passed_usd": 8.199092105263158e-05,
+      "gross_cost_usd": 0.003115655,
+      "high_severity": {
+        "attempted": 6,
+        "passed": 6
+      },
+      "median_latency_seconds": 1.8566751459984516,
+      "not_attempted": 0,
+      "passed": 38,
+      "planned": 40,
+      "repeat": 2,
+      "unique_chunk_recoveries": 0
+    },
+    {
+      "ambiguity_or_unsupported": {
+        "attempted": 12,
+        "passed": 12
+      },
+      "answerable": {
+        "attempted": 28,
+        "passed": 28
+      },
+      "argument_repairs": 0,
+      "attempted": 40,
+      "cache_write_tokens": 161,
+      "cached_input_tokens": 42886,
+      "completed": 40,
+      "failures": [],
+      "gross_cost_per_passed_usd": 7.9729625e-05,
+      "gross_cost_usd": 0.003189185,
+      "high_severity": {
+        "attempted": 6,
+        "passed": 6
+      },
+      "median_latency_seconds": 1.8464838749969203,
+      "not_attempted": 0,
+      "passed": 40,
+      "planned": 40,
+      "repeat": 3,
+      "unique_chunk_recoveries": 1
+    }
+  ],
+  "user_cumulative_cap_usd": 0.1
+}

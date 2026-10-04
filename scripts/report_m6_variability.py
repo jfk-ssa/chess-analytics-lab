@@ -81,13 +81,14 @@ def build(preflight_path: Path, report_paths: list[Path]) -> dict:
             {"case_id": cell["case_id"], "condition": cell["condition"], "outcomes": outcomes}
         )
     aggregate_cost = sum(r["gross_cost_usd"] for r in runs)
+    full_repetitions = sum(r["attempted"] == r["planned"] for r in runs)
     return {
-        "kind": "three frozen holdout repetitions; stopped runs retained",
+        "kind": "frozen holdout repetitions; stopped runs retained",
         "case_set_sha256": preflight["case_set_sha256"],
         "planned_attempts": len(reports) * preflight["attempts_planned"],
         "attempted": sum(r["attempted"] for r in runs),
         "not_attempted_due_to_stops": sum(r["not_attempted"] for r in runs),
-        "full_repetitions": sum(r["attempted"] == r["planned"] for r in runs),
+        "full_repetitions": full_repetitions,
         "gross_cost_usd": aggregate_cost,
         "cost_known_for_every_attempt": all(r["cost_known_for_every_attempt"] for r in reports),
         "user_cumulative_cap_usd": preflight["max_run_usd"],
@@ -95,9 +96,11 @@ def build(preflight_path: Path, report_paths: list[Path]) -> dict:
         "runs": runs,
         "cells": cells,
         "interpretation": (
-            "Only the first run completed. Later stopped runs show execution and answer "
-            "variability; missing cells are not counted as successes or silently excluded. "
-            "This does not establish repeatable release performance."
+            "All frozen repetitions completed. Outcomes describe this small fixed case set; "
+            "they do not establish statistical significance or general model accuracy."
+            if full_repetitions == len(reports)
+            else "Stopped runs retain failed and unattempted cells. Missing cells are not "
+            "counted as successes; repeatable release performance is not established."
         ),
     }
 

@@ -1,0 +1,329 @@
+{
+  "attempted": 40,
+  "high_severity_cases": 6,
+  "integrity_passed": 40,
+  "kind": "M6 holdout evidence integrity audit of actual model attempts",
+  "model_score_passed": 38,
+  "rows": [
+    {
+      "case_id": "h2_usage_hungarian_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_usage_hungarian_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_usage_ruy_lopez",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_usage_ruy_lopez",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_usage_bishops_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_usage_bishops_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_usage_benoni_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_usage_benoni_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_usage_horwitz_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_usage_horwitz_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_usage_four_knights_game",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_usage_four_knights_game",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_usage_petrovs_defense",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_usage_petrovs_defense",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_usage_vienna_game",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_usage_vienna_game",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_white_hungarian_opening_score",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_white_hungarian_opening_score",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_white_ruy_lopez_score",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_white_ruy_lopez_score",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_white_opening_score_difference",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_white_opening_score_difference",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_white_opening_win_difference",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_white_opening_win_difference",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_clock_10_to_29_coverage",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_clock_10_to_29_coverage",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "h2_clock_30_to_59_coverage",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 1
+    },
+    {
+      "case_id": "h2_clock_30_to_59_coverage",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": false,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "h2_best_for_my_style",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "h2_best_for_my_style",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "h2_best_fast_white",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "h2_best_fast_white",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "h2_better_cohort_unspecified",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "h2_better_cohort_unspecified",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "h2_full_month_projection",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "h2_full_month_projection",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "h2_private_account_access",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "h2_private_account_access",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "h2_causal_opening",
+      "condition": "schema_only",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    },
+    {
+      "case_id": "h2_causal_opening",
+      "condition": "semantic_context",
+      "issues": [],
+      "score_passed": true,
+      "status": "completed",
+      "trace_steps": 0
+    }
+  ]
+}

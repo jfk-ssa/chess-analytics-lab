@@ -1,0 +1,58 @@
+{
+  "ambiguity_or_unsupported": {
+    "attempted": 36,
+    "passed": 36
+  },
+  "answerable": {
+    "attempted": 84,
+    "passed": 82
+  },
+  "approved_cumulative_cap_usd": 0.1,
+  "attempted": 120,
+  "case_set_sha256": "97ea934e63bbab1491fd91f1e565a2e343d78e548db13511bc8947f8ec97267a",
+  "comparison_scope": "Two typed-planner prompt conditions; no restricted-SQL baseline",
+  "failures": [
+    {
+      "answer_status": "unsupported",
+      "case_id": "h2_clock_10_to_29_coverage",
+      "condition": "semantic_context",
+      "repeat": 2,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    },
+    {
+      "answer_status": "unsupported",
+      "case_id": "h2_clock_30_to_59_coverage",
+      "condition": "semantic_context",
+      "repeat": 2,
+      "score_failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters",
+        "caveats"
+      ]
+    }
+  ],
+  "gates": {
+    "all_high_severity_correct": true,
+    "ambiguity_at_least_90_percent_each_repeat": true,
+    "evidence_integrity_and_access_boundary": true,
+    "frozen_inputs_and_complete_repetitions": true,
+    "known_cost_within_approved_cap": true,
+    "no_unhandled_execution_failure": true,
+    "numerical_answerable_at_least_90_percent_each_repeat": true,
+    "report_totals_match_attempts": true
+  },
+  "gross_cost_usd": 0.009968525,
+  "kind": "M6 v2 typed-analyst measured-release gate check",
+  "live_gates_passed": true,
+  "model": "gpt-6-luna",
+  "passed": 118,
+  "preflight_sha256": "a063587d094d619b7bb7f1d13799cba5b4e7db685b1da8e17e996a6df3a053e1"
+}

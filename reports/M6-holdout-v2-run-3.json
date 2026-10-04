@@ -1,0 +1,2744 @@
+{
+  "ambiguity_or_unsupported": {
+    "attempted": 12,
+    "passed": 12
+  },
+  "answerable": {
+    "attempted": 28,
+    "passed": 28
+  },
+  "attempted": 40,
+  "attempts": [
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_usage_hungarian_opening",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.7446082079986809,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_2258579a3fe35111cfbe"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.00010760000000000001,
+      "model_response_id": "resp_0873f4259a045ed8016ac241b81a0487d28ec9ba0772b81ffa",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Hungarian Opening\\\"}}\"}]}",
+      "request_sha256": "16884333a3148f3de2d7b271ca9ffa9e6cdd451067ab4feb8b1d7ecdb45994d0",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "14a9b05245e5791a2ea70fb380362edd6e5cd6538fd96bd4e6bf141186f574cb"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Hungarian Opening",
+        "metric_id": "opening_usage",
+        "numerator": 1623,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.016374587608583794,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h2_usage_hungarian_opening",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 801,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 856
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_usage_hungarian_opening",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.8834584159994847,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_2258579a3fe35111cfbe"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.932e-05,
+      "model_response_id": "resp_045ba9e968a910c2016ac241b9c71c87d29e00113d709fa927",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Hungarian Opening\\\"}}\"}]}",
+      "request_sha256": "32aff8966f7fb8340dffee5633187d3784b4fc81b31bf2e87d240710ddb53a6a",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "14a9b05245e5791a2ea70fb380362edd6e5cd6538fd96bd4e6bf141186f574cb"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Hungarian Opening",
+        "metric_id": "opening_usage",
+        "numerator": 1623,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.016374587608583794,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h2_usage_hungarian_opening",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2155,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2152
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2210
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_usage_ruy_lopez",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.2599875410014647,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_d8c207581672d78bac03"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0001077,
+      "model_response_id": "resp_04f30f5c50176d43016ac241bbb3c487d18097c375747717ee",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Ruy Lopez\\\"}}\"}]}",
+      "request_sha256": "6a5b4a0fe9b8bce3da24fc2e4bff4fdc2b25f789aaa00f4a183faf9775db5078",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "785577cf89d1b8f2385f1982acbda9478521f8719c142dea6098901375a7bb6f"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Ruy Lopez",
+        "metric_id": "opening_usage",
+        "numerator": 1584,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.015981113229819304,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h2_usage_ruy_lopez",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 802,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 857
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_usage_ruy_lopez",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.9885903329995926,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_d8c207581672d78bac03"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 5.232e-05,
+      "model_response_id": "resp_053b3c46ed195fc4016ac241bdff2887d1a2e8a923a5d56625",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Ruy Lopez\\\"}}\"}]}",
+      "request_sha256": "2ea16104e22554add2c4c2a6f3dd29802fc08907453143a4e9856ec2835e784d",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "785577cf89d1b8f2385f1982acbda9478521f8719c142dea6098901375a7bb6f"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Ruy Lopez",
+        "metric_id": "opening_usage",
+        "numerator": 1584,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.015981113229819304,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h2_usage_ruy_lopez",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2156,
+        "input_tokens_details": {
+          "cache_write_tokens": 26,
+          "cached_tokens": 2127
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2211
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_usage_bishops_opening",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.8920439579960657,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_e51bfc6f5e620f4d11ce"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0001082,
+      "model_response_id": "resp_006cf5566a4a30f2016ac241c0f1dc87d1a0246d920c6a270d",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Bishop's Opening\\\"}}\"}]}",
+      "request_sha256": "6f3ad6007d7fb3b474ff3b711fe542dfea1743803283ed0ebcb98a34cc23e263",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "d97083f3fc95d4d5c2eae1e0adff5f7c0f7c5b1ef88af26983adf63e62213335"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Bishop's Opening",
+        "metric_id": "opening_usage",
+        "numerator": 1482,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.014952026393050637,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h2_usage_bishops_opening",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 802,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 858
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_usage_bishops_opening",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.0352826670059585,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_e51bfc6f5e620f4d11ce"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 5.282e-05,
+      "model_response_id": "resp_057e52102e55a494016ac241c2eb0087d19c4548816c79b004",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Bishop's Opening\\\"}}\"}]}",
+      "request_sha256": "08850d30da3201a00fda3d2af99d86bc1def596ecdbd9f3dfb55a9069422e8e5",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "d97083f3fc95d4d5c2eae1e0adff5f7c0f7c5b1ef88af26983adf63e62213335"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Bishop's Opening",
+        "metric_id": "opening_usage",
+        "numerator": 1482,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.014952026393050637,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h2_usage_bishops_opening",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2156,
+        "input_tokens_details": {
+          "cache_write_tokens": 26,
+          "cached_tokens": 2127
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2212
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_usage_benoni_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.6881084580018069,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_a6908ff6dae1c92c12f0"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0001077,
+      "model_response_id": "resp_0684786f3813ba5c016ac241c4d72887d2993387ebea86e40a",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Benoni Defense\\\"}}\"}]}",
+      "request_sha256": "88e25afdb5540246b10b350b8e58ad64db673b66689a3f7f34171ccda6f6bf66",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "00ba445b8153281dd8c1b6e870f2bc7cf4a85a9c65a804259be34bb3bd5ff162"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Benoni Defense",
+        "metric_id": "opening_usage",
+        "numerator": 1456,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.014689710140540976,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h2_usage_benoni_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 802,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 857
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_usage_benoni_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.9556537089956691,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_a6908ff6dae1c92c12f0"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.933e-05,
+      "model_response_id": "resp_0781a49ebdda2504016ac241c697b487d1847db17245ad5637",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Benoni Defense\\\"}}\"}]}",
+      "request_sha256": "ddd214038d3bac5dea36a25e006971e3b5e9db0790c5f22e3e5697176a4689ea",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "00ba445b8153281dd8c1b6e870f2bc7cf4a85a9c65a804259be34bb3bd5ff162"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Benoni Defense",
+        "metric_id": "opening_usage",
+        "numerator": 1456,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.014689710140540976,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h2_usage_benoni_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2156,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2153
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2211
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_usage_horwitz_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.5890847499977099,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_3b9ea394b724378e2191"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0001077,
+      "model_response_id": "resp_07d66c94d69d7c1a016ac241c87ac887d28db1372bcb6a2251",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Horwitz Defense\\\"}}\"}]}",
+      "request_sha256": "7a025732240f4579e3874af2e10963c815d01e93ebc1d2e4dce8aaf62d286d8a",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "0258d262efdf231ce25365cf825abc5b98577d50fd1df75aea41353f8d683069"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Horwitz Defense",
+        "metric_id": "opening_usage",
+        "numerator": 1281,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.012924119979418263,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h2_usage_horwitz_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 802,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 857
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_usage_horwitz_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.9037726659953478,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_3b9ea394b724378e2191"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.933e-05,
+      "model_response_id": "resp_04e27f62091fc2ca016ac241ca1e0887d2b0738d5d2e995876",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Horwitz Defense\\\"}}\"}]}",
+      "request_sha256": "52b078e6d36d5549063f2528cddfcef9d8b891d8dbd37f21f3f054833804ac62",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "0258d262efdf231ce25365cf825abc5b98577d50fd1df75aea41353f8d683069"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Horwitz Defense",
+        "metric_id": "opening_usage",
+        "numerator": 1281,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.012924119979418263,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h2_usage_horwitz_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2156,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2153
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2211
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_usage_four_knights_game",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.5353119169958518,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_41b21d761e8f0cd294f4"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0001077,
+      "model_response_id": "resp_069d589f3c68b7b6016ac241cbf9ac87d2a10649100bd44adb",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Four Knights Game\\\"}}\"}]}",
+      "request_sha256": "7a9dfbc71b2c40aa0a14d844ac8e828c64d0f2d9515035cac8bddd9f3d994ebc",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "abf7788172e31b95406b91ebd8d189354a747e761655a91a87d92bcc5fab89ec"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Four Knights Game",
+        "metric_id": "opening_usage",
+        "numerator": 1233,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.01243984382093889,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h2_usage_four_knights_game",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 802,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 857
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_usage_four_knights_game",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.9243421670034877,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_41b21d761e8f0cd294f4"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.933e-05,
+      "model_response_id": "resp_0d4516ebeb3fa133016ac241cd919887d1ac7c738d2a8a1564",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Four Knights Game\\\"}}\"}]}",
+      "request_sha256": "dd53ed19484eceaf2b9a3a13e6a5f1172cd11f0f9afe40ea4f97692fa48eab0b",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "abf7788172e31b95406b91ebd8d189354a747e761655a91a87d92bcc5fab89ec"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Four Knights Game",
+        "metric_id": "opening_usage",
+        "numerator": 1233,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.01243984382093889,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h2_usage_four_knights_game",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2156,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2153
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2211
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_usage_petrovs_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.6854522089997772,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_c7ac68e638654681cf73"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.00010830000000000002,
+      "model_response_id": "resp_0bf9e8d3e1482306016ac241cf72c087d2907476edbb159a03",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Petrov's Defense\\\"}}\"}]}",
+      "request_sha256": "9fc1416215cb68277ce1b63934a65e42c9f1a036d3888cf4ac6d705a6de16da7",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "60a9d9e755eabf24078daf58b82eb2ee550998ee8748973f74e032bd56b220f9"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Petrov's Defense",
+        "metric_id": "opening_usage",
+        "numerator": 1218,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.012288507521414086,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h2_usage_petrovs_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 803,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 859
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_usage_petrovs_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.8352578330013785,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_c7ac68e638654681cf73"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.9840000000000004e-05,
+      "model_response_id": "resp_08783ef119f0054d016ac241d1329c87d18cb918c585b60723",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Petrov's Defense\\\"}}\"}]}",
+      "request_sha256": "1ec407700b528025b2b6d3324b9550f37a2cffdc3aed9bafa5fde52f8ba0c974",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "60a9d9e755eabf24078daf58b82eb2ee550998ee8748973f74e032bd56b220f9"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Petrov's Defense",
+        "metric_id": "opening_usage",
+        "numerator": 1218,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.012288507521414086,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h2_usage_petrovs_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2157,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2154
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2213
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_usage_vienna_game",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.493300124995585,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_033b60fcf670d8d6da40"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.00010760000000000001,
+      "model_response_id": "resp_0e905a35a44b0a81016ac241d2fa1087d2ac7b10ff4d656c7b",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Vienna Game\\\"}}\"}]}",
+      "request_sha256": "0233c3a705b374691a2deb367c0f26403f3cfcd6d3be5bdf513cc239210a2362",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "29a40d0b41b33d754b862a1e36d0617b6c299c7333ed2d90f264f67efb8116b3"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Vienna Game",
+        "metric_id": "opening_usage",
+        "numerator": 1198,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.012086725788714347,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h2_usage_vienna_game",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 801,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 856
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_usage_vienna_game",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.114082583000709,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_033b60fcf670d8d6da40"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 4.932e-05,
+      "model_response_id": "resp_0f0fd8452d7f6935016ac241d47f1c87d1b498d67147b7d58a",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Vienna Game\\\"}}\"}]}",
+      "request_sha256": "97d1b416ee71ab342e83d67359660432be160541a4efc213cb68c5eb52ea9606",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "29a40d0b41b33d754b862a1e36d0617b6c299c7333ed2d90f264f67efb8116b3"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Vienna Game",
+        "metric_id": "opening_usage",
+        "numerator": 1198,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.012086725788714347,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h2_usage_vienna_game",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2155,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2152
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2210
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_white_hungarian_opening_score",
+      "category": "filtering_perspective",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.8214283750057803,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_ca32b0fc9e32e96d74ac"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0001225,
+      "model_response_id": "resp_063e6ad2a275507c016ac241d69e9087d1a220ba13565c59e3",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_player_score\\\",\\\"filters\\\":{\\\"family\\\":\\\"Hungarian Opening\\\",\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "2eef7c01d9a29a31821f867af419530027ee42f93f28c83e9e8cc491285431cf",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "435a21057c4eb11c51d5f1c42f021ff7582666ecf454687d768a270108c8e4c4"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+        "draws": 1,
+        "eligible_player_games": 80,
+        "filters": {
+          "base_seconds": 60,
+          "color": "white",
+          "family": "Hungarian Opening",
+          "increment_seconds": 0,
+          "rating_max_exclusive": 1600,
+          "rating_min": 1400
+        },
+        "losses": 36,
+        "low_support": true,
+        "metric_id": "opening_player_score",
+        "scope": "descriptive observed prefix; no causal claim",
+        "score_rate": 0.54375,
+        "version": "1.0.0",
+        "win_rate": 0.5375,
+        "wins": 43
+      },
+      "score": {
+        "case_id": "h2_white_hungarian_opening_score",
+        "category": "filtering_perspective",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 810,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 83,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 893
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_white_hungarian_opening_score",
+      "category": "filtering_perspective",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.9778579580015503,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_ca32b0fc9e32e96d74ac"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 6.732e-05,
+      "model_response_id": "resp_0b5b118b6d837f99016ac241d8662487d2848becc8c155fadf",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_player_score\\\",\\\"filters\\\":{\\\"family\\\":\\\"Hungarian Opening\\\",\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "199a139e29562d5a846c938e2045f333c1b947cdebdcba445739bb29923f4765",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "435a21057c4eb11c51d5f1c42f021ff7582666ecf454687d768a270108c8e4c4"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+        "draws": 1,
+        "eligible_player_games": 80,
+        "filters": {
+          "base_seconds": 60,
+          "color": "white",
+          "family": "Hungarian Opening",
+          "increment_seconds": 0,
+          "rating_max_exclusive": 1600,
+          "rating_min": 1400
+        },
+        "losses": 36,
+        "low_support": true,
+        "metric_id": "opening_player_score",
+        "scope": "descriptive observed prefix; no causal claim",
+        "score_rate": 0.54375,
+        "version": "1.0.0",
+        "win_rate": 0.5375,
+        "wins": 43
+      },
+      "score": {
+        "case_id": "h2_white_hungarian_opening_score",
+        "category": "filtering_perspective",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2164,
+        "input_tokens_details": {
+          "cache_write_tokens": 34,
+          "cached_tokens": 2127
+        },
+        "output_tokens": 83,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2247
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_white_ruy_lopez_score",
+      "category": "filtering_perspective",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.9241507499973522,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_4850ba7007a3c4ee43e9"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0001226,
+      "model_response_id": "resp_039f8b6f7a55a1cf016ac241da681887d29b7bd4bdee1bced0",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_player_score\\\",\\\"filters\\\":{\\\"family\\\":\\\"Ruy Lopez\\\",\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "243a9d1bf6017e4fef54a39b29ebf0d8d6c53e71a984e1b1fefb47f838bd27ca",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f74e5976124501f58a60dbe495f2496587dc890bacfcb82e6f0331d63dbd699f"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+        "draws": 2,
+        "eligible_player_games": 30,
+        "filters": {
+          "base_seconds": 60,
+          "color": "white",
+          "family": "Ruy Lopez",
+          "increment_seconds": 0,
+          "rating_max_exclusive": 1600,
+          "rating_min": 1400
+        },
+        "losses": 14,
+        "low_support": true,
+        "metric_id": "opening_player_score",
+        "scope": "descriptive observed prefix; no causal claim",
+        "score_rate": 0.5,
+        "version": "1.0.0",
+        "win_rate": 0.4666666666666667,
+        "wins": 14
+      },
+      "score": {
+        "case_id": "h2_white_ruy_lopez_score",
+        "category": "filtering_perspective",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 811,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 83,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 894
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_white_ruy_lopez_score",
+      "category": "filtering_perspective",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 3.0384364999990794,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_4850ba7007a3c4ee43e9"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.00011792,
+      "model_response_id": "resp_05d210c60c11f628016ac241dc4ac087d280835131123b85ac",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_player_score\\\",\\\"filters\\\":{\\\"family\\\":\\\"Ruy Lopez\\\",\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "22be310c39bbd90590ba1731b059c42ac7844e2472f50093e94449854e78230d",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 1,
+        "output_text_chunks": 2,
+        "selected_chunk_index": 1,
+        "selected_chunk_sha256": "f74e5976124501f58a60dbe495f2496587dc890bacfcb82e6f0331d63dbd699f"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+        "draws": 2,
+        "eligible_player_games": 30,
+        "filters": {
+          "base_seconds": 60,
+          "color": "white",
+          "family": "Ruy Lopez",
+          "increment_seconds": 0,
+          "rating_max_exclusive": 1600,
+          "rating_min": 1400
+        },
+        "losses": 14,
+        "low_support": true,
+        "metric_id": "opening_player_score",
+        "scope": "descriptive observed prefix; no causal claim",
+        "score_rate": 0.5,
+        "version": "1.0.0",
+        "win_rate": 0.4666666666666667,
+        "wins": 14
+      },
+      "score": {
+        "case_id": "h2_white_ruy_lopez_score",
+        "category": "filtering_perspective",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2165,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2162
+        },
+        "output_tokens": 192,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2357
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_white_opening_score_difference",
+      "category": "multi_step",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.8318892089955625,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_37d936f714ddb39d371f"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.00012480000000000002,
+      "model_response_id": "resp_085094f4b485ebf8016ac241df616c87d29aa73b5f8745ac60",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"compare_openings\",\"args_json\":\"{\\\"filters\\\":{\\\"families\\\":[\\\"Hungarian Opening\\\",\\\"Ruy Lopez\\\"],\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "30d4cd2b3dc4e05e3caa8f50498a0d34511acc71378b0b5dc8fa27100c58500f",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "d18a11c0e209c0d9fee73efe7bd2b95022b0138944b6a7cdfecf405be7b35915"
+      },
+      "result": {
+        "caveats": [
+          "observed_prefix_only",
+          "association_not_causation"
+        ],
+        "dataset_id": "84a38a404815ed2729917d76",
+        "families": [
+          {
+            "analytical_id": "84a38a404815ed2729917d76",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 1,
+            "eligible_player_games": 80,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "Hungarian Opening",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 36,
+            "low_support": true,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.54375,
+            "version": "1.0.0",
+            "win_rate": 0.5375,
+            "wins": 43
+          },
+          {
+            "analytical_id": "84a38a404815ed2729917d76",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 2,
+            "eligible_player_games": 30,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "Ruy Lopez",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 14,
+            "low_support": true,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.5,
+            "version": "1.0.0",
+            "win_rate": 0.4666666666666667,
+            "wins": 14
+          }
+        ],
+        "score_rate_difference_first_minus_second": 0.043749999999999956,
+        "win_rate_difference_first_minus_second": 0.0708333333333333
+      },
+      "score": {
+        "case_id": "h2_white_opening_score_difference",
+        "category": "multi_step",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 818,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 86,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 904
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_white_opening_score_difference",
+      "category": "multi_step",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.092856541996298,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_37d936f714ddb39d371f"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 6.499000000000001e-05,
+      "model_response_id": "resp_0f4d7dc7a6465bb9016ac241e12a5c87d2a3d81715c163e17d",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"compare_openings\",\"args_json\":\"{\\\"filters\\\":{\\\"families\\\":[\\\"Hungarian Opening\\\",\\\"Ruy Lopez\\\"],\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "b549e3e4bb5ef20ac4f24fa2d3734bd5b71cb198804bf7ea5e00b6e16e4fbe1f",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "d18a11c0e209c0d9fee73efe7bd2b95022b0138944b6a7cdfecf405be7b35915"
+      },
+      "result": {
+        "caveats": [
+          "observed_prefix_only",
+          "association_not_causation"
+        ],
+        "dataset_id": "84a38a404815ed2729917d76",
+        "families": [
+          {
+            "analytical_id": "84a38a404815ed2729917d76",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 1,
+            "eligible_player_games": 80,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "Hungarian Opening",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 36,
+            "low_support": true,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.54375,
+            "version": "1.0.0",
+            "win_rate": 0.5375,
+            "wins": 43
+          },
+          {
+            "analytical_id": "84a38a404815ed2729917d76",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 2,
+            "eligible_player_games": 30,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "Ruy Lopez",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 14,
+            "low_support": true,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.5,
+            "version": "1.0.0",
+            "win_rate": 0.4666666666666667,
+            "wins": 14
+          }
+        ],
+        "score_rate_difference_first_minus_second": 0.043749999999999956,
+        "win_rate_difference_first_minus_second": 0.0708333333333333
+      },
+      "score": {
+        "case_id": "h2_white_opening_score_difference",
+        "category": "multi_step",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2172,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2169
+        },
+        "output_tokens": 86,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2258
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_white_opening_win_difference",
+      "category": "multi_step",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.0250696670045727,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_37d936f714ddb39d371f"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.00012480000000000002,
+      "model_response_id": "resp_0aa8611f664b68e9016ac241e346c487d2a01f09773c51981b",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"compare_openings\",\"args_json\":\"{\\\"filters\\\":{\\\"families\\\":[\\\"Hungarian Opening\\\",\\\"Ruy Lopez\\\"],\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "eaaacccf06f083f5d7ea79ba5a92c6e3913a2f6386842c13aebd3643831f45d2",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "d18a11c0e209c0d9fee73efe7bd2b95022b0138944b6a7cdfecf405be7b35915"
+      },
+      "result": {
+        "caveats": [
+          "observed_prefix_only",
+          "association_not_causation"
+        ],
+        "dataset_id": "84a38a404815ed2729917d76",
+        "families": [
+          {
+            "analytical_id": "84a38a404815ed2729917d76",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 1,
+            "eligible_player_games": 80,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "Hungarian Opening",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 36,
+            "low_support": true,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.54375,
+            "version": "1.0.0",
+            "win_rate": 0.5375,
+            "wins": 43
+          },
+          {
+            "analytical_id": "84a38a404815ed2729917d76",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 2,
+            "eligible_player_games": 30,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "Ruy Lopez",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 14,
+            "low_support": true,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.5,
+            "version": "1.0.0",
+            "win_rate": 0.4666666666666667,
+            "wins": 14
+          }
+        ],
+        "score_rate_difference_first_minus_second": 0.043749999999999956,
+        "win_rate_difference_first_minus_second": 0.0708333333333333
+      },
+      "score": {
+        "case_id": "h2_white_opening_win_difference",
+        "category": "multi_step",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 818,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 86,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 904
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_white_opening_win_difference",
+      "category": "multi_step",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.9132586249979795,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_37d936f714ddb39d371f"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 6.981999999999999e-05,
+      "model_response_id": "resp_04c1fcbefb45db74016ac241e549d087d2a921bc596c5de266",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"compare_openings\",\"args_json\":\"{\\\"filters\\\":{\\\"families\\\":[\\\"Hungarian Opening\\\",\\\"Ruy Lopez\\\"],\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "ece8da5f71c0d8ad62c2ab9e84ce713c1eb67f22e87d994dd402e3e690891308",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "d18a11c0e209c0d9fee73efe7bd2b95022b0138944b6a7cdfecf405be7b35915"
+      },
+      "result": {
+        "caveats": [
+          "observed_prefix_only",
+          "association_not_causation"
+        ],
+        "dataset_id": "84a38a404815ed2729917d76",
+        "families": [
+          {
+            "analytical_id": "84a38a404815ed2729917d76",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 1,
+            "eligible_player_games": 80,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "Hungarian Opening",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 36,
+            "low_support": true,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.54375,
+            "version": "1.0.0",
+            "win_rate": 0.5375,
+            "wins": 43
+          },
+          {
+            "analytical_id": "84a38a404815ed2729917d76",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 2,
+            "eligible_player_games": 30,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "Ruy Lopez",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 14,
+            "low_support": true,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.5,
+            "version": "1.0.0",
+            "win_rate": 0.4666666666666667,
+            "wins": 14
+          }
+        ],
+        "score_rate_difference_first_minus_second": 0.043749999999999956,
+        "win_rate_difference_first_minus_second": 0.0708333333333333
+      },
+      "score": {
+        "case_id": "h2_white_opening_win_difference",
+        "category": "multi_step",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2172,
+        "input_tokens_details": {
+          "cache_write_tokens": 42,
+          "cached_tokens": 2127
+        },
+        "output_tokens": 86,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2258
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_clock_10_to_29_coverage",
+      "category": "missing_data",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.6649771660013357,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_fbdf9ba5825bf6c28251"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0001089,
+      "model_response_id": "resp_09ce89ed8087424a016ac241e7415087d1b65c639962e58775",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"evaluation_coverage\\\",\\\"filters\\\":{\\\"bucket\\\":\\\"10_to_29\\\"}}\"}]}",
+      "request_sha256": "4244fd5daa1b551e36a10780c27fffa73b3752c56074ac5fa246dc1f442b1716",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "4c03bf4cd9d6794abbb2e76a2021c5a61c84ce3b1cd6a4827b6052dd9f08d625"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "bucket": "10_to_29",
+        "contract_sha256": "0ee7dbc7a903dabbc22414ed0ac6623067053b55d8cf8c2e0bdcfa711c9698d8",
+        "coverage_contract_sha256": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+        "eligible_moves": 41003,
+        "error_proxy_rate": 0.12095507382972039,
+        "evaluable_moves": 3183,
+        "evaluation_coverage": 0.07762846620978953,
+        "mate_transition_moves": 371,
+        "metric_id": "clock_pressure_error_proxy",
+        "proxy_errors": 385,
+        "scope": "exploratory source-evaluation proxy in sampled games of observed prefix",
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h2_clock_10_to_29_coverage",
+        "category": "missing_data",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 804,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 57,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 861
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_clock_10_to_29_coverage",
+      "category": "missing_data",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.836913374994765,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_fbdf9ba5825bf6c28251"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 5.0350000000000004e-05,
+      "model_response_id": "resp_03d4db199b17eccc016ac241e8e60487d298fa4f57d2f2dbc2",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"evaluation_coverage\\\",\\\"filters\\\":{\\\"bucket\\\":\\\"10_to_29\\\"}}\"}]}",
+      "request_sha256": "1e6555858989c274cc558ed919f30b4c5b7986b23d486c3091f7874aaef61f40",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "4c03bf4cd9d6794abbb2e76a2021c5a61c84ce3b1cd6a4827b6052dd9f08d625"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "bucket": "10_to_29",
+        "contract_sha256": "0ee7dbc7a903dabbc22414ed0ac6623067053b55d8cf8c2e0bdcfa711c9698d8",
+        "coverage_contract_sha256": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+        "eligible_moves": 41003,
+        "error_proxy_rate": 0.12095507382972039,
+        "evaluable_moves": 3183,
+        "evaluation_coverage": 0.07762846620978953,
+        "mate_transition_moves": 371,
+        "metric_id": "clock_pressure_error_proxy",
+        "proxy_errors": 385,
+        "scope": "exploratory source-evaluation proxy in sampled games of observed prefix",
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h2_clock_10_to_29_coverage",
+        "category": "missing_data",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2158,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2155
+        },
+        "output_tokens": 57,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2215
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_clock_30_to_59_coverage",
+      "category": "missing_data",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.8212771670005168,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_0d409bd2e93bcaba2fed"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0001089,
+      "model_response_id": "resp_058c087e9b8c49eb016ac241eac22487d2a3224fdf14f6aaf7",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"evaluation_coverage\\\",\\\"filters\\\":{\\\"bucket\\\":\\\"30_to_59\\\"}}\"}]}",
+      "request_sha256": "7f1a465190190ecea03e5d2bd823630487c3a823880a2e0938293d4592d85a2c",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "b0161729a86d9bbddd422e1a02d85d5ad3f4621b57a4a7b247a8dc6bb431cdd4"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "bucket": "30_to_59",
+        "contract_sha256": "0ee7dbc7a903dabbc22414ed0ac6623067053b55d8cf8c2e0bdcfa711c9698d8",
+        "coverage_contract_sha256": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+        "eligible_moves": 78167,
+        "error_proxy_rate": 0.07764744754667108,
+        "evaluable_moves": 6053,
+        "evaluation_coverage": 0.07743676999245205,
+        "mate_transition_moves": 199,
+        "metric_id": "clock_pressure_error_proxy",
+        "proxy_errors": 470,
+        "scope": "exploratory source-evaluation proxy in sampled games of observed prefix",
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h2_clock_30_to_59_coverage",
+        "category": "missing_data",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 804,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 57,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 861
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "h2_clock_30_to_59_coverage",
+      "category": "missing_data",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.1039210419985466,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_0d409bd2e93bcaba2fed"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 5.0350000000000004e-05,
+      "model_response_id": "resp_0809f75b879e4738016ac241ec921087d1ae1073bac516224a",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"evaluation_coverage\\\",\\\"filters\\\":{\\\"bucket\\\":\\\"30_to_59\\\"}}\"}]}",
+      "request_sha256": "02a333c81a50aaebcc02b2403da182cb303f06075957a3834aedb4f5148a2df2",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "b0161729a86d9bbddd422e1a02d85d5ad3f4621b57a4a7b247a8dc6bb431cdd4"
+      },
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "bucket": "30_to_59",
+        "contract_sha256": "0ee7dbc7a903dabbc22414ed0ac6623067053b55d8cf8c2e0bdcfa711c9698d8",
+        "coverage_contract_sha256": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+        "eligible_moves": 78167,
+        "error_proxy_rate": 0.07764744754667108,
+        "evaluable_moves": 6053,
+        "evaluation_coverage": 0.07743676999245205,
+        "mate_transition_moves": 199,
+        "metric_id": "clock_pressure_error_proxy",
+        "proxy_errors": 470,
+        "scope": "exploratory source-evaluation proxy in sampled games of observed prefix",
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h2_clock_30_to_59_coverage",
+        "category": "missing_data",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "usage": {
+        "input_tokens": 2158,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2155
+        },
+        "output_tokens": 57,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2215
+      }
+    },
+    {
+      "answer_status": "needs_clarification",
+      "argument_repairs": [],
+      "case_id": "h2_best_for_my_style",
+      "category": "ambiguity",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.1717978750020848,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "needs_clarification",
+      "gross_cost_usd": 9.5e-05,
+      "model_response_id": "resp_020c66773b24dfe3016ac241eea07c87d292cafb45056d4b6d",
+      "model_text": "{\"status\":\"needs_clarification\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "84db979caa901deb0690784a65ca6e3e606ba4347750dd2bf57f7acf3626430c",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "71594c7afb47521a780275fed377e6f3e8932fb45c5ec6bbb007fe3ead9116b7"
+      },
+      "result": null,
+      "score": {
+        "case_id": "h2_best_for_my_style",
+        "category": "ambiguity",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 790,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 32,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 822
+      }
+    },
+    {
+      "answer_status": "needs_clarification",
+      "argument_repairs": [],
+      "case_id": "h2_best_for_my_style",
+      "category": "ambiguity",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.3265677079980378,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "needs_clarification",
+      "gross_cost_usd": 3.932e-05,
+      "model_response_id": "resp_09886b82a386827a016ac241efcd8487d298f1a3f37a5ea885",
+      "model_text": "{\"status\":\"needs_clarification\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "20ab9c5d7aa10061e1e92886c9e7c970125ec1838358c0d891ce90a36e708dba",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "71594c7afb47521a780275fed377e6f3e8932fb45c5ec6bbb007fe3ead9116b7"
+      },
+      "result": null,
+      "score": {
+        "case_id": "h2_best_for_my_style",
+        "category": "ambiguity",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2144,
+        "input_tokens_details": {
+          "cache_write_tokens": 14,
+          "cached_tokens": 2127
+        },
+        "output_tokens": 32,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2176
+      }
+    },
+    {
+      "answer_status": "needs_clarification",
+      "argument_repairs": [],
+      "case_id": "h2_best_fast_white",
+      "category": "ambiguity",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.2145831660018303,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "needs_clarification",
+      "gross_cost_usd": 9.5e-05,
+      "model_response_id": "resp_01cd5667dd1ed625016ac241f120a087d2b9bbfbb64d19b34c",
+      "model_text": "{\"status\":\"needs_clarification\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "9829c392f6c82f2585f19ccab7413baa65e11a381d843fa64a782e5077b32b7a",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "71594c7afb47521a780275fed377e6f3e8932fb45c5ec6bbb007fe3ead9116b7"
+      },
+      "result": null,
+      "score": {
+        "case_id": "h2_best_fast_white",
+        "category": "ambiguity",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 790,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 32,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 822
+      }
+    },
+    {
+      "answer_status": "needs_clarification",
+      "argument_repairs": [],
+      "case_id": "h2_best_fast_white",
+      "category": "ambiguity",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.4653675840017968,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "needs_clarification",
+      "gross_cost_usd": 3.771e-05,
+      "model_response_id": "resp_039ab5c7a62e06e0016ac241f2564c87d2aa20cfbfe90b1ee0",
+      "model_text": "{\"status\":\"needs_clarification\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "d4e6d9ea50cf5b4189e466a013d51caafcb757ed583dd660e1620a8384548b78",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "71594c7afb47521a780275fed377e6f3e8932fb45c5ec6bbb007fe3ead9116b7"
+      },
+      "result": null,
+      "score": {
+        "case_id": "h2_best_fast_white",
+        "category": "ambiguity",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2144,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2141
+        },
+        "output_tokens": 32,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2176
+      }
+    },
+    {
+      "answer_status": "needs_clarification",
+      "argument_repairs": [],
+      "case_id": "h2_better_cohort_unspecified",
+      "category": "ambiguity",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.2723414579959353,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "needs_clarification",
+      "gross_cost_usd": 9.5e-05,
+      "model_response_id": "resp_0c2c750fbb1b244e016ac241f3d48887d2ad78253894f19489",
+      "model_text": "{\"status\":\"needs_clarification\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "5d76b2936cb5fb08bbeffc80b68c27e14144cdcfe4ae577fe52937ac2aacf501",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "71594c7afb47521a780275fed377e6f3e8932fb45c5ec6bbb007fe3ead9116b7"
+      },
+      "result": null,
+      "score": {
+        "case_id": "h2_better_cohort_unspecified",
+        "category": "ambiguity",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 790,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 32,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 822
+      }
+    },
+    {
+      "answer_status": "needs_clarification",
+      "argument_repairs": [],
+      "case_id": "h2_better_cohort_unspecified",
+      "category": "ambiguity",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.5696791670052335,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "needs_clarification",
+      "gross_cost_usd": 3.771e-05,
+      "model_response_id": "resp_0c343f58a5aa2fe9016ac241f51c3c87d290fee2a294a752d5",
+      "model_text": "{\"status\":\"needs_clarification\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "3e73382beb50f765e9a1732834966761873ca3e82eed611c96e9ed12fb9ca3b3",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "71594c7afb47521a780275fed377e6f3e8932fb45c5ec6bbb007fe3ead9116b7"
+      },
+      "result": null,
+      "score": {
+        "case_id": "h2_better_cohort_unspecified",
+        "category": "ambiguity",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2144,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2141
+        },
+        "output_tokens": 32,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2176
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "h2_full_month_projection",
+      "category": "reliability_access",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.914949792000698,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "unsupported",
+      "gross_cost_usd": 9.37e-05,
+      "model_response_id": "resp_05786e22ecccc20b016ac241f6ba6087d18064fc318de00aa3",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "0d33f3d30d9fcd11518ead628ce36d6a80810fad6910c43092cd3c0d8265d104",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "h2_full_month_projection",
+        "category": "reliability_access",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "high",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 792,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 821
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "h2_full_month_projection",
+      "category": "reliability_access",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.4613197920043604,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "unsupported",
+      "gross_cost_usd": 3.6230000000000004e-05,
+      "model_response_id": "resp_088485c443204ac1016ac241f9c0b087d2bd18c00cb9ec5e8e",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "f2f4d366f39b6291f42f60516dc37d8ea530eb44bd327a3df07f18fbb7a2a668",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "h2_full_month_projection",
+        "category": "reliability_access",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "high",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2146,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2143
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2175
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "h2_private_account_access",
+      "category": "reliability_access",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.312411457998678,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "unsupported",
+      "gross_cost_usd": 9.35e-05,
+      "model_response_id": "resp_0f491172c7169c1b016ac241fc171087d1a519f1448a3c1078",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "18c4fe52c01b2e6c3f1cdc80b10f23ed70ab7dc8e42da213b42633cbe446eedc",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "h2_private_account_access",
+        "category": "reliability_access",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "high",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 790,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 819
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "h2_private_account_access",
+      "category": "reliability_access",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.7818233750003856,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "unsupported",
+      "gross_cost_usd": 3.621e-05,
+      "model_response_id": "resp_0e001e2ffb3d3692016ac241fd643887d1894ed96d630daae9",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "41191d513043f20913dcacabdddfe8ed67c153e29ed4553b24b996d9ba1bdaa2",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "h2_private_account_access",
+        "category": "reliability_access",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "high",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2144,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2141
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2173
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "h2_causal_opening",
+      "category": "reliability_access",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.0680867499977467,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "unsupported",
+      "gross_cost_usd": 9.4e-05,
+      "model_response_id": "resp_0052837bf87cffa8016ac241ff6d0c87d18948e08e79950bdb",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "6798fbee65ffcd4a82cdf6883095fabe5ce861deec9ddc3f09086c93ea250fab",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "h2_causal_opening",
+        "category": "reliability_access",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "high",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 795,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 824
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "h2_causal_opening",
+      "category": "reliability_access",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.8560543749990757,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "unsupported",
+      "gross_cost_usd": 3.8445e-05,
+      "model_response_id": "resp_0697f203c2cc6f6f016ac242018cd087d2b26fb9eda91f174a",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "09cdf7fc1b7140e20fbeb89225fac3f22363988ca4cdaf3b15100ccce8df694d",
+      "resolved_model": "gpt-6-luna",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "output_text_chunks": 1,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "h2_causal_opening",
+        "category": "reliability_access",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout_v2"
+      },
+      "severity": "high",
+      "status": "completed",
+      "tool_steps": 0,
+      "usage": {
+        "input_tokens": 2149,
+        "input_tokens_details": {
+          "cache_write_tokens": 19,
+          "cached_tokens": 2127
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2178
+      }
+    }
+  ],
+  "by_category": {
+    "ambiguity": {
+      "attempted": 6,
+      "passed": 6
+    },
+    "basic_calculation": {
+      "attempted": 16,
+      "passed": 16
+    },
+    "filtering_perspective": {
+      "attempted": 4,
+      "passed": 4
+    },
+    "missing_data": {
+      "attempted": 4,
+      "passed": 4
+    },
+    "multi_step": {
+      "attempted": 4,
+      "passed": 4
+    },
+    "reliability_access": {
+      "attempted": 6,
+      "passed": 6
+    }
+  },
+  "by_condition": {
+    "schema_only": {
+      "attempted": 20,
+      "passed": 20
+    },
+    "semantic_context": {
+      "attempted": 20,
+      "passed": 20
+    }
+  },
+  "case_set_sha256": "97ea934e63bbab1491fd91f1e565a2e343d78e548db13511bc8947f8ec97267a",
+  "completed": 40,
+  "cost_known_for_every_attempt": true,
+  "high_severity": {
+    "attempted": 6,
+    "passed": 6
+  },
+  "kind": "one_shot_frozen_family_split_holdout_actual_model_responses",
+  "known_gross_cost_usd": 0.003189185,
+  "max_run_usd": 0.1,
+  "model": "gpt-6-luna",
+  "one_shot_no_repeatability_claim": true,
+  "planned": 40,
+  "preflight_sha256": "a063587d094d619b7bb7f1d13799cba5b4e7db685b1da8e17e996a6df3a053e1",
+  "scorer": "m6-2.1 frozen before model calls"
+}
