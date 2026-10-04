@@ -781,3 +781,16 @@ published `jev-1.13.0` pricing is $0.042 per million input tokens and free
 output; a provisional $0.25 gross pilot recommendation must be replaced by
 an exact frozen preflight before requesting a separate M8 live cap. No Jev
 model calls or benchmark results are claimed. See [the M8 research](M8.md).
+
+## 2026-10-04 — Pin M7 baseline and isolate M8 variants within one repository
+
+Tag accepted M7 commit `f814377` as `m7-baseline`. Keep the checked-tool
+core and baseline evaluation runnable without Jev. Add each candidate Jev
+decision as an explicit, separately scored mode on frozen inputs, with one
+intervention active at a time. Use temporary branches for development as
+needed, but do not maintain independent repository forks or duplicate the
+data pipeline; that would make drift harder to separate from Jev's effect.
+Use the same scorer and log code revision, model/version, thresholds, cost,
+latency and fallback. The personal TypeSafe key belongs only in an ignored
+named local env file; API login is not proof of entitlement, and no Jev
+inference is authorized before a separate frozen M8 cap.
