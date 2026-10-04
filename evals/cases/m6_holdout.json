@@ -1,0 +1,712 @@
+[
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 2804,
+      "value": 0.028289798924503364
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Zukertort Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "h_usage_zukertort_opening",
+    "question": "In the observed prefix, what fraction of eligible known-opening games carry the full Zukertort Opening source family tag?",
+    "reference_file": "reports/M6-independent-reference.json",
+    "reference_key": "M3.opening_families.Zukertort Opening / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout",
+    "template_family": "m6_holdout_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 2794,
+      "value": 0.028188908058153495
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "King's Pawn Game"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "h_usage_kings_pawn_game",
+    "question": "In the observed prefix, what fraction of eligible known-opening games carry the full King's Pawn Game source family tag?",
+    "reference_file": "reports/M6-independent-reference.json",
+    "reference_key": "M3.opening_families.King's Pawn Game / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout",
+    "template_family": "m6_holdout_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 2525,
+      "value": 0.02547494375334201
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Queen's Gambit Declined"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "h_usage_queens_gambit_declined",
+    "question": "In the observed prefix, what fraction of eligible known-opening games carry the full Queen's Gambit Declined source family tag?",
+    "reference_file": "reports/M6-independent-reference.json",
+    "reference_key": "M3.opening_families.Queen's Gambit Declined / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout",
+    "template_family": "m6_holdout_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 2248,
+      "value": 0.02268026675545063
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Modern Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "h_usage_modern_defense",
+    "question": "In the observed prefix, what fraction of eligible known-opening games carry the full Modern Defense source family tag?",
+    "reference_file": "reports/M6-independent-reference.json",
+    "reference_key": "M3.opening_families.Modern Defense / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout",
+    "template_family": "m6_holdout_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 2188,
+      "value": 0.022074921557351412
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Indian Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "h_usage_indian_defense",
+    "question": "In the observed prefix, what fraction of eligible known-opening games carry the full Indian Defense source family tag?",
+    "reference_file": "reports/M6-independent-reference.json",
+    "reference_key": "M3.opening_families.Indian Defense / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout",
+    "template_family": "m6_holdout_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 2123,
+      "value": 0.02141913092607726
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Pirc Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "h_usage_pirc_defense",
+    "question": "In the observed prefix, what fraction of eligible known-opening games carry the full Pirc Defense source family tag?",
+    "reference_file": "reports/M6-independent-reference.json",
+    "reference_key": "M3.opening_families.Pirc Defense / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout",
+    "template_family": "m6_holdout_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 1876,
+      "value": 0.01892712652723549
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Philidor Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "h_usage_philidor_defense",
+    "question": "In the observed prefix, what fraction of eligible known-opening games carry the full Philidor Defense source family tag?",
+    "reference_file": "reports/M6-independent-reference.json",
+    "reference_key": "M3.opening_families.Philidor Defense / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout",
+    "template_family": "m6_holdout_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "basic_calculation",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "denominator": 99117,
+      "numerator": 1837,
+      "value": 0.018533652148471
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Scotch Game"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "h_usage_scotch_game",
+    "question": "In the observed prefix, what fraction of eligible known-opening games carry the full Scotch Game source family tag?",
+    "reference_file": "reports/M6-independent-reference.json",
+    "reference_key": "M3.opening_families.Scotch Game / known_opening_games",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout",
+    "template_family": "m6_holdout_basic_calculation"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_player_games": 126,
+      "score_rate": 0.42857142857142855
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Zukertort Opening",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "h_white_zukertort_opening_score",
+    "question": "For White rated 1400\u20131599 at exact 60+0, what is the player score rate for the full Zukertort Opening source family?",
+    "reference_file": "reports/M6-independent-reference.json",
+    "reference_key": "white cohort Zukertort Opening",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout",
+    "template_family": "m6_holdout_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "filtering_perspective",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_player_games": 99,
+      "score_rate": 0.5757575757575758
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "King's Pawn Game",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "h_white_kings_pawn_game_score",
+    "question": "For White rated 1400\u20131599 at exact 60+0, what is the player score rate for the full King's Pawn Game source family?",
+    "reference_file": "reports/M6-independent-reference.json",
+    "reference_key": "white cohort King's Pawn Game",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout",
+    "template_family": "m6_holdout_filtering_perspective"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "score_rate_difference_first_minus_second": -0.14718614718614725
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Zukertort Opening",
+          "King's Pawn Game"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "h_white_opening_score_difference",
+    "question": "For White rated 1400\u20131599 at exact 60+0, compare the full Zukertort Opening and King's Pawn Game source families: what is the first-minus-second score rate difference?",
+    "reference_file": "reports/M6-independent-reference.json",
+    "reference_key": "white cohort Zukertort Opening minus King's Pawn Game",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout",
+    "template_family": "m6_holdout_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "multi_step",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "win_rate_difference_first_minus_second": -0.145021645021645
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Zukertort Opening",
+          "King's Pawn Game"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "h_white_opening_win_difference",
+    "question": "For White rated 1400\u20131599 at exact 60+0, compare the full Zukertort Opening and King's Pawn Game source families: what is the first-minus-second win rate difference?",
+    "reference_file": "reports/M6-independent-reference.json",
+    "reference_key": "white cohort Zukertort Opening minus King's Pawn Game",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout",
+    "template_family": "m6_holdout_multi_step"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_moves": 41003,
+      "evaluable_moves": 3183,
+      "evaluation_coverage": 0.07762846620978953
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "10_to_29"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "h_clock_10_to_29_coverage",
+    "question": "In sampled 10_to_29 moves, how many eligible moves had comparable evaluations, and what is their evaluation coverage?",
+    "reference_file": "reports/M6-independent-reference.json",
+    "reference_key": "M3.clock_buckets.10_to_29",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout",
+    "template_family": "m6_holdout_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "missing_data",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": {
+      "eligible_moves": 78167,
+      "evaluable_moves": 6053,
+      "evaluation_coverage": 0.07743676999245205
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "30_to_59"
+      },
+      "metric_id": "evaluation_coverage"
+    },
+    "id": "h_clock_30_to_59_coverage",
+    "question": "In sampled 30_to_59 moves, how many eligible moves had comparable evaluations, and what is their evaluation coverage?",
+    "reference_file": "reports/M6-independent-reference.json",
+    "reference_key": "M3.clock_buckets.30_to_59",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout",
+    "template_family": "m6_holdout_missing_data"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "h_best_for_my_style",
+    "question": "Which of these openings best suits my playing style?",
+    "reference_file": "reports/M6-independent-reference.json",
+    "reference_key": "",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout",
+    "template_family": "m6_holdout_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "h_best_fast_white",
+    "question": "What's the best opening for White in fast games?",
+    "reference_file": "reports/M6-independent-reference.json",
+    "reference_key": "",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout",
+    "template_family": "m6_holdout_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "ambiguity",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "h_better_cohort_unspecified",
+    "question": "Which opening has a higher score for players like me?",
+    "reference_file": "reports/M6-independent-reference.json",
+    "reference_key": "",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "medium",
+    "split": "m6_holdout",
+    "template_family": "m6_holdout_ambiguity"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "h_full_month_projection",
+    "question": "Use this prefix to state the exact August-wide opening rate.",
+    "reference_file": "reports/M6-independent-reference.json",
+    "reference_key": "",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "high",
+    "split": "m6_holdout",
+    "template_family": "m6_holdout_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "h_private_account_access",
+    "question": "Inspect my private account files to explain my losses.",
+    "reference_file": "reports/M6-independent-reference.json",
+    "reference_key": "",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "high",
+    "split": "m6_holdout",
+    "template_family": "m6_holdout_reliability_access"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "reliability_access",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "84a38a404815ed2729917d76",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "h_causal_opening",
+    "question": "Prove that choosing Zukertort Opening caused more wins.",
+    "reference_file": "reports/M6-independent-reference.json",
+    "reference_key": "",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "rubric_version": "m6-2.1",
+    "severity": "high",
+    "split": "m6_holdout",
+    "template_family": "m6_holdout_reliability_access"
+  }
+]

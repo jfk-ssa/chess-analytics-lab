@@ -78,6 +78,24 @@ def score_case_m6(case: dict, answer: dict) -> dict:
     return scored
 
 
+def score_case_m6_holdout(case: dict, answer: dict) -> dict:
+    """Holdout rubric: equivalent checked clock views can support either metric."""
+    scored = score_case_m6(case, answer)
+    expected = case.get("expected_tool_args") or {}
+    trace = answer.get("evidence") or []
+    if (
+        "tool_or_filters" in scored["failures"]
+        and expected.get("metric_id") in {"clock_pressure_error_proxy", "evaluation_coverage"}
+        and trace
+        and trace[-1].get("args") == expected.get("filters")
+        and trace[-1].get("tool") == "analyze_clock_pressure"
+    ):
+        scored["failures"].remove("tool_or_filters")
+        scored["passed"] = not scored["failures"]
+    scored["rubric_version"] = "m6-2.1"
+    return scored
+
+
 def evaluate(project: Path, *, split: str = "both") -> dict:
     if split not in {"dev", "test", "both"}:
         raise ValueError("invalid evaluation split")

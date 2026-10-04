@@ -7,8 +7,8 @@ from pathlib import Path
 
 import pytest
 
-from analyst_m5.core import run_killable_tool
-from analyst_m5.evaluation import score_case, score_case_m6
+from analyst_m5.core import execute_plan, run_killable_tool
+from analyst_m5.evaluation import score_case, score_case_m6, score_case_m6_holdout
 from analyst_m5.experiment import _load_named_key, prepare, run
 from analyst_m5.provider import price_usage, quote_request
 
@@ -194,3 +194,32 @@ def test_cache_write_and_hit_costs_are_separate():
     cost, basis = price_usage(config, usage)
     assert basis == "conservative_missing_cache_breakdown"
     assert cost == pytest.approx(0.000175)
+
+
+def test_holdout_reference_and_frozen_preflight_without_model_calls(tmp_path, monkeypatch):
+    if not (PROJECT / "data/analytical-current.json").exists():
+        pytest.skip("optional real analytical snapshot not in clean checkout")
+    cases = json.loads((PROJECT / "evals/cases/m6_holdout.json").read_text())
+    assert len(cases) == 20
+    assert sum(c["expected_status"] == "answered" for c in cases) == 14
+    for case in cases:
+        plan = {
+            "status": case["expected_status"],
+            "interpretation": "descriptive_observed_prefix",
+            "actions": (
+                [{"tool": case["expected_tool"], "args": case["expected_tool_args"]}]
+                if case["expected_tool"]
+                else []
+            ),
+        }
+        answer = execute_plan(PROJECT, case["question"], plan)
+        assert score_case_m6_holdout(case, answer)["passed"], case["id"]
+    preflight = prepare(PROJECT, max_run_usd=0.10, holdout=True)
+    assert preflight["attempts_planned"] == 40
+    assert preflight["fits_cap"]
+    assert preflight["case_file"] == "evals/cases/m6_holdout.json"
+    frozen_path = tmp_path / "holdout.json"
+    frozen_path.write_text(json.dumps(preflight))
+    monkeypatch.delenv("CHESSLAB_OPENAI_API_KEY", raising=False)
+    with pytest.raises(ValueError, match="personal API key is absent"):
+        run(PROJECT, None, frozen_path, max_run_usd=0.10, holdout=True)

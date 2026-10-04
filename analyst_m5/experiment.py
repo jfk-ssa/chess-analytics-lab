@@ -9,7 +9,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-from analyst_m5.evaluation import score_case_m6
+from analyst_m5.evaluation import score_case_m6, score_case_m6_holdout
 from analyst_m5.provider import (
     KEY_ENV,
     _default_transport,
@@ -42,7 +42,7 @@ DEFAULT_CACHE_WRITE_USD_PER_MILLION = 0.125
 DEFAULT_CACHED_INPUT_USD_PER_MILLION = 0.01
 DEFAULT_MAX_OUTPUT_TOKENS = 512
 DEFAULT_PRICE_SOURCE = "https://developers.openai.com/api/docs/models/gpt-6-luna"
-DEFAULT_PRICE_CHECKED_UTC_DATE = "2026-10-03"
+DEFAULT_PRICE_CHECKED_UTC_DATE = "2026-10-04"
 
 
 def _sha(path: Path) -> str:
@@ -89,20 +89,36 @@ def _resolve_config(config_path: Path | None, max_run_usd: float | None) -> dict
     )
 
 
-def prepare(project: Path, config_path: Path | None = None, *, max_run_usd=None) -> dict:
+def prepare(
+    project: Path, config_path: Path | None = None, *, max_run_usd=None, holdout=False
+) -> dict:
     """Quote all cells and freeze code/data/question inputs without a key."""
     config = _resolve_config(config_path, max_run_usd)
-    manifest = json.loads((project / "evals/cases/m5_manifest.json").read_text())
-    cases = json.loads((project / "evals/cases/m5_dev.json").read_text())
-    test_cases = json.loads((project / "evals/cases/m5_test.json").read_text())
+    if holdout:
+        case_file = "evals/cases/m6_holdout.json"
+        manifest_file = "evals/cases/m6_holdout_manifest.json"
+        cases = json.loads((project / case_file).read_text())
+        selected = cases
+        digest_cases = cases
+    else:
+        case_file = "evals/cases/m5_dev.json"
+        manifest_file = "evals/cases/m5_manifest.json"
+        cases = json.loads((project / case_file).read_text())
+        test_cases = json.loads((project / "evals/cases/m5_test.json").read_text())
+        digest_cases = cases + test_cases
+        selected = [case for case in cases if case["id"] in PILOT_IDS]
+        if len(selected) != len(PILOT_IDS) or {c["id"] for c in selected} != set(PILOT_IDS):
+            raise ValueError("pilot case set changed")
+    manifest = json.loads((project / manifest_file).read_text())
     case_digest = hashlib.sha256(
-        json.dumps(sorted(cases + test_cases, key=lambda case: case["id"]), sort_keys=True).encode()
+        json.dumps(sorted(digest_cases, key=lambda case: case["id"]), sort_keys=True).encode()
     ).hexdigest()
     if case_digest != manifest["case_set_sha256"]:
         raise ValueError("case set hash changed")
-    selected = [case for case in cases if case["id"] in PILOT_IDS]
-    if len(selected) != len(PILOT_IDS) or {c["id"] for c in selected} != set(PILOT_IDS):
-        raise ValueError("pilot case set changed")
+    if holdout and (
+        len(selected) != manifest["cases"] or len({c["id"] for c in selected}) != len(selected)
+    ):
+        raise ValueError("holdout case count or identities changed")
     cells = []
     for case in selected:
         for condition in CONDITIONS:
@@ -125,21 +141,40 @@ def prepare(project: Path, config_path: Path | None = None, *, max_run_usd=None)
         "analyst_m5/experiment.py",
         "analytics_m3/metrics.py",
         "analytics_m4/analysis.py",
-        "evals/cases/m5_dev.json",
-        "evals/cases/m5_test.json",
-        "evals/cases/m5_manifest.json",
+        case_file,
+        manifest_file,
         "docs/METRICS.md",
         "uv.lock",
     ]
+    if holdout:
+        frozen_files.extend(
+            (
+                "reports/M3-independent-reference.json",
+                "reports/M6-independent-reference.json",
+                "scripts/reference_m6_holdout.py",
+                "scripts/build_m6_holdout.py",
+            )
+        )
+    else:
+        frozen_files.append("evals/cases/m5_test.json")
     frozen_files.extend(
         str(path.relative_to(project)) for path in sorted((project / "contracts").glob("*.json"))
     )
     return {
-        "kind": "m6_typed_planner_development_pilot_preflight_no_model_calls",
+        "kind": (
+            "m6_typed_planner_holdout_preflight_no_model_calls"
+            if holdout
+            else "m6_typed_planner_development_pilot_preflight_no_model_calls"
+        ),
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "dataset_id": manifest["dataset_id"],
         "case_set_sha256": manifest["case_set_sha256"],
-        "selection": "12 inspected development cases; not untouched holdout",
+        "selection": (
+            "20 new family-split holdout cases; one-shot"
+            if holdout
+            else "12 inspected development cases; not untouched holdout"
+        ),
+        "case_file": case_file,
         "conditions": list(CONDITIONS),
         "comparison": (
             "typed planner with versus without governed metric definitions; not SQL baseline"
@@ -169,14 +204,17 @@ def run(
     max_run_usd=None,
     env_file: Path | None = None,
     transport=None,
+    holdout=False,
 ) -> dict:
     """One attempt per frozen cell, reserving the whole run before transport."""
     preflight = json.loads(preflight_path.read_text())
     config = _resolve_config(config_path, max_run_usd)
-    current = prepare(project, config_path, max_run_usd=max_run_usd)
+    current = prepare(project, config_path, max_run_usd=max_run_usd, holdout=holdout)
     frozen_keys = (
         "dataset_id",
         "case_set_sha256",
+        "selection",
+        "case_file",
         "conditions",
         "model",
         "max_output_tokens",
@@ -200,7 +238,7 @@ def run(
         _load_named_key(env_file)
     if not os.environ.get(KEY_ENV):
         raise ValueError("explicit personal API key is absent")
-    cases = {c["id"]: c for c in json.loads((project / "evals/cases/m5_dev.json").read_text())}
+    cases = {c["id"]: c for c in json.loads((project / current["case_file"]).read_text())}
     experiment_id = uuid.uuid4().hex
     directory = project / "data/analyst_attempts" / experiment_id
     directory.mkdir(parents=True, exist_ok=False)
@@ -230,7 +268,8 @@ def run(
                 condition=cell["condition"],
                 remaining_usd=current["max_run_usd"] - reserved + cell["reserved_cost_usd"],
             )
-            record.update(status="completed", answer=answer, score=score_case_m6(case, answer))
+            scorer = score_case_m6_holdout if holdout else score_case_m6
+            record.update(status="completed", answer=answer, score=scorer(case, answer))
         except Exception as exc:
             key = os.environ.get(KEY_ENV)
             message = str(exc).replace(key, "[redacted]") if key else str(exc)
@@ -276,7 +315,11 @@ def run(
             "correct": row.get("score", {}).get("passed"),
         }
     summary = {
-        "kind": "live_development_pilot_if_attempts_nonzero",
+        "kind": (
+            "live_holdout_if_attempts_nonzero"
+            if holdout
+            else "live_development_pilot_if_attempts_nonzero"
+        ),
         "experiment_id": experiment_id,
         "attempts": len(outcomes),
         "planned": len(current["cells"]),
@@ -304,11 +347,14 @@ def main(argv=None):
     config_group.add_argument("--max-run-usd", type=float)
     parser.add_argument("--env-file", type=Path, help="run mode only; reads only the named key")
     parser.add_argument("--preflight", type=Path, required=True)
+    parser.add_argument("--holdout", action="store_true", help="use frozen M6 family split")
     args = parser.parse_args(argv)
     if args.mode == "prepare":
         if args.env_file is not None:
             parser.error("--env-file applies only to run mode")
-        result = prepare(args.project, args.config, max_run_usd=args.max_run_usd)
+        result = prepare(
+            args.project, args.config, max_run_usd=args.max_run_usd, holdout=args.holdout
+        )
         write_json(args.preflight, result)
     else:
         result = run(
@@ -317,6 +363,7 @@ def main(argv=None):
             args.preflight,
             max_run_usd=args.max_run_usd,
             env_file=args.env_file,
+            holdout=args.holdout,
         )
     print(json.dumps(result, indent=2, sort_keys=True))
 

@@ -1,0 +1,23 @@
+{
+  "ambiguity_or_unsupported": 6,
+  "answerable": 14,
+  "case_set_sha256": "d7aadbad6a7c19d58bc5dfcf70499b4f97021c9fbc6241e057848f4909a46fd6",
+  "cases": 20,
+  "dataset_id": "84a38a404815ed2729917d76",
+  "families_not_in_m5_usage_cases": [
+    "Zukertort Opening",
+    "King's Pawn Game",
+    "Queen's Gambit Declined",
+    "Modern Defense",
+    "Indian Defense",
+    "Pirc Defense",
+    "Philidor Defense",
+    "Scotch Game"
+  ],
+  "kind": "frozen unseen-family holdout; no model response",
+  "no_model_response_scored": true,
+  "reference_files": [
+    "reports/M3-independent-reference.json",
+    "reports/M6-independent-reference.json"
+  ]
+}
