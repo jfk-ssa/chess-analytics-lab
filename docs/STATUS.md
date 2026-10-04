@@ -123,6 +123,12 @@ restricted-SQL baseline remains deferred until isolation is proved. Optional
 Airflow remains deferred unless its local stack has a measured benefit. M8 Jev
 is follow-up; the recommender remains backlog.
 
+Every future live-cap request will include a specific recommended gross cap,
+fresh conservative preflight and prior actual-cost evidence. The provisional
+[M7 estimate](M7.md) recommends $0.15 for one 100-call pass or $0.45
+cumulative for three, **only if the later exact preflight fits**. These figures
+are not live-call authorization.
+
 The actual v2 model responses and two scored failures are retained. M5's 50/50
 fixture replay is harness validation, not model accuracy. The provider example
 is disabled by default; no workplace credential was used. Gross cost is reported
