@@ -82,6 +82,7 @@ def test_preflight_freezes_two_conditions_and_blocks_over_cap(tmp_path, monkeypa
     assert b"selection.selected_games" in schema["body"]
     assert b"Use unsupported for private-file access" in schema["body"]
     assert b"use compare_openings" in schema["body"]
+    assert b"it is fully specified" in schema["body"]
     assert json.loads(schema["body"])["reasoning"] == {"effort": "none"}
     assert json.loads(schema["body"])["text"]["format"]["schema"]["properties"]["interpretation"][
         "enum"
