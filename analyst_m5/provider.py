@@ -122,6 +122,12 @@ def quote_request(project: Path, question: str, config: dict, condition="semanti
         "Select at most four reviewed metric tool actions. Use only the observed bounded prefix. "
         "If essential filters are absent, request clarification. Reject causal or unsupported "
         "claims. Return tool arguments as JSON in args_json. Do not calculate numeric answers. "
+        "Exact action args: list_metrics {}; get_metric_definition {metric_id}; "
+        "get_dataset_coverage {}; query_metric {metric_id, filters, optional group_by}; "
+        "compare_openings {filters}; analyze_clock_pressure {bucket}; "
+        "compare_clock_buckets {first, second}. Never put dataset_id in args_json. "
+        "For numerical questions, use query_metric or a specialized numerical tool; "
+        "a metric definition alone is not numerical evidence. "
         f"Dataset: {tools.dataset_id}. Available metric IDs: "
         f"{json.dumps(tools.list_metrics()['metric_ids'])}. "
         "Opening player-score filters require family, color, rating_min, "
@@ -140,6 +146,7 @@ def quote_request(project: Path, question: str, config: dict, condition="semanti
         "instructions": prompt,
         "input": question,
         "max_output_tokens": config["max_output_tokens"],
+        "reasoning": {"effort": "none"},
         "store": False,
         "text": {
             "format": {

@@ -231,6 +231,16 @@ def run(
                 provider_response=captured.get("response"),
             )
         record["elapsed_seconds"] = time.monotonic() - started
+        response = captured.get("response")
+        usage = response.get("usage") if isinstance(response, dict) else None
+        if isinstance(usage, dict) and all(
+            type(usage.get(name)) is int for name in ("input_tokens", "output_tokens")
+        ):
+            record["provider_usage"] = usage
+            record["gross_cost_usd"] = (
+                usage["input_tokens"] * config["input_usd_per_million"]
+                + usage["output_tokens"] * config["output_usd_per_million"]
+            ) / 1_000_000
         write_json(directory / f"{index:02d}-{cell['case_id']}-{cell['condition']}.json", record)
         outcomes.append(record)
         # A failed/unknown-cost request may have been billed. No retry or later cell.
@@ -258,10 +268,8 @@ def run(
         "failed": sum(row["status"] == "failed" for row in outcomes),
         "scored_correct": sum(row.get("score", {}).get("passed", False) for row in outcomes),
         "reserved_usd": reserved,
-        "known_gross_cost_usd": sum(
-            row.get("answer", {}).get("provider", {}).get("gross_cost_usd", 0) for row in outcomes
-        ),
-        "cost_complete": all(row["status"] == "completed" for row in outcomes),
+        "known_gross_cost_usd": sum(row.get("gross_cost_usd", 0) for row in outcomes),
+        "cost_complete": all("gross_cost_usd" in row for row in outcomes),
         "categories": categories,
         "paired_by_case": pairs,
         "one_shot_no_repeatability_claim": True,

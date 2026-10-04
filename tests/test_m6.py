@@ -75,6 +75,8 @@ def test_preflight_freezes_two_conditions_and_blocks_over_cap(tmp_path, monkeypa
     semantic = quote_request(PROJECT, case["question"], config, "semantic_context")
     assert b"Governed metric definitions" not in schema["body"]
     assert b"Governed metric definitions" in semantic["body"]
+    assert b"Never put dataset_id in args_json" in schema["body"]
+    assert json.loads(schema["body"])["reasoning"] == {"effort": "none"}
     frozen_path = tmp_path / "frozen.json"
     frozen_path.write_text(json.dumps(preflight))
     monkeypatch.setenv("CHESSLAB_OPENAI_API_KEY", "test-only")
