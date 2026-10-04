@@ -1,0 +1,4552 @@
+{
+  "ambiguity_or_unsupported": {
+    "attempted": 9,
+    "passed": 9
+  },
+  "answerable": {
+    "attempted": 41,
+    "passed": 41
+  },
+  "attempted": 50,
+  "attempts": [
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_sicilian_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.569645916002628,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_4da329c8bacac6b75451"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0010458,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Sicilian Defense"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0a38adc45faa4b83016ac2d82da40087d19e7fb2a45e40aa64",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Sicilian Defense\\\"}}\"}]}",
+      "request_sha256": "3971f7cbdb3cfcc17964c0dcf9c785d4c0d13f6a7b2a21a61fccbc28c5ad6bba",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "8c55b09a25974fa3ddd81095c8f410e782be317a01c14640b797eeb1f3b2d096"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Sicilian Defense",
+        "metric_id": "opening_usage",
+        "numerator": 10259,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.1036587214178177,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_sicilian_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2402,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2399
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2458
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_queens_pawn_game",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.1185043750010664,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_6d9ce5e885b0fe543c7b"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.001046,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Queen's Pawn Game"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0ae2ccad9224449b016ac2d83012fc87d29b5da03a496b5ef8",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Queen's Pawn Game\\\"}}\"}]}",
+      "request_sha256": "76105758a27a92cc45669f145a762efd5565fe2e78486fb39b38d54c21df18c2",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "0f9a94b7eed72f439a368e44e0e62ee6685506a077b303d7aa2fb2790a436feb"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Queen's Pawn Game",
+        "metric_id": "opening_usage",
+        "numerator": 9349,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.09446392304661055,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_queens_pawn_game",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2403,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2400
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2459
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_french_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.2550432920033927,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_c6f570bcb356e9b51b42"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0010256,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "French Defense"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0cb7b4ada758570c016ac2d8323dd087d2994278ce6c58c629",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"French Defense\\\"}}\"}]}",
+      "request_sha256": "ae19394357c04b5b07923d1e6ba4912fcbaee93ab79b04da186bb2db732d1e3b",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "8fdde8e39d388f4ffac7c91f83a6ba1930e9e1169fbe5540139f3c4482dddf03"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "French Defense",
+        "metric_id": "opening_usage",
+        "numerator": 6206,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.06270650405682587,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_french_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2401,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2398
+        },
+        "output_tokens": 54,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2455
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_caro_kann_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.414472416996432,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_c39e59c6a9bcc72630f8"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0010562,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Caro-Kann Defense"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_049b0d60c7c0fac7016ac2d83480b887d2bea8c29a0aceea77",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Caro-Kann Defense\\\"}}\"}]}",
+      "request_sha256": "55a4220131074728a251d15a6607bfd958d3716f145d2efd940243ff112839dd",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "7267ddd46dd11601b818a76d12a283373d962221f6e8da0d420a2c8aea98cd1b"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Caro-Kann Defense",
+        "metric_id": "opening_usage",
+        "numerator": 5564,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.0562196243268094,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_caro_kann_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2404,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2401
+        },
+        "output_tokens": 57,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2461
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_scandinavian_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.0342587920022197,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_1bfe62baf6d5f974117b"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0010455999999999998,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Scandinavian Defense"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0d3ced628596baf0016ac2d836e5ec87d2b2d9a6f92cc51dc9",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Scandinavian Defense\\\"}}\"}]}",
+      "request_sha256": "d56d0718cbffaf2becc379deab9333325b71f803dfb08faedbb730c7680bf461",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "88e34ca9ac77daf98e9e5f51983014521ba3dbb6dfda862414c7dacc164433db"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Scandinavian Defense",
+        "metric_id": "opening_usage",
+        "numerator": 5455,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.055118269357071405,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_scandinavian_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2401,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2398
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2457
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_italian_game",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 3.4537546669962467,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_473b90db3acf6d0aaa37"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0011038,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Italian Game"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_01ae4b445ee790d7016ac2d839ee9887d1bd601c6373a1e063",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Italian Game\\\"}}\"}]}",
+      "request_sha256": "102b4ec74035c00378a38a7aafed6534d3348d92da2b0bf33feda62995b579d1",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "954bb1890be7b4998e87b3d5b8ecf07cb4144e4b5804ba3987a47165c5556626"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Italian Game",
+        "metric_id": "opening_usage",
+        "numerator": 3591,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.0362840889571482,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_italian_game",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2401,
+        "input_tokens_details": {
+          "cache_write_tokens": 34,
+          "cached_tokens": 2364
+        },
+        "output_tokens": 54,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2455
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_english_opening",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.3695212910024566,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_f25c7cb48bea6d1c07d0"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0010256,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "English Opening"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_006c0a224c2faa75016ac2d83c633087d2b856975a74c4815a",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"English Opening\\\"}}\"}]}",
+      "request_sha256": "f1f84ccaff25e69ed2e3d13fc6e4524fdfd0038334a4b82c418ce2c5610a001b",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "9666916a83ccd68ee05f9103f9dd837795251d5f7e4bd45cdeb6b878033998a2"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "English Opening",
+        "metric_id": "opening_usage",
+        "numerator": 3088,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.031201689417898533,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_english_opening",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2401,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2398
+        },
+        "output_tokens": 54,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2455
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_kings_pawn_game",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.888348791995668,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_2c422f19f97cae005bbf"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0010458,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "King's Pawn Game"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_07d232cd7a7e54a1016ac2d83ebaa087d29e4b728cd6c7b182",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"King's Pawn Game\\\"}}\"}]}",
+      "request_sha256": "e7a1532d06a04c6c2c0881bad4453f37ac9b7e17ce4096a88dac65385d851493",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "cd655936f435a06e3a9b5d3f82e92209ac5791e937651a0c16308da4c8a0acbf"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "King's Pawn Game",
+        "metric_id": "opening_usage",
+        "numerator": 2793,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.02822095807778193,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_kings_pawn_game",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2402,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2399
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2458
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_zukertort_opening",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.1531341250010883,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_0ce71c2fa53d6ce4f891"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0011413,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Zukertort Opening"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_024c14198c7aa0b2016ac2d8419b6887d2b1c46443ef020170",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Zukertort Opening\\\"}}\"}]}",
+      "request_sha256": "225e945f560fd0b4a656569db3219dce5d040ae8003b25556bc21fce7e15d83c",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "3b4031ea8ef842c5b05e07af778831facd6ed5b961df179c7b557b47ce7e9894"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Zukertort Opening",
+        "metric_id": "opening_usage",
+        "numerator": 2598,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.026250644141094685,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_zukertort_opening",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2404,
+        "input_tokens_details": {
+          "cache_write_tokens": 37,
+          "cached_tokens": 2364
+        },
+        "output_tokens": 57,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2461
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_queens_gambit_declined",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.0002662500046426,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_6e3652a4b86ebdf848dc"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0010664000000000001,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Queen's Gambit Declined"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_06a492559f13f3c8016ac2d843c9cc87d280aed29d668b2573",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Queen's Gambit Declined\\\"}}\"}]}",
+      "request_sha256": "1c99a8d10b9c9e5a033f5627d5ae7c12d56d2527a8408c29f59c9ff71eca3606",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "eaa1c98e5f07a8bf9cc6e2dd5449c7252ab382fdc4f44abbc287661936db38e0"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Queen's Gambit Declined",
+        "metric_id": "opening_usage",
+        "numerator": 2437,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.024623872121573423,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_queens_gambit_declined",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2405,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2402
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2463
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_modern_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.402185915998416,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_6650992c67d40088b236"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0011038,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Modern Defense"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0f4e312cc11bdc71016ac2d845e30c87d199ea75200de22c06",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Modern Defense\\\"}}\"}]}",
+      "request_sha256": "574a0c758ad62f449179a87c01824fc63e3974777ebee5834605b1e90e0d8d6b",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f44aec26b4b52410667b39ec871e0263ff8dd45ad9b10eeb568baacc7ac250dc"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Modern Defense",
+        "metric_id": "opening_usage",
+        "numerator": 2306,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.023300225323080966,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_modern_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2401,
+        "input_tokens_details": {
+          "cache_write_tokens": 34,
+          "cached_tokens": 2364
+        },
+        "output_tokens": 54,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2455
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_pirc_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.1339725830039242,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_fcd54bfc037203a10fa4"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0010358,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Pirc Defense"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_072d9cdbad410752016ac2d848317487d2a431c43f6b63d184",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Pirc Defense\\\"}}\"}]}",
+      "request_sha256": "446e4d2a8aaef58a42559a91931782812c0b3ccac66d1b35d8a14634fcec2a09",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "22caa2f8f8a0ccb63bc7205e5f54145e80da3fdff65a2432b4d8a113035ae608"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Pirc Defense",
+        "metric_id": "opening_usage",
+        "numerator": 1917,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.019369701623740767,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_pirc_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2402,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2399
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2457
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_indian_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.518148458999349,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_86f612f5c6abf3cebbd1"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0011038,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Indian Defense"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0d342a28d0ee5134016ac2d84a560087d2ad9f41de61c0fcc4",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Indian Defense\\\"}}\"}]}",
+      "request_sha256": "826cb42213fcdb9d82bb0e774ffcbea6eea213ccb4f9ad175681a289b8976e99",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "c8b18914e683ac7587206bad039a369b63e6c62c10a2103acb43f07d78a51c11"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Indian Defense",
+        "metric_id": "opening_usage",
+        "numerator": 2150,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.02172397417373117,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_indian_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2401,
+        "input_tokens_details": {
+          "cache_write_tokens": 34,
+          "cached_tokens": 2364
+        },
+        "output_tokens": 54,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2455
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_philidor_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.1529806249964167,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_5d6ef36391907c69faee"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0010358,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Philidor Defense"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_061a553d8c080a13016ac2d84cd97887d2aa5b5b6f2fef39f1",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Philidor Defense\\\"}}\"}]}",
+      "request_sha256": "0a4715d82d987a02e5317f50e27e47132976fa7aa73a794428ddfeb33d00902e",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "30f4511f5608ee3ff165e6dde00bd4eb095b9c8ab4bd22569c30274919d31181"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Philidor Defense",
+        "metric_id": "opening_usage",
+        "numerator": 1962,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.01982438945528398,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_philidor_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2402,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2399
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2457
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_scotch_game",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.1654191249981523,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_c17451a8b47e92f42f1a"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0011137999999999999,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Scotch Game"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0e16edc7bd5629ed016ac2d84f053087d2b38f20d508ef86d9",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Scotch Game\\\"}}\"}]}",
+      "request_sha256": "7cde9377913a8fdc6f01d86d4ea3639e348bd7af0824279184cda836180c40fc",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "c1687069e29746701e7cfbf1b07ac9b567ce71e53246770acc4cd95ae75a710b"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Scotch Game",
+        "metric_id": "opening_usage",
+        "numerator": 1884,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.01903626388060908,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_scotch_game",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2401,
+        "input_tokens_details": {
+          "cache_write_tokens": 34,
+          "cached_tokens": 2364
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2456
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_nimzo_larsen_attack",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.598003584003891,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_5a3b3dfe37bdb837bff4"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0010764000000000001,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Nimzo-Larsen Attack"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_04ea8aa5e843800b016ac2d851648887d2b223fc1cb3924632",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Nimzo-Larsen Attack\\\"}}\"}]}",
+      "request_sha256": "d86e43a946d01d3b730dd784d33af6552cb3e7d0a66a7e7aac65d0bd3d6d590b",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "b66014d02b33c7f06eb64dea3210d43392e8f14032b234de4dd14dca754dcd26"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Nimzo-Larsen Attack",
+        "metric_id": "opening_usage",
+        "numerator": 1871,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.018904909618163265,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_nimzo_larsen_attack",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2405,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2402
+        },
+        "output_tokens": 59,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2464
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_vant_kruijs_opening",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.231442333999439,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_47e2fdcdb30691c2b854"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0010562,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Van't Kruijs Opening"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_07132d33751ca9e4016ac2d853c90887d2a8068149f6024025",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Van't Kruijs Opening\\\"}}\"}]}",
+      "request_sha256": "c0bfa1d43d802489d97e924bb6425e7273ebddc8e48f3cc0c67e9d1313da06d0",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "3a22ff27990f054b4fabd0fe3a12abbe2e3286a579b6babb5392842bf6711e7c"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Van't Kruijs Opening",
+        "metric_id": "opening_usage",
+        "numerator": 1782,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.018005638129111136,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_vant_kruijs_opening",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2404,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2401
+        },
+        "output_tokens": 57,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2461
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_ruy_lopez",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.6039656669963733,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_9d7218d75d231bced551"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0010358,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Ruy Lopez"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0abeaaafa13d7db5016ac2d856004087d28d0c4425803ae91e",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Ruy Lopez\\\"}}\"}]}",
+      "request_sha256": "ff797c19f8a465acd9668a9550e862bae6d40b519852e9bd3387a99f8b22f0b3",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "785577cf89d1b8f2385f1982acbda9478521f8719c142dea6098901375a7bb6f"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Ruy Lopez",
+        "metric_id": "opening_usage",
+        "numerator": 1549,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.015651365579120734,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_ruy_lopez",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2402,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2399
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2457
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_hungarian_opening",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.2577434170016204,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_f0e0f6b36ddc78d97507"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0010355999999999998,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Hungarian Opening"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_04c5d1ce4747f6ea016ac2d858b0e887d2a4ed7eac4a880ca1",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Hungarian Opening\\\"}}\"}]}",
+      "request_sha256": "85756d1ecc9c4fb772fb4223e291111808c4411823efb922caba57eebce97a2c",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "14a9b05245e5791a2ea70fb380362edd6e5cd6538fd96bd4e6bf141186f574cb"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Hungarian Opening",
+        "metric_id": "opening_usage",
+        "numerator": 1585,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.016015115844355304,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_hungarian_opening",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2401,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2398
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2456
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_bishops_opening",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.094694833001995,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_570783e8d27b13b3544d"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0010458,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Bishop's Opening"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0ec1be264b199087016ac2d85aeb3487d1ba3280c3ae4f066b",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Bishop's Opening\\\"}}\"}]}",
+      "request_sha256": "ae30a2ae522b70c8d4642a1a8cbe5d94fd70326b45b80e76eb29002213c6409f",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "d97083f3fc95d4d5c2eae1e0adff5f7c0f7c5b1ef88af26983adf63e62213335"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Bishop's Opening",
+        "metric_id": "opening_usage",
+        "numerator": 1526,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.015418969576331983,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_bishops_opening",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2402,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2399
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2458
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_horwitz_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.1769451660002233,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_8553de89243dd48cff77"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0010358,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Horwitz Defense"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0f41d4cdf7a3d4ac016ac2d85cf0b087d2b101632f9f616fd8",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Horwitz Defense\\\"}}\"}]}",
+      "request_sha256": "c3e2c7487fc166af705277665a5e53bb42d390daad6334a0b7b22a50dca63f74",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "0258d262efdf231ce25365cf825abc5b98577d50fd1df75aea41353f8d683069"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Horwitz Defense",
+        "metric_id": "opening_usage",
+        "numerator": 1337,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.013509280683850499,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_horwitz_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2402,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2399
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2457
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_benoni_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.001442375003535,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_d2a28308c2d46f7e8a12"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0010358,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Benoni Defense"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0edac4369373902a016ac2d85f1aec87d2b2562375e2836dea",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Benoni Defense\\\"}}\"}]}",
+      "request_sha256": "f2f23c54fa0e7c6fb886de25a8a7e9aaccd178e3a0409cfadde9fa0b7cdeaf22",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "00ba445b8153281dd8c1b6e870f2bc7cf4a85a9c65a804259be34bb3bd5ff162"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Benoni Defense",
+        "metric_id": "opening_usage",
+        "numerator": 1409,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.014236781214319635,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_benoni_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2402,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2399
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2457
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_petrovs_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 4.017160499999591,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_7477c99b5d6861e6883c"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.001046,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Petrov's Defense"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0b14a3bb7cc2c51c016ac2d8612fb487d1a46595b7a3277faf",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Petrov's Defense\\\"}}\"}]}",
+      "request_sha256": "29e89573a1ad576ca0863beb9749cd8dc4517e55c6c744f1b61b47498ab2cda7",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "60a9d9e755eabf24078daf58b82eb2ee550998ee8748973f74e032bd56b220f9"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Petrov's Defense",
+        "metric_id": "opening_usage",
+        "numerator": 1193,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.012054279622912225,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_petrovs_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2403,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2400
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2459
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_four_knights_game",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.485233250001329,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_3959c564a6acdcc6023d"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0011163,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Four Knights Game"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0221f468dfe0e5c4016ac2d8654c5087d1b265db5342bc7d1e",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Four Knights Game\\\"}}\"}]}",
+      "request_sha256": "da440ffd7fd97ce758c8c1f2e9a24ae71df9dc6a00f0a54a7fda7e2f82b4b932",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "abf7788172e31b95406b91ebd8d189354a747e761655a91a87d92bcc5fab89ec"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Four Knights Game",
+        "metric_id": "opening_usage",
+        "numerator": 1214,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.01226646727763239,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_four_knights_game",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2402,
+        "input_tokens_details": {
+          "cache_write_tokens": 35,
+          "cached_tokens": 2364
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2457
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_usage_englund_gambit",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.158053334002034,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_3ae49ac3128dc6ad8ea8"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.001046,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Englund Gambit"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0b5a9f5de5d171c1016ac2d867a2f887d2b07bf7ec41d43f75",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Englund Gambit\\\"}}\"}]}",
+      "request_sha256": "cac8575ce3f157f4d634cf1b5f3a58100786593344facbb8c740990167ef8997",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "a6ef73204415bb219a00af84af52ac2a62893cea4878e5cb0a962929d2252e27"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "60139d9a5176e70686f84de63621fa3deb451612c25185c251495d010c530114",
+        "denominator": 98969,
+        "family": "Englund Gambit",
+        "metric_id": "opening_usage",
+        "numerator": 1325,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.013388030595438976,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_usage_englund_gambit",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2403,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2400
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2459
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_white_queens_pawn_game_score",
+      "category": "filtering_perspective",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.3836251250031637,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_cbeba59152b889a9d726"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0013274,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "family": "Queen's Pawn Game",
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              },
+              "metric_id": "opening_player_score"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0afbf172aa5edfe5016ac2d869e0b887d18c0b68b4ecd3f1c6",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_player_score\\\",\\\"filters\\\":{\\\"family\\\":\\\"Queen's Pawn Game\\\",\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "68a4cbe6e9cd8188ecdb44db1be23ca0149ce529350660e9353faa87b0c7c132",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "ac730de4a963ad5a7330c6c6e5d7063c692661414301e721aec36dd375869a3f"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+        "draws": 5,
+        "eligible_player_games": 392,
+        "filters": {
+          "base_seconds": 60,
+          "color": "white",
+          "family": "Queen's Pawn Game",
+          "increment_seconds": 0,
+          "rating_max_exclusive": 1600,
+          "rating_min": 1400
+        },
+        "losses": 183,
+        "low_support": false,
+        "metric_id": "opening_player_score",
+        "scope": "descriptive observed prefix; no causal claim",
+        "score_rate": 0.5267857142857143,
+        "version": "1.0.0",
+        "win_rate": 0.5204081632653061,
+        "wins": 204
+      },
+      "score": {
+        "case_id": "m7l_white_queens_pawn_game_score",
+        "category": "filtering_perspective",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2410,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2407
+        },
+        "output_tokens": 84,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2494
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_white_sicilian_defense_score",
+      "category": "filtering_perspective",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.1884413339939783,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_7ed881b669d50aace1fb"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0013272,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "family": "Sicilian Defense",
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              },
+              "metric_id": "opening_player_score"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_00f7b92447ce9e10016ac2d86c283887d2b65089361df5fc0d",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_player_score\\\",\\\"filters\\\":{\\\"family\\\":\\\"Sicilian Defense\\\",\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "6ad1f3161ca2ec8f64c03378b3cc3dd012f6896f094d436094b8f872ce9fff68",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "6bb7bf8a499408ad6bf7b7647070da329e4be36623af3ee40c0bb5b120343227"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+        "draws": 4,
+        "eligible_player_games": 252,
+        "filters": {
+          "base_seconds": 60,
+          "color": "white",
+          "family": "Sicilian Defense",
+          "increment_seconds": 0,
+          "rating_max_exclusive": 1600,
+          "rating_min": 1400
+        },
+        "losses": 119,
+        "low_support": false,
+        "metric_id": "opening_player_score",
+        "scope": "descriptive observed prefix; no causal claim",
+        "score_rate": 0.5198412698412699,
+        "version": "1.0.0",
+        "win_rate": 0.5119047619047619,
+        "wins": 129
+      },
+      "score": {
+        "case_id": "m7l_white_sicilian_defense_score",
+        "category": "filtering_perspective",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2409,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2406
+        },
+        "output_tokens": 84,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2493
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_white_scandinavian_defense_score",
+      "category": "filtering_perspective",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.2810425420029787,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_34961cdfdf4da6937abd"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.001327,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "family": "Scandinavian Defense",
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              },
+              "metric_id": "opening_player_score"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0a650d0546581661016ac2d86e801887d19feda07aae1fded8",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_player_score\\\",\\\"filters\\\":{\\\"family\\\":\\\"Scandinavian Defense\\\",\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "acf0ce5788870ee7ce2098db53fcc6e9241e0f98b6fc89f79effb931f54f0373",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "20601b77c383698499cd3c7a4e8552fdf2d4d9a5f2ceed95ce672af15dfe7e85"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+        "draws": 0,
+        "eligible_player_games": 232,
+        "filters": {
+          "base_seconds": 60,
+          "color": "white",
+          "family": "Scandinavian Defense",
+          "increment_seconds": 0,
+          "rating_max_exclusive": 1600,
+          "rating_min": 1400
+        },
+        "losses": 112,
+        "low_support": false,
+        "metric_id": "opening_player_score",
+        "scope": "descriptive observed prefix; no causal claim",
+        "score_rate": 0.5172413793103449,
+        "version": "1.0.0",
+        "win_rate": 0.5172413793103449,
+        "wins": 120
+      },
+      "score": {
+        "case_id": "m7l_white_scandinavian_defense_score",
+        "category": "filtering_perspective",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2408,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2405
+        },
+        "output_tokens": 84,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2492
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_white_french_defense_score",
+      "category": "filtering_perspective",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.477567875001114,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_804eacb6252ac2c21dfe"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.001307,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "family": "French Defense",
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              },
+              "metric_id": "opening_player_score"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0804c0c7c7898d3e016ac2d870c39c87d18fab20ccb2f9014f",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_player_score\\\",\\\"filters\\\":{\\\"family\\\":\\\"French Defense\\\",\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "d545b9f943690fca9ee17b25db817d015a4fc0826ba23b69fe8c64bd1a82fe77",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "eea1e2b3ebef0256a7160893d1cacee2a554392fc926ca13b5be6fa1b4c0d8ee"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+        "draws": 2,
+        "eligible_player_games": 246,
+        "filters": {
+          "base_seconds": 60,
+          "color": "white",
+          "family": "French Defense",
+          "increment_seconds": 0,
+          "rating_max_exclusive": 1600,
+          "rating_min": 1400
+        },
+        "losses": 114,
+        "low_support": false,
+        "metric_id": "opening_player_score",
+        "scope": "descriptive observed prefix; no causal claim",
+        "score_rate": 0.532520325203252,
+        "version": "1.0.0",
+        "win_rate": 0.5284552845528455,
+        "wins": 130
+      },
+      "score": {
+        "case_id": "m7l_white_french_defense_score",
+        "category": "filtering_perspective",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2408,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2405
+        },
+        "output_tokens": 82,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2490
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_compare_queens_pawn_game_sicilian_defense_score",
+      "category": "multi_step",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.266364416995202,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_1c4b8cb97db157b9e457"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0013686,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "families": [
+                  "Queen's Pawn Game",
+                  "Sicilian Defense"
+                ],
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              }
+            },
+            "tool": "compare_openings"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0137890880942a9b016ac2d873329087d28b35cb47c9371f4e",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"compare_openings\",\"args_json\":\"{\\\"filters\\\":{\\\"families\\\":[\\\"Queen's Pawn Game\\\",\\\"Sicilian Defense\\\"],\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "bc5309fc660313a40e967cf34edb5fce6bebf61b65ee0cd1f5cc10d998d38599",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "ad53520c6204071f2258dd4ee721511e6759486efff6c7698e364ee3a24343cf"
+      },
+      "result": {
+        "caveats": [
+          "observed_prefix_only",
+          "association_not_causation"
+        ],
+        "dataset_id": "bf2d56649b944934d9c2ec4c",
+        "families": [
+          {
+            "analytical_id": "bf2d56649b944934d9c2ec4c",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 5,
+            "eligible_player_games": 392,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "Queen's Pawn Game",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 183,
+            "low_support": false,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.5267857142857143,
+            "version": "1.0.0",
+            "win_rate": 0.5204081632653061,
+            "wins": 204
+          },
+          {
+            "analytical_id": "bf2d56649b944934d9c2ec4c",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 4,
+            "eligible_player_games": 252,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "Sicilian Defense",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 119,
+            "low_support": false,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.5198412698412699,
+            "version": "1.0.0",
+            "win_rate": 0.5119047619047619,
+            "wins": 129
+          }
+        ],
+        "score_rate_difference_first_minus_second": 0.00694444444444442,
+        "win_rate_difference_first_minus_second": 0.008503401360544283
+      },
+      "score": {
+        "case_id": "m7l_compare_queens_pawn_game_sicilian_defense_score",
+        "category": "multi_step",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2416,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2413
+        },
+        "output_tokens": 88,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2504
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_compare_queens_pawn_game_sicilian_defense_win",
+      "category": "multi_step",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.54706341700512,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_1c4b8cb97db157b9e457"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0013686,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "families": [
+                  "Queen's Pawn Game",
+                  "Sicilian Defense"
+                ],
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              }
+            },
+            "tool": "compare_openings"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_052e09ba50f8a09f016ac2d875772887d189efb3470535de30",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"compare_openings\",\"args_json\":\"{\\\"filters\\\":{\\\"families\\\":[\\\"Queen's Pawn Game\\\",\\\"Sicilian Defense\\\"],\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "faa146e1ce32073a95ad25d20e3bdec8a608ce9fd36a8f82290f525dd7d866d3",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "ad53520c6204071f2258dd4ee721511e6759486efff6c7698e364ee3a24343cf"
+      },
+      "result": {
+        "caveats": [
+          "observed_prefix_only",
+          "association_not_causation"
+        ],
+        "dataset_id": "bf2d56649b944934d9c2ec4c",
+        "families": [
+          {
+            "analytical_id": "bf2d56649b944934d9c2ec4c",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 5,
+            "eligible_player_games": 392,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "Queen's Pawn Game",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 183,
+            "low_support": false,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.5267857142857143,
+            "version": "1.0.0",
+            "win_rate": 0.5204081632653061,
+            "wins": 204
+          },
+          {
+            "analytical_id": "bf2d56649b944934d9c2ec4c",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 4,
+            "eligible_player_games": 252,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "Sicilian Defense",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 119,
+            "low_support": false,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.5198412698412699,
+            "version": "1.0.0",
+            "win_rate": 0.5119047619047619,
+            "wins": 129
+          }
+        ],
+        "score_rate_difference_first_minus_second": 0.00694444444444442,
+        "win_rate_difference_first_minus_second": 0.008503401360544283
+      },
+      "score": {
+        "case_id": "m7l_compare_queens_pawn_game_sicilian_defense_win",
+        "category": "multi_step",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2416,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2413
+        },
+        "output_tokens": 88,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2504
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_compare_scandinavian_defense_french_defense_score",
+      "category": "multi_step",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.2150817080037086,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_84aaa56b8dda8109afff"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.001348,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "families": [
+                  "Scandinavian Defense",
+                  "French Defense"
+                ],
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              }
+            },
+            "tool": "compare_openings"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0faa43ed65475f8a016ac2d877f1ec87d2b663b8d1d2cffa3f",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"compare_openings\",\"args_json\":\"{\\\"filters\\\":{\\\"families\\\":[\\\"Scandinavian Defense\\\",\\\"French Defense\\\"],\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "f95b926436807e710b85e2ab2995962a365e975ecb74de40c93584a60c163d93",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "815d75d2df7d075da788acd31db69734e6a3e9a4a079e6eda598a88b9f01ed41"
+      },
+      "result": {
+        "caveats": [
+          "observed_prefix_only",
+          "association_not_causation"
+        ],
+        "dataset_id": "bf2d56649b944934d9c2ec4c",
+        "families": [
+          {
+            "analytical_id": "bf2d56649b944934d9c2ec4c",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 0,
+            "eligible_player_games": 232,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "Scandinavian Defense",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 112,
+            "low_support": false,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.5172413793103449,
+            "version": "1.0.0",
+            "win_rate": 0.5172413793103449,
+            "wins": 120
+          },
+          {
+            "analytical_id": "bf2d56649b944934d9c2ec4c",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 2,
+            "eligible_player_games": 246,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "French Defense",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 114,
+            "low_support": false,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.532520325203252,
+            "version": "1.0.0",
+            "win_rate": 0.5284552845528455,
+            "wins": 130
+          }
+        ],
+        "score_rate_difference_first_minus_second": -0.015278945892907125,
+        "win_rate_difference_first_minus_second": -0.011213905242500655
+      },
+      "score": {
+        "case_id": "m7l_compare_scandinavian_defense_french_defense_score",
+        "category": "multi_step",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2413,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2410
+        },
+        "output_tokens": 86,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2499
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_compare_scandinavian_defense_french_defense_win",
+      "category": "multi_step",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.457011958998919,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_84aaa56b8dda8109afff"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.001348,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "families": [
+                  "Scandinavian Defense",
+                  "French Defense"
+                ],
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              }
+            },
+            "tool": "compare_openings"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_051ee89b18394629016ac2d87a456887d19e6186c6247285f6",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"compare_openings\",\"args_json\":\"{\\\"filters\\\":{\\\"families\\\":[\\\"Scandinavian Defense\\\",\\\"French Defense\\\"],\\\"color\\\":\\\"white\\\",\\\"rating_min\\\":1400,\\\"rating_max_exclusive\\\":1600,\\\"base_seconds\\\":60,\\\"increment_seconds\\\":0}}\"}]}",
+      "request_sha256": "a542ba3ad706a47fadff242de45d7ac64bddfc6a287e7626e4c32c3e1b6b3839",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "815d75d2df7d075da788acd31db69734e6a3e9a4a079e6eda598a88b9f01ed41"
+      },
+      "result": {
+        "caveats": [
+          "observed_prefix_only",
+          "association_not_causation"
+        ],
+        "dataset_id": "bf2d56649b944934d9c2ec4c",
+        "families": [
+          {
+            "analytical_id": "bf2d56649b944934d9c2ec4c",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 0,
+            "eligible_player_games": 232,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "Scandinavian Defense",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 112,
+            "low_support": false,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.5172413793103449,
+            "version": "1.0.0",
+            "win_rate": 0.5172413793103449,
+            "wins": 120
+          },
+          {
+            "analytical_id": "bf2d56649b944934d9c2ec4c",
+            "contract_sha256": "cdf817e41cb971eec2ae862f399daa4101f06d671fb01b45ad23ab1fbfbbf779",
+            "draws": 2,
+            "eligible_player_games": 246,
+            "filters": {
+              "base_seconds": 60,
+              "color": "white",
+              "family": "French Defense",
+              "increment_seconds": 0,
+              "rating_max_exclusive": 1600,
+              "rating_min": 1400
+            },
+            "losses": 114,
+            "low_support": false,
+            "metric_id": "opening_player_score",
+            "scope": "descriptive observed prefix; no causal claim",
+            "score_rate": 0.532520325203252,
+            "version": "1.0.0",
+            "win_rate": 0.5284552845528455,
+            "wins": 130
+          }
+        ],
+        "score_rate_difference_first_minus_second": -0.015278945892907125,
+        "win_rate_difference_first_minus_second": -0.011213905242500655
+      },
+      "score": {
+        "case_id": "m7l_compare_scandinavian_defense_french_defense_win",
+        "category": "multi_step",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2413,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2410
+        },
+        "output_tokens": 86,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2499
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_clock_under_10_coverage",
+      "category": "missing_data",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.0882247499976074,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_e102bb4fdcfb6d425d00"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0010454000000000001,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "bucket": "under_10"
+              },
+              "metric_id": "evaluation_coverage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_040ecc9072248ad2016ac2d87cb7f087d28a87c211c53e2879",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"evaluation_coverage\\\",\\\"filters\\\":{\\\"bucket\\\":\\\"under_10\\\"}}\"}]}",
+      "request_sha256": "91cf45bd3ae3ebe80b6366d1c5c4041399284b7b1c00b6d4e900288decc1f774",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "a54315d4a146224e9a006505721d391a1a830029f7b3cb3147ec51eb385f8fa3"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "bucket": "under_10",
+        "contract_sha256": "059a90922fb35a51e3d9bb30632a22ccab7e59a6802d38990ce82432782eea0e",
+        "coverage_contract_sha256": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+        "eligible_moves": 16281,
+        "error_proxy_rate": 0.1709741550695825,
+        "evaluable_moves": 503,
+        "evaluation_coverage": 0.030894908175173517,
+        "mate_transition_moves": 238,
+        "metric_id": "clock_pressure_error_proxy",
+        "proxy_errors": 86,
+        "scope": "exploratory source-evaluation proxy in sampled games of observed prefix",
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_clock_under_10_coverage",
+        "category": "missing_data",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2400,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2397
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2456
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_clock_under_10_proxy",
+      "category": "missing_data",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 3.021122292004293,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_e102bb4fdcfb6d425d00",
+        "ev_fd696ec9100f3413cc12"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0013988,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "bucket": "under_10"
+              },
+              "metric_id": "evaluation_coverage"
+            },
+            "tool": "query_metric"
+          },
+          {
+            "args": {
+              "filters": {
+                "bucket": "under_10"
+              },
+              "metric_id": "clock_pressure_error_proxy"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_09abcbf39fd4400f016ac2d87ec12087d19ef78b3c857a7b13",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"evaluation_coverage\\\",\\\"filters\\\":{\\\"bucket\\\":\\\"under_10\\\"}}\"},{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"clock_pressure_error_proxy\\\",\\\"filters\\\":{\\\"bucket\\\":\\\"under_10\\\"}}\"}]}",
+      "request_sha256": "3ab17e8aa67b81790e8beec7a1dde842702ae463578d4a800a3debe7b692060e",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "94ea7e7efb8f2a2bae02f5ca601a92af7c365ce59bbb16868bb98adc8bf8dde6"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "bucket": "under_10",
+        "contract_sha256": "059a90922fb35a51e3d9bb30632a22ccab7e59a6802d38990ce82432782eea0e",
+        "coverage_contract_sha256": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+        "eligible_moves": 16281,
+        "error_proxy_rate": 0.1709741550695825,
+        "evaluable_moves": 503,
+        "evaluation_coverage": 0.030894908175173517,
+        "mate_transition_moves": 238,
+        "metric_id": "clock_pressure_error_proxy",
+        "proxy_errors": 86,
+        "scope": "exploratory source-evaluation proxy in sampled games of observed prefix",
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_clock_under_10_proxy",
+        "category": "missing_data",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 2,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2403,
+        "input_tokens_details": {
+          "cache_write_tokens": 36,
+          "cached_tokens": 2364
+        },
+        "output_tokens": 83,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2486
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_clock_10_to_29_coverage",
+      "category": "missing_data",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.699541916997987,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_b2f1c483f1a8b783d367"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0011363,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "bucket": "10_to_29"
+              },
+              "metric_id": "evaluation_coverage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0a4b0b2bec7286dc016ac2d881e81c87d2bcb587a803c3ed11",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"evaluation_coverage\\\",\\\"filters\\\":{\\\"bucket\\\":\\\"10_to_29\\\"}}\"}]}",
+      "request_sha256": "3d40b3610271cd042adaf5d7adc7e916a3d5198ac971f336768e4436308106cf",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "4c03bf4cd9d6794abbb2e76a2021c5a61c84ce3b1cd6a4827b6052dd9f08d625"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "bucket": "10_to_29",
+        "contract_sha256": "059a90922fb35a51e3d9bb30632a22ccab7e59a6802d38990ce82432782eea0e",
+        "coverage_contract_sha256": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+        "eligible_moves": 32175,
+        "error_proxy_rate": 0.11271477663230241,
+        "evaluable_moves": 1455,
+        "evaluation_coverage": 0.04522144522144522,
+        "mate_transition_moves": 304,
+        "metric_id": "clock_pressure_error_proxy",
+        "proxy_errors": 164,
+        "scope": "exploratory source-evaluation proxy in sampled games of observed prefix",
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_clock_10_to_29_coverage",
+        "category": "missing_data",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2402,
+        "input_tokens_details": {
+          "cache_write_tokens": 35,
+          "cached_tokens": 2364
+        },
+        "output_tokens": 57,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2459
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_clock_10_to_29_proxy",
+      "category": "missing_data",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 3.0341487920013606,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_b2f1c483f1a8b783d367",
+        "ev_c7fb12bc891c409c4bb1"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0014238,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "bucket": "10_to_29"
+              },
+              "metric_id": "evaluation_coverage"
+            },
+            "tool": "query_metric"
+          },
+          {
+            "args": {
+              "filters": {
+                "bucket": "10_to_29"
+              },
+              "metric_id": "clock_pressure_error_proxy"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_059e9f7d3be55566016ac2d8848e2487d19d6adcb4f23dedcf",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"evaluation_coverage\\\",\\\"filters\\\":{\\\"bucket\\\":\\\"10_to_29\\\"}}\"},{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"clock_pressure_error_proxy\\\",\\\"filters\\\":{\\\"bucket\\\":\\\"10_to_29\\\"}}\"}]}",
+      "request_sha256": "111b2ebc604efab3408b53cb8525ce953886d11cc654b250263fc63229dde3c9",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "c0a84ad83d4b67c30963147cf112a383c4a8ff561cba0c425f9c8664eea2b164"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "bucket": "10_to_29",
+        "contract_sha256": "059a90922fb35a51e3d9bb30632a22ccab7e59a6802d38990ce82432782eea0e",
+        "coverage_contract_sha256": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+        "eligible_moves": 32175,
+        "error_proxy_rate": 0.11271477663230241,
+        "evaluable_moves": 1455,
+        "evaluation_coverage": 0.04522144522144522,
+        "mate_transition_moves": 304,
+        "metric_id": "clock_pressure_error_proxy",
+        "proxy_errors": 164,
+        "scope": "exploratory source-evaluation proxy in sampled games of observed prefix",
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_clock_10_to_29_proxy",
+        "category": "missing_data",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 2,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2405,
+        "input_tokens_details": {
+          "cache_write_tokens": 38,
+          "cached_tokens": 2364
+        },
+        "output_tokens": 85,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2490
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_clock_30_to_59_coverage",
+      "category": "missing_data",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 3.115561999999045,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_599c6c5cd6ab34e9fe45"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0010558,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "bucket": "30_to_59"
+              },
+              "metric_id": "evaluation_coverage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_088044e71f5bce85016ac2d887e79887d2861f652ff8c9affa",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"evaluation_coverage\\\",\\\"filters\\\":{\\\"bucket\\\":\\\"30_to_59\\\"}}\"}]}",
+      "request_sha256": "02df802df74abdd69c12f6101a58e38c3da727f6d24926f666bfa970138794ea",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "b0161729a86d9bbddd422e1a02d85d5ad3f4621b57a4a7b247a8dc6bb431cdd4"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "bucket": "30_to_59",
+        "contract_sha256": "059a90922fb35a51e3d9bb30632a22ccab7e59a6802d38990ce82432782eea0e",
+        "coverage_contract_sha256": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+        "eligible_moves": 62207,
+        "error_proxy_rate": 0.07293666026871401,
+        "evaluable_moves": 3126,
+        "evaluation_coverage": 0.05025157940424711,
+        "mate_transition_moves": 110,
+        "metric_id": "clock_pressure_error_proxy",
+        "proxy_errors": 228,
+        "scope": "exploratory source-evaluation proxy in sampled games of observed prefix",
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_clock_30_to_59_coverage",
+        "category": "missing_data",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2402,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2399
+        },
+        "output_tokens": 57,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2459
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_clock_30_to_59_proxy",
+      "category": "missing_data",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.863737250001577,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_599c6c5cd6ab34e9fe45",
+        "ev_29a3c1aae04ab1fe360e"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0014238,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "bucket": "30_to_59"
+              },
+              "metric_id": "evaluation_coverage"
+            },
+            "tool": "query_metric"
+          },
+          {
+            "args": {
+              "filters": {
+                "bucket": "30_to_59"
+              },
+              "metric_id": "clock_pressure_error_proxy"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0e380030f5001534016ac2d88aa00c87d183f3c087c49988da",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"evaluation_coverage\\\",\\\"filters\\\":{\\\"bucket\\\":\\\"30_to_59\\\"}}\"},{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"clock_pressure_error_proxy\\\",\\\"filters\\\":{\\\"bucket\\\":\\\"30_to_59\\\"}}\"}]}",
+      "request_sha256": "14c25460ef9203282300c3c1ff674ddb90fc844ee40fcc7af9a69b3f884b4a55",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "cf793978cfd5ade39f74876c3ef5db87cac6325710481d668144c9dc16f876a7"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "bucket": "30_to_59",
+        "contract_sha256": "059a90922fb35a51e3d9bb30632a22ccab7e59a6802d38990ce82432782eea0e",
+        "coverage_contract_sha256": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+        "eligible_moves": 62207,
+        "error_proxy_rate": 0.07293666026871401,
+        "evaluable_moves": 3126,
+        "evaluation_coverage": 0.05025157940424711,
+        "mate_transition_moves": 110,
+        "metric_id": "clock_pressure_error_proxy",
+        "proxy_errors": 228,
+        "scope": "exploratory source-evaluation proxy in sampled games of observed prefix",
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_clock_30_to_59_proxy",
+        "category": "missing_data",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 2,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2405,
+        "input_tokens_details": {
+          "cache_write_tokens": 38,
+          "cached_tokens": 2364
+        },
+        "output_tokens": 85,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2490
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_clock_60_plus_coverage",
+      "category": "missing_data",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.2132014160015387,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_0b9026048fd0638af771"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0010354000000000001,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "bucket": "60_plus"
+              },
+              "metric_id": "evaluation_coverage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_08bed63261755a02016ac2d88d7b4487d189eda6539779ead6",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"evaluation_coverage\\\",\\\"filters\\\":{\\\"bucket\\\":\\\"60_plus\\\"}}\"}]}",
+      "request_sha256": "cfd1ba4e2722b57ce39a4a26015317d3fd9d6f0b008cc4cd875abbb4e632a0a2",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "4728994cbb44d524775a80db84412cc17efea4905515f7828b231be77609cfb2"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "bucket": "60_plus",
+        "contract_sha256": "059a90922fb35a51e3d9bb30632a22ccab7e59a6802d38990ce82432782eea0e",
+        "coverage_contract_sha256": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+        "eligible_moves": 127329,
+        "error_proxy_rate": 0.07637670992634163,
+        "evaluable_moves": 11404,
+        "evaluation_coverage": 0.08956325738834044,
+        "mate_transition_moves": 804,
+        "metric_id": "clock_pressure_error_proxy",
+        "proxy_errors": 871,
+        "scope": "exploratory source-evaluation proxy in sampled games of observed prefix",
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_clock_60_plus_coverage",
+        "category": "missing_data",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 1,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2400,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2397
+        },
+        "output_tokens": 55,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2455
+      }
+    },
+    {
+      "answer_status": "answered",
+      "argument_repairs": [],
+      "case_id": "m7l_clock_60_plus_proxy",
+      "category": "missing_data",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.936458208001568,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_0b9026048fd0638af771",
+        "ev_2aa37ca3fc6d2f77a34d"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.001296,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "bucket": "60_plus"
+              },
+              "metric_id": "evaluation_coverage"
+            },
+            "tool": "query_metric"
+          },
+          {
+            "args": {
+              "filters": {
+                "bucket": "60_plus"
+              },
+              "metric_id": "clock_pressure_error_proxy"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "model_response_id": "resp_0aa334b760315262016ac2d88fb68c87d19d85bbc76a4bd2b2",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"evaluation_coverage\\\",\\\"filters\\\":{\\\"bucket\\\":\\\"60_plus\\\"}}\"},{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"clock_pressure_error_proxy\\\",\\\"filters\\\":{\\\"bucket\\\":\\\"60_plus\\\"}}\"}]}",
+      "request_sha256": "8888a611027722f27fc2023fd84a9a7595a09a4192c06445cd043af274e066b2",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "2ac3746835a6ad1063bdb04103c5b8f15a65870be328993ee2852087ad173653"
+      },
+      "result": {
+        "analytical_id": "bf2d56649b944934d9c2ec4c",
+        "bucket": "60_plus",
+        "contract_sha256": "059a90922fb35a51e3d9bb30632a22ccab7e59a6802d38990ce82432782eea0e",
+        "coverage_contract_sha256": "c52c72036d9796c6a0dabefc60ea68c3fa852023b1e2555f3f5361c9b397f1bc",
+        "eligible_moves": 127329,
+        "error_proxy_rate": 0.07637670992634163,
+        "evaluable_moves": 11404,
+        "evaluation_coverage": 0.08956325738834044,
+        "mate_transition_moves": 804,
+        "metric_id": "clock_pressure_error_proxy",
+        "proxy_errors": 871,
+        "scope": "exploratory source-evaluation proxy in sampled games of observed prefix",
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "m7l_clock_60_plus_proxy",
+        "category": "missing_data",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 2,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2403,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2400
+        },
+        "output_tokens": 81,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2484
+      }
+    },
+    {
+      "answer_status": "needs_clarification",
+      "argument_repairs": [],
+      "case_id": "m7l_boundary_personal_choice",
+      "category": "ambiguity",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.3835198330052663,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "needs_clarification",
+      "gross_cost_usd": 0.0008047999999999999,
+      "model_plan_before_semantic_repair": {
+        "actions": [],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "needs_clarification"
+      },
+      "model_response_id": "resp_03c8fa4b2f20aac8016ac2d892941c87d28f14bbc225aec748",
+      "model_text": "{\"status\":\"needs_clarification\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "b84eed74183c6645d176695805c8a87d6e88512e902bb395a56bf4d9776e45d3",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "71594c7afb47521a780275fed377e6f3e8932fb45c5ec6bbb007fe3ead9116b7"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7l_boundary_personal_choice",
+        "category": "ambiguity",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2397,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2394
+        },
+        "output_tokens": 32,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2429
+      }
+    },
+    {
+      "answer_status": "needs_clarification",
+      "argument_repairs": [],
+      "case_id": "m7l_boundary_rating_unspecified",
+      "category": "ambiguity",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.9300559160037665,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "needs_clarification",
+      "gross_cost_usd": 0.0008046,
+      "model_plan_before_semantic_repair": {
+        "actions": [],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "needs_clarification"
+      },
+      "model_response_id": "resp_09807e05ac5a96c6016ac2d8941d4487d188f4824b1fd47c48",
+      "model_text": "{\"status\":\"needs_clarification\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "6b12d1d189746740360fa547300e590d077a7a5c2f33a59f3795b09aff6b8ddb",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "71594c7afb47521a780275fed377e6f3e8932fb45c5ec6bbb007fe3ead9116b7"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7l_boundary_rating_unspecified",
+        "category": "ambiguity",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2396,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2393
+        },
+        "output_tokens": 32,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2428
+      }
+    },
+    {
+      "answer_status": "needs_clarification",
+      "argument_repairs": [],
+      "case_id": "m7l_boundary_bucket_unspecified",
+      "category": "ambiguity",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.6937509999988833,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "needs_clarification",
+      "gross_cost_usd": 0.0008338,
+      "model_plan_before_semantic_repair": {
+        "actions": [],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "needs_clarification"
+      },
+      "model_response_id": "resp_0f4d4c326798a4a2016ac2d895fdc887d19359e4f09e11e097",
+      "model_text": "{\"status\":\"needs_clarification\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "a988fc8c2c09436581f1080236360a7bcf424638038a2288e24f14225303ad68",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "71594c7afb47521a780275fed377e6f3e8932fb45c5ec6bbb007fe3ead9116b7"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7l_boundary_bucket_unspecified",
+        "category": "ambiguity",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2381,
+        "input_tokens_details": {
+          "cache_write_tokens": 14,
+          "cached_tokens": 2364
+        },
+        "output_tokens": 32,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2413
+      }
+    },
+    {
+      "answer_status": "needs_clarification",
+      "argument_repairs": [],
+      "case_id": "m7l_boundary_cohort_unspecified",
+      "category": "ambiguity",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.9654772499998217,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "needs_clarification",
+      "gross_cost_usd": 0.0008537999999999999,
+      "model_plan_before_semantic_repair": {
+        "actions": [],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "needs_clarification"
+      },
+      "model_response_id": "resp_0ad99bb2f3f89ec6016ac2d897a66087d1a8bc6635b916f814",
+      "model_text": "{\"status\":\"needs_clarification\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "83c7511ac04c014c51f5e24621718d1cd4ec524f82f7d2a7f6ce50534b441ad5",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "71594c7afb47521a780275fed377e6f3e8932fb45c5ec6bbb007fe3ead9116b7"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7l_boundary_cohort_unspecified",
+        "category": "ambiguity",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "medium",
+      "status": "completed",
+      "tool_steps": 0,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2389,
+        "input_tokens_details": {
+          "cache_write_tokens": 22,
+          "cached_tokens": 2364
+        },
+        "output_tokens": 32,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2421
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7l_boundary_private_file",
+      "category": "reliability_access",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.5613730830009445,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "unsupported",
+      "gross_cost_usd": 0.0007718,
+      "model_plan_before_semantic_repair": {
+        "actions": [],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "unsupported"
+      },
+      "model_response_id": "resp_0b6aaac86a7ec18e016ac2d899a7b487d28fe370925e037c72",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "23e5880e2a1cc1572243d31f24c0c0ec229abc9431108fab2adc3c1967b41a10",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7l_boundary_private_file",
+        "category": "reliability_access",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "high",
+      "status": "completed",
+      "tool_steps": 0,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2382,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2379
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2411
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7l_boundary_causal_opening",
+      "category": "reliability_access",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.532787833995826,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "unsupported",
+      "gross_cost_usd": 0.0008087999999999999,
+      "model_plan_before_semantic_repair": {
+        "actions": [],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "unsupported"
+      },
+      "model_response_id": "resp_0b4ee44d6be08268016ac2d89b351c87d1b534507c87749aa4",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "6ea77bc620cd04c98f74ce6a209538008cb68175ebf53a384d796754ed05c305",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7l_boundary_causal_opening",
+        "category": "reliability_access",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "high",
+      "status": "completed",
+      "tool_steps": 0,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2383,
+        "input_tokens_details": {
+          "cache_write_tokens": 16,
+          "cached_tokens": 2364
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2412
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7l_boundary_full_month",
+      "category": "reliability_access",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.3443955420007114,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "unsupported",
+      "gross_cost_usd": 0.0007726,
+      "model_plan_before_semantic_repair": {
+        "actions": [],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "unsupported"
+      },
+      "model_response_id": "resp_0f40a925ca2c2f20016ac2d89cabe487d28e1226bc674f2945",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "d89a3b93bc48f3559e6e2b95c2a215ae8ecec832095a8d410b247d417275d381",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7l_boundary_full_month",
+        "category": "reliability_access",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "high",
+      "status": "completed",
+      "tool_steps": 0,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2386,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2383
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2415
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7l_boundary_personality",
+      "category": "reliability_access",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.564640042000974,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "unsupported",
+      "gross_cost_usd": 0.0007714000000000001,
+      "model_plan_before_semantic_repair": {
+        "actions": [],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "unsupported"
+      },
+      "model_response_id": "resp_0f43cec3e62c3cc2016ac2d89e128087d1be89f3f61273afb3",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "1ca9c6d94084a9fc27df18d00d33ef924dfc3693e14671703f954491d93c12e2",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7l_boundary_personality",
+        "category": "reliability_access",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "high",
+      "status": "completed",
+      "tool_steps": 0,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2380,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2377
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2409
+      }
+    },
+    {
+      "answer_status": "unsupported",
+      "argument_repairs": [],
+      "case_id": "m7l_boundary_guaranteed_result",
+      "category": "reliability_access",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.3630092500025057,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [],
+      "expected_status": "unsupported",
+      "gross_cost_usd": 0.0008087999999999999,
+      "model_plan_before_semantic_repair": {
+        "actions": [],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "unsupported"
+      },
+      "model_response_id": "resp_03e9de95f39a5300016ac2d89f9aa887d2bc103b9072803647",
+      "model_text": "{\"status\":\"unsupported\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[]}",
+      "request_sha256": "cc2fc7bab5f004e575489f73d802402c7c1219ff9fb3dfde06d3e209b99ef037",
+      "resolved_model": "gpt-6-sol",
+      "response_selection": {
+        "discarded_invalid_chunks": 0,
+        "duplicate_valid_chunks": 0,
+        "output_text_chunks": 1,
+        "recovered_argument_suffixes": [],
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": null,
+        "selected_chunk_index": 0,
+        "selected_chunk_sha256": "f1ab48a8c03e4d0e0984ff124616ab96d47cefdb81cbb4edc8f91341609ba038"
+      },
+      "result": null,
+      "score": {
+        "case_id": "m7l_boundary_guaranteed_result",
+        "category": "reliability_access",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m7-1.0",
+        "split": "m7_holdout_v12"
+      },
+      "semantic_repairs": [],
+      "severity": "high",
+      "status": "completed",
+      "tool_steps": 0,
+      "transport_retries": [],
+      "unknown_cost_reservation_usd": 0,
+      "usage": {
+        "input_tokens": 2383,
+        "input_tokens_details": {
+          "cache_write_tokens": 16,
+          "cached_tokens": 2364
+        },
+        "output_tokens": 29,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2412
+      }
+    }
+  ],
+  "by_category": {
+    "ambiguity": {
+      "attempted": 4,
+      "passed": 4
+    },
+    "basic_calculation": {
+      "attempted": 25,
+      "passed": 25
+    },
+    "filtering_perspective": {
+      "attempted": 4,
+      "passed": 4
+    },
+    "missing_data": {
+      "attempted": 8,
+      "passed": 8
+    },
+    "multi_step": {
+      "attempted": 4,
+      "passed": 4
+    },
+    "reliability_access": {
+      "attempted": 5,
+      "passed": 5
+    }
+  },
+  "by_condition": {
+    "semantic_context": {
+      "attempted": 50,
+      "passed": 50
+    }
+  },
+  "case_set_sha256": "6262258565eaae4f311c5644f24acc7ec8f4981a1b4801afb65b35054a96219b",
+  "completed": 50,
+  "cost_known_for_every_attempt": true,
+  "gross_cost_accounted_usd": 0.054292300000000016,
+  "high_severity": {
+    "attempted": 5,
+    "passed": 5
+  },
+  "kind": "one_shot_frozen_family_split_holdout_actual_model_responses",
+  "known_gross_cost_usd": 0.0542923,
+  "max_run_usd": 6.0,
+  "model": "gpt-6-sol",
+  "one_shot_no_repeatability_claim": true,
+  "planned": 50,
+  "preflight_sha256": "51efe0ae7a2b7d7e62758c9a0d403693ce4105e24be747fc640aef48e1759fd3",
+  "scorer": "m7-1.0 frozen before model calls",
+  "unknown_cost_reservations_usd": 0.0
+}

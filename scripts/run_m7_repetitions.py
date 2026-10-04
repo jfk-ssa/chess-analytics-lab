@@ -78,9 +78,9 @@ def main() -> None:
             holdout_version=args.holdout_version,
             conditions=preflight["conditions"],
         )
-        summary_path = (
-            args.ledger.parent / f"m7-v{args.holdout_version - 2}-run-{repeat}-summary.json"
-        )
+        # Include the ledger stem so an interrupted, separately audited invocation
+        # cannot have its exported summary overwritten by a later retry.
+        summary_path = args.ledger.parent / f"{args.ledger.stem}-run-{repeat}-summary.json"
         write_json(summary_path, summary)
         ledger["summaries"].append(str(summary_path))
         ledger["gross_accounted_usd"] += summary.get(

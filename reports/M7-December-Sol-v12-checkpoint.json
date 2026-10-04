@@ -1,0 +1,59 @@
+{
+  "answerable_per_repeat": [
+    {
+      "attempted": 41,
+      "passed": 41
+    },
+    {
+      "attempted": 41,
+      "passed": 41
+    },
+    {
+      "attempted": 41,
+      "passed": 41
+    }
+  ],
+  "approved_cumulative_cap_usd": 6.0,
+  "boundary_per_repeat": [
+    {
+      "attempted": 9,
+      "passed": 9
+    },
+    {
+      "attempted": 9,
+      "passed": 9
+    },
+    {
+      "attempted": 9,
+      "passed": 9
+    }
+  ],
+  "case_set_sha256": "6262258565eaae4f311c5644f24acc7ec8f4981a1b4801afb65b35054a96219b",
+  "cumulative_gross_accounted_usd": 0.35392836000000005,
+  "failures": [],
+  "gates": {
+    "all_high_severity_correct": true,
+    "answerable_at_least_90_percent_each": true,
+    "boundary_at_least_90_percent_each": true,
+    "bounded_logged_transport_retry": true,
+    "cumulative_gross_cap": true,
+    "evidence_and_access_integrity": true,
+    "frozen_complete_runs": true,
+    "no_execution_failure_or_unknown_cost": true,
+    "sandbox_failure_retained_and_reserved": true,
+    "totals_match_raw_attempts": true
+  },
+  "gross_cost_usd": 0.17789590000000002,
+  "kind": "M7 December v12 independent-data semantic-context checkpoint",
+  "live_gates_passed": true,
+  "preflight_sha256": "51efe0ae7a2b7d7e62758c9a0d403693ce4105e24be747fc640aef48e1759fd3",
+  "prior_before_december_usd": 0.13879496,
+  "prior_gross_accounted_usd": 0.17603246,
+  "sandbox_unknown_cost_reservation_usd": 0.0372375,
+  "scope": "50 frozen cases on an observed December 1 prefix; product semantic-context mode",
+  "scored_per_repeat": [
+    50,
+    50,
+    50
+  ]
+}

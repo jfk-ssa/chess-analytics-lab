@@ -1,4 +1,4 @@
-# M7 December Sol v12 gate — frozen, awaiting spending-cap approval
+# M7 December Sol v12 gate — accepted local checkpoint
 
 January v11's first Luna run met every per-run threshold, but repetition 2
 stopped at a conflicting provider response. Do not select between those
@@ -50,14 +50,39 @@ cumulative cap. Official OpenAI documentation lists Sol at $2 input,
 $0.20 cached input, $2.50 cache write and $10 output per million tokens.
 The exact frozen conservative reservation is **$1.859967500 per 50-case
 run**. Three full reservations plus prior spend are **$5.718697460**.
-The recommended maximum cumulative gross cap is **$6.00**; this is a
+The approved maximum cumulative gross cap is **$6.00**; this is a
 ceiling, not an expected charge. The six-case actual diagnostic cost
 **$0.017980600**; simple proportional scaling gives about **$0.449515**
 for 150 calls and **$0.588310** including prior M7 spend, but case mix,
 caching, response length and failures can change that. The conservative
-bound controls authorization. The runner stops when the remaining cap
+bound controlled authorization. The runner stops when the remaining cap
 cannot reserve another full repetition, or after a failed request, unknown
-usage or bound violation. No December live call is authorized until the
-user approves the higher cap.
+usage or bound violation. The user approved this cap before the December
+live evaluation.
+
+## Observed result — gate met
+
+The first invocation stopped after one request because sandbox DNS could not
+resolve the API host. No provider usage was returned. Preserve the [partial
+record](../reports/M7-December-Sol-v12-sandbox-partial.json) and charge its
+entire **$0.037237500** cell reservation as unknown cost. An audited retry
+with network access used the identical frozen preflight and a separate
+ledger; three repetitions completed 50/50, 50/50 and 50/50. In each,
+answerable cases passed 41/41, boundary cases 9/9 and high-severity cases
+5/5. All **150/150** evidence/access audits passed. There were no transport
+retries, argument or semantic repairs, recovered provider chunks, failed
+requests, or missing usage in these three runs. The [checkpoint](../reports/M7-December-Sol-v12-checkpoint.json)
+independently reconciles request hashes, resolved model, category totals,
+audits, failed-attempt reservation and cumulative cap; all ten gates pass.
+The [variability report](../reports/M7-December-Sol-v12-variability.json)
+retains per-cell outcomes and latency.
+
+The three completed repetitions cost **$0.068096900**, **$0.055506700** and
+**$0.054292300** gross, totaling **$0.177895900**. Prior M7 accounted gross
+was $0.138794960; with the sandbox reservation, cumulative M7 accounted
+gross is **$0.353928360** of the $6.00 cap. This is a fixed-case,
+new-date repetition result, not a general model accuracy or monthly
+population estimate. No provider comparison or Stockfish enrichment was
+needed to pass the M7 gate.
 
 Source: [GPT-6 Sol model page](https://developers.openai.com/api/docs/models/gpt-6-sol).

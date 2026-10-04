@@ -1,6 +1,6 @@
 # Status — 2026-10-04
 
-**M0–M6 accepted locally; M7 in progress.** This is a new standalone local Git
+**M0–M7 accepted locally; M8 queued.** This is a new standalone local Git
 repository; projects 1–3 remain together. No remote repository or hosting created.
 
 ## Phase tracker
@@ -14,8 +14,8 @@ repository; projects 1–3 remain together. No remote repository or hosting crea
 | M4 analytics product | Done | Accepted local six-view dashboard and two reproducible memos |
 | M5 analyst/eval harness | Done | Accepted checked typed tools, fixture replay and 50-case harness; no model result |
 | M6 measured release | Done; typed-analyst release gates met | Three complete frozen v2 repetitions, 118/120 scored passes, all evidence audits and offline checks passed. See [release checkpoint](M6-RELEASE.md). |
-| M7 depth | In progress; December Sol gate frozen, awaiting higher-cap approval | Earlier v1–v11 failures and stops are retained. January's first run met per-run thresholds but repetition 2 stopped. A six-case inspected-data Sol diagnostic passed 6/6. December's new-date 50-case oracle passed 50/50; its three-run live plan has a $5.71869746 cumulative conservative bound, above the current $0.50 approval. See [December gate](M7-DECEMBER.md). |
-| M8 Jev | Follow-up | Fair, measured integration experiment |
+| M7 depth | Done; December Sol v12 gate accepted | Three complete frozen repetitions scored 50/50 each with 150/150 evidence audits, no repairs/retries, and $0.35392836 cumulative accounted gross under the approved $6 cap. Earlier failed/stopped gates remain retained. See [December checkpoint](M7-DECEMBER.md). |
+| M8 Jev | Next, queued | Fair, measured Jev/pg_jev/DuckDB integration experiment after selecting a narrow decision task |
 | Personalized recommender | Backlog | Outside first-release scope |
 
 ## Completed acceptance
@@ -57,7 +57,7 @@ repository; projects 1–3 remain together. No remote repository or hosting crea
 | M7 February v10 | New-date 50-case freeze, 3-retry transport allowance | First run 47/50 with all per-run gates, one retry and one semantic repair; second stopped at cell 26 on malformed provider suffix. [Failed gate](../reports/M7-February-v10-checkpoint.json); [suffix replay](../reports/M7-inert-suffix-replay.json) is offline only. Cumulative accounted gross before January: **$0.115247510**. |
 | M7 January v11 | New-date 50-case freeze and three-run Luna attempt | First run 48/50 with all per-run gates; second stopped at cell 26 on conflicting provider text. [Failed gate](../reports/M7-January-v11-checkpoint.json). Cumulative accounted gross before Sol diagnostic: **$0.120814360**. |
 | M7 Sol development | Six inspected January cases with a separate frozen Sol request/price plan | Six actual calls completed and scored 6/6; gross **$0.017980600**. This is [development evidence](../reports/M7-Sol-development.json), not holdout performance. Cumulative M7 accounted gross **$0.138794960**. |
-| M7 December Sol freeze | New-date source and 50-case holdout, no live calls | 99,307 accepted games from a 40 MB prefix; independent raw-PGN checks and 50/50 offline oracle passed. [Preflight](../reports/M7-December-Sol-v12-preflight.json) reserves $1.8599675 per repetition and $5.71869746 cumulative including prior spend. Higher-cap approval is required before live scoring. |
+| M7 December Sol checkpoint | New-date source and 50-case holdout, three approved live repetitions | 99,307 accepted games from a 40 MB prefix; independent raw-PGN checks and 50/50 offline oracle passed. A sandbox DNS attempt failed before provider usage and its $0.0372375 reservation is retained. Three full Sol runs scored 50/50 each, with 150/150 evidence audits, zero retries/repairs, $0.1778959 actual gross across full runs and $0.35392836 cumulative M7 accounted gross under the approved $6 cap. [Checkpoint](../reports/M7-December-Sol-v12-checkpoint.json). |
 | M7 data-depth feasibility | Measured current local source, disk and processing baseline | [Feasibility](../reports/M7-depth-feasibility.json): 40 MB compressed prefix, 236.5 MB extracted PGN, 111-second source ingestion, August 1 only. No second-day acquisition or engine benchmark; both deferred pending a bounded method/value test. |
 
 Acceptance details: [reports/M0-M1.md](../reports/M0-M1.md), machine-readable
@@ -92,7 +92,7 @@ CI workflow exists; equivalent commands ran locally. No hosted CI run is claimed
 ## Limitations and blockers
 
 The personal key was loaded only by the named live adapter after explicit
-caps. The M7 $0.50 cap applies cumulatively to explicitly frozen M7 evaluations;
+caps. The M7 $6.00 cap applied cumulatively to the frozen December Sol gate;
 the M6 caps are closed. Model/pricing defaults were last checked
 against the official model page on 2026-10-04; account credit use itself was
 not independently verified.
@@ -124,23 +124,22 @@ comparison attempt could not bind one inside the sandbox; a permitted local run
 completed and its result was saved. See [run instructions](ORCHESTRATION.md).
 Separate locked Dagster-only and Prefect-only environments installed from the local
 uv cache and completed one-off tiny runs during M2. The current dbt-enabled
-environment with optional dbt/dashboard extras passes **55 offline tests** (none skipped); Ruff check/format, Git whitespace check,
+environment with optional dbt/dashboard extras passes **56 offline tests** (none skipped); Ruff check/format, Git whitespace check,
 and `uv lock --check --offline` pass with the workspace cache. The current foundation
 snapshot still reports 3,982/121,332. No hosted CI run is claimed.
 
-## Next concrete work — M7
+## Next concrete work — M8
 
-Do not reuse inspected splits for an untouched quality claim. December 2025
-is frozen on a new source date after January v11 stopped in repetition 2.
-The six-case Sol diagnostic passed, but does not satisfy the M7 gate. All
-July–January outcomes are retained, with offline replay separated from live
-scores. **$0.138794960** cumulative M7 gross is accounted against the
-approved **$0.50** cap. The December 150-request Sol plan has a conservative
-**$5.718697460 cumulative** bound. Recommend a **$6.00 cumulative gross cap**
-before any full Sol live call. Stockfish enrichment remains
-conditional on a measured value test. Evaluate OpenRouter or
-CheaperInference only if inference costs rise materially. Restricted SQL,
-optional Airflow and M8 Jev remain follow-ups; the recommender stays backlog.
+Do not reuse inspected splits for an untouched quality claim. The December
+Sol new-date gate is accepted with three complete 50-case repetitions and
+**$0.353928360** cumulative accounted M7 gross. Earlier Luna failures and
+offline replays remain retained separately from live results. M8 next
+compares a narrow Jev task with direct API, DuckDB extension and pg_jev
+routes on independently labeled data, with a new preflight and recommended
+cap if live calls are warranted. Stockfish enrichment remains conditional
+on a measured value test. Consider OpenRouter or CheaperInference only if
+inference costs rise materially. Restricted SQL and optional Airflow remain
+follow-ups; the recommender stays backlog.
 
 The actual M6 v2 model responses and two scored failures are retained. M5's 50/50
 fixture replay is harness validation, not model accuracy. The provider example

@@ -1,0 +1,575 @@
+{
+  "attempted": 150,
+  "case_set_sha256": "6262258565eaae4f311c5644f24acc7ec8f4981a1b4801afb65b35054a96219b",
+  "cells": [
+    {
+      "case_id": "m7l_usage_sicilian_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_queens_pawn_game",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_french_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_caro_kann_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_scandinavian_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_italian_game",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_english_opening",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_kings_pawn_game",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_zukertort_opening",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_queens_gambit_declined",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_modern_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_pirc_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_indian_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_philidor_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_scotch_game",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_nimzo_larsen_attack",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_vant_kruijs_opening",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_ruy_lopez",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_hungarian_opening",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_bishops_opening",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_horwitz_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_benoni_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_petrovs_defense",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_four_knights_game",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_usage_englund_gambit",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_white_queens_pawn_game_score",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_white_sicilian_defense_score",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_white_scandinavian_defense_score",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_white_french_defense_score",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_compare_queens_pawn_game_sicilian_defense_score",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_compare_queens_pawn_game_sicilian_defense_win",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_compare_scandinavian_defense_french_defense_score",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_compare_scandinavian_defense_french_defense_win",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_clock_under_10_coverage",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_clock_under_10_proxy",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_clock_10_to_29_coverage",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_clock_10_to_29_proxy",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_clock_30_to_59_coverage",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_clock_30_to_59_proxy",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_clock_60_plus_coverage",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_clock_60_plus_proxy",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_boundary_personal_choice",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_boundary_rating_unspecified",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_boundary_bucket_unspecified",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_boundary_cohort_unspecified",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_boundary_private_file",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_boundary_causal_opening",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_boundary_full_month",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_boundary_personality",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    },
+    {
+      "case_id": "m7l_boundary_guaranteed_result",
+      "condition": "semantic_context",
+      "outcomes": [
+        "passed",
+        "passed",
+        "passed"
+      ]
+    }
+  ],
+  "cost_known_for_every_attempt": true,
+  "cumulative_cap_respected": true,
+  "full_repetitions": 3,
+  "gross_cost_usd": 0.17789590000000002,
+  "interpretation": "All frozen repetitions completed. Outcomes describe this small fixed case set; they do not establish statistical significance or general model accuracy.",
+  "kind": "frozen holdout repetitions; stopped runs retained",
+  "not_attempted_due_to_stops": 0,
+  "planned_attempts": 150,
+  "runs": [
+    {
+      "ambiguity_or_unsupported": {
+        "attempted": 9,
+        "passed": 9
+      },
+      "answerable": {
+        "attempted": 41,
+        "passed": 41
+      },
+      "argument_repairs": 0,
+      "attempted": 50,
+      "cache_write_tokens": 6425,
+      "cached_input_tokens": 113472,
+      "completed": 50,
+      "discarded_invalid_chunks": 0,
+      "duplicate_valid_chunks": 0,
+      "failures": [],
+      "gross_cost_per_passed_usd": 0.001361938,
+      "gross_cost_usd": 0.0680969,
+      "high_severity": {
+        "attempted": 5,
+        "passed": 5
+      },
+      "known_gross_cost_usd": 0.0680969,
+      "median_latency_seconds": 2.420520061998104,
+      "multi_chunk_responses": 0,
+      "not_attempted": 0,
+      "passed": 50,
+      "planned": 50,
+      "recovered_inert_suffix_chunks": 0,
+      "recovered_repeated_plan_chunks": 0,
+      "repeat": 1,
+      "semantic_repairs": 0,
+      "transport_retries": 0,
+      "unknown_cost_reservations_usd": 0.0
+    },
+    {
+      "ambiguity_or_unsupported": {
+        "attempted": 9,
+        "passed": 9
+      },
+      "answerable": {
+        "attempted": 41,
+        "passed": 41
+      },
+      "argument_repairs": 0,
+      "attempted": 50,
+      "cache_write_tokens": 951,
+      "cached_input_tokens": 118946,
+      "completed": 50,
+      "discarded_invalid_chunks": 0,
+      "duplicate_valid_chunks": 0,
+      "failures": [],
+      "gross_cost_per_passed_usd": 0.001110134,
+      "gross_cost_usd": 0.0555067,
+      "high_severity": {
+        "attempted": 5,
+        "passed": 5
+      },
+      "known_gross_cost_usd": 0.0555067,
+      "median_latency_seconds": 2.2669572710037755,
+      "multi_chunk_responses": 0,
+      "not_attempted": 0,
+      "passed": 50,
+      "planned": 50,
+      "recovered_inert_suffix_chunks": 0,
+      "recovered_repeated_plan_chunks": 0,
+      "repeat": 2,
+      "semantic_repairs": 0,
+      "transport_retries": 0,
+      "unknown_cost_reservations_usd": 0.0
+    },
+    {
+      "ambiguity_or_unsupported": {
+        "attempted": 9,
+        "passed": 9
+      },
+      "answerable": {
+        "attempted": 41,
+        "passed": 41
+      },
+      "argument_repairs": 0,
+      "attempted": 50,
+      "cache_write_tokens": 423,
+      "cached_input_tokens": 119474,
+      "completed": 50,
+      "discarded_invalid_chunks": 0,
+      "duplicate_valid_chunks": 0,
+      "failures": [],
+      "gross_cost_per_passed_usd": 0.0010858460000000003,
+      "gross_cost_usd": 0.054292300000000016,
+      "high_severity": {
+        "attempted": 5,
+        "passed": 5
+      },
+      "known_gross_cost_usd": 0.0542923,
+      "median_latency_seconds": 2.243242813001416,
+      "multi_chunk_responses": 0,
+      "not_attempted": 0,
+      "passed": 50,
+      "planned": 50,
+      "recovered_inert_suffix_chunks": 0,
+      "recovered_repeated_plan_chunks": 0,
+      "repeat": 3,
+      "semantic_repairs": 0,
+      "transport_retries": 0,
+      "unknown_cost_reservations_usd": 0.0
+    }
+  ],
+  "user_cumulative_cap_usd": 6.0
+}

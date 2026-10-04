@@ -9,7 +9,12 @@ from pathlib import Path
 from chess_analytics.common import write_json
 
 
-def check(preflight_path: Path, report_paths: list[Path], audit_paths: list[Path]) -> dict:
+def check(
+    preflight_path: Path,
+    report_paths: list[Path],
+    audit_paths: list[Path],
+    sandbox_attempt_path: Path,
+) -> dict:
     if len(report_paths) != 3 or len(audit_paths) != 3:
         raise ValueError("three reports and audits required")
     frozen = preflight_path.read_bytes()
@@ -20,11 +25,26 @@ def check(preflight_path: Path, report_paths: list[Path], audit_paths: list[Path
         raise ValueError("December product-condition preflight required")
     reports = [json.loads(path.read_text()) for path in report_paths]
     audits = [json.loads(path.read_text()) for path in audit_paths]
+    sandbox_attempt = json.loads(sandbox_attempt_path.read_text())
     digest = hashlib.sha256(frozen).hexdigest()
     planned = preflight["attempts_planned"]
     # Includes all inspected M7 spend and full reservations for unknown-cost attempts.
-    prior = 0.13879496
+    prior_before_december = 0.13879496
     gates = {}
+    gates["sandbox_failure_retained_and_reserved"] = (
+        sandbox_attempt["preflight_sha256"] == digest
+        and sandbox_attempt["attempted"] == 1
+        and sandbox_attempt["completed"] == 0
+        and sandbox_attempt["attempts"][0]["status"] == "failed"
+        and sandbox_attempt["attempts"][0]["request_sha256"]
+        == preflight["cells"][0]["request_sha256"]
+        and sandbox_attempt["attempts"][0]["gross_cost_usd"] is None
+        and sandbox_attempt["unknown_cost_reservations_usd"]
+        == preflight["cells"][0]["reserved_cost_usd"]
+        and sandbox_attempt["gross_cost_accounted_usd"]
+        == sandbox_attempt["unknown_cost_reservations_usd"]
+    )
+    prior = prior_before_december + sandbox_attempt["gross_cost_accounted_usd"]
     gates["frozen_complete_runs"] = all(
         report["preflight_sha256"] == digest
         and report["case_set_sha256"] == preflight["case_set_sha256"]
@@ -139,6 +159,8 @@ def check(preflight_path: Path, report_paths: list[Path], audit_paths: list[Path
         "boundary_per_repeat": [report["ambiguity_or_unsupported"] for report in reports],
         "gross_cost_usd": gross,
         "prior_gross_accounted_usd": prior,
+        "prior_before_december_usd": prior_before_december,
+        "sandbox_unknown_cost_reservation_usd": sandbox_attempt["gross_cost_accounted_usd"],
         "cumulative_gross_accounted_usd": prior + gross,
         "approved_cumulative_cap_usd": preflight["max_run_usd"],
         "preflight_sha256": digest,
@@ -153,9 +175,10 @@ def main() -> None:
     parser.add_argument("--preflight", type=Path, required=True)
     parser.add_argument("--reports", type=Path, nargs=3, required=True)
     parser.add_argument("--audits", type=Path, nargs=3, required=True)
+    parser.add_argument("--sandbox-attempt", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
-    result = check(args.preflight, args.reports, args.audits)
+    result = check(args.preflight, args.reports, args.audits, args.sandbox_attempt)
     write_json(args.out, result)
     print(json.dumps({"live_gates_passed": result["live_gates_passed"], "gates": result["gates"]}))
     if not result["live_gates_passed"]:

@@ -2,6 +2,8 @@
 
 import hashlib
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -189,3 +191,49 @@ def test_december_sol_preflight_is_independent_and_bounded():
     )
     for key in ("case_set_sha256", "dataset_id", "frozen_file_sha256", "cells"):
         assert current[key] == frozen[key]
+
+
+def test_december_live_gate_reconciles_failed_reservation_and_three_runs(tmp_path):
+    preflight = PROJECT / "reports/M7-December-Sol-v12-preflight.json"
+    reports = [PROJECT / f"reports/M7-December-Sol-v12-run-{i}.json" for i in (1, 2, 3)]
+    audits = [PROJECT / f"reports/M7-December-Sol-v12-run-{i}-audit.json" for i in (1, 2, 3)]
+    sandbox = PROJECT / "reports/M7-December-Sol-v12-sandbox-partial.json"
+
+    def gate(paths, output):
+        process = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "scripts.check_m7_december",
+                "--preflight",
+                str(preflight),
+                "--reports",
+                *(str(path) for path in paths),
+                "--audits",
+                *(str(path) for path in audits),
+                "--sandbox-attempt",
+                str(sandbox),
+                "--out",
+                str(output),
+            ],
+            cwd=PROJECT,
+            capture_output=True,
+            text=True,
+        )
+        return process.returncode, json.loads(output.read_text())
+
+    code, result = gate(reports, tmp_path / "accepted.json")
+    assert code == 0
+    assert result["live_gates_passed"]
+    assert result["scored_per_repeat"] == [50, 50, 50]
+    assert result["cumulative_gross_accounted_usd"] == pytest.approx(0.35392836)
+    assert result["sandbox_unknown_cost_reservation_usd"] == pytest.approx(0.0372375)
+
+    damaged = json.loads(reports[0].read_text())
+    damaged["attempts"][0]["request_sha256"] = "drifted"
+    changed = tmp_path / "damaged.json"
+    changed.write_text(json.dumps(damaged))
+    code, rejected = gate([changed, *reports[1:]], tmp_path / "rejected.json")
+    assert code == 1
+    assert not rejected["live_gates_passed"]
+    assert not rejected["gates"]["frozen_complete_runs"]
