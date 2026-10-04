@@ -1,0 +1,591 @@
+{
+  "ambiguity_or_unsupported": {
+    "attempted": 0,
+    "passed": 0
+  },
+  "answerable": {
+    "attempted": 10,
+    "passed": 9
+  },
+  "attempted": 10,
+  "attempts": [
+    {
+      "answer_status": "answered",
+      "case_id": "h_usage_zukertort_opening",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.3850010829992243,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_ecfa937da6f1d5ed9b3b"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.00010190000000000001,
+      "model_response_id": "resp_0b67e13f5cd745c2016ac2280795d487d1b0de9857dff66485",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Zukertort Opening\\\"}}\"}]}",
+      "request_sha256": "731b2c0775a5a507bbed07748a9b4b96330f1884f626ad89f34aadbd22826934",
+      "resolved_model": "gpt-6-luna",
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Zukertort Opening",
+        "metric_id": "opening_usage",
+        "numerator": 2804,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.028289798924503364,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h_usage_zukertort_opening",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "usage": {
+        "input_tokens": 734,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 57,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 791
+      }
+    },
+    {
+      "answer_status": "answered",
+      "case_id": "h_usage_zukertort_opening",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.4829646669968497,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_ecfa937da6f1d5ed9b3b"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 5.287000000000001e-05,
+      "model_response_id": "resp_07fc4b2506193b04016ac22809ac2887d1befd077bd5ec7a78",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Zukertort Opening\\\"}}\"}]}",
+      "request_sha256": "c465863b4d01e156a4116132581df23c60e2fa2048bc277f530c463a2f551b8b",
+      "resolved_model": "gpt-6-luna",
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Zukertort Opening",
+        "metric_id": "opening_usage",
+        "numerator": 2804,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.028289798924503364,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h_usage_zukertort_opening",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "usage": {
+        "input_tokens": 2088,
+        "input_tokens_details": {
+          "cache_write_tokens": 28,
+          "cached_tokens": 2057
+        },
+        "output_tokens": 57,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2145
+      }
+    },
+    {
+      "answer_status": "answered",
+      "case_id": "h_usage_kings_pawn_game",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.344656707995455,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_6081e5b7b28303e84b07"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.00010120000000000001,
+      "model_response_id": "resp_0daf56fdf2bb45d4016ac2280c1de087d1ba54a1fd730e3290",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"King's Pawn Game\\\"}}\"}]}",
+      "request_sha256": "064ceef78a72829feda440198c2460c74b6ac25c7cf18670aff56f60ca9add18",
+      "resolved_model": "gpt-6-luna",
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "King's Pawn Game",
+        "metric_id": "opening_usage",
+        "numerator": 2794,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.028188908058153495,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h_usage_kings_pawn_game",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "usage": {
+        "input_tokens": 732,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 788
+      }
+    },
+    {
+      "answer_status": "answered",
+      "case_id": "h_usage_kings_pawn_game",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.830800249997992,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_6081e5b7b28303e84b07"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 5.212e-05,
+      "model_response_id": "resp_0d57f8b0b02b66b7016ac2280ead9087d19788bdbfb7fa7903",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"King's Pawn Game\\\"}}\"}]}",
+      "request_sha256": "5f67e9581bf49807bc3e18d8e884006d3c16eba9ec27097203f810a0b4daf298",
+      "resolved_model": "gpt-6-luna",
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "King's Pawn Game",
+        "metric_id": "opening_usage",
+        "numerator": 2794,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.028188908058153495,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h_usage_kings_pawn_game",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "usage": {
+        "input_tokens": 2086,
+        "input_tokens_details": {
+          "cache_write_tokens": 26,
+          "cached_tokens": 2057
+        },
+        "output_tokens": 56,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2142
+      }
+    },
+    {
+      "answer_status": "answered",
+      "case_id": "h_usage_queens_gambit_declined",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.6858406249957625,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_cab6994eeee5086ae8a7"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.0001025,
+      "model_response_id": "resp_0f3bf9de3df48de1016ac228118d2c87d1baba0ca063d50c1a",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Queen's Gambit Declined\\\"}}\"}]}",
+      "request_sha256": "f4ac63c99620bc5433ef10cf09a14eaad015a601324d559053a07f772ba2e981",
+      "resolved_model": "gpt-6-luna",
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Queen's Gambit Declined",
+        "metric_id": "opening_usage",
+        "numerator": 2525,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.02547494375334201,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h_usage_queens_gambit_declined",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "usage": {
+        "input_tokens": 735,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 793
+      }
+    },
+    {
+      "answer_status": "answered",
+      "case_id": "h_usage_queens_gambit_declined",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 1.796563125004468,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_cab6994eeee5086ae8a7"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 5.0159999999999994e-05,
+      "model_response_id": "resp_035e00cddeee7ffe016ac2281416c887d287a0b462d8f4f3b8",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Queen's Gambit Declined\\\"}}\"}]}",
+      "request_sha256": "e43ba70e1fb56aa06244b5262a75222884ac3c8d93972c5b699f7bb7956aa4c1",
+      "resolved_model": "gpt-6-luna",
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Queen's Gambit Declined",
+        "metric_id": "opening_usage",
+        "numerator": 2525,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.02547494375334201,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h_usage_queens_gambit_declined",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "usage": {
+        "input_tokens": 2089,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2086
+        },
+        "output_tokens": 58,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2147
+      }
+    },
+    {
+      "answer_status": "answered",
+      "case_id": "h_usage_modern_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.340649541998573,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_0cfb26f7a705e62809c1"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.00010010000000000001,
+      "model_response_id": "resp_0ca7a350d9c82019016ac22816398487d1b43c4181e3060833",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Modern Defense\\\"}}\"}]}",
+      "request_sha256": "ac9a6fd7831ec655c83bfb867025d383804a85839f6d5ceb276e1ec3be50e878",
+      "resolved_model": "gpt-6-luna",
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Modern Defense",
+        "metric_id": "opening_usage",
+        "numerator": 2248,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.02268026675545063,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h_usage_modern_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "usage": {
+        "input_tokens": 731,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 54,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 785
+      }
+    },
+    {
+      "answer_status": "answered",
+      "case_id": "h_usage_modern_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.2664702080001007,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_0cfb26f7a705e62809c1"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 5.0995e-05,
+      "model_response_id": "resp_06ab892d9026ba36016ac22818401887d2a93f864dc36704c2",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Modern Defense\\\"}}\"}]}",
+      "request_sha256": "e0e44499ddfed422f1a55315d8ea070478ee2fed9d0ca8ee86948147c4afb3fa",
+      "resolved_model": "gpt-6-luna",
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Modern Defense",
+        "metric_id": "opening_usage",
+        "numerator": 2248,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.02268026675545063,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h_usage_modern_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "usage": {
+        "input_tokens": 2085,
+        "input_tokens_details": {
+          "cache_write_tokens": 25,
+          "cached_tokens": 2057
+        },
+        "output_tokens": 54,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2139
+      }
+    },
+    {
+      "answer_status": "answered",
+      "case_id": "h_usage_indian_defense",
+      "category": "basic_calculation",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "condition": "schema_only",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.0434257499946398,
+      "error": null,
+      "error_type": null,
+      "evidence_ids": [
+        "ev_64d4800ac189c27dfb9e"
+      ],
+      "expected_status": "answered",
+      "gross_cost_usd": 0.00010010000000000001,
+      "model_response_id": "resp_0922a1de786a4d71016ac2281a8a7887d2b9e008f3a9ba0328",
+      "model_text": "{\"status\":\"answered\",\"interpretation\":\"descriptive_observed_prefix\",\"actions\":[{\"tool\":\"query_metric\",\"args_json\":\"{\\\"metric_id\\\":\\\"opening_usage\\\",\\\"filters\\\":{\\\"family\\\":\\\"Indian Defense\\\"}}\"}]}",
+      "request_sha256": "abf35dc5f0cfc699d9bf2242a37a25b7d3cc46b9d15d3ea9dba96d956903a478",
+      "resolved_model": "gpt-6-luna",
+      "result": {
+        "analytical_id": "84a38a404815ed2729917d76",
+        "contract_sha256": "01fd36a9dbd2abcc2ee2642950e516f9eb0a63d3630544ac61fdc0f2f56fe99e",
+        "denominator": 99117,
+        "family": "Indian Defense",
+        "metric_id": "opening_usage",
+        "numerator": 2188,
+        "scope": "observed bounded prefix only",
+        "unknown_opening_games": 0,
+        "value": 0.022074921557351412,
+        "version": "1.0.0"
+      },
+      "score": {
+        "case_id": "h_usage_indian_defense",
+        "category": "basic_calculation",
+        "failures": [],
+        "passed": true,
+        "rubric_version": "m6-2.1",
+        "split": "m6_holdout"
+      },
+      "severity": "medium",
+      "status": "completed",
+      "usage": {
+        "input_tokens": 731,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 54,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 785
+      }
+    },
+    {
+      "answer_status": null,
+      "case_id": "h_usage_indian_defense",
+      "category": "basic_calculation",
+      "caveats": null,
+      "condition": "semantic_context",
+      "cost_basis": "reported_cache_breakdown",
+      "elapsed_seconds": 2.383190166998247,
+      "error": "provider returned no single structured plan",
+      "error_type": "ValueError",
+      "evidence_ids": null,
+      "expected_status": "answered",
+      "gross_cost_usd": 7.362e-05,
+      "model_response_id": "resp_0adb1ad9c8807ec8016ac2281c81d087d1a5c8997ed4b633e6",
+      "model_text": null,
+      "request_sha256": "ae8015db86dfb544d7fbe678d17a3836b55d4417190c4aec2fcfb08bec2cc527",
+      "resolved_model": "gpt-6-luna",
+      "result": null,
+      "score": null,
+      "severity": "medium",
+      "status": "failed",
+      "usage": {
+        "input_tokens": 2085,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 2082
+        },
+        "output_tokens": 105,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 2190
+      }
+    }
+  ],
+  "by_category": {
+    "basic_calculation": {
+      "attempted": 10,
+      "passed": 9
+    }
+  },
+  "by_condition": {
+    "schema_only": {
+      "attempted": 5,
+      "passed": 5
+    },
+    "semantic_context": {
+      "attempted": 5,
+      "passed": 4
+    }
+  },
+  "case_set_sha256": "d7aadbad6a7c19d58bc5dfcf70499b4f97021c9fbc6241e057848f4909a46fd6",
+  "completed": 9,
+  "cost_known_for_every_attempt": true,
+  "high_severity": {
+    "attempted": 0,
+    "passed": 0
+  },
+  "kind": "one_shot_frozen_family_split_holdout_actual_model_responses",
+  "known_gross_cost_usd": 0.000785565,
+  "max_run_usd": 0.1,
+  "model": "gpt-6-luna",
+  "one_shot_no_repeatability_claim": true,
+  "planned": 40,
+  "preflight_sha256": "1044f859b5fe89406496321ba721b1488f73f6a73af79da1350fdb141d668981",
+  "scorer": "m6-2.1 frozen before model calls"
+}

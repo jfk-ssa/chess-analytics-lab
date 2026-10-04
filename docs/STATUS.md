@@ -13,7 +13,7 @@ repository; projects 1–3 remain together. No remote repository or hosting crea
 | M3 analytical corpus and metrics | Done | Accepted bounded prefix, observed coverage, independent checks, 12 draft dev cases |
 | M4 analytics product | Done | Accepted local six-view dashboard and two reproducible memos |
 | M5 analyst/eval harness | Done | Accepted checked typed tools, fixture replay and 50-case harness; no model result |
-| M6 measured release | In progress; holdout frozen offline | New 20-case family split and 40-request preflight pass offline checks. Await a separate gross-spend cap before live scoring and failure review. |
+| M6 measured release | In progress; release held | First frozen holdout run passed 39/40 and the numerical/abstention thresholds, but two authorized repeats stopped after 10 and 22 attempts. Diagnose reliability on development cases, then freeze a new holdout before any release claim. |
 | M7 depth | Later | Select only measured improvements |
 | M8 Jev | Follow-up | Fair, measured integration experiment |
 | Personalized recommender | Backlog | Outside first-release scope |
@@ -38,7 +38,8 @@ repository; projects 1–3 remain together. No remote repository or hosting crea
 | M6 offline preparation | Hard-deadline credential-free tool worker; 12-case/two-condition typed-planner pilot with whole-run budget reservation and frozen request hashes | Worker ran against the real checked snapshot; proposed 24-cell quote is $0.0198638 under hypothetical $1 cap. Fresh clone and cached offline tiny demo passed after filling missing macOS wheels. These are offline checks, not model outcomes. [M6 evidence](M6.md). |
 | M6 actual development pilot | Four frozen prompt revisions; 32 API requests including stopped attempts; final two-condition run completed 24/24 | Frozen scorer 16/24: 8/12 answerable and 8/12 ambiguity/unsupported; both conditions 8/12. Corrected gross cost across attempts $0.0028105 under the first $0.10 cap. Release gates **not met**. [Actual model results](../reports/M6-live-pilot.json). |
 | M6 development revisions | M6 2.0 scorer accepts an equivalent checked clock-pressure tool; prompt clarifies abstention and opening filters; 64 further actual requests | Revisions: 20/24, stopped at 16 after a two-chunk response, then 23/24 (11/12 answerable, 12/12 abstention). Corrected gross cost $0.00528149 under the separate $0.10 cap. One-shot development success is not held-out release evidence. [Progress and failures](../reports/M6-development-progress.json). |
-| M6 new holdout preparation | 20 frozen cases (14 answerable, 6 ambiguity/unsupported) using eight opening families absent from M5 usage cases; raw-PGN cohort reference for two new families; separate M6 2.1 scorer | All 20 deterministic checked-tool answers matched independent references offline; 40 request hashes and 24 file hashes frozen. Conservative [preflight](../reports/M6-holdout-preflight.json) quote $0.0503635 at the documented Luna rates. **No holdout model response yet.** |
+| M6 new holdout preparation | 20 frozen cases (14 answerable, 6 ambiguity/unsupported) using eight opening families absent from M5 usage cases; raw-PGN cohort reference for two new families; separate M6 2.1 scorer | All 20 deterministic checked-tool answers matched independent references offline before live calls; 40 request hashes and 24 file hashes frozen. Conservative [preflight](../reports/M6-holdout-preflight.json) quote $0.0503635 at the documented Luna rates. |
+| M6 actual family-split holdout | Three authorized repetitions of the same frozen 40-cell preflight; 72/120 planned requests attempted, all raw failures retained | First complete run 39/40: 27/28 answerable, 12/12 ambiguity/unsupported, 6/6 high-severity. Repeat 2 stopped at 10 (9 scored passes); repeat 3 stopped at 22 (20 scored passes). Gross total $0.0060692 below the $0.10 cumulative cap. Evidence integrity passed for all 70 completed answers; two attempts failed closed. **No repeatable release performance claim.** [Runs and censored cells](../reports/M6-holdout-variability.json). |
 
 Acceptance details: [reports/M0-M1.md](../reports/M0-M1.md), machine-readable
 [acceptance.json](../reports/acceptance.json), [foundation manifest](../reports/foundation-manifest.json).
@@ -101,7 +102,7 @@ comparison attempt could not bind one inside the sandbox; a permitted local run
 completed and its result was saved. See [run instructions](ORCHESTRATION.md).
 Separate locked Dagster-only and Prefect-only environments installed from the local
 uv cache and completed one-off tiny runs during M2. The current dbt-enabled
-environment passes **37 offline tests** (2 optional tests skipped); Ruff check/format, Git whitespace check,
+environment passes **38 offline tests** (2 optional tests skipped); Ruff check/format, Git whitespace check,
 and `uv lock --check --offline` pass with the workspace cache. The current foundation
 snapshot still reports 3,982/121,332. No hosted CI run is claimed.
 
@@ -110,9 +111,10 @@ snapshot still reports 3,982/121,332. No hosted CI run is claimed.
 1. Diagnose the actual multi-step and abstention failures. Keep the failed
    model responses and the frozen scorer results visible. Do not lower release
    targets after seeing the results.
-2. With a separate user-approved gross cap, run the frozen 40-request family-split
-   holdout once, retain every response and failure, and manually review evidence.
-   The inspected M5 test split remains retired for untouched claims.
+2. The family-split holdout is now inspected and retired for future untouched
+   claims. Fix provider-format and checked-tool argument failures on development
+   cases, preserving the stopped runs. Then freeze a new holdout and cap before
+   any new live release attempt.
 3. Complete release evidence only when gates pass. The fresh-clone tiny demo
    has passed. Keep optional Airflow deferred unless its extra local stack has
    a measured benefit.

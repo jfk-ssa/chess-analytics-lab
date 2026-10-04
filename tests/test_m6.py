@@ -1,5 +1,6 @@
 """M6 budget and process-boundary acceptance without provider calls."""
 
+import importlib.util
 import json
 import os
 import subprocess
@@ -223,3 +224,57 @@ def test_holdout_reference_and_frozen_preflight_without_model_calls(tmp_path, mo
     monkeypatch.delenv("CHESSLAB_OPENAI_API_KEY", raising=False)
     with pytest.raises(ValueError, match="personal API key is absent"):
         run(PROJECT, None, frozen_path, max_run_usd=0.10, holdout=True)
+
+
+def test_stopped_repeats_keep_unattempted_cells_out_of_accuracy_denominators(tmp_path):
+    spec = importlib.util.spec_from_file_location(
+        "report_m6_variability", PROJECT / "scripts/report_m6_variability.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    preflight = {
+        "case_set_sha256": "frozen",
+        "attempts_planned": 2,
+        "max_run_usd": 0.10,
+        "cells": [
+            {"case_id": "a", "condition": "schema_only"},
+            {"case_id": "a", "condition": "semantic_context"},
+        ],
+    }
+    preflight_path = tmp_path / "preflight.json"
+    preflight_path.write_text(json.dumps(preflight))
+    paths = []
+    for index, count in enumerate((2, 1, 0)):
+        attempts = [
+            {
+                "case_id": "a",
+                "condition": preflight["cells"][j]["condition"],
+                "score": {"passed": True},
+                "usage": {},
+                "elapsed_seconds": 1.0,
+                "status": "completed",
+                "error_type": None,
+            }
+            for j in range(count)
+        ]
+        report = {
+            "case_set_sha256": "frozen",
+            "attempts": attempts,
+            "completed": count,
+            "answerable": {"attempted": count, "passed": count},
+            "ambiguity_or_unsupported": {"attempted": 0, "passed": 0},
+            "high_severity": {"attempted": 0, "passed": 0},
+            "known_gross_cost_usd": count * 0.001,
+            "cost_known_for_every_attempt": True,
+        }
+        path = tmp_path / f"report-{index}.json"
+        path.write_text(json.dumps(report))
+        paths.append(path)
+    result = module.build(preflight_path, paths)
+    assert (
+        result["planned_attempts"],
+        result["attempted"],
+        result["not_attempted_due_to_stops"],
+        result["full_repetitions"],
+    ) == (6, 3, 3, 1)
+    assert result["cells"][1]["outcomes"] == ["passed", "not_attempted", "not_attempted"]
