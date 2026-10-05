@@ -3,7 +3,9 @@
 The four bounded findings below were fixed offline after this review. The
 historical findings and the original M8 evidence remain preserved. A fresh
 release candidate was committed as `07c1344` and pushed to a private GitHub
-repository. Hosted CI must complete before public visibility.
+repository. GitHub Actions run [37371042615](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/37371042615)
+subsequently passed both jobs on `73b6dfc`; the owner approved public visibility,
+and GitHub reports the repository as public.
 
 ## Resolution after review
 
@@ -32,8 +34,10 @@ wheel and source archive include LICENSE and exclude ignored work, caches,
 virtual environments, and private env files; see the
 [package inventory](../reports/final-package-inventory.json). The
 [post-fix candidate scan](../reports/final-upload-audit.json) found no matching
-sensitive content or personal-path patterns. This is local evidence; hosted
-CI and GitHub rendering remain to be checked after a push.
+sensitive content or personal-path patterns. The clean-export check was local
+evidence. Hosted CI subsequently passed both
+jobs in run 37371042615 on the pushed release; the README is available in the
+public repository.
 
 ## Findings and bounded fixes
 
