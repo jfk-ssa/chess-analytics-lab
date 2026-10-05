@@ -1,7 +1,8 @@
 # Status — 2026-10-05
 
 **M0–M7 accepted locally; M8 routing and end-to-end Jev comparisons measured, with no production promotion. Portfolio hardening verified locally and in a fresh export; GPL-3.0-or-later selected for original project code.** This is a new standalone local Git
-repository; projects 1–3 remain together. No remote repository or hosting created.
+repository; projects 1–3 remain together. A private GitHub remote now exists at
+https://github.com/jfk-ssa/chess-analytics-lab; it has not been made public.
 
 ## Phase tracker
 
@@ -15,8 +16,10 @@ See [final review and resolution](FINAL_RELEASE_REVIEW.md) and the
 post-fix local suite passed 108 tests; a fresh locked export passed 95 tests
 with 13 expected real-data skips, Ruff, and the full offline demo. The
 post-fix source archive and wheel include the license and exclude ignored
-payloads. Commit and hosted CI are the remaining release gates; no new
-live call or upload occurred.
+payloads. Release commit `07c1344` and the `m7-baseline` tag were pushed to
+the private remote. Hosted CI was queued at last check during a reported
+GitHub Actions runner-assignment incident; no hosted result is claimed.
+No new live model call occurred.
 
 | Phase | State | Next gate |
 |---|---|---|
@@ -29,7 +32,7 @@ live call or upload occurred.
 | M6 measured release | Done; typed-analyst release gates met | Three complete frozen v2 repetitions, 118/120 scored passes, all evidence audits and offline checks passed. See [release checkpoint](M6-RELEASE.md). |
 | M7 depth | Done; December Sol v12 gate accepted | Three complete frozen repetitions scored 50/50 each with 150/150 evidence audits, no repairs/retries, and $0.35392836 cumulative accounted gross under the approved $6 cap. Earlier failed/stopped gates remain retained. See [December checkpoint](M7-DECEMBER.md). |
 | M8 Jev | Routing and paired final-answer comparisons measured; no production promotion | [Route checkpoint](../reports/M8-routing-checkpoint.json): rules 35/40; Jev passes 39/40 and 37/40; existing analyst 33/40. [End-to-end checkpoint](../reports/M8-e2e-checkpoint.json): both arms 31/32 after versioned offline rescore; Jev costs slightly more. Eight new boundary labels received owner review. See [end-to-end lab](JEV_END_TO_END.md). Compatible DuckDB extension remains an optional isolated exercise. |
-| Portfolio readiness | Integrity, offline demo, docs, clean export and license verified locally; commit and hosted CI pending | [Implementation evidence](EVIDENCE_INDEX.md), [review findings](REPOSITORY_REVIEW.md) and [handoff record](PORTFOLIO_HANDOFF.md). |
+| Portfolio readiness | Integrity, offline demo, docs, clean export and license verified locally; private remote created and release commit pushed; hosted CI pending | [Implementation evidence](EVIDENCE_INDEX.md), [final review](FINAL_RELEASE_REVIEW.md) and [handoff record](PORTFOLIO_HANDOFF.md). Public visibility remains a later owner decision after CI. |
 | Personalized recommender | Backlog | Outside first-release scope |
 
 ## Portfolio hardening checkpoint

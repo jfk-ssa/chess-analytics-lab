@@ -2,7 +2,8 @@
 
 The four bounded findings below were fixed offline after this review. The
 historical findings and the original M8 evidence remain preserved. A fresh
-release candidate still needs a commit and hosted CI before publication.
+release candidate was committed as `07c1344` and pushed to a private GitHub
+repository. Hosted CI must complete before public visibility.
 
 ## Resolution after review
 
@@ -117,6 +118,11 @@ existing HEAD would omit much of the reviewed work. There is no Git remote,
 and no hosted CI result is claimed.
 
 ## Publication sequence
+
+Steps 1–3 were carried through the private push. At the last check, both
+GitHub Actions jobs on `main` were queued while GitHub reported an incident
+delaying assignment of hosted runners. Keep step 3 open until the actual
+hosted result is available; local checks cannot substitute for it.
 
 1. Fix F1–F4 with offline regressions; preserve frozen evidence and original
    scores. Re-run focused tests, the local suite, and clean-export checks.
