@@ -1,6 +1,7 @@
 """Run locally: streamlit run analytics_m4/dashboard.py."""
 
 import json
+import os
 from pathlib import Path
 
 import streamlit as st
@@ -15,7 +16,7 @@ from analytics_m4.analysis import (
     opening_comparison,
 )
 
-PROJECT = Path(__file__).resolve().parents[1]
+PROJECT = Path(os.environ.get("CHESSLAB_PROJECT", Path(__file__).resolve().parents[1])).resolve()
 st.set_page_config(page_title="Chess Analytics Lab", layout="wide")
 st.title("Chess Analytics Lab")
 
@@ -40,12 +41,16 @@ except (OSError, ValueError) as exc:
     st.stop()
 
 date = cover["observed_dates"]
+fixture = cover["source_kind"] == "synthetic_test_fixture"
 st.caption(
     f"Snapshot {snapshot.name} · observed UTC {date['first_utc_date']} to "
-    f"{date['last_utc_date']} · ordered archive prefix · partial source · "
+    f"{date['last_utc_date']} · "
+    f"{'synthetic test fixture' if fixture else 'ordered archive prefix; partial source'} · "
     f"{cover['source_counts']['accepted']:,} accepted games · "
     f"{cover['selection']['selected_games']:,} selected move games"
 )
+if fixture:
+    st.warning("Synthetic games for demonstration only. These are not observations of players.")
 page = st.sidebar.radio(
     "View",
     [
@@ -69,9 +74,10 @@ if page == "Overview and coverage":
     st.caption(
         "Opening share denominator: known-opening completed eligible games. Source tags only."
     )
-    st.warning(
-        "The first 100,000 complete games cover one observed day; this is not an August estimate."
-    )
+    if fixture:
+        st.info("The opening counts are hand-checkable fixture values, not population estimates.")
+    else:
+        st.warning("This ordered prefix covers only its observed dates, not a whole month.")
 elif page == "Opening comparisons":
     st.subheader("Opening score comparison")
     color = st.selectbox("Player color", ["black", "white"])
@@ -115,10 +121,13 @@ elif page == "Clock pressure":
         if row["error_proxy_rate"] is not None
         else "No evaluable moves"
     )
-    st.write(
-        f"Evaluation coverage: {row['evaluable_moves']:,} / {row['eligible_moves']:,} "
-        f"eligible moves = {row['evaluation_coverage']:.1%}"
-    )
+    if row["eligible_moves"]:
+        st.write(
+            f"Evaluation coverage: {row['evaluable_moves']:,} / {row['eligible_moves']:,} "
+            f"eligible moves = {row['evaluation_coverage']:.1%}"
+        )
+    else:
+        st.write("Evaluation coverage: no eligible moves in this bucket")
     st.dataframe([r for r in clocks["strata"] if r["bucket"] == selected], hide_index=True)
     st.warning(
         "Source evaluations are sparse and selected. This does not establish a causal effect."
@@ -164,6 +173,14 @@ elif page == "AI analyst":
         "Live provider calls remain disabled pending personal configuration and a spending cap."
     )
 else:
+    if fixture:
+        path = PROJECT / "reports/portfolio-demo.json"
+        if path.exists():
+            demo = json.loads(path.read_text())
+            st.subheader("Synthetic fixture replay")
+            st.json(demo["analyst"])
+        st.caption("This panel contains fixture plans and checked values, not model responses.")
+    st.subheader("Historical evaluation evidence")
     path = PROJECT / "reports/M5-both-harness.json"
     if path.exists():
         report = json.loads(path.read_text())
@@ -173,4 +190,14 @@ else:
             hide_index=True,
         )
         st.caption(f"Case set SHA256: {report['case_set_sha256']}")
-    st.warning("Harness validation only. No model accuracy or live benchmark is claimed.")
+    st.caption("M5 is a replay/scorer harness check, not model accuracy.")
+    checkpoint = PROJECT / "reports/M7-December-Sol-v12-checkpoint.json"
+    if checkpoint.exists():
+        live = json.loads(checkpoint.read_text())
+        st.metric("M7 frozen live cases", "/".join(str(n) for n in live["scored_per_repeat"]))
+        st.caption(
+            f"Three repetitions of the same 50-case December 1 prefix holdout; "
+            f"{live['gross_cost_usd']:.6f} USD gross for the complete runs. "
+            "Earlier stopped and failed runs are retained in docs/M7-DECEMBER.md. "
+            "This is a fixed-case checkpoint, not population accuracy."
+        )

@@ -25,6 +25,6 @@ Lichess open database, released under CC0: https://database.lichess.org/.
 The exact source URL/checksum/listing date are in config/datasets.json. No broadcast
 data or engine binary is included. Tiny fixture games were authored for tests.
 
-The repository's distribution license has not been selected. Review compatibility
-with GPL python-chess before public distribution; CC0 data does not make the software
-or all dependencies CC0. Do not describe this repository as permissively licensed.
+Original project code is licensed under [GPL-3.0-or-later](LICENSE). The
+python-chess dependency is GPL-3.0-or-later; other dependencies retain the
+licenses listed above. CC0 source data does not set the software license.

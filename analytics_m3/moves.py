@@ -111,19 +111,26 @@ def write_sampled_moves(source: Path, snapshot: Path, target: Path, plan: dict, 
     zero_ply_games = 0
     row_count = 0
     expected_rows = 0
+    processed_games: set[str] = set()
     write_batch = 16 * 1024 * 1024
     guard_disk(root, plan["max_generated_bytes"], write_batch)
     remaining = write_batch
     with target.open("w") as out:
         for _, raw, _ in records(source, plan):
             match = SITE.search(raw)
-            if not match or match[1] not in accepted or not selected(match[1]):
+            if (
+                not match
+                or match[1] not in accepted
+                or not selected(match[1])
+                or match[1] in processed_games
+            ):
                 continue
             game_id = match[1]
             base, increment, ply_count = accepted[game_id]
             rows = move_rows(raw, game_id, base, increment)
             if len(rows) != ply_count:
                 raise ValueError(f"selected game move count drift: {game_id}")
+            processed_games.add(game_id)
             selected_games += 1
             zero_ply_games += not rows
             expected_rows += ply_count

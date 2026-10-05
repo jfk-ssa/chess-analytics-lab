@@ -35,6 +35,7 @@ def coverage(project: Path, snapshot: Path) -> dict:
     return {
         "analytical_id": manifest["analytical_id"],
         "source_snapshot_id": manifest["source_snapshot_id"],
+        "source_kind": source_manifest["plan"].get("source_kind", "complete_archive"),
         "partial_archive": manifest["partial_archive"],
         "observed_dates": manifest["observed_date_coverage"],
         "source_counts": source_manifest["counts"],

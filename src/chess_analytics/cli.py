@@ -25,14 +25,14 @@ def fixture_plan(project):
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Chess Analytics Lab — local M0/M1 pipeline")
+    parser = argparse.ArgumentParser(description="Chess Analytics Lab — local checked data")
     parser.add_argument("--project", type=Path, default=Path.cwd(), help="repository root")
     parser.add_argument("--data-dir", type=Path, help="default: PROJECT/data")
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("doctor")
-    sub.add_parser(
-        "demo", help="synthetic fixture pipeline, offline; analyst replay is planned for M5"
-    )
+    demo = sub.add_parser("demo", help="offline foundation or complete portfolio fixture")
+    demo.add_argument("--scope", choices=("tiny", "all"), default="tiny")
+    demo.add_argument("--workspace", type=Path, help="isolated output for --scope all")
     for command in ("ingest", "build", "validate", "report"):
         item = sub.add_parser(command)
         item.add_argument("--dataset", choices=("tiny", "foundation"), default="tiny")
@@ -52,6 +52,10 @@ def main(argv=None):
                 "live_calls_supported": False,
                 "credentials_read": False,
             }
+        elif args.command == "demo" and args.scope == "all":
+            from chess_analytics.portfolio_demo import run
+
+            result = run(project, args.workspace or project / "work/portfolio-demo")
         elif args.command in {"ingest", "build", "demo"}:
             with writer_lock(root):
                 if args.command in {"ingest", "demo"}:

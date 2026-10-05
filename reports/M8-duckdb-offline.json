@@ -1,0 +1,268 @@
+{
+  "case_sha256": "8d2a626a4d2975bc050a7ed844c7a475a4672ad6d2f4c1f8718d46937912b965",
+  "duckdb_version": "1.4.1",
+  "kind": "m8_duckdb_offline_rules_replay_no_jev_calls",
+  "limit": "Python rules classify rows read from DuckDB; Jev SQL was not executed.",
+  "rows": 40,
+  "scoring": {
+    "accuracy": 0.875,
+    "cases": 40,
+    "confusion": {
+      "clarify": {
+        "clarify": 5,
+        "clock_bucket": 0,
+        "clock_compare": 0,
+        "coverage": 0,
+        "fallback": 0,
+        "opening_compare": 0,
+        "opening_score": 0,
+        "opening_usage": 0,
+        "unsupported": 0
+      },
+      "clock_bucket": {
+        "clarify": 0,
+        "clock_bucket": 4,
+        "clock_compare": 0,
+        "coverage": 0,
+        "fallback": 0,
+        "opening_compare": 0,
+        "opening_score": 0,
+        "opening_usage": 1,
+        "unsupported": 0
+      },
+      "clock_compare": {
+        "clarify": 0,
+        "clock_bucket": 1,
+        "clock_compare": 2,
+        "coverage": 1,
+        "fallback": 0,
+        "opening_compare": 0,
+        "opening_score": 0,
+        "opening_usage": 0,
+        "unsupported": 1
+      },
+      "coverage": {
+        "clarify": 0,
+        "clock_bucket": 0,
+        "clock_compare": 0,
+        "coverage": 5,
+        "fallback": 0,
+        "opening_compare": 0,
+        "opening_score": 0,
+        "opening_usage": 0,
+        "unsupported": 0
+      },
+      "opening_compare": {
+        "clarify": 0,
+        "clock_bucket": 0,
+        "clock_compare": 0,
+        "coverage": 0,
+        "fallback": 0,
+        "opening_compare": 5,
+        "opening_score": 0,
+        "opening_usage": 0,
+        "unsupported": 0
+      },
+      "opening_score": {
+        "clarify": 0,
+        "clock_bucket": 0,
+        "clock_compare": 0,
+        "coverage": 0,
+        "fallback": 0,
+        "opening_compare": 0,
+        "opening_score": 4,
+        "opening_usage": 1,
+        "unsupported": 0
+      },
+      "opening_usage": {
+        "clarify": 0,
+        "clock_bucket": 0,
+        "clock_compare": 0,
+        "coverage": 0,
+        "fallback": 0,
+        "opening_compare": 0,
+        "opening_score": 0,
+        "opening_usage": 5,
+        "unsupported": 0
+      },
+      "unsupported": {
+        "clarify": 0,
+        "clock_bucket": 0,
+        "clock_compare": 0,
+        "coverage": 0,
+        "fallback": 0,
+        "opening_compare": 0,
+        "opening_score": 0,
+        "opening_usage": 0,
+        "unsupported": 5
+      }
+    },
+    "correct": 35,
+    "kind": "m8_duckdb_rules_replay_routing_results",
+    "predictions": [
+      {
+        "id": "a06",
+        "route": "clarify"
+      },
+      {
+        "id": "a07",
+        "route": "clarify"
+      },
+      {
+        "id": "a08",
+        "route": "clarify"
+      },
+      {
+        "id": "a09",
+        "route": "clarify"
+      },
+      {
+        "id": "a10",
+        "route": "clarify"
+      },
+      {
+        "id": "b06",
+        "route": "clock_bucket"
+      },
+      {
+        "id": "b07",
+        "route": "opening_usage"
+      },
+      {
+        "id": "b08",
+        "route": "clock_bucket"
+      },
+      {
+        "id": "b09",
+        "route": "clock_bucket"
+      },
+      {
+        "id": "b10",
+        "route": "clock_bucket"
+      },
+      {
+        "id": "c06",
+        "route": "coverage"
+      },
+      {
+        "id": "c07",
+        "route": "clock_bucket"
+      },
+      {
+        "id": "c08",
+        "route": "clock_compare"
+      },
+      {
+        "id": "c09",
+        "route": "clock_compare"
+      },
+      {
+        "id": "c10",
+        "route": "unsupported"
+      },
+      {
+        "id": "o06",
+        "route": "opening_compare"
+      },
+      {
+        "id": "o07",
+        "route": "opening_compare"
+      },
+      {
+        "id": "o08",
+        "route": "opening_compare"
+      },
+      {
+        "id": "o09",
+        "route": "opening_compare"
+      },
+      {
+        "id": "o10",
+        "route": "opening_compare"
+      },
+      {
+        "id": "s06",
+        "route": "opening_score"
+      },
+      {
+        "id": "s07",
+        "route": "opening_score"
+      },
+      {
+        "id": "s08",
+        "route": "opening_score"
+      },
+      {
+        "id": "s09",
+        "route": "opening_usage"
+      },
+      {
+        "id": "s10",
+        "route": "opening_score"
+      },
+      {
+        "id": "u06",
+        "route": "opening_usage"
+      },
+      {
+        "id": "u07",
+        "route": "opening_usage"
+      },
+      {
+        "id": "u08",
+        "route": "opening_usage"
+      },
+      {
+        "id": "u09",
+        "route": "opening_usage"
+      },
+      {
+        "id": "u10",
+        "route": "opening_usage"
+      },
+      {
+        "id": "v06",
+        "route": "coverage"
+      },
+      {
+        "id": "v07",
+        "route": "coverage"
+      },
+      {
+        "id": "v08",
+        "route": "coverage"
+      },
+      {
+        "id": "v09",
+        "route": "coverage"
+      },
+      {
+        "id": "v10",
+        "route": "coverage"
+      },
+      {
+        "id": "x06",
+        "route": "unsupported"
+      },
+      {
+        "id": "x07",
+        "route": "unsupported"
+      },
+      {
+        "id": "x08",
+        "route": "unsupported"
+      },
+      {
+        "id": "x09",
+        "route": "unsupported"
+      },
+      {
+        "id": "x10",
+        "route": "unsupported"
+      }
+    ],
+    "unsupported_recall": 1.0
+  },
+  "split": "test",
+  "sql_preview": "-- Run only with an explicit key and gross cap in an isolated DuckDB version.\n-- INSTALL/LOAD are intentionally omitted: pinned DuckDB 1.4.1 has no Jev binary.\nSET jev_model = 'jev-1.13.0';\nSET jev_batch_size = 20;\nSET jev_concurrency = 1;\nSET jev_max_retries = 0;\nSET jev_max_rows_per_statement = 40;\nSET jev_max_chars_per_statement = 16000;\nSELECT id, label, jev_eval(struct_pack(question := question), 'Select the primary Chess Analytics Lab route. Missing referent: clarify. Out-of-scope, causal, personal or live request: unsupported. Otherwise choose the matching opening, clock or coverage route.', 'choice', ['opening_usage', 'opening_score', 'opening_compare', 'clock_bucket', 'clock_compare', 'coverage', 'clarify', 'unsupported']) AS judgment\nFROM routing_questions ORDER BY id;\nSELECT jev_stats();\n"
+}

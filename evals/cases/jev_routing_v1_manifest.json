@@ -1,0 +1,24 @@
+{
+  "annotation_rule": "A question has one primary intent. Route to clarify when a required referent is absent, and unsupported when the requested claim or action exceeds the product scope. Semantic route labels do not authorize execution; code checks exact filters and dataset coverage.",
+  "case_file": "evals/cases/jev_routing_v1.tsv",
+  "case_sha256": "8d2a626a4d2975bc050a7ed844c7a475a4672ad6d2f4c1f8718d46937912b965",
+  "cases": 80,
+  "freeze_note": "Labels were authored before implementing the M8 rules baseline or running Jev on these inputs; no M5-M7 heldout questions copied.",
+  "kind": "independently authored semantic route references; no model responses",
+  "labels": {
+    "clarify": 10,
+    "clock_bucket": 10,
+    "clock_compare": 10,
+    "coverage": 10,
+    "opening_compare": 10,
+    "opening_score": 10,
+    "opening_usage": 10,
+    "unsupported": 10
+  },
+  "source_data": "Questions contain no private game rows and do not require a corpus snapshot.",
+  "splits": {
+    "dev": 40,
+    "test": 40
+  },
+  "version": "jev-routing-v1"
+}

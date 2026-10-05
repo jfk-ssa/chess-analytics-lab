@@ -1,0 +1,11 @@
+{
+  "case_file": "evals/cases/jev_e2e_v1.json",
+  "case_sha256": "58642936c91601884a27585bc93b1ff63c108ae028a2cf09d3d1c5ef033a3a5d",
+  "cases": 32,
+  "clock_reference_sha256": "784225d2f247d8b79fdc3545408f271fd411aecbabba159bcef7b2f3882b67d5",
+  "gate_policy": "Jev Choice at probability >= 0.70 can emit only clarify or unsupported; every other decision falls through to unchanged checked analyst",
+  "kind": "m8_fresh_answer_holdout_frozen_before_live_inference",
+  "numerical_reference": "independent raw-PGN header/comment tallies, not checked metric code",
+  "question_author": "project agent; semantic boundary labels not human-adjudicated",
+  "reference_sha256": "7e64fb8c80f549f400633e60117d378c6ee90e4182afd24025c2a25967690560"
+}

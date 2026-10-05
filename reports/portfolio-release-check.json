@@ -1,0 +1,49 @@
+{
+  "artifacts": {
+    "sdist_bytes": 883602,
+    "sdist_entries": 487,
+    "sdist_ignored_payloads": 0,
+    "wheel_entries": 41,
+    "wheel_ignored_payloads": 0,
+    "wheel_includes_portfolio_demo": true
+  },
+  "baseline_commit": "26f675b80ef91f29406ebfb707d13b9f2004cde0",
+  "distribution_license": "owner_decision_pending",
+  "hosted_ci_run": "not_run",
+  "kind": "portfolio hardening local release acceptance; no hosted CI or publication",
+  "limits": [
+    "Real-data tests require ignored archives and snapshots",
+    "Historic live runs are retained evidence, not repeated here",
+    "Artifact inspection checked excluded local payloads; source archive was built before this final evidence-record update"
+  ],
+  "local": {
+    "extras": [
+      "dbt",
+      "dashboard"
+    ],
+    "git_diff_check": "passed",
+    "passed": 93,
+    "ruff_check": "passed",
+    "ruff_format": "passed",
+    "seconds": 45.32,
+    "skipped": 0,
+    "uv_lock_check": "passed"
+  },
+  "remote_upload": "not_done",
+  "retained_source_receipt_audit": {
+    "checked_pairs": 9,
+    "mismatches": 0
+  },
+  "tracked_source_export": {
+    "analytical_id": "0f372dc758dae03db6a4d816",
+    "complete_synthetic_demo": "passed",
+    "fresh_locked_install": "passed; one-time download of two missing cached wheels",
+    "live_requests": 0,
+    "passed": 81,
+    "ruff_check": "passed",
+    "seconds": 14.87,
+    "skipped_optional_real_data": 12,
+    "source_snapshot_id": "e766a3cbbbe1085da8e2aa7f"
+  },
+  "working_tree_contains_uncommitted_review_and_implementation": true
+}

@@ -1,0 +1,305 @@
+{
+  "accuracy": 0.875,
+  "case_sha256": "8d2a626a4d2975bc050a7ed844c7a475a4672ad6d2f4c1f8718d46937912b965",
+  "cases": 40,
+  "confusion": {
+    "clarify": {
+      "clarify": 5,
+      "clock_bucket": 0,
+      "clock_compare": 0,
+      "coverage": 0,
+      "fallback": 0,
+      "opening_compare": 0,
+      "opening_score": 0,
+      "opening_usage": 0,
+      "unsupported": 0
+    },
+    "clock_bucket": {
+      "clarify": 0,
+      "clock_bucket": 4,
+      "clock_compare": 0,
+      "coverage": 0,
+      "fallback": 0,
+      "opening_compare": 0,
+      "opening_score": 0,
+      "opening_usage": 1,
+      "unsupported": 0
+    },
+    "clock_compare": {
+      "clarify": 0,
+      "clock_bucket": 1,
+      "clock_compare": 2,
+      "coverage": 1,
+      "fallback": 0,
+      "opening_compare": 0,
+      "opening_score": 0,
+      "opening_usage": 0,
+      "unsupported": 1
+    },
+    "coverage": {
+      "clarify": 0,
+      "clock_bucket": 0,
+      "clock_compare": 0,
+      "coverage": 5,
+      "fallback": 0,
+      "opening_compare": 0,
+      "opening_score": 0,
+      "opening_usage": 0,
+      "unsupported": 0
+    },
+    "opening_compare": {
+      "clarify": 0,
+      "clock_bucket": 0,
+      "clock_compare": 0,
+      "coverage": 0,
+      "fallback": 0,
+      "opening_compare": 5,
+      "opening_score": 0,
+      "opening_usage": 0,
+      "unsupported": 0
+    },
+    "opening_score": {
+      "clarify": 0,
+      "clock_bucket": 0,
+      "clock_compare": 0,
+      "coverage": 0,
+      "fallback": 0,
+      "opening_compare": 0,
+      "opening_score": 4,
+      "opening_usage": 1,
+      "unsupported": 0
+    },
+    "opening_usage": {
+      "clarify": 0,
+      "clock_bucket": 0,
+      "clock_compare": 0,
+      "coverage": 0,
+      "fallback": 0,
+      "opening_compare": 0,
+      "opening_score": 0,
+      "opening_usage": 5,
+      "unsupported": 0
+    },
+    "unsupported": {
+      "clarify": 0,
+      "clock_bucket": 0,
+      "clock_compare": 0,
+      "coverage": 0,
+      "fallback": 0,
+      "opening_compare": 0,
+      "opening_score": 0,
+      "opening_usage": 0,
+      "unsupported": 5
+    }
+  },
+  "correct": 35,
+  "elapsed_seconds": 0.0008754169975873083,
+  "kind": "m8_rules_routing_results",
+  "predictions": [
+    {
+      "id": "u06",
+      "route": "opening_usage"
+    },
+    {
+      "id": "u07",
+      "route": "opening_usage"
+    },
+    {
+      "id": "u08",
+      "route": "opening_usage"
+    },
+    {
+      "id": "u09",
+      "route": "opening_usage"
+    },
+    {
+      "id": "u10",
+      "route": "opening_usage"
+    },
+    {
+      "id": "s06",
+      "route": "opening_score"
+    },
+    {
+      "id": "s07",
+      "route": "opening_score"
+    },
+    {
+      "id": "s08",
+      "route": "opening_score"
+    },
+    {
+      "id": "s09",
+      "route": "opening_usage"
+    },
+    {
+      "id": "s10",
+      "route": "opening_score"
+    },
+    {
+      "id": "o06",
+      "route": "opening_compare"
+    },
+    {
+      "id": "o07",
+      "route": "opening_compare"
+    },
+    {
+      "id": "o08",
+      "route": "opening_compare"
+    },
+    {
+      "id": "o09",
+      "route": "opening_compare"
+    },
+    {
+      "id": "o10",
+      "route": "opening_compare"
+    },
+    {
+      "id": "b06",
+      "route": "clock_bucket"
+    },
+    {
+      "id": "b07",
+      "route": "opening_usage"
+    },
+    {
+      "id": "b08",
+      "route": "clock_bucket"
+    },
+    {
+      "id": "b09",
+      "route": "clock_bucket"
+    },
+    {
+      "id": "b10",
+      "route": "clock_bucket"
+    },
+    {
+      "id": "c06",
+      "route": "coverage"
+    },
+    {
+      "id": "c07",
+      "route": "clock_bucket"
+    },
+    {
+      "id": "c08",
+      "route": "clock_compare"
+    },
+    {
+      "id": "c09",
+      "route": "clock_compare"
+    },
+    {
+      "id": "c10",
+      "route": "unsupported"
+    },
+    {
+      "id": "v06",
+      "route": "coverage"
+    },
+    {
+      "id": "v07",
+      "route": "coverage"
+    },
+    {
+      "id": "v08",
+      "route": "coverage"
+    },
+    {
+      "id": "v09",
+      "route": "coverage"
+    },
+    {
+      "id": "v10",
+      "route": "coverage"
+    },
+    {
+      "id": "a06",
+      "route": "clarify"
+    },
+    {
+      "id": "a07",
+      "route": "clarify"
+    },
+    {
+      "id": "a08",
+      "route": "clarify"
+    },
+    {
+      "id": "a09",
+      "route": "clarify"
+    },
+    {
+      "id": "a10",
+      "route": "clarify"
+    },
+    {
+      "id": "x06",
+      "route": "unsupported"
+    },
+    {
+      "id": "x07",
+      "route": "unsupported"
+    },
+    {
+      "id": "x08",
+      "route": "unsupported"
+    },
+    {
+      "id": "x09",
+      "route": "unsupported"
+    },
+    {
+      "id": "x10",
+      "route": "unsupported"
+    }
+  ],
+  "references": {
+    "a06": "clarify",
+    "a07": "clarify",
+    "a08": "clarify",
+    "a09": "clarify",
+    "a10": "clarify",
+    "b06": "clock_bucket",
+    "b07": "clock_bucket",
+    "b08": "clock_bucket",
+    "b09": "clock_bucket",
+    "b10": "clock_bucket",
+    "c06": "clock_compare",
+    "c07": "clock_compare",
+    "c08": "clock_compare",
+    "c09": "clock_compare",
+    "c10": "clock_compare",
+    "o06": "opening_compare",
+    "o07": "opening_compare",
+    "o08": "opening_compare",
+    "o09": "opening_compare",
+    "o10": "opening_compare",
+    "s06": "opening_score",
+    "s07": "opening_score",
+    "s08": "opening_score",
+    "s09": "opening_score",
+    "s10": "opening_score",
+    "u06": "opening_usage",
+    "u07": "opening_usage",
+    "u08": "opening_usage",
+    "u09": "opening_usage",
+    "u10": "opening_usage",
+    "v06": "coverage",
+    "v07": "coverage",
+    "v08": "coverage",
+    "v09": "coverage",
+    "v10": "coverage",
+    "x06": "unsupported",
+    "x07": "unsupported",
+    "x08": "unsupported",
+    "x09": "unsupported",
+    "x10": "unsupported"
+  },
+  "rules_version": "routing-rules-1.0",
+  "split": "test",
+  "unsupported_recall": 1.0
+}

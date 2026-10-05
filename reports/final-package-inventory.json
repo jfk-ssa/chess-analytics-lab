@@ -1,0 +1,14 @@
+{
+  "chess_analytics_lab-0.1.0-py3-none-any.whl": {
+    "bytes": 100617,
+    "entries": 47,
+    "forbidden_payload_paths": [],
+    "license_included": true
+  },
+  "chess_analytics_lab-0.1.0.tar.gz": {
+    "bytes": 965655,
+    "entries": 525,
+    "forbidden_payload_paths": [],
+    "license_included": true
+  }
+}

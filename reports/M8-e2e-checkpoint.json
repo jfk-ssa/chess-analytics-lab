@@ -1,0 +1,94 @@
+{
+  "actual_attempt_sha256": "de89c2598b8468c20fb127e28007c3cf4da3ae9e0cdb0ac199040916966dd800",
+  "arms": {
+    "baseline": {
+      "analyst_calls": 32,
+      "answerable_passed": 23,
+      "answerable_total": 24,
+      "boundary_passed": 8,
+      "boundary_total": 8,
+      "elapsed_seconds_mean": 2.6239471887811305,
+      "elapsed_seconds_total": 83.96631004099618,
+      "failed_case_ids": [
+        "e2e_v01"
+      ],
+      "gross_per_correct_answer_usd": 7.826774193548388e-05,
+      "gross_usd": 0.0024263,
+      "jev_calls": 0,
+      "passed": 31,
+      "total": 32
+    },
+    "gated": {
+      "analyst_calls": 26,
+      "answerable_passed": 23,
+      "answerable_total": 24,
+      "boundary_passed": 8,
+      "boundary_total": 8,
+      "elapsed_seconds_mean": 2.690891401000499,
+      "elapsed_seconds_total": 86.10852483201597,
+      "failed_case_ids": [
+        "e2e_v01"
+      ],
+      "gross_per_correct_answer_usd": 8.07703870967742e-05,
+      "gross_usd": 0.0025038820000000002,
+      "jev_calls": 32,
+      "passed": 31,
+      "total": 32
+    }
+  },
+  "attempt_complete": true,
+  "case_sha256": "58642936c91601884a27585bc93b1ff63c108ae028a2cf09d3d1c5ef033a3a5d",
+  "dataset_id": "bf2d56649b944934d9c2ec4c",
+  "decision": "do_not_promote_jev_gate",
+  "kind": "m8_e2e_checkpoint",
+  "limitations": [
+    "one paired repetition",
+    "small authored holdout",
+    "first-day archive prefix",
+    "owner boundary review is one rater"
+  ],
+  "numeric_reference": "reports/M8-e2e-independent-reference.json",
+  "offline_rescore": {
+    "baseline": {
+      "correct_answer_cost_usd": 7.826774193548388e-05,
+      "gross_usd": 0.0024263,
+      "passed": 31,
+      "total": 32
+    },
+    "gated": {
+      "correct_answer_cost_usd": 8.07703870967742e-05,
+      "gross_usd": 0.0025038820000000002,
+      "passed": 31,
+      "total": 32
+    }
+  },
+  "offline_rescore_rubric": "m8-e2e-1.1",
+  "original_live_scoring": {
+    "baseline": {
+      "correct_answer_cost_usd": 8.087666666666667e-05,
+      "gross_usd": 0.0024263,
+      "passed": 30,
+      "total": 32
+    },
+    "gated": {
+      "correct_answer_cost_usd": 8.346273333333334e-05,
+      "gross_usd": 0.0025038820000000002,
+      "passed": 30,
+      "total": 32
+    }
+  },
+  "owner_boundary_labels_reviewed": 8,
+  "provider_caps_usd": {
+    "jev": 0.03,
+    "openai": 0.2
+  },
+  "provider_gross_usd": {
+    "jev": 0.000804762,
+    "openai": 0.004125420000000001
+  },
+  "rescore_change": "e2e_b04: expected checked metric was first of two evidence items; second coverage metric is harmless; both arms change from 30/32 to 31/32. Original live scoring retained.",
+  "unknown_cost_reservation_usd": {
+    "jev": 0.0,
+    "openai": 0.0
+  }
+}

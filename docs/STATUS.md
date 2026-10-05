@@ -1,9 +1,22 @@
-# Status — 2026-10-04
+# Status — 2026-10-05
 
-**M0–M7 accepted locally; M8 queued.** This is a new standalone local Git
+**M0–M7 accepted locally; M8 routing and end-to-end Jev comparisons measured, with no production promotion. Portfolio hardening verified locally and in a fresh export; GPL-3.0-or-later selected for original project code.** This is a new standalone local Git
 repository; projects 1–3 remain together. No remote repository or hosting created.
 
 ## Phase tracker
+
+Final publication review: the initial candidate export passed 90 tests with
+13 expected real-data skips, Ruff and the full offline demo. The four
+findings are now fixed offline: durable pending API reservations, explicit
+Luna versus Sol comparison scope, nonzero incomplete-run exit, and
+protection against overwriting an original report during rescore.
+See [final review and resolution](FINAL_RELEASE_REVIEW.md) and the
+[original review evidence](../reports/final-release-review.json). The
+post-fix local suite passed 108 tests; a fresh locked export passed 95 tests
+with 13 expected real-data skips, Ruff, and the full offline demo. The
+post-fix source archive and wheel include the license and exclude ignored
+payloads. Commit and hosted CI are the remaining release gates; no new
+live call or upload occurred.
 
 | Phase | State | Next gate |
 |---|---|---|
@@ -15,8 +28,26 @@ repository; projects 1–3 remain together. No remote repository or hosting crea
 | M5 analyst/eval harness | Done | Accepted checked typed tools, fixture replay and 50-case harness; no model result |
 | M6 measured release | Done; typed-analyst release gates met | Three complete frozen v2 repetitions, 118/120 scored passes, all evidence audits and offline checks passed. See [release checkpoint](M6-RELEASE.md). |
 | M7 depth | Done; December Sol v12 gate accepted | Three complete frozen repetitions scored 50/50 each with 150/150 evidence audits, no repairs/retries, and $0.35392836 cumulative accounted gross under the approved $6 cap. Earlier failed/stopped gates remain retained. See [December checkpoint](M7-DECEMBER.md). |
-| M8 Jev | Research done; implementation queued | [Ranked opportunities](M8.md): question intent/boundary routing first, then answer review, evidence relevance, and cost-aware routing. Direct API first; DuckDB SQL experiment next; pg_jev optional. Fresh labels and offline baselines precede any live cap. |
+| M8 Jev | Routing and paired final-answer comparisons measured; no production promotion | [Route checkpoint](../reports/M8-routing-checkpoint.json): rules 35/40; Jev passes 39/40 and 37/40; existing analyst 33/40. [End-to-end checkpoint](../reports/M8-e2e-checkpoint.json): both arms 31/32 after versioned offline rescore; Jev costs slightly more. Eight new boundary labels received owner review. See [end-to-end lab](JEV_END_TO_END.md). Compatible DuckDB extension remains an optional isolated exercise. |
+| Portfolio readiness | Integrity, offline demo, docs, clean export and license verified locally; commit and hosted CI pending | [Implementation evidence](EVIDENCE_INDEX.md), [review findings](REPOSITORY_REVIEW.md) and [handoff record](PORTFOLIO_HANDOFF.md). |
 | Personalized recommender | Backlog | Outside first-release scope |
+
+## Portfolio hardening checkpoint
+
+The budget validator now rejects non-finite values; analytical publication binds
+the extracted receipt, source snapshot and configured plan; selected duplicate
+games emit moves only once. A separate `portfolio-1.0` scorer rejects boolean and
+non-finite numeric answers without changing M5–M7 rubrics. The dashboard renders
+empty clock buckets and labels synthetic data. `chesslab demo --scope all` builds
+a distinct ignored synthetic workspace and replays three checked analyst plans.
+The final local dbt/dashboard suite passed **93 tests, none skipped**. A fresh locked export passed **81 tests with 12 expected real-data skips** and the complete synthetic demo. Its wheel and source archive contained no ignored local payloads. A read-only audit
+of nine retained analytical source/receipt pairs found zero mismatches. No live
+model request was made. The prior real snapshots remain retained; foundation
+reporting and a fresh analytical move publication need a new ingest under this
+changed implementation hash. The offline portfolio demo needs no real-data rebuild.
+[Demo](DEMO.md), [source audit](../reports/portfolio-source-audit.json).
+The expanded demo walkthrough was checked with a fresh offline demo and CLI
+replay; its two focused tests passed, including all six Streamlit views.
 
 ## Completed acceptance
 
@@ -124,23 +155,85 @@ comparison attempt could not bind one inside the sandbox; a permitted local run
 completed and its result was saved. See [run instructions](ORCHESTRATION.md).
 Separate locked Dagster-only and Prefect-only environments installed from the local
 uv cache and completed one-off tiny runs during M2. The current dbt-enabled
-environment with optional dbt/dashboard extras passes **56 offline tests** (none skipped); Ruff check/format, Git whitespace check,
+environment with optional dbt/dashboard extras passed **56 offline tests** at the reviewed baseline; the final portfolio revision passed **93 offline tests** (none skipped); Ruff check/format, Git whitespace check,
 and `uv lock --check --offline` pass with the workspace cache. The current foundation
 snapshot still reports 3,982/121,332. No hosted CI run is claimed.
 
-## Next concrete work — M8
+## Next concrete work — publication verification
+
+A tracked-files export installed the locked dbt/dashboard environment with a
+one-time download of two missing cached wheels. It passed 81 tests; 12 optional
+real-data tests skipped because their ignored archives/snapshots are absent.
+The complete synthetic demo and Ruff passed in the export. [Release check](../reports/portfolio-release-check.json). A wheel and source
+archive were inspected for ignored local payloads. The upload candidate and
+33 reachable commits had no simple credential/personal-path pattern matches;
+this is a bounded scan, not a guarantee. No hosted CI run or remote upload is
+claimed. The owner selected GPL-3.0-or-later for original project code; the
+license file and package metadata now declare it. The review/hardening changes
+remain uncommitted and hosted CI remains unverified. After the license change,
+the local dbt/dashboard suite passed 93/93; locked dependency resolution passed.
+The rebuilt wheel declares `GPL-3.0-or-later` and includes LICENSE. The source
+archive includes LICENSE and excludes ignored scratch `work/` content after an
+explicit package exclusion was added. M8 now has a separate offline routing
+experiment; it does not change this portfolio release candidate.
+
+## M8 checkpoint and remaining gate
 
 Do not reuse inspected splits for an untouched quality claim. The December
 Sol new-date gate is accepted with three complete 50-case repetitions and
 **$0.353928360** cumulative accounted M7 gross. Earlier Luna failures and
 offline replays remain retained separately from live results. M8 research
-ranks question intent/boundary routing first; implementation next needs new
-independent labels and fair baselines before a live preflight. The direct
-API is the first product route, with DuckDB and optional pg_jev comparisons.
+ranks question intent/boundary routing first. The 80 new labels were authored
+before model scoring, but have not had independent human adjudication. The
+40-case rules test scored 35/40. Actual direct Jev passes scored 39/40 and
+37/40; two decisions changed between identical runs. The existing structured
+analyst scored 33/40. All paths detected five of five unsupported requests.
+An offline DuckDB table replayed the rule score. The separately approved
+cumulative gross caps were $0.05 TypeSafe and $0.10 OpenAI; actual accounted
+M8 gross was $0.002000376 and $0.00417844, respectively. An OpenAI attempt
+stopped after 20 completed cases because a checked clock comparison subtracted
+null coverage; the failure and cost were retained, the tool was fixed and
+regression-tested, and a fresh 40-case run completed. An earlier retry stopped
+before transport on preflight dataset drift. A Jev community-extension install for pinned DuckDB
+1.4.1/macOS arm64 returned HTTP 404, so SQL Jev execution awaits an isolated
+compatible build. The original 80 route labels still lack independent human
+review; the new eight end-to-end boundary labels received owner review.
+See [M8 learning runbook](JEV_ROUTING_RUNBOOK.md).
+After the live fix, the locked local suite passed **99 tests** with Ruff
+check/format and `git diff --check`; the complete synthetic demo had passed
+before the paid runs. A final source archive and wheel included the new M8
+modules/reports but no ignored `work/`, local cache, or key file. The
+[post-M8 upload audit](../reports/M8-upload-audit.json) found no matching
+sensitive filenames; it is a bounded pattern scan, not a secret guarantee.
 Stockfish enrichment remains conditional
 on a measured value test. Consider OpenRouter or CheaperInference only if
 inference costs rise materially. Restricted SQL and optional Airflow remain
 follow-ups; the recommender stays backlog.
+
+The fresh December 32-case end-to-end holdout has eight opening families
+outside the prior M7 reference and independent raw-PGN numeric values.
+Its eight boundary labels were shown to and approved by the owner before
+new model calls. One complete paired live run scored 30/32 per arm under
+the original rubric; an offline rescore of the saved answers corrected a
+last-evidence-only false negative and gives **31/32 per arm** (23/24
+answerable, 8/8 boundary). No model response was repeated for that rescore.
+Both arms used Luna; the accepted M7 checkpoint used Sol. Jev avoided six
+of 32 Luna analyst calls but gross cost was $0.002503882 versus
+$0.00242630 Luna baseline, and summed per-case elapsed time was 86.11 versus
+83.97 seconds. Actual gross TypeSafe $0.000804762 and OpenAI $0.00412542
+were under newly approved $0.03/$0.20 caps; no unknown-cost reservation.
+Both arms missed the same answerable coverage question. No Jev production
+integration is justified by this one small Luna comparison; Sol pairing
+remains unmeasured. Original
+results, rescore, and [decision checkpoint](../reports/M8-e2e-checkpoint.json)
+are distinct. The historical preflight will reject future source hash drift;
+new caps and a fresh preflight are needed for any subsequent live study.
+The locked local suite passed **103 tests** after the scorer regression,
+with Ruff, format, lock and whitespace checks. The tracked checkpoint
+reconciles to the retained actual report and offline rescore. The current
+[upload candidate audit](../reports/M8-e2e-upload-audit.json) found no
+matching sensitive filenames or personal paths; it is a bounded pattern
+scan, not a fresh clean-export or hosted-CI run.
 
 The actual M6 v2 model responses and two scored failures are retained. M5's 50/50
 fixture replay is harness validation, not model accuracy. The provider example

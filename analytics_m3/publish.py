@@ -155,7 +155,19 @@ def build_analytical(project: Path, root: Path) -> Path:
         raise ValueError("analytical extracted source failed receipt check")
     source_snapshot = current(root, "analytical")
     source_report = report(project, source_snapshot)
-    if not read_json(source_snapshot / "manifest.json")["partial"]:
+    source_manifest = read_json(source_snapshot / "manifest.json")
+    if any(source_manifest["plan"].get(key) != value for key, value in plan.items()):
+        raise ValueError("analytical source snapshot differs from configured plan")
+    if receipt.get("plan_sha256") is not None and receipt["plan_sha256"] != hash_json(plan):
+        raise ValueError("analytical extraction receipt differs from configured plan")
+    if (
+        "compressed_prefix_sha256" in plan
+        and receipt.get("compressed_prefix_sha256") != plan["compressed_prefix_sha256"]
+    ):
+        raise ValueError("analytical extraction receipt differs from configured prefix")
+    if source_report["source_sha256"] != receipt["source_sha256"]:
+        raise ValueError("analytical extracted source differs from checked source snapshot")
+    if not source_manifest["partial"]:
         raise ValueError("analytical source must be marked partial")
     identity = snapshot_identity(project, source_snapshot.name, receipt["source_sha256"])
     final = root / "analytical/published" / identity

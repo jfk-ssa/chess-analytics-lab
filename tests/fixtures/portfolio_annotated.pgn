@@ -1,0 +1,75 @@
+[Event "Rated Blitz synthetic portfolio"]
+[Site "https://lichess.org/00000013"]
+[UTCDate "2020.01.01"]
+[White "FixtureWhiteA"]
+[Black "FixtureBlackA"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[Opening "Sicilian Defense: Test Line"]
+
+1. e4 {[%clk 0:00:59] [%eval 0.00]} c5 {[%clk 0:00:59] [%eval 0.00]} 2. Nf3 {[%clk 0:00:05] [%eval -2.50]} d6 {[%clk 0:00:05] [%eval -2.50]} 3. d4 {[%clk 0:00:04] [%eval -2.50]} cxd4 {[%clk 0:00:04] [%eval -2.50]} 1-0
+
+[Event "Rated Blitz synthetic portfolio"]
+[Site "https://lichess.org/00000042"]
+[UTCDate "2020.01.02"]
+[White "FixtureWhiteB"]
+[Black "FixtureBlackB"]
+[WhiteElo "1510"]
+[BlackElo "1530"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[Opening "Sicilian Defense: Test Line"]
+
+1. e4 {[%clk 0:00:59] [%eval 0.00]} c5 {[%clk 0:00:59] [%eval 0.00]} 2. Nf3 {[%clk 0:00:05] [%eval -2.50]} d6 {[%clk 0:00:05] [%eval -2.50]} 3. d4 {[%clk 0:00:04] [%eval -2.50]} cxd4 {[%clk 0:00:04] [%eval -2.50]} 0-1
+
+[Event "Rated Blitz synthetic portfolio"]
+[Site "https://lichess.org/00000071"]
+[UTCDate "2020.01.03"]
+[White "FixtureWhiteC"]
+[Black "FixtureBlackC"]
+[WhiteElo "1540"]
+[BlackElo "1560"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[Opening "French Defense: Test Line"]
+
+1. e4 {[%clk 0:00:59] [%eval 0.00]} e6 {[%clk 0:00:59] [%eval 0.00]} 2. d4 {[%clk 0:00:05] [%eval -2.50]} d5 {[%clk 0:00:05] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} Nf6 {[%clk 0:00:04] [%eval -2.50]} 1/2-1/2
+
+[Event "Rated Blitz synthetic portfolio"]
+[Site "https://lichess.org/00000082"]
+[UTCDate "2020.01.04"]
+[White "FixtureWhiteD"]
+[Black "FixtureBlackD"]
+[WhiteElo "1550"]
+[BlackElo "1570"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[Opening "French Defense: Test Line"]
+
+1. e4 {[%clk 0:00:59]} e6 {[%clk 0:00:59]} 2. d4 {[%clk 0:00:05]} d5 {[%clk 0:00:05]} 3. Nc3 {[%clk 0:00:04] [%eval #3]} Nf6 {[%clk 0:00:04]} 1-0
+
+[Event "Rated Blitz synthetic portfolio"]
+[Site "https://lichess.org/00000013"]
+[UTCDate "2020.01.01"]
+[White "FixtureWhiteA"]
+[Black "FixtureBlackA"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[Opening "Sicilian Defense: Test Line"]
+
+1. e4 {[%clk 0:00:59] [%eval 0.00]} c5 {[%clk 0:00:59] [%eval 0.00]} 2. Nf3 {[%clk 0:00:05] [%eval -2.50]} d6 {[%clk 0:00:05] [%eval -2.50]} 3. d4 {[%clk 0:00:04] [%eval -2.50]} cxd4 {[%clk 0:00:04] [%eval -2.50]} 1-0
+
+[Event "Casual Blitz synthetic exclusion"]
+[Site "https://lichess.org/00000090"]
+[UTCDate "2020.01.05"]
+[White "FixtureWhiteE"]
+[Black "FixtureBlackE"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[Opening "French Defense: Test Line"]
+
+1. e4 e6 1-0

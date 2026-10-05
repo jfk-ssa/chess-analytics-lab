@@ -1,0 +1,83 @@
+{
+  "case_sha256": "8d2a626a4d2975bc050a7ed844c7a475a4672ad6d2f4c1f8718d46937912b965",
+  "existing_analyst": {
+    "accounted_cumulative_gross_usd": 0.00417844,
+    "approved_cumulative_cap_usd": 0.1,
+    "complete_pass": {
+      "cases": 40,
+      "correct_routes": 33,
+      "gross_usd": 0.0022620499999999994,
+      "report": "M8-analyst-pass-1.json",
+      "sum_completed_case_elapsed_seconds": 101.63032729207771,
+      "unsupported_recall": 1.0,
+      "wrong_case_ids": [
+        "s09",
+        "c07",
+        "c09",
+        "c10",
+        "v06",
+        "v07",
+        "v08"
+      ]
+    },
+    "model": "gpt-6-luna",
+    "stopped_attempt": {
+      "accounted_gross_usd": 0.0019163899999999998,
+      "completed_cases": 20,
+      "failed_case_id": "c06",
+      "reason": "Checked clock comparison raised TypeError on null evaluation coverage; fixed and regression-tested offline",
+      "report": "M8-analyst-stopped.json"
+    }
+  },
+  "jev": {
+    "accounted_cumulative_gross_usd": 0.002000376,
+    "approved_cumulative_cap_usd": 0.05,
+    "changed_route_ids_between_passes": [
+      "b10",
+      "v09"
+    ],
+    "model": "jev-1.13.0",
+    "passes": [
+      {
+        "cases": 40,
+        "correct_routes": 39,
+        "gross_usd": 0.0010001880000000002,
+        "report": "M8-jev-pass-1.json",
+        "sum_completed_case_elapsed_seconds": 12.045178082960774,
+        "unsupported_recall": 1.0,
+        "wrong_case_ids": [
+          "v07"
+        ]
+      },
+      {
+        "cases": 40,
+        "correct_routes": 37,
+        "gross_usd": 0.0010001880000000002,
+        "report": "M8-jev-pass-2.json",
+        "sum_completed_case_elapsed_seconds": 12.039194332013722,
+        "unsupported_recall": 1.0,
+        "wrong_case_ids": [
+          "b10",
+          "v07",
+          "v09"
+        ]
+      }
+    ]
+  },
+  "kind": "m8_actual_routing_checkpoint_v1",
+  "metric_scope": "Semantic route accuracy only; not correct numerical/end-to-end answers. Hybrid threshold table is post-hoc replay, not executed combined path.",
+  "references": "Manually authored before model runs; not independently human adjudicated",
+  "report_sha256": {
+    "M8-analyst-pass-1.json": "d57515170c54fa3bc1ac46d44526de0ee068304f8f56858c2810647a990f6477",
+    "M8-analyst-stopped.json": "205d8234a9c7169c918c5a2fbd9edf3bce981d15ec40cd3c02d72470b8e9e319",
+    "M8-jev-pass-1.json": "cc396c54299e8532e0b8569a6172eaf442180cff90d16136740699aa2fd660de",
+    "M8-jev-pass-2.json": "814eb75d6ff42bd7872fdc53928cebde46b6815d4067195bdce9fb266f0a8060",
+    "M8-routing-rules-test.json": "4fda75d9fe16babc5503a6be7a801db51de36b8b3350d92b83fec9da46b976df"
+  },
+  "rules": {
+    "correct_routes": 35,
+    "gross_api_usd": 0.0,
+    "unsupported_recall": 1.0
+  },
+  "test_cases": 40
+}

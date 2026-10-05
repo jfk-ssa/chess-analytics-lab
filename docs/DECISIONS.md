@@ -794,3 +794,185 @@ Use the same scorer and log code revision, model/version, thresholds, cost,
 latency and fallback. The personal TypeSafe key belongs only in an ignored
 named local env file; API login is not proof of entitlement, and no Jev
 inference is authorized before a separate frozen M8 cap.
+
+## 2026-10-04 — Review first; defer implementation and Jev
+
+The owner requested an end-to-end portfolio review, then explicitly asked for a
+fix plan to pass to a lower model. Preserve production code at reviewed commit
+`26f675b`; save and reverse the interrupted five-file implementation diff under
+ignored `work/repository-review/proposed-fixes.patch`. It is untested and incomplete.
+Only review artifacts and status/decision documentation change in this pass.
+
+[Review](REPOSITORY_REVIEW.md) records confirmed offline defects, 56 local passing
+tests, 44 passing/12 skipped exported-source tests, and a missing-cache-wheel
+limitation on fresh installation. [Handoff](PORTFOLIO_HANDOFF.md) prioritizes finite
+budget validation and source binding before a complete synthetic product demo.
+Use functional public interfaces while retaining immutable milestone/version
+evidence; broad package/path renames need explicit hash/compatibility handling.
+License selection remains an owner decision. No live spend, new model task,
+Jev implementation, cloud service or repository upload is authorized by this plan.
+
+## 2026-10-04 — Portfolio integrity and offline release path
+
+Implement the selected handoff in this repository. Reject non-finite personal
+budget/rates before provider transport. Bind analytical receipt source hash and
+plan to the checked source snapshot before candidate publication. Emit selected
+duplicate games once; keep upstream conflict rejection. Historical M5–M7 scoring
+functions/results remain frozen; use a new `portfolio-1.0` strict numeric rubric
+for synthetic demonstrations.
+
+Use a six-record authored PGN with separate expected arithmetic and an isolated
+`work/portfolio-demo/project` for the complete offline three-project command. The
+dashboard accepts that project only through explicit `CHESSLAB_PROJECT`, and labels
+its source synthetic on every view. Retain the original tiny CLI demo. Preserve
+milestone names for hash-bound historical evidence; offer functional public
+commands/docs without a broad package rename. A read-only audit found 9/9 locally
+retained analytical source/receipt pairs matched their hashes and plans. Local
+dbt/dashboard verification passed 91 tests; hosted CI and fresh export are not yet
+claimed. No live spending, Jev integration, cloud resources or remote upload.
+
+## 2026-10-04 — Clean-export acceptance and publication boundary
+
+A tracked-source export installed the locked dbt/dashboard environment after a
+one-time fetch of missing Pygments and Ruff wheels. It passed 81 tests with 12
+expected skips for ignored real data, then the full synthetic demo and Ruff. The
+local full suite passed 93/93 with no skips; lock, format and whitespace checks
+passed. A wheel and source archive omitted ignored work, cache, env and bulk-data
+payloads. A filename-only candidate/history pattern audit found no matching
+credential or personal path in 33 reachable commits; it is not a proof of absence.
+Hosted CI has not run, and no Git remote or upload exists. The owner still needs to
+choose a repository distribution license before public publication.
+
+## 2026-10-05 — Portfolio code license
+
+The owner approved GPL-3.0-or-later for original Chess Analytics Lab code.
+This aligns with the direct python-chess dependency (`chess==1.11.2`), which is
+GPL-3.0-or-later. Add the full GPLv3 license text, declare the SPDX expression
+in package metadata, and update README and third-party notices. This decision
+does not relicense dependencies or Lichess CC0 data. Use the collective project
+name for attribution pending any optional personal-name preference. Historical
+review and release-check reports retain their original pre-decision state.
+The source archive initially admitted `.env.example` files from ignored
+clean-checkout scratch directories; an explicit sdist `work/**` exclusion removed
+them. The wheel and source archive both include the selected license.
+
+## 2026-10-05 — Executable offline walkthrough
+
+Keep DEMO.md focused on the tracked synthetic three-project path. Spell out
+the locked install, isolated workspace, expected JSON fields, six dashboard
+views, exact CLI replay and common local failures. Link optional real-data and
+orchestrator procedures to their existing guides rather than implying that
+the default offline command runs those components. A fresh offline demo,
+CLI replay and focused dashboard/demo tests verified the documented path;
+no provider request or archive download occurred.
+
+## 2026-10-05 — M8 routing study and DuckDB isolation
+
+Implement the owner's selected rank-1 Jev learning opportunity in the same
+repository, leaving the M7 checked-tool baseline intact. Freeze 80 newly
+authored, balanced question/route labels, with 40 development and 40 test
+cases. The labels precede model scoring but lack independent human
+adjudication, so report exploratory route accuracy, not general accuracy or
+end-to-end answer correctness. Freeze the small rule baseline after using
+development cases; its first test score is 35/40 with 5/5 unsupported recall.
+Keep mock transport tests, offline DuckDB replay, and actual provider results
+explicitly distinct. The direct TypeSafe Choice adapter and existing OpenAI
+analyst comparator require separate named local key files, finite caps,
+matching preflights, raw attempt retention, and usage accounting. Never infer
+spending authorization from available credits.
+
+An actual `INSTALL jev FROM community` on DuckDB 1.4.1/macOS arm64 returned
+HTTP 404 for the extension binary. The public listing and source README
+disagree about installation; source instructions currently require matching
+DuckDB 1.5.5. Do not change the production lock or use the production read-only
+analyst connection for this experiment. Provide an offline question table and
+an explicit SQL preview; run extension-based classification only in an
+isolated compatible environment with a separate cost control. The extension's
+row/character limits and estimated `jev_stats()` are not a hard dollar cap.
+The educational [runbook](JEV_ROUTING_RUNBOOK.md) gives the reproduce/interpret
+sequence and identifies the separate future end-to-end gate.
+
+## 2026-10-05 — M8 live routing results and no production promotion
+
+The owner approved separate cumulative gross caps of $0.05 for two frozen
+TypeSafe passes and $0.10 for one structured-analyst comparison. The explicit
+personal TypeSafe key authenticated; its model-list endpoint showed aliases,
+but the pinned `jev-1.13.0` completed both 40-case passes. Actual scores were
+39/40 and 37/40; two routes changed between identical passes. Their total
+gross cost was $0.002000376. The existing structured analyst completed a
+40-case pass at 33/40 and $0.00226205. It also had a stopped 20-completed-case
+attempt at $0.00191639 after `compare_clock_buckets` subtracted null evaluation
+coverage. Fix only that null arithmetic, retain its failure and charge, and
+verify the regression offline before the complete pass. An earlier preflight
+dataset-ID mismatch prevented transport and incurred no charge. OpenAI's M8
+cumulative accounted gross was $0.00417844, below its separate cap.
+
+These results compare semantic routes on authored, not independently
+human-adjudicated labels. The structured analyst executed checked tools over
+the small synthetic demo, while Jev received a compact catalog. The
+coverage/error and cost table can support learning, but does not establish
+end-to-end numerical answer quality or a production improvement. Its
+Jev-plus-analyst fallback table is a post hoc replay using observed per-case
+costs, not an executed combined system. Keep Jev isolated and the M7 baseline
+available until fresh independent references and an end-to-end evaluation
+show a practical benefit. DuckDB Jev remains an isolated extension exercise.
+
+## 2026-10-05 — M8 paired final-answer study
+
+Use a narrow Jev boundary gate, not a full semantic route replacement, as the
+first integrated test. Jev may end only `clarify` or `unsupported` questions
+at probability at least 0.70; every other decision falls through to the
+unchanged checked analyst. This protects numerical calculations and keeps
+the baseline directly comparable. The owner reviewed and approved all eight
+new boundary labels before live scoring; opening and clock values come from
+independent raw-PGN references. One paired 32-case run had separate newly
+approved cumulative gross caps of $0.03 TypeSafe and $0.20 OpenAI.
+
+The original live report scored both arms 30/32. Its inherited rubric
+required the expected checked tool to be the **last** evidence item, wrongly
+rejecting an answer that used the expected clock metric followed by an
+additional checked coverage metric. Keep that original report, add a focused
+regression, and rescore the saved answers offline under `m8-e2e-1.1`, which
+accepts the expected tool anywhere in the integrity-checked evidence. Both
+arms then score 31/32; no model call was repeated. The shared failure is an
+answerable UTC-date coverage question that the analyst marked unsupported.
+
+Both arms used `gpt-6-luna`; the accepted M7 checkpoint used `gpt-6-sol`.
+The gated arm saved six analyst calls but made 32 Jev calls. Measured gross
+was $0.002503882 gated versus $0.00242630 baseline; summed per-case elapsed
+time was 86.11 versus 83.97 seconds. TypeSafe gross $0.000804762 and OpenAI
+gross $0.00412542 remained under their caps with no unknown usage. Retain
+Jev as a learning lab and do **not** integrate the gate into the product:
+this Luna pairing has no measured final-answer quality, cost, or latency
+benefit. A Sol pairing was not evaluated.
+The result is one small paired run, not a stability or population estimate.
+Future Jev work needs a concrete higher-value trigger, fresh independent
+cases, and new spending approvals.
+
+## 2026-10-05 — Final publication review gate
+
+Review the full working-tree upload candidate, including new files, in a
+clean export before creating a remote. The export passed 90 tests with 13
+expected real-data skips, Ruff and the complete offline demo; package
+inventory included the selected license and excluded ignored payloads.
+Keep publication pending the four fixes in FINAL_RELEASE_REVIEW.md. The
+M8 comparator was Luna, whereas the accepted M7 checkpoint used Sol; the
+observed no-benefit conclusion is limited to the Luna experiment. No new
+live experiment is required to correct that scope. A mock interruption
+proved a missing durable request reservation, and inspection found a
+success exit for incomplete runs and a rescore overwrite path. This turn
+records review evidence and acceptance criteria only, without code fixes
+or publication.
+
+## 2026-10-05 — Publication fixes after review
+
+Resolve the four findings with no new model calls. Persist a pending cost
+reservation before each provider transport, reconcile pending/settled
+records after an interrupt, and accept previous attempt directories when
+enforcing a cumulative cap on retry. A pending record may conservatively
+reserve a call that never reached the provider; that is safer than treating
+unknown usage as free. Return nonzero for incomplete runs. Require a fresh
+rescore destination outside the original attempt. Name the Luna pairing in
+M8's conclusion and leave Sol integration unclaimed. Preserve frozen run
+reports, hashes and raw attempts; any future live run must re-preflight
+under a newly approved cap.

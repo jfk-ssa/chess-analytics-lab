@@ -1,0 +1,137 @@
+{
+  "accounted_gross_usd": 0.0019163899999999998,
+  "case_sha256": "8d2a626a4d2975bc050a7ed844c7a475a4672ad6d2f4c1f8718d46937912b965",
+  "complete": false,
+  "completed_cases": 20,
+  "dataset_id": "220bd7ddb1b621e2418ad685",
+  "kind": "m8_existing_structured_analyst_attempt",
+  "known_gross_cost_usd": 0.0019163899999999998,
+  "max_run_usd": 0.1,
+  "model": "gpt-6-luna",
+  "predictions": [
+    {
+      "elapsed_seconds": 3.708151041995734,
+      "gross_cost_usd": 0.000325675,
+      "id": "u06",
+      "route": "opening_usage"
+    },
+    {
+      "elapsed_seconds": 2.5160810830129776,
+      "gross_cost_usd": 5.316e-05,
+      "id": "u07",
+      "route": "opening_usage"
+    },
+    {
+      "elapsed_seconds": 3.0516288749931846,
+      "gross_cost_usd": 5.4409999999999996e-05,
+      "id": "u08",
+      "route": "opening_usage"
+    },
+    {
+      "elapsed_seconds": 4.119799708001665,
+      "gross_cost_usd": 0.00013953499999999998,
+      "id": "u09",
+      "route": "opening_usage"
+    },
+    {
+      "elapsed_seconds": 4.026111958010006,
+      "gross_cost_usd": 0.000325425,
+      "id": "u10",
+      "route": "opening_usage"
+    },
+    {
+      "elapsed_seconds": 2.443731374994968,
+      "gross_cost_usd": 6.953499999999999e-05,
+      "id": "s06",
+      "route": "opening_score"
+    },
+    {
+      "elapsed_seconds": 2.4425296669942327,
+      "gross_cost_usd": 4.3534999999999996e-05,
+      "id": "s07",
+      "route": "clarify"
+    },
+    {
+      "elapsed_seconds": 2.69905862500309,
+      "gross_cost_usd": 5.7535e-05,
+      "id": "s08",
+      "route": "clarify"
+    },
+    {
+      "elapsed_seconds": 2.621724374999758,
+      "gross_cost_usd": 6.9285e-05,
+      "id": "s09",
+      "route": "opening_score"
+    },
+    {
+      "elapsed_seconds": 2.6679644999967422,
+      "gross_cost_usd": 6.916e-05,
+      "id": "s10",
+      "route": "opening_score"
+    },
+    {
+      "elapsed_seconds": 2.512976208992768,
+      "gross_cost_usd": 7.141e-05,
+      "id": "o06",
+      "route": "opening_compare"
+    },
+    {
+      "elapsed_seconds": 2.9843489159975434,
+      "gross_cost_usd": 7.041e-05,
+      "id": "o07",
+      "route": "opening_compare"
+    },
+    {
+      "elapsed_seconds": 2.8890879590035183,
+      "gross_cost_usd": 7.041e-05,
+      "id": "o08",
+      "route": "opening_compare"
+    },
+    {
+      "elapsed_seconds": 2.348562667000806,
+      "gross_cost_usd": 7.065999999999999e-05,
+      "id": "o09",
+      "route": "opening_compare"
+    },
+    {
+      "elapsed_seconds": 3.537518083991017,
+      "gross_cost_usd": 7.1535e-05,
+      "id": "o10",
+      "route": "opening_compare"
+    },
+    {
+      "elapsed_seconds": 2.2164587909937836,
+      "gross_cost_usd": 5.5159999999999994e-05,
+      "id": "b06",
+      "route": "clock_bucket"
+    },
+    {
+      "elapsed_seconds": 2.444267333994503,
+      "gross_cost_usd": 6.453499999999999e-05,
+      "id": "b07",
+      "route": "clock_bucket"
+    },
+    {
+      "elapsed_seconds": 3.741015833002166,
+      "gross_cost_usd": 5.5784999999999995e-05,
+      "id": "b08",
+      "route": "clock_bucket"
+    },
+    {
+      "elapsed_seconds": 3.0973461249959655,
+      "gross_cost_usd": 6.916e-05,
+      "id": "b09",
+      "route": "clock_bucket"
+    },
+    {
+      "elapsed_seconds": 2.1581935839931248,
+      "gross_cost_usd": 5.591e-05,
+      "id": "b10",
+      "route": "clock_bucket"
+    }
+  ],
+  "split": "test",
+  "total_cases": 40,
+  "transport_kind": "openai_api",
+  "unknown_cost_reservation_usd": 0.0
+}

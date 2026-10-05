@@ -1,0 +1,79 @@
+{
+  "checked_pairs": 9,
+  "kind": "read-only local retained analytical source/receipt audit",
+  "mismatches": 0,
+  "records": [
+    {
+      "plan_match": true,
+      "prefix_match": true,
+      "project": ".",
+      "receipt_plan_match": true,
+      "snapshot_id": "6cf51473f8da6ae6b12ea5c2",
+      "state": "match"
+    },
+    {
+      "plan_match": true,
+      "prefix_match": true,
+      "project": "work/m7-april-project",
+      "receipt_plan_match": true,
+      "snapshot_id": "276aeae80962482673c7da80",
+      "state": "match"
+    },
+    {
+      "plan_match": true,
+      "prefix_match": true,
+      "project": "work/m7-december-project",
+      "receipt_plan_match": true,
+      "snapshot_id": "cb81c3aa96877be7db5ae552",
+      "state": "match"
+    },
+    {
+      "plan_match": true,
+      "prefix_match": true,
+      "project": "work/m7-february-project",
+      "receipt_plan_match": true,
+      "snapshot_id": "a5fe34904b99d05ac5bca315",
+      "state": "match"
+    },
+    {
+      "plan_match": true,
+      "prefix_match": true,
+      "project": "work/m7-january-project",
+      "receipt_plan_match": true,
+      "snapshot_id": "ac29d2596b9592d06a6f0c02",
+      "state": "match"
+    },
+    {
+      "plan_match": true,
+      "prefix_match": true,
+      "project": "work/m7-july-project",
+      "receipt_plan_match": true,
+      "snapshot_id": "3f6265ca957d11f6454ca708",
+      "state": "match"
+    },
+    {
+      "plan_match": true,
+      "prefix_match": true,
+      "project": "work/m7-june-project",
+      "receipt_plan_match": true,
+      "snapshot_id": "f571e46ce156f9badfe49096",
+      "state": "match"
+    },
+    {
+      "plan_match": true,
+      "prefix_match": true,
+      "project": "work/m7-march-project",
+      "receipt_plan_match": true,
+      "snapshot_id": "16da594543bc7d4760878d54",
+      "state": "match"
+    },
+    {
+      "plan_match": true,
+      "prefix_match": true,
+      "project": "work/m7-may-project",
+      "receipt_plan_match": true,
+      "snapshot_id": "99053359d8e18d0c8d5906e9",
+      "state": "match"
+    }
+  ]
+}

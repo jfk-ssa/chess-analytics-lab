@@ -1,0 +1,114 @@
+{
+  "dashboard_probe": {
+    "exceptions": [
+      "unsupported format string passed to NoneType.__format__"
+    ],
+    "kind": "AppTest with injected valid empty clock bucket"
+  },
+  "date": "2026-10-04",
+  "fresh_offline_install": {
+    "reason": "pygments==2.21.0 wheel absent from workspace cache",
+    "status": "incomplete"
+  },
+  "inventory": {
+    "largest_files": [
+      {
+        "bytes": 296076,
+        "path": "uv.lock"
+      },
+      {
+        "bytes": 249566,
+        "path": "reports/M7-holdout-v2-run-2.json"
+      },
+      {
+        "bytes": 248774,
+        "path": "reports/M7-holdout-v3-run-1.json"
+      },
+      {
+        "bytes": 248765,
+        "path": "reports/M7-holdout-v3-run-3.json"
+      },
+      {
+        "bytes": 248675,
+        "path": "reports/M7-holdout-v2-run-3.json"
+      }
+    ],
+    "missing_relative_markdown_targets": [],
+    "sensitive_pattern_matching_paths": [],
+    "tracked_bytes": 7742256,
+    "tracked_files": 467,
+    "unexpected_local_payload_paths": []
+  },
+  "kind": "offline repository review; no implementation fixes",
+  "limitations": [
+    "No new hosted CI run",
+    "No fresh-install success",
+    "No full Git-history secret scan",
+    "No new orchestrator run",
+    "No comprehensive historical source-pair audit"
+  ],
+  "live_calls": 0,
+  "local_tests": {
+    "passed": 56,
+    "seconds": 40.52,
+    "skipped": 0
+  },
+  "probes": {
+    "duplicate": {
+      "ingest_counts": {
+        "accepted": 1,
+        "conflict": 0,
+        "duplicate": 1,
+        "excluded": 0,
+        "quarantine": 0,
+        "seen": 2
+      },
+      "move_counts": {
+        "move_rows": 8,
+        "selected_games": 2,
+        "selected_zero_ply_games": 0,
+        "selection": "SHA256(game_id) first 8 bytes mod 20 == 0"
+      }
+    },
+    "mismatched_source_publication": {
+      "manifest_source_sha256": "92b21ed6d981505bb2db4e1c9543ae20bb9d996c247a6941e478345014f63651",
+      "published": true,
+      "source_a_sha256": "92b21ed6d981505bb2db4e1c9543ae20bb9d996c247a6941e478345014f63651",
+      "source_b_sha256": "0122975b5f83f64fbaa6873e9b38e01182f356b4b1716e6d3221055e2f6d3744",
+      "stored_evaluations_cp": [
+        990
+      ]
+    },
+    "nonfinite_accepted": {
+      "input_usd_per_million:infinity": true,
+      "input_usd_per_million:nan": true,
+      "max_run_usd:infinity": true,
+      "max_run_usd:nan": true,
+      "output_usd_per_million:infinity": true,
+      "output_usd_per_million:nan": true
+    },
+    "scorer_boolean_accepted_as_number": {
+      "float": true,
+      "integer": true
+    }
+  },
+  "reviewed_commit": "26f675b80ef91f29406ebfb707d13b9f2004cde0",
+  "static_checks": {
+    "format": "passed",
+    "git_whitespace": "passed",
+    "lock": "passed",
+    "ruff": "passed"
+  },
+  "tiny_export_demo": {
+    "accepted_games": 22,
+    "draws": 4,
+    "eligible_games": 20,
+    "status": "passed"
+  },
+  "tracked_export_tests": {
+    "passed": 44,
+    "runtime": "existing installed dependencies; exported source via PYTHONPATH",
+    "seconds": 10.07,
+    "skipped": 12
+  }
+}

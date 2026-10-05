@@ -1,0 +1,71 @@
+{
+  "clock_reference_kind": "independent raw-PGN reference; no model response",
+  "clock_reference_sha256": "784225d2f247d8b79fdc3545408f271fd411aecbabba159bcef7b2f3882b67d5",
+  "dataset_id": "bf2d56649b944934d9c2ec4c",
+  "kind": "m8_new_family_raw_pgn_reference_no_model_responses",
+  "known_opening_games": 98969,
+  "opening_usage": {
+    "Alekhine Defense": 981,
+    "Bird Opening": 1050,
+    "King's Indian Defense": 799,
+    "Mieses Opening": 827,
+    "Nimzowitsch Defense": 1122,
+    "Owen Defense": 1221,
+    "Slav Defense": 985,
+    "Vienna Game": 1264
+  },
+  "prior_family_overlap": 0,
+  "source": "data/analytical/complete-2025-12-first-100000.pgn",
+  "source_sha256": "86bce6acfcbff45e130eb8ce6959a8856b28486fd9ab21514b66c500e313ac36",
+  "source_snapshot_id": "cb81c3aa96877be7db5ae552",
+  "white_rating_1400_1599_60_plus_0": {
+    "Alekhine Defense": {
+      "draws": 0,
+      "games": 35,
+      "losses": 19,
+      "wins": 16
+    },
+    "Bird Opening": {
+      "draws": 0,
+      "games": 35,
+      "losses": 18,
+      "wins": 17
+    },
+    "King's Indian Defense": {
+      "draws": 0,
+      "games": 22,
+      "losses": 7,
+      "wins": 15
+    },
+    "Mieses Opening": {
+      "draws": 0,
+      "games": 38,
+      "losses": 20,
+      "wins": 18
+    },
+    "Nimzowitsch Defense": {
+      "draws": 2,
+      "games": 58,
+      "losses": 24,
+      "wins": 32
+    },
+    "Owen Defense": {
+      "draws": 1,
+      "games": 51,
+      "losses": 33,
+      "wins": 17
+    },
+    "Slav Defense": {
+      "draws": 0,
+      "games": 22,
+      "losses": 11,
+      "wins": 11
+    },
+    "Vienna Game": {
+      "draws": 1,
+      "games": 59,
+      "losses": 29,
+      "wins": 29
+    }
+  }
+}

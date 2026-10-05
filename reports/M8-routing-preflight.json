@@ -1,0 +1,32 @@
+{
+  "case_sha256": "8d2a626a4d2975bc050a7ed844c7a475a4672ad6d2f4c1f8718d46937912b965",
+  "cases": 40,
+  "existing_analyst": {
+    "code_sha256": "2b7b1abf6984a6da5992eb1903075f718b08a213b182cdccb81dcc87f95018f8",
+    "dataset_id": "220bd7ddb1b621e2418ad685",
+    "model": "gpt-6-luna",
+    "prices": {
+      "cache_write_usd_per_million": 0.125,
+      "cached_input_usd_per_million": 0.01,
+      "input_usd_per_million": 0.1,
+      "output_usd_per_million": 0.5
+    },
+    "pricing_source": "https://developers.openai.com/api/docs/models/gpt-6-luna",
+    "source_hashes": {
+      "analyst_m5/core.py": "528efd7c52bec4a9e8156fee80e3899fc91a0dac40ea7505b64565efd23e6e66",
+      "analyst_m5/provider.py": "b1318ae9a0549cc21df8c87930585d029fdcc377e886d31d227939e4d6899878",
+      "analyst_m5/tools.py": "2f2547f5e2ca20518d82620791ecc6d1fa9d6e1af0eadcbd728009f285d50dd7"
+    },
+    "total_reserved_cost_usd": 0.07403775
+  },
+  "jev": {
+    "code_sha256": "7ba307304dbb66f3e696d9ff634f74f6c8f3ebf66ed67f778e00aa689b1c5119",
+    "model": "jev-1.13.0",
+    "price_usd_per_million_input": 0.042,
+    "pricing_source": "https://docs.typesafe.ai/models",
+    "reservation_limit": "Four times request UTF-8 bytes plus 1024 tokens per call is a conservative estimate, not a contractual tokenizer bound; actual usage and unknown-cost reservations are logged.",
+    "total_reserved_cost_usd": 0.010722096
+  },
+  "kind": "m8_offline_preflight_no_model_calls",
+  "note": "Quotes do not authorize live inference; actual M8 calls used the separately approved caps in M8-routing-checkpoint.json."
+}

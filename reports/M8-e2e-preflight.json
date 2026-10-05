@@ -1,0 +1,29 @@
+{
+  "case_count": 32,
+  "case_sha256": "58642936c91601884a27585bc93b1ff63c108ae028a2cf09d3d1c5ef033a3a5d",
+  "code_sha256": "0a833b93b5da757c68ac61e7756981e9c605e75bad9220b2c7b26e39aef34939",
+  "dataset_id": "bf2d56649b944934d9c2ec4c",
+  "jev_model": "jev-1.13.0",
+  "jev_price_usd_per_million_input": 0.042,
+  "jev_whole_run_reservation_usd": 0.008664432000000001,
+  "kind": "m8_e2e_paired_preflight_no_model_calls",
+  "openai_model": "gpt-6-luna",
+  "openai_prices": {
+    "cache_write_usd_per_million": 0.125,
+    "cached_input_usd_per_million": 0.01,
+    "input_usd_per_million": 0.1,
+    "output_usd_per_million": 0.5
+  },
+  "openai_whole_run_reservation_usd": 0.1186775,
+  "policy": "jev-boundary-gate-v1",
+  "reference_sha256": "7e64fb8c80f549f400633e60117d378c6ee90e4182afd24025c2a25967690560",
+  "reservation_limit": "OpenAI reserves baseline plus every possible gated fallback. Jev reserves 4\u00d7 request bytes + 1024 tokens per case; these are conservative quotes, not contractual tokenizer bounds.",
+  "source_hashes": {
+    "analyst_m5/core.py": "528efd7c52bec4a9e8156fee80e3899fc91a0dac40ea7505b64565efd23e6e66",
+    "analyst_m5/evaluation.py": "ef4b78ee37ec7b8a9d44502ba5bd8273d772d76551def9780ad6675eca68e5cd",
+    "analyst_m5/provider.py": "b1318ae9a0549cc21df8c87930585d029fdcc377e886d31d227939e4d6899878",
+    "analyst_m5/tools.py": "2f2547f5e2ca20518d82620791ecc6d1fa9d6e1af0eadcbd728009f285d50dd7",
+    "src/chess_analytics/routing_study.py": "7ba307304dbb66f3e696d9ff634f74f6c8f3ebf66ed67f778e00aa689b1c5119"
+  },
+  "threshold": 0.7
+}

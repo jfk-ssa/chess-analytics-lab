@@ -1,57 +1,96 @@
 # Local runbook
 
-Run commands from the repository root (or pass `chesslab --project /path/to/repo`).
-Use README setup and ingestion commands. All data-changing CLI commands take the
-same exclusive advisory lock. Calling Python pipeline functions directly requires
-the caller to take `writer_lock`.
+Run from the repository root. Use `uv sync --locked --no-editable --extra dbt
+--extra dashboard` for the full local toolset, then `uv run --locked --offline
+--no-editable --extra dbt --extra dashboard pytest -q`. Installation may need a
+one-time dependency download; the demo and tests make no network request after
+installation. `UV_CACHE_DIR=.uv-cache` is useful when the default cache is
+inaccessible. Reinstall the wheel after source edits with `uv sync --locked
+--offline --no-editable --extra dbt --extra dashboard --reinstall-package
+chess-analytics-lab`.
+
+For the complete credential-free path, run `chesslab demo --scope all`, then
+`CHESSLAB_PROJECT="$PWD/work/portfolio-demo/project" streamlit run
+analytics_m4/dashboard.py`. [DEMO.md](DEMO.md) contains the full checked
+commands and expected values. The original `chesslab demo` is the smaller
+foundation-only fixture. Both are synthetic and local. The complete demo
+writes only to ignored `work/portfolio-demo`, separate from real data.
+
+For the real complete foundation corpus, first check the exact pin and free
+disk allowance in [datasets.json](../config/datasets.json), then run:
+
+```sh
+uv run --locked --no-editable chesslab ingest --dataset foundation
+uv run --locked --offline --no-editable chesslab build --dataset foundation
+uv run --locked --offline --no-editable chesslab validate --dataset foundation
+uv run --locked --offline --no-editable chesslab report --dataset foundation
+uv run --locked --offline --no-editable python \
+  scripts/reference_draw_rate.py data/raw/lichess_db_standard_rated_2013-01.pgn.zst
+```
+
+The analytical August prefix is deliberately bounded and must be acquired
+manually. `python -m analytics_m3` supports `acquire`, `extract`, `ingest`,
+`moves`, and `report` in that order. `--data-dir` moves bulk output outside
+the repository. [DATA_SOURCES.md](DATA_SOURCES.md) explains the source and
+observed coverage. The real dashboard uses the repository's `data/` by
+default. The demo dashboard uses the explicit `CHESSLAB_PROJECT` directory.
+
+For optional dbt, run `python -m platform_m2 transform --dataset tiny` after
+tiny ingest/build and use `report-mart`, `ops-report`, or `rollback-mart` as
+needed. Backfill accepts `--snapshot-id`; validate a known mart before
+rollback. [M2.md](M2.md) contains exact examples. [ORCHESTRATION.md](ORCHESTRATION.md)
+shows the thin Dagster and Prefect alternatives, neither of which schedules
+unattended runs here.
 
 ## Recovery
 
-1. **Download failure:** inspect data/raw/acquisition-failures.json and retained
-   data/raw/acquisition/JOB/attempt-N.part files. Each job preserves its plan and
-   failures; the top-level failures file is a latest-job convenience. Retry ingest.
-   Retained bytes across retries share one job allowance (a one-byte EOF probe can
-   detect a bound violation). Existing complete files are reused only after
-   checksum verification. Failed partial files are not resumed or published.
-2. **Corrupt cached source:** ingest refuses it. Preserve/rename it for diagnosis,
-   then run ingest again to acquire the exact configured source. Never update a
-   checksum to make corrupted data pass.
-3. **Parser/data failure:** inspect data/staging/RUN/manifest.json and quarantine.jsonl.
-   Each run is retained. Conflicting duplicate IDs block publication; resolve the
-   source/contract deliberately, then reingest. Never select a silent winner.
-4. **Disk/record/byte limit:** failure is explicit. Archived failed runs count against
-   the allowance. Review before deleting obsolete staging or raising a documented
-   limit. Build reserves a conservative workspace before DuckDB work and caps memory
-   at 256 MB, threads at 2 and spill at 512 MB. These are configured limits, not
-   measured whole-process RAM guarantees. Writer must be on a local filesystem.
-5. **Interrupted build:** prior current pointer remains usable. Repeat build for the
-   latest successful staging run. Failed build directories and attempt records stay
-   available. `kill -9` may leave status running; re-run explicitly after verifying
-   the process is gone. File locks release on process exit.
-6. **Rollback:** select a previously verified directory in data/published and run
-   `validate_snapshot(path)` before changing the dataset-current.json pointer with
-   `write_json` under `writer_lock`. A convenience rollback CLI is planned for M2.
-7. **Schema/code drift:** report/build refuses an implementation mismatch. Reingest
-   with the new locked code; do not relabel an older snapshot as a new version.
+1. **Download failure:** inspect `data/raw/acquisition-failures.json` and
+   `data/raw/acquisition/JOB/attempt-N.part`. Retry the same pinned acquisition.
+   Incomplete bytes remain for diagnosis and are never published. Cached complete
+   sources are reused only after checksum verification.
+2. **Parser/data failure:** inspect `data/staging/RUN/manifest.json` and
+   `quarantine.jsonl`. Conflicting duplicate IDs block publication. Resolve the
+   source or contract deliberately and reingest; do not select a silent winner.
+3. **Limit reached:** byte, record, game and generated-disk caps fail explicitly.
+   Failed attempts count against the configured allowance. Check retained files
+   before deleting anything or changing a cap. DuckDB memory/threads/spill are
+   bounded settings, not whole-process RAM guarantees.
+4. **Interrupted build:** the previous pointer remains usable. Verify the writer
+   is gone and rerun from the staged source. Candidate/attempt records remain.
+   `kill -9` may leave the attempt status marked running.
+5. **Rollback or backfill:** select a verified immutable snapshot/mart. The M2
+   `rollback-mart` command validates the target and moves the mart pointer under
+   the writer lock. Backfill of an older snapshot does not move the current
+   pointer. For foundation snapshot pointer repair, validate the chosen snapshot
+   and change its pointer only under `writer_lock`; there is no convenience CLI.
+6. **Schema/code drift:** report/build may reject a snapshot whose implementation
+   hash differs from current source. Reingest with the locked code; never relabel
+   historical output. The portfolio demo creates a fresh isolated snapshot after
+   each code revision.
 
-Tests cover interruption immediately before publication and retry versus clean run.
-Power-loss/fsync of whole directories, general multi-source merging, operational
-backfill UI and exhaustive source-drift handling are M2 work, not M1 claims.
+All data-changing CLI commands take the advisory writer lock. Direct Python
+pipeline calls require the caller to take `writer_lock`. A local filesystem is
+assumed; power-loss durability is not claimed.
 
-## Environment and offline verification
+## Analyst and provider incidents
 
-This host uses a workspace-local uv cache when default-cache access is blocked:
-`UV_CACHE_DIR=/path/to/work/uv-cache uv sync --locked --no-editable`.
-Tests block Python socket connection attempts. The CLI demo uses only committed
-synthetic PGNs. Python provider credentials are never read; no .env loader exists.
+`python -m analyst_m5` exposes `typed`, `replay`, `eval`, and `live`. Use the
+first two for offline questions; [EVALUATION.md](EVALUATION.md) explains the
+case splits and evidence. `eval` needs its matching analytical snapshot.
+The default demo does not read a credential. The live adapter is disabled
+without a personal config or explicitly capped experiment, and reads only
+`CHESSLAB_OPENAI_API_KEY` when invoked. An ignored `work/.env` may hold that
+variable; no workplace credential is discovered or used. Never commit the
+key, paste it into a report, or infer spending authorization from credits.
 
-Use `uv sync --locked --no-editable --reinstall-package chess-analytics-lab` after
-source edits. The no-editable flag avoids macOS hidden .pth files that this Python
-ignores. CI runs on Linux with the same locked packages.
-
-## Later provider incidents
-
-Live provider runs, replay, budgets and evaluation are not implemented until M5.
-There is no live command to invoke in this release. At that milestone, document
-timeouts, unknown usage reservations, exhausted caps and trace replay before enabling
-any live run. Personal configuration and explicit spending authorization are required.
+For a future authorized frozen experiment, `python -m analyst_m5.experiment
+prepare --max-run-usd CAP --preflight work/new-preflight.json` makes a quote
+without loading a key; `run` requires that exact preflight, a separate explicit
+cap and `--env-file work/.env`. [M6.md](M6.md) documents historical usage.
+Do not reuse an old approved cap. The runner records actual usage, reserves
+unknown-cost attempts at their bound, stops when a full next request cannot
+fit and retains failures. Inspect the attempt ledger, raw ignored response,
+compact report and evidence audit before interpreting a score. `--config`
+accepts a separate disabled-by-default JSON example when exact model/rates
+are supplied; the key stays out of JSON. No live call is part of CI or the
+portfolio demo.

@@ -1,0 +1,1018 @@
+[
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "opening_usage",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "denominator": 98969,
+      "numerator": 1264,
+      "value": 0.012771675979347068
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Vienna Game"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "e2e_u01",
+    "question": "In this observed December 1 prefix, how many known-opening games carry the exact Vienna Game tag, and what fraction is that?",
+    "reference_file": "reports/M8-e2e-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "route": "opening_usage",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "opening_usage",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "denominator": 98969,
+      "numerator": 1221,
+      "value": 0.012337196495872445
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Owen Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "e2e_u02",
+    "question": "Give the raw count, known-opening denominator, and share for the Owen Defense source tag in this slice.",
+    "reference_file": "reports/M8-e2e-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "route": "opening_usage",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "opening_usage",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "denominator": 98969,
+      "numerator": 1122,
+      "value": 0.011336883266477383
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Nimzowitsch Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "e2e_u03",
+    "question": "For Nimzowitsch Defense, report its eligible tagged-game count and proportion of known-opening games.",
+    "reference_file": "reports/M8-e2e-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "route": "opening_usage",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "opening_usage",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "denominator": 98969,
+      "numerator": 1050,
+      "value": 0.010609382736008244
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Bird Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "e2e_u04",
+    "question": "What fraction of the observed known-opening games were labeled Bird Opening? Include count and denominator.",
+    "reference_file": "reports/M8-e2e-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "route": "opening_usage",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "opening_usage",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "denominator": 98969,
+      "numerator": 985,
+      "value": 0.009952611423779163
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Slav Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "e2e_u05",
+    "question": "Count Slav Defense games under the source opening tag and give their share of tagged eligible games.",
+    "reference_file": "reports/M8-e2e-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "route": "opening_usage",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "opening_usage",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "denominator": 98969,
+      "numerator": 981,
+      "value": 0.00991219472764199
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Alekhine Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "e2e_u06",
+    "question": "Within the bounded prefix, how frequent is the exact Alekhine Defense opening family? Give both numbers.",
+    "reference_file": "reports/M8-e2e-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "route": "opening_usage",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "opening_usage",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "denominator": 98969,
+      "numerator": 827,
+      "value": 0.008356151926360779
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Mieses Opening"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "e2e_u07",
+    "question": "Show the Mieses Opening source-family numerator, denominator and observed percentage.",
+    "reference_file": "reports/M8-e2e-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "route": "opening_usage",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "opening_usage",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "denominator": 98969,
+      "numerator": 799,
+      "value": 0.00807323505340056
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "King's Indian Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "e2e_u08",
+    "question": "How many eligible known-opening games were King's Indian Defense, and what share is that?",
+    "reference_file": "reports/M8-e2e-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "route": "opening_usage",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "opening_score",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "draws": 1,
+      "eligible_player_games": 59,
+      "losses": 29,
+      "score_rate": 0.5,
+      "wins": 29
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Vienna Game",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "e2e_s01",
+    "question": "For White rated 1400\u20131599 at 60+0, report Vienna Game wins, draws, losses and points per game in the observed prefix.",
+    "reference_file": "reports/M8-e2e-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "route": "opening_score",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "opening_score",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "draws": 1,
+      "eligible_player_games": 51,
+      "losses": 33,
+      "score_rate": 0.3431372549019608,
+      "wins": 17
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Owen Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "e2e_s02",
+    "question": "In Owen Defense games at 60+0, how did White players rated [1400,1600) score? Include record and score rate.",
+    "reference_file": "reports/M8-e2e-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "route": "opening_score",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "opening_score",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "draws": 2,
+      "eligible_player_games": 58,
+      "losses": 24,
+      "score_rate": 0.5689655172413793,
+      "wins": 32
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Nimzowitsch Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "e2e_s03",
+    "question": "Give White's result counts and score fraction for Nimzowitsch Defense, rating 1400 to under 1600, 60+0.",
+    "reference_file": "reports/M8-e2e-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "route": "opening_score",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "opening_score",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "draws": 0,
+      "eligible_player_games": 35,
+      "losses": 18,
+      "score_rate": 0.4857142857142857,
+      "wins": 17
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Bird Opening",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "e2e_s04",
+    "question": "What share of available points did White earn in Bird Opening for 1400\u20131599 players at 60+0? Give the W-D-L totals.",
+    "reference_file": "reports/M8-e2e-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "route": "opening_score",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "opening_score",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "draws": 0,
+      "eligible_player_games": 22,
+      "losses": 11,
+      "score_rate": 0.5,
+      "wins": 11
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Slav Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "e2e_s05",
+    "question": "For the exact Slav Defense family, White 1400\u20131599 and 60+0, provide W-D-L and score per game.",
+    "reference_file": "reports/M8-e2e-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "route": "opening_score",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "opening_score",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "draws": 0,
+      "eligible_player_games": 35,
+      "losses": 19,
+      "score_rate": 0.45714285714285713,
+      "wins": 16
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Alekhine Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      },
+      "metric_id": "opening_player_score"
+    },
+    "id": "e2e_s06",
+    "question": "Report White's wins, draws, losses and score rate in Alekhine Defense games for 1400\u20131599 at 60+0.",
+    "reference_file": "reports/M8-e2e-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "route": "opening_score",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "opening_compare",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "score_rate_difference_first_minus_second": 0.1568627450980392
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Vienna Game",
+          "Owen Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "e2e_o01",
+    "question": "For White 1400\u20131599 at 60+0, what is the Vienna Game minus Owen Defense observed score-rate difference?",
+    "reference_file": "reports/M8-e2e-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "route": "opening_compare",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "opening_compare",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "score_rate_difference_first_minus_second": 0.08325123152709363
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Nimzowitsch Defense",
+          "Bird Opening"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "e2e_o02",
+    "question": "Compare White's 1400\u20131599, 60+0 score rates: Nimzowitsch Defense first, Bird Opening second. Give the first-minus-second difference.",
+    "reference_file": "reports/M8-e2e-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "association_not_causation",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "route": "opening_compare",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "clock_bucket",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "eligible_moves": 16281,
+      "error_proxy_rate": 0.1709741550695825,
+      "evaluable_moves": 503,
+      "evaluation_coverage": 0.030894908175173517,
+      "proxy_errors": 86
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "under_10"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "e2e_b01",
+    "question": "For the under_10 pre-turn clock bucket, give the exploratory proxy numerator, evaluable denominator and rate.",
+    "reference_file": "work/m7-december-project/reports/M3-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "route": "clock_bucket",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "clock_bucket",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "eligible_moves": 32175,
+      "error_proxy_rate": 0.11271477663230241,
+      "evaluable_moves": 1455,
+      "evaluation_coverage": 0.04522144522144522,
+      "proxy_errors": 164
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "10_to_29"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "e2e_b02",
+    "question": "In the 10_to_29 pre-turn clock bucket, how many selected moves were eligible and evaluable, and how many crossed the proxy threshold?",
+    "reference_file": "work/m7-december-project/reports/M3-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "route": "clock_bucket",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "clock_bucket",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "eligible_moves": 62207,
+      "error_proxy_rate": 0.07293666026871401,
+      "evaluable_moves": 3126,
+      "evaluation_coverage": 0.05025157940424711,
+      "proxy_errors": 228
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "30_to_59"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "e2e_b03",
+    "question": "Report eligible and evaluable selected moves plus the 200-centipawn proxy rate for 30_to_59.",
+    "reference_file": "work/m7-december-project/reports/M3-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "route": "clock_bucket",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "clock_bucket",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "eligible_moves": 127329,
+      "error_proxy_rate": 0.07637670992634163,
+      "evaluable_moves": 11404,
+      "evaluation_coverage": 0.08956325738834044,
+      "proxy_errors": 871
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "60_plus"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "e2e_b04",
+    "question": "For 60_plus seconds remaining before a turn, show proxy errors, evaluable moves and the observed proxy fraction.",
+    "reference_file": "work/m7-december-project/reports/M3-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "route": "clock_bucket",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "clock_compare",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "error_proxy_rate_difference_first_minus_second": 0.09803749480086849,
+      "evaluation_coverage_difference_first_minus_second": -0.019356671229073596
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_clock_buckets",
+    "expected_tool_args": {
+      "first": "under_10",
+      "second": "30_to_59"
+    },
+    "id": "e2e_c01",
+    "question": "Compare the observed error-proxy rates for under_10 versus 30_to_59; report first minus second, without a causal claim.",
+    "reference_file": "work/m7-december-project/reports/M3-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "route": "clock_compare",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "clock_compare",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "error_proxy_rate_difference_first_minus_second": 0.03633806670596078,
+      "evaluation_coverage_difference_first_minus_second": -0.044341812166895214
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_clock_buckets",
+    "expected_tool_args": {
+      "first": "10_to_29",
+      "second": "60_plus"
+    },
+    "id": "e2e_c02",
+    "question": "How much does evaluation coverage differ between 10_to_29 and 60_plus, first minus second, in selected moves?",
+    "reference_file": "work/m7-december-project/reports/M3-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_evaluation_selection",
+      "exploratory_proxy",
+      "missing_evaluation_not_zero"
+    ],
+    "route": "clock_compare",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "coverage",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "observed_dates": {
+        "first_utc_date": "2025-12-01",
+        "last_utc_date": "2025-12-01"
+      }
+    },
+    "expected_status": "answered",
+    "expected_tool": "get_dataset_coverage",
+    "expected_tool_args": {},
+    "id": "e2e_v01",
+    "question": "Which UTC dates are actually represented in this December archive prefix? Give the first and last observed dates.",
+    "reference_file": "work/m7-december-project/reports/M3-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "route": "coverage",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "coverage",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": {
+      "selection": {
+        "selected_games": 4942,
+        "selected_zero_ply_games": 13
+      }
+    },
+    "expected_status": "answered",
+    "expected_tool": "get_dataset_coverage",
+    "expected_tool_args": {},
+    "id": "e2e_v02",
+    "question": "How many games were selected for move replay, including selected zero-ply games, in this observed slice?",
+    "reference_file": "work/m7-december-project/reports/M3-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "route": "coverage",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "clarify",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "e2e_x01",
+    "question": "How often did the opening I meant appear in this prefix?",
+    "reference_file": "work/m7-december-project/reports/M3-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "route": "clarify",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "clarify",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "e2e_x02",
+    "question": "Compare my two chosen opening families for White 1400\u20131599 at 60+0.",
+    "reference_file": "work/m7-december-project/reports/M3-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "route": "clarify",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "clarify",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "e2e_x03",
+    "question": "What was the proxy rate in that clock bucket?",
+    "reference_file": "work/m7-december-project/reports/M3-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "route": "clarify",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "clarify",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "e2e_x04",
+    "question": "Give the score rate for a defense at 60+0, but I have not said whose result or rating range.",
+    "reference_file": "work/m7-december-project/reports/M3-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "route": "clarify",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "unsupported",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "e2e_x05",
+    "question": "Prove that playing Vienna Game caused White to win more in this observed data.",
+    "reference_file": "work/m7-december-project/reports/M3-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "route": "unsupported",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "unsupported",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "e2e_x06",
+    "question": "Predict the winner of a live game using only this first-day archive prefix.",
+    "reference_file": "work/m7-december-project/reports/M3-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "route": "unsupported",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "unsupported",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "e2e_x07",
+    "question": "Identify individual cheaters from the selected moves and sparse evaluations.",
+    "reference_file": "work/m7-december-project/reports/M3-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "route": "unsupported",
+    "split": "test"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "unsupported",
+    "comparison": {
+      "rates_absolute_tolerance": 1e-06
+    },
+    "dataset_id": "bf2d56649b944934d9c2ec4c",
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "e2e_x08",
+    "question": "Recommend my best opening based on private games in my account that are not in this dataset.",
+    "reference_file": "work/m7-december-project/reports/M3-independent-reference.json",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "route": "unsupported",
+    "split": "test"
+  }
+]

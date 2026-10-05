@@ -1,0 +1,1028 @@
+{
+  "attempt_gross_usd": {
+    "jev": 0.000804762,
+    "openai": 0.004125420000000001
+  },
+  "caps_usd": {
+    "jev": 0.03,
+    "openai": 0.2
+  },
+  "case_sha256": "58642936c91601884a27585bc93b1ff63c108ae028a2cf09d3d1c5ef033a3a5d",
+  "complete": true,
+  "cumulative_accounted_gross_usd": {
+    "jev": 0.000804762,
+    "openai": 0.004125420000000001
+  },
+  "dataset_id": "bf2d56649b944934d9c2ec4c",
+  "failure": null,
+  "kind": "m8_paired_e2e_actual_attempt",
+  "models": {
+    "jev": "jev-1.13.0",
+    "openai": "gpt-6-luna"
+  },
+  "outcomes": {
+    "baseline": [
+      {
+        "elapsed_seconds": 3.9865367080055876,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 0.00032705
+        },
+        "id": "e2e_u01",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.7153009159956127,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 5.4565e-05
+        },
+        "id": "e2e_u02",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 3.4061154579976574,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 0.00033580000000000003
+        },
+        "id": "e2e_u03",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.673799208001583,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 5.3689999999999996e-05
+        },
+        "id": "e2e_u04",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 3.2192692079988774,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 5.4189999999999994e-05
+        },
+        "id": "e2e_u05",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.4766795829928014,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 5.5064999999999995e-05
+        },
+        "id": "e2e_u06",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.04106841700559,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 5.4315e-05
+        },
+        "id": "e2e_u07",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.69542783300858,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 4.2564999999999997e-05
+        },
+        "id": "e2e_u08",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 3.1004236249864334,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 0.00010944
+        },
+        "id": "e2e_s01",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.9060415839921916,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 6.968999999999999e-05
+        },
+        "id": "e2e_s02",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.7644637920020614,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 7.119e-05
+        },
+        "id": "e2e_s03",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 3.471045416998095,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 6.944e-05
+        },
+        "id": "e2e_s04",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 3.4400133330054814,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 6.9565e-05
+        },
+        "id": "e2e_s05",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.855759209007374,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 8.069e-05
+        },
+        "id": "e2e_s06",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.8489597919979133,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 7.081499999999999e-05
+        },
+        "id": "e2e_o01",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 3.2804494589945534,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 7.2815e-05
+        },
+        "id": "e2e_o02",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.773202249998576,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 5.569e-05
+        },
+        "id": "e2e_b01",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 3.726878959001624,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 7.069e-05
+        },
+        "id": "e2e_b02",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.858853750003618,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 6.9815e-05
+        },
+        "id": "e2e_b03",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 3.671969834002084,
+        "expected_status": "answered",
+        "failures": [
+          "tool_or_filters"
+        ],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 6.7815e-05
+        },
+        "id": "e2e_b04",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": false,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.8258753749978496,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 5.5939999999999996e-05
+        },
+        "id": "e2e_c01",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.5710097910050536,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 5.5064999999999995e-05
+        },
+        "id": "e2e_c02",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 1.8294482079945737,
+        "expected_status": "answered",
+        "failures": [
+          "status",
+          "result_values",
+          "evidence",
+          "tool_or_filters"
+        ],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 4.1439999999999996e-05
+        },
+        "id": "e2e_v01",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "unsupported",
+        "passed": false,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 3.2014356659929035,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 8.5565e-05
+        },
+        "id": "e2e_v02",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 1.4730652080033906,
+        "expected_status": "needs_clarification",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 4.1939999999999995e-05
+        },
+        "id": "e2e_x01",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "needs_clarification",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 1.7603587079938734,
+        "expected_status": "needs_clarification",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 4.294e-05
+        },
+        "id": "e2e_x02",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "needs_clarification",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 1.7358444169949507,
+        "expected_status": "needs_clarification",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 4.1689999999999996e-05
+        },
+        "id": "e2e_x03",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "needs_clarification",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 1.3902504590078024,
+        "expected_status": "needs_clarification",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 4.344e-05
+        },
+        "id": "e2e_x04",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "needs_clarification",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 1.6236311660031788,
+        "expected_status": "unsupported",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 4.094e-05
+        },
+        "id": "e2e_x05",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "unsupported",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 1.5823921670089476,
+        "expected_status": "unsupported",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 4.0814999999999995e-05
+        },
+        "id": "e2e_x06",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "unsupported",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 1.5475265410059365,
+        "expected_status": "unsupported",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 4.044e-05
+        },
+        "id": "e2e_x07",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "unsupported",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 1.5132139999914216,
+        "expected_status": "unsupported",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 0.0,
+          "openai": 4.119e-05
+        },
+        "id": "e2e_x08",
+        "jev_probability": null,
+        "jev_route": null,
+        "observed_status": "unsupported",
+        "passed": true,
+        "used_analyst": true
+      }
+    ],
+    "gated": [
+      {
+        "elapsed_seconds": 2.3981935840129154,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.5200000000000003e-05,
+          "openai": 5.174e-05
+        },
+        "id": "e2e_u01",
+        "jev_probability": 0.81,
+        "jev_route": "opening_usage",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.5377565829985542,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.4990000000000003e-05,
+          "openai": 5.1689999999999995e-05
+        },
+        "id": "e2e_u02",
+        "jev_probability": 0.78,
+        "jev_route": "opening_usage",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.786097125004744,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.4990000000000003e-05,
+          "openai": 5.5939999999999996e-05
+        },
+        "id": "e2e_u03",
+        "jev_probability": 0.9,
+        "jev_route": "opening_usage",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.467382583010476,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.4864e-05,
+          "openai": 5.3689999999999996e-05
+        },
+        "id": "e2e_u04",
+        "jev_probability": 0.91,
+        "jev_route": "opening_usage",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.5193627499975264,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.4864e-05,
+          "openai": 5.166e-05
+        },
+        "id": "e2e_u05",
+        "jev_probability": 0.88,
+        "jev_route": "opening_usage",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 3.0328880830056733,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.4990000000000003e-05,
+          "openai": 5.5064999999999995e-05
+        },
+        "id": "e2e_u06",
+        "jev_probability": 0.73,
+        "jev_route": "opening_usage",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.3785967089934275,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.4738000000000003e-05,
+          "openai": 5.2130000000000004e-05
+        },
+        "id": "e2e_u07",
+        "jev_probability": 0.88,
+        "jev_route": "opening_usage",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.5839342919935007,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.4864e-05,
+          "openai": 4.1065e-05
+        },
+        "id": "e2e_u08",
+        "jev_probability": 0.79,
+        "jev_route": "opening_usage",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 3.480445207998855,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.5662000000000003e-05,
+          "openai": 0.0001048
+        },
+        "id": "e2e_s01",
+        "jev_probability": 0.88,
+        "jev_route": "opening_score",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 3.327106165990699,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.5578e-05,
+          "openai": 6.968999999999999e-05
+        },
+        "id": "e2e_s02",
+        "jev_probability": 0.94,
+        "jev_route": "opening_score",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.636759790999349,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.5620000000000002e-05,
+          "openai": 6.728e-05
+        },
+        "id": "e2e_s03",
+        "jev_probability": 0.96,
+        "jev_route": "opening_score",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 3.6274376249930356,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.5662000000000003e-05,
+          "openai": 6.944e-05
+        },
+        "id": "e2e_s04",
+        "jev_probability": 0.96,
+        "jev_route": "opening_score",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.973268375004409,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.5536e-05,
+          "openai": 6.577e-05
+        },
+        "id": "e2e_s05",
+        "jev_probability": 0.91,
+        "jev_route": "opening_score",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.7346721249923576,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.5578e-05,
+          "openai": 6.628e-05
+        },
+        "id": "e2e_s06",
+        "jev_probability": 0.92,
+        "jev_route": "opening_score",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.6819408340088557,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.5452000000000003e-05,
+          "openai": 6.725e-05
+        },
+        "id": "e2e_o01",
+        "jev_probability": 0.93,
+        "jev_route": "opening_compare",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.5769675000046846,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.5830000000000002e-05,
+          "openai": 6.833e-05
+        },
+        "id": "e2e_o02",
+        "jev_probability": 0.94,
+        "jev_route": "opening_compare",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.4340997079998488,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.5200000000000003e-05,
+          "openai": 5.569e-05
+        },
+        "id": "e2e_b01",
+        "jev_probability": 0.8,
+        "jev_route": "clock_bucket",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 3.3586435840115882,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.5494000000000004e-05,
+          "openai": 6.678000000000001e-05
+        },
+        "id": "e2e_b02",
+        "jev_probability": 0.83,
+        "jev_route": "clock_bucket",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 6.019140917007462,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.5326e-05,
+          "openai": 0.00019171000000000002
+        },
+        "id": "e2e_b03",
+        "jev_probability": 0.68,
+        "jev_route": "clock_bucket",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 3.8655376249953406,
+        "expected_status": "answered",
+        "failures": [
+          "tool_or_filters"
+        ],
+        "gross_cost_usd": {
+          "jev": 2.5158000000000002e-05,
+          "openai": 9.621e-05
+        },
+        "id": "e2e_b04",
+        "jev_probability": 0.85,
+        "jev_route": "clock_bucket",
+        "observed_status": "answered",
+        "passed": false,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.7287059999944177,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.541e-05,
+          "openai": 5.2260000000000004e-05
+        },
+        "id": "e2e_c01",
+        "jev_probability": 0.68,
+        "jev_route": "clock_compare",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 4.240190333002829,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.5284000000000004e-05,
+          "openai": 5.5064999999999995e-05
+        },
+        "id": "e2e_c02",
+        "jev_probability": 0.87,
+        "jev_route": "clock_compare",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 2.7752533329912694,
+        "expected_status": "answered",
+        "failures": [
+          "status",
+          "result_values",
+          "evidence",
+          "tool_or_filters"
+        ],
+        "gross_cost_usd": {
+          "jev": 2.4948e-05,
+          "openai": 4.1439999999999996e-05
+        },
+        "id": "e2e_v01",
+        "jev_probability": 0.9,
+        "jev_route": "coverage",
+        "observed_status": "unsupported",
+        "passed": false,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 4.140743833006127,
+        "expected_status": "answered",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.4990000000000003e-05,
+          "openai": 6.6565e-05
+        },
+        "id": "e2e_v02",
+        "jev_probability": 0.74,
+        "jev_route": "coverage",
+        "observed_status": "answered",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 0.6974221249984112,
+        "expected_status": "needs_clarification",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.4612e-05,
+          "openai": 0.0
+        },
+        "id": "e2e_x01",
+        "jev_probability": 0.8,
+        "jev_route": "clarify",
+        "observed_status": "needs_clarification",
+        "passed": true,
+        "used_analyst": false
+      },
+      {
+        "elapsed_seconds": 2.8602406249992782,
+        "expected_status": "needs_clarification",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.5158000000000002e-05,
+          "openai": 4.294e-05
+        },
+        "id": "e2e_x02",
+        "jev_probability": 0.68,
+        "jev_route": "clarify",
+        "observed_status": "needs_clarification",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 0.7349532079970231,
+        "expected_status": "needs_clarification",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.4528000000000003e-05,
+          "openai": 0.0
+        },
+        "id": "e2e_x03",
+        "jev_probability": 0.8,
+        "jev_route": "clarify",
+        "observed_status": "needs_clarification",
+        "passed": true,
+        "used_analyst": false
+      },
+      {
+        "elapsed_seconds": 0.8247750000009546,
+        "expected_status": "needs_clarification",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.5158000000000002e-05,
+          "openai": 0.0
+        },
+        "id": "e2e_x04",
+        "jev_probability": 0.97,
+        "jev_route": "clarify",
+        "observed_status": "needs_clarification",
+        "passed": true,
+        "used_analyst": false
+      },
+      {
+        "elapsed_seconds": 3.7599990000016987,
+        "expected_status": "unsupported",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.478e-05,
+          "openai": 3.864e-05
+        },
+        "id": "e2e_x05",
+        "jev_probability": 0.58,
+        "jev_route": "unsupported",
+        "observed_status": "unsupported",
+        "passed": true,
+        "used_analyst": true
+      },
+      {
+        "elapsed_seconds": 0.9289879999996629,
+        "expected_status": "unsupported",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.4738000000000003e-05,
+          "openai": 0.0
+        },
+        "id": "e2e_x06",
+        "jev_probability": 0.94,
+        "jev_route": "unsupported",
+        "observed_status": "unsupported",
+        "passed": true,
+        "used_analyst": false
+      },
+      {
+        "elapsed_seconds": 1.0500587080023251,
+        "expected_status": "unsupported",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.4696000000000002e-05,
+          "openai": 0.0
+        },
+        "id": "e2e_x07",
+        "jev_probability": 0.92,
+        "jev_route": "unsupported",
+        "observed_status": "unsupported",
+        "passed": true,
+        "used_analyst": false
+      },
+      {
+        "elapsed_seconds": 0.9469634999986738,
+        "expected_status": "unsupported",
+        "failures": [],
+        "gross_cost_usd": {
+          "jev": 2.4864e-05,
+          "openai": 0.0
+        },
+        "id": "e2e_x08",
+        "jev_probability": 0.71,
+        "jev_route": "unsupported",
+        "observed_status": "unsupported",
+        "passed": true,
+        "used_analyst": false
+      }
+    ]
+  },
+  "planned_cases_per_arm": 32,
+  "policy": "jev-boundary-gate-v1",
+  "prior_gross_usd": {
+    "jev": 0.0,
+    "openai": 0.0
+  },
+  "scores": {
+    "baseline": {
+      "correct_answer_cost_usd": 8.087666666666667e-05,
+      "gross_usd": 0.0024263,
+      "passed": 30,
+      "total": 32
+    },
+    "gated": {
+      "correct_answer_cost_usd": 8.346273333333334e-05,
+      "gross_usd": 0.0025038820000000002,
+      "passed": 30,
+      "total": 32
+    }
+  },
+  "threshold": 0.7,
+  "unknown_cost_reservation_usd": {
+    "jev": 0.0,
+    "openai": 0.0
+  }
+}

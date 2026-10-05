@@ -240,7 +240,9 @@ class CheckedTools:
             "buckets": [a, b],
             "error_proxy_rate_difference_first_minus_second": delta,
             "evaluation_coverage_difference_first_minus_second": (
-                a["evaluation_coverage"] - b["evaluation_coverage"]
+                None
+                if a["evaluation_coverage"] is None or b["evaluation_coverage"] is None
+                else a["evaluation_coverage"] - b["evaluation_coverage"]
             ),
             "caveats": ["source_evaluation_selection", "exploratory_proxy"],
         }

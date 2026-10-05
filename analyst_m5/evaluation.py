@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import math
 import time
 from pathlib import Path
 
@@ -57,6 +58,43 @@ def score_case(case: dict, answer: dict) -> dict:
         "passed": not failures,
         "failures": failures,
     }
+
+
+def _strict_subset(expected, observed, tolerance=1e-6):
+    """Typed numerical comparison for new portfolio fixtures; historical rubrics stay frozen."""
+    if isinstance(expected, dict):
+        return isinstance(observed, dict) and all(
+            key in observed and _strict_subset(value, observed[key], tolerance)
+            for key, value in expected.items()
+        )
+    if isinstance(expected, (int, float)) and not isinstance(expected, bool):
+        return (
+            isinstance(observed, (int, float))
+            and not isinstance(observed, bool)
+            and math.isfinite(expected)
+            and math.isfinite(observed)
+            and abs(expected - observed) <= tolerance
+        )
+    return type(expected) is type(observed) and expected == observed
+
+
+def score_case_portfolio(case: dict, answer: dict) -> dict:
+    """Versioned rubric for new offline checks; does not alter M5–M7 scoring."""
+    scored = score_case(case, answer)
+    if case["expected_status"] == "answered":
+        observed = answer.get("result")
+        for key in case.get("result_path", []):
+            observed = observed.get(key) if isinstance(observed, dict) else None
+        if (
+            not _strict_subset(
+                case["expected_result"], observed, case["comparison"]["rates_absolute_tolerance"]
+            )
+            and "result_values" not in scored["failures"]
+        ):
+            scored["failures"].append("result_values")
+    scored["passed"] = not scored["failures"]
+    scored["rubric_version"] = "portfolio-1.0"
+    return scored
 
 
 def score_case_m6(case: dict, answer: dict) -> dict:

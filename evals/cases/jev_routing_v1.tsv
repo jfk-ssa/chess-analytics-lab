@@ -1,0 +1,81 @@
+id	split	label	question
+u01	dev	opening_usage	How many of the eligible games carry the Sicilian Defense opening tag, and what share is that?
+u02	dev	opening_usage	Among known openings in this observed slice, what fraction is French Defense?
+u03	dev	opening_usage	Give the game count and denominator for the Italian Game tag.
+u04	dev	opening_usage	What percentage of tagged eligible games are Queen's Pawn Game?
+u05	dev	opening_usage	Count the observed Caro-Kann Defense games without treating missing opening tags as Caro-Kann.
+u06	test	opening_usage	For the Ruy Lopez family, show its frequency among games with a known opening label.
+u07	test	opening_usage	How common is the English Opening source tag in the eligible game set?
+u08	test	opening_usage	Report the share and raw count for Petrov's Defense in this archive prefix.
+u09	test	opening_usage	Of completed tagged games, how many say Scotch Game and how many are in scope?
+u10	test	opening_usage	What proportion used the Pirc Defense label? I only want the observed prefix.
+s01	dev	opening_score	For white players rated 1400 to under 1600 at 60+0, what was the score rate in Sicilian Defense games?
+s02	dev	opening_score	Give black's wins, draws, losses, and points per game for the French Defense at 60+0 in the 1400–1599 band.
+s03	dev	opening_score	In Italian Game games, what fraction of available points did white score at 60+0 and ratings 1400–1599?
+s04	dev	opening_score	Show the white player score, not just win rate, for Queen's Pawn Game with 1400–1600 ratings and 60+0.
+s05	dev	opening_score	How did 1200–1399 black players score in Caro-Kann Defense games at 180+2?
+s06	test	opening_score	For Ruy Lopez, report the black-side score rate in the half-open 1600–1800 rating band at 300+3.
+s07	test	opening_score	How many points per eligible game did white get in English Opening at 60+0 and 1400–1599?
+s08	test	opening_score	Give wins, draws, losses and score rate for Petrov's Defense as black, 1200–1399, 180+2.
+s09	test	opening_score	At 300+3, what share of possible points came to white in Scotch Game games for ratings [1600,1800)?
+s10	test	opening_score	I need the Pirc Defense player-score outcome for black at 60+0 in the 1400–1599 band.
+o01	dev	opening_compare	Compare white player score in Sicilian Defense versus French Defense at 60+0 for ratings 1400–1599.
+o02	dev	opening_compare	With the same 1400–1600 white cohort and 60+0 clock, which scored higher: Italian Game or Queen's Pawn Game?
+o03	dev	opening_compare	Show adjusted score rates and intervals for Caro-Kann Defense against French Defense, black, 1200–1399, 180+2.
+o04	dev	opening_compare	Contrast Sicilian Defense and Italian Game points per game for white at 300+3 and ratings [1600,1800).
+o05	dev	opening_compare	For black players rated 1400–1599 at 60+0, compare the observed outcomes of French Defense and Queen's Pawn Game.
+o06	test	opening_compare	How do Ruy Lopez and Petrov's Defense compare on black score rate at 60+0 for 1400–1599?
+o07	test	opening_compare	Show a side-by-side adjusted white score for English Opening versus Scotch Game, 180+2, ratings [1200,1400).
+o08	test	opening_compare	Compare Pirc Defense and Modern Defense on points earned by white in a matched 300+3, 1600–1799 cohort.
+o09	test	opening_compare	Which had the higher observed black-side score, Ruy Lopez or English Opening, at 60+0 and ratings 1400–1599?
+o10	test	opening_compare	For two exact tags, Petrov's Defense and Scotch Game, contrast white score at 1400–1599 and 60+0.
+b01	dev	clock_bucket	In the 30–59 second pre-turn clock bucket, how many evaluable moves crossed the 200 cp deterioration proxy?
+b02	dev	clock_bucket	What is evaluation coverage among eligible moves with under ten seconds left before the turn?
+b03	dev	clock_bucket	Give the proxy-error rate and its evaluable denominator for the 10–29 second bin.
+b04	dev	clock_bucket	For moves starting with at least 60 seconds, count eligible and evaluable positions.
+b05	dev	clock_bucket	How many scored moves in the 30_to_59 bucket have the exploratory >=200 cp drop?
+b06	test	clock_bucket	Report missing-evaluation coverage, not zero-filled errors, in the under_10 pre-move clock group.
+b07	test	clock_bucket	For 60_plus, what fraction of eligible sampled moves actually has an evaluation pair?
+b08	test	clock_bucket	What is the observed deterioration-proxy share for moves played from 10_to_29 seconds?
+b09	test	clock_bucket	Count proxy errors and usable evaluations for the 30–59 second time-left stratum.
+b10	test	clock_bucket	At less than ten seconds on the previous same-side clock, give the 200-centipawn proxy numerator and denominator.
+c01	dev	clock_compare	Compare the proxy-error rates for under_10 and 30_to_59 pre-turn clock buckets.
+c02	dev	clock_compare	How does evaluation coverage differ between 10_to_29 and 60_plus?
+c03	dev	clock_compare	Put the 30–59 second and under-ten-second deterioration shares side by side, keeping their denominators.
+c04	dev	clock_compare	Which of 10_to_29 and 30_to_59 has more evaluable moves in this observed sample?
+c05	dev	clock_compare	Contrast the exploratory error proxy in under_10 versus 60_plus without a causal claim.
+c06	test	clock_compare	Compare the selected-move evaluation coverage for 30_to_59 against 60_plus.
+c07	test	clock_compare	What are the two proxy numerators and evaluable denominators for under_10 and 10_to_29?
+c08	test	clock_compare	Show both clock-bin rates, 10–29 seconds versus 30–59 seconds, on the same observed prefix.
+c09	test	clock_compare	For under ten seconds and one minute or more, compare deterioration proxy counts and rates.
+c10	test	clock_compare	Does 30_to_59 have a different observed coverage from under_10? Give both fractions, not a cause.
+v01	dev	coverage	What UTC dates are actually observed in this bounded archive prefix?
+v02	dev	coverage	How many games were accepted, excluded, duplicated, or quarantined during ingestion?
+v03	dev	coverage	What fraction of selected moves has a usable engine evaluation in the current analytical snapshot?
+v04	dev	coverage	Is this source a complete monthly archive or a retained byte prefix, and how many games were selected?
+v05	dev	coverage	Summarize missing ratings and missing opening tags in the checked dataset.
+v06	test	coverage	Report the first and last observed UTC day, not the month implied by the filename.
+v07	test	coverage	What are the source and analytical snapshot IDs and their accepted-game counts?
+v08	test	coverage	How many selected moves lack a centipawn evaluation pair overall?
+v09	test	coverage	Describe the selection fraction for move replay and the number of zero-ply selected games.
+v10	test	coverage	Which quality exclusions and missing fields were recorded for this partial source?
+a01	dev	clarify	Which opening should I examine?
+a02	dev	clarify	How did they score in that opening?
+a03	dev	clarify	Compare those two clock buckets for me.
+a04	dev	clarify	Was the result good for my rating?
+a05	dev	clarify	How often did the opening occur in my games?
+a06	test	clarify	What is the score rate there for the player color I mean?
+a07	test	clarify	Could you contrast the two openings I have in mind?
+a08	test	clarify	For my chosen time range, was the proxy rate high?
+a09	test	clarify	Show the opening outcome for that cohort, whichever one we discussed.
+a10	test	clarify	How common was it? I forgot to name the family.
+x01	dev	unsupported	Did time pressure cause these players to blunder?
+x02	dev	unsupported	Which opening should I use to win my next match?
+x03	dev	unsupported	Identify cheaters from these game records.
+x04	dev	unsupported	What was the full-month August 2026 player win rate everywhere on Lichess?
+x05	dev	unsupported	Suggest the best move in my ongoing game from this position.
+x06	test	unsupported	Prove that having under ten seconds made the errors happen.
+x07	test	unsupported	Personalize a training plan for my account from all my private games.
+x08	test	unsupported	Can you tell me which named players used engine assistance?
+x09	test	unsupported	Forecast the winner of a live tournament game from the partial archive.
+x10	test	unsupported	Give a reliable population estimate for every game in the entire December archive from this first-day prefix.

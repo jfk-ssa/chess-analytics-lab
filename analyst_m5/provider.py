@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import math
 import os
 import re
 import unicodedata
@@ -87,7 +88,12 @@ def validate_personal_config(config: dict) -> dict:
         *(cache_prices & set(config)),
     ):
         value = config[key]
-        if isinstance(value, bool) or not isinstance(value, (int, float)) or value <= 0:
+        if (
+            isinstance(value, bool)
+            or not isinstance(value, (int, float))
+            or not math.isfinite(value)
+            or value <= 0
+        ):
             raise ValueError(f"positive {key} required")
     if (
         type(config["max_output_tokens"]) is not int
@@ -133,10 +139,10 @@ def price_usage(config: dict, usage: dict) -> tuple[float, str]:
     else:
         input_cost = usage["input_tokens"] * max(input_rate, write_rate, cached_rate)
         basis = "conservative_missing_cache_breakdown"
-    return (
-        (input_cost + usage["output_tokens"] * config["output_usd_per_million"]) / 1_000_000,
-        basis,
-    )
+    cost = (input_cost + usage["output_tokens"] * config["output_usd_per_million"]) / 1_000_000
+    if not math.isfinite(cost):
+        raise ValueError("provider cost cannot be established as a finite amount")
+    return cost, basis
 
 
 def _default_transport(body: bytes, key: str) -> dict:
@@ -487,6 +493,8 @@ def quote_request(project: Path, question: str, config: dict, condition="semanti
         (len(body) + 1000) * max(config["input_usd_per_million"], *cache_rates(config))
         + config["max_output_tokens"] * config["output_usd_per_million"]
     ) / 1_000_000
+    if not math.isfinite(reserved_usd):
+        raise ValueError("request cost bound is not finite")
     return {
         "body": body,
         "request_sha256": hashlib.sha256(body).hexdigest(),
@@ -513,6 +521,13 @@ def live_answer(
     )
     quote = quote_request(project, question, config, condition)
     reserved_usd = quote["reserved_cost_usd"]
+    if remaining_usd is not None and (
+        isinstance(remaining_usd, bool)
+        or not isinstance(remaining_usd, (int, float))
+        or not math.isfinite(remaining_usd)
+        or remaining_usd < 0
+    ):
+        raise ValueError("finite remaining run budget required")
     if reserved_usd > config["max_run_usd"] or (
         remaining_usd is not None and reserved_usd > remaining_usd
     ):

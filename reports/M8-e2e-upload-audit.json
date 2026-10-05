@@ -1,0 +1,17 @@
+{
+  "candidate_bytes": 8239554,
+  "candidate_file_count": 519,
+  "candidate_personal_path_paths": [],
+  "candidate_sensitive_pattern_paths": [],
+  "forbidden_payload_paths": [],
+  "history_personal_path_paths": [],
+  "history_sensitive_pattern_paths": [],
+  "kind": "candidate and reachable-Git-history filename-only pattern audit",
+  "limitations": [
+    "Pattern scan, not a comprehensive secret detector",
+    "Does not inspect ignored local files or unreachable Git objects",
+    "No remote upload or hosted CI run"
+  ],
+  "reachable_commits": 33,
+  "remote_configured": false
+}
