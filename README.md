@@ -64,6 +64,7 @@ reliable ingestion, not contemporary chess behavior. See [data sources](docs/DAT
 - [Dagster and Prefect local adapters](docs/ORCHESTRATION.md); Airflow is a follow-up
 - [Repository review](docs/REPOSITORY_REVIEW.md) and [portfolio hardening plan](docs/PORTFOLIO_HANDOFF.md)
 - [Jev question-routing learning lab](docs/JEV_ROUTING_RUNBOOK.md), [measured comparison](reports/M8-routing-comparison.html), and [paired final-answer lab](docs/JEV_END_TO_END.md)
+- [Separate business communication and data observability examples](auxiliary-examples/README.md)
 
 The default analyst path is offline typed-tool execution or fixture replay. A
 personal provider key, explicit model/prices and run cap are required for any

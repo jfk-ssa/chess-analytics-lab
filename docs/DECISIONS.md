@@ -997,3 +997,15 @@ The owner explicitly authorized changing `jfk-ssa/chess-analytics-lab` to public
 including its full Git history and the previously disclosed local author address.
 The visibility change succeeded, and GitHub reports `PUBLIC`. Keep the frozen
 M0–M8 evidence and historical private-first decision as the record of sequence.
+
+## 2026-10-06 — Separate public business examples
+
+Place the owner-supplied executive metric communication text and data
+observability screenshot in `auxiliary-examples/`, outside the chess package and
+evidence chain. Adapt the text for public sharing: replace observed financial
+figures with labeled synthetic worked examples, remove named people, email
+addresses, customer identifiers, internal ticket links, and production change
+history. Retain the supplied dashboard screenshot because it shows no visible
+financial amounts or named people. Link the folder from the repository README
+so both artifacts have stable, direct public URLs, and exclude the folder from
+Python distributions because it is not part of the application.

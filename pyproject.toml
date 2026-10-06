@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 packages = ["src/chess_analytics", "orchestration", "platform_m2", "analytics_m3", "analytics_m4", "analyst_m5"]
 
 [tool.hatch.build.targets.sdist]
-exclude = ["/work/**", "/.uv-cache/**", "/.venv/**"]
+exclude = ["/work/**", "/.uv-cache/**", "/.venv/**", "/auxiliary-examples/**"]
 
 [project]
 name = "chess-analytics-lab"

@@ -1,4 +1,4 @@
-# Status — 2026-10-05
+# Status — 2026-10-06
 
 **M0–M7 accepted locally; M8 routing and end-to-end Jev comparisons measured, with no production promotion. Portfolio hardening verified locally and in a fresh export; GPL-3.0-or-later selected for original project code.** This is a new standalone local Git
 repository; projects 1–3 remain together. The portfolio repository is public at
@@ -35,6 +35,12 @@ No new live model call occurred.
 | M8 Jev | Routing and paired final-answer comparisons measured; no production promotion | [Route checkpoint](../reports/M8-routing-checkpoint.json): rules 35/40; Jev passes 39/40 and 37/40; existing analyst 33/40. [End-to-end checkpoint](../reports/M8-e2e-checkpoint.json): both arms 31/32 after versioned offline rescore; Jev costs slightly more. Eight new boundary labels received owner review. See [end-to-end lab](JEV_END_TO_END.md). Compatible DuckDB extension remains an optional isolated exercise. |
 | Portfolio readiness | Integrity, offline demo, docs, clean export and license verified locally; hosted CI passed; repository public | [Implementation evidence](EVIDENCE_INDEX.md), [final review](FINAL_RELEASE_REVIEW.md) and [handoff record](PORTFOLIO_HANDOFF.md). |
 | Personalized recommender | Backlog | Outside first-release scope |
+
+An [auxiliary examples folder](../auxiliary-examples/README.md) now holds a
+publicly adapted executive metric communication example and a data
+observability screenshot. The examples are separate from Chess Analytics Lab;
+the metric document uses synthetic financial cases and omits named people,
+email addresses, customer identifiers, and internal ticket links.
 
 ## Portfolio hardening checkpoint
 
