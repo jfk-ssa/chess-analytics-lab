@@ -187,8 +187,8 @@
     "candidate_history_pattern_scan": "no matching sensitive/personal paths; bounded patterns, not comprehensive secret detection",
     "package_inventory": "wheel and sdist include license and exclude ignored payloads",
     "browser_visual_preview": "local-file protocol blocked; HTML structure checked; visual appearance unverified",
-    "new_hosted_ci": "not run",
-    "remote_publication": "Owner authorized; release candidate ready for push.",
+    "new_hosted_ci": "Pending verification; previous runs are separate evidence.",
+    "remote_publication": "Pushed to public main in 4411e179b83d4c84eba03d3279cc46b6791d6e66",
     "clean_export_offline_demo": "passed"
   },
   "retained_final_answer_comparison": {

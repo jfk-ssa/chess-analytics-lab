@@ -4,19 +4,19 @@
 repository; projects 1–3 remain together. The portfolio repository is public at
 https://github.com/jfk-ssa/chess-analytics-lab.
 
-## Current documentation and publication candidate — 2026-10-07
+## Current documentation and publication — 2026-10-07
 
 The first-visit review is complete: the README now includes clone/setup and
 development checks, [the documentation guide](README.md) gives reading paths
 and a repository map, and [the classifier summary](CLASSIFIER_COMPARISON.md)
 is readable directly on GitHub. The Decisions experiment and comparison report
-are included in the owner-authorized publication candidate. The full local suite
+were pushed to public `main` in commit `4411e17`, following owner authorization. The full local suite
 passed **115 tests**, Ruff passed, and the offline demo completed. The local link
 scan found no missing targets. Numbered cloud-sync copies were excluded; the
 installed dependency copies that caused dbt failures remain in ignored diagnostic
 storage. See [review findings](DOCUMENTATION_REVIEW.md) and
 [verification](../reports/documentation-review.json). Hosted CI for this update
-remains pending until verified after the push.
+is pending verification. Earlier successful runs are separate evidence.
 
 ## Phase tracker
 
@@ -276,8 +276,9 @@ include the license and exclude ignored payloads. The bounded candidate/history
 pattern scan found no matching secret or personal paths. See [package inventory](../reports/decisions-package-inventory.json)
 and [candidate audit](../reports/decisions-upload-audit.json). The HTML has four
 comparison sections and eight threshold plots; browser visual inspection was
-blocked by local-file protocol policy. This extension is a local reviewable
-change set; no new push or hosted CI is claimed.
+blocked by local-file protocol policy. At this pre-publication check, the extension was a local reviewable change set.
+The later publication record above identifies the actual push; hosted CI is
+reported separately.
 
 The Decisions HTML now leads with a checkpoint-backed results summary before
 the detailed comparisons, including spend and evidence limits. The renderer

@@ -2,12 +2,16 @@
   "kind": "first_visit_documentation_review",
   "date": "2026-10-07",
   "markdown_files": 44,
-  "relative_links": 365,
+  "relative_links": 369,
   "missing_local_targets": [],
   "scope": "Path existence; external URLs and heading anchors not checked.",
   "dependency_failure": "Four failed local runs, each 114 passed/1 failed. Numbered cloud-sync copies affected dbt-duckdb macros, dbt-core macros and the core overview document. Original logs preserved under ignored work.",
   "environment_repair": "133 byte-identical unrecorded cloud-sync copies preserved outside dbt include tree; no tracked SQL change.",
-  "publication": "Owner authorized push; pending final checks and remote verification.",
+  "publication": {
+    "state": "pushed_to_public_main",
+    "implementation_commit": "4411e179b83d4c84eba03d3279cc46b6791d6e66",
+    "new_hosted_ci": "pending verification"
+  },
   "cloud_sync_copies": "Owner identified numbered copies as cloud-synced artifacts; excluded from candidate, retained diagnostics under ignored work.",
   "cloud_copy_candidate_paths": [],
   "verification": {
