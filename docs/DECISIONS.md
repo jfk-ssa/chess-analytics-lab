@@ -1009,3 +1009,71 @@ history. Retain the supplied dashboard screenshot because it shows no visible
 financial amounts or named people. Link the folder from the repository README
 so both artifacts have stable, direct public URLs, and exclude the folder from
 Python distributions because it is not part of the application.
+
+## 2026-10-07 — Optional OpenAI Decisions classifier
+
+Add a separate Decisions API learning experiment; keep rules, Jev and the existing
+checked analyst intact. Use the standard global Decisions endpoint, gpt-6-luna,
+one fixed eight-choice route question, and standard-library HTTP. Official pricing
+checked today is $0.10 per million input tokens. No new dependency or infrastructure.
+
+All historical cases are inspected development evidence. Select and freeze the
+0.70 chosen-option probability threshold from 40 development responses before
+fresh scoring. The owner approved 24 new labels and a simplified private-history
+question before any holdout call. Label review is independent of the authoring
+agent, but is owner review rather than external expert adjudication. Three identical
+repetitions scored 23/24 each; do not count them as 72 independent examples or tune
+the rubric against the repeated error without retiring this holdout.
+
+All six runs used one durable locked campaign ledger and the approved $0.05
+cumulative Decisions cap. Actual recorded usage totals $0.0068145 for 184 requests,
+with no unknown reservations, transport failures, retries or refusals. Retain raw
+attempts under ignored work; compact scored reports and the checkpoint are public
+artifacts. Usage-based gross is not a provider invoice settlement. Future paid
+runs need a new explicit estimate, recommended cap and approval; remaining credits
+and unused cap are not an authorization for another campaign.
+
+Compare retained Jev/analyst runs only on the same historical split; no fresh
+TypeSafe or Responses call was authorized or made. The 32-case historical
+retained-answer replay scores 31/32 with 26 fallbacks, unchanged from baseline,
+and raises simulated cost from $0.0024263 to $0.003363135. It has no combined live
+latency and proves no benefit for the accepted M7 Sol analyst. Keep Decisions
+optional; a fresh paired final-answer test needs separate provider estimates and
+caps before considering integration. See [runbook](DECISIONS_ROUTING_RUNBOOK.md)
+and [checkpoint](../reports/decisions-checkpoint.json).
+
+## 2026-10-07 — Lead the comparison with results
+
+The owner requested an upfront results section in the Decisions comparison.
+Render a checkpoint-backed summary before the detailed tables, highlighting
+routing accuracy, frozen gate behavior, gross spend, retained-answer replay and
+the recommendation to keep Decisions optional. Require matching report hashes
+when rendering the checkpoint summary. Preserve classifier runs and avoid new
+paid calls for this presentation change.
+
+Clarify “baseline” in the report: rules are the simple routing baseline; the
+existing Luna analyst is the final-answer baseline. Show baseline, Jev and
+Decisions side by side on shared historical cases, separating actual paired
+results from Decisions retained-answer replay. Mark Jev/analyst fresh results
+as not measured rather than comparing different case sets.
+
+## 2026-10-07 — First-visit documentation and publication
+
+The owner requested a repository review with a focus on first-time navigation
+and authorized confident changes to be pushed. Add a goal-based documentation
+guide and repository map, a GitHub-readable classifier summary, clone/setup
+steps, platform notes and development checks. Distinguish current guides from
+historical milestone evidence, define the two baselines, preserve repeated Jev
+results and label Decisions final-answer replay. Keep all original live scores,
+frozen cases, package names and spending rules intact. Historical provider prices
+are dated research, not current quotes. No new paid calls or infrastructure.
+
+The local dbt failures were traced to 133 identical, unrecorded duplicate dependency
+files in the ignored environment. Preserve them under work/dependency-diagnostic
+and rerun verification; do not change tracked SQL to accommodate this defect.
+See [documentation review](DOCUMENTATION_REVIEW.md) and its measured checks.
+
+The owner identified the numbered dependency duplicates as cloud-synced copies.
+They are not project source; the publication candidate contains none. Preserve
+the ignored diagnostics without adding broad filename exclusions that could hide
+intentional future files.

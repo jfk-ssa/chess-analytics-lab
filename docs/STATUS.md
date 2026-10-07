@@ -1,8 +1,22 @@
-# Status — 2026-10-06
+# Status — 2026-10-07
 
 **M0–M7 accepted locally; M8 routing and end-to-end Jev comparisons measured, with no production promotion. Portfolio hardening verified locally and in a fresh export; GPL-3.0-or-later selected for original project code.** This is a new standalone local Git
 repository; projects 1–3 remain together. The portfolio repository is public at
 https://github.com/jfk-ssa/chess-analytics-lab.
+
+## Current documentation and publication candidate — 2026-10-07
+
+The first-visit review is complete: the README now includes clone/setup and
+development checks, [the documentation guide](README.md) gives reading paths
+and a repository map, and [the classifier summary](CLASSIFIER_COMPARISON.md)
+is readable directly on GitHub. The Decisions experiment and comparison report
+are included in the owner-authorized publication candidate. The full local suite
+passed **115 tests**, Ruff passed, and the offline demo completed. The local link
+scan found no missing targets. Numbered cloud-sync copies were excluded; the
+installed dependency copies that caused dbt failures remain in ignored diagnostic
+storage. See [review findings](DOCUMENTATION_REVIEW.md) and
+[verification](../reports/documentation-review.json). Hosted CI for this update
+remains pending until verified after the push.
 
 ## Phase tracker
 
@@ -33,6 +47,7 @@ No new live model call occurred.
 | M6 measured release | Done; typed-analyst release gates met | Three complete frozen v2 repetitions, 118/120 scored passes, all evidence audits and offline checks passed. See [release checkpoint](M6-RELEASE.md). |
 | M7 depth | Done; December Sol v12 gate accepted | Three complete frozen repetitions scored 50/50 each with 150/150 evidence audits, no repairs/retries, and $0.35392836 cumulative accounted gross under the approved $6 cap. Earlier failed/stopped gates remain retained. See [December checkpoint](M7-DECEMBER.md). |
 | M8 Jev | Routing and paired final-answer comparisons measured; no production promotion | [Route checkpoint](../reports/M8-routing-checkpoint.json): rules 35/40; Jev passes 39/40 and 37/40; existing analyst 33/40. [End-to-end checkpoint](../reports/M8-e2e-checkpoint.json): both arms 31/32 after versioned offline rescore; Jev costs slightly more. Eight new boundary labels received owner review. See [end-to-end lab](JEV_END_TO_END.md). Compatible DuckDB extension remains an optional isolated exercise. |
+| M8 Decisions extension | Measured optional classifier; no production promotion | Owner-reviewed 24-case language holdout: 23/24 on each of three repetitions; rules 8/24. Development-selected 0.70 threshold accepts 17/24 with zero observed errors. Historical retained-answer replay stays 31/32 and costs more. Six live Decisions runs / 184 requests cost $0.0068145 gross under $0.05. [Runbook](DECISIONS_ROUTING_RUNBOOK.md), [checkpoint](../reports/decisions-checkpoint.json). Fresh paired Jev/analyst evaluation remains a separate optional gate requiring new estimates and caps. |
 | Portfolio readiness | Integrity, offline demo, docs, clean export and license verified locally; hosted CI passed; repository public | [Implementation evidence](EVIDENCE_INDEX.md), [final review](FINAL_RELEASE_REVIEW.md) and [handoff record](PORTFOLIO_HANDOFF.md). |
 | Personalized recommender | Backlog | Outside first-release scope |
 
@@ -250,3 +265,24 @@ fixture replay is harness validation, not model accuracy. The provider example
 is disabled by default; no workplace credential was used. Gross cost is reported
 even if account credit covers it. No hosted CI run or broad model-performance
 claim is made.
+
+## Decisions extension verification — 2026-10-07
+
+The local full dbt/dashboard suite passed 114 tests; the final report refinement
+and additional false-boundary replay regression passed all seven focused tests.
+A fresh locked export passed 102 tests with 13 expected real-data skips. The local
+offline demo, Ruff and new-file formatting passed. The wheel and source archive
+include the license and exclude ignored payloads. The bounded candidate/history
+pattern scan found no matching secret or personal paths. See [package inventory](../reports/decisions-package-inventory.json)
+and [candidate audit](../reports/decisions-upload-audit.json). The HTML has four
+comparison sections and eight threshold plots; browser visual inspection was
+blocked by local-file protocol policy. This extension is a local reviewable
+change set; no new push or hosted CI is claimed.
+
+The Decisions HTML now leads with a checkpoint-backed results summary before
+the detailed comparisons, including spend and evidence limits. The renderer
+checks report hashes when the summary is requested; no new model call occurred.
+
+The upfront results now separate a shared 40-question routing comparison from
+the 32-question final-answer comparison, and identify which fresh comparisons
+were not run. Seven focused checks and Ruff passed; no new API calls.

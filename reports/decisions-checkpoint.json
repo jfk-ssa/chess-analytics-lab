@@ -1,0 +1,235 @@
+{
+  "kind": "decisions_classifier_checkpoint",
+  "date": "2026-10-07",
+  "state": "measured_optional_experiment_no_production_promotion",
+  "approved_cumulative_gross_cap_usd": 0.05,
+  "accounted_gross_usd": 0.006814499999999996,
+  "unknown_reserved_usd": 0.0,
+  "live_requests": 184,
+  "new_live_jev_calls": 0,
+  "new_live_analyst_calls": 0,
+  "label_review": "Owner approved all 24 labels and simplified dx03 before fresh scoring. Agent-proposed labels, owner review, no external expert adjudication.",
+  "policy": {
+    "development_case_sha256": "8d2a626a4d2975bc050a7ed844c7a475a4672ad6d2f4c1f8718d46937912b965",
+    "development_report_sha256": "36da02dcaae87f5eee124814f07b619da5727b7fd49348425de8a3e765fd270f",
+    "kind": "development_threshold_policy",
+    "metric": "chosen_option_probability",
+    "rule": "Lowest development-only threshold with zero observed accepted errors and >=50% coverage; otherwise fallback all. Not proof of calibration.",
+    "threshold": 0.7,
+    "transport_kind": "openai_decisions_api"
+  },
+  "runs": [
+    {
+      "report": "decisions-development.json",
+      "suite": "historical",
+      "split": "dev",
+      "correct": 37,
+      "cases": 40,
+      "gross_usd": 0.0014653000000000001,
+      "median_case_seconds": 0.35496987499209354,
+      "policy_coverage": {
+        "accepted": 25,
+        "coverage": 0.625,
+        "error_rate_among_accepted": 0.0,
+        "errors": 0,
+        "fallbacks": 15,
+        "threshold": 0.7
+      },
+      "false_boundary_rejections": 1,
+      "refusals": 0
+    },
+    {
+      "report": "decisions-historical-test.json",
+      "suite": "historical",
+      "split": "test",
+      "correct": 39,
+      "cases": 40,
+      "gross_usd": 0.0014690000000000007,
+      "median_case_seconds": 0.32679947950236965,
+      "policy_coverage": {
+        "threshold": 0.7,
+        "coverage": 0.725,
+        "accepted": 29,
+        "errors": 0,
+        "error_rate_among_accepted": 0.0,
+        "fallbacks": 11
+      },
+      "false_boundary_rejections": 1,
+      "refusals": 0
+    },
+    {
+      "report": "decisions-historical-e2e.json",
+      "suite": "historical_e2e",
+      "split": "test",
+      "correct": 31,
+      "cases": 32,
+      "gross_usd": 0.0011856000000000002,
+      "median_case_seconds": 0.3276897289979388,
+      "policy_coverage": {
+        "threshold": 0.7,
+        "coverage": 0.75,
+        "accepted": 24,
+        "errors": 1,
+        "error_rate_among_accepted": 0.041666666666666664,
+        "fallbacks": 8
+      },
+      "false_boundary_rejections": 0,
+      "refusals": 0
+    },
+    {
+      "report": "decisions-fresh-pass-1.json",
+      "suite": "fresh",
+      "split": "test",
+      "correct": 23,
+      "cases": 24,
+      "gross_usd": 0.0008981999999999983,
+      "median_case_seconds": 0.33129910400748486,
+      "policy_coverage": {
+        "threshold": 0.7,
+        "coverage": 0.7083333333333334,
+        "accepted": 17,
+        "errors": 0,
+        "error_rate_among_accepted": 0.0,
+        "fallbacks": 7
+      },
+      "false_boundary_rejections": 0,
+      "refusals": 0
+    },
+    {
+      "report": "decisions-fresh-pass-2.json",
+      "suite": "fresh",
+      "split": "test",
+      "correct": 23,
+      "cases": 24,
+      "gross_usd": 0.0008981999999999974,
+      "median_case_seconds": 0.3724214579924592,
+      "policy_coverage": {
+        "threshold": 0.7,
+        "coverage": 0.7083333333333334,
+        "accepted": 17,
+        "errors": 0,
+        "error_rate_among_accepted": 0.0,
+        "fallbacks": 7
+      },
+      "false_boundary_rejections": 0,
+      "refusals": 0
+    },
+    {
+      "report": "decisions-fresh-pass-3.json",
+      "suite": "fresh",
+      "split": "test",
+      "correct": 23,
+      "cases": 24,
+      "gross_usd": 0.0008981999999999992,
+      "median_case_seconds": 0.38751829200191423,
+      "policy_coverage": {
+        "threshold": 0.7,
+        "coverage": 0.7083333333333334,
+        "accepted": 17,
+        "errors": 0,
+        "error_rate_among_accepted": 0.0,
+        "fallbacks": 7
+      },
+      "false_boundary_rejections": 0,
+      "refusals": 0
+    }
+  ],
+  "historical_comparators": {
+    "rules_correct": 35,
+    "jev_correct": [
+      39,
+      37
+    ],
+    "structured_luna_analyst_correct": 33,
+    "cases": 40,
+    "limitation": "Retained runs at different times, inspected historical questions, not new paired live experiment."
+  },
+  "fresh_rules_correct": 8,
+  "replay": {
+    "kind": "offline_retained_answer_replay_not_live_paired_experiment",
+    "classifier_transport_kind": "openai_decisions_api",
+    "case_sha256": "58642936c91601884a27585bc93b1ff63c108ae028a2cf09d3d1c5ef033a3a5d",
+    "cases": 32,
+    "correct": 31,
+    "baseline_correct": 31,
+    "analyst_fallbacks": 26,
+    "replayed_gross_cost_usd": 0.003363135,
+    "replayed_gross_per_correct_usd": 0.00010848822580645162,
+    "new_live_analyst_calls": 0,
+    "combined_live_latency_seconds": null,
+    "retained_report_sha256": "620dad48bdfef24d18003380b129cdf12e1f4171860505893e03bc324ebea3f4",
+    "limitation": "New Decisions labels plus old Luna answers/costs. No combined execution, cache, latency, Sol benefit or new-answer quality claim."
+  },
+  "limits": [
+    "Only 24 independent fresh language cases, three per route. Three repeats are not 72 independent examples.",
+    "Fresh Decisions-versus-rules comparison; Jev and analyst comparators only on retained historical cases.",
+    "Replay uses retained Luna answers, not newly generated final answers or accepted M7 Sol analyst.",
+    "No empirical production calibration guarantee; threshold remains development-selected."
+  ],
+  "files": {
+    "decisions-development.json": "a06b0bfea5c752ca7a7dc4f23fd05c82c7652bc57baaba8954d0ad0c16ad5967",
+    "decisions-historical-test.json": "053f5ab18ffe4663ccf630a70b3ae7ffd207952ff0cb247c1b83ca91a9d33716",
+    "decisions-historical-e2e.json": "edc0e2960bdb2776ea9cac2da819d47b9eb0d3aea801bd1ea3e117886144f851",
+    "decisions-fresh-pass-1.json": "3b3a7f645b0c5c3b31fa076baac22338dc82a24fc603b2d13e92db177f854953",
+    "decisions-fresh-pass-2.json": "2045039057f44b0b962ee922ed71258d92e2b66867d66f509f4d861af3aa25a5",
+    "decisions-fresh-pass-3.json": "ec434aec5afe6d8fbfdd2f2a38e337ac6cc9e21086ca67cbcafd86c1efa483df"
+  },
+  "fresh_repeat_route_changes_vs_first": [
+    0,
+    0,
+    0
+  ],
+  "verification": {
+    "local_full_suite": "115 passed after preserving cloud-sync copies outside installed dbt include tree.",
+    "clean_export_suite": "102 passed; 13 expected skips for absent real data.",
+    "ruff": "check and new-file format passed",
+    "local_offline_demo": "passed",
+    "candidate_history_pattern_scan": "no matching sensitive/personal paths; bounded patterns, not comprehensive secret detection",
+    "package_inventory": "wheel and sdist include license and exclude ignored payloads",
+    "browser_visual_preview": "local-file protocol blocked; HTML structure checked; visual appearance unverified",
+    "new_hosted_ci": "not run",
+    "remote_publication": "Owner authorized; release candidate ready for push.",
+    "clean_export_offline_demo": "passed"
+  },
+  "retained_final_answer_comparison": {
+    "source": "M8-e2e-checkpoint.json",
+    "case_sha256": "58642936c91601884a27585bc93b1ff63c108ae028a2cf09d3d1c5ef033a3a5d",
+    "arms": {
+      "baseline": {
+        "analyst_calls": 32,
+        "answerable_passed": 23,
+        "answerable_total": 24,
+        "boundary_passed": 8,
+        "boundary_total": 8,
+        "elapsed_seconds_mean": 2.6239471887811305,
+        "elapsed_seconds_total": 83.96631004099618,
+        "failed_case_ids": [
+          "e2e_v01"
+        ],
+        "gross_per_correct_answer_usd": 7.826774193548388e-05,
+        "gross_usd": 0.0024263,
+        "jev_calls": 0,
+        "passed": 31,
+        "total": 32
+      },
+      "gated": {
+        "analyst_calls": 26,
+        "answerable_passed": 23,
+        "answerable_total": 24,
+        "boundary_passed": 8,
+        "boundary_total": 8,
+        "elapsed_seconds_mean": 2.690891401000499,
+        "elapsed_seconds_total": 86.10852483201597,
+        "failed_case_ids": [
+          "e2e_v01"
+        ],
+        "gross_per_correct_answer_usd": 8.07703870967742e-05,
+        "gross_usd": 0.0025038820000000002,
+        "jev_calls": 32,
+        "passed": 31,
+        "total": 32
+      }
+    },
+    "evidence": "Retained live paired Luna experiment, scored with versioned offline rescore."
+  }
+}

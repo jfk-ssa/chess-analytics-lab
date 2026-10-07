@@ -1,0 +1,19 @@
+{
+  "kind": "fresh_semantic_route_labels_no_model_results",
+  "version": "decisions-routing-v1",
+  "case_sha256": "c49ab6e50a3aa1aec9cbc2f8210db4f49b340883b152def9d7c53e36b94bddad",
+  "cases": 24,
+  "labels": {
+    "opening_usage": 3,
+    "opening_score": 3,
+    "opening_compare": 3,
+    "clock_bucket": 3,
+    "clock_compare": 3,
+    "coverage": 3,
+    "clarify": 3,
+    "unsupported": 3
+  },
+  "independent_owner_review": true,
+  "review_note": "Owner approved all 24 labels and revised dx03 in chat on 2026-10-07, before any fresh live scoring. Labels proposed by project agent, reviewed by owner; not external expert adjudication.",
+  "scope": "New language cases; no fresh dataset or untouched numerical-answer benchmark."
+}

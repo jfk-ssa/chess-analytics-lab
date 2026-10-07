@@ -6,7 +6,9 @@ is commit `26f675b80ef91f29406ebfb707d13b9f2004cde0`; accepted experimental base
 tag is `m7-baseline` (`f814377`). These identify different things intentionally.
 The owner selected this plan for implementation. Steps 1–5 are implemented and the step 6 clean-export checks passed.
 The owner subsequently selected GPL-3.0-or-later for original project code;
-no upload has occurred. Do not create a new repository or split the three projects.
+this is the preserved hardening handoff, not the current publication state.
+The repository subsequently became public; see [STATUS](STATUS.md). Do not
+create a new repository or split the three projects.
 
 ## Suggested execution order
 

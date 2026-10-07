@@ -47,3 +47,13 @@ snapshot is available**; that command writes a local report. The immutable
 tracked M5 report remains readable without it. No live evaluation command is
 part of the quickstart. A new experiment requires a new freeze, reference
 set, finite cap and personal provider configuration before any request.
+
+## Optional classifier comparisons
+
+[The comparison summary](CLASSIFIER_COMPARISON.md) separates task routing from
+final-answer correctness. Jev routing has two retained repetitions; its 32-case
+pairing used Luna rather than the accepted M7 Sol analyst. Decisions has new live
+classifications, a fresh 24-case owner-reviewed language set, and a separately
+labeled replay using saved Luna answers. Neither gate is promoted. Follow the
+[Jev](JEV_ROUTING_RUNBOOK.md) and [Decisions](DECISIONS_ROUTING_RUNBOOK.md) runbooks
+for offline harness/replay paths; a new live experiment requires its own cap.

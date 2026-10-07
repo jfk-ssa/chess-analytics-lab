@@ -1,5 +1,10 @@
 # Provider choice for the analyst — 2026-10-04
 
+Historical provider research as of the date above, not a current price quote.
+The default remains direct personal-provider access; consider alternative
+gateways only when costs rise materially. Check current prices before any new
+paid experiment. See [current status](STATUS.md) for completed studies.
+
 Keep the direct OpenAI Responses adapter as the M6 reference implementation.
 The first family-split holdout and its two stopped repetitions used 72 actual
 requests for $0.0060692 gross. At this scale, a percentage inference discount
@@ -7,7 +12,7 @@ saves fractions of a cent while a routing change adds compatibility and
 measurement questions. Finish the direct-provider reliability gate before
 changing the provider in the release experiment.
 
-[OpenRouter's current pricing page](https://openrouter.ai/pricing) lists a
+[OpenRouter's pricing page](https://openrouter.ai/pricing) lists a
 5.5% Standard platform fee on credit purchases and a plan-dependent BYOK
 allowance ($25,000/month of list-price inference without fees on Standard,
 then 5%). OpenRouter is most useful here as a controlled multi-provider or

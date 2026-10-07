@@ -1,0 +1,1433 @@
+{
+  "kind": "decisions_routing_attempt",
+  "model": "gpt-6-luna",
+  "endpoint": "https://api.openai.com/v1/decisions",
+  "cap_usd": 0.05,
+  "input_usd_per_million": 0.1,
+  "personal_account_acknowledged": true,
+  "transport_kind": "openai_decisions_api",
+  "suite": "historical_e2e",
+  "split": "test",
+  "case_sha256": "58642936c91601884a27585bc93b1ff63c108ae028a2cf09d3d1c5ef033a3a5d",
+  "preflight_sha256": "ec11f57dab1e6d415f3f963e559f8ceb1fbd3960f91dc28c84b46e93536856af",
+  "complete": true,
+  "total_cases": 32,
+  "completed_cases": 32,
+  "predictions": [
+    {
+      "id": "e2e_u01",
+      "route": "opening_usage",
+      "confidence": 0.49,
+      "probabilities": {
+        "opening_usage": 0.55,
+        "opening_score": 0.03,
+        "opening_compare": 0.02,
+        "clock_bucket": 0.01,
+        "clock_compare": 0.01,
+        "coverage": 0.07,
+        "clarify": 0.27,
+        "unsupported": 0.04
+      },
+      "input_tokens": 374,
+      "gross_cost_usd": 3.74e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.26687950000632554
+    },
+    {
+      "id": "e2e_u02",
+      "route": "opening_usage",
+      "confidence": 0.75,
+      "probabilities": {
+        "opening_usage": 0.78,
+        "opening_score": 0.01,
+        "opening_compare": 0.01,
+        "clock_bucket": 0.0,
+        "clock_compare": 0.01,
+        "coverage": 0.02,
+        "clarify": 0.16,
+        "unsupported": 0.01
+      },
+      "input_tokens": 369,
+      "gross_cost_usd": 3.6899999999999996e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.29269229200144764
+    },
+    {
+      "id": "e2e_u03",
+      "route": "opening_usage",
+      "confidence": 0.58,
+      "probabilities": {
+        "opening_usage": 0.63,
+        "opening_score": 0.02,
+        "opening_compare": 0.02,
+        "clock_bucket": 0.01,
+        "clock_compare": 0.01,
+        "coverage": 0.04,
+        "clarify": 0.25,
+        "unsupported": 0.02
+      },
+      "input_tokens": 368,
+      "gross_cost_usd": 3.680000000000001e-05,
+      "refusal": false,
+      "elapsed_seconds": 1.3129388749948703
+    },
+    {
+      "id": "e2e_u04",
+      "route": "opening_usage",
+      "confidence": 0.91,
+      "probabilities": {
+        "opening_usage": 0.92,
+        "opening_score": 0.01,
+        "opening_compare": 0.01,
+        "clock_bucket": 0.0,
+        "clock_compare": 0.0,
+        "coverage": 0.0,
+        "clarify": 0.06,
+        "unsupported": 0.0
+      },
+      "input_tokens": 366,
+      "gross_cost_usd": 3.66e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.30937804200220853
+    },
+    {
+      "id": "e2e_u05",
+      "route": "opening_usage",
+      "confidence": 0.74,
+      "probabilities": {
+        "opening_usage": 0.77,
+        "opening_score": 0.02,
+        "opening_compare": 0.02,
+        "clock_bucket": 0.01,
+        "clock_compare": 0.02,
+        "coverage": 0.03,
+        "clarify": 0.11,
+        "unsupported": 0.02
+      },
+      "input_tokens": 366,
+      "gross_cost_usd": 3.66e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.2841463329968974
+    },
+    {
+      "id": "e2e_u06",
+      "route": "opening_usage",
+      "confidence": 0.54,
+      "probabilities": {
+        "opening_usage": 0.6,
+        "opening_score": 0.01,
+        "opening_compare": 0.01,
+        "clock_bucket": 0.0,
+        "clock_compare": 0.01,
+        "coverage": 0.03,
+        "clarify": 0.31,
+        "unsupported": 0.03
+      },
+      "input_tokens": 369,
+      "gross_cost_usd": 3.6899999999999996e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.37088666699128225
+    },
+    {
+      "id": "e2e_u07",
+      "route": "opening_usage",
+      "confidence": 0.59,
+      "probabilities": {
+        "opening_usage": 0.64,
+        "opening_score": 0.02,
+        "opening_compare": 0.02,
+        "clock_bucket": 0.01,
+        "clock_compare": 0.01,
+        "coverage": 0.06,
+        "clarify": 0.22,
+        "unsupported": 0.02
+      },
+      "input_tokens": 363,
+      "gross_cost_usd": 3.63e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.27549229199939873
+    },
+    {
+      "id": "e2e_u08",
+      "route": "opening_usage",
+      "confidence": 0.39,
+      "probabilities": {
+        "opening_usage": 0.47,
+        "opening_score": 0.01,
+        "opening_compare": 0.02,
+        "clock_bucket": 0.01,
+        "clock_compare": 0.01,
+        "coverage": 0.07,
+        "clarify": 0.38,
+        "unsupported": 0.03
+      },
+      "input_tokens": 365,
+      "gross_cost_usd": 3.65e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.3274106250028126
+    },
+    {
+      "id": "e2e_s01",
+      "route": "opening_score",
+      "confidence": 0.89,
+      "probabilities": {
+        "opening_usage": 0.03,
+        "opening_score": 0.9,
+        "opening_compare": 0.01,
+        "clock_bucket": 0.01,
+        "clock_compare": 0.01,
+        "coverage": 0.01,
+        "clarify": 0.02,
+        "unsupported": 0.01
+      },
+      "input_tokens": 380,
+      "gross_cost_usd": 3.8e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.29049374999885913
+    },
+    {
+      "id": "e2e_s02",
+      "route": "opening_score",
+      "confidence": 0.77,
+      "probabilities": {
+        "opening_usage": 0.07,
+        "opening_score": 0.8,
+        "opening_compare": 0.01,
+        "clock_bucket": 0.01,
+        "clock_compare": 0.01,
+        "coverage": 0.01,
+        "clarify": 0.08,
+        "unsupported": 0.01
+      },
+      "input_tokens": 378,
+      "gross_cost_usd": 3.7800000000000004e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.3622674159996677
+    },
+    {
+      "id": "e2e_s03",
+      "route": "opening_score",
+      "confidence": 0.99,
+      "probabilities": {
+        "opening_usage": 0.01,
+        "opening_score": 0.99,
+        "opening_compare": 0.0,
+        "clock_bucket": 0.0,
+        "clock_compare": 0.0,
+        "coverage": 0.0,
+        "clarify": 0.0,
+        "unsupported": 0.0
+      },
+      "input_tokens": 378,
+      "gross_cost_usd": 3.7800000000000004e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.327968832993065
+    },
+    {
+      "id": "e2e_s04",
+      "route": "opening_score",
+      "confidence": 0.93,
+      "probabilities": {
+        "opening_usage": 0.03,
+        "opening_score": 0.94,
+        "opening_compare": 0.0,
+        "clock_bucket": 0.0,
+        "clock_compare": 0.01,
+        "coverage": 0.0,
+        "clarify": 0.01,
+        "unsupported": 0.01
+      },
+      "input_tokens": 380,
+      "gross_cost_usd": 3.8e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.31049433299631346
+    },
+    {
+      "id": "e2e_s05",
+      "route": "opening_score",
+      "confidence": 0.97,
+      "probabilities": {
+        "opening_usage": 0.01,
+        "opening_score": 0.97,
+        "opening_compare": 0.0,
+        "clock_bucket": 0.0,
+        "clock_compare": 0.0,
+        "coverage": 0.0,
+        "clarify": 0.02,
+        "unsupported": 0.0
+      },
+      "input_tokens": 377,
+      "gross_cost_usd": 3.77e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.3318976250011474
+    },
+    {
+      "id": "e2e_s06",
+      "route": "opening_score",
+      "confidence": 0.94,
+      "probabilities": {
+        "opening_usage": 0.01,
+        "opening_score": 0.95,
+        "opening_compare": 0.0,
+        "clock_bucket": 0.0,
+        "clock_compare": 0.01,
+        "coverage": 0.0,
+        "clarify": 0.02,
+        "unsupported": 0.01
+      },
+      "input_tokens": 378,
+      "gross_cost_usd": 3.7800000000000004e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.3183933749969583
+    },
+    {
+      "id": "e2e_o01",
+      "route": "opening_compare",
+      "confidence": 0.86,
+      "probabilities": {
+        "opening_usage": 0.02,
+        "opening_score": 0.04,
+        "opening_compare": 0.88,
+        "clock_bucket": 0.0,
+        "clock_compare": 0.0,
+        "coverage": 0.02,
+        "clarify": 0.03,
+        "unsupported": 0.01
+      },
+      "input_tokens": 375,
+      "gross_cost_usd": 3.75e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.354044707986759
+    },
+    {
+      "id": "e2e_o02",
+      "route": "opening_compare",
+      "confidence": 0.85,
+      "probabilities": {
+        "opening_usage": 0.02,
+        "opening_score": 0.05,
+        "opening_compare": 0.87,
+        "clock_bucket": 0.0,
+        "clock_compare": 0.01,
+        "coverage": 0.01,
+        "clarify": 0.01,
+        "unsupported": 0.03
+      },
+      "input_tokens": 383,
+      "gross_cost_usd": 3.83e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.5045938749972265
+    },
+    {
+      "id": "e2e_b01",
+      "route": "clock_bucket",
+      "confidence": 0.78,
+      "probabilities": {
+        "opening_usage": 0.03,
+        "opening_score": 0.0,
+        "opening_compare": 0.01,
+        "clock_bucket": 0.81,
+        "clock_compare": 0.01,
+        "coverage": 0.0,
+        "clarify": 0.13,
+        "unsupported": 0.01
+      },
+      "input_tokens": 370,
+      "gross_cost_usd": 3.7e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.3389703749999171
+    },
+    {
+      "id": "e2e_b02",
+      "route": "clock_bucket",
+      "confidence": 0.67,
+      "probabilities": {
+        "opening_usage": 0.05,
+        "opening_score": 0.0,
+        "opening_compare": 0.01,
+        "clock_bucket": 0.71,
+        "clock_compare": 0.02,
+        "coverage": 0.05,
+        "clarify": 0.15,
+        "unsupported": 0.01
+      },
+      "input_tokens": 378,
+      "gross_cost_usd": 3.7800000000000004e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.36611095900298096
+    },
+    {
+      "id": "e2e_b03",
+      "route": "clock_bucket",
+      "confidence": 0.67,
+      "probabilities": {
+        "opening_usage": 0.03,
+        "opening_score": 0.01,
+        "opening_compare": 0.02,
+        "clock_bucket": 0.71,
+        "clock_compare": 0.03,
+        "coverage": 0.04,
+        "clarify": 0.15,
+        "unsupported": 0.01
+      },
+      "input_tokens": 371,
+      "gross_cost_usd": 3.71e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.35631345899309963
+    },
+    {
+      "id": "e2e_b04",
+      "route": "clock_bucket",
+      "confidence": 0.76,
+      "probabilities": {
+        "opening_usage": 0.01,
+        "opening_score": 0.0,
+        "opening_compare": 0.01,
+        "clock_bucket": 0.79,
+        "clock_compare": 0.01,
+        "coverage": 0.01,
+        "clarify": 0.16,
+        "unsupported": 0.01
+      },
+      "input_tokens": 371,
+      "gross_cost_usd": 3.71e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.33805816699168645
+    },
+    {
+      "id": "e2e_c01",
+      "route": "clock_compare",
+      "confidence": 0.58,
+      "probabilities": {
+        "opening_usage": 0.03,
+        "opening_score": 0.01,
+        "opening_compare": 0.01,
+        "clock_bucket": 0.16,
+        "clock_compare": 0.63,
+        "coverage": 0.02,
+        "clarify": 0.07,
+        "unsupported": 0.07
+      },
+      "input_tokens": 376,
+      "gross_cost_usd": 3.76e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.3228491670015501
+    },
+    {
+      "id": "e2e_c02",
+      "route": "clock_compare",
+      "confidence": 0.86,
+      "probabilities": {
+        "opening_usage": 0.01,
+        "opening_score": 0.0,
+        "opening_compare": 0.01,
+        "clock_bucket": 0.05,
+        "clock_compare": 0.88,
+        "coverage": 0.03,
+        "clarify": 0.01,
+        "unsupported": 0.01
+      },
+      "input_tokens": 373,
+      "gross_cost_usd": 3.7300000000000005e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.2785115419974318
+    },
+    {
+      "id": "e2e_v01",
+      "route": "coverage",
+      "confidence": 0.79,
+      "probabilities": {
+        "opening_usage": 0.04,
+        "opening_score": 0.01,
+        "opening_compare": 0.01,
+        "clock_bucket": 0.0,
+        "clock_compare": 0.01,
+        "coverage": 0.82,
+        "clarify": 0.06,
+        "unsupported": 0.05
+      },
+      "input_tokens": 368,
+      "gross_cost_usd": 3.680000000000001e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.3517469579965109
+    },
+    {
+      "id": "e2e_v02",
+      "route": "coverage",
+      "confidence": 0.49,
+      "probabilities": {
+        "opening_usage": 0.08,
+        "opening_score": 0.01,
+        "opening_compare": 0.01,
+        "clock_bucket": 0.0,
+        "clock_compare": 0.01,
+        "coverage": 0.55,
+        "clarify": 0.31,
+        "unsupported": 0.03
+      },
+      "input_tokens": 369,
+      "gross_cost_usd": 3.6899999999999996e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.3791133750055451
+    },
+    {
+      "id": "e2e_x01",
+      "route": "clarify",
+      "confidence": 0.77,
+      "probabilities": {
+        "opening_usage": 0.08,
+        "opening_score": 0.01,
+        "opening_compare": 0.01,
+        "clock_bucket": 0.0,
+        "clock_compare": 0.01,
+        "coverage": 0.04,
+        "clarify": 0.8,
+        "unsupported": 0.05
+      },
+      "input_tokens": 360,
+      "gross_cost_usd": 3.6e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.29378312498738524
+    },
+    {
+      "id": "e2e_x02",
+      "route": "clarify",
+      "confidence": 0.35,
+      "probabilities": {
+        "opening_usage": 0.13,
+        "opening_score": 0.17,
+        "opening_compare": 0.17,
+        "clock_bucket": 0.02,
+        "clock_compare": 0.02,
+        "coverage": 0.02,
+        "clarify": 0.43,
+        "unsupported": 0.04
+      },
+      "input_tokens": 368,
+      "gross_cost_usd": 3.680000000000001e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.3617069580068346
+    },
+    {
+      "id": "e2e_x03",
+      "route": "clock_bucket",
+      "confidence": 0.66,
+      "probabilities": {
+        "opening_usage": 0.01,
+        "opening_score": 0.0,
+        "opening_compare": 0.01,
+        "clock_bucket": 0.7,
+        "clock_compare": 0.01,
+        "coverage": 0.0,
+        "clarify": 0.26,
+        "unsupported": 0.01
+      },
+      "input_tokens": 358,
+      "gross_cost_usd": 3.58e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.3765853750082897
+    },
+    {
+      "id": "e2e_x04",
+      "route": "clarify",
+      "confidence": 0.93,
+      "probabilities": {
+        "opening_usage": 0.02,
+        "opening_score": 0.0,
+        "opening_compare": 0.01,
+        "clock_bucket": 0.01,
+        "clock_compare": 0.01,
+        "coverage": 0.0,
+        "clarify": 0.94,
+        "unsupported": 0.01
+      },
+      "input_tokens": 372,
+      "gross_cost_usd": 3.72e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.3180398339900421
+    },
+    {
+      "id": "e2e_x05",
+      "route": "unsupported",
+      "confidence": 0.94,
+      "probabilities": {
+        "opening_usage": 0.01,
+        "opening_score": 0.04,
+        "opening_compare": 0.0,
+        "clock_bucket": 0.0,
+        "clock_compare": 0.0,
+        "coverage": 0.0,
+        "clarify": 0.0,
+        "unsupported": 0.95
+      },
+      "input_tokens": 364,
+      "gross_cost_usd": 3.64e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.27598479099106044
+    },
+    {
+      "id": "e2e_x06",
+      "route": "unsupported",
+      "confidence": 0.97,
+      "probabilities": {
+        "opening_usage": 0.02,
+        "opening_score": 0.01,
+        "opening_compare": 0.0,
+        "clock_bucket": 0.0,
+        "clock_compare": 0.0,
+        "coverage": 0.0,
+        "clarify": 0.0,
+        "unsupported": 0.97
+      },
+      "input_tokens": 363,
+      "gross_cost_usd": 3.63e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.2949047919973964
+    },
+    {
+      "id": "e2e_x07",
+      "route": "unsupported",
+      "confidence": 0.98,
+      "probabilities": {
+        "opening_usage": 0.01,
+        "opening_score": 0.0,
+        "opening_compare": 0.0,
+        "clock_bucket": 0.0,
+        "clock_compare": 0.0,
+        "coverage": 0.0,
+        "clarify": 0.01,
+        "unsupported": 0.98
+      },
+      "input_tokens": 360,
+      "gross_cost_usd": 3.6e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.4215377499931492
+    },
+    {
+      "id": "e2e_x08",
+      "route": "unsupported",
+      "confidence": 0.86,
+      "probabilities": {
+        "opening_usage": 0.03,
+        "opening_score": 0.01,
+        "opening_compare": 0.01,
+        "clock_bucket": 0.0,
+        "clock_compare": 0.0,
+        "coverage": 0.01,
+        "clarify": 0.06,
+        "unsupported": 0.88
+      },
+      "input_tokens": 366,
+      "gross_cost_usd": 3.66e-05,
+      "refusal": false,
+      "elapsed_seconds": 0.28741716699732933
+    }
+  ],
+  "attempt_name": "attempt-0003",
+  "failure": null,
+  "attempt_accounted_gross_usd": 0.0011856000000000002,
+  "cumulative_cost": {
+    "accounted_gross_usd": 0.004119900000000001,
+    "unknown_reserved_usd": 0.0
+  },
+  "scoring": {
+    "kind": "decisions_routing_scoring",
+    "cases": 32,
+    "correct": 31,
+    "accuracy": 0.96875,
+    "unsupported_recall": 1.0,
+    "confusion": {
+      "opening_usage": {
+        "opening_usage": 8,
+        "opening_score": 0,
+        "opening_compare": 0,
+        "clock_bucket": 0,
+        "clock_compare": 0,
+        "coverage": 0,
+        "clarify": 0,
+        "unsupported": 0,
+        "fallback": 0
+      },
+      "opening_score": {
+        "opening_usage": 0,
+        "opening_score": 6,
+        "opening_compare": 0,
+        "clock_bucket": 0,
+        "clock_compare": 0,
+        "coverage": 0,
+        "clarify": 0,
+        "unsupported": 0,
+        "fallback": 0
+      },
+      "opening_compare": {
+        "opening_usage": 0,
+        "opening_score": 0,
+        "opening_compare": 2,
+        "clock_bucket": 0,
+        "clock_compare": 0,
+        "coverage": 0,
+        "clarify": 0,
+        "unsupported": 0,
+        "fallback": 0
+      },
+      "clock_bucket": {
+        "opening_usage": 0,
+        "opening_score": 0,
+        "opening_compare": 0,
+        "clock_bucket": 4,
+        "clock_compare": 0,
+        "coverage": 0,
+        "clarify": 0,
+        "unsupported": 0,
+        "fallback": 0
+      },
+      "clock_compare": {
+        "opening_usage": 0,
+        "opening_score": 0,
+        "opening_compare": 0,
+        "clock_bucket": 0,
+        "clock_compare": 2,
+        "coverage": 0,
+        "clarify": 0,
+        "unsupported": 0,
+        "fallback": 0
+      },
+      "coverage": {
+        "opening_usage": 0,
+        "opening_score": 0,
+        "opening_compare": 0,
+        "clock_bucket": 0,
+        "clock_compare": 0,
+        "coverage": 2,
+        "clarify": 0,
+        "unsupported": 0,
+        "fallback": 0
+      },
+      "clarify": {
+        "opening_usage": 0,
+        "opening_score": 0,
+        "opening_compare": 0,
+        "clock_bucket": 1,
+        "clock_compare": 0,
+        "coverage": 0,
+        "clarify": 3,
+        "unsupported": 0,
+        "fallback": 0
+      },
+      "unsupported": {
+        "opening_usage": 0,
+        "opening_score": 0,
+        "opening_compare": 0,
+        "clock_bucket": 0,
+        "clock_compare": 0,
+        "coverage": 0,
+        "clarify": 0,
+        "unsupported": 4,
+        "fallback": 0
+      }
+    },
+    "predictions": [
+      {
+        "id": "e2e_u01",
+        "route": "opening_usage",
+        "confidence": 0.49,
+        "probabilities": {
+          "opening_usage": 0.55,
+          "opening_score": 0.03,
+          "opening_compare": 0.02,
+          "clock_bucket": 0.01,
+          "clock_compare": 0.01,
+          "coverage": 0.07,
+          "clarify": 0.27,
+          "unsupported": 0.04
+        },
+        "input_tokens": 374,
+        "gross_cost_usd": 3.74e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.26687950000632554
+      },
+      {
+        "id": "e2e_u02",
+        "route": "opening_usage",
+        "confidence": 0.75,
+        "probabilities": {
+          "opening_usage": 0.78,
+          "opening_score": 0.01,
+          "opening_compare": 0.01,
+          "clock_bucket": 0.0,
+          "clock_compare": 0.01,
+          "coverage": 0.02,
+          "clarify": 0.16,
+          "unsupported": 0.01
+        },
+        "input_tokens": 369,
+        "gross_cost_usd": 3.6899999999999996e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.29269229200144764
+      },
+      {
+        "id": "e2e_u03",
+        "route": "opening_usage",
+        "confidence": 0.58,
+        "probabilities": {
+          "opening_usage": 0.63,
+          "opening_score": 0.02,
+          "opening_compare": 0.02,
+          "clock_bucket": 0.01,
+          "clock_compare": 0.01,
+          "coverage": 0.04,
+          "clarify": 0.25,
+          "unsupported": 0.02
+        },
+        "input_tokens": 368,
+        "gross_cost_usd": 3.680000000000001e-05,
+        "refusal": false,
+        "elapsed_seconds": 1.3129388749948703
+      },
+      {
+        "id": "e2e_u04",
+        "route": "opening_usage",
+        "confidence": 0.91,
+        "probabilities": {
+          "opening_usage": 0.92,
+          "opening_score": 0.01,
+          "opening_compare": 0.01,
+          "clock_bucket": 0.0,
+          "clock_compare": 0.0,
+          "coverage": 0.0,
+          "clarify": 0.06,
+          "unsupported": 0.0
+        },
+        "input_tokens": 366,
+        "gross_cost_usd": 3.66e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.30937804200220853
+      },
+      {
+        "id": "e2e_u05",
+        "route": "opening_usage",
+        "confidence": 0.74,
+        "probabilities": {
+          "opening_usage": 0.77,
+          "opening_score": 0.02,
+          "opening_compare": 0.02,
+          "clock_bucket": 0.01,
+          "clock_compare": 0.02,
+          "coverage": 0.03,
+          "clarify": 0.11,
+          "unsupported": 0.02
+        },
+        "input_tokens": 366,
+        "gross_cost_usd": 3.66e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.2841463329968974
+      },
+      {
+        "id": "e2e_u06",
+        "route": "opening_usage",
+        "confidence": 0.54,
+        "probabilities": {
+          "opening_usage": 0.6,
+          "opening_score": 0.01,
+          "opening_compare": 0.01,
+          "clock_bucket": 0.0,
+          "clock_compare": 0.01,
+          "coverage": 0.03,
+          "clarify": 0.31,
+          "unsupported": 0.03
+        },
+        "input_tokens": 369,
+        "gross_cost_usd": 3.6899999999999996e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.37088666699128225
+      },
+      {
+        "id": "e2e_u07",
+        "route": "opening_usage",
+        "confidence": 0.59,
+        "probabilities": {
+          "opening_usage": 0.64,
+          "opening_score": 0.02,
+          "opening_compare": 0.02,
+          "clock_bucket": 0.01,
+          "clock_compare": 0.01,
+          "coverage": 0.06,
+          "clarify": 0.22,
+          "unsupported": 0.02
+        },
+        "input_tokens": 363,
+        "gross_cost_usd": 3.63e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.27549229199939873
+      },
+      {
+        "id": "e2e_u08",
+        "route": "opening_usage",
+        "confidence": 0.39,
+        "probabilities": {
+          "opening_usage": 0.47,
+          "opening_score": 0.01,
+          "opening_compare": 0.02,
+          "clock_bucket": 0.01,
+          "clock_compare": 0.01,
+          "coverage": 0.07,
+          "clarify": 0.38,
+          "unsupported": 0.03
+        },
+        "input_tokens": 365,
+        "gross_cost_usd": 3.65e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.3274106250028126
+      },
+      {
+        "id": "e2e_s01",
+        "route": "opening_score",
+        "confidence": 0.89,
+        "probabilities": {
+          "opening_usage": 0.03,
+          "opening_score": 0.9,
+          "opening_compare": 0.01,
+          "clock_bucket": 0.01,
+          "clock_compare": 0.01,
+          "coverage": 0.01,
+          "clarify": 0.02,
+          "unsupported": 0.01
+        },
+        "input_tokens": 380,
+        "gross_cost_usd": 3.8e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.29049374999885913
+      },
+      {
+        "id": "e2e_s02",
+        "route": "opening_score",
+        "confidence": 0.77,
+        "probabilities": {
+          "opening_usage": 0.07,
+          "opening_score": 0.8,
+          "opening_compare": 0.01,
+          "clock_bucket": 0.01,
+          "clock_compare": 0.01,
+          "coverage": 0.01,
+          "clarify": 0.08,
+          "unsupported": 0.01
+        },
+        "input_tokens": 378,
+        "gross_cost_usd": 3.7800000000000004e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.3622674159996677
+      },
+      {
+        "id": "e2e_s03",
+        "route": "opening_score",
+        "confidence": 0.99,
+        "probabilities": {
+          "opening_usage": 0.01,
+          "opening_score": 0.99,
+          "opening_compare": 0.0,
+          "clock_bucket": 0.0,
+          "clock_compare": 0.0,
+          "coverage": 0.0,
+          "clarify": 0.0,
+          "unsupported": 0.0
+        },
+        "input_tokens": 378,
+        "gross_cost_usd": 3.7800000000000004e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.327968832993065
+      },
+      {
+        "id": "e2e_s04",
+        "route": "opening_score",
+        "confidence": 0.93,
+        "probabilities": {
+          "opening_usage": 0.03,
+          "opening_score": 0.94,
+          "opening_compare": 0.0,
+          "clock_bucket": 0.0,
+          "clock_compare": 0.01,
+          "coverage": 0.0,
+          "clarify": 0.01,
+          "unsupported": 0.01
+        },
+        "input_tokens": 380,
+        "gross_cost_usd": 3.8e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.31049433299631346
+      },
+      {
+        "id": "e2e_s05",
+        "route": "opening_score",
+        "confidence": 0.97,
+        "probabilities": {
+          "opening_usage": 0.01,
+          "opening_score": 0.97,
+          "opening_compare": 0.0,
+          "clock_bucket": 0.0,
+          "clock_compare": 0.0,
+          "coverage": 0.0,
+          "clarify": 0.02,
+          "unsupported": 0.0
+        },
+        "input_tokens": 377,
+        "gross_cost_usd": 3.77e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.3318976250011474
+      },
+      {
+        "id": "e2e_s06",
+        "route": "opening_score",
+        "confidence": 0.94,
+        "probabilities": {
+          "opening_usage": 0.01,
+          "opening_score": 0.95,
+          "opening_compare": 0.0,
+          "clock_bucket": 0.0,
+          "clock_compare": 0.01,
+          "coverage": 0.0,
+          "clarify": 0.02,
+          "unsupported": 0.01
+        },
+        "input_tokens": 378,
+        "gross_cost_usd": 3.7800000000000004e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.3183933749969583
+      },
+      {
+        "id": "e2e_o01",
+        "route": "opening_compare",
+        "confidence": 0.86,
+        "probabilities": {
+          "opening_usage": 0.02,
+          "opening_score": 0.04,
+          "opening_compare": 0.88,
+          "clock_bucket": 0.0,
+          "clock_compare": 0.0,
+          "coverage": 0.02,
+          "clarify": 0.03,
+          "unsupported": 0.01
+        },
+        "input_tokens": 375,
+        "gross_cost_usd": 3.75e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.354044707986759
+      },
+      {
+        "id": "e2e_o02",
+        "route": "opening_compare",
+        "confidence": 0.85,
+        "probabilities": {
+          "opening_usage": 0.02,
+          "opening_score": 0.05,
+          "opening_compare": 0.87,
+          "clock_bucket": 0.0,
+          "clock_compare": 0.01,
+          "coverage": 0.01,
+          "clarify": 0.01,
+          "unsupported": 0.03
+        },
+        "input_tokens": 383,
+        "gross_cost_usd": 3.83e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.5045938749972265
+      },
+      {
+        "id": "e2e_b01",
+        "route": "clock_bucket",
+        "confidence": 0.78,
+        "probabilities": {
+          "opening_usage": 0.03,
+          "opening_score": 0.0,
+          "opening_compare": 0.01,
+          "clock_bucket": 0.81,
+          "clock_compare": 0.01,
+          "coverage": 0.0,
+          "clarify": 0.13,
+          "unsupported": 0.01
+        },
+        "input_tokens": 370,
+        "gross_cost_usd": 3.7e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.3389703749999171
+      },
+      {
+        "id": "e2e_b02",
+        "route": "clock_bucket",
+        "confidence": 0.67,
+        "probabilities": {
+          "opening_usage": 0.05,
+          "opening_score": 0.0,
+          "opening_compare": 0.01,
+          "clock_bucket": 0.71,
+          "clock_compare": 0.02,
+          "coverage": 0.05,
+          "clarify": 0.15,
+          "unsupported": 0.01
+        },
+        "input_tokens": 378,
+        "gross_cost_usd": 3.7800000000000004e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.36611095900298096
+      },
+      {
+        "id": "e2e_b03",
+        "route": "clock_bucket",
+        "confidence": 0.67,
+        "probabilities": {
+          "opening_usage": 0.03,
+          "opening_score": 0.01,
+          "opening_compare": 0.02,
+          "clock_bucket": 0.71,
+          "clock_compare": 0.03,
+          "coverage": 0.04,
+          "clarify": 0.15,
+          "unsupported": 0.01
+        },
+        "input_tokens": 371,
+        "gross_cost_usd": 3.71e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.35631345899309963
+      },
+      {
+        "id": "e2e_b04",
+        "route": "clock_bucket",
+        "confidence": 0.76,
+        "probabilities": {
+          "opening_usage": 0.01,
+          "opening_score": 0.0,
+          "opening_compare": 0.01,
+          "clock_bucket": 0.79,
+          "clock_compare": 0.01,
+          "coverage": 0.01,
+          "clarify": 0.16,
+          "unsupported": 0.01
+        },
+        "input_tokens": 371,
+        "gross_cost_usd": 3.71e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.33805816699168645
+      },
+      {
+        "id": "e2e_c01",
+        "route": "clock_compare",
+        "confidence": 0.58,
+        "probabilities": {
+          "opening_usage": 0.03,
+          "opening_score": 0.01,
+          "opening_compare": 0.01,
+          "clock_bucket": 0.16,
+          "clock_compare": 0.63,
+          "coverage": 0.02,
+          "clarify": 0.07,
+          "unsupported": 0.07
+        },
+        "input_tokens": 376,
+        "gross_cost_usd": 3.76e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.3228491670015501
+      },
+      {
+        "id": "e2e_c02",
+        "route": "clock_compare",
+        "confidence": 0.86,
+        "probabilities": {
+          "opening_usage": 0.01,
+          "opening_score": 0.0,
+          "opening_compare": 0.01,
+          "clock_bucket": 0.05,
+          "clock_compare": 0.88,
+          "coverage": 0.03,
+          "clarify": 0.01,
+          "unsupported": 0.01
+        },
+        "input_tokens": 373,
+        "gross_cost_usd": 3.7300000000000005e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.2785115419974318
+      },
+      {
+        "id": "e2e_v01",
+        "route": "coverage",
+        "confidence": 0.79,
+        "probabilities": {
+          "opening_usage": 0.04,
+          "opening_score": 0.01,
+          "opening_compare": 0.01,
+          "clock_bucket": 0.0,
+          "clock_compare": 0.01,
+          "coverage": 0.82,
+          "clarify": 0.06,
+          "unsupported": 0.05
+        },
+        "input_tokens": 368,
+        "gross_cost_usd": 3.680000000000001e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.3517469579965109
+      },
+      {
+        "id": "e2e_v02",
+        "route": "coverage",
+        "confidence": 0.49,
+        "probabilities": {
+          "opening_usage": 0.08,
+          "opening_score": 0.01,
+          "opening_compare": 0.01,
+          "clock_bucket": 0.0,
+          "clock_compare": 0.01,
+          "coverage": 0.55,
+          "clarify": 0.31,
+          "unsupported": 0.03
+        },
+        "input_tokens": 369,
+        "gross_cost_usd": 3.6899999999999996e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.3791133750055451
+      },
+      {
+        "id": "e2e_x01",
+        "route": "clarify",
+        "confidence": 0.77,
+        "probabilities": {
+          "opening_usage": 0.08,
+          "opening_score": 0.01,
+          "opening_compare": 0.01,
+          "clock_bucket": 0.0,
+          "clock_compare": 0.01,
+          "coverage": 0.04,
+          "clarify": 0.8,
+          "unsupported": 0.05
+        },
+        "input_tokens": 360,
+        "gross_cost_usd": 3.6e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.29378312498738524
+      },
+      {
+        "id": "e2e_x02",
+        "route": "clarify",
+        "confidence": 0.35,
+        "probabilities": {
+          "opening_usage": 0.13,
+          "opening_score": 0.17,
+          "opening_compare": 0.17,
+          "clock_bucket": 0.02,
+          "clock_compare": 0.02,
+          "coverage": 0.02,
+          "clarify": 0.43,
+          "unsupported": 0.04
+        },
+        "input_tokens": 368,
+        "gross_cost_usd": 3.680000000000001e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.3617069580068346
+      },
+      {
+        "id": "e2e_x03",
+        "route": "clock_bucket",
+        "confidence": 0.66,
+        "probabilities": {
+          "opening_usage": 0.01,
+          "opening_score": 0.0,
+          "opening_compare": 0.01,
+          "clock_bucket": 0.7,
+          "clock_compare": 0.01,
+          "coverage": 0.0,
+          "clarify": 0.26,
+          "unsupported": 0.01
+        },
+        "input_tokens": 358,
+        "gross_cost_usd": 3.58e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.3765853750082897
+      },
+      {
+        "id": "e2e_x04",
+        "route": "clarify",
+        "confidence": 0.93,
+        "probabilities": {
+          "opening_usage": 0.02,
+          "opening_score": 0.0,
+          "opening_compare": 0.01,
+          "clock_bucket": 0.01,
+          "clock_compare": 0.01,
+          "coverage": 0.0,
+          "clarify": 0.94,
+          "unsupported": 0.01
+        },
+        "input_tokens": 372,
+        "gross_cost_usd": 3.72e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.3180398339900421
+      },
+      {
+        "id": "e2e_x05",
+        "route": "unsupported",
+        "confidence": 0.94,
+        "probabilities": {
+          "opening_usage": 0.01,
+          "opening_score": 0.04,
+          "opening_compare": 0.0,
+          "clock_bucket": 0.0,
+          "clock_compare": 0.0,
+          "coverage": 0.0,
+          "clarify": 0.0,
+          "unsupported": 0.95
+        },
+        "input_tokens": 364,
+        "gross_cost_usd": 3.64e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.27598479099106044
+      },
+      {
+        "id": "e2e_x06",
+        "route": "unsupported",
+        "confidence": 0.97,
+        "probabilities": {
+          "opening_usage": 0.02,
+          "opening_score": 0.01,
+          "opening_compare": 0.0,
+          "clock_bucket": 0.0,
+          "clock_compare": 0.0,
+          "coverage": 0.0,
+          "clarify": 0.0,
+          "unsupported": 0.97
+        },
+        "input_tokens": 363,
+        "gross_cost_usd": 3.63e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.2949047919973964
+      },
+      {
+        "id": "e2e_x07",
+        "route": "unsupported",
+        "confidence": 0.98,
+        "probabilities": {
+          "opening_usage": 0.01,
+          "opening_score": 0.0,
+          "opening_compare": 0.0,
+          "clock_bucket": 0.0,
+          "clock_compare": 0.0,
+          "coverage": 0.0,
+          "clarify": 0.01,
+          "unsupported": 0.98
+        },
+        "input_tokens": 360,
+        "gross_cost_usd": 3.6e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.4215377499931492
+      },
+      {
+        "id": "e2e_x08",
+        "route": "unsupported",
+        "confidence": 0.86,
+        "probabilities": {
+          "opening_usage": 0.03,
+          "opening_score": 0.01,
+          "opening_compare": 0.01,
+          "clock_bucket": 0.0,
+          "clock_compare": 0.0,
+          "coverage": 0.01,
+          "clarify": 0.06,
+          "unsupported": 0.88
+        },
+        "input_tokens": 366,
+        "gross_cost_usd": 3.66e-05,
+        "refusal": false,
+        "elapsed_seconds": 0.28741716699732933
+      }
+    ],
+    "known_gross_cost_usd": 0.0011856,
+    "gross_cost_per_correct_route_usd": 3.824516129032258e-05,
+    "selective_curve": [
+      {
+        "threshold": 0.0,
+        "coverage": 1.0,
+        "accepted": 32,
+        "errors": 1,
+        "error_rate_among_accepted": 0.03125,
+        "fallbacks": 0
+      },
+      {
+        "threshold": 0.5,
+        "coverage": 0.9375,
+        "accepted": 30,
+        "errors": 1,
+        "error_rate_among_accepted": 0.03333333333333333,
+        "fallbacks": 2
+      },
+      {
+        "threshold": 0.7,
+        "coverage": 0.75,
+        "accepted": 24,
+        "errors": 1,
+        "error_rate_among_accepted": 0.041666666666666664,
+        "fallbacks": 8
+      },
+      {
+        "threshold": 0.85,
+        "coverage": 0.4375,
+        "accepted": 14,
+        "errors": 0,
+        "error_rate_among_accepted": 0.0,
+        "fallbacks": 18
+      },
+      {
+        "threshold": 0.95,
+        "coverage": 0.1875,
+        "accepted": 6,
+        "errors": 0,
+        "error_rate_among_accepted": 0.0,
+        "fallbacks": 26
+      }
+    ],
+    "false_boundary_rejections": 0,
+    "confidence_curve": [
+      {
+        "threshold": 0.0,
+        "accepted": 32,
+        "coverage": 1.0,
+        "errors": 1,
+        "error_rate_among_accepted": 0.03125
+      },
+      {
+        "threshold": 0.5,
+        "accepted": 28,
+        "coverage": 0.875,
+        "errors": 1,
+        "error_rate_among_accepted": 0.03571428571428571
+      },
+      {
+        "threshold": 0.7,
+        "accepted": 21,
+        "coverage": 0.65625,
+        "errors": 0,
+        "error_rate_among_accepted": 0.0
+      },
+      {
+        "threshold": 0.85,
+        "accepted": 14,
+        "coverage": 0.4375,
+        "errors": 0,
+        "error_rate_among_accepted": 0.0
+      },
+      {
+        "threshold": 0.95,
+        "accepted": 4,
+        "coverage": 0.125,
+        "errors": 0,
+        "error_rate_among_accepted": 0.0
+      },
+      {
+        "threshold": 1.0,
+        "accepted": 0,
+        "coverage": 0.0,
+        "errors": 0,
+        "error_rate_among_accepted": null
+      }
+    ],
+    "brier_score": 0.12594375,
+    "probabilistic_cases": 32,
+    "refusals": 0,
+    "probability_definition": "selective_curve uses chosen-option probability; confidence_curve uses API confidence. Neither is assumed calibrated."
+  }
+}

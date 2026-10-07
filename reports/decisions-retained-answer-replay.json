@@ -1,0 +1,282 @@
+{
+  "kind": "offline_retained_answer_replay_not_live_paired_experiment",
+  "classifier_transport_kind": "openai_decisions_api",
+  "case_sha256": "58642936c91601884a27585bc93b1ff63c108ae028a2cf09d3d1c5ef033a3a5d",
+  "cases": 32,
+  "correct": 31,
+  "baseline_correct": 31,
+  "analyst_fallbacks": 26,
+  "replayed_gross_cost_usd": 0.003363135,
+  "replayed_gross_per_correct_usd": 0.00010848822580645162,
+  "new_live_analyst_calls": 0,
+  "combined_live_latency_seconds": null,
+  "retained_report_sha256": "620dad48bdfef24d18003380b129cdf12e1f4171860505893e03bc324ebea3f4",
+  "threshold_policy": {
+    "development_case_sha256": "8d2a626a4d2975bc050a7ed844c7a475a4672ad6d2f4c1f8718d46937912b965",
+    "development_report_sha256": "36da02dcaae87f5eee124814f07b619da5727b7fd49348425de8a3e765fd270f",
+    "kind": "development_threshold_policy",
+    "metric": "chosen_option_probability",
+    "rule": "Lowest development-only threshold with zero observed accepted errors and >=50% coverage; otherwise fallback all. Not proof of calibration.",
+    "threshold": 0.7,
+    "transport_kind": "openai_decisions_api"
+  },
+  "outcomes": [
+    {
+      "id": "e2e_u01",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 0.00036445
+    },
+    {
+      "id": "e2e_u02",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 9.146499999999999e-05
+    },
+    {
+      "id": "e2e_u03",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 0.00037260000000000006
+    },
+    {
+      "id": "e2e_u04",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 9.029e-05
+    },
+    {
+      "id": "e2e_u05",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 9.078999999999999e-05
+    },
+    {
+      "id": "e2e_u06",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 9.196499999999999e-05
+    },
+    {
+      "id": "e2e_u07",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 9.0615e-05
+    },
+    {
+      "id": "e2e_u08",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 7.906499999999999e-05
+    },
+    {
+      "id": "e2e_s01",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 0.00014743999999999998
+    },
+    {
+      "id": "e2e_s02",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 0.00010748999999999999
+    },
+    {
+      "id": "e2e_s03",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 0.00010899
+    },
+    {
+      "id": "e2e_s04",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 0.00010744
+    },
+    {
+      "id": "e2e_s05",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 0.000107265
+    },
+    {
+      "id": "e2e_s06",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 0.00011849000000000001
+    },
+    {
+      "id": "e2e_o01",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 0.000108315
+    },
+    {
+      "id": "e2e_o02",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 0.00011111500000000001
+    },
+    {
+      "id": "e2e_b01",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 9.269e-05
+    },
+    {
+      "id": "e2e_b02",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 0.00010849000000000001
+    },
+    {
+      "id": "e2e_b03",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 0.00010691499999999999
+    },
+    {
+      "id": "e2e_b04",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 0.000104915
+    },
+    {
+      "id": "e2e_c01",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 9.354e-05
+    },
+    {
+      "id": "e2e_c02",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 9.2365e-05
+    },
+    {
+      "id": "e2e_v01",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "unsupported",
+      "passed": false,
+      "replayed_gross_cost_usd": 7.824000000000001e-05
+    },
+    {
+      "id": "e2e_v02",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "answered",
+      "passed": true,
+      "replayed_gross_cost_usd": 0.000122465
+    },
+    {
+      "id": "e2e_x01",
+      "accepted_boundary": true,
+      "used_retained_analyst": false,
+      "observed_status": "needs_clarification",
+      "passed": true,
+      "replayed_gross_cost_usd": 3.6e-05
+    },
+    {
+      "id": "e2e_x02",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "needs_clarification",
+      "passed": true,
+      "replayed_gross_cost_usd": 7.974e-05
+    },
+    {
+      "id": "e2e_x03",
+      "accepted_boundary": false,
+      "used_retained_analyst": true,
+      "observed_status": "needs_clarification",
+      "passed": true,
+      "replayed_gross_cost_usd": 7.748999999999999e-05
+    },
+    {
+      "id": "e2e_x04",
+      "accepted_boundary": true,
+      "used_retained_analyst": false,
+      "observed_status": "needs_clarification",
+      "passed": true,
+      "replayed_gross_cost_usd": 3.72e-05
+    },
+    {
+      "id": "e2e_x05",
+      "accepted_boundary": true,
+      "used_retained_analyst": false,
+      "observed_status": "unsupported",
+      "passed": true,
+      "replayed_gross_cost_usd": 3.64e-05
+    },
+    {
+      "id": "e2e_x06",
+      "accepted_boundary": true,
+      "used_retained_analyst": false,
+      "observed_status": "unsupported",
+      "passed": true,
+      "replayed_gross_cost_usd": 3.63e-05
+    },
+    {
+      "id": "e2e_x07",
+      "accepted_boundary": true,
+      "used_retained_analyst": false,
+      "observed_status": "unsupported",
+      "passed": true,
+      "replayed_gross_cost_usd": 3.6e-05
+    },
+    {
+      "id": "e2e_x08",
+      "accepted_boundary": true,
+      "used_retained_analyst": false,
+      "observed_status": "unsupported",
+      "passed": true,
+      "replayed_gross_cost_usd": 3.66e-05
+    }
+  ],
+  "limitation": "New Decisions labels plus old Luna answers/costs. No combined execution, cache, latency, Sol benefit or new-answer quality claim."
+}

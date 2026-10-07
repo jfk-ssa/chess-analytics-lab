@@ -1,0 +1,201 @@
+{
+  "case_sha256": "c49ab6e50a3aa1aec9cbc2f8210db4f49b340883b152def9d7c53e36b94bddad",
+  "kind": "offline_rules_routing",
+  "scoring": {
+    "accuracy": 0.3333333333333333,
+    "cases": 24,
+    "confusion": {
+      "clarify": {
+        "clarify": 0,
+        "clock_bucket": 1,
+        "clock_compare": 0,
+        "coverage": 0,
+        "fallback": 0,
+        "opening_compare": 1,
+        "opening_score": 0,
+        "opening_usage": 1,
+        "unsupported": 0
+      },
+      "clock_bucket": {
+        "clarify": 0,
+        "clock_bucket": 2,
+        "clock_compare": 0,
+        "coverage": 0,
+        "fallback": 0,
+        "opening_compare": 0,
+        "opening_score": 0,
+        "opening_usage": 0,
+        "unsupported": 1
+      },
+      "clock_compare": {
+        "clarify": 0,
+        "clock_bucket": 1,
+        "clock_compare": 0,
+        "coverage": 0,
+        "fallback": 0,
+        "opening_compare": 1,
+        "opening_score": 0,
+        "opening_usage": 0,
+        "unsupported": 1
+      },
+      "coverage": {
+        "clarify": 1,
+        "clock_bucket": 1,
+        "clock_compare": 0,
+        "coverage": 1,
+        "fallback": 0,
+        "opening_compare": 0,
+        "opening_score": 0,
+        "opening_usage": 0,
+        "unsupported": 0
+      },
+      "opening_compare": {
+        "clarify": 0,
+        "clock_bucket": 0,
+        "clock_compare": 0,
+        "coverage": 0,
+        "fallback": 0,
+        "opening_compare": 3,
+        "opening_score": 0,
+        "opening_usage": 0,
+        "unsupported": 0
+      },
+      "opening_score": {
+        "clarify": 1,
+        "clock_bucket": 0,
+        "clock_compare": 0,
+        "coverage": 0,
+        "fallback": 0,
+        "opening_compare": 0,
+        "opening_score": 1,
+        "opening_usage": 1,
+        "unsupported": 0
+      },
+      "opening_usage": {
+        "clarify": 2,
+        "clock_bucket": 0,
+        "clock_compare": 0,
+        "coverage": 0,
+        "fallback": 0,
+        "opening_compare": 0,
+        "opening_score": 1,
+        "opening_usage": 0,
+        "unsupported": 0
+      },
+      "unsupported": {
+        "clarify": 1,
+        "clock_bucket": 0,
+        "clock_compare": 0,
+        "coverage": 0,
+        "fallback": 0,
+        "opening_compare": 0,
+        "opening_score": 0,
+        "opening_usage": 1,
+        "unsupported": 1
+      }
+    },
+    "correct": 8,
+    "kind": "m8_rules_routing_results",
+    "predictions": [
+      {
+        "id": "du01",
+        "route": "clarify"
+      },
+      {
+        "id": "du02",
+        "route": "clarify"
+      },
+      {
+        "id": "du03",
+        "route": "opening_score"
+      },
+      {
+        "id": "ds01",
+        "route": "opening_score"
+      },
+      {
+        "id": "ds02",
+        "route": "opening_usage"
+      },
+      {
+        "id": "ds03",
+        "route": "clarify"
+      },
+      {
+        "id": "do01",
+        "route": "opening_compare"
+      },
+      {
+        "id": "do02",
+        "route": "opening_compare"
+      },
+      {
+        "id": "do03",
+        "route": "opening_compare"
+      },
+      {
+        "id": "db01",
+        "route": "clock_bucket"
+      },
+      {
+        "id": "db02",
+        "route": "clock_bucket"
+      },
+      {
+        "id": "db03",
+        "route": "unsupported"
+      },
+      {
+        "id": "dc01",
+        "route": "unsupported"
+      },
+      {
+        "id": "dc02",
+        "route": "opening_compare"
+      },
+      {
+        "id": "dc03",
+        "route": "clock_bucket"
+      },
+      {
+        "id": "dv01",
+        "route": "clarify"
+      },
+      {
+        "id": "dv02",
+        "route": "clock_bucket"
+      },
+      {
+        "id": "dv03",
+        "route": "coverage"
+      },
+      {
+        "id": "da01",
+        "route": "opening_usage"
+      },
+      {
+        "id": "da02",
+        "route": "clock_bucket"
+      },
+      {
+        "id": "da03",
+        "route": "opening_compare"
+      },
+      {
+        "id": "dx01",
+        "route": "unsupported"
+      },
+      {
+        "id": "dx02",
+        "route": "opening_usage"
+      },
+      {
+        "id": "dx03",
+        "route": "clarify"
+      }
+    ],
+    "unsupported_recall": 0.3333333333333333
+  },
+  "split": "test",
+  "suite": "fresh"
+}
