@@ -31,9 +31,8 @@ licenses listed above. CC0 source data does not set the software license.
 
 ## Bundled typography
 
-Inter and Source Serif 4 are bundled as Latin normal-style variable WOFF2 fonts
+Inter is bundled as a Latin normal-style variable WOFF2 font
 from Fontsource packages **5.3.0**, under **SIL Open Font License 1.1**.
-They retain their own licenses; the project's GPL does not replace them.
+It retains its own license; the project's GPL does not replace it.
 See [pinned URLs and SHA-256 hashes](site/assets/fonts/provenance.json),
-[Inter license](analytics_m4/static/fonts/LICENSE.inter.txt) and
-[Source Serif 4 license](site/assets/fonts/LICENSE.source-serif-4.txt).
+[Inter license](analytics_m4/static/fonts/LICENSE.inter.txt).

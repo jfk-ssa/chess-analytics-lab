@@ -37,7 +37,8 @@ returned HTTP 200; published report bytes match the original. See [website runbo
 
 ## Visual style update — 2026-10-09
 
-Applied the owner-approved Inter body/UI and Source Serif 4 guide-heading pairing.
+Applied Inter throughout the guides and dashboard, following owner feedback
+that the mixed serif/sans pairing was not preferred.
 Fonts are bundled locally with OFL licenses and pinned provenance. The dashboard
 uses the shared light palette and Inter headings at 36px/600; guide tables use
 tabular numbers and numeric alignment. Actual synthetic Overview and opening

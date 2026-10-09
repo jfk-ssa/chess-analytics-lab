@@ -9,7 +9,7 @@ and measured values.
 
 | Role | Choice | Reason |
 | --- | --- | --- |
-| Guide headings | Source Serif 4, weight 600 | Gives the learning guides an editorial character |
+| Guide headings | Inter, weight 600 | Matches the body and dashboard with one consistent family |
 | Body, navigation, cards, tables | Inter, weight 400; emphasis 600–650 | Clear screen reading and restrained emphasis |
 | Dashboard text and headings | Inter; headings weight 600 | Compact analytical interface without oversized heavy titles |
 | Code and technical identifiers | Existing system monospace | Separates execution instructions and identifiers |
@@ -38,7 +38,8 @@ larger gaps between sections; cards have subtle borders and restrained corners.
   Streamlit loads this file. Restart the server after font/theme changes.
 - [Website builder](../scripts/build_docs_site.py) copies only named assets.
   The site and dashboard share the same checked Inter file from
-  `analytics_m4/static/fonts`; only the guides use Source Serif 4.
+  `analytics_m4/static/fonts`. All current guide and dashboard text uses Inter
+  except code, which keeps its monospace role.
 
 The font files are Latin-subset normal-style variable WOFF2 files. Other scripts
 and unsupported glyphs use the fallback fonts; italic text can use synthesized

@@ -48,10 +48,6 @@ ASSETS = {
         "analytics_m4/static/fonts/inter-latin-wght-normal.woff2"
     ),
     "fonts/LICENSE.inter.txt": "analytics_m4/static/fonts/LICENSE.inter.txt",
-    "fonts/source-serif-4-latin-wght-normal.woff2": (
-        "site/assets/fonts/source-serif-4-latin-wght-normal.woff2"
-    ),
-    "fonts/LICENSE.source-serif-4.txt": "site/assets/fonts/LICENSE.source-serif-4.txt",
     "fonts/provenance.json": "site/assets/fonts/provenance.json",
 }
 NAV = (

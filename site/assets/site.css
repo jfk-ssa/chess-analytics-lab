@@ -5,13 +5,6 @@
   font-weight:100 900;
   font-display:swap}
 
-@font-face {
-  font-family:"Source Serif 4";
-  src:url("fonts/source-serif-4-latin-wght-normal.woff2") format("woff2");
-  font-style:normal;
-  font-weight:200 900;
-  font-display:swap}
-
 :root {
   color-scheme:light;
   --ink:#203433;
@@ -22,7 +15,7 @@
   --accent:#cf612f;
   --soft:#eaf1eb;
   --font-body:Inter,system-ui,-apple-system,sans-serif;
-  --font-heading:"Source Serif 4",Georgia,serif;
+  --font-heading:var(--font-body);
   --radius:10px;
   --space-unit:4px}
 * {

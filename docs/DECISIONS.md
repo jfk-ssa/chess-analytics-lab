@@ -1117,3 +1117,11 @@ Use Inter alone in the analytical dashboard and serif headings in learning guide
 Refresh actual synthetic-demo screenshots and limit previews to 760px with full-size
 links. Preserve the original frozen comparison report and all scoring evidence.
 No additional paid calls or data acquisition are part of this visual update.
+
+## 2026-10-09 — Inter throughout
+
+The owner rejected the mixed serif/Inter pairing and prefers Inter. Guide headings
+now use the same Inter family as body text and the dashboard. Remove the unused
+Source Serif font, license and active provenance entry; its original experiment
+remains in Git history and the preceding decision. Update the current visual
+guide and notices to match. Preserve the original comparison report styling.
