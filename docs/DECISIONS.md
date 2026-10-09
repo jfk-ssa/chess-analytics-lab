@@ -1125,3 +1125,13 @@ now use the same Inter family as body text and the dashboard. Remove the unused
 Source Serif font, license and active provenance entry; its original experiment
 remains in Git history and the preceding decision. Update the current visual
 guide and notices to match. Preserve the original comparison report styling.
+
+## 2026-10-09 — Try Sora throughout
+
+The owner selected Sora after the in-chat font comparison. Replace Inter in the
+current guides and Streamlit theme with pinned Fontsource Sora 5.3.0, locally
+hosted under its original OFL license. Keep size/weight roles and the shared
+palette; refresh the actual synthetic demo screenshots. Add source-revision
+queries to stylesheet/script URLs so a new deployment refreshes those assets.
+Earlier typeface trials remain in Git history and the decision log. Frozen
+comparison report styling and all benchmark evidence remain unchanged.

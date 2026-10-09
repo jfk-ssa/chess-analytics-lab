@@ -37,10 +37,10 @@ returned HTTP 200; published report bytes match the original. See [website runbo
 
 ## Visual style update — 2026-10-09
 
-Applied Inter throughout the guides and dashboard, following owner feedback
-that the mixed serif/sans pairing was not preferred.
+Applied Sora throughout the guides and dashboard after the owner chose the
+slightly wider sans-serif from the in-chat comparison.
 Fonts are bundled locally with OFL licenses and pinned provenance. The dashboard
-uses the shared light palette and Inter headings at 36px/600; guide tables use
+uses the shared light palette and Sora headings at 36px/600; guide tables use
 tabular numbers and numeric alignment. Actual synthetic Overview and opening
 replay screenshots were refreshed; previews are capped at 760px with full-size
 links. Desktop and 390px architecture checks found no page overflow; routing

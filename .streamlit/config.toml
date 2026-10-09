@@ -11,15 +11,15 @@ primaryColor = "#116559"
 backgroundColor = "#faf9f5"
 secondaryBackgroundColor = "#eaf1eb"
 textColor = "#203433"
-font = "Inter, sans-serif"
-headingFont = "Inter, sans-serif"
+font = "Sora, sans-serif"
+headingFont = "Sora, sans-serif"
 baseFontSize = 16
 baseFontWeight = 400
 headingFontSizes = ["2.25rem", "1.75rem", "1.375rem", "1.125rem", "1rem", "1rem"]
 headingFontWeights = 600
 
 [[theme.fontFaces]]
-family = "Inter"
-url = "app/static/fonts/inter-latin-wght-normal.woff2"
-weight = "100 900"
+family = "Sora"
+url = "app/static/fonts/sora-latin-wght-normal.woff2"
+weight = "100 800"
 style = "normal"

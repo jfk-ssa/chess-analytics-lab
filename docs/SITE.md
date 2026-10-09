@@ -95,7 +95,7 @@ responses, `.env` files, numbered cloud-sync copies and credentials are excluded
 
 ## Shared appearance
 
-[The visual style guide](DESIGN.md) explains the Inter heading/body font roles,
+[The visual style guide](DESIGN.md) explains the Sora heading/body font roles,
 shared palette, licensing and screenshot refresh process. Fonts are bundled in
 both the site and local dashboard; no runtime font-service connection is needed.
 Demo images are constrained to 760px and link to their full-size originals.

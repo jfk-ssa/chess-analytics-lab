@@ -9,9 +9,9 @@ and measured values.
 
 | Role | Choice | Reason |
 | --- | --- | --- |
-| Guide headings | Inter, weight 600 | Matches the body and dashboard with one consistent family |
-| Body, navigation, cards, tables | Inter, weight 400; emphasis 600–650 | Clear screen reading and restrained emphasis |
-| Dashboard text and headings | Inter; headings weight 600 | Compact analytical interface without oversized heavy titles |
+| Guide headings | Sora, weight 600 | Matches the body and dashboard with one consistent family |
+| Body, navigation, cards, tables | Sora, weight 400; emphasis 600–650 | Clear screen reading and restrained emphasis |
+| Dashboard text and headings | Sora; headings weight 600 | Compact analytical interface without oversized heavy titles |
 | Code and technical identifiers | Existing system monospace | Separates execution instructions and identifiers |
 | Numbers in tables | Tabular numerals; numeric cells aligned right | Easier comparison across rows |
 
@@ -34,11 +34,11 @@ larger gaps between sections; cards have subtle borders and restrained corners.
   and responsive behavior. The `--font-body` and `--font-heading` tokens define
   the font roles.
 - [Streamlit configuration](../.streamlit/config.toml) uses supported theme
-  settings for the same palette and Inter. Launch from the repository root so
+  settings for the same palette and Sora. Launch from the repository root so
   Streamlit loads this file. Restart the server after font/theme changes.
 - [Website builder](../scripts/build_docs_site.py) copies only named assets.
-  The site and dashboard share the same checked Inter file from
-  `analytics_m4/static/fonts`. All current guide and dashboard text uses Inter
+  The site and dashboard share the same checked Sora file from
+  `analytics_m4/static/fonts`. All current guide and dashboard text uses Sora
   except code, which keeps its monospace role.
 
 The font files are Latin-subset normal-style variable WOFF2 files. Other scripts

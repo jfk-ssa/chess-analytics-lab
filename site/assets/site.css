@@ -1,8 +1,8 @@
 @font-face {
-  font-family:Inter;
-  src:url("fonts/inter-latin-wght-normal.woff2") format("woff2");
+  font-family:Sora;
+  src:url("fonts/sora-latin-wght-normal.woff2") format("woff2");
   font-style:normal;
-  font-weight:100 900;
+  font-weight:100 800;
   font-display:swap}
 
 :root {
@@ -14,7 +14,7 @@
   --teal:#116559;
   --accent:#cf612f;
   --soft:#eaf1eb;
-  --font-body:Inter,system-ui,-apple-system,sans-serif;
+  --font-body:Sora,system-ui,-apple-system,sans-serif;
   --font-heading:var(--font-body);
   --radius:10px;
   --space-unit:4px}

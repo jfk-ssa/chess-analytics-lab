@@ -44,10 +44,10 @@ ASSETS = {
     "site.js": "site/assets/site.js",
     "demo-overview.png": "site/assets/demo-overview.png",
     "demo-analyst.png": "site/assets/demo-analyst.png",
-    "fonts/inter-latin-wght-normal.woff2": (
-        "analytics_m4/static/fonts/inter-latin-wght-normal.woff2"
+    "fonts/sora-latin-wght-normal.woff2": (
+        "analytics_m4/static/fonts/sora-latin-wght-normal.woff2"
     ),
-    "fonts/LICENSE.inter.txt": "analytics_m4/static/fonts/LICENSE.inter.txt",
+    "fonts/LICENSE.sora.txt": "analytics_m4/static/fonts/LICENSE.sora.txt",
     "fonts/provenance.json": "site/assets/fonts/provenance.json",
 }
 NAV = (
@@ -108,7 +108,8 @@ def shell(title, active, intro, body, commit):
 <meta name="description"
 content="Local chess analytics, reproducible evidence and learning guides.">
 <title>{html.escape(title)} · Chess Analytics Lab</title>
-<link rel="stylesheet" href="assets/site.css"><script defer src="assets/site.js"></script></head>
+<link rel="stylesheet" href="assets/site.css?v={commit}">
+<script defer src="assets/site.js?v={commit}"></script></head>
 <body><a class="skip" href="#main">Skip to content</a><header class="topbar"><div class="nav-inner">
 <a class="brand" href="index.html">Chess Analytics Lab <span class="badge">Learning lab</span></a>
 <nav aria-label="Main navigation">{nav}</nav></div></header><main id="main">

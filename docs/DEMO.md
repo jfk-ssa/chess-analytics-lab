@@ -140,6 +140,6 @@ month implied by an archive name.
 ## Dashboard appearance
 
 Run from the repository root to load the shared light theme and locally served
-Inter font in `.streamlit/config.toml`. Restart Streamlit after theme changes.
+Sora font in `.streamlit/config.toml`. Restart Streamlit after theme changes.
 The [visual style guide](DESIGN.md) explains font choices and screenshot capture;
 the HTML guide provides smaller previews with links to full-size images.
