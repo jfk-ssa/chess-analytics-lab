@@ -1,0 +1,24 @@
+[
+  {
+    "family": "inter",
+    "package": "@fontsource-variable/inter",
+    "version": "5.3.0",
+    "tarball_url": "https://registry.npmjs.org/@fontsource-variable/inter/-/inter-5.3.0.tgz",
+    "tarball_sha256": "d26710dd38e7217484a1d47ee76c024977ec550548876f26d06ed1844af09a14",
+    "font_path": "analytics_m4/static/fonts/inter-latin-wght-normal.woff2",
+    "font_sha256": "3100e775e8616cd2611beecfa23a4263d7037586789b43f035236a2e6fbd4c62",
+    "license_path": "analytics_m4/static/fonts/LICENSE.inter.txt",
+    "license_sha256": "3b0a5fca3d17942cde889069889dedbbbd075e9b599968c82a95f4d944e9b345"
+  },
+  {
+    "family": "source-serif-4",
+    "package": "@fontsource-variable/source-serif-4",
+    "version": "5.3.0",
+    "tarball_url": "https://registry.npmjs.org/@fontsource-variable/source-serif-4/-/source-serif-4-5.3.0.tgz",
+    "tarball_sha256": "4a19d3a6fda1a977f15a0ee1e60e5f53df2e6ae77f46f1ed54c7fc52d015e85a",
+    "font_path": "site/assets/fonts/source-serif-4-latin-wght-normal.woff2",
+    "font_sha256": "c1df4596be5029233ed2afbb8b2f6ea20784b3fb1aa5d6b5c6519ccd85eb3dfb",
+    "license_path": "site/assets/fonts/LICENSE.source-serif-4.txt",
+    "license_sha256": "18aabf190848725e2576eefb5c29ba06aac1029d02132252a7f312eac2e50cf3"
+  }
+]

@@ -1,0 +1,25 @@
+# Shared with site/assets/site.css; see docs/DESIGN.md.
+[server]
+enableStaticServing = true
+
+[browser]
+gatherUsageStats = false
+
+[theme]
+base = "light"
+primaryColor = "#116559"
+backgroundColor = "#faf9f5"
+secondaryBackgroundColor = "#eaf1eb"
+textColor = "#203433"
+font = "Inter, sans-serif"
+headingFont = "Inter, sans-serif"
+baseFontSize = 16
+baseFontWeight = 400
+headingFontSizes = ["2.25rem", "1.75rem", "1.375rem", "1.125rem", "1rem", "1rem"]
+headingFontWeights = 600
+
+[[theme.fontFaces]]
+family = "Inter"
+url = "app/static/fonts/inter-latin-wght-normal.woff2"
+weight = "100 900"
+style = "normal"

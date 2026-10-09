@@ -35,6 +35,19 @@ passed on `814ffe9`. All five public pages, the full report and the build manife
 returned HTTP 200; published report bytes match the original. See [website runbook](SITE.md) and
 [site checkpoint](../reports/docs-site-checkpoint.json).
 
+## Visual style update — 2026-10-09
+
+Applied the owner-approved Inter body/UI and Source Serif 4 guide-heading pairing.
+Fonts are bundled locally with OFL licenses and pinned provenance. The dashboard
+uses the shared light palette and Inter headings at 36px/600; guide tables use
+tabular numbers and numeric alignment. Actual synthetic Overview and opening
+replay screenshots were refreshed; previews are capped at 760px with full-size
+links. Desktop and 390px architecture checks found no page overflow; routing
+controls still report the frozen counts. The targeted publication/demo suite
+passed **5 tests** and Ruff passed. See [visual guide](DESIGN.md). The existing Pages workflow publishes
+this presentation update from main; original comparison report and benchmark
+evidence are unchanged. No live model calls occurred.
+
 ## Phase tracker
 
 Final publication review: the initial candidate export passed 90 tests with

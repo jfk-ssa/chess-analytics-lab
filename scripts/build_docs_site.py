@@ -39,6 +39,21 @@ REPORTS = (
     "M8-analyst-pass-1.json",
     "M8-e2e-checkpoint.json",
 )
+ASSETS = {
+    "site.css": "site/assets/site.css",
+    "site.js": "site/assets/site.js",
+    "demo-overview.png": "site/assets/demo-overview.png",
+    "demo-analyst.png": "site/assets/demo-analyst.png",
+    "fonts/inter-latin-wght-normal.woff2": (
+        "analytics_m4/static/fonts/inter-latin-wght-normal.woff2"
+    ),
+    "fonts/LICENSE.inter.txt": "analytics_m4/static/fonts/LICENSE.inter.txt",
+    "fonts/source-serif-4-latin-wght-normal.woff2": (
+        "site/assets/fonts/source-serif-4-latin-wght-normal.woff2"
+    ),
+    "fonts/LICENSE.source-serif-4.txt": "site/assets/fonts/LICENSE.source-serif-4.txt",
+    "fonts/provenance.json": "site/assets/fonts/provenance.json",
+}
 NAV = (
     ("index.html", "Start here"),
     ("comparison.html", "Comparison"),
@@ -342,11 +357,14 @@ def build(repo, output):
     (output / ".site-output").write_text("Generated static site; safe to rebuild.\n")
     (output / ".nojekyll").touch()
     (output / "assets").mkdir()
-    for name in ("site.css", "site.js", "demo-overview.png", "demo-analyst.png"):
-        asset = repo / "site/assets" / name
+    for name, source in ASSETS.items():
+        asset = repo / source
+        if not asset.exists() and name not in ("demo-overview.png", "demo-analyst.png"):
+            raise ValueError(f"Missing required public asset: {name}")
         if asset.exists():
             if asset.is_symlink():
                 raise ValueError(f"Refusing symlink asset: {name}")
+            (output / "assets" / name).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(asset, output / "assets" / name)
     try:
         commit = subprocess.check_output(
@@ -407,8 +425,9 @@ def build(repo, output):
     ):
         if (repo / "site/assets" / name).exists():
             demo_images += (
-                f'<figure><img src="assets/{name}" alt="{caption}" loading="lazy">'
-                f"<figcaption>{caption}</figcaption></figure>"
+                f'<figure><a href="assets/{name}"><img src="assets/{name}" '
+                f'alt="{caption}" loading="lazy"></a><figcaption>{caption}</figcaption>'
+                f'<a class="full-size" href="assets/{name}">View full-size screenshot</a></figure>'
             )
     bodies = {
         "index.html": (
@@ -478,7 +497,7 @@ def build(repo, output):
     source_files.update(repo / "reports" / name for name in REPORTS)
     source_files.update((repo / "contracts").glob("*.json"))
     source_files.update(
-        repo / "site/assets" / p.name for p in (output / "assets").iterdir() if p.is_file()
+        repo / source for name, source in ASSETS.items() if (output / "assets" / name).is_file()
     )
     manifest = {
         "kind": "static_documentation_build_no_live_requests",

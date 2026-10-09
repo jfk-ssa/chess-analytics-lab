@@ -28,3 +28,12 @@ data or engine binary is included. Tiny fixture games were authored for tests.
 Original project code is licensed under [GPL-3.0-or-later](LICENSE). The
 python-chess dependency is GPL-3.0-or-later; other dependencies retain the
 licenses listed above. CC0 source data does not set the software license.
+
+## Bundled typography
+
+Inter and Source Serif 4 are bundled as Latin normal-style variable WOFF2 fonts
+from Fontsource packages **5.3.0**, under **SIL Open Font License 1.1**.
+They retain their own licenses; the project's GPL does not replace them.
+See [pinned URLs and SHA-256 hashes](site/assets/fonts/provenance.json),
+[Inter license](analytics_m4/static/fonts/LICENSE.inter.txt) and
+[Source Serif 4 license](site/assets/fonts/LICENSE.source-serif-4.txt).

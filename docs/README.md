@@ -69,3 +69,6 @@ of historic live experiments needs retained ignored responses. A JSON checkpoint
 is evidence of a recorded experiment, not a way to regenerate provider outputs.
 Live commands need personal configuration and a new explicit spending cap; old
 approvals and provider credits do not authorize another run.
+
+For typography, shared dashboard styling and image maintenance, see
+[the visual style guide](DESIGN.md).

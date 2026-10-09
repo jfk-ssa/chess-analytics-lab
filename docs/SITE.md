@@ -92,3 +92,10 @@ screenshots and usable mobile navigation. Numeric experiments retain their
 original dates and evidence; deploying HTML does not create a new benchmark.
 Only named public assets and sources enter the build. Ignored datasets, provider
 responses, `.env` files, numbered cloud-sync copies and credentials are excluded.
+
+## Shared appearance
+
+[The visual style guide](DESIGN.md) explains the Inter/Source Serif 4 font roles,
+shared palette, licensing and screenshot refresh process. Fonts are bundled in
+both the site and local dashboard; no runtime font-service connection is needed.
+Demo images are constrained to 760px and link to their full-size originals.
