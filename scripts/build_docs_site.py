@@ -44,10 +44,10 @@ ASSETS = {
     "site.js": "site/assets/site.js",
     "demo-overview.png": "site/assets/demo-overview.png",
     "demo-analyst.png": "site/assets/demo-analyst.png",
-    "fonts/sora-latin-wght-normal.woff2": (
-        "analytics_m4/static/fonts/sora-latin-wght-normal.woff2"
+    "fonts/dm-sans-latin-wght-normal.woff2": (
+        "analytics_m4/static/fonts/dm-sans-latin-wght-normal.woff2"
     ),
-    "fonts/LICENSE.sora.txt": "analytics_m4/static/fonts/LICENSE.sora.txt",
+    "fonts/LICENSE.dm-sans.txt": "analytics_m4/static/fonts/LICENSE.dm-sans.txt",
     "fonts/provenance.json": "site/assets/fonts/provenance.json",
 }
 NAV = (

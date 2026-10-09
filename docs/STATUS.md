@@ -37,14 +37,18 @@ returned HTTP 200; published report bytes match the original. See [website runbo
 
 ## Visual style update — 2026-10-09
 
-Applied Sora throughout the guides and dashboard after the owner chose the
-slightly wider sans-serif from the in-chat comparison.
-Fonts are bundled locally with OFL licenses and pinned provenance. The dashboard
-uses the shared light palette and Sora headings at 36px/600; guide tables use
+Applied owner-approved DM Sans throughout the guides and dashboard after the
+Inter/DM Sans/Sora guide comparison. Guide body text is 14px/1.55 with 0.01em
+letter spacing and a roughly 70-character prose measure; page titles now scale
+from 28px to 36px. Fonts are bundled locally with OFL licenses and pinned
+provenance. The dashboard uses the shared light palette, a 14px base and
+approximately 32px/600 headings; guide tables use
 tabular numbers and numeric alignment. Actual synthetic Overview and opening
 replay screenshots were refreshed; previews are capped at 760px with full-size
-links. Desktop and 390px architecture checks found no page overflow; routing
-controls still report the frozen counts. The targeted publication/demo suite
+links. Desktop browser checks verified the current font and replay. Earlier
+390px checks apply to the preceding style; the current browser viewport override
+remained at 1280px, so a new mobile visual check was not completed. Responsive
+layout rules remain in place. The targeted publication/demo suite
 passed **5 tests** and Ruff passed. See [visual guide](DESIGN.md). The existing Pages workflow publishes
 this presentation update from main; original comparison report and benchmark
 evidence are unchanged. No live model calls occurred.
