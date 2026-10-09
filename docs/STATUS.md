@@ -1,4 +1,4 @@
-# Status — 2026-10-07
+# Status — 2026-10-09
 
 **M0–M7 accepted locally; M8 routing and end-to-end Jev comparisons measured, with no production promotion. Portfolio hardening verified locally and in a fresh export; GPL-3.0-or-later selected for original project code.** This is a new standalone local Git
 repository; projects 1–3 remain together. The portfolio repository is public at
@@ -15,8 +15,22 @@ passed **115 tests**, Ruff passed, and the offline demo completed. The local lin
 scan found no missing targets. Numbered cloud-sync copies were excluded; the
 installed dependency copies that caused dbt failures remain in ignored diagnostic
 storage. See [review findings](DOCUMENTATION_REVIEW.md) and
-[verification](../reports/documentation-review.json). Hosted CI for this update
-is pending verification. Earlier successful runs are separate evidence.
+[verification](../reports/documentation-review.json). Hosted CI passed on `4411e17` (run `37647663561`) and `a4fe38d`
+(run `37647806258`). Earlier successful runs are separate evidence.
+
+## Documentation website — 2026-10-09
+
+The generated site has a homepage plus comparison, clickable architecture,
+searchable metrics/data and illustrated offline-demo pages. Markdown remains the
+maintained source. The original comparison HTML is copied unchanged; interactive
+controls operate only on saved classifications or hypothetical examples. The
+local suite passed **118 tests**, Ruff passed, three publication regressions
+passed, and the full offline demo completed. Browser checks verified threshold
+changes, search, denominator arithmetic, pipeline disclosure, both actual demo
+screenshots and 390px navigation without page overflow. No live calls or data
+acquisition occurred. GitHub Pages is configured for workflow deployment;
+publication verification is pending. See [website runbook](SITE.md) and
+[site checkpoint](../reports/docs-site-checkpoint.json).
 
 ## Phase tracker
 
@@ -49,6 +63,7 @@ No new live model call occurred.
 | M8 Jev | Routing and paired final-answer comparisons measured; no production promotion | [Route checkpoint](../reports/M8-routing-checkpoint.json): rules 35/40; Jev passes 39/40 and 37/40; existing analyst 33/40. [End-to-end checkpoint](../reports/M8-e2e-checkpoint.json): both arms 31/32 after versioned offline rescore; Jev costs slightly more. Eight new boundary labels received owner review. See [end-to-end lab](JEV_END_TO_END.md). Compatible DuckDB extension remains an optional isolated exercise. |
 | M8 Decisions extension | Measured optional classifier; no production promotion | Owner-reviewed 24-case language holdout: 23/24 on each of three repetitions; rules 8/24. Development-selected 0.70 threshold accepts 17/24 with zero observed errors. Historical retained-answer replay stays 31/32 and costs more. Six live Decisions runs / 184 requests cost $0.0068145 gross under $0.05. [Runbook](DECISIONS_ROUTING_RUNBOOK.md), [checkpoint](../reports/decisions-checkpoint.json). Fresh paired Jev/analyst evaluation remains a separate optional gate requiring new estimates and caps. |
 | Portfolio readiness | Integrity, offline demo, docs, clean export and license verified locally; hosted CI passed; repository public | [Implementation evidence](EVIDENCE_INDEX.md), [final review](FINAL_RELEASE_REVIEW.md) and [handoff record](PORTFOLIO_HANDOFF.md). |
+| Documentation website | Verified locally; publication pending | Homepage + four guides; original report preserved; [runbook](SITE.md), [checkpoint](../reports/docs-site-checkpoint.json). |
 | Personalized recommender | Backlog | Outside first-release scope |
 
 An [auxiliary examples folder](../auxiliary-examples/README.md) now holds a

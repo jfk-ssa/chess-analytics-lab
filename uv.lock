@@ -324,6 +324,9 @@ dashboard = [
 dbt = [
     { name = "dbt-duckdb" },
 ]
+docs = [
+    { name = "markdown" },
+]
 prefect = [
     { name = "prefect" },
 ]
@@ -341,11 +344,12 @@ requires-dist = [
     { name = "dagster-webserver", marker = "extra == 'dagster'", specifier = "==1.13.25" },
     { name = "dbt-duckdb", marker = "extra == 'dbt'", specifier = "==1.10.1" },
     { name = "duckdb", specifier = "==1.4.1" },
+    { name = "markdown", marker = "extra == 'docs'", specifier = "==3.11" },
     { name = "prefect", marker = "extra == 'prefect'", specifier = "==3.8.7" },
     { name = "streamlit", marker = "extra == 'dashboard'", specifier = "==1.50.0" },
     { name = "zstandard", specifier = "==0.25.0" },
 ]
-provides-extras = ["dagster", "prefect", "dbt", "dashboard"]
+provides-extras = ["docs", "dagster", "prefect", "dbt", "dashboard"]
 
 [package.metadata.requires-dev]
 dev = [

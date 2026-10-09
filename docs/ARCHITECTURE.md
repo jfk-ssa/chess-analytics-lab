@@ -1,5 +1,7 @@
 # Architecture and boundaries
 
+**HTML version:** [Read this guide on the documentation site](https://jfk-ssa.github.io/chess-analytics-lab/architecture.html).
+
 Chess Analytics Lab uses one Python/SQL repository and local DuckDB files.
 `chesslab` provides the foundation ingestion and two offline demos. The
 analytical source command is `python -m analytics_m3`; the checked analyst is

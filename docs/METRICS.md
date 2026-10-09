@@ -1,5 +1,7 @@
 # Metric registry — M1–M3
 
+**HTML version:** [Read this guide on the documentation site](https://jfk-ssa.github.io/chess-analytics-lab/metrics.html).
+
 `contracts/game_draw_rate.json` is the versioned definition and result schema.
 `src/chess_analytics/metrics/draw_rate.sql` is the reviewed SQL implementation.
 
@@ -21,7 +23,8 @@ opening comparison, time-pressure analysis or model benchmark is attached to it.
 M3 metrics use the checked partial analytical snapshot and are descriptive only:
 
 - [Opening usage](../contracts/opening_usage.json): source Opening tag family
-  count divided by completed, rated Standard, non-marked-bot games. Unknown
+  count divided by eligible completed, rated Standard, non-marked-bot games
+  with a nonempty source opening family. Unknown
   results do not enter the denominator. Missing/unknown source tags are shown,
   never silently inferred.
 - [Opening player score](../contracts/opening_player_score.json): one player-game

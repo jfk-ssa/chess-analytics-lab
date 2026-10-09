@@ -1,5 +1,7 @@
 # Data dictionary — M1–M3
 
+**HTML version:** [Read this guide on the documentation site](https://jfk-ssa.github.io/chess-analytics-lab/metrics.html).
+
 The explicit storage types are in contracts/tables.json.
 
 - **fact_game:** one provider/game ID. Source ordinal is one-based within the

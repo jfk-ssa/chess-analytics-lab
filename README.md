@@ -6,6 +6,9 @@ The default demo runs all three on synthetic games without API keys or real-data
 downloads. Recurring infrastructure target: **$0**; paid experiments are optional
 and have separately recorded spending caps.
 
+**Website:** [documentation homepage](https://jfk-ssa.github.io/chess-analytics-lab/)
+· [published comparison](https://jfk-ssa.github.io/chess-analytics-lab/comparison.html).
+
 **Start here:** [documentation guide](docs/README.md) · [offline demo](docs/DEMO.md)
 · [classifier results](docs/CLASSIFIER_COMPARISON.md) · [current status](docs/STATUS.md).
 

@@ -1,5 +1,7 @@
 # Documentation guide
 
+**HTML version:** [Read this guide on the documentation site](https://jfk-ssa.github.io/chess-analytics-lab/).
+
 Start here if this is your first visit. Chess Analytics Lab is a local learning
 and portfolio project combining a reliable data pipeline, opening/clock analytics,
 and an evaluated analyst. You can explore all three without credentials or real
@@ -30,7 +32,8 @@ live evaluations are recorded separately.
 | `orchestration/` | Optional local Dagster/Prefect wrappers over the same pipeline |
 | `contracts/`, `config/`, `evals/` | Definitions, bounded source plans, frozen questions and reference manifests |
 | `tests/fixtures/`, `tests/` | Tracked synthetic inputs, independent expected values and offline regressions |
-| `reports/` | Compact historical evidence and generated comparison HTML; not an automatic deployment |
+| `reports/` | Compact historical evidence and the original comparison report |
+| `site/`, `scripts/build_docs_site.py` | Static website assets and generation from maintained guides |
 | `work/`, `data/` | Ignored local outputs, raw attempts and bulk data; absent in a fresh clone |
 | `auxiliary-examples/` | Separate business communication and observability examples, outside the chess application |
 
@@ -54,10 +57,11 @@ report. The evidence index identifies which files require ignored real data.
 ## Viewing reports and reproducing results
 
 GitHub renders Markdown guides, but displays `.html` reports as source. Read
-[the classifier summary](CLASSIFIER_COMPARISON.md) on GitHub, or clone the repo
-and open `reports/decisions-routing-comparison.html` in a browser for the full
-tables, confusion matrices and threshold plots. This repo does not host that
-HTML as a website.
+[the published comparison](https://jfk-ssa.github.io/chess-analytics-lab/comparison.html)
+for an interactive guide, or the
+[full rendered report](https://jfk-ssa.github.io/chess-analytics-lab/reports/decisions-routing-comparison.html)
+for tables, confusion matrices and threshold plots. You can also open the tracked
+report locally. See [the website runbook](SITE.md) for source mapping and publication.
 
 The demo and fixture tests can be reproduced from tracked files after dependency
 installation. Real metrics need the exact bounded archive bytes; full rescoring

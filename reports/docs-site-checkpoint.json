@@ -1,0 +1,38 @@
+{
+  "kind": "documentation_publication_checkpoint",
+  "date": "2026-10-09",
+  "scope": "Static documentation; no new benchmark",
+  "pages": [
+    "index.html",
+    "comparison.html",
+    "architecture.html",
+    "metrics.html",
+    "demo.html"
+  ],
+  "local_verification": {
+    "full_suite": "118 passed in 59.13s; docs, dbt and dashboard extras installed",
+    "ruff": "passed",
+    "publication_regressions": "3 passed",
+    "offline_demo": "scope all completed; actual synthetic Overview and portfolio-opening fixture replay screenshots",
+    "generated_local_links": 54,
+    "original_report": "copied byte-for-byte; original unmodified",
+    "browser": {
+      "historical_threshold_0_70": "29/40 accepted; 0 accepted errors; 11 fallbacks",
+      "fresh_threshold_0_50": "22/24 accepted; 1 accepted error; 2 fallbacks",
+      "fresh_jev": "Not measured",
+      "search_clock": "3 matching contracts or schemas",
+      "missing_evaluations_3": "proxy 3/6=50%; coverage 6/9=66.7%",
+      "pipeline_stage": "analyst disclosure opens on stage click",
+      "screenshots": "both synthetic demo images loaded",
+      "mobile": "390px viewport; 390px document width; all five navigation links available",
+      "console_errors": 0
+    }
+  },
+  "publication": {
+    "status": "local checks complete; hosted deployment pending",
+    "base_url": "https://jfk-ssa.github.io/chess-analytics-lab/",
+    "source": "GitHub Actions Pages artifact"
+  },
+  "live_requests": 0,
+  "data_downloads": 0
+}
