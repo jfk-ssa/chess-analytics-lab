@@ -9,13 +9,13 @@ and measured values.
 
 | Role | Choice | Reason |
 | --- | --- | --- |
-| Guide headings | DM Sans, weight 600 | Matches the body and dashboard with one consistent family |
-| Body, navigation, cards, tables | DM Sans, weight 400; emphasis 600–650 | Clear screen reading and restrained emphasis |
-| Dashboard text and headings | DM Sans; headings weight 600 | Compact analytical interface without oversized heavy titles |
+| Guide headings | Inter, weight 600 | Matches the body and dashboard with one consistent family |
+| Body, navigation, cards, tables | Inter Medium, weight 500; emphasis 600–650 | Clear screen reading and restrained emphasis |
+| Dashboard text and headings | Inter Medium body; headings weight 600 | Compact analytical interface without oversized heavy titles |
 | Code and technical identifiers | Existing system monospace | Separates execution instructions and identifiers |
 | Numbers in tables | Tabular numerals; numeric cells aligned right | Easier comparison across rows |
 
-Guide body text is 14px with 1.55 line height, 0.01em letter spacing and prose
+Guide body text uses Medium (500) at 14px with 1.55 line height, 0.01em letter spacing and prose
 limited to roughly 70 characters per line. The page title scales from 28px to
 36px; section headings are 23px. Navigation and tables use the same family.
 Dashboard body text is 14px and the main title approximately 32px, using
@@ -36,11 +36,11 @@ larger gaps between sections; cards have subtle borders and restrained corners.
   and responsive behavior. The `--font-body` and `--font-heading` tokens define
   the font roles.
 - [Streamlit configuration](../.streamlit/config.toml) uses supported theme
-  settings for the same palette and DM Sans. Launch from the repository root so
+  settings for the same palette and Inter. Launch from the repository root so
   Streamlit loads this file. Restart the server after font/theme changes.
 - [Website builder](../scripts/build_docs_site.py) copies only named assets.
-  The site and dashboard share the same checked DM Sans file from
-  `analytics_m4/static/fonts`. All current guide and dashboard text uses DM Sans
+  The site and dashboard share the same checked Inter file from
+  `analytics_m4/static/fonts`. All current guide and dashboard text uses Inter
   except code, which keeps its monospace role.
 
 The font files are Latin-subset normal-style variable WOFF2 files. Other scripts

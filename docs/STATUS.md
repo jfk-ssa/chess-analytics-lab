@@ -37,8 +37,9 @@ returned HTTP 200; published report bytes match the original. See [website runbo
 
 ## Visual style update — 2026-10-09
 
-Applied owner-approved DM Sans throughout the guides and dashboard after the
-Inter/DM Sans/Sora guide comparison. Guide body text is 14px/1.55 with 0.01em
+Applied owner-approved Inter Medium throughout the guides and dashboard after
+the Inter Open/Regular/Medium page comparison. Body weight is 500; guide body
+text is 14px/1.55 with 0.01em
 letter spacing and a roughly 70-character prose measure; page titles now scale
 from 28px to 36px. Fonts are bundled locally with OFL licenses and pinned
 provenance. The dashboard uses the shared light palette, a 14px base and

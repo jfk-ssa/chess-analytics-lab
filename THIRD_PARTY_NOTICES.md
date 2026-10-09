@@ -31,8 +31,8 @@ licenses listed above. CC0 source data does not set the software license.
 
 ## Bundled typography
 
-DM Sans is bundled as a Latin normal-style variable WOFF2 font
+Inter is bundled as a Latin normal-style variable WOFF2 font
 from Fontsource packages **5.3.0**, under **SIL Open Font License 1.1**.
 It retains its own license; the project's GPL does not replace it.
 See [pinned URLs and SHA-256 hashes](site/assets/fonts/provenance.json),
-[DM Sans license](analytics_m4/static/fonts/LICENSE.dm-sans.txt).
+[Inter license](analytics_m4/static/fonts/LICENSE.inter.txt).

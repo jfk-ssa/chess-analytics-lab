@@ -1,8 +1,8 @@
 @font-face {
-  font-family:"DM Sans";
-  src:url("fonts/dm-sans-latin-wght-normal.woff2") format("woff2");
+  font-family:"Inter";
+  src:url("fonts/inter-latin-wght-normal.woff2") format("woff2");
   font-style:normal;
-  font-weight:100 1000;
+  font-weight:100 900;
   font-display:swap}
 
 :root {
@@ -14,7 +14,7 @@
   --teal:#116559;
   --accent:#cf612f;
   --soft:#eaf1eb;
-  --font-body:"DM Sans",system-ui,-apple-system,sans-serif;
+  --font-body:"Inter",system-ui,-apple-system,sans-serif;
   --font-heading:var(--font-body);
   --radius:10px;
   --space-unit:4px}
@@ -27,7 +27,7 @@ body {
   margin:0;
   background:var(--paper);
   color:var(--ink);
-  font:14px/1.55 var(--font-body);
+  font:500 14px/1.55 var(--font-body);
   letter-spacing:.01em}
 a {
   color:var(--teal);
