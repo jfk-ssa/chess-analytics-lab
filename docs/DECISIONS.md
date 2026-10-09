@@ -1102,3 +1102,7 @@ The metrics prose now explicitly matches the known-opening denominator contract.
 A dedicated workflow builds and checks pull requests, and deploys only main.
 No live inference, new ingestion or cloud service was provisioned. See SITE.md
 and the documentation-site checkpoint for execution and publication evidence.
+
+Publication was verified on `814ffe9`: Pages and offline integrity CI passed;
+all public guide/report URLs returned HTTP 200 and the original report bytes
+were preserved. Keep deployment evidence separate from model-evaluation claims.

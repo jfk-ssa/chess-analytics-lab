@@ -29,9 +29,65 @@
     }
   },
   "publication": {
-    "status": "local checks complete; hosted deployment pending",
+    "status": "published and verified",
     "base_url": "https://jfk-ssa.github.io/chess-analytics-lab/",
-    "source": "GitHub Actions Pages artifact"
+    "source": "GitHub Actions Pages artifact",
+    "verified_source_revision": "814ffe996f699cb3fc57141085281bc73a6f2c34",
+    "verified_at_utc": "2026-10-09T13:50:10.326926+00:00",
+    "deployment_workflow": {
+      "url": "https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/37939389092",
+      "conclusion": "success"
+    },
+    "offline_integrity": {
+      "url": "https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/37939389093",
+      "conclusion": "success"
+    },
+    "http_checks": [
+      {
+        "url": "https://jfk-ssa.github.io/chess-analytics-lab/",
+        "status": 200,
+        "bytes": 10452,
+        "sha256": "53c7909663a66d45124cbc928433e8c2abb00be54c0bad44bb84543ca21e1e35"
+      },
+      {
+        "url": "https://jfk-ssa.github.io/chess-analytics-lab/comparison.html",
+        "status": 200,
+        "bytes": 27355,
+        "sha256": "c70b60b73fdf0e5c00180ad804328adff71dfd30173451f71929a7fd08b673d2"
+      },
+      {
+        "url": "https://jfk-ssa.github.io/chess-analytics-lab/architecture.html",
+        "status": 200,
+        "bytes": 7677,
+        "sha256": "31a79ad1701a0485bf745f9a61d143dfa1906e8f92d728e745950aff0b063340"
+      },
+      {
+        "url": "https://jfk-ssa.github.io/chess-analytics-lab/metrics.html",
+        "status": 200,
+        "bytes": 21461,
+        "sha256": "9d69fed8c5066e66f48f5640217f6f8c8406ffa0868192208a6e2e5e6bec17f2"
+      },
+      {
+        "url": "https://jfk-ssa.github.io/chess-analytics-lab/demo.html",
+        "status": 200,
+        "bytes": 12410,
+        "sha256": "f469e53e547f1822d5ea4f4e9aa988ce4fbca3b46d97889456f13ca01f818c7f"
+      },
+      {
+        "url": "https://jfk-ssa.github.io/chess-analytics-lab/reports/decisions-routing-comparison.html",
+        "status": 200,
+        "bytes": 41120,
+        "sha256": "4ee64aa1b9530351d52af4ad9e37d18f26ab0d555c0552a7d93653f9dfae76f9"
+      },
+      {
+        "url": "https://jfk-ssa.github.io/chess-analytics-lab/site-build.json",
+        "status": 200,
+        "bytes": 5644,
+        "sha256": "eaf828470f9fd64b62dcc770ad7bb39b294dd662efbc14f4e2e4efce5f010215"
+      }
+    ],
+    "browser_public_homepage": "Verified navigation and four learning cards; screenshot retained locally",
+    "note": "HTTP hashes refer to the verified source revision above; subsequent metadata commits rebuild page footers without changing experimental evidence."
   },
   "live_requests": 0,
   "data_downloads": 0

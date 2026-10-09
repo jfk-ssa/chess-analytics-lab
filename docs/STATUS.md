@@ -28,8 +28,11 @@ local suite passed **118 tests**, Ruff passed, three publication regressions
 passed, and the full offline demo completed. Browser checks verified threshold
 changes, search, denominator arithmetic, pipeline disclosure, both actual demo
 screenshots and 390px navigation without page overflow. No live calls or data
-acquisition occurred. GitHub Pages is configured for workflow deployment;
-publication verification is pending. See [website runbook](SITE.md) and
+acquisition occurred. The site is [public](https://jfk-ssa.github.io/chess-analytics-lab/).
+[Pages deployment](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/37939389092)
+and [offline integrity CI](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/37939389093)
+passed on `814ffe9`. All five public pages, the full report and the build manifest
+returned HTTP 200; published report bytes match the original. See [website runbook](SITE.md) and
 [site checkpoint](../reports/docs-site-checkpoint.json).
 
 ## Phase tracker
@@ -63,7 +66,7 @@ No new live model call occurred.
 | M8 Jev | Routing and paired final-answer comparisons measured; no production promotion | [Route checkpoint](../reports/M8-routing-checkpoint.json): rules 35/40; Jev passes 39/40 and 37/40; existing analyst 33/40. [End-to-end checkpoint](../reports/M8-e2e-checkpoint.json): both arms 31/32 after versioned offline rescore; Jev costs slightly more. Eight new boundary labels received owner review. See [end-to-end lab](JEV_END_TO_END.md). Compatible DuckDB extension remains an optional isolated exercise. |
 | M8 Decisions extension | Measured optional classifier; no production promotion | Owner-reviewed 24-case language holdout: 23/24 on each of three repetitions; rules 8/24. Development-selected 0.70 threshold accepts 17/24 with zero observed errors. Historical retained-answer replay stays 31/32 and costs more. Six live Decisions runs / 184 requests cost $0.0068145 gross under $0.05. [Runbook](DECISIONS_ROUTING_RUNBOOK.md), [checkpoint](../reports/decisions-checkpoint.json). Fresh paired Jev/analyst evaluation remains a separate optional gate requiring new estimates and caps. |
 | Portfolio readiness | Integrity, offline demo, docs, clean export and license verified locally; hosted CI passed; repository public | [Implementation evidence](EVIDENCE_INDEX.md), [final review](FINAL_RELEASE_REVIEW.md) and [handoff record](PORTFOLIO_HANDOFF.md). |
-| Documentation website | Verified locally; publication pending | Homepage + four guides; original report preserved; [runbook](SITE.md), [checkpoint](../reports/docs-site-checkpoint.json). |
+| Documentation website | Published; deployment and integrity CI passed | Homepage + four guides; original report preserved; [runbook](SITE.md), [checkpoint](../reports/docs-site-checkpoint.json). |
 | Personalized recommender | Backlog | Outside first-release scope |
 
 An [auxiliary examples folder](../auxiliary-examples/README.md) now holds a
