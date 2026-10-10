@@ -15,7 +15,7 @@ The site is static: it cannot run the analyst, contact a model or download games
 | [Architecture](https://jfk-ssa.github.io/chess-analytics-lab/architecture.html) | [Architecture guide](ARCHITECTURE.md), stage descriptions in the builder | Clickable pipeline stages and implementation links |
 | [Metrics and data](https://jfk-ssa.github.io/chess-analytics-lab/metrics.html) | [Metrics](METRICS.md), [dictionary](DATA_DICTIONARY.md), versioned contracts | Searchable contracts/schemas and a denominator illustration |
 | [Demo](https://jfk-ssa.github.io/chess-analytics-lab/demo.html) | [Demo walkthrough](DEMO.md), synthetic dashboard screenshots | Actual example screens and copyable commands |
-| [Opening learning](https://jfk-ssa.github.io/chess-analytics-lab/transpositions.html) | [Transposition learning](TRANSPOSITION_LEARNING.md), checked corpus report | Corpus counts and cohort selection, two legally replayed routes, and the research/integration plan |
+| [Opening learning](https://jfk-ssa.github.io/chess-analytics-lab/transpositions.html) | [Transposition learning](TRANSPOSITION_LEARNING.md), checked corpus and position reports | Measured recurring/transposing rankings by cohort/opening, boards, routes, continuations, union coverage and an illustrative walkthrough |
 
 The [original full comparison report](https://jfk-ssa.github.io/chess-analytics-lab/reports/decisions-routing-comparison.html)
 is copied byte-for-byte from its tracked report, rather than rewritten. Historical
@@ -70,6 +70,36 @@ actual local Overview and fixture-replay views; they are illustrations, not
 population findings or fresh model responses. To refresh them, run the full
 [offline demo](DEMO.md), capture those views and replace only the two named PNGs
 in `site/assets`. Never capture personal-provider settings or private games.
+
+On Opening learning, choose Elite or Public, then a recorded opening family.
+The default ranking requires multiple move orders; switch to recurring positions
+to include frequently repeated boards with one observed route. Select a row to
+inspect its board and common routes. Continuations show recorded choices, not
+engine recommendations. The statistics use the selected view's game denominator.
+Top-set coverage counts a game once across all selected positions. Expand the
+family/depth details to inspect the full family inventory and endpoint convergence.
+Keyboard users can select rows with Enter/Space and scroll table regions.
+
+## Rebuild opening-position evidence
+
+Ordinary site builds use the tracked compact report and require no corpus files.
+Regeneration requires the separate full lab's retained, hash-matching opening
+index and PGNs. Install the existing DuckDB/chess dependencies, then run:
+
+```sh
+uv run --locked --offline --no-editable python scripts/build_opening_positions.py --corpus-root /path/to/full-lab
+uv run --locked --offline --no-editable python scripts/summarize_opening_positions.py --snapshot work/opening-positions/published/SNAPSHOT_ID
+```
+
+Use the extraction command's printed snapshot path. Output stays in ignored
+`work/opening-positions/`; never put it inside the source corpus. The plan reserves
+6 GB of free disk and caps derived storage at 8 GB. Per-source hash-checked shards
+support resumption. Summary uses a 1 GB DuckDB memory cap and 2 GB spill cap. After
+reviewing a regenerated report, refresh the checkpoint's hashes for the report,
+plan, contract and two extraction/aggregation scripts together. The website rejects
+source/cohort drift, changed receipt hashes, invalid boards/routes/continuations,
+inconsistent frequencies and impossible coverage. It generates SVGs only for the
+published bounded rankings; game-level data remain local.
 
 ## Publication and acceptance
 

@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0",
+  "name": "observed_white_opening_positions",
+  "source_grain": "checked source snapshot × provider × game ID × White decision ply",
+  "analysis_grain": "visit snapshot × cohort × optional recorded opening family × canonical position",
+  "position_key_version": "standard-fen-first-four-legal-ep-1.0",
+  "position_key": "Piece placement, side to move, castling rights, and en passant only if legal; first four normalized FEN fields. SHA-256 truncated to 24 hex characters; retained key and collision check.",
+  "history": "Full FEN, full UCI prefix and repeated-position flag remain in local visit shards. Draw counters and repetition history are not part of the recognition key.",
+  "default_window": {"learner_color": "white", "min_ply": 6, "max_ply": 20, "step": 2},
+  "game_count": "A game contributes once per canonical position within the window; the earliest visit supplies its route and continuation.",
+  "frequency": "Distinct games reaching the position / all eligible games in that cohort and, when selected, recorded opening family. Not a personal encounter estimate.",
+  "opening_family": "Recorded game opening tag before its first colon. ECO is retained separately. Labels do not define or merge board positions.",
+  "recurring": "At least two distinct games reach the exact position.",
+  "acyclic_route_count": "Distinct complete UCI arrival prefixes with no repeated canonical position anywhere in that prefix. Looped prefixes are counted in game frequency but not in this route count.",
+  "transposing": "At least two distinct acyclic arrival prefixes reach the exact position.",
+  "ranking": "Descending distinct-game count, with position ID as deterministic tie breaker; up to 20 recurring and 20 transposing positions per view.",
+  "route_share": "Games with this earliest arrival prefix / position games; up to three non-looped examples are published, so displayed shares need not sum to one.",
+  "continuation_share": "Games choosing this legal next White move at the earliest visit / position games, including games without a next move in the denominator. Report next_move_games separately. Up to five moves are published.",
+  "top_set_coverage": "Union of distinct games encountering any top-10 or top-20 position / eligible view games. Overlapping position frequencies must not be added.",
+  "endpoint_compression": "At a fixed ply, 1 − distinct canonical endpoint positions / distinct UCI prefixes. Exclude any prefix with a repeated canonical position. Descriptive convergence, not a measured learning benefit.",
+  "publication": "Separate Elite and broader public cohorts. Publish all opening-family inventory counts, plus all-opening rankings and up to twelve largest known families with at least 1000 eligible games. Local hashes bind retained inputs, extraction plan, parser implementation and artifacts.",
+  "limits": "Elite is a curated November 2025 month; public sources are nine ordered first-day archive prefixes. Frequency is not move quality, strategic importance, or causal evidence. No engine scoring, personal weighting, drills, or live provider requests."
+}

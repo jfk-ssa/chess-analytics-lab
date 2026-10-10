@@ -74,3 +74,4 @@ the latest measured state.
 | 0066 | 2026-10-10 | [One M7 campaign command](adr/0066-one-m7-campaign-command.md) |
 | 0067 | 2026-10-10 | [Keep only referenced historical reports](adr/0067-keep-only-referenced-historical-reports.md) |
 | 0068 | 2026-10-09 | [Evidence-first site review improvements](adr/0068-evidence-first-site-review-improvements.md) |
+| 0069 | 2026-10-10 | [Measured opening-position explorer](adr/0069-measured-opening-position-explorer.md) |

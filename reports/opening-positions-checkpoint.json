@@ -1,0 +1,64 @@
+{
+  "kind": "checked_opening_position_publication",
+  "created_at": "2026-10-10T12:58:30.424503+00:00",
+  "corpus_snapshot_id": "00e7a73fbf67c401e23b4b4b",
+  "visit_snapshot_id": "bd299fb6ebbced2145f1161b",
+  "visit_manifest_sha256": "d43e5eea12e8cc6359c13320f36ba7e3a8c9a3d443f854b767bdb4127eeaecec",
+  "games": 1042346,
+  "visits": 8338768,
+  "derived_artifact_bytes": 436694803,
+  "runtime": {
+    "chess": "1.11.2",
+    "duckdb": "1.5.6",
+    "uv_lock_sha256": "bbdc8c1905a327d2ec23600fe8fa2bb823e7874633c01b8d3cdc701a24c52829"
+  },
+  "files": {
+    "reports/opening-positions.json": "503f5dcfc0a6c616685cf242e3111f04c0f8e96335693e07a4a5c30e1ebc0b2d",
+    "config/opening-positions.json": "ac27ab29912ffdbbf7f6c5526caf450eeddf39fb725d9db6cd4cf95df9a43693",
+    "contracts/opening_positions.json": "b5721be89703b2ef96db538eb8b4a657fb75e102c736201adf3ec40c053fa8c6",
+    "scripts/build_opening_positions.py": "2b14e5d7ed465915365123802ec32e23e5ba339fa5983684602ac72938226244",
+    "scripts/summarize_opening_positions.py": "022d809eeb5db952ff32da662a3bc65f4f68491b3acfdf18dcac3f00c88a8821",
+    "uv.lock": "bbdc8c1905a327d2ec23600fe8fa2bb823e7874633c01b8d3cdc701a24c52829"
+  },
+  "independent_checks": {
+    "raw_distinct_game_counts_and_union_coverage_rankings": 52,
+    "passed": true
+  },
+  "scope": "Observed White decisions at plies 6\u201320. No new acquisition, engine scoring, live model calls, or learning experiment.",
+  "live_requests": 0,
+  "data_downloads": 0,
+  "verification": {
+    "offline_suite": {
+      "passed": 135,
+      "skipped": 15,
+      "extras": [
+        "docs",
+        "dashboard"
+      ]
+    },
+    "ruff_check": "passed",
+    "ruff_format": "passed",
+    "basedpyright": "0 errors, 0 warnings, 0 notes",
+    "site": {
+      "pages": 6,
+      "local_links_checked": 242,
+      "published_board_svgs": 420
+    },
+    "browser": {
+      "cohort_switch": "passed",
+      "opening_family_denominator": "passed",
+      "ranking_mode": "passed",
+      "keyboard_selection": "passed",
+      "board_update": "passed",
+      "console_errors": 0,
+      "viewport_css_widths": [
+        1500,
+        487
+      ],
+      "page_wide_overflow": false,
+      "narrow_selection_focus": "position-detail",
+      "screen_reader_tested": false,
+      "physical_phone_tested": false
+    }
+  }
+}

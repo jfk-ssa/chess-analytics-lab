@@ -48,6 +48,18 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
         descriptions.add(description)
     assert len(descriptions) == len(result["pages"])
     assert (output / "favicon.ico").read_bytes() == (ROOT / "site/assets/favicon.ico").read_bytes()
+    assert (output / "assets/opening-positions.json").read_bytes() == (
+        ROOT / "reports/opening-positions.json"
+    ).read_bytes()
+    positions = site.checked_positions(ROOT)
+    identifiers = {
+        key
+        for cohort in positions["cohorts"].values()
+        for view in cohort["views"].values()
+        for key in view["positions"]
+    }
+    assert {p.stem for p in (output / "assets/opening-positions").glob("*.svg")} == identifiers
+    assert 'id="position-explorer"' in (output / "transpositions.html").read_text()
     site.build(ROOT, output)  # A generated output is safely rebuildable.
 
 
@@ -142,3 +154,33 @@ def test_homepage_rejects_disagreeing_final_answer_checkpoints(tmp_path):
     checkpoint.write_text(json.dumps(data))
     with pytest.raises(ValueError, match="Final-answer checkpoints do not reconcile"):
         site.homepage_results(tmp_path)
+
+
+@pytest.mark.parametrize("damage", ["denominator", "coverage", "route", "hash"])
+def test_position_publication_rejects_inconsistent_evidence(tmp_path, damage):
+    checkpoint = json.loads((ROOT / "reports/opening-positions-checkpoint.json").read_text())
+    for name in {
+        *checkpoint["files"],
+        "reports/opening-corpus.json",
+        "reports/opening-positions-checkpoint.json",
+    }:
+        target = tmp_path / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(ROOT / name, target)
+    path = tmp_path / "reports/opening-positions.json"
+    data = json.loads(path.read_text())
+    cohort = data["cohorts"]["elite_reference"]
+    if damage == "denominator":
+        cohort["denominator_games"] += 1
+    elif damage == "coverage":
+        cohort["views"]["all"]["rankings"]["transposing"]["top_20_game_coverage"] = (
+            cohort["denominator_games"] + 1
+        )
+    elif damage == "route":
+        next(iter(cohort["views"]["all"]["positions"].values()))["routes"][0]["uci"] = "e2e5"
+    if damage == "hash":
+        path.write_text(path.read_text() + "\n")
+    else:
+        path.write_text(json.dumps(data))
+    with pytest.raises(ValueError):
+        site.checked_positions(tmp_path)

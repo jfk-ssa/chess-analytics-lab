@@ -47,6 +47,7 @@ REPORTS = (
 ASSETS = {
     "site.css": "site/assets/site.css",
     "site.js": "site/assets/site.js",
+    "position-explorer.js": "site/assets/position-explorer.js",
     "favicon.svg": "site/assets/favicon.svg",
     "social-preview.png": "site/assets/social-preview.png",
     "demo-overview.png": "site/assets/demo-overview.png",
@@ -349,11 +350,186 @@ stronger play is useful for reference study, but ratings do not certify every mo
 <th class="number" scope="col">Minimum player rating</th></tr></thead>
 <tbody id="opening-cohort-rows"></tbody></table></div>
 <p class="source-note">Counts come from a checked local game index. The full PGNs remain
-local; this page downloads no database. Opening-position analysis and drills are the
-next milestone. <a href="#getting-more-games">Sources, exclusions and costs</a></p>
+local; this page downloads no database. Measured position rankings appear above;
+learning drills remain proposed. <a href="#getting-more-games">Sources, exclusions and costs</a></p>
 <noscript>The default Elite cohort contains {counts["elite_training_games"]:,} games.
 Enable JavaScript to switch the cohort summary.</noscript></section>
 <script type="application/json" id="opening-corpus-data">{payload}</script>"""
+
+
+def validate_position(identifier, position, expected):
+    key = position["position_key"]
+    if not re.fullmatch(r"[0-9a-f]{24}", identifier) or digest(key.encode())[:24] != identifier:
+        raise ValueError("Opening position identifier changed")
+    board = chess.Board(key + " 0 1")
+    if not board.is_valid() or board.turn != chess.WHITE:
+        raise ValueError("Opening position is not a valid White decision")
+    if " ".join(board.fen(en_passant="legal").split()[:4]) != key:
+        raise ValueError("Opening position is not canonical")
+    games = position["games"]
+    if not 1 <= games <= expected or position["frequency"] != games / expected:
+        raise ValueError("Opening position frequency does not reconcile")
+    if not 0 <= position["acyclic_routes"] <= games:
+        raise ValueError("Opening route count exceeds position games")
+    if not 0 <= position["loop_prefix_games"] <= games:
+        raise ValueError("Opening loop count exceeds position games")
+    if not 0 <= position["next_move_games"] <= games:
+        raise ValueError("Opening continuation denominator exceeds position games")
+    for route in position["routes"]:
+        replay = chess.Board()
+        for uci in route["uci"].split():
+            move = chess.Move.from_uci(uci)
+            if move not in replay.legal_moves:
+                raise ValueError("Opening route is illegal")
+            replay.push(move)
+        if " ".join(replay.fen(en_passant="legal").split()[:4]) != key:
+            raise ValueError("Opening route endpoint differs")
+        if route["share"] != route["games"] / games:
+            raise ValueError("Opening route share differs")
+    for move in position["continuations"]:
+        parsed = chess.Move.from_uci(move["uci"])
+        if parsed not in board.legal_moves or board.san(parsed) != move["san"]:
+            raise ValueError("Opening continuation is illegal or mislabeled")
+        if move["share_of_position_games"] != move["games"] / games:
+            raise ValueError("Opening continuation share differs")
+
+
+def validate_ranking(kind, ranking, view, expected, limit):
+    ranked = [view["positions"][key] for key in ranking["ids"]]
+    if len(ranked) > limit or len(set(ranking["ids"])) != len(ranked):
+        raise ValueError("Opening ranking is unbounded or duplicated")
+    if any(p["games"] < 2 or (kind == "transposing" and p["acyclic_routes"] < 2) for p in ranked):
+        raise ValueError("Opening ranking contains an ineligible position")
+    if [p["games"] for p in ranked] != sorted((p["games"] for p in ranked), reverse=True):
+        raise ValueError("Opening ranking is not ordered by game frequency")
+    c10, c20 = ranking["top_10_game_coverage"], ranking["top_20_game_coverage"]
+    if not 0 <= c10 <= c20 <= expected:
+        raise ValueError("Opening union coverage exceeds denominator")
+    for count, rows in ((c10, ranked[:10]), (c20, ranked)):
+        if rows and not max(p["games"] for p in rows) <= count <= sum(p["games"] for p in rows):
+            raise ValueError("Opening union coverage is inconsistent")
+
+
+def checked_positions(repo):
+    """Validate compact publication against its checked corpus and build receipt."""
+    source = repo / "reports/opening-positions.json"
+    data = json.loads(source.read_text())
+    corpus = json.loads((repo / "reports/opening-corpus.json").read_text())
+    plan = json.loads((repo / "config/opening-positions.json").read_text())
+    checkpoint = json.loads((repo / "reports/opening-positions-checkpoint.json").read_text())
+    if data["kind"] != "observed_white_opening_positions" or data["plan"] != plan:
+        raise ValueError("Opening position kind or plan changed")
+    if data["corpus_snapshot_id"] != corpus["snapshot_id"]:
+        raise ValueError("Opening position corpus identity changed")
+    if data["training_sources"] != corpus["training_sources"]:
+        raise ValueError("Opening position sources differ from checked corpus")
+    if set(data["cohorts"]) != set(plan["cohorts"]):
+        raise ValueError("Opening position cohorts differ from plan")
+    for cohort, details in data["cohorts"].items():
+        denominator = sum(s["games"] for s in corpus["training_sources"] if s["cohort"] == cohort)
+        families = {row["family"]: row["games"] for row in details["opening_families"]}
+        if details["denominator_games"] != denominator or sum(families.values()) != denominator:
+            raise ValueError("Opening position denominator does not reconcile")
+        for name, view in details["views"].items():
+            expected = denominator if name == "all" else families[name]
+            if view["denominator_games"] != expected:
+                raise ValueError("Opening family denominator does not reconcile")
+            for identifier, position in view["positions"].items():
+                validate_position(identifier, position, expected)
+            for kind, ranking in view["rankings"].items():
+                validate_ranking(
+                    kind, ranking, view, expected, plan["published_positions_per_view"]
+                )
+    for name, expected_hash in checkpoint["files"].items():
+        if digest((repo / name).read_bytes()) != expected_hash:
+            raise ValueError("Opening position publication hash changed: " + name)
+    return data
+
+
+def opening_positions(repo, output):
+    data = checked_positions(repo)
+    directory = output / "assets/opening-positions"
+    directory.mkdir()
+    positions = {
+        identifier: position
+        for cohort in data["cohorts"].values()
+        for view in cohort["views"].values()
+        for identifier, position in view["positions"].items()
+    }
+    for identifier, position in positions.items():
+        board = chess.Board(position["position_key"] + " 0 1")
+        (directory / (identifier + ".svg")).write_text(
+            chess.svg.board(
+                board, size=420, colors={"square light": "#eaf1eb", "square dark": "#789b8d"}
+            )
+        )
+    shutil.copy2(repo / "reports/opening-positions.json", output / "assets/opening-positions.json")
+    elite = data["cohorts"]["elite_reference"]["views"]["all"]
+    ranked = elite["rankings"]["transposing"]
+    first = elite["positions"][ranked["ids"][0]]
+    rows = "".join(
+        f"<tr><td>{index}</td><td>{html.escape(elite['positions'][key]['routes'][0]['san'])}</td>"
+        f'<td class="number">{elite["positions"][key]["games"]:,}</td>'
+        f'<td class="number">{elite["positions"][key]["frequency"]:.2%}</td>'
+        f'<td class="number">{elite["positions"][key]["acyclic_routes"]:,}</td></tr>'
+        for index, key in enumerate(ranked["ids"][:5], 1)
+    )
+    return f'''<section id="position-explorer" class="position-explorer"
+aria-labelledby="positions-title">
+<div class="eyebrow">Measured from retained games</div>
+<h2 id="positions-title">Find positions worth studying together</h2>
+<p>Rank White decisions after Black's moves 3–10. A recurring position appears in
+at least two games; a transposing position has at least two distinct arrival move
+orders without repetition loops. A game counts once per position.</p>
+<div class="toolbar" id="position-controls" hidden>
+<div><label for="position-cohort">Reference cohort</label>
+<select id="position-cohort"><option value="elite_reference">Elite · 240,086 games</option>
+<option value="rated_public">Public 1000+ · 802,260 games</option></select></div>
+<div><label for="position-family">Recorded opening family</label>
+<select id="position-family"></select></div>
+<div><label for="position-kind">Position ranking</label><select id="position-kind">
+<option value="transposing">Multiple move orders</option>
+<option value="recurring">All recurring positions</option>
+</select></div></div>
+<p id="position-status" class="stats" aria-live="polite">Elite reference ·
+{elite["denominator_games"]:,} eligible games.
+Top 20 transposing positions reach {ranked["top_20_game_coverage"]:,} distinct games
+({ranked["top_20_game_coverage"] / elite["denominator_games"]:.1%}).</p>
+<p id="position-scope" class="source-note">Opening names/ECO are recorded game labels,
+not definitions of the board position. The filter includes the twelve largest eligible
+labeled families per cohort; complete family counts are available below.</p>
+<div class="position-layout"><div class="scroll position-ranking" tabindex="0"
+role="region" aria-label="Ranked positions; scroll horizontally on smaller screens">
+<table><caption id="position-caption">Most frequent transposing positions · Elite</caption>
+<thead><tr><th scope="col">Rank</th><th scope="col">Position</th>
+<th scope="col" class="number">Games</th><th scope="col" class="number">Frequency</th>
+<th scope="col" class="number">Move orders</th></tr></thead>
+<tbody id="position-rows">{rows}</tbody></table></div>
+<div id="position-detail" class="position-detail" tabindex="-1"
+role="region" aria-labelledby="position-selected-title">
+<h3 id="position-selected-title">Most frequent transposing position</h3>
+<img id="position-image" width="420" height="420" src="assets/opening-positions/{first["id"]}.svg"
+alt="Most frequent Elite transposing position, White to move">
+<p id="position-selected-note" class="source-note" aria-live="polite">
+{first["games"]:,} games · White to move.</p>
+<div id="position-selected-content"></div></div></div>
+<details class="definition"><summary>Opening-family counts and convergence by depth</summary>
+<div id="position-inventory"></div>
+<p>At one depth, endpoint compression is 1 − distinct positions / distinct move orders.
+Repeated-position prefixes are excluded. This describes convergence in the observed
+corpus; it does not measure time saved or learning improvement.</p>
+<div id="position-compression"></div></details>
+<p class="source-note">Elite covers the curated November 2025 month. Public games are
+nine ordered first-day archive prefixes. Compare cohorts separately; these are not
+estimates of your personal encounter rate. Continuations show observed choices,
+not best moves. Drills and strategic lesson explanations remain future work.</p>
+<p><a href="assets/opening-positions.json" download>Download measured rankings (JSON)</a> ·
+<a href="{REPO_URL}contracts/opening_positions.json">Metric definitions</a> ·
+<a href="{REPO_URL}reports/opening-positions-checkpoint.json">Build evidence</a></p>
+<noscript>The table shows the five leading Elite transposing positions. Enable JavaScript
+to explore both cohorts, opening families, boards, routes and continuations.</noscript>
+<p id="position-load-note" class="source-note" aria-live="polite"></p>
+</section><script defer src="assets/position-explorer.js"></script>'''
 
 
 def transposition_example():
@@ -657,7 +833,7 @@ def homepage_results(repo):
 <div class="result-grid">
 <div class="result-card"><strong>{corpus["training_games"]:,}</strong>
 <h3>Selected public games</h3><p>A checked opening-training game index, with Elite and
-broader cohorts kept separate. Position models and drills are proposed work.</p>
+broader cohorts kept separate. Opening-position rankings are measured; drills remain proposed.</p>
 <a href="{REPO_URL}reports/opening-corpus.json">Inspect corpus evidence</a></div>
 <div class="result-card"><strong>{baseline["passed"]}/{baseline["total"]} ·
 {gated["passed"]}/{gated["total"]}</strong>
@@ -815,10 +991,11 @@ def build(repo, output):
             "Learn the position. Recognize every route.",
             "Explore how opening sequences converge, why familiar positions may help decisions, "
             "and how we can evaluate the learning method.",
-            '<div class="callout"><span class="badge">Corpus implemented · drills proposed</span>'
-            "<p>The game index is built. This page illustrates two legal routes; "
-            "opening-position models, personalized practice and measured learning benefits "
-            "remain proposed work.</p></div>"
+            '<div class="callout"><span class="badge">'
+            "Position analysis implemented · drills proposed</span>"
+            "<p>Explore recurring boards and their observed move orders across 1,042,346 games. "
+            "Personalized practice and measured learning benefits remain proposed.</p></div>"
+            + opening_positions(repo, output)
             + opening_corpus(repo)
             + transpositions()
             + md(repo, "TRANSPOSITION_LEARNING.md"),
@@ -844,6 +1021,16 @@ def build(repo, output):
     source_files.update(repo / "docs" / name for name in PAGES)
     source_files.update(repo / "reports" / name for name in REPORTS)
     source_files.add(repo / "reports/opening-corpus.json")
+    source_files.update(
+        repo / name
+        for name in (
+            "reports/opening-positions.json",
+            "reports/opening-positions-checkpoint.json",
+            "config/opening-positions.json",
+            "scripts/build_opening_positions.py",
+            "scripts/summarize_opening_positions.py",
+        )
+    )
     source_files.add(repo / "tests/fixtures/portfolio_expected.json")
     source_files.add(repo / "site/assets/favicon.ico")
     source_files.update((repo / "contracts").glob("*.json"))
