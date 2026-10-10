@@ -11,7 +11,7 @@ chess-analytics-lab`.
 
 For the complete credential-free path, run `chesslab demo --scope all`, then
 `CHESSLAB_PROJECT="$PWD/work/portfolio-demo/project" streamlit run
-analytics_m4/dashboard.py`. [DEMO.md](DEMO.md) contains the full checked
+src/chess_analytics/dashboard/dashboard.py`. [DEMO.md](DEMO.md) contains the full checked
 commands and expected values. The original `chesslab demo` is the smaller
 foundation-only fixture. Both are synthetic and local. The complete demo
 writes only to ignored `work/portfolio-demo`, separate from real data.

@@ -71,7 +71,7 @@ Start Streamlit from the same repository root:
 ```sh
 CHESSLAB_PROJECT="$PWD/work/portfolio-demo/project" \
   uv run --locked --offline --no-editable --extra dashboard \
-  streamlit run analytics_m4/dashboard.py
+  streamlit run src/chess_analytics/dashboard/dashboard.py
 ```
 
 Open the local URL printed by Streamlit and use the **View** selector in the

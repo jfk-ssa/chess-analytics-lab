@@ -169,7 +169,7 @@ def prepare(
         "analyst_m5/evaluation.py",
         "analyst_m5/experiment.py",
         "src/chess_analytics/corpus/metrics.py",
-        "analytics_m4/analysis.py",
+        "src/chess_analytics/dashboard/analysis.py",
         case_file,
         manifest_file,
         "docs/METRICS.md",

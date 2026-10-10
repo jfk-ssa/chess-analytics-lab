@@ -47,7 +47,6 @@ CAVEATS_SCORE = [
 ]
 WORKSPACE_DIRECTORIES = (
     "src",
-    "analytics_m4",
     "analyst_m5",
     "contracts",
     "docs",

@@ -14,7 +14,7 @@ Lichess fixed complete archive / fixed byte prefix / synthetic PGN
   → chess_analytics.warehouse: checked immutable snapshots + current pointer
   → chess_analytics.marts: local dbt copy, tests, published marts + recovery ledger
   → chess_analytics.corpus: selected moves, opening and clock definitions
-  → analytics_m4: parameterized analysis and Streamlit views
+  → chess_analytics.dashboard: parameterized analysis and Streamlit views
   → analyst_m5: allowlisted read-only tools, bounded plan, evidence IDs
   → frozen references + scorer + preserved attempts and costs
 ```

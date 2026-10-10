@@ -5,12 +5,12 @@ from pathlib import Path
 
 from analyst_m5.core import replay
 from analyst_m5.evaluation import score_case_portfolio
-from analytics_m4.analysis import clock_analysis, opening_catalog
 from chess_analytics.cli import fixture_plan
 from chess_analytics.common import digest, read_json, write_json, writer_lock
 from chess_analytics.corpus.metrics import clock_pressure, opening_player_score, opening_usage
 from chess_analytics.corpus.publish import build_analytical
 from chess_analytics.corpus.source import extracted_path
+from chess_analytics.dashboard.analysis import clock_analysis, opening_catalog
 from chess_analytics.ingest.pipeline import ingest
 from chess_analytics.warehouse.snapshots import build, report
 

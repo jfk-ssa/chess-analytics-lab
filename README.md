@@ -42,7 +42,7 @@ uv sync --locked --no-editable --extra dashboard
 uv run --locked --offline --no-editable --extra dashboard chesslab demo --scope all
 CHESSLAB_PROJECT="$PWD/work/portfolio-demo/project" \
   uv run --locked --offline --no-editable --extra dashboard \
-  streamlit run analytics_m4/dashboard.py
+  streamlit run src/chess_analytics/dashboard/dashboard.py
 ```
 
 Dependency installation may require a one-time download; subsequent demo and

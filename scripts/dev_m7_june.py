@@ -9,8 +9,8 @@ from analyst_m5.core import execute_plan
 from analyst_m5.evaluation import score_case_m7
 from analyst_m5.experiment import _load_named_key, _resolve_config
 from analyst_m5.provider import KEY_ENV, _default_transport, live_answer, price_usage, quote_request
-from analytics_m4.analysis import current_snapshot
 from chess_analytics.common import write_json
+from chess_analytics.dashboard.analysis import current_snapshot
 
 DEV_IDS = (
     "m7e_usage_scandinavian_defense",

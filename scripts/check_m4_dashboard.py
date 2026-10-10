@@ -19,7 +19,9 @@ VIEWS = (
 
 
 def check(project=PROJECT):
-    app = AppTest.from_file(str(project / "analytics_m4/dashboard.py"), default_timeout=30).run()
+    app = AppTest.from_file(
+        str(project / "src/chess_analytics/dashboard/dashboard.py"), default_timeout=30
+    ).run()
     observations = []
     for view in VIEWS:
         if view != VIEWS[0]:

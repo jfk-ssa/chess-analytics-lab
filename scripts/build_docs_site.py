@@ -49,9 +49,9 @@ ASSETS = {
     "demo-overview.png": "site/assets/demo-overview.png",
     "demo-analyst.png": "site/assets/demo-analyst.png",
     "fonts/inter-latin-wght-normal.woff2": (
-        "analytics_m4/static/fonts/inter-latin-wght-normal.woff2"
+        "src/chess_analytics/dashboard/static/fonts/inter-latin-wght-normal.woff2"
     ),
-    "fonts/LICENSE.inter.txt": "analytics_m4/static/fonts/LICENSE.inter.txt",
+    "fonts/LICENSE.inter.txt": "src/chess_analytics/dashboard/static/fonts/LICENSE.inter.txt",
     "fonts/provenance.json": "site/assets/fonts/provenance.json",
 }
 NAV = (
@@ -234,7 +234,7 @@ def architecture():
         (
             "metrics",
             "Opening & clock metrics",
-            "analytics_m4/analysis.py",
+            "src/chess_analytics/dashboard/analysis.py",
             "Apply explicit cohorts, denominators, missingness and observed-prefix caveats.",
         ),
         (

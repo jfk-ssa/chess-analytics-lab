@@ -98,7 +98,7 @@ larger gaps between sections; cards have subtle borders and restrained corners.
   Streamlit loads this file. Restart the server after font/theme changes.
 - [Website builder](../scripts/build_docs_site.py) copies only named assets.
   The site and dashboard share the same checked Inter file from
-  `analytics_m4/static/fonts`. All current guide and dashboard text uses Inter
+  `src/chess_analytics/dashboard/static/fonts`. All current guide and dashboard text uses Inter
   except code, which keeps its monospace role.
 
 The font files are Latin-subset normal-style variable WOFF2 files. Other scripts
