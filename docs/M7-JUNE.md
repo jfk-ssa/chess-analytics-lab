@@ -9,7 +9,7 @@ accounting. July's observed date is July 1 only, not a full month.
 
 The new source is a separate fixed 40,000,000-byte prefix of the June 2026
 standard-rated archive, with observed **June 1** coverage only. The exact
-range, source listing and prefix SHA256 are in `config/m7_june_source.json`.
+range, source listing and prefix SHA256 are in the `june` entry of `config/m7_campaigns.json`.
 The publisher's full-archive checksum is not claimed. June has 100,000
 complete PGNs, 99,530 accepted games, 470 exclusions and zero quarantine or
 conflicts. Its deterministic game-ID-hash sample selected 5,087 games and

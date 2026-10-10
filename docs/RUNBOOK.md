@@ -72,6 +72,15 @@ All data-changing CLI commands take the advisory writer lock. Direct Python
 pipeline calls require the caller to take `writer_lock`. A local filesystem is
 assumed; power-loss durability is not claimed.
 
+## M7 campaigns
+
+`chesslab m7 --campaign july pin` downloads one pinned 40 MB prefix when it is
+missing and checks it against `config/m7_campaigns.json`. `workspace`,
+`reference`, and `cases` rebuild an isolated month view, the raw-PGN reference,
+and the 50-case file. `check` scores a retained three-run gate; December also
+needs `--sandbox-attempt`. Historical per-month scripts are replaced by that
+command. Frozen case files and live reports stay the evidence.
+
 ## Analyst and provider incidents
 
 `python -m analyst_m5` exposes `typed`, `replay`, `eval`, and `live`. Use the

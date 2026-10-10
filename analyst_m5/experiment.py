@@ -180,107 +180,98 @@ def prepare(
             frozen_files.extend(
                 (
                     "config/datasets.json",
-                    "config/m7_july_source.json",
+                    "config/m7_campaigns.json",
                     "reports/M3-analytical-manifest.json",
                     "reports/M3-independent-reference.json",
                     "reports/M7-independent-reference-v5.json",
-                    "scripts/reference_m7_july.py",
-                    "scripts/build_m7_july.py",
+                    "src/chess_analytics/m7_campaign.py",
                 )
             )
         elif holdout_version == 8:
             frozen_files.extend(
                 (
                     "config/datasets.json",
-                    "config/m7_june_source.json",
+                    "config/m7_campaigns.json",
                     "reports/M3-analytical-manifest.json",
                     "reports/M3-independent-reference.json",
                     "reports/M7-independent-reference-v6.json",
-                    "scripts/reference_m7_june.py",
-                    "scripts/build_m7_june.py",
+                    "src/chess_analytics/m7_campaign.py",
                 )
             )
         elif holdout_version == 9:
             frozen_files.extend(
                 (
                     "config/datasets.json",
-                    "config/m7_may_source.json",
+                    "config/m7_campaigns.json",
                     "reports/M3-analytical-manifest.json",
                     "reports/M3-independent-reference.json",
                     "reports/M7-independent-reference-v7.json",
-                    "scripts/reference_m7_may.py",
-                    "scripts/build_m7_may.py",
+                    "src/chess_analytics/m7_campaign.py",
                 )
             )
         elif holdout_version == 10:
             frozen_files.extend(
                 (
                     "config/datasets.json",
-                    "config/m7_april_source.json",
+                    "config/m7_campaigns.json",
                     "reports/M3-analytical-manifest.json",
                     "reports/M3-independent-reference.json",
                     "reports/M7-independent-reference-v8.json",
-                    "scripts/reference_m7_april.py",
-                    "scripts/build_m7_april.py",
+                    "src/chess_analytics/m7_campaign.py",
                 )
             )
         elif holdout_version == 11:
             frozen_files.extend(
                 (
                     "config/datasets.json",
-                    "config/m7_march_source.json",
+                    "config/m7_campaigns.json",
                     "reports/M3-analytical-manifest.json",
                     "reports/M3-independent-reference.json",
                     "reports/M7-independent-reference-v9.json",
-                    "scripts/reference_m7_march.py",
-                    "scripts/build_m7_march.py",
+                    "src/chess_analytics/m7_campaign.py",
                 )
             )
         elif holdout_version == 12:
             frozen_files.extend(
                 (
                     "config/datasets.json",
-                    "config/m7_february_source.json",
+                    "config/m7_campaigns.json",
                     "reports/M3-analytical-manifest.json",
                     "reports/M3-independent-reference.json",
                     "reports/M7-independent-reference-v10.json",
-                    "scripts/reference_m7_february.py",
-                    "scripts/build_m7_february.py",
+                    "src/chess_analytics/m7_campaign.py",
                 )
             )
         elif holdout_version == 13:
             frozen_files.extend(
                 (
                     "config/datasets.json",
-                    "config/m7_january_source.json",
+                    "config/m7_campaigns.json",
                     "reports/M3-analytical-manifest.json",
                     "reports/M3-independent-reference.json",
                     "reports/M7-independent-reference-v11.json",
-                    "scripts/reference_m7_january.py",
-                    "scripts/build_m7_january.py",
+                    "src/chess_analytics/m7_campaign.py",
                 )
             )
         elif holdout_version == 14:
             frozen_files.extend(
                 (
                     "config/datasets.json",
-                    "config/m7_december_source.json",
+                    "config/m7_campaigns.json",
                     "reports/M3-analytical-manifest.json",
                     "reports/M3-independent-reference.json",
                     "reports/M7-independent-reference-v12.json",
-                    "scripts/reference_m7_december.py",
-                    "scripts/build_m7_december.py",
+                    "src/chess_analytics/m7_campaign.py",
                 )
             )
         elif holdout_version in {3, 4, 5, 6}:
-            suffix = "" if holdout_version == 3 else f"_v{holdout_version - 2}"
             report_suffix = "" if holdout_version == 3 else f"-v{holdout_version - 2}"
             frozen_files.extend(
                 (
                     "reports/M3-independent-reference.json",
                     f"reports/M7-independent-reference{report_suffix}.json",
-                    f"scripts/reference_m7_holdout{suffix}.py",
-                    f"scripts/build_m7_holdout{suffix}.py",
+                    "config/m7_campaigns.json",
+                    "src/chess_analytics/m7_campaign.py",
                 )
             )
         else:

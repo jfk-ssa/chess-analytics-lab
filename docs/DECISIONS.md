@@ -1158,3 +1158,16 @@ tracking; use Streamlit's native spacing with base weight 500. Bundle pinned
 Fontsource Inter 5.3.0 locally with OFL license/provenance. Refresh the actual
 synthetic demo images and current style documentation. Earlier trials and
 frozen report styling remain historical evidence, not active design choices.
+
+## 2026-10-10 — One M7 campaign command
+
+The per-month pin, workspace, reference, case, and gate scripts differed by
+source pin, opening families, question wording, and checkpoint accounting.
+Those differences now live in `config/m7_campaigns.json`. `chesslab m7` runs
+`pin`, `workspace`, `reference`, `cases`, and `check` for a campaign id.
+New preflights hash that config and `src/chess_analytics/m7_campaign.py`.
+Published preflight files keep their original script hashes. A prefix hash
+mismatch raises instead of rewriting a per-month JSON. New workspaces record
+`config/m7_campaigns.json` as the source plan. Question text was compared with
+every frozen case file before the copied scripts were removed. Shared
+checkpoint, clock-dev, and repetition scripts stay.
