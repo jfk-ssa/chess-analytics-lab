@@ -14,6 +14,35 @@ With the dashboard and docs extras installed, the locked offline suite passed **
 
 ## Publication and presentation
 
+### Local PGN import — 2026-10-10
+
+Branch-local second PR adds /import-games.html for local Chess.com/Lichess and
+generic UTF-8 PGNs. Pinned, license-preserved chess.js legally replays entire
+Standard mainlines in a browser worker; independent Python normalization agrees
+on every field and visit for five authored games. Explicit provider/player selection,
+visible dispositions, duplicate/conflict handling, White-game filters and a bounded
+public-reference comparison preserve separate personal and public denominators.
+Short White games are included by default. Route departures stop at example endpoints,
+including shorter endpoints shared by longer routes. No mistake/engine claim follows.
+
+Locked docs/dashboard suite: **148 passed, 15 skipped**. Final focused import/site
+suite: **23 passed**, plus nine Node unit tests. Ruff check/format and basedpyright
+pass. Eight-page build checks **351 links**. Browser checks cover the example and
+actual file chooser, duplicates, explicit aliases, filtering, board keyboard focus,
+public d4/g3 reference, inert header markup, malformed/unsupported records, clear,
+reload, download and cancellation. Zero console errors and no page-wide overflow
+at the actual 487-CSS-pixel narrow viewport. No physical-device/screen-reader test.
+The deadline code was reviewed; browser timeout was not forced.
+
+The session caps are 20 files, 10 MiB, 5,000 games, 1,000 plies/game, 32 variation
+levels and 60 seconds. Local Node 24 fixture replay accepted 5,000 unique-ID
+20-ply games in 3.577 seconds; this does not establish long-game/mobile performance.
+Public corpus/position reports and historical comparison bytes are unchanged.
+Development uses authored fixtures only. Username/API collection is dropped.
+[Verification receipt](../reports/game-import-verification.json),
+[ADR 0071](adr/0071-local-pgn-imports.md). PRs remain separate and unmerged;
+hosted CI is recorded in GitHub rather than inferred from local results.
+
 ### Public transposition insights — 2026-10-10
 
 Branch-local implementation separates Transpositions from Opening learning and

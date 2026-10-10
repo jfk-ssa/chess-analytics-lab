@@ -1,0 +1,10 @@
+[Event "Live Chess"]
+[Site "Chess.com"]
+[Date "2026.10.01"]
+[White "ExampleWhite"]
+[Black "ExampleBlack"]
+[Result "1-0"]
+[TimeControl "300"]
+[Link "https://www.chess.com/game/live/90000001"]
+
+1.d4 {A comment with [headers] and 0-1 inside it} Nf6 (1... d5 (1... e6)) 2.c4 $1 e6 3.Nf3 d5 4.g3 Be7 5.Bg2 O-O 6.O-O c5 7.dxc5 Bxc5 8.Nc3 Nc6 9.Bg5 h6 10.Bxf6 Qxf6 1-0

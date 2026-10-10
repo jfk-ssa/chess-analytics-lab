@@ -17,7 +17,7 @@ spec.loader.exec_module(site)
 def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     before = (ROOT / "reports/decisions-routing-comparison.html").read_bytes()
     result = site.build(ROOT, tmp_path / "output")
-    assert len(result["pages"]) == 7
+    assert len(result["pages"]) == 8
     assert result["local_links_checked"] > 50
     assert result["live_requests"] == result["data_downloads"] == 0
     output = tmp_path / "output"
@@ -197,3 +197,41 @@ def test_position_publication_rejects_inconsistent_evidence(tmp_path, damage):
         path.write_text(json.dumps(data))
     with pytest.raises(ValueError):
         site.checked_positions(tmp_path)
+
+
+def test_import_page_has_bounded_checked_reference_and_local_runtime(tmp_path):
+    site.build(ROOT, tmp_path / "output")
+    output = tmp_path / "output"
+    text = (output / "import-games.html").read_text()
+    assert "connect-src 'none'" in text and "worker-src 'self'" in text
+    assert 'type="file"' in text and "game-import-ui.js" in text
+    encoded = text.split('id="import-reference-data">', 1)[1].split("</script>", 1)[0]
+    reference = json.loads(encoded)
+    checked = site.checked_positions(ROOT)
+    assert reference["corpus_snapshot_id"] == checked["corpus_snapshot_id"]
+    for cohort, payload in reference["cohorts"].items():
+        for view, data in payload["views"].items():
+            expected = checked["cohorts"][cohort]["views"][view]
+            for kind, ids in data["rankings"].items():
+                assert ids == expected["rankings"][kind]["ids"] and len(ids) <= 20
+            for identifier, position in data["positions"].items():
+                original = expected["positions"][identifier]
+                assert position["position_key"] == original["position_key"]
+                assert position["routes"] == [{"uci": r["uci"]} for r in original["routes"]]
+                assert len(position["routes"]) <= 3
+    assert len(list((output / "assets/pieces").glob("*.svg"))) == 12
+    assert (output / "assets/vendor/chess-1.4.0.mjs").read_bytes() == (
+        ROOT / "site/assets/vendor/chess-1.4.0.mjs"
+    ).read_bytes()
+    assert (output / "assets/import-example.pgn").read_bytes() == (
+        ROOT / "tests/fixtures/imports/authored-games.pgn"
+    ).read_bytes()
+    assert "local_user_opening_analysis" in (output / "metrics.html").read_text()
+
+
+def test_import_publication_rejects_changed_vendor(tmp_path):
+    vendor = tmp_path / "site/assets/vendor"
+    shutil.copytree(ROOT / "site/assets/vendor", vendor)
+    (vendor / "chess-1.4.0.mjs").write_text("modified dependency")
+    with pytest.raises(ValueError, match="Vendored chess library hash changed"):
+        site.game_import(tmp_path, tmp_path / "output")

@@ -36,3 +36,13 @@ from Fontsource packages **5.3.0**, under **SIL Open Font License 1.1**.
 It retains its own license; the project's GPL does not replace it.
 See [pinned URLs and SHA-256 hashes](site/assets/fonts/provenance.json),
 [Inter license](src/chess_analytics/dashboard/static/fonts/LICENSE.inter.txt).
+
+
+## Bundled browser chess engine
+
+chess.js **1.4.0** is bundled unchanged from the npm registry distribution under
+**BSD-2-Clause**, for legal Standard mainline replay in a local worker. There is
+no runtime CDN or npm installation. Preserve [its license](site/assets/vendor/LICENSE.chess-js.txt)
+and [registry URL, integrity and SHA256 provenance](site/assets/vendor/chess-js-provenance.json)
+when updating it. Browser board pieces are generated with the existing
+GPL-3.0-or-later python-chess dependency; project licensing remains unchanged.

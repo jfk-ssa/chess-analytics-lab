@@ -1,0 +1,139 @@
+{
+  "kind": "local_pgn_import_verification",
+  "date": "2026-10-10",
+  "source_mode": "authored_fixtures_only",
+  "contract_version": "1.0.0",
+  "sha256": {
+    "contracts/imported_games.json": "c1074a7ac0a60093e79e16fc432cd0daab83e19520cd66ad11de69b42a01296c",
+    "src/chess_analytics/game_import.py": "585fe74d327062a241835f99162ef9e7b38b07710fcd7287f1c6fcaa88c737ac",
+    "site/assets/game-import-core.mjs": "36d70db4321bf0dfa2cc2790d6e1b939acbdb2541f395153788f0fb5091db042",
+    "site/assets/game-import-worker.mjs": "c5557e1ac9cfa120928ed989793ea252f65dc6eb6cdd8c1faa3267d53fc0cc0b",
+    "site/assets/game-import-ui.js": "2f15af7d6bd04cba3a866a8593bd000bf271d7609c41e769ee3b8f00dd44e1be",
+    "scripts/build_docs_site.py": "4d6d3a0f46689060f3221e7f90c828f74e6a434bd0cfed17c70ecdd4386ffa1e",
+    "scripts/check_game_import.mjs": "2a7e76dafb1e61619512930cf3f4076639b20e0ada55647770db96c59c1d9fed",
+    "tests/test_game_import.py": "9b7ac89a87677a18f52aeec395407701509269e71721bbfc72cb83d05f11e570",
+    "tests/test_docs_site.py": "99080b4f501f032f520b06596f6409eb4205fc6f2b72d40dc42e34b188b47589",
+    "tests/js/game_import.test.mjs": "925fabe9d56a606f48ce0b8ff76208ad6d241da55c67c9074df7ed83d8eabf06",
+    "tests/js/import_parity.mjs": "1f82cd80fbabbb19ca115dfe520ea38eaa32845dc10ddc5619b4eb297ba0b5e9",
+    "tests/fixtures/imports/authored-games.pgn": "1c35eef4a454e8204cf7660a024b166b39ef98dd51e7467ba588395a831e051c",
+    "tests/fixtures/imports/annotated-duplicate.pgn": "fd7f2b313cfe71881386c9412cad5e21d7e0a6021e5769915b977644d4264317",
+    "site/assets/vendor/chess-js-provenance.json": "959fb4b699ac88ed67f16bb793ba15ab081a024c43243eb27b05332ad640337c",
+    "uv.lock": "bbdc8c1905a327d2ec23600fe8fa2bb823e7874633c01b8d3cdc701a24c52829"
+  },
+  "local_checks": {
+    "offline_suite": {
+      "passed": 148,
+      "skipped": 15,
+      "extras": [
+        "docs",
+        "dashboard"
+      ]
+    },
+    "final_focused_suite": {
+      "passed": 23,
+      "skipped": 0
+    },
+    "node_unit_tests": {
+      "passed": 9
+    },
+    "ruff_check": "passed",
+    "ruff_format": "passed",
+    "basedpyright": "passed",
+    "site": {
+      "pages": 8,
+      "local_links_checked": 351,
+      "live_requests": 0
+    },
+    "independent_python_browser_parity": "all normalized fields, mainlines and eligible visits agree across five authored games"
+  },
+  "browser_checks": {
+    "fixture_denominator": 4,
+    "fixture_covered_games": 2,
+    "fixture_share": 0.5,
+    "minimum20_denominator": 3,
+    "minimum20_share": 0.6666666666666666,
+    "file_import_with_annotation_duplicate": {
+      "seen": 6,
+      "accepted": 5,
+      "duplicates": 1
+    },
+    "malformed_and_unsupported_files": {
+      "framed": 7,
+      "accepted": 6,
+      "rejected": 1,
+      "failed_files": 1
+    },
+    "keyboard_board_selection": "passed; focus transfers to detail; 64 squares; no broken piece images",
+    "header_markup": "displayed as text; no injected images",
+    "summary_download": "authored fixture summary; source hashes and selection; no raw PGN/comments",
+    "clear_and_reload": "remove results, selection and session; download disabled",
+    "large_import_cancel": "6,022,000-byte authored fixture canceled; no partial analysis kept",
+    "public_lens": "public cohort / d4-g3 selection ran",
+    "narrow_viewport": {
+      "actual_css_width": 487,
+      "page_scroll_width": 487
+    },
+    "console_errors": 0
+  },
+  "performance": {
+    "kind": "authored_fixture_import_performance",
+    "runtime": "v24.19.0",
+    "platform": "darwin",
+    "architecture": "arm64",
+    "limits": {
+      "bytes": 10485760,
+      "games": 5000,
+      "plies": 1000,
+      "variationDepth": 32,
+      "files": 20
+    },
+    "results": [
+      {
+        "games": 100,
+        "bytes": 29599,
+        "import_seconds": 0.096,
+        "analysis_seconds": 0.001,
+        "accepted": 100,
+        "covered_games": 100,
+        "process_rss_bytes": 75939840
+      },
+      {
+        "games": 1000,
+        "bytes": 295999,
+        "import_seconds": 0.714,
+        "analysis_seconds": 0.004,
+        "accepted": 1000,
+        "covered_games": 1000,
+        "process_rss_bytes": 104693760
+      },
+      {
+        "games": 5000,
+        "bytes": 1479999,
+        "import_seconds": 3.577,
+        "analysis_seconds": 0.02,
+        "accepted": 5000,
+        "covered_games": 5000,
+        "process_rss_bytes": 229998592
+      }
+    ],
+    "scope": "Node core replay on repeated authored 20-ply games with unique native IDs. Browser worker limits remain enforced; long-game/device performance is not inferred."
+  },
+  "preserved_public_evidence": {
+    "reports/opening-corpus.json": "978d6eacddbda7f17f5ca6dbc6b609e89201b1aa3add3a3d264ca4726b9ad7ca",
+    "reports/opening-positions.json": "31a395044203532224cbb387475ef0bb790c8e88faac98bc9b2a12f5d500c46e",
+    "reports/opening-positions-checkpoint.json": "75cf650ebb33d155494245e872eb5d8bb0e7b320c7ad5986c33014274990048f",
+    "reports/decisions-routing-comparison.html": "4ee64aa1b9530351d52af4ad9e37d18f26ab0d555c0552a7d93653f9dfae76f9"
+  },
+  "review_fixes": [
+    "Route comparison stops at any selected example endpoint, including endpoints shared by longer examples; regression test covers overlap.",
+    "Whole-session cap rejection uses ImportLimitError for game, ply and variation-depth limits; no silent file truncation.",
+    "Stale worker messages ignored after replacement; termination clears session and export references."
+  ],
+  "limitations": [
+    "Author-performed review; independent approval not claimed.",
+    "No account history, username/API download, engine/model request or new corpus acquisition.",
+    "No physical-phone or screen-reader testing; timeout path reviewed but not forced in browser.",
+    "Node performance uses authored 20-ply fixtures; does not predict long-game/mobile performance.",
+    "Hosted checks are a separate gate; no PR merge or deployment."
+  ]
+}

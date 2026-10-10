@@ -65,3 +65,20 @@ denominators; white_g3_played_games distinguishes arrivals before and after g3.
 The report, configuration, contract, source and implementation hashes are checked
 by the site builder. Local full FEN preserves draw counters; the recognition key
 uses pieces, turn, castling and legal en passant only.
+
+
+## Session-only imported games
+
+Imported PGN records are held in a browser worker, separate from the immutable
+public corpus. Grain: one completed legal Standard game per provider/native ID
+or provider/fallback semantic identity. Fields include normalized players, date,
+result, optional rated/time-control metadata, full legal UCI mainline and White
+visits at plies 6–20. Each visit retains full FEN, canonical first-four-field key,
+24-character SHA-derived ID, route, repetition-prefix flag and next move.
+
+File SHA256 identifies bytes separately from semantic game identity. Equivalent
+annotation copies count once; differing semantic fingerprints withhold all copies
+of that identity. Explicit player selection is scoped to the provider. An exported
+summary contains selected aliases, filters, source hashes and derived metrics and
+routes, rather than raw PGNs/comments. Records are not persisted or published.
+See [the contract](../contracts/imported_games.json) and [guide](GAME_IMPORT.md).
