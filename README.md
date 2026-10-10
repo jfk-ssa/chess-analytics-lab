@@ -104,7 +104,14 @@ uv run --locked --offline --no-editable --extra dbt --extra dashboard pytest -q
 uv run --locked --offline --no-editable --extra dbt --extra dashboard ruff check .
 uv run --locked --offline --no-editable --extra dbt --extra dashboard ruff format --check .
 uv run --locked --offline --no-editable --extra dbt --extra dashboard basedpyright
+pre-commit install
+pre-commit install --hook-type commit-msg
 ```
+
+Those commands install the file hooks and the Conventional Commits `commit-msg`
+hook. `.pre-commit-config.yaml` lists `commit-msg` in `default_install_hook_types`,
+so `pre-commit install` alone covers both on a fresh checkout. Use
+`--hook-type commit-msg` when that hook is missing from an existing checkout.
 
 Tests requiring ignored real archives skip in a fresh clone. After source edits,
 reinstall with the same extras and `--reinstall-package chess-analytics-lab`.

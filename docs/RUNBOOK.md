@@ -7,7 +7,9 @@ one-time dependency download; the demo and tests make no network request after
 installation. `UV_CACHE_DIR=.uv-cache` is useful when the default cache is
 inaccessible. Reinstall the wheel after source edits with `uv sync --locked
 --offline --no-editable --extra dbt --extra dashboard --reinstall-package
-chess-analytics-lab`.
+chess-analytics-lab`. Install local checks with `pre-commit install` and
+`pre-commit install --hook-type commit-msg` so commit messages follow
+[Conventional Commits](../CONTRIBUTING.md#commits).
 
 For the complete credential-free path, run `chesslab demo --scope all`, then
 `CHESSLAB_PROJECT="$PWD/work/portfolio-demo/project" streamlit run
