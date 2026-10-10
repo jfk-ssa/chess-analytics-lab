@@ -1,0 +1,17 @@
+<section aria-labelledby="results-title">
+<h2 id="results-title">What the lab demonstrates</h2>
+<div class="result-grid">
+<div class="result-card"><strong>{{ training_games }}</strong>
+<h3>Selected public games</h3><p>A checked opening-training game index, with Elite and
+broader cohorts kept separate. Opening-position rankings are measured; drills remain proposed.</p>
+<a href="{{ repo_url }}reports/opening-corpus.json">Inspect corpus evidence</a></div>
+<div class="result-card"><strong>{{ baseline_passed }}/{{ baseline_total }} ·
+{{ gated_passed }}/{{ gated_total }}</strong>
+<h3>Final-answer comparison</h3><p>The direct analyst and Jev gate tied in one small
+paired Luna experiment under a versioned offline rescore. The gate cost more;
+it remains optional.</p><a href="comparison.html">See results and limitations</a></div>
+<div class="result-card"><strong>{{ accepted }} games · offline</strong>
+<h3>Reproducible demo</h3><p>Authored synthetic games exercise ingestion, metrics and
+checked answer replay. Fixture checks are separate from live model results.</p>
+<a href="demo.html">Run the walkthrough</a></div>
+</div></section>

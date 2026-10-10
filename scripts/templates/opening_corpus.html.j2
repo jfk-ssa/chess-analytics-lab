@@ -1,0 +1,25 @@
+<section class="corpus-panel" aria-labelledby="corpus-title">
+<div class="eyebrow">Public games · White first</div>
+<h2 id="corpus-title">A stronger reference corpus</h2>
+<p>The default reference is Lichess Elite: both players rated 2300+, with at least
+one rated 2500+, and bullet excluded. The broader comparison corpus enforces a
+1000 rating floor for both players. Each cohort keeps its own denominator.</p>
+<div class="corpus-stats">{% for label, value, detail in stats %}<div class="corpus-stat"><span>{{ label }}</span><strong>{{ value }}</strong><small>{{ detail }}</small></div>{% endfor %}</div>
+<div class="toolbar"><div><label for="opening-cohort">Explore a training cohort</label>
+<select id="opening-cohort"><option value="elite_reference">Elite reference · default</option>
+<option value="rated_public">Public games · both players 1000+</option>
+<option value="all">All eligible games · combined inventory</option></select></div>
+<div><strong id="opening-cohort-count">{{ elite_games }}</strong>
+<span>eligible games</span></div></div>
+<p id="opening-cohort-note" aria-live="polite">Full curated November 2025 file;
+stronger play is useful for reference study, but ratings do not certify every move.</p>
+<div class="scroll"><table><thead><tr><th>Source period</th><th>Cohort</th>
+<th class="number" scope="col">Games</th><th>Observed dates</th>
+<th class="number" scope="col">Minimum player rating</th></tr></thead>
+<tbody id="opening-cohort-rows"></tbody></table></div>
+<p class="source-note">Counts come from a checked local game index. The full PGNs remain
+local; this page downloads no database. Measured position rankings appear above;
+learning drills remain proposed. <a href="#getting-more-games">Sources, exclusions and costs</a></p>
+<noscript>The default Elite cohort contains {{ elite_games }} games.
+Enable JavaScript to switch the cohort summary.</noscript></section>
+<script type="application/json" id="opening-corpus-data">{{ payload }}</script>

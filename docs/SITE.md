@@ -57,9 +57,9 @@ uv run --locked --offline --no-editable --extra docs ruff check scripts/build_do
 
 The builder accepts `--output`, but refuses to replace an existing non-generated
 directory. Its default output is ignored under `work/docs-site`; never hand-edit
-that HTML. Edit the Markdown, contracts, or `site/assets/site.css` and
-`site/assets/site.js`, then rebuild. The optional `docs` extra pins the same
-Markdown version already present in the lockfile; the application does not need it.
+that HTML. Page markup lives in `scripts/templates`. Edit the Markdown, contracts,
+templates, or `site/assets/site.css` and `site/assets/site.js`, then rebuild. The
+optional `docs` extra pins Markdown and Jinja2; the application does not need them.
 
 ## Learn from the interactions
 

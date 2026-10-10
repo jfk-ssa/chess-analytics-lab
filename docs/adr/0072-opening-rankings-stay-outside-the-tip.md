@@ -14,3 +14,6 @@ which downloads that immutable blob and checks SHA-256
 publication checkpoint. A local visit snapshot can still be summarized with
 `scripts/summarize_opening_positions.py`. Tests read the restored file and do
 not download it. The site continues to publish `assets/opening-positions.json`.
+The receipt still records the lock hash from publication. Later documentation
+dependencies may change `uv.lock` without regenerating the rankings; the live
+check follows the report, plan, contract, and generator scripts.

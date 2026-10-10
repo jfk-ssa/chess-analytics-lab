@@ -154,6 +154,11 @@ def test_link_checker_catches_moved_github_modules_and_missing_anchors(tmp_path)
     page.write_text(f'<a href="{site.REPO_URL}docs/DEMO.md#missing">Demo</a>')
     with pytest.raises(ValueError, match="Broken generated anchor"):
         site.validate_site(output, ROOT)
+    page.write_text(f'<a href="{site.REPO_URL}src/chess_analytics/game_import.py#L1-L4">Code</a>')
+    assert site.validate_site(output, ROOT) == 1
+    page.write_text(f'<a href="{site.REPO_URL}src/chess_analytics/game_import.py#L99999">Code</a>')
+    with pytest.raises(ValueError, match="Broken generated anchor"):
+        site.validate_site(output, ROOT)
 
 
 def test_homepage_rejects_disagreeing_final_answer_checkpoints(tmp_path):
