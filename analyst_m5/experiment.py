@@ -168,7 +168,7 @@ def prepare(
         "analyst_m5/tool_worker.py",
         "analyst_m5/evaluation.py",
         "analyst_m5/experiment.py",
-        "analytics_m3/metrics.py",
+        "src/chess_analytics/corpus/metrics.py",
         "analytics_m4/analysis.py",
         case_file,
         manifest_file,

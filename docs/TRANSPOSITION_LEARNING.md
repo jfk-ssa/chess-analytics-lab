@@ -118,7 +118,7 @@ An exact transposition and a similar pawn structure serve different lessons. Exa
 
 Reuse the existing bounded ingestion → legal PGN replay → immutable Parquet/DuckDB snapshot → optional dbt marts → analytics → checked publication workflow. Keep the versioned `warehouse.duckdb` snapshots and existing `fact_game`, `fact_player_game`, and sampled `fact_move` relations as the foundation. This work does not need another database engine.
 
-The current [move extractor](../analytics_m3/moves.py) already records UCI moves, side, ply, clocks, and source evaluations for hash-selected accepted games. It does not record position keys or complete board states. Extend replay to emit opening visits and legal transitions, retaining the source/game IDs and snapshot lineage, rather than infer transpositions from opening tags.
+The current [move extractor](../src/chess_analytics/corpus/moves.py) already records UCI moves, side, ply, clocks, and source evaluations for hash-selected accepted games. It does not record position keys or complete board states. Extend replay to emit opening visits and legal transitions, retaining the source/game IDs and snapshot lineage, rather than infer transpositions from opening tags.
 
 Read a checked source snapshot and its retained PGNs; create a new derived opening snapshot with position/visit/edge Parquet files and corresponding DuckDB tables. Follow the lab's immutable publication and pointer-validation pattern. Original foundation and analytical snapshots must remain reproducible. Existing dbt models and analytical tools can join the new relations through provider/game IDs and explicit snapshot identity.
 

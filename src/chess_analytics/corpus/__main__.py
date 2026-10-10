@@ -5,9 +5,9 @@ import json
 import re
 from pathlib import Path
 
-from analytics_m3.publish import build_analytical, validate_analytical
-from analytics_m3.source import acquire_prefix, extract_complete_games
 from chess_analytics.common import read_json, writer_lock
+from chess_analytics.corpus.publish import build_analytical, validate_analytical
+from chess_analytics.corpus.source import acquire_prefix, extract_complete_games
 from chess_analytics.ingest.pipeline import ingest
 from chess_analytics.warehouse.snapshots import build, report
 

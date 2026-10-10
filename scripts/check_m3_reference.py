@@ -3,8 +3,8 @@
 import json
 from pathlib import Path
 
-from analytics_m3.metrics import opening_player_score
 from chess_analytics.common import write_json
+from chess_analytics.corpus.metrics import opening_player_score
 from chess_analytics.warehouse.snapshots import current, report
 
 PROJECT = Path(__file__).resolve().parents[1]

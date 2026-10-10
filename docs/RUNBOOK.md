@@ -29,7 +29,7 @@ uv run --locked --offline --no-editable python \
 ```
 
 The analytical August prefix is deliberately bounded and must be acquired
-manually. `python -m analytics_m3` supports `acquire`, `extract`, `ingest`,
+manually. `python -m chess_analytics.corpus` supports `acquire`, `extract`, `ingest`,
 `moves`, and `report` in that order. `--data-dir` moves bulk output outside
 the repository. [DATA_SOURCES.md](DATA_SOURCES.md) explains the source and
 observed coverage. The real dashboard uses the repository's `data/` by

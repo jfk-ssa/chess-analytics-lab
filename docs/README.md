@@ -28,7 +28,7 @@ live evaluations are recorded separately.
 |---|---|
 | `src/chess_analytics/` | Foundation CLI, ingestion/warehouse, offline demo and optional classifier studies |
 | `src/chess_analytics/marts/`, `dbt/` | Local marts and their validation/recovery path |
-| `analytics_m3/`, `analytics_m4/` | Analytical source/moves, parameterized metrics, Streamlit dashboard |
+| `src/chess_analytics/corpus/`, `analytics_m4/` | Analytical source/moves, parameterized metrics, Streamlit dashboard |
 | `analyst_m5/` | Checked read-only tools, typed plans, provider adapter and evaluation harness |
 | `orchestration/` | Optional local Dagster/Prefect wrappers over the same pipeline |
 | `contracts/`, `config/`, `evals/` | Definitions, bounded source plans, frozen questions and reference manifests |

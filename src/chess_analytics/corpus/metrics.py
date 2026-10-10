@@ -4,8 +4,8 @@ from pathlib import Path
 
 import duckdb
 
-from analytics_m3.publish import validate_analytical
 from chess_analytics.common import digest
+from chess_analytics.corpus.publish import validate_analytical
 
 BUCKETS = {"under_10", "10_to_29", "30_to_59", "60_plus"}
 
@@ -13,7 +13,7 @@ BUCKETS = {"under_10", "10_to_29", "30_to_59", "60_plus"}
 def opening_usage(project: Path, snapshot: Path, family: str) -> dict:
     manifest = validate_analytical(snapshot)
     with duckdb.connect(str(snapshot / "warehouse.duckdb"), read_only=True) as con:
-        numerator, denominator, unknown = con.execute(
+        row = con.execute(
             """
             select count(*) filter (where trim(split_part(source_opening, ':', 1)) = ?),
                    count(*) filter (where nullif(trim(source_opening), '') is not null),
@@ -23,6 +23,9 @@ def opening_usage(project: Path, snapshot: Path, family: str) -> dict:
         """,
             [family],
         ).fetchone()
+    if row is None:
+        raise RuntimeError("opening usage query returned no row")
+    numerator, denominator, unknown = row
     return {
         "metric_id": "opening_usage",
         "version": "1.0.0",
@@ -52,7 +55,7 @@ def opening_player_score(
         raise ValueError("invalid color or half-open rating band")
     manifest = validate_analytical(snapshot)
     with duckdb.connect(str(snapshot / "warehouse.duckdb"), read_only=True) as con:
-        wins, draws, losses, score = con.execute(
+        row = con.execute(
             """
             select count(*) filter (where p.score = 1),
                    count(*) filter (where p.score = 0.5),
@@ -66,6 +69,9 @@ def opening_player_score(
         """,
             [color, rating_min, rating_max_exclusive, base_seconds, increment_seconds, family],
         ).fetchone()
+    if row is None:
+        raise RuntimeError("opening player score query returned no row")
+    wins, draws, losses, score = row
     total = wins + draws + losses
     return {
         "metric_id": "opening_player_score",
@@ -96,7 +102,7 @@ def clock_pressure(project: Path, snapshot: Path, bucket: str) -> dict:
         raise ValueError("unsupported clock bucket")
     manifest = validate_analytical(snapshot)
     with duckdb.connect(str(snapshot / "warehouse.duckdb"), read_only=True) as con:
-        eligible, evaluable, errors, mates = con.execute(
+        row = con.execute(
             """
             select count(*),
                    count(*) filter (where m.centipawn_deterioration is not null),
@@ -109,6 +115,9 @@ def clock_pressure(project: Path, snapshot: Path, bucket: str) -> dict:
         """,
             [bucket],
         ).fetchone()
+    if row is None:
+        raise RuntimeError("clock pressure query returned no row")
+    eligible, evaluable, errors, mates = row
     return {
         "metric_id": "clock_pressure_error_proxy",
         "version": "1.0.0",

@@ -49,7 +49,7 @@ def move_rows(
         raise ValueError(f"previously accepted game did not replay: {game_id}")
     rows = []
     previous_evaluation = (None, None)
-    same_side_clock = {"white": None, "black": None}
+    same_side_clock: dict[str, float | None] = {"white": None, "black": None}
     for node in game.mainline():
         ply = node.ply()
         color = "white" if ply % 2 else "black"

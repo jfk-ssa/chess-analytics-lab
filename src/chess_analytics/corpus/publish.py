@@ -8,14 +8,14 @@ from pathlib import Path
 
 import duckdb
 
-from analytics_m3.moves import SAMPLE_MODULUS, write_sampled_moves
-from analytics_m3.source import extracted_path
 from chess_analytics.common import digest, guard_disk, hash_json, now, read_json, write_json
+from chess_analytics.corpus.moves import SAMPLE_MODULUS, write_sampled_moves
+from chess_analytics.corpus.source import extracted_path
 from chess_analytics.warehouse.snapshots import current, report
 
 
 def analytics_hash(project: Path) -> str:
-    paths = sorted((project / "analytics_m3").glob("*.py"))
+    paths = sorted((project / "src/chess_analytics/corpus").glob("*.py"))
     paths += sorted((project / "contracts").glob("*.json"))
     return hash_json({str(path.relative_to(project)): digest(path) for path in paths})
 
@@ -121,19 +121,23 @@ def validate_analytical(directory: Path) -> dict:
             raise ValueError(f"analytical artifact checksum mismatch: {name}")
     with duckdb.connect(str(directory / "warehouse.duckdb"), read_only=True) as con:
         observed = summarize(con)
-        invalid = con.execute("""
+        invalid_row = con.execute("""
             select count(*) from (
                 select m.provider, m.game_id, count(*) as rows, max(m.ply) as max_ply,
                        max(g.ply_count) as expected
                 from fact_move m join fact_game g using (provider, game_id)
                 group by m.provider, m.game_id
                 having rows != expected or max_ply != expected)
-        """).fetchone()[0]
-        duplicate = con.execute("""
+        """).fetchone()
+        duplicate_row = con.execute("""
             select count(*) from (
                 select provider, game_id, ply from fact_move
                 group by all having count(*) != 1)
-        """).fetchone()[0]
+        """).fetchone()
+    if invalid_row is None or duplicate_row is None:
+        raise RuntimeError("analytical validation query returned no row")
+    invalid = invalid_row[0]
+    duplicate = duplicate_row[0]
     selection = manifest["selection"]
     mismatch = (
         observed["move_coverage"]["moves"] != selection["move_rows"]
