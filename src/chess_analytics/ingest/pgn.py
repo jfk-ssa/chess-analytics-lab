@@ -149,7 +149,11 @@ def normalize(raw, ordinal):
                 "provider": "lichess",
                 "game_id": site[1],
                 "color": color,
-                "player_key": name.lower() if name not in {None, "?", "Anonymous"} else None,
+                "player_key": (
+                    name.lower()
+                    if isinstance(name, str) and name not in {"?", "Anonymous"}
+                    else None
+                ),
                 "rating": ratings[index],
                 "opponent_rating": ratings[1 - index],
                 "score": score if index == 0 or score is None else 1 - score,

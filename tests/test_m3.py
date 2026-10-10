@@ -1,5 +1,6 @@
 import io
 from pathlib import Path
+from typing import ClassVar
 
 import pytest
 import zstandard
@@ -63,7 +64,7 @@ def test_fixed_prefix_requires_range_and_discards_open_tail(tmp_path, monkeypatc
 
     class Response(io.BytesIO):
         status = 206
-        headers = {
+        headers: ClassVar[dict[str, str]] = {
             "Content-Range": f"bytes 0-{len(payload) - 1}/{len(payload) + 100}",
             "Content-Length": str(len(payload)),
         }

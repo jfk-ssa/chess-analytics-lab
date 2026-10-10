@@ -1,4 +1,14 @@
-# Status — 2026-10-09
+# Status — 2026-10-10
+
+## Quality guardrails — 2026-10-10
+
+Pre-commit runs Ruff check/format, YAML/TOML/JSON checks, whitespace and
+end-of-file fixes, a 1024 KB added-file limit, Gitleaks, and `uv lock --check`.
+Ruff now includes UP, SIM, C90, PTH, RUF, and N, with complexity capped at 22.
+`scripts/build_m5_cases.py` and `src/chess_analytics/jev_e2e.py` are ignored for
+C901 until they are split. basedpyright `basic` checks `src/` only (0 errors).
+Offline CI on pull requests and `main` pushes also runs `ruff format --check`
+and basedpyright, with in-progress runs cancelled. No live calls or new data.
 
 **M0–M7 accepted locally; M8 routing and end-to-end Jev comparisons measured, with no production promotion. Portfolio hardening verified locally and in a fresh export; GPL-3.0-or-later selected for original project code.** This is a new standalone local Git
 repository; projects 1–3 remain together. The portfolio repository is public at

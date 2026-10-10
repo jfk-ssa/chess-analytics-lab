@@ -45,7 +45,7 @@ def _durable_write(path: Path, value: dict) -> None:
         handle.write("\n")
         handle.flush()
         os.fsync(handle.fileno())
-    os.replace(temporary, path)
+    temporary.replace(path)
     descriptor = os.open(path.parent, os.O_RDONLY)
     try:
         os.fsync(descriptor)
@@ -213,11 +213,12 @@ def _cost_from_raw(raw, config: dict, reserved: float, kind: str) -> tuple[float
             return count * PRICE_USD_PER_MILLION_INPUT / 1_000_000, False
     else:
         usage = raw.get("usage") if isinstance(raw, dict) else None
-        try:
-            cost, _ = provider.price_usage(config, usage)
-            return cost, False
-        except (ValueError, TypeError, KeyError):
-            pass
+        if isinstance(usage, dict):
+            try:
+                cost, _ = provider.price_usage(config, usage)
+                return cost, False
+            except (ValueError, TypeError, KeyError):
+                pass
     return reserved, True
 
 

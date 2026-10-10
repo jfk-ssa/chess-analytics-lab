@@ -5,9 +5,9 @@ from pathlib import Path
 
 os.environ["DAGSTER_DISABLE_TELEMETRY"] = "1"
 
-import dagster as dg  # noqa: E402
+import dagster as dg
 
-from orchestration import core  # noqa: E402
+from orchestration import core
 
 PROJECT = Path(__file__).resolve().parents[1]
 

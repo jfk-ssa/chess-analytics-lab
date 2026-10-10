@@ -6,7 +6,7 @@ import json
 import os
 import time
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from analyst_m5.evaluation import score_case_m6, score_case_m6_holdout, score_case_m7
@@ -322,7 +322,7 @@ def prepare(
             if holdout
             else "m6_typed_planner_development_pilot_preflight_no_model_calls"
         ),
-        "created_utc": datetime.now(timezone.utc).isoformat(),
+        "created_utc": datetime.now(UTC).isoformat(),
         "dataset_id": manifest["dataset_id"],
         "case_set_sha256": manifest["case_set_sha256"],
         "selection": (

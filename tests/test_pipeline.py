@@ -1,5 +1,6 @@
 import io
 import json
+from typing import ClassVar
 
 import duckdb
 import pytest
@@ -162,9 +163,12 @@ def test_read_only_snapshot_and_writer_lock(project, tmp_path):
         with pytest.raises(duckdb.Error):
             c.execute("delete from fact_game")
         assert draw_rate(c, project)["denominator"] == 20
-    with writer_lock(tmp_path), pytest.raises(ValueError, match="another local writer"):
-        with writer_lock(tmp_path):
-            pass
+    with (
+        writer_lock(tmp_path),
+        pytest.raises(ValueError, match="another local writer"),
+        writer_lock(tmp_path),
+    ):
+        pass
 
 
 def test_cli_offline_and_no_live_command(project, tmp_path, capsys, monkeypatch):
@@ -178,7 +182,7 @@ def test_cli_offline_and_no_live_command(project, tmp_path, capsys, monkeypatch)
 def test_download_checksum_success_and_no_network_reuse(project, tmp_path, monkeypatch):
     class Response(io.BytesIO):
         status = 200
-        headers = {}
+        headers: ClassVar[dict[str, str]] = {}
 
     payload = b"bounded test archive"
     sample = tmp_path / "sample"
@@ -194,7 +198,7 @@ def test_download_checksum_success_and_no_network_reuse(project, tmp_path, monke
 def test_download_retry_cap_and_preserved_jobs(project, tmp_path, monkeypatch):
     class BrokenResponse(io.BytesIO):
         status = 200
-        headers = {}
+        headers: ClassVar[dict[str, str]] = {}
 
         def read(self, size=-1):
             if self.tell():

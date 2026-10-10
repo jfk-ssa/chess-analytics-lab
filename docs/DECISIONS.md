@@ -1158,3 +1158,18 @@ tracking; use Streamlit's native spacing with base weight 500. Bundle pinned
 Fontsource Inter 5.3.0 locally with OFL license/provenance. Refresh the actual
 synthetic demo images and current style documentation. Earlier trials and
 frozen report styling remain historical evidence, not active design choices.
+
+## 2026-10-10 — Lean quality guardrails
+
+Add pre-commit, stricter Ruff, and basedpyright without a rewrite. Ruff selects
+E, F, I, B, UP, SIM, C90, PTH, RUF, and N. McCabe complexity stays at 22;
+`scripts/build_m5_cases.py` (39) and `src/chess_analytics/jev_e2e.py` (34) keep
+a per-file C901 ignore until a later split. En dash, minus sign, multiplication
+sign, and fullwidth tilde stay allowed because they appear in authored questions.
+basedpyright runs in `basic` mode on `src/` so the check passes now and can move
+to `standard` later. Three basic-mode findings were fixed without changing
+results: player keys still lowercase only real names, unknown OpenAI usage still
+keeps its reservation, and the draw-rate value is still numerator/denominator.
+Offline CI runs format and type checks with `contents: read`, locked uv, and
+cancel-in-progress, on pull requests and pushes to `main`. Dependabot opens
+weekly grouped uv and GitHub Actions updates. `@jfk-ssa` is the code owner.
