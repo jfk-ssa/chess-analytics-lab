@@ -1,4 +1,16 @@
-# Status — 2026-10-09
+# Status — 2026-10-10
+
+## M7 campaign command — 2026-10-10
+
+The twelve copied month and holdout builders are one `chesslab m7 --campaign`
+command. Pins, families, question wording, and live-gate accounting live in
+`config/m7_campaigns.json`. Frozen case questions for all twelve campaigns match
+that config. Historical preflight JSON still names the old scripts. Checkpoint,
+clock-dev, and repetition helpers remain. The locked offline suite passed
+**114 tests** with 17 expected skips, and Ruff and basedpyright passed. The tiny
+source hash stayed `130df65e85d18e78bbafd89daf6696c2596e03abf939adf47f2dcbdc4d33e75b`
+and the draw rate stayed 0.2. The snapshot id is `16658e09208c597abd5a610c`
+because the implementation hash includes the campaign module. No live calls.
 
 **M0–M7 accepted locally; M8 routing and end-to-end Jev comparisons measured, with no production promotion. Portfolio hardening verified locally and in a fresh export; GPL-3.0-or-later selected for original project code.** This is a new standalone local Git
 repository; projects 1–3 remain together. The portfolio repository is public at

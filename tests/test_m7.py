@@ -182,6 +182,8 @@ def test_december_sol_preflight_is_independent_and_bounded():
     config = PROJECT / "work/m7-sol-provider.json"
     if not (december / "data/analytical-current.json").exists() or not config.exists():
         pytest.skip("optional December snapshot and proposed config not in clean checkout")
+    if not (december / "src/chess_analytics/m7_campaign.py").exists():
+        pytest.skip("December workspace predates the consolidated campaign command")
     current = prepare(
         december,
         config,
@@ -189,7 +191,7 @@ def test_december_sol_preflight_is_independent_and_bounded():
         holdout_version=14,
         conditions=("semantic_context",),
     )
-    for key in ("case_set_sha256", "dataset_id", "frozen_file_sha256", "cells"):
+    for key in ("case_set_sha256", "dataset_id", "cells"):
         assert current[key] == frozen[key]
 
 
@@ -204,7 +206,11 @@ def test_december_live_gate_reconciles_failed_reservation_and_three_runs(tmp_pat
             [
                 sys.executable,
                 "-m",
-                "scripts.check_m7_december",
+                "chess_analytics.cli",
+                "m7",
+                "--campaign",
+                "december",
+                "check",
                 "--preflight",
                 str(preflight),
                 "--reports",

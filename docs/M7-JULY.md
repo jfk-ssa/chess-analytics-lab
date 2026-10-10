@@ -3,7 +3,7 @@
 This checkpoint uses a fixed 40,000,000-byte prefix of the July 2026 standard
 rated archive, kept in an isolated local workspace. Its 100,000 complete PGNs
 cover **July 1 only**. The prefix SHA256 is recorded in
-`config/m7_july_source.json`; it is not a checksum of the full publisher archive.
+the `july` entry of `config/m7_campaigns.json`; it is not a checksum of the full publisher archive.
 The existing August snapshot, dashboard and memos remain the accepted product
 data. July is an independent evaluation slice, not a representative second day
 of August or a monthly sample.

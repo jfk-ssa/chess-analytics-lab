@@ -16,7 +16,7 @@ This holdout uses an isolated 40,000,000-byte prefix of the May 2026 standard
 rated archive. Its 100,000 complete PGNs cover **May 1 only**, with 99,505
 accepted games, 495 exclusions, and no quarantine or conflict. The publisher
 full-archive checksum is not claimed; the exact prefix hash, range and
-listing values are pinned in `config/m7_may_source.json`. The deterministic
+listing values are pinned in the `may` entry of `config/m7_campaigns.json`. The deterministic
 move sample selected 4,927 games and 325,259 move rows. Independent raw-PGN
 checks passed for source draw rate, 12 opening families, four player cohorts
 and four clock buckets. A separate raw-PGN reference tallied 25 opening
