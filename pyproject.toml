@@ -3,7 +3,7 @@ requires = ["hatchling==1.27.0", "packaging==26.3", "pathspec==1.1.1", "pluggy==
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/chess_analytics", "orchestration"]
+packages = ["src/chess_analytics"]
 
 [tool.hatch.build.targets.sdist]
 exclude = ["/work/**", "/.uv-cache/**", "/.venv/**", "/auxiliary-examples/**"]

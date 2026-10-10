@@ -12,9 +12,9 @@ os.environ["DAGSTER_DISABLE_TELEMETRY"] = "1"
 import dagster as dg  # noqa: E402
 
 from chess_analytics.common import write_json  # noqa: E402
-from orchestration.core import verify  # noqa: E402
-from orchestration.dagster_app import make_assets  # noqa: E402
-from orchestration.prefect_app import run_pipeline  # noqa: E402
+from chess_analytics.orchestration.core import verify  # noqa: E402
+from chess_analytics.orchestration.dagster_app import make_assets  # noqa: E402
+from chess_analytics.orchestration.prefect_app import run_pipeline  # noqa: E402
 
 
 def compare(base: Path | None = None):

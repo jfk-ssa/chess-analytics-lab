@@ -5,11 +5,11 @@ from pathlib import Path
 
 os.environ["DAGSTER_DISABLE_TELEMETRY"] = "1"
 
-import dagster as dg
+import dagster as dg  # pyright: ignore[reportMissingImports]
 
-from orchestration import core
+from chess_analytics.orchestration import core
 
-PROJECT = Path(__file__).resolve().parents[1]
+PROJECT = Path(__file__).resolve().parents[3]
 
 
 def make_assets(project: Path, data_dir: Path, dataset: str = "tiny", with_dbt: bool = False):

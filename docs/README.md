@@ -30,7 +30,7 @@ live evaluations are recorded separately.
 | `src/chess_analytics/marts/`, `dbt/` | Local marts and their validation/recovery path |
 | `src/chess_analytics/corpus/`, `src/chess_analytics/dashboard/` | Analytical source/moves, parameterized metrics, Streamlit dashboard |
 | `src/chess_analytics/analyst/` | Checked read-only tools, typed plans, provider adapter and evaluation harness |
-| `orchestration/` | Optional local Dagster/Prefect wrappers over the same pipeline |
+| `src/chess_analytics/orchestration/` | Optional local Dagster/Prefect wrappers over the same pipeline |
 | `contracts/`, `config/`, `evals/` | Definitions, bounded source plans, frozen questions and reference manifests |
 | `tests/fixtures/`, `tests/` | Tracked synthetic inputs, independent expected values and offline regressions |
 | `reports/` | Compact historical evidence and the original comparison report |
