@@ -46,6 +46,6 @@ target-version = "py312"
 line-length = 100
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "B", "UP", "SIM", "PTH", "RUF"]
+select = ["E", "F", "I", "B", "UP", "SIM", "PTH", "RUF", "N"]
 # En dashes, minus signs, and similar marks are intentional in questions and reports.
 allowed-confusables = ["–", "−", "×", "～"]
