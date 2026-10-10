@@ -621,3 +621,18 @@ need and an explicit byte/processing plan. Keep learning recognition, decision q
 time, and mistaken transfer as separate outcomes. The
 [design guide](TRANSPOSITION_LEARNING.md) specifies the rationale, limitations,
 metrics, and proposed learning experiment.
+
+
+## 22. Public insights and local game import — 2026-10-10
+
+The owner requested separate reviewed, unmerged PRs for public transposition
+insights and generic PGN imports. Public analysis now has separate Transpositions,
+Opening learning, and Metrics & data pages. Checked report 1.1.0 retains earlier
+figures and adds alternative-route share, complete union coverage curves,
+recorded-label breadth and public d4/g3 move-sequence facets. Charts and route
+comparisons have table/text alternatives. Learning gains remain unmeasured.
+
+A subsequent PR will accept Chess.com/Lichess PGN files on the device, with
+provider-neutral normalization, explicit player selection, visible exclusions,
+and a bounded public-reference overlay. No personal account collection is part
+of development. Username/API downloads are excluded from this delivery.

@@ -1,4 +1,4 @@
-# Metric registry — M1–M3
+# Metric registry
 
 **HTML version:** [Read this guide on the documentation site](https://jfk-ssa.github.io/chess-analytics-lab/metrics.html).
 
@@ -46,3 +46,33 @@ common pooled weights across three focal-minus-opponent rating-difference
 strata, with a seeded focal-player cluster bootstrap. The M4 dashboard and
 analyst tool use the same implementation. Its interval describes dependence
 within the observed prefix, not uncertainty for all August games.
+
+
+## Opening-position metrics
+
+[Transpositions](TRANSPOSITIONS.md) uses the checked opening-position publication,
+with definitions in [opening_positions.json](../contracts/opening_positions.json).
+
+| Metric | Numerator / definition | Denominator / interpretation |
+|---|---|---|
+| Frequency | Distinct games reaching a canonical board at an eligible White decision | Eligible games in selected cohort, recorded family, or public lens |
+| Acyclic routes | Distinct complete earliest-arrival UCI prefixes without repetition | Count, not a percentage or measure of move quality |
+| Alternative-route share | Acyclic position games outside the largest route | Position games minus repetition-prefix games; null if zero |
+| Study-set coverage | Union of games hitting at least one first-N ranked board | Eligible view games; a game counts once across the set |
+| Marginal coverage | Newly covered games when the next ranked board is added | Report count as well as total coverage |
+| Endpoint compression | 1 minus distinct endpoints / distinct acyclic routes at one ply | Same nonrepeating visits at that ply; descriptive convergence |
+| Recorded-label breadth | Complete distinct known families and known ECO codes, counted separately | Recorded game tags can reflect later play; five examples are not exhaustive |
+
+The two cohort denominators stay separate. Lens frequencies use only matching games;
+family filters use recorded-family game counts. Repetition arrivals contribute to
+position frequency but not acyclic routes. Route-card shares use all position games,
+while alternative-route share uses acyclic games. Draw counters and repetition
+history are outside the canonical recognition key.
+
+In the Elite report, the leading Sicilian board has 8,465 games and eight routes,
+but 99.29% of acyclic arrivals use one route. The QGD example has 6,431 games and
+28 routes, with only 33.28% on its leading route. Frequency and route count alone
+would hide that difference. Their alternative-route shares are 0.71% and 66.72%.
+
+Charts and rankings describe selected public games. They do not establish learning
+improvement, personal encounter rates, engine quality, or causal outcome differences.

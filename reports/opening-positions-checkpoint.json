@@ -1,6 +1,6 @@
 {
   "kind": "checked_opening_position_publication",
-  "created_at": "2026-10-10T12:58:30.424503+00:00",
+  "created_at": "2026-10-10T13:44:55.012883+00:00",
   "corpus_snapshot_id": "00e7a73fbf67c401e23b4b4b",
   "visit_snapshot_id": "bd299fb6ebbced2145f1161b",
   "visit_manifest_sha256": "d43e5eea12e8cc6359c13320f36ba7e3a8c9a3d443f854b767bdb4127eeaecec",
@@ -13,21 +13,18 @@
     "uv_lock_sha256": "bbdc8c1905a327d2ec23600fe8fa2bb823e7874633c01b8d3cdc701a24c52829"
   },
   "files": {
-    "reports/opening-positions.json": "503f5dcfc0a6c616685cf242e3111f04c0f8e96335693e07a4a5c30e1ebc0b2d",
+    "reports/opening-positions.json": "31a395044203532224cbb387475ef0bb790c8e88faac98bc9b2a12f5d500c46e",
     "config/opening-positions.json": "ac27ab29912ffdbbf7f6c5526caf450eeddf39fb725d9db6cd4cf95df9a43693",
-    "contracts/opening_positions.json": "b5721be89703b2ef96db538eb8b4a657fb75e102c736201adf3ec40c053fa8c6",
+    "contracts/opening_positions.json": "3d74b3aa8cff38eea90c678481387b42725ab28e6563804cf6135a965d5b8517",
     "scripts/build_opening_positions.py": "2b14e5d7ed465915365123802ec32e23e5ba339fa5983684602ac72938226244",
-    "scripts/summarize_opening_positions.py": "022d809eeb5db952ff32da662a3bc65f4f68491b3acfdf18dcac3f00c88a8821",
-    "uv.lock": "bbdc8c1905a327d2ec23600fe8fa2bb823e7874633c01b8d3cdc701a24c52829"
-  },
-  "independent_checks": {
-    "raw_distinct_game_counts_and_union_coverage_rankings": 52,
-    "passed": true
+    "scripts/summarize_opening_positions.py": "60f1e03fa28764a707d41d85ec4a4b2a8109b489ca56a20a8be174ff84a7d954",
+    "uv.lock": "bbdc8c1905a327d2ec23600fe8fa2bb823e7874633c01b8d3cdc701a24c52829",
+    "scripts/check_opening_insights.py": "5ba9e2762ee0ce6a03e3e7dda9adb6b94e6ef6b7c22eef46de8db2e5ac4a1586"
   },
   "scope": "Observed White decisions at plies 6\u201320. No new acquisition, engine scoring, live model calls, or learning experiment.",
   "live_requests": 0,
   "data_downloads": 0,
-  "verification": {
+  "baseline_verification": {
     "offline_suite": {
       "passed": 135,
       "skipped": 15,
@@ -60,5 +57,71 @@
       "screen_reader_tested": false,
       "physical_phone_tested": false
     }
+  },
+  "baseline_independent_checks": {
+    "raw_distinct_game_counts_and_union_coverage_rankings": 52,
+    "passed": true
+  },
+  "verification": {
+    "offline_suite": {
+      "passed": 137,
+      "skipped": 15,
+      "extras": [
+        "docs",
+        "dashboard"
+      ]
+    },
+    "ruff_check": "passed",
+    "ruff_format": "passed",
+    "basedpyright": "0 errors, 0 warnings, 0 notes",
+    "prior_published_fields_preserved_exactly": true,
+    "site": {
+      "pages": 7,
+      "local_links_checked": 303,
+      "published_board_svgs": 516
+    },
+    "browser": {
+      "explorer_views_checked": 64,
+      "chart_count_each_view": 3,
+      "ranked_rows_each_view": 20,
+      "console_errors": 0,
+      "keyboard_chart_selection": "passed",
+      "metric_search": "passed",
+      "page_separation": "passed",
+      "narrow_viewport_css_width": 487,
+      "page_wide_overflow": false,
+      "screen_reader_tested": false,
+      "physical_phone_tested": false
+    },
+    "hosted_ci": "not yet run",
+    "deployment": "unmerged branch; not deployed"
+  },
+  "independent_checks": {
+    "checker_sha256": "5ba9e2762ee0ce6a03e3e7dda9adb6b94e6ef6b7c22eef46de8db2e5ac4a1586",
+    "checks": {
+      "curve_points": 1280,
+      "lenses": {
+        "elite_reference/d4-g3": 16647,
+        "elite_reference/d4-g3-catalan": 6850,
+        "elite_reference/d4-g3-kings-indian": 2867,
+        "rated_public/d4-g3": 20745,
+        "rated_public/d4-g3-catalan": 5429,
+        "rated_public/d4-g3-kings-indian": 1647
+      },
+      "position_details": 668,
+      "rankings": 64
+    },
+    "data_downloads": 0,
+    "kind": "raw_visit_opening_insight_reconciliation",
+    "live_requests": 0,
+    "passed": true,
+    "report_sha256": "31a395044203532224cbb387475ef0bb790c8e88faac98bc9b2a12f5d500c46e",
+    "visit_snapshot_id": "bd299fb6ebbced2145f1161b"
+  },
+  "retained_failure": {
+    "stage": "first independent verification attempt",
+    "reason": "2GB temporary-storage cap exceeded during full distinct-route ranking query",
+    "resolution": "Bound route grouping to boards that can displace a published rank, use one thread, keep cap unchanged",
+    "rerun": "passed"
   }
 }

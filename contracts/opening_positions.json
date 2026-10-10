@@ -1,12 +1,17 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "name": "observed_white_opening_positions",
-  "source_grain": "checked source snapshot × provider × game ID × White decision ply",
-  "analysis_grain": "visit snapshot × cohort × optional recorded opening family × canonical position",
+  "source_grain": "checked source snapshot \u00d7 provider \u00d7 game ID \u00d7 White decision ply",
+  "analysis_grain": "visit snapshot \u00d7 cohort \u00d7 optional recorded opening family \u00d7 canonical position",
   "position_key_version": "standard-fen-first-four-legal-ep-1.0",
   "position_key": "Piece placement, side to move, castling rights, and en passant only if legal; first four normalized FEN fields. SHA-256 truncated to 24 hex characters; retained key and collision check.",
   "history": "Full FEN, full UCI prefix and repeated-position flag remain in local visit shards. Draw counters and repetition history are not part of the recognition key.",
-  "default_window": {"learner_color": "white", "min_ply": 6, "max_ply": 20, "step": 2},
+  "default_window": {
+    "learner_color": "white",
+    "min_ply": 6,
+    "max_ply": 20,
+    "step": 2
+  },
   "game_count": "A game contributes once per canonical position within the window; the earliest visit supplies its route and continuation.",
   "frequency": "Distinct games reaching the position / all eligible games in that cohort and, when selected, recorded opening family. Not a personal encounter estimate.",
   "opening_family": "Recorded game opening tag before its first colon. ECO is retained separately. Labels do not define or merge board positions.",
@@ -16,8 +21,47 @@
   "ranking": "Descending distinct-game count, with position ID as deterministic tie breaker; up to 20 recurring and 20 transposing positions per view.",
   "route_share": "Games with this earliest arrival prefix / position games; up to three non-looped examples are published, so displayed shares need not sum to one.",
   "continuation_share": "Games choosing this legal next White move at the earliest visit / position games, including games without a next move in the denominator. Report next_move_games separately. Up to five moves are published.",
-  "top_set_coverage": "Union of distinct games encountering any top-10 or top-20 position / eligible view games. Overlapping position frequencies must not be added.",
-  "endpoint_compression": "At a fixed ply, 1 − distinct canonical endpoint positions / distinct UCI prefixes. Exclude any prefix with a repeated canonical position. Descriptive convergence, not a measured learning benefit.",
+  "top_set_coverage": "Union of distinct games encountering any first-N frequency-ranked position / eligible view games, N=1..20. Overlapping position frequencies must not be added.",
+  "endpoint_compression": "At a fixed ply, 1 \u2212 distinct canonical endpoint positions / distinct UCI prefixes. Exclude any prefix with a repeated canonical position. Descriptive convergence, not a measured learning benefit.",
   "publication": "Separate Elite and broader public cohorts. Publish all opening-family inventory counts, plus all-opening rankings and up to twelve largest known families with at least 1000 eligible games. Local hashes bind retained inputs, extraction plan, parser implementation and artifacts.",
-  "limits": "Elite is a curated November 2025 month; public sources are nine ordered first-day archive prefixes. Frequency is not move quality, strategic importance, or causal evidence. No engine scoring, personal weighting, drills, or live provider requests."
+  "limits": "Elite is a curated November 2025 month; public sources are nine ordered first-day archive prefixes. Frequency is not move quality, strategic importance, or causal evidence. No engine scoring, personal weighting, drills, or live provider requests.",
+  "alternative_route_share": "1 - dominant acyclic route games / acyclic position games; acyclic position games = position games - repetition-prefix games. Null for zero acyclic games. Route cards retain all position games as denominator.",
+  "coverage_curve": "For each N=1..20 in the frequency ranking, union distinct games reaching any first-N position / eligible view games. additional_games is the difference from N-1. This is not a greedy coverage ranking.",
+  "opening_label_breadth": "Count all distinct known recorded families and all distinct known ECO codes separately; unknown-family games reported separately. Five displayed family/ECO pairs are examples, not exhaustive breadth. Labels can reflect later play.",
+  "route_remainder": "Other acyclic route games + repetition-prefix games + top-three acyclic route games = position games.",
+  "public_lenses": {
+    "d4-g3": {
+      "label": "1.d4 with g3",
+      "moves": [
+        "d2d4",
+        "g2g3"
+      ]
+    },
+    "d4-g3-catalan": {
+      "label": "Catalan-style fianchetto",
+      "moves": [
+        "d2d4",
+        "c2c4",
+        "g2g3",
+        "f1g2",
+        "e7e6",
+        "d7d5"
+      ]
+    },
+    "d4-g3-kings-indian": {
+      "label": "King's Indian fianchetto",
+      "moves": [
+        "d2d4",
+        "c2c4",
+        "g2g3",
+        "f1g2",
+        "g8f6",
+        "g7g6",
+        "f8g7",
+        "d7d6"
+      ]
+    }
+  },
+  "lens_policy": "First White move d4; all required UCI moves present by max_ply. Curated move-sequence facets, not exhaustive taxonomy. Denominator is matching games; include eligible positions before and after g3. No personal histories.",
+  "scatter_scope": "Published ranked positions in the selected view only, deduplicated by position ID; not a corpus-wide distribution."
 }

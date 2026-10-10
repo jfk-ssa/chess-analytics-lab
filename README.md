@@ -84,7 +84,8 @@ reliable ingestion, not contemporary chess behavior. See [data sources](docs/DAT
 |---|---|
 | Understand the pipeline and code | [Architecture](docs/ARCHITECTURE.md) and [repository map](docs/README.md#repository-map) |
 | Understand findings and denominators | [Opening memo](docs/M4-OPENINGS.md), [clock memo](docs/M4-CLOCK.md), [metrics](docs/METRICS.md) |
-| Explore learning through transpositions | [Interactive HTML](https://jfk-ssa.github.io/chess-analytics-lab/transpositions.html); measured position rankings by cohort/opening, boards, arrival routes, continuations and [maintained rationale](docs/TRANSPOSITION_LEARNING.md) |
+| Design opening lessons | [Opening learning](https://jfk-ssa.github.io/chess-analytics-lab/opening-learning.html) and [maintained rationale](docs/TRANSPOSITION_LEARNING.md) |
+| Explore measured transpositions | [Interactive HTML](https://jfk-ssa.github.io/chess-analytics-lab/transpositions.html); public position rankings, route balance, coverage, fianchetto lenses and [definitions](docs/TRANSPOSITIONS.md) |
 | Evaluate the AI claims | [Evaluation guide](docs/EVALUATION.md), [evidence index](docs/EVIDENCE_INDEX.md) |
 | Compare rules, Jev and Decisions | [GitHub-readable results](docs/CLASSIFIER_COMPARISON.md) |
 | Run optional components or acquire data | [Runbook](docs/RUNBOOK.md), [orchestration](docs/ORCHESTRATION.md), [sources](docs/DATA_SOURCES.md) |

@@ -14,6 +14,30 @@ With the dashboard and docs extras installed, the locked offline suite passed **
 
 ## Publication and presentation
 
+### Public transposition insights — 2026-10-10
+
+Branch-local implementation separates Transpositions from Opening learning and
+adds the opening-position metric registry, dynamic definition count, metadata and
+sitemap. Report 1.1.0 adds alternative-route share, N=1..20 union coverage and
+marginal gains, complete family/ECO breadth, and three public move-sequence lenses.
+Coverage/depth charts, a bounded ranked-position scatter, and route comparisons
+share accessible tables and keyboard controls. Existing cohort/family figures,
+arrival routes and continuations reconcile exactly with the earlier report.
+
+The d4/g3 lens contains 16,647 Elite and 20,745 public games. Independent raw-visit
+checks pass for 64 rankings, 1,280 curve points and 668 position details. The first
+independent query exceeded its 2GB temporary-storage cap; the bounded retry passes
+without raising the cap. That failure remains in the receipt. No source corpus,
+frozen evaluation, engine work, personal collection or live provider call changed.
+
+Locked docs/dashboard offline suite: **137 passed, 15 skipped**. Ruff check/format
+and basedpyright pass. The seven-page build checks **303 links**. Browser checks
+cover all 64 cohort/family/lens/ranking views, charts, board updates, keyboard chart
+selection, metric search and learning-page separation, with zero console errors.
+A 487-CSS-pixel narrow viewport has no page-wide overflow. Screen-reader and
+physical-phone behavior remain untested. Hosted CI and deployment are separate.
+[ADR 0070](adr/0070-public-transposition-insights.md) records this delivery scope.
+
 ### Measured opening-position explorer — 2026-10-10
 
 Implemented a separate White opening visit publication over all **1,042,346**

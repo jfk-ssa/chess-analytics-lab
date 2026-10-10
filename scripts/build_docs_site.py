@@ -26,7 +26,8 @@ PAGES = {
     "METRICS.md": "metrics.html",
     "DATA_DICTIONARY.md": "metrics.html",
     "DEMO.md": "demo.html",
-    "TRANSPOSITION_LEARNING.md": "transpositions.html",
+    "TRANSPOSITIONS.md": "transpositions.html",
+    "TRANSPOSITION_LEARNING.md": "opening-learning.html",
 }
 REPORTS = (
     "decisions-development.json",
@@ -48,6 +49,7 @@ ASSETS = {
     "site.css": "site/assets/site.css",
     "site.js": "site/assets/site.js",
     "position-explorer.js": "site/assets/position-explorer.js",
+    "position-charts.js": "site/assets/position-charts.js",
     "favicon.svg": "site/assets/favicon.svg",
     "social-preview.png": "site/assets/social-preview.png",
     "demo-overview.png": "site/assets/demo-overview.png",
@@ -63,7 +65,8 @@ NAV = (
     ("comparison.html", "Comparison"),
     ("architecture.html", "Architecture"),
     ("metrics.html", "Metrics & data"),
-    ("transpositions.html", "Opening learning"),
+    ("transpositions.html", "Transpositions"),
+    ("opening-learning.html", "Opening learning"),
     ("demo.html", "Run the demo"),
 )
 
@@ -375,6 +378,27 @@ def validate_position(identifier, position, expected):
         raise ValueError("Opening loop count exceeds position games")
     if not 0 <= position["next_move_games"] <= games:
         raise ValueError("Opening continuation denominator exceeds position games")
+    acyclic = games - position["loop_prefix_games"]
+    dominant = max((route["games"] for route in position["routes"]), default=0)
+    alternative = 1 - dominant / acyclic if acyclic else None
+    if (
+        position["acyclic_games"] != acyclic
+        or position["dominant_route_games"] != dominant
+        or position["alternative_route_share"] != alternative
+        or position["other_acyclic_route_games"]
+        != acyclic - sum(route["games"] for route in position["routes"])
+    ):
+        raise ValueError("Opening alternative-route denominator differs")
+    if not 0 <= position["other_acyclic_route_games"] <= acyclic:
+        raise ValueError("Opening route remainder differs")
+    for field in (
+        "distinct_recorded_families",
+        "distinct_recorded_ecos",
+        "unknown_family_games",
+        "white_g3_played_games",
+    ):
+        if not 0 <= position[field] <= games:
+            raise ValueError("Opening label or g3 count exceeds games")
     for route in position["routes"]:
         replay = chess.Board()
         for uci in route["uci"].split():
@@ -408,6 +432,23 @@ def validate_ranking(kind, ranking, view, expected, limit):
     for count, rows in ((c10, ranked[:10]), (c20, ranked)):
         if rows and not max(p["games"] for p in rows) <= count <= sum(p["games"] for p in rows):
             raise ValueError("Opening union coverage is inconsistent")
+    curve = ranking["coverage_curve"]
+    if len(curve) != len(ranked):
+        raise ValueError("Opening coverage curve length differs")
+    previous = 0
+    for n, (point, position) in enumerate(zip(curve, ranked, strict=True), 1):
+        if (
+            point["n"] != n
+            or not previous <= point["games"] <= expected
+            or point["additional_games"] != point["games"] - previous
+            or not 0 <= point["additional_games"] <= position["games"]
+            or point["share"] != point["games"] / expected
+            or point["games"] < max(p["games"] for p in ranked[:n])
+        ):
+            raise ValueError("Opening coverage curve does not reconcile")
+        previous = point["games"]
+    if curve and (c10 != curve[min(10, len(curve)) - 1]["games"] or c20 != previous):
+        raise ValueError("Opening coverage endpoints differ")
 
 
 def checked_positions(repo):
@@ -415,6 +456,7 @@ def checked_positions(repo):
     source = repo / "reports/opening-positions.json"
     data = json.loads(source.read_text())
     corpus = json.loads((repo / "reports/opening-corpus.json").read_text())
+    contract = json.loads((repo / "contracts/opening_positions.json").read_text())
     plan = json.loads((repo / "config/opening-positions.json").read_text())
     checkpoint = json.loads((repo / "reports/opening-positions-checkpoint.json").read_text())
     if data["kind"] != "observed_white_opening_positions" or data["plan"] != plan:
@@ -431,7 +473,24 @@ def checked_positions(repo):
         if details["denominator_games"] != denominator or sum(families.values()) != denominator:
             raise ValueError("Opening position denominator does not reconcile")
         for name, view in details["views"].items():
-            expected = denominator if name == "all" else families[name]
+            lens = view.get("lens")
+            expected = (
+                view["denominator_games"]
+                if lens
+                else denominator
+                if name == "all"
+                else families[name]
+            )
+            if lens and (
+                name not in {"d4-g3", "d4-g3-catalan", "d4-g3-kings-indian"}
+                or not 1 <= expected <= denominator
+                or view["family"] is not None
+            ):
+                raise ValueError("Opening lens definition or denominator differs")
+            if lens and any(
+                lens[field] != value for field, value in contract["public_lenses"][name].items()
+            ):
+                raise ValueError("Opening lens moves differ from contract")
             if view["denominator_games"] != expected:
                 raise ValueError("Opening family denominator does not reconcile")
             for identifier, position in view["positions"].items():
@@ -471,7 +530,8 @@ def opening_positions(repo, output):
         f"<tr><td>{index}</td><td>{html.escape(elite['positions'][key]['routes'][0]['san'])}</td>"
         f'<td class="number">{elite["positions"][key]["games"]:,}</td>'
         f'<td class="number">{elite["positions"][key]["frequency"]:.2%}</td>'
-        f'<td class="number">{elite["positions"][key]["acyclic_routes"]:,}</td></tr>'
+        f'<td class="number">{elite["positions"][key]["acyclic_routes"]:,}</td>'
+        f'<td class="number">{elite["positions"][key]["alternative_route_share"]:.2%}</td></tr>'
         for index, key in enumerate(ranked["ids"][:5], 1)
     )
     return f'''<section id="position-explorer" class="position-explorer"
@@ -485,7 +545,7 @@ orders without repetition loops. A game counts once per position.</p>
 <div><label for="position-cohort">Reference cohort</label>
 <select id="position-cohort"><option value="elite_reference">Elite · 240,086 games</option>
 <option value="rated_public">Public 1000+ · 802,260 games</option></select></div>
-<div><label for="position-family">Recorded opening family</label>
+<div><label for="position-family">Opening family or public lens</label>
 <select id="position-family"></select></div>
 <div><label for="position-kind">Position ranking</label><select id="position-kind">
 <option value="transposing">Multiple move orders</option>
@@ -503,7 +563,8 @@ role="region" aria-label="Ranked positions; scroll horizontally on smaller scree
 <table><caption id="position-caption">Most frequent transposing positions · Elite</caption>
 <thead><tr><th scope="col">Rank</th><th scope="col">Position</th>
 <th scope="col" class="number">Games</th><th scope="col" class="number">Frequency</th>
-<th scope="col" class="number">Move orders</th></tr></thead>
+<th scope="col" class="number">Move orders</th>
+<th scope="col" class="number">Alternative-route share</th></tr></thead>
 <tbody id="position-rows">{rows}</tbody></table></div>
 <div id="position-detail" class="position-detail" tabindex="-1"
 role="region" aria-labelledby="position-selected-title">
@@ -513,6 +574,31 @@ alt="Most frequent Elite transposing position, White to move">
 <p id="position-selected-note" class="source-note" aria-live="polite">
 {first["games"]:,} games · White to move.</p>
 <div id="position-selected-content"></div></div></div>
+<section aria-labelledby="position-coverage-title" class="position-chart-panel">
+<h3 id="position-coverage-title">How much does a study set cover?</h3>
+<p>Positions ranked by frequency. Each game counts
+once across the set. The next position can overlap games already covered.</p>
+<div id="position-coverage-chart" class="scroll" tabindex="0"
+role="region" aria-label="Coverage chart; scroll horizontally if needed"></div><details>
+<summary>Coverage and marginal gains table</summary>
+<div id="position-coverage-table"></div></details></section>
+<section aria-labelledby="position-depth-title" class="position-chart-panel">
+<h3 id="position-depth-title">Different routes, fewer endpoints</h3>
+<p>Endpoint compression at each depth: 1 − distinct positions / distinct acyclic
+routes. Both cohorts include all openings; this chart does not follow family or lens filters.</p>
+<div id="position-depth-chart" class="scroll" tabindex="0"
+role="region" aria-label="Depth chart; scroll horizontally if needed"></div>
+<div id="position-depth-legend"></div>
+<details><summary>Depth observations and included visits</summary>
+<div id="position-depth-table"></div></details></section>
+<section aria-labelledby="position-scatter-title" class="position-chart-panel">
+<h3 id="position-scatter-title">Frequency and route variety</h3>
+<p>Published ranked positions in this view, rather than the whole corpus.
+Axes use logarithmic scales. Select a point or a table row to inspect its board.
+Darker green indicates more games arriving through alternatives to the leading route.</p>
+<div id="position-scatter-chart" class="scroll" tabindex="0"
+role="region" aria-label="Frequency and routes chart; scroll horizontally if needed"></div>
+</section>
 <details class="definition"><summary>Opening-family counts and convergence by depth</summary>
 <div id="position-inventory"></div>
 <p>At one depth, endpoint compression is 1 − distinct positions / distinct move orders.
@@ -529,7 +615,8 @@ not best moves. Drills and strategic lesson explanations remain future work.</p>
 <noscript>The table shows the five leading Elite transposing positions. Enable JavaScript
 to explore both cohorts, opening families, boards, routes and continuations.</noscript>
 <p id="position-load-note" class="source-note" aria-live="polite"></p>
-</section><script defer src="assets/position-explorer.js"></script>'''
+</section><script defer src="assets/position-charts.js"></script>
+<script defer src="assets/position-explorer.js"></script>'''
 
 
 def transposition_example():
@@ -698,6 +785,7 @@ def definitions(repo):
         "opening_usage.json",
         "opening_player_score.json",
         "opening_adjusted_score.json",
+        "opening_positions.json",
         "clock_pressure_error_proxy.json",
         "evaluation_coverage.json",
     )
@@ -727,7 +815,9 @@ def definitions(repo):
 <label for="definition-search">Search names, definitions and schemas</label>
 <input id="definition-search" class="search" type="search"
 placeholder="Try denominator, rating, clock or missing">
-<p id="search-status" aria-live="polite">9 definitions or schemas shown</p>"""
+<p id="search-status" aria-live="polite">"""
+        + str(len(cards))
+        + " definitions or schemas shown</p>"
         + "".join(cards)
         + """
 <section class="example-panel" aria-labelledby="denominator-title">
@@ -907,10 +997,15 @@ def build(repo, output):
                 ),
                 (
                     "transpositions.html",
-                    "Learn positions across move orders",
-                    "Explore shared opening positions, the learning rationale, "
-                    "and a White-first plan.",
-                    "Legal board walkthrough + research design",
+                    "Explore positions across move orders",
+                    "Compare recurring boards, route balance and coverage across public cohorts.",
+                    "Measured rankings, charts and fianchetto lenses",
+                ),
+                (
+                    "opening-learning.html",
+                    "Design lessons around positions",
+                    "Replay an illustrative transposition and inspect the learning proposal.",
+                    "Lesson design and evaluation plan",
                 ),
                 (
                     "demo.html",
@@ -988,19 +1083,58 @@ def build(repo, output):
             ),
         ),
         "transpositions.html": (
-            "Learn the position. Recognize every route.",
-            "Explore how opening sequences converge, why familiar positions may help decisions, "
-            "and how we can evaluate the learning method.",
-            '<div class="callout"><span class="badge">'
-            "Position analysis implemented · drills proposed</span>"
-            "<p>Explore recurring boards and their observed move orders across 1,042,346 games. "
-            "Personalized practice and measured learning benefits remain proposed.</p></div>"
+            "Opening positions, across move orders",
+            "Explore recurring boards, route diversity and study-set coverage "
+            "in two public cohorts.",
+            '<div class="callout"><span class="badge">Measured public-corpus analysis</span>'
+            "<p>Different routes can lead to one board. Explore which boards recur and how much "
+            'a small study set covers. <a href="opening-learning.html">Learning rationale and '
+            'illustrative walkthrough</a> · <a href="metrics.html#opening-position-metrics">'
+            "Metric definitions</a></p></div>"
             + opening_positions(repo, output)
             + opening_corpus(repo)
+            + md(repo, "TRANSPOSITIONS.md")
+            + '<p id="opening-lab-title">The illustrative board has moved to '
+            '<a href="opening-learning.html#opening-lab-title">Opening learning</a>.</p>',
+        ),
+        "opening-learning.html": (
+            "Learn the position. Recognize every route.",
+            "An illustrative walkthrough, lesson design and evaluation plan "
+            "for learning through transpositions.",
+            '<div class="callout"><span class="badge">Learning design · benefits unmeasured</span>'
+            "<p>The public analysis is available on "
+            '<a href="transpositions.html#position-explorer">'
+            "Transpositions</a>. This page explains the learning proposal; drills and a "
+            "learning experiment remain future work.</p></div>"
             + transpositions()
             + md(repo, "TRANSPOSITION_LEARNING.md"),
         ),
     }
+    # Keep previously published learning-guide fragments useful after the page split.
+    legacy = SiteLinks()
+    legacy.feed(md(repo, "TRANSPOSITION_LEARNING.md"))
+    current = SiteLinks()
+    current.feed(bodies["transpositions.html"][2])
+    aliases = "".join(
+        f'<p id="{html.escape(anchor)}"><a href="opening-learning.html#{html.escape(anchor)}">'
+        f"{html.escape(anchor.replace('-', ' '))}</a></p>"
+        for anchor in sorted(legacy.ids - current.ids)
+    )
+    title, intro, body = bodies["transpositions.html"]
+    bodies["transpositions.html"] = (
+        title,
+        intro,
+        body + "<details><summary>Earlier learning-guide links</summary>" + aliases + "</details>",
+    )
+    (output / "sitemap.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+        + "".join(
+            "<url><loc>" + SITE_URL + ("" if name == "index.html" else name) + "</loc></url>"
+            for name in sorted(bodies)
+        )
+        + "</urlset>\n"
+    )
     for name, (title, intro, body) in bodies.items():
         (output / name).write_text(shell(title, name, intro, body, commit))
     (output / "reports").mkdir()
