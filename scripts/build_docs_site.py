@@ -18,8 +18,9 @@ import chess.svg
 import markdown
 
 REPO_URL = "https://github.com/jfk-ssa/chess-analytics-lab/blob/main/"
+SITE_URL = "https://jfk-ssa.github.io/chess-analytics-lab/"
 PAGES = {
-    "README.md": "index.html",
+    "HOME.md": "index.html",
     "CLASSIFIER_COMPARISON.md": "comparison.html",
     "ARCHITECTURE.md": "architecture.html",
     "METRICS.md": "metrics.html",
@@ -46,6 +47,8 @@ REPORTS = (
 ASSETS = {
     "site.css": "site/assets/site.css",
     "site.js": "site/assets/site.js",
+    "favicon.svg": "site/assets/favicon.svg",
+    "social-preview.png": "site/assets/social-preview.png",
     "demo-overview.png": "site/assets/demo-overview.png",
     "demo-analyst.png": "site/assets/demo-analyst.png",
     "fonts/inter-latin-wght-normal.woff2": (
@@ -178,25 +181,57 @@ def md(repo, name):
     content = re.sub(r"<table>.*?</table>", table_layout, content, flags=re.DOTALL)
     content = re.sub(r"<(/?)h1([ >])", r"<\1h2\2", content)
     toc = re.sub(r'^<div class="toc">\s*|\s*</div>\s*$', "", engine.toc)
-    return (
+    contents = (
         '<div class="toc" role="navigation" aria-label="On this page"><strong>On this page</strong>'
         + toc
-        + '</div><article class="article">'
-        + content
-        + "</article>"
+        + "</div>"
+        if len(engine.toc_tokens) > 1 or any(t["children"] for t in engine.toc_tokens)
+        else ""
     )
+    return contents + '<article class="article">' + content + "</article>"
 
 
 def shell(title, active, intro, body, commit):
+    canonical = SITE_URL + ("" if active == "index.html" else active)
+    page_title = title if active == "index.html" else title + " · Chess Analytics Lab"
+    description = html.escape(intro, quote=True)
+    source_note = (
+        '<p class="source-note">Generated from maintained Markdown, contracts and '
+        f'recorded evidence. <a href="{REPO_URL}docs/README.md">Repository guides</a></p>'
+        if active != "index.html"
+        else ""
+    )
+    revision = html.escape(commit)
+    if commit != "local export":
+        revision = (
+            f'<a href="https://github.com/jfk-ssa/chess-analytics-lab/commit/{commit}">'
+            f"{revision}</a>"
+        )
     nav = "".join(
         f'<a href="{path}"' + (' aria-current="page"' if path == active else "") + f">{name}</a>"
         for path, name in NAV
     )
     return f'''<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description"
-content="Local chess analytics, reproducible evidence and learning guides.">
-<title>{html.escape(title)} · Chess Analytics Lab</title>
+<meta name="description" content="{description}">
+<title>{html.escape(page_title)}</title>
+<link rel="canonical" href="{canonical}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Chess Analytics Lab">
+<meta property="og:title" content="{html.escape(page_title, quote=True)}">
+<meta property="og:description" content="{description}">
+<meta property="og:url" content="{canonical}">
+<meta property="og:image" content="{SITE_URL}assets/social-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Chess Analytics Lab: data, analytics and evaluated AI">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{html.escape(page_title, quote=True)}">
+<meta name="twitter:description" content="{description}">
+<meta name="twitter:image" content="{SITE_URL}assets/social-preview.png">
+<meta name="twitter:image:alt" content="Chess Analytics Lab: data, analytics and evaluated AI">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="stylesheet" href="assets/site.css?v={commit}">
 <script defer src="assets/site.js?v={commit}"></script></head>
 <body><a class="skip" href="#main">Skip to content</a><header class="topbar"><div class="nav-inner">
@@ -204,9 +239,8 @@ content="Local chess analytics, reproducible evidence and learning guides.">
 <nav aria-label="Main navigation">{nav}</nav></div></header><main id="main">
 <div class="hero"><div class="eyebrow">Data • Analytics • Evaluated AI</div>
 <h1>{html.escape(title)}</h1>
-<p class="lead">{intro}</p><p class="source-note">Generated from maintained Markdown, contracts and
-recorded evidence. <a href="{REPO_URL}docs/README.md">Repository guides</a></p></div>{body}</main>
-<footer>Source revision {html.escape(commit)} · Static documentation ·
+<p class="lead">{intro}</p>{source_note}</div>{body}</main>
+<footer>Source revision {revision} · Static documentation ·
 No runtime model calls or game downloads.
 <a href="{REPO_URL}docs/SITE.md">Build and publishing runbook</a></footer></body></html>'''
 
@@ -216,13 +250,13 @@ def architecture():
         (
             "ingest",
             "Bounded ingestion",
-            "src/chess_analytics/ingest.py",
+            "src/chess_analytics/ingest/pipeline.py",
             "Read a pinned archive or fixture; preserve exclusions, quarantine and source hashes.",
         ),
         (
             "publish",
             "Checked snapshots",
-            "src/chess_analytics/warehouse.py",
+            "src/chess_analytics/warehouse/snapshots.py",
             "Validate immutable Parquet/DuckDB output before replacing its current pointer.",
         ),
         (
@@ -260,7 +294,7 @@ def architecture():
     )
     details = "".join(
         f'<details class="definition" id="stage-{key}"><summary>{name}</summary><p>{desc}</p>'
-        f'<a href="{REPO_URL}{path}">Inspect the implementation</a></details>'
+        f'<a href="{REPO_URL}{path}">Inspect {name.lower()} code</a></details>'
         for key, name, path, desc in stages
     )
     return (
@@ -464,7 +498,11 @@ with JavaScript disabled.</noscript>
             for v in (0.0, 0.5, 0.7, 0.85, 0.95)
         )
         + """</select></div></div><p id="routing-status" class="stats" aria-live="polite"></p>
-<div class="scroll"><table>
+<details class="routing-details"><summary>Inspect all saved question-level routes</summary>
+<p>Scroll the table sideways to compare every method. Route names are task labels;
+agreement here does not establish a correct final answer.</p>
+<div class="scroll" tabindex="0" role="region" aria-label="Saved routing comparisons">
+<table class="routing-table">
 <caption>Saved route choices; colored cells show agreement with reviewed labels.</caption>
 <thead><tr><th>ID</th><th>Question</th><th>Expected route</th>
 <th>Rules</th><th>Jev run 1</th><th>Jev run 2</th>
@@ -473,7 +511,7 @@ with JavaScript disabled.</noscript>
 <tbody id="routing-rows"></tbody></table></div>
 <script type="application/json" id="routing-data">"""
         + encoded
-        + "</script></section>"
+        + "</script></details></section>"
     )
 
 
@@ -531,30 +569,106 @@ not new observations or model results.</p></section>"""
     )
 
 
-def validate_site(output):
-    class Links(HTMLParser):
-        def __init__(self):
-            super().__init__()
-            self.refs = []
+class SiteLinks(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.refs = []
+        self.ids = set()
 
-        def handle_starttag(self, tag, attrs):
-            for k, value in attrs:
-                if k in ("href", "src") and value:
-                    self.refs.append(value)
+    def handle_starttag(self, tag, attrs):
+        for key, value in attrs:
+            if key in ("href", "src") and value:
+                self.refs.append(value)
+            if key == "id" and value:
+                self.ids.add(value)
 
+
+def target_anchors(path, github=False):
+    text = path.read_text()
+    if path.suffix == ".md":
+        text = markdown.markdown(text, extensions=["fenced_code", "tables", "toc"])
+    parser = SiteLinks()
+    parser.feed(text)
+    if github and path.suffix == ".md":
+        # GitHub removes punctuation from heading anchors; repeated headings get suffixes.
+        used = set()
+        for heading in re.findall(r"<h[1-6][^>]*>(.*?)</h[1-6]>", text, re.DOTALL):
+            plain = html.unescape(re.sub(r"<[^>]+>", "", heading)).lower()
+            slug = re.sub(r"[^\w\- ]", "", plain).replace(" ", "-")
+            anchor, index = slug, 0
+            while anchor in used:
+                index += 1
+                anchor = f"{slug}-{index}"
+            used.add(anchor)
+        return used | parser.ids
+    return parser.ids
+
+
+def validate_site(output, repo=None):
     checked = 0
+    anchors = {}
     for path in output.rglob("*.html"):
-        parser = Links()
+        parser = SiteLinks()
         parser.feed(path.read_text())
         for ref in parser.refs:
             url = urlsplit(ref)
-            if url.scheme or ref.startswith("#"):
+            github = repo is not None and ref.startswith(REPO_URL)
+            if github:
+                target = (repo / unquote(url.path.split("/blob/main/", 1)[1])).resolve()
+                root = repo.resolve()
+            elif ref.startswith(SITE_URL):
+                relative = unquote(url.path.removeprefix("/chess-analytics-lab/"))
+                target = (output / relative).resolve()
+                root = output.resolve()
+            elif not url.scheme and not url.netloc:
+                target = (path.parent / unquote(url.path)).resolve() if url.path else path
+                root = output.resolve()
+            else:
                 continue
-            target = (path.parent / unquote(url.path)).resolve()
-            if not target.is_relative_to(output.resolve()) or not target.exists():
+            if not target.is_relative_to(root) or not target.exists():
                 raise ValueError(f"Broken generated link in {path.name}: {ref}")
+            if target.is_dir() and not github:
+                target /= "index.html"
+                if not target.exists():
+                    raise ValueError(f"Broken generated link in {path.name}: {ref}")
+            if url.fragment:
+                cache_key = (target, github)
+                if cache_key not in anchors:
+                    anchors[cache_key] = target_anchors(target, github)
+                if unquote(url.fragment) not in anchors[cache_key]:
+                    raise ValueError(f"Broken generated anchor in {path.name}: {ref}")
             checked += 1
     return checked
+
+
+def homepage_results(repo):
+    # Reuse corpus reconciliation and frozen report checks before promoting values to the hero.
+    opening_corpus(repo)
+    routing(repo)
+    corpus = json.loads((repo / "reports/opening-corpus.json").read_text())["counts"]
+    paired = json.loads((repo / "reports/M8-e2e-checkpoint.json").read_text())
+    checkpoint = json.loads((repo / "reports/decisions-checkpoint.json").read_text())
+    if paired["arms"] != checkpoint["retained_final_answer_comparison"]["arms"]:
+        raise ValueError("Final-answer checkpoints do not reconcile")
+    baseline, gated = paired["arms"]["baseline"], paired["arms"]["gated"]
+    fixture = json.loads((repo / "tests/fixtures/portfolio_expected.json").read_text())
+    return f'''<section aria-labelledby="results-title">
+<h2 id="results-title">What the lab demonstrates</h2>
+<div class="result-grid">
+<div class="result-card"><strong>{corpus["training_games"]:,}</strong>
+<h3>Selected public games</h3><p>A checked opening-training game index, with Elite and
+broader cohorts kept separate. Position models and drills are proposed work.</p>
+<a href="{REPO_URL}reports/opening-corpus.json">Inspect corpus evidence</a></div>
+<div class="result-card"><strong>{baseline["passed"]}/{baseline["total"]} ·
+{gated["passed"]}/{gated["total"]}</strong>
+<h3>Final-answer comparison</h3><p>The direct analyst and Jev gate tied in one small
+paired Luna experiment under a versioned offline rescore. The gate cost more;
+it remains optional.</p><a href="comparison.html">See results and limitations</a></div>
+<div class="result-card"><strong>{fixture["accepted"]} games · offline</strong>
+<h3>Reproducible demo</h3><p>Authored synthetic games exercise ingestion, metrics and
+checked answer replay. Fixture checks are separate from live model results.</p>
+<a href="demo.html">Run the walkthrough</a></div>
+</div></section>'''
 
 
 def build(repo, output):
@@ -569,6 +683,7 @@ def build(repo, output):
     (output / ".site-output").write_text("Generated static site; safe to rebuild.\n")
     (output / ".nojekyll").touch()
     (output / "assets").mkdir()
+    shutil.copy2(repo / "site/assets/favicon.ico", output / "favicon.ico")
     for name, source in ASSETS.items():
         asset = repo / source
         if not asset.exists() and name not in ("demo-overview.png", "demo-analyst.png"):
@@ -650,12 +765,16 @@ def build(repo, output):
             )
     bodies = {
         "index.html": (
-            "Start with evidence. Learn by doing.",
+            "Chess Analytics Lab",
             (
-                "A local chess data platform, descriptive analytics and an evaluat"
-                "ed AI analyst—one reproducible learning project."
+                "A reproducible chess data pipeline, explicit analytical metrics, "
+                "and an AI analyst evaluated against checked evidence."
             ),
-            home + md(repo, "README.md"),
+            '<p class="home-links">A portfolio project by '
+            '<a href="https://github.com/jfk-ssa">jfk-ssa</a> · '
+            '<a href="https://github.com/jfk-ssa/chess-analytics-lab">Explore the source</a>'
+            '</p><p class="stack">Python · SQL · DuckDB · Parquet · dbt · Streamlit · '
+            "AI evaluation</p>" + homepage_results(repo) + home + md(repo, "HOME.md"),
         ),
         "architecture.html": (
             "From game records to checked answers",
@@ -687,18 +806,22 @@ def build(repo, output):
             md(repo, "CLASSIFIER_COMPARISON.md")
             + routing(repo)
             + (
-                '<h2>Full recorded comparison report</h2><p><a href="reports/decis'
-                'ions-routing-comparison.html">Open the full report in its own pag'
-                'e</a></p><iframe class="report-frame" title="Recorded Decisions c'
-                'omparison report" src="reports/decisions-routing-comparison.html"'
-                ' loading="lazy"></iframe>'
+                '<a class="card report-link" href="reports/decisions-routing-comparison.html">'
+                "<strong>Open the original comparison report</strong><p>Confusion matrices, "
+                "latency and coverage plots. Preserved as the historical report.</p></a>"
             ),
         ),
         "transpositions.html": (
             "Learn the position. Recognize every route.",
             "Explore how opening sequences converge, why familiar positions may help decisions, "
             "and how we can evaluate the learning method.",
-            opening_corpus(repo) + transpositions() + md(repo, "TRANSPOSITION_LEARNING.md"),
+            '<div class="callout"><span class="badge">Corpus implemented · drills proposed</span>'
+            "<p>The game index is built. This page illustrates two legal routes; "
+            "opening-position models, personalized practice and measured learning benefits "
+            "remain proposed work.</p></div>"
+            + opening_corpus(repo)
+            + transpositions()
+            + md(repo, "TRANSPOSITION_LEARNING.md"),
         ),
     }
     for name, (title, intro, body) in bodies.items():
@@ -721,6 +844,8 @@ def build(repo, output):
     source_files.update(repo / "docs" / name for name in PAGES)
     source_files.update(repo / "reports" / name for name in REPORTS)
     source_files.add(repo / "reports/opening-corpus.json")
+    source_files.add(repo / "tests/fixtures/portfolio_expected.json")
+    source_files.add(repo / "site/assets/favicon.ico")
     source_files.update((repo / "contracts").glob("*.json"))
     source_files.update(
         repo / source for name, source in ASSETS.items() if (output / "assets" / name).is_file()
@@ -729,7 +854,7 @@ def build(repo, output):
         "kind": "static_documentation_build_no_live_requests",
         "source_revision": commit,
         "pages": sorted(bodies),
-        "local_links_checked": validate_site(output),
+        "local_links_checked": validate_site(output, repo),
         "sources": {
             p.relative_to(repo).as_posix(): digest(p.read_bytes()) for p in sorted(source_files)
         },

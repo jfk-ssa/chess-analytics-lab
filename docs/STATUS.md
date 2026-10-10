@@ -14,6 +14,26 @@ With the dashboard and docs extras installed, the locked offline suite passed **
 
 ## Publication and presentation
 
+### Site review improvements — 2026-10-09
+
+Implemented an evidence-led portfolio homepage, explicit opening-learning status,
+fixed moved source links, offline path/anchor validation, readable comparison
+disclosure, mobile navigation and darker accent text. All six current guides have
+distinct metadata, canonical/share tags and local favicon/sharing assets. Original
+comparison report bytes remain intact. Retained routing predictions reconcile to
+the published 35/40 rules, 39/40 and 37/40 Jev, 39/40 Decisions historical scores,
+and 8/24 rules versus 23/24 Decisions fresh scores. The fresh 0.70 gate accepts
+17/24 with zero observed accepted errors. No new live evaluation or ingestion.
+
+The locked docs/dashboard offline suite passed **123 tests**, with 15 skips for
+absent real data or optional components. Ruff check and format passed. The site
+build checks **229** links. Browser verification covered all six guides, keyboard
+pipeline/board/disclosure controls, search and denominator updates. At the narrow
+browser viewport (443 CSS pixels), the header is non-sticky and checked pages
+have no page-wide overflow. Screen-reader behavior and a physical phone were not
+tested. See [site review verification](../reports/site-review-verification.json).
+These are branch-local results; new hosted CI and deployment are separate gates.
+
 The documentation site is [public](https://jfk-ssa.github.io/chess-analytics-lab/).
 Current guides and the dashboard use Inter Medium; see [the visual guide](DESIGN.md)
 and [the website runbook](SITE.md). Pages deployment

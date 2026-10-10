@@ -9,6 +9,9 @@ records are **authored synthetic examples**, not observations of players. Run
 every command below from the repository root, the directory containing
 `pyproject.toml` and `uv.lock`.
 
+Six input records produce four accepted games: one record repeats a game and
+one is excluded because it is casual. This fixture quarantines no records.
+
 ## 1. Install the locked environment
 
 Install [uv](https://docs.astral.sh/uv/) if it is not already available, then:
