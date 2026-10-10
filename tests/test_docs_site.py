@@ -57,6 +57,31 @@ def test_publication_rejects_changed_frozen_run(tmp_path):
         site.routing(tmp_path)
 
 
+def test_transposition_routes_share_one_legal_position():
+    example = site.transposition_example()
+    assert example["kind"] == "illustrative_legal_routes_not_observed_training_results"
+    routes = example["routes"]
+    assert routes[0]["states"][-1]["position_key"] == routes[1]["states"][-1]["position_key"]
+    assert routes[0]["states"][-1]["to_move"] == "White"
+    assert len(routes[0]["states"]) == 7
+
+
+def test_opening_corpus_panel_matches_the_checked_report():
+    report = json.loads((ROOT / "reports/opening-corpus.json").read_text())
+    html = site.opening_corpus(ROOT)
+    assert f"{report['counts']['elite_training_games']:,}" in html
+    assert 'id="opening-corpus-data"' in html
+
+
+def test_opening_corpus_rejects_inconsistent_bands(tmp_path):
+    report = json.loads((ROOT / "reports/opening-corpus.json").read_text())
+    report["rating_bands"] = {"1000-1599": 1}
+    (tmp_path / "reports").mkdir()
+    (tmp_path / "reports/opening-corpus.json").write_text(json.dumps(report))
+    with pytest.raises(ValueError, match="rating bands do not reconcile"):
+        site.opening_corpus(tmp_path)
+
+
 def test_unrelated_output_and_missing_links_are_rejected(tmp_path):
     output = tmp_path / "unrelated"
     output.mkdir()
