@@ -12,117 +12,18 @@ With the dashboard and docs extras installed, the locked offline suite passed **
 
 101 report files that nothing in the checkout names were removed. They remain on tag `archive/reports-before-main-prune-2026-10-10` at `2fa1fbb`. December Sol runs, the M6 v2 run and audit triples, and every eval case file stay.
 
-## Publication and presentation
-
-### Local PGN import — 2026-10-10
-
-Branch-local second PR adds /import-games.html for local Chess.com/Lichess and
-generic UTF-8 PGNs. Pinned, license-preserved chess.js legally replays entire
-Standard mainlines in a browser worker; independent Python normalization agrees
-on every field and visit for five authored games. Explicit provider/player selection,
-visible dispositions, duplicate/conflict handling, White-game filters and a bounded
-public-reference comparison preserve separate personal and public denominators.
-Short White games are included by default. Route departures stop at example endpoints,
-including shorter endpoints shared by longer routes. No mistake/engine claim follows.
-
-Locked docs/dashboard suite: **148 passed, 15 skipped**. Final focused import/site
-suite: **23 passed**, plus nine Node unit tests. Ruff check/format and basedpyright
-pass. Eight-page build checks **351 links**. Browser checks cover the example and
-actual file chooser, duplicates, explicit aliases, filtering, board keyboard focus,
-public d4/g3 reference, inert header markup, malformed/unsupported records, clear,
-reload, download and cancellation. Zero console errors and no page-wide overflow
-at the actual 487-CSS-pixel narrow viewport. No physical-device/screen-reader test.
-The deadline code was reviewed; browser timeout was not forced.
-
-The session caps are 20 files, 10 MiB, 5,000 games, 1,000 plies/game, 32 variation
-levels and 60 seconds. Local Node 24 fixture replay accepted 5,000 unique-ID
-20-ply games in 3.577 seconds; this does not establish long-game/mobile performance.
-Public corpus/position reports and historical comparison bytes are unchanged.
-Development uses authored fixtures only. Username/API collection is dropped.
-[Verification receipt](../reports/game-import-verification.json),
-[ADR 0071](adr/0071-local-pgn-imports.md). PRs remain separate and unmerged;
-hosted CI is recorded in GitHub rather than inferred from local results.
-
-### Public transposition insights — 2026-10-10
-
-Branch-local implementation separates Transpositions from Opening learning and
-adds the opening-position metric registry, dynamic definition count, metadata and
-sitemap. Report 1.1.0 adds alternative-route share, N=1..20 union coverage and
-marginal gains, complete family/ECO breadth, and three public move-sequence lenses.
-Coverage/depth charts, a bounded ranked-position scatter, and route comparisons
-share accessible tables and keyboard controls. Existing cohort/family figures,
-arrival routes and continuations reconcile exactly with the earlier report.
-
-The d4/g3 lens contains 16,647 Elite and 20,745 public games. Independent raw-visit
-checks pass for 64 rankings, 1,280 curve points and 668 position details. The first
-independent query exceeded its 2GB temporary-storage cap; the bounded retry passes
-without raising the cap. That failure remains in the receipt. No source corpus,
-frozen evaluation, engine work, personal collection or live provider call changed.
-
-Locked docs/dashboard offline suite: **137 passed, 15 skipped**. Ruff check/format
-and basedpyright pass. The seven-page build checks **303 links**. Browser checks
-cover all 64 cohort/family/lens/ranking views, charts, board updates, keyboard chart
-selection, metric search and learning-page separation, with zero console errors.
-A 487-CSS-pixel narrow viewport has no page-wide overflow. Screen-reader and
-physical-phone behavior remain untested. Hosted CI and deployment are separate.
-[ADR 0070](adr/0070-public-transposition-insights.md) records this delivery scope.
-
-### Measured opening-position explorer — 2026-10-10
-
-Implemented a separate White opening visit publication over all **1,042,346**
-selected games: **8,338,768** visits at plies 6–20, with full FEN, canonical keys,
-complete UCI arrival prefixes, next moves and source/game lineage. The immutable
-derived snapshot is `bd299fb6ebbced2145f1161b`, based on checked opening corpus
-`00e7a73fbf67c401e23b4b4b`. Published visit artifacts occupy **436,694,803 bytes**.
-Original corpus and frozen evaluations remain intact; no new acquisition or live calls.
-
-The [position report](../reports/opening-positions.json) separates the **240,086**
-Elite games and **802,260** public prefix games. Top 20 transposing positions reach
-**56,861** distinct Elite games (**23.68%**) and **115,042** public games (**14.34%**).
-Each game counts once per board; repeated-position arrival prefixes do not add
-acyclic move orders. Family views use their own recorded-label denominators.
-The website adds rankings for recurring/transposing boards, twelve opening-family
-filters per cohort, boards, route shares, observed continuations, complete family
-counts and convergence by depth. Strategic lessons and measured learning benefits
-remain proposed. [ADR 0069](adr/0069-measured-opening-position-explorer.md) records scope.
-
-Independent raw-visit checks reconcile game counts and top-10/top-20 union coverage
-for all **52** published rankings. The locked docs/dashboard offline suite passes
-**135 tests**, with 15 skips; Ruff check/format and basedpyright pass. Site build
-checks **242** links and generates 420 board SVGs. Browser checks cover cohort and
-family filters, ranking mode, keyboard row selection, board updates and console
-errors. Checked desktop/narrow widths are 1500/487 CSS pixels with no page-wide
-overflow; narrow row selection moves focus to the board panel. Screen-reader use
-and a physical phone were not tested. See the [publication receipt](../reports/opening-positions-checkpoint.json).
-Hosted checks/deployment remain separate from these local results.
-
-### Site review improvements — 2026-10-09
-
-Implemented an evidence-led portfolio homepage, explicit opening-learning status,
-fixed moved source links, offline path/anchor validation, readable comparison
-disclosure, mobile navigation and darker accent text. All six current guides have
-distinct metadata, canonical/share tags and local favicon/sharing assets. Original
-comparison report bytes remain intact. Retained routing predictions reconcile to
-the published 35/40 rules, 39/40 and 37/40 Jev, 39/40 Decisions historical scores,
-and 8/24 rules versus 23/24 Decisions fresh scores. The fresh 0.70 gate accepts
-17/24 with zero observed accepted errors. No new live evaluation or ingestion.
-
-The locked docs/dashboard offline suite passed **123 tests**, with 15 skips for
-absent real data or optional components. Ruff check and format passed. The site
-build checks **229** links. Browser verification covered all six guides, keyboard
-pipeline/board/disclosure controls, search and denominator updates. At the narrow
-browser viewport (443 CSS pixels), the header is non-sticky and checked pages
-have no page-wide overflow. Screen-reader behavior and a physical phone were not
-tested. See [site review verification](../reports/site-review-verification.json).
-These are branch-local results; new hosted CI and deployment are separate gates.
+## Current state
 
 The documentation site is [public](https://jfk-ssa.github.io/chess-analytics-lab/).
-Current guides and the dashboard use Inter Medium; see [the visual guide](DESIGN.md)
-and [the website runbook](SITE.md). Pages deployment
-[37939389092](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/37939389092)
-and offline integrity CI
-[37939389093](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/37939389093)
-passed on `814ffe9`. GitHub reports the repository `PUBLIC`.
+Guides and the dashboard use Inter Medium; see [the visual guide](DESIGN.md)
+and [the website runbook](SITE.md). Opening rankings, transposition views, the
+site review, and local PGN import are recorded in ADRs 0068–0072 and their
+receipts under `reports/`. Generated opening rankings are restored by the pinned
+publication hash rather than stored on the branch tip.
+
+This file stays a short summary: checkout structure, phase tracker, dataset
+versions, and limits. New decisions go only into [docs/adr](adr/). Do not append
+measurement logs here. Earlier verification logs remain in Git history.
 
 ## Phase tracker
 
