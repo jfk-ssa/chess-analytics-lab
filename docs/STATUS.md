@@ -324,3 +324,32 @@ checks report hashes when the summary is requested; no new model call occurred.
 The upfront results now separate a shared 40-question routing comparison from
 the 32-question final-answer comparison, and identify which fresh comparisons
 were not run. Seven focused checks and Ruff passed; no new API calls.
+
+# Opening learning guide and relocation — 2026-10-09
+
+The full Git repository, retained ignored datasets, and dashboard now reside in
+the linked chess project folder. The 174-game example previously moved there is
+a separate companion case study. Reinstalled the locked local environment to
+refresh executable paths after the move.
+
+Added `transpositions.html` to the existing documentation builder and shared
+navigation. It uses the current Inter Medium style, two legal example routes,
+board replay controls, and the maintained [learning design](TRANSPOSITION_LEARNING.md).
+The guide records motivation and indirect research support, White-first frequency
+ranking, a later Black extension, source limits, and reuse of the immutable
+DuckDB/Parquet pipeline. Opening graph tables, measured lesson ranking, training
+attempts, and learning outcomes remain proposed work.
+
+Read-only queries of retained warehouses agree with their accepted-game manifests:
+121,332 January 2013 foundation games; 99,467 August 2026 prefix games; and
+99,307 December 2025 prefix games. Recent prefixes cover the first day of their
+month only. These are separate counts. The existing August move sample contains
+330,956 rows, so the next step can replay opening plies from retained PGNs before
+acquiring another source. Broader archives and personal exports are documented.
+
+The local static build generated six guide pages and checked 76 local links.
+Ruff passed. Browser inspection showed the two move orders diverging and
+converging, functional route/ply controls, and the shared guide styling at the
+existing narrow panel width. No new model call, game download, hosted build,
+deployment, or learning-effect measurement occurred. See the
+[local checkpoint](../reports/opening-learning-checkpoint.json).

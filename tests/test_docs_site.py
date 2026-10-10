@@ -17,7 +17,7 @@ spec.loader.exec_module(site)
 def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     before = (ROOT / "reports/decisions-routing-comparison.html").read_bytes()
     result = site.build(ROOT, tmp_path / "output")
-    assert len(result["pages"]) == 5
+    assert len(result["pages"]) == 6
     assert result["local_links_checked"] > 50
     assert result["live_requests"] == result["data_downloads"] == 0
     output = tmp_path / "output"

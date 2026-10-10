@@ -10,11 +10,12 @@ The site is static: it cannot run the analyst, contact a model or download games
 
 | Published page | Maintained sources | What HTML adds |
 | --- | --- | --- |
-| [Homepage](https://jfk-ssa.github.io/chess-analytics-lab/) | [Documentation guide](README.md) | Four learning paths and common navigation |
+| [Homepage](https://jfk-ssa.github.io/chess-analytics-lab/) | [Documentation guide](README.md) | Five learning paths and common navigation |
 | [Comparison](https://jfk-ssa.github.io/chess-analytics-lab/comparison.html) | [Classifier summary](CLASSIFIER_COMPARISON.md), frozen reports and cases | Question-level routing and threshold exploration |
 | [Architecture](https://jfk-ssa.github.io/chess-analytics-lab/architecture.html) | [Architecture guide](ARCHITECTURE.md), stage descriptions in the builder | Clickable pipeline stages and implementation links |
 | [Metrics and data](https://jfk-ssa.github.io/chess-analytics-lab/metrics.html) | [Metrics](METRICS.md), [dictionary](DATA_DICTIONARY.md), versioned contracts | Searchable contracts/schemas and a denominator illustration |
 | [Demo](https://jfk-ssa.github.io/chess-analytics-lab/demo.html) | [Demo walkthrough](DEMO.md), synthetic dashboard screenshots | Actual example screens and copyable commands |
+| Opening learning (`transpositions.html`, local until the next deployment) | [Transposition learning](TRANSPOSITION_LEARNING.md) | Two legally replayed routes, board controls, and the research/integration plan |
 
 The [original full comparison report](https://jfk-ssa.github.io/chess-analytics-lab/reports/decisions-routing-comparison.html)
 is copied byte-for-byte from its tracked report, rather than rewritten. Historical
@@ -86,12 +87,19 @@ The build checks local link targets and frozen case/run hashes. Its
 `site-build.json` records source/output hashes, source Git revision, generated
 pages and zero live requests. The publication checkpoint records checks and
 browser observations in [docs-site-checkpoint.json](../reports/docs-site-checkpoint.json).
-Acceptance includes five reachable pages, intact full-report bytes, clear
+Acceptance includes six reachable guide pages, intact full-report bytes, clear
 unmeasured cases, working search/threshold/pipeline controls, visible demo
 screenshots and usable mobile navigation. Numeric experiments retain their
 original dates and evidence; deploying HTML does not create a new benchmark.
 Only named public assets and sources enter the build. Ignored datasets, provider
 responses, `.env` files, numbered cloud-sync copies and credentials are excluded.
+
+On Opening learning, choose either move order and step backward or forward. After
+six half-moves both routes share the same normalized opening position, while
+earlier positions diverge. The builder validates the routes with the existing
+pinned chess library. This is an illustrative walkthrough, not a trainer or a
+measured improvement in learning. The complete rationale is maintained in
+Markdown and uses the same visual style and navigation as the other guides.
 
 ## Shared appearance
 

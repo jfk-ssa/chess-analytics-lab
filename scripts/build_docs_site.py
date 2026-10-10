@@ -12,6 +12,8 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
+import chess
+import chess.svg
 import markdown
 
 REPO_URL = "https://github.com/jfk-ssa/chess-analytics-lab/blob/main/"
@@ -22,6 +24,7 @@ PAGES = {
     "METRICS.md": "metrics.html",
     "DATA_DICTIONARY.md": "metrics.html",
     "DEMO.md": "demo.html",
+    "TRANSPOSITION_LEARNING.md": "transpositions.html",
 }
 REPORTS = (
     "decisions-development.json",
@@ -55,6 +58,7 @@ NAV = (
     ("comparison.html", "Comparison"),
     ("architecture.html", "Architecture"),
     ("metrics.html", "Metrics & data"),
+    ("transpositions.html", "Opening learning"),
     ("demo.html", "Run the demo"),
 )
 
@@ -181,6 +185,80 @@ def architecture():
         )
         + flow
         + details
+    )
+
+
+def transposition_example():
+    """Replay two legal illustrative routes; retain full FEN and opening identity."""
+    routes = []
+    for name, line, moves in (
+        ("Knight first", "1.d4 Nf6 2.c4 e6 3.Nf3 d5", "d4 Nf6 c4 e6 Nf3 d5"),
+        ("Center first", "1.d4 d5 2.c4 e6 3.Nf3 Nf6", "d4 d5 c4 e6 Nf3 Nf6"),
+    ):
+        board = chess.Board()
+        states = []
+        for ply, san in enumerate([None, *moves.split()]):
+            lastmove = board.push_san(san) if san is not None else None
+            states.append(
+                {
+                    "ply": ply,
+                    "san": san,
+                    "full_fen": board.fen(),
+                    "position_key": " ".join(board.fen(en_passant="legal").split()[:4]),
+                    "to_move": "White" if board.turn == chess.WHITE else "Black",
+                    "svg": chess.svg.board(
+                        board,
+                        lastmove=lastmove,
+                        size=400,
+                        colors={"square light": "#eaf1eb", "square dark": "#789b8d"},
+                    ),
+                }
+            )
+        routes.append({"name": name, "line": line, "states": states})
+    if routes[0]["states"][-1]["position_key"] != routes[1]["states"][-1]["position_key"]:
+        raise ValueError("Illustrative routes no longer transpose")
+    return {"kind": "illustrative_legal_routes_not_observed_training_results", "routes": routes}
+
+
+def transpositions():
+    example = transposition_example()
+    data = json.dumps(example).replace("<", "\\u003c")
+    return (
+        """<section class="opening-lab" aria-labelledby="opening-lab-title">
+<div class="opening-lab-header"><span class="badge">Illustrative legal example</span>
+<h2 id="opening-lab-title">Two routes. One position to recognize.</h2>
+<p>Replay either move order, then compare the shared position after Black's third move.
+The board example is verified by legal replay; it is not a measured learning result.</p></div>
+<div class="opening-grid"><div>
+<label for="opening-route">Choose an arrival route</label>
+<select id="opening-route"><option value="0">Knight first</option>
+<option value="1">Center first</option></select>
+<div id="opening-board" class="opening-board" role="img"
+aria-label="Opening board after six half-moves, White to move">"""
+        + (example["routes"][0]["states"][-1]["svg"])
+        + """</div><div class="opening-controls">
+<button type="button" id="opening-back" aria-label="Previous half-move">Previous</button>
+<label for="opening-ply">Half-move <output id="opening-ply-value">6 / 6</output></label>
+<input id="opening-ply" type="range" min="0" max="6" value="6" step="1">
+<button type="button" id="opening-next" aria-label="Next half-move">Next</button></div>
+<p id="opening-board-status" class="source-note" aria-live="polite">White to move.</p>
+</div><div class="opening-explanation">
+<div class="route-card"><h3>Knight first</h3><p><code>1.d4 Nf6 2.c4 e6 3.Nf3 d5</code></p></div>
+<div class="route-card"><h3>Center first</h3><p><code>1.d4 d5 2.c4 e6 3.Nf3 Nf6</code></p></div>
+<div class="callout"><strong id="opening-match-title">Shared opening position</strong>
+<p id="opening-match-note" aria-live="polite">The board, side to move, castling rights,
+and legal en passant availability match after both routes.</p></div>
+<h3>Attach knowledge to the position</h3><ol>
+<li>Recognize the arrangement and the opponent's threats.</li>
+<li>Recall candidate moves, pawn breaks, and their reasons.</li>
+<li>Check tactics and differences before choosing a move.</li></ol>
+<p class="source-note">Earlier deviations need their own lessons. A move order can
+leave this route before the shared position is reached.</p></div></div>
+<noscript>The two printed routes transpose after six half-moves. Enable JavaScript
+to step through their intermediate positions.</noscript></section>
+<script type="application/json" id="opening-data">"""
+        + data
+        + "</script>"
     )
 
 
@@ -400,6 +478,13 @@ def build(repo, output):
                     "Explicit missingness and coverage",
                 ),
                 (
+                    "transpositions.html",
+                    "Learn positions across move orders",
+                    "Explore shared opening positions, the learning rationale, "
+                    "and a White-first plan.",
+                    "Legal board walkthrough + research design",
+                ),
+                (
                     "demo.html",
                     "Run it yourself",
                     "Build tiny synthetic data, explore the dashboard and replay a checked answer.",
@@ -471,6 +556,12 @@ def build(repo, output):
                 'omparison report" src="reports/decisions-routing-comparison.html"'
                 ' loading="lazy"></iframe>'
             ),
+        ),
+        "transpositions.html": (
+            "Learn the position. Recognize every route.",
+            "Explore how opening sequences converge, why familiar positions may help decisions, "
+            "and how we can evaluate the learning method.",
+            transpositions() + md(repo, "TRANSPOSITION_LEARNING.md"),
         ),
     }
     for name, (title, intro, body) in bodies.items():

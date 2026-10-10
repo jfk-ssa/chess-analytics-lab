@@ -366,3 +366,62 @@ figure .full-size {
   html {
   scroll-behavior:auto}
 }
+
+.opening-lab {
+  margin:28px 0;
+  padding:24px;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:white}
+.opening-lab-header h2 {
+  margin:14px 0 12px}
+.opening-lab-header p {
+  max-width:75ch;
+  color:var(--muted)}
+.opening-grid {
+  display:grid;
+  grid-template-columns:minmax(0,420px) minmax(0,1fr);
+  gap:32px;
+  align-items:start;
+  margin-top:24px}
+.opening-board {
+  margin:14px 0;
+  max-width:420px}
+.opening-board svg {
+  display:block;
+  width:100%;
+  height:auto}
+.opening-controls {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px}
+.opening-controls input[type=range] {
+  width:100%;
+  order:1;
+  accent-color:var(--teal)}
+.opening-controls button:disabled {
+  opacity:.5;
+  cursor:default}
+.route-card {
+  padding:14px 18px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  margin-bottom:12px}
+.route-card h3 {
+  margin:0 0 8px;
+  font-size:15px}
+.route-card p {
+  margin:0}
+.route-card[data-active] {
+  border-color:var(--teal);
+  background:var(--soft)}
+.opening-explanation .callout {
+  margin:20px 0}
+@media(max-width:750px) {
+  .opening-lab {
+    padding:18px}
+  .opening-grid {
+    grid-template-columns:1fr;
+    gap:16px}
+}

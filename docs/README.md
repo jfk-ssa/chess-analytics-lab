@@ -15,6 +15,7 @@ live evaluations are recorded separately.
 | Run something immediately | [Offline demo](DEMO.md) | Install, build four unique fixture games, explore six dashboard views, replay checked answers |
 | Understand the system | [Architecture](ARCHITECTURE.md) → [data dictionary](DATA_DICTIONARY.md) | Pipeline, code boundaries, table grain and provenance |
 | Understand an analysis | [Metric contracts](METRICS.md) → [opening memo](M4-OPENINGS.md) / [clock memo](M4-CLOCK.md) | Denominators, cohort filters, missingness and limits |
+| Explore opening learning | [Transposition learning](TRANSPOSITION_LEARNING.md) | Research rationale, legal board walkthrough in HTML, White-first frequency ranking, and a plan to reuse the existing warehouse |
 | Assess the AI evidence | [Evaluation guide](EVALUATION.md) → [evidence index](EVIDENCE_INDEX.md) | Fixture tests versus actual responses; frozen references and retained failures |
 | Compare rules, Jev and Decisions | [Classifier comparison](CLASSIFIER_COMPARISON.md) | Shared-case scores, cost and conclusions readable directly on GitHub |
 | Reproduce optional classifier exercises | [Jev routing](JEV_ROUTING_RUNBOOK.md), [paired answers](JEV_END_TO_END.md), [Decisions](DECISIONS_ROUTING_RUNBOOK.md) | Offline harness/replay commands and separate live spending gates |

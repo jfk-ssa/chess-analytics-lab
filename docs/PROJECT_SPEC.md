@@ -591,3 +591,22 @@ Copy the following text into a new chat with this document attached or present i
 Technical and pricing sources were consulted on 2026-10-03. Product capabilities, billing, and model IDs can change; recheck them before live integration. Architecture, budgets, thresholds, milestone estimates, and experiments in this document are project proposals, not claims made by vendors.
 
 Primary references are linked beside the relevant claims. Additional implementation references: [OpenAI evaluation guidance](https://developers.openai.com/api/docs/guides/evals), [TypeSafe API documentation](https://docs.typesafe.ai/), and [Streamlit resource management](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app). The evaluation suite should remain ordinary versioned local files and code, independent of any hosted evaluation product's lifecycle.
+
+## 21. Opening-transposition learning extension — 2026-10-09
+
+The owner approved a maintained research/integration guide and matching static
+HTML walkthrough for learning opening strategy through converging move orders.
+The delivered guide shares the lab's documentation infrastructure and visual
+style. Its two legally replayed example routes illustrate position recognition;
+they do not constitute a personalized recommender or measured training result.
+
+The next functional milestone should reuse the existing retained PGNs, legal
+replay, game identities, cohort filters, and immutable DuckDB/Parquet snapshots.
+Create versioned opening visits, positions, edges, and continuation summaries
+through a derived opening publication. Start with White and frequency within a
+declared cohort or player history; extend to Black after the first workflow is
+useful. Broader game acquisition is optional because retained data already
+supports an initial pilot. Keep learning recognition, decision quality, response
+time, and mistaken transfer as separate outcomes. The
+[design guide](TRANSPOSITION_LEARNING.md) specifies the rationale, limitations,
+metrics, and proposed learning experiment.
