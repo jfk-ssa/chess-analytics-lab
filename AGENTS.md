@@ -1,6 +1,6 @@
 # Repository instructions
 
-Read docs/STATUS.md, docs/DECISIONS.md and docs/PROJECT_SPEC.md before extending this project.
+Read docs/STATUS.md, the decision records under docs/adr/ (indexed by docs/DECISIONS.md), and docs/PROJECT_SPEC.md before extending this project.
 Work in milestone order. Preserve failures and distinguish fixture tests, replay and live results.
 Never read workplace credentials. Live calls stay disabled until personal configuration and an
 explicit run spending cap exist. Do not infer permission or budgets from API credits.
