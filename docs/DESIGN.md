@@ -82,11 +82,19 @@ original historical artifact.
 
 The shared palette is warm paper `#faf9f5`, dark teal text `#203433`, muted text
 `#586c69`, action teal `#116559`, pale panels `#eaf1eb`, borders `#d7ded7` and
-an orange accent `#cf612f`. The muted text on paper meets normal-text contrast
+an orange text/focus accent `#a84a1f`. Its contrast is 5.44:1 on paper and 4.99:1
+on pale panels. The muted text on paper meets normal-text contrast
 requirements. Keep textual error labels alongside color; color alone is not a
 sufficient explanation. Maintain visible keyboard focus, wrapping navigation,
 scrollable tables and reduced-motion support. Spacing uses a 4px base with
 larger gaps between sections; cards have subtle borders and restrained corners.
+
+The homepage adds a three-column results grid, stacked at 750px and below.
+The header becomes non-sticky at that breakpoint. The opening board fills its
+mobile column. Comparison question details stay collapsed until opened, with
+a 320px Question column in a contained table. Definition JSON wraps long lines;
+executable command blocks keep contained scrolling. The original comparison
+report is linked as a separate artifact, preserving its historical appearance.
 
 ## Where the styles live
 

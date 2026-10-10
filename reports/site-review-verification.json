@@ -1,0 +1,68 @@
+{
+  "kind": "site_review_verification_no_new_experiments",
+  "date": "2026-10-09",
+  "base_revision": "7fc90ef",
+  "offline_tests": {
+    "passed": 123,
+    "skipped": 15,
+    "extras": [
+      "docs",
+      "dashboard"
+    ]
+  },
+  "checks": {
+    "ruff": "passed",
+    "ruff_format": "passed",
+    "links_checked": 229,
+    "original_report_bytes": "unchanged"
+  },
+  "recomputed_routing": {
+    "historical": {
+      "rules": "35/40",
+      "jev_run_1": "39/40",
+      "jev_run_2": "37/40",
+      "decisions": "39/40"
+    },
+    "fresh": {
+      "rules": "8/24",
+      "decisions": "23/24",
+      "gate_0_70": {
+        "accepted": 17,
+        "total": 24,
+        "accepted_errors": 0
+      }
+    }
+  },
+  "evidence_scope": "Retained predictions/checkpoints and independent fixture expectations. No live model rerun or bulk corpus rebuild.",
+  "contrast": {
+    "accent": "#a84a1f",
+    "paper": 5.44,
+    "soft_panel": 4.99,
+    "white_panel": 5.73
+  },
+  "browser": {
+    "narrow_css_width": 443,
+    "header": "static",
+    "page_wide_overflow": "none on checked guide pages",
+    "controls": [
+      "keyboard pipeline link",
+      "keyboard board previous/next",
+      "keyboard question disclosure",
+      "cohort select",
+      "definition search",
+      "keyboard denominator slider"
+    ]
+  },
+  "metadata_scope": "Six current guide pages. Frozen full report remains byte-preserved.",
+  "limits": [
+    "Physical phone and screen reader not tested.",
+    "Social provider preview rendering/caches not verified.",
+    "Hosted CI/deployment pending branch publication."
+  ],
+  "deferred": {
+    "external_board_json": "No observed loading defect or measured performance trigger.",
+    "templates": "No measured maintenance requirement for a framework/template refactor."
+  },
+  "live_requests": 0,
+  "data_downloads": 0
+}

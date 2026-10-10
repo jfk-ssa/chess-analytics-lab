@@ -12,7 +12,7 @@
   --paper:#faf9f5;
   --line:#d7ded7;
   --teal:#116559;
-  --accent:#cf612f;
+  --accent:#a84a1f;
   --soft:#eaf1eb;
   --font-body:"Inter",system-ui,-apple-system,sans-serif;
   --font-heading:var(--font-body);
@@ -39,7 +39,7 @@ a {
   text-underline-offset:3px}
 a:hover {
   color:#9c431f}
-a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible {
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,.scroll:focus-visible {
   outline:3px solid var(--accent);
   outline-offset:4px}
 .skip {
@@ -209,6 +209,42 @@ button:hover {
 .scroll {
   overflow-x:auto;
   margin:20px 0}
+.routing-details {
+  margin:20px 0;
+  padding:16px;
+  border:1px solid var(--line);
+  border-radius:var(--radius)}
+.routing-table {
+  min-width:1350px;
+  table-layout:fixed}
+.routing-table th:nth-child(2) {
+  width:320px}
+.routing-table th:first-child {
+  width:80px}
+.routing-table td {
+  overflow-wrap:anywhere}
+.definition pre {
+  white-space:pre-wrap;
+  overflow-wrap:anywhere}
+.home-links,.stack {
+  color:var(--muted)}
+.result-grid {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:var(--grid-gap)}
+.result-card {
+  padding:24px;
+  border:1px solid var(--line);
+  background:white;
+  border-radius:var(--radius)}
+.result-card>strong {
+  color:var(--teal);
+  font-size:28px;
+  font-variant-numeric:tabular-nums}
+.result-card h3 {
+  font-size:16px}
+.report-link {
+  margin:28px 0}
 table {
   border-collapse:collapse;
   width:100%;
@@ -341,6 +377,12 @@ noscript {
   font-size:28px;
   color:var(--teal)}
 @media(max-width:750px) {
+  .topbar {
+  position:static}
+  .result-grid {
+  grid-template-columns:1fr}
+  html {
+  scroll-padding-top:16px}
   .nav-inner {
   display:block;
   padding:12px 18px}
@@ -484,6 +526,7 @@ figure .full-size {
   margin-top:24px}
 .opening-board {
   margin:14px 0;
+  width:100%;
   max-width:420px}
 .opening-board svg {
   display:block;
@@ -526,4 +569,6 @@ figure .full-size {
   .opening-grid {
     grid-template-columns:1fr;
     gap:16px}
+  .opening-board {
+    max-width:none}
 }

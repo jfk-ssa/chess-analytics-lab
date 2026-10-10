@@ -10,7 +10,7 @@ The site is static: it cannot run the analyst, contact a model or download games
 
 | Published page | Maintained sources | What HTML adds |
 | --- | --- | --- |
-| [Homepage](https://jfk-ssa.github.io/chess-analytics-lab/) | [Documentation guide](README.md) | Five learning paths and common navigation |
+| [Homepage](https://jfk-ssa.github.io/chess-analytics-lab/) | [Portfolio introduction](HOME.md), corpus/final-answer checkpoints, fixture reference | Report-backed outcomes, stack, author/source links and five learning paths |
 | [Comparison](https://jfk-ssa.github.io/chess-analytics-lab/comparison.html) | [Classifier summary](CLASSIFIER_COMPARISON.md), frozen reports and cases | Question-level routing and threshold exploration |
 | [Architecture](https://jfk-ssa.github.io/chess-analytics-lab/architecture.html) | [Architecture guide](ARCHITECTURE.md), stage descriptions in the builder | Clickable pipeline stages and implementation links |
 | [Metrics and data](https://jfk-ssa.github.io/chess-analytics-lab/metrics.html) | [Metrics](METRICS.md), [dictionary](DATA_DICTIONARY.md), versioned contracts | Searchable contracts/schemas and a denominator illustration |
@@ -83,7 +83,9 @@ Existing offline integrity CI remains separate. Public static hosting requires
 no cloud database or continuously running application; Actions usage remains
 subject to the owner's GitHub plan.
 
-The build checks local link targets and frozen case/run hashes. Its
+The build checks local link targets and anchors, same-repository GitHub
+`blob/main` targets against the checkout, and frozen case/run hashes. External
+sites and historical GitHub revisions are outside this offline check. Its
 `site-build.json` records source/output hashes, source Git revision, generated
 pages and zero live requests. The publication checkpoint records checks and
 browser observations in [docs-site-checkpoint.json](../reports/docs-site-checkpoint.json).
@@ -114,3 +116,23 @@ games), with broader public (802,260) and combined views. These counts come from
 [the checked corpus report](../reports/opening-corpus.json), not runtime database
 queries. The website publishes no PGNs or full warehouses. Research sources use
 stacked cards; ordinary article tables align to the prose reading width.
+
+## Site review improvements
+
+The six current guide pages have distinct descriptions, self-canonical URLs,
+Open Graph and Twitter sharing tags, a shared 1200×630 PNG preview and SVG/ICO
+favicons. The homepage canonical URL is the directory URL. Sharing metadata is
+checked locally; provider preview caches may need to be refreshed after deployment.
+The original full report remains a byte-preserved historical artifact.
+
+The homepage promotes counts from the reconciled corpus report and matching
+paired-answer checkpoints. These checks establish agreement among retained
+artifacts; they do not rerun a live evaluation or rebuild the bulk corpus.
+The full question table is collapsed by default and has a wider Question column
+inside a keyboard-focusable horizontal scroll region. The frozen report opens
+through a link rather than a nested iframe. Mobile navigation scrolls away with
+the page. Maintain visible keyboard focus and the approved 78ch reading measure.
+
+The favicon is an original geometric rook; the sharing card is original
+typographic artwork. Neither depicts a measured result. They are tracked public
+assets and require no runtime image service.
