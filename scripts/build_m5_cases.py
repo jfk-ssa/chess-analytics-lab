@@ -21,6 +21,96 @@ def ratio(a, b):
     return a / b if b else None
 
 
+def template_family(category, case_id):
+    if category == "basic_calculation" and case_id.startswith("usage_"):
+        return "opening_usage_template"
+    if category == "filtering_perspective":
+        return "black_cohort_template" if case_id.startswith("black_") else "white_cohort_template"
+    if category == "multi_step":
+        return (
+            "clock_comparison_template"
+            if case_id.startswith("clock_")
+            else "opening_comparison_template"
+        )
+    if category == "missing_data":
+        return "coverage_template" if case_id.startswith("coverage_") else "proxy_template"
+    return case_id
+
+
+def split_for(category, case_id, index, dev_count):
+    if category == "basic_calculation":
+        return "test" if case_id in {"draw_fraction", "accepted_count"} else "dev"
+    if category == "filtering_perspective":
+        return "dev" if case_id.startswith("black_") else "test"
+    if category == "multi_step":
+        return "test" if case_id.startswith("clock_") else "dev"
+    if category == "missing_data":
+        return "test" if case_id.startswith("coverage_") else "dev"
+    return "dev" if index < dev_count else "test"
+
+
+def reference_locator(tool, args):
+    if tool == "get_dataset_coverage":
+        return "accepted_games or selected_games"
+    if tool == "query_metric":
+        metric = args["metric_id"]
+        filters = args["filters"]
+        if metric == "game_draw_rate":
+            return "drawn_eligible_games / eligible_games"
+        if metric == "opening_usage":
+            return f"opening_families.{filters['family']} / known_opening_games"
+        if metric == "opening_player_score":
+            key = f"{filters['family']}|{filters['color']}|rating_1400_1599|60+0"
+            return f"opening_player_cohorts.{key}"
+        return f"clock_buckets.{filters['bucket']}"
+    if tool == "compare_openings":
+        return f"opening_player_cohorts.{args['filters']['color']} paired families"
+    if tool == "compare_clock_buckets":
+        return f"clock_buckets.{args['first']} minus {args['second']}"
+    return "not_applicable"
+
+
+def add_case(
+    records,
+    dataset,
+    category,
+    case_id,
+    question,
+    expected,
+    tool=None,
+    args=None,
+    caveats=None,
+    status="answered",
+    result_path=None,
+):
+    records[category].append(
+        {
+            "id": case_id,
+            "category": category,
+            "template_family": template_family(category, case_id),
+            "question": question,
+            "dataset_id": dataset,
+            "expected_status": status,
+            "reference_file": "reports/M3-independent-reference.json",
+            "reference_key": reference_locator(tool, args),
+            "expected_result": expected,
+            "expected_tool": tool,
+            "expected_tool_args": args,
+            "result_path": result_path or [],
+            "comparison": {"counts": "exact", "rates_absolute_tolerance": 1e-6},
+            "required_caveats": caveats or ["observed_prefix_only"],
+            "allowed_interpretations": ["descriptive_observed_prefix"],
+            "severity": "high" if category == "reliability_access" else "medium",
+            "rubric_version": "m5-1.0",
+            "replay_plan": {
+                "status": status,
+                "interpretation": "descriptive_observed_prefix",
+                "actions": [{"tool": tool, "args": args}] if tool else [],
+            },
+        }
+    )
+
+
 def build(project=PROJECT):
     ref = json.loads((project / "reports/M3-independent-reference.json").read_text())
     dataset = json.loads((project / "reports/M3-analytical-manifest.json").read_text())[
@@ -28,91 +118,8 @@ def build(project=PROJECT):
     ]
     records = {name: [] for name in QUOTAS}
 
-    def template_family(category, case_id):
-        if category == "basic_calculation" and case_id.startswith("usage_"):
-            return "opening_usage_template"
-        if category == "filtering_perspective":
-            return (
-                "black_cohort_template" if case_id.startswith("black_") else "white_cohort_template"
-            )
-        if category == "multi_step":
-            return (
-                "clock_comparison_template"
-                if case_id.startswith("clock_")
-                else "opening_comparison_template"
-            )
-        if category == "missing_data":
-            return "coverage_template" if case_id.startswith("coverage_") else "proxy_template"
-        return case_id
-
-    def split_for(category, case_id, index, dev_count):
-        if category == "basic_calculation":
-            return "test" if case_id in {"draw_fraction", "accepted_count"} else "dev"
-        if category == "filtering_perspective":
-            return "dev" if case_id.startswith("black_") else "test"
-        if category == "multi_step":
-            return "test" if case_id.startswith("clock_") else "dev"
-        if category == "missing_data":
-            return "test" if case_id.startswith("coverage_") else "dev"
-        return "dev" if index < dev_count else "test"
-
-    def reference_locator(tool, args):
-        if tool == "get_dataset_coverage":
-            return "accepted_games or selected_games"
-        if tool == "query_metric":
-            metric = args["metric_id"]
-            filters = args["filters"]
-            if metric == "game_draw_rate":
-                return "drawn_eligible_games / eligible_games"
-            if metric == "opening_usage":
-                return f"opening_families.{filters['family']} / known_opening_games"
-            if metric == "opening_player_score":
-                key = f"{filters['family']}|{filters['color']}|rating_1400_1599|60+0"
-                return f"opening_player_cohorts.{key}"
-            return f"clock_buckets.{filters['bucket']}"
-        if tool == "compare_openings":
-            return f"opening_player_cohorts.{args['filters']['color']} paired families"
-        if tool == "compare_clock_buckets":
-            return f"clock_buckets.{args['first']} minus {args['second']}"
-        return "not_applicable"
-
-    def add(
-        category,
-        case_id,
-        question,
-        expected,
-        tool=None,
-        args=None,
-        caveats=None,
-        status="answered",
-        result_path=None,
-    ):
-        records[category].append(
-            {
-                "id": case_id,
-                "category": category,
-                "template_family": template_family(category, case_id),
-                "question": question,
-                "dataset_id": dataset,
-                "expected_status": status,
-                "reference_file": "reports/M3-independent-reference.json",
-                "reference_key": reference_locator(tool, args),
-                "expected_result": expected,
-                "expected_tool": tool,
-                "expected_tool_args": args,
-                "result_path": result_path or [],
-                "comparison": {"counts": "exact", "rates_absolute_tolerance": 1e-6},
-                "required_caveats": caveats or ["observed_prefix_only"],
-                "allowed_interpretations": ["descriptive_observed_prefix"],
-                "severity": "high" if category == "reliability_access" else "medium",
-                "rubric_version": "m5-1.0",
-                "replay_plan": {
-                    "status": status,
-                    "interpretation": "descriptive_observed_prefix",
-                    "actions": [{"tool": tool, "args": args}] if tool else [],
-                },
-            }
-        )
+    def add(*args, **kwargs):
+        add_case(records, dataset, *args, **kwargs)
 
     add(
         "basic_calculation",

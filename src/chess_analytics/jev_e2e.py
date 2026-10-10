@@ -222,6 +222,136 @@ def _cost_from_raw(raw, config: dict, reserved: float, kind: str) -> tuple[float
     return reserved, True
 
 
+def _openai_answer(
+    row: dict,
+    cell: dict,
+    phase: str,
+    prior_openai_usd,
+    accounted,
+    unknown,
+    openai_cap,
+    output,
+    openai_call,
+    data_project,
+    config,
+):
+    reserved = cell["openai_reserved_cost_usd"]
+    if prior_openai_usd + accounted["openai"] + reserved > openai_cap:
+        raise ValueError("next OpenAI call exceeds remaining cumulative cap")
+    record = {
+        "case_id": row["id"],
+        "phase": phase,
+        "request_sha256": cell["openai_request_sha256"],
+    }
+    path = output / f"{phase}-{row['id']}.json"
+
+    def capture(body, key):
+        if _sha(body) != cell["openai_request_sha256"]:
+            raise ValueError("OpenAI request changed after frozen preflight")
+        record.update(
+            state="pending",
+            transport_started=True,
+            reserved_cost_usd=reserved,
+        )
+        _durable_write(path, record)
+        raw = (openai_call or provider._default_transport)(body, key)
+        record["raw_response"] = raw
+        _durable_write(path, record)
+        return raw
+
+    try:
+        answer = provider.live_answer(
+            data_project,
+            row["question"],
+            None,
+            config=config,
+            transport=capture,
+            remaining_usd=openai_cap - prior_openai_usd - accounted["openai"],
+        )
+        cost = answer["provider"]["gross_cost_usd"]
+        accounted["openai"] += cost
+        record["cost_accounted"] = True
+        record["answer"] = answer
+        record["gross_cost_usd"] = cost
+        record["state"] = "settled"
+        _durable_write(path, record)
+        return answer, cost
+    except (OSError, ValueError, RuntimeError, TimeoutError) as exc:
+        cost, reserved_unknown = (
+            _cost_from_raw(record.get("raw_response"), config, reserved, "openai")
+            if record.get("transport_started")
+            else (0.0, False)
+        )
+        if not record.get("cost_accounted"):
+            accounted["openai"] += cost
+        if reserved_unknown:
+            unknown["openai"] += cost
+        record["failure"] = {"type": type(exc).__name__, "message": str(exc)[:300]}
+        record["accounted_cost_usd"] = cost
+        record["unknown_cost_reservation"] = reserved_unknown
+        record["state"] = "failed"
+        _durable_write(path, record)
+        raise
+
+
+def _jev_choice(
+    row: dict,
+    cell: dict,
+    prior_jev_usd,
+    accounted,
+    unknown,
+    jev_cap,
+    output,
+    jev_call,
+    jev_key,
+    config,
+):
+    reserved = cell["jev_reserved_cost_usd"]
+    if prior_jev_usd + accounted["jev"] + reserved > jev_cap:
+        raise ValueError("next Jev call exceeds remaining cumulative cap")
+    record = {"case_id": row["id"], "request_sha256": cell["jev_request_sha256"]}
+    path = output / f"jev-{row['id']}.json"
+    try:
+        body = jev_request(row["question"])
+        if _sha(body) != cell["jev_request_sha256"]:
+            raise ValueError("Jev request changed after frozen preflight")
+        record.update(
+            state="pending",
+            transport_started=True,
+            reserved_cost_usd=reserved,
+        )
+        _durable_write(path, record)
+        raw = (jev_call or jev_transport)(body, jev_key)
+        record["raw_response"] = raw
+        _durable_write(path, record)
+        parsed = parse_jev_response(raw)
+        if parsed["gross_cost_usd"] > reserved:
+            raise ValueError("Jev usage exceeded request reservation")
+        accounted["jev"] += parsed["gross_cost_usd"]
+        record["cost_accounted"] = True
+        record["parsed"] = parsed
+        record["gross_cost_usd"] = parsed["gross_cost_usd"]
+        record["state"] = "settled"
+        _durable_write(path, record)
+        return parsed
+    except (OSError, ValueError, RuntimeError, TimeoutError) as exc:
+        cost, reserved_unknown = (
+            _cost_from_raw(record.get("raw_response"), config, reserved, "jev")
+            if record.get("transport_started")
+            else (0.0, False)
+        )
+        if not record.get("cost_accounted"):
+            accounted["jev"] += cost
+        if reserved_unknown:
+            unknown["jev"] += cost
+        record["failure"] = {"type": type(exc).__name__, "message": str(exc)[:300]}
+        record["accounted_cost_usd"] = cost
+        record["unknown_cost_reservation"] = reserved_unknown
+        record["state"] = "failed"
+        _durable_write(path, record)
+        raise
+
+
 def run(
     repo: Path,
     data_project: Path,
@@ -275,111 +405,6 @@ def run(
     failure = None
     previous = os.environ.get(provider.KEY_ENV)
 
-    def openai_answer(row: dict, cell: dict, phase: str):
-        reserved = cell["openai_reserved_cost_usd"]
-        if prior_openai_usd + accounted["openai"] + reserved > openai_cap:
-            raise ValueError("next OpenAI call exceeds remaining cumulative cap")
-        record = {
-            "case_id": row["id"],
-            "phase": phase,
-            "request_sha256": cell["openai_request_sha256"],
-        }
-        path = output / f"{phase}-{row['id']}.json"
-
-        def capture(body, key):
-            if _sha(body) != cell["openai_request_sha256"]:
-                raise ValueError("OpenAI request changed after frozen preflight")
-            record.update(
-                state="pending",
-                transport_started=True,
-                reserved_cost_usd=reserved,
-            )
-            _durable_write(path, record)
-            raw = (openai_call or provider._default_transport)(body, key)
-            record["raw_response"] = raw
-            _durable_write(path, record)
-            return raw
-
-        try:
-            answer = provider.live_answer(
-                data_project,
-                row["question"],
-                None,
-                config=config,
-                transport=capture,
-                remaining_usd=openai_cap - prior_openai_usd - accounted["openai"],
-            )
-            cost = answer["provider"]["gross_cost_usd"]
-            accounted["openai"] += cost
-            record["cost_accounted"] = True
-            record["answer"] = answer
-            record["gross_cost_usd"] = cost
-            record["state"] = "settled"
-            _durable_write(path, record)
-            return answer, cost
-        except (OSError, ValueError, RuntimeError, TimeoutError) as exc:
-            cost, reserved_unknown = (
-                _cost_from_raw(record.get("raw_response"), config, reserved, "openai")
-                if record.get("transport_started")
-                else (0.0, False)
-            )
-            if not record.get("cost_accounted"):
-                accounted["openai"] += cost
-            if reserved_unknown:
-                unknown["openai"] += cost
-            record["failure"] = {"type": type(exc).__name__, "message": str(exc)[:300]}
-            record["accounted_cost_usd"] = cost
-            record["unknown_cost_reservation"] = reserved_unknown
-            record["state"] = "failed"
-            _durable_write(path, record)
-            raise
-
-    def jev_choice(row: dict, cell: dict):
-        reserved = cell["jev_reserved_cost_usd"]
-        if prior_jev_usd + accounted["jev"] + reserved > jev_cap:
-            raise ValueError("next Jev call exceeds remaining cumulative cap")
-        record = {"case_id": row["id"], "request_sha256": cell["jev_request_sha256"]}
-        path = output / f"jev-{row['id']}.json"
-        try:
-            body = jev_request(row["question"])
-            if _sha(body) != cell["jev_request_sha256"]:
-                raise ValueError("Jev request changed after frozen preflight")
-            record.update(
-                state="pending",
-                transport_started=True,
-                reserved_cost_usd=reserved,
-            )
-            _durable_write(path, record)
-            raw = (jev_call or jev_transport)(body, jev_key)
-            record["raw_response"] = raw
-            _durable_write(path, record)
-            parsed = parse_jev_response(raw)
-            if parsed["gross_cost_usd"] > reserved:
-                raise ValueError("Jev usage exceeded request reservation")
-            accounted["jev"] += parsed["gross_cost_usd"]
-            record["cost_accounted"] = True
-            record["parsed"] = parsed
-            record["gross_cost_usd"] = parsed["gross_cost_usd"]
-            record["state"] = "settled"
-            _durable_write(path, record)
-            return parsed
-        except (OSError, ValueError, RuntimeError, TimeoutError) as exc:
-            cost, reserved_unknown = (
-                _cost_from_raw(record.get("raw_response"), config, reserved, "jev")
-                if record.get("transport_started")
-                else (0.0, False)
-            )
-            if not record.get("cost_accounted"):
-                accounted["jev"] += cost
-            if reserved_unknown:
-                unknown["jev"] += cost
-            record["failure"] = {"type": type(exc).__name__, "message": str(exc)[:300]}
-            record["accounted_cost_usd"] = cost
-            record["unknown_cost_reservation"] = reserved_unknown
-            record["state"] = "failed"
-            _durable_write(path, record)
-            raise
-
     try:
         os.environ[provider.KEY_ENV] = openai_key
         for phase in ("baseline", "gated"):
@@ -391,7 +416,18 @@ def run(
                     used_analyst = True
                     cost = {"jev": 0.0, "openai": 0.0}
                     if phase == "gated":
-                        parsed = jev_choice(row, cell)
+                        parsed = _jev_choice(
+                            row,
+                            cell,
+                            prior_jev_usd,
+                            accounted,
+                            unknown,
+                            jev_cap,
+                            output,
+                            jev_call,
+                            jev_key,
+                            config,
+                        )
                         cost["jev"] = parsed["gross_cost_usd"]
                         route = parsed["choice"]
                         confidence = parsed["probabilities"][route]
@@ -399,7 +435,19 @@ def run(
                             route in {"clarify", "unsupported"} and confidence >= THRESHOLD
                         )
                     if used_analyst:
-                        answer, cost["openai"] = openai_answer(row, cell, phase)
+                        answer, cost["openai"] = _openai_answer(
+                            row,
+                            cell,
+                            phase,
+                            prior_openai_usd,
+                            accounted,
+                            unknown,
+                            openai_cap,
+                            output,
+                            openai_call,
+                            data_project,
+                            config,
+                        )
                     else:
                         status = "needs_clarification" if route == "clarify" else "unsupported"
                         answer = execute_plan(
