@@ -1,0 +1,22 @@
+<section><h2>Explore routing and fallback</h2><p>These controls recompute acceptance
+from saved classifications. They make no requests.
+The frozen development threshold is {{ threshold }};
+changing it here is descriptive exploration, not a newly validated production policy.</p>
+<noscript>The complete summary and recorded report below remain readable
+with JavaScript disabled.</noscript>
+<div class="toolbar"><div><label for="cohort">Question set</label><select id="cohort">
+<option value="historical">40 historical questions — shared comparison</option>
+<option value="fresh">24 fresh questions — Decisions and rules</option></select></div>
+<div><label for="threshold">Minimum chosen-option probability</label><select id="threshold">{% for option in thresholds %}<option value="{{ option.value }}"{% if option.selected %} selected{% endif %}>{{ option.label }}</option>{% endfor %}</select></div></div><p id="routing-status" class="stats" aria-live="polite"></p>
+<details class="routing-details"><summary>Inspect all saved question-level routes</summary>
+<p>Scroll the table sideways to compare every method. Route names are task labels;
+agreement here does not establish a correct final answer.</p>
+<div class="scroll" tabindex="0" role="region" aria-label="Saved routing comparisons">
+<table class="routing-table">
+<caption>Saved route choices; colored cells show agreement with reviewed labels.</caption>
+<thead><tr><th>ID</th><th>Question</th><th>Expected route</th>
+<th>Rules</th><th>Jev run 1</th><th>Jev run 2</th>
+<th>Decisions</th><th class="number" scope="col">Chosen-option probability</th>
+<th>Explored gate</th></tr></thead>
+<tbody id="routing-rows"></tbody></table></div>
+<script type="application/json" id="routing-data">{{ encoded }}</script></details></section>

@@ -1,0 +1,17 @@
+<h2>Find a definition or column</h2>
+<label for="definition-search">Search names, definitions and schemas</label>
+<input id="definition-search" class="search" type="search"
+placeholder="Try denominator, rating, clock or missing">
+<p id="search-status" aria-live="polite">{{ count }} definitions or schemas shown</p>{{ cards }}
+<section class="example-panel" aria-labelledby="denominator-title">
+<h2 id="denominator-title">Why the denominator matters</h2>
+<p>This worked illustration starts with the authored demo:
+3 proxy errors among 6 evaluable moves. Change the number of moves with missing evaluations;
+they change coverage, while the proxy rate stays tied to evaluable moves.</p>
+<div class="toolbar"><div><label for="missing-moves">
+Missing evaluations: <span id="missing-value">2</span></label>
+<input id="missing-moves" type="range" min="0" max="14" value="2"></div></div>
+<div class="fraction"><div>Proxy rate<br><strong id="proxy-rate">3 / 6 = 50.0%</strong></div>
+<div>Evaluation coverage<br><strong id="coverage-rate">6 / 8 = 75.0%</strong></div></div>
+<p class="source-note">Other slider values are hypothetical examples,
+not new observations or model results.</p></section>

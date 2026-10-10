@@ -1,0 +1,83 @@
+<section id="position-explorer" class="position-explorer"
+aria-labelledby="positions-title">
+<div class="eyebrow">Measured from retained games</div>
+<h2 id="positions-title">Find positions worth studying together</h2>
+<p>Rank White decisions after Black's moves 3–10. A recurring position appears in
+at least two games; a transposing position has at least two distinct arrival move
+orders without repetition loops. A game counts once per position.</p>
+<div class="toolbar" id="position-controls" hidden>
+<div><label for="position-cohort">Reference cohort</label>
+<select id="position-cohort"><option value="elite_reference">Elite · 240,086 games</option>
+<option value="rated_public">Public 1000+ · 802,260 games</option></select></div>
+<div><label for="position-family">Opening family or public lens</label>
+<select id="position-family"></select></div>
+<div><label for="position-kind">Position ranking</label><select id="position-kind">
+<option value="transposing">Multiple move orders</option>
+<option value="recurring">All recurring positions</option>
+</select></div></div>
+<p id="position-status" class="stats" aria-live="polite">Elite reference ·
+{{ denominator_games }} eligible games.
+Top 20 transposing positions reach {{ coverage_games }} distinct games
+({{ coverage_share }}).</p>
+<p id="position-scope" class="source-note">Opening names/ECO are recorded game labels,
+not definitions of the board position. The filter includes the twelve largest eligible
+labeled families per cohort; complete family counts are available below.</p>
+<div class="position-layout"><div class="scroll position-ranking" tabindex="0"
+role="region" aria-label="Ranked positions; scroll horizontally on smaller screens">
+<table><caption id="position-caption">Most frequent transposing positions · Elite</caption>
+<thead><tr><th scope="col">Rank</th><th scope="col">Position</th>
+<th scope="col" class="number">Games</th><th scope="col" class="number">Frequency</th>
+<th scope="col" class="number">Move orders</th>
+<th scope="col" class="number">Alternative-route share</th></tr></thead>
+<tbody id="position-rows">{% for row in preview %}<tr><td>{{ row.index }}</td><td>{{ row.san }}</td><td class="number">{{ row.games }}</td><td class="number">{{ row.frequency }}</td><td class="number">{{ row.routes }}</td><td class="number">{{ row.share }}</td></tr>{% endfor %}</tbody></table></div>
+<div id="position-detail" class="position-detail" tabindex="-1"
+role="region" aria-labelledby="position-selected-title">
+<h3 id="position-selected-title">Most frequent transposing position</h3>
+<img id="position-image" width="420" height="420" src="assets/opening-positions/{{ first_id }}.svg"
+alt="Most frequent Elite transposing position, White to move">
+<p id="position-selected-note" class="source-note" aria-live="polite">
+{{ first_games }} games · White to move.</p>
+<div id="position-selected-content"></div></div></div>
+<section aria-labelledby="position-coverage-title" class="position-chart-panel">
+<h3 id="position-coverage-title">How much does a study set cover?</h3>
+<p>Positions ranked by frequency. Each game counts
+once across the set. The next position can overlap games already covered.</p>
+<div id="position-coverage-chart" class="scroll" tabindex="0"
+role="region" aria-label="Coverage chart; scroll horizontally if needed"></div><details>
+<summary>Coverage and marginal gains table</summary>
+<div id="position-coverage-table"></div></details></section>
+<section aria-labelledby="position-depth-title" class="position-chart-panel">
+<h3 id="position-depth-title">Different routes, fewer endpoints</h3>
+<p>Endpoint compression at each depth: 1 − distinct positions / distinct acyclic
+routes. Both cohorts include all openings; this chart does not follow family or lens filters.</p>
+<div id="position-depth-chart" class="scroll" tabindex="0"
+role="region" aria-label="Depth chart; scroll horizontally if needed"></div>
+<div id="position-depth-legend"></div>
+<details><summary>Depth observations and included visits</summary>
+<div id="position-depth-table"></div></details></section>
+<section aria-labelledby="position-scatter-title" class="position-chart-panel">
+<h3 id="position-scatter-title">Frequency and route variety</h3>
+<p>Published ranked positions in this view, rather than the whole corpus.
+Axes use logarithmic scales. Select a point or a table row to inspect its board.
+Darker green indicates more games arriving through alternatives to the leading route.</p>
+<div id="position-scatter-chart" class="scroll" tabindex="0"
+role="region" aria-label="Frequency and routes chart; scroll horizontally if needed"></div>
+</section>
+<details class="definition"><summary>Opening-family counts and convergence by depth</summary>
+<div id="position-inventory"></div>
+<p>At one depth, endpoint compression is 1 − distinct positions / distinct move orders.
+Repeated-position prefixes are excluded. This describes convergence in the observed
+corpus; it does not measure time saved or learning improvement.</p>
+<div id="position-compression"></div></details>
+<p class="source-note">Elite covers the curated November 2025 month. Public games are
+nine ordered first-day archive prefixes. Compare cohorts separately; these are not
+estimates of your personal encounter rate. Continuations show observed choices,
+not best moves. Drills and strategic lesson explanations remain future work.</p>
+<p><a href="assets/opening-positions.json" download>Download measured rankings (JSON)</a> ·
+<a href="{{ repo_url }}contracts/opening_positions.json">Metric definitions</a> ·
+<a href="{{ repo_url }}reports/opening-positions-checkpoint.json">Build evidence</a></p>
+<noscript>The table shows the five leading Elite transposing positions. Enable JavaScript
+to explore both cohorts, opening families, boards, routes and continuations.</noscript>
+<p id="position-load-note" class="source-note" aria-live="polite"></p>
+</section><script defer src="assets/position-charts.js"></script>
+<script defer src="assets/position-explorer.js"></script>

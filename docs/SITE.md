@@ -27,6 +27,20 @@ Jev measurement; the explorer explicitly shows **Not measured** for those cells.
 
 ## Build and preview locally
 
+The generated opening rankings are not stored on the branch tip. Restore the
+pinned publication before the docs tests or the site build. The command checks
+SHA-256 `31a395044203532224cbb387475ef0bb790c8e88faac98bc9b2a12f5d500c46e` and
+does not rerun the corpus. A local visit snapshot can instead be summarized
+with `scripts/summarize_opening_positions.py`.
+
+This restoration is a preparation step for the documentation publication gate,
+which verifies the restored bytes against the checkpoint. The default offline
+suite verifies the pin without requiring the generated file or downloading it.
+
+```sh
+uv run --locked --no-editable python scripts/materialize_opening_positions.py
+```
+
 From the repository root, install the pinned documentation dependency once:
 
 ```sh
@@ -47,9 +61,9 @@ uv run --locked --offline --no-editable --extra docs ruff check scripts/build_do
 
 The builder accepts `--output`, but refuses to replace an existing non-generated
 directory. Its default output is ignored under `work/docs-site`; never hand-edit
-that HTML. Edit the Markdown, contracts, or `site/assets/site.css` and
-`site/assets/site.js`, then rebuild. The optional `docs` extra pins the same
-Markdown version already present in the lockfile; the application does not need it.
+that HTML. Page markup lives in `scripts/templates`. Edit the Markdown, contracts,
+templates, or `site/assets/site.css` and `site/assets/site.js`, then rebuild. The
+optional `docs` extra pins Markdown and Jinja2; the application does not need them.
 
 ## Learn from the interactions
 

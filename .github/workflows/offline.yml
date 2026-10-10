@@ -19,7 +19,11 @@ jobs:
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: "24"
+      - run: npx --yes @biomejs/biome@2.5.15 check
       - run: node --test tests/js/game_import.test.mjs
+      - run: node scripts/check_game_import.mjs
+      - run: node tests/js/import_parity.mjs tests/fixtures/imports/authored-games.pgn
+      - run: node tests/js/import_parity.mjs tests/fixtures/imports/zero-castling.pgn
       - run: uv sync --locked --no-editable
       - run: uv run --locked --offline --no-editable ruff check .
       - run: uv run --locked --offline --no-editable ruff format --check .

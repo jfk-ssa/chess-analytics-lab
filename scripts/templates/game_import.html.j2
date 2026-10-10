@@ -1,0 +1,66 @@
+<section class="game-import" aria-labelledby="import-title">
+<h2 id="import-title">Analyze your exported games</h2>
+<p>Choose plain PGN files exported from Chess.com or Lichess. Your files stay on this
+device; legal replay and analysis run in a browser worker.
+Each import replaces the current session.</p>
+<label for="import-files">Choose PGN files</label>
+<input type="file" id="import-files" accept=".pgn,text/plain,application/x-chess-pgn" multiple>
+<p class="source-note">Up to 20 files, 10 MiB total, 5,000 games and 1,000 plies per game.
+Standard chess from the initial board, completed games only. Invalid records and
+unsupported games receive visible dispositions. No account connection is needed.</p>
+<div class="import-actions"><button type="button" id="import-example">Try authored example</button>
+<button type="button" id="import-cancel" hidden>Cancel processing</button>
+<button type="button" id="import-clear" disabled>Clear session</button>
+<button type="button" id="import-download" disabled>Download analysis JSON</button></div>
+<p id="import-status" class="stats" role="status" aria-live="polite">
+Choose PGN files or try the authored example.</p>
+<div id="import-summary"></div>
+<div id="import-selection" hidden><fieldset id="import-filters">
+<legend>Choose your player and comparison scope</legend>
+<p>Select the player separately for each provider. Matching usernames are not
+linked automatically. This release analyzes your White games and reports Black games separately.</p>
+<div id="import-players" class="toolbar"></div>
+<div class="toolbar"><div><label for="import-since">Start date (optional)</label>
+<input type="date" id="import-since"></div>
+<div><label for="import-until">End date (optional)</label>
+<input type="date" id="import-until"></div>
+<div><label for="import-time-control">Time control</label><select id="import-time-control">
+<option value="all">All time controls</option></select></div>
+<div><label for="import-rated">Rated status</label><select id="import-rated">
+<option value="all">All / include unknown</option><option value="true">Known rated</option>
+<option value="false">Known casual / unrated</option><option value="unknown">Unknown status</option>
+</select></div></div>
+<p class="source-note">Missing ratings do not exclude games.
+Date filters visibly exclude undated games;
+platform ratings and reference cohorts are not interchangeable.
+Exported rated status may be unknown.</p>
+<label class="import-check"><input type="checkbox" id="import-minimum20">
+Require at least 20 plies for comparison with the public eligibility policy</label>
+<h3>Choose a bounded public study set</h3>
+<div class="toolbar"><div><label for="import-cohort">Reference cohort</label>
+<select id="import-cohort"><option value="elite_reference">Elite reference</option>
+<option value="rated_public">Public 1000+</option></select></div>
+<div><label for="import-view">Reference opening family or lens</label>
+<select id="import-view"></select></div>
+<div><label for="import-kind">Reference ranking</label><select id="import-kind">
+<option value="transposing">Multiple move orders</option>
+<option value="recurring">All recurring positions</option></select></div>
+<div><label for="import-n">Number of reference positions</label>
+<select id="import-n">{% for n in position_counts %}<option value="{{ n }}"{% if n == 20 %} selected{% endif %}>{{ n }}</option>{% endfor %}</select></div></div>
+<p>The comparison uses selected published boards and up to three recorded route examples
+per board. A position outside this set has not been checked against the full corpus.
+A route departure is not a mistake; comparison stops when an example ends.</p>
+</fieldset><button type="button" id="import-analyze" disabled>
+Analyze selected White games</button></div>
+<div id="import-results" aria-live="polite"></div>
+<noscript>Local game import needs JavaScript and browser workers. The public
+<a href="transpositions.html">Transposition analysis</a>
+remains available without an import.</noscript>
+<p class="source-note">No persistent browser storage, server upload, username download,
+engine scoring or model call. Clearing/reloading removes the session; explicitly downloaded
+reports remain on your device. <a href="assets/import-example.pgn" download>
+Download authored PGN example</a></p>
+</section><script type="application/json" id="import-reference-data">{{ reference }}</script>
+<script type="application/json" id="import-example-data">{{ example }}</script>
+<script defer src="assets/position-charts.js"></script>
+<script type="module" src="assets/game-import-ui.js"></script>

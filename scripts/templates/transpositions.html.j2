@@ -1,0 +1,31 @@
+<section class="opening-lab" aria-labelledby="opening-lab-title">
+<div class="opening-lab-header"><span class="badge">Illustrative legal example</span>
+<h2 id="opening-lab-title">Two routes. One position to recognize.</h2>
+<p>Replay either move order, then compare the shared position after Black's third move.
+The board example is verified by legal replay; it is not a measured learning result.</p></div>
+<div class="opening-grid"><div>
+<label for="opening-route">Choose an arrival route</label>
+<select id="opening-route"><option value="0">Knight first</option>
+<option value="1">Center first</option></select>
+<div id="opening-board" class="opening-board" role="img"
+aria-label="Opening board after six half-moves, White to move">{{ board }}</div><div class="opening-controls">
+<button type="button" id="opening-back" aria-label="Previous half-move">Previous</button>
+<label for="opening-ply">Half-move <output id="opening-ply-value">6 / 6</output></label>
+<input id="opening-ply" type="range" min="0" max="6" value="6" step="1">
+<button type="button" id="opening-next" aria-label="Next half-move">Next</button></div>
+<p id="opening-board-status" class="source-note" aria-live="polite">White to move.</p>
+</div><div class="opening-explanation">
+<div class="route-card"><h3>Knight first</h3><p><code>1.d4 Nf6 2.c4 e6 3.Nf3 d5</code></p></div>
+<div class="route-card"><h3>Center first</h3><p><code>1.d4 d5 2.c4 e6 3.Nf3 Nf6</code></p></div>
+<div class="callout"><strong id="opening-match-title">Shared opening position</strong>
+<p id="opening-match-note" aria-live="polite">The board, side to move, castling rights,
+and legal en passant availability match after both routes.</p></div>
+<h3>Attach knowledge to the position</h3><ol>
+<li>Recognize the arrangement and the opponent's threats.</li>
+<li>Recall candidate moves, pawn breaks, and their reasons.</li>
+<li>Check tactics and differences before choosing a move.</li></ol>
+<p class="source-note">Earlier deviations need their own lessons. A move order can
+leave this route before the shared position is reached.</p></div></div>
+<noscript>The two printed routes transpose after six half-moves. Enable JavaScript
+to step through their intermediate positions.</noscript></section>
+<script type="application/json" id="opening-data">{{ data }}</script>

@@ -25,7 +25,10 @@ unknown rated status stays unknown, rather than being guessed from the platform.
 The import replays the entire mainline legally, not just the first ten moves.
 Comments, variations and NAGs are ignored for mainline statistics. Unsupported
 variants, setup boards, unfinished games, conflicting results, malformed headers
-and illegal moves receive visible dispositions. Parsing failures import no partial
+and illegal moves receive visible dispositions. Player names are trimmed and
+Unicode-normalized before the empty, `?`, and 200-character checks. A Result
+header that disagrees with the result token in the move text is rejected.
+Castling may be written with letter O (`O-O`, `O-O-O`) or digit 0 (`0-0`, `0-0-0`). Parsing failures import no partial
 file; cap violations, cancellation and timeouts keep no partial session.
 
 Provider/native IDs distinguish games. Annotation-only duplicate copies count once.

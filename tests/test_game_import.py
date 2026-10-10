@@ -11,17 +11,18 @@ import chess
 import chess.pgn
 import pytest
 
-from chess_analytics.game_import import normalize_game, provider_identity
+from chess_analytics.game_import import normalize_game, provider_identity, read_imported_game
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "tests/fixtures/imports/authored-games.pgn"
+ZERO_CASTLING = ROOT / "tests/fixtures/imports/zero-castling.pgn"
 NODE = shutil.which("node")
 
 
 def records(text):
     source = io.StringIO(text)
     result = []
-    while game := chess.pgn.read_game(source):
+    while game := read_imported_game(source):
         result.append(normalize_game(game))
     return result
 
@@ -45,15 +46,22 @@ def test_provider_neutral_reference_preserves_short_games_and_missing_ratings():
 @pytest.mark.skipif(
     NODE is None, reason="Browser parity requires Node; CI explicitly runs Node tests"
 )
-def test_browser_replay_and_python_normalization_agree_exactly():
+@pytest.mark.parametrize("fixture", [FIXTURE, ZERO_CASTLING], ids=["authored", "zero-castling"])
+def test_browser_replay_and_python_normalization_agree_exactly(fixture):
     result = subprocess.run(
-        [NODE, str(ROOT / "tests/js/import_parity.mjs"), str(FIXTURE)],
+        [NODE, str(ROOT / "tests/js/import_parity.mjs"), str(fixture)],
         check=True,
         capture_output=True,
         text=True,
         timeout=30,
     )
-    assert json.loads(result.stdout) == records(FIXTURE.read_text())
+    normalized = records(fixture.read_text())
+    assert json.loads(result.stdout) == normalized
+    if fixture == ZERO_CASTLING:
+        assert normalized[0]["white"] == "Zero Castler"
+        assert normalized[0]["moves"][8:10] == ["e1g1", "f8e7"]
+        assert "e8g8" in normalized[0]["moves"]
+        assert normalized[1]["moves"][-1] == "e1c1"
 
 
 @pytest.mark.skipif(NODE is None, reason="Node unit suite is a separate mandatory hosted CI step")
@@ -77,6 +85,29 @@ def test_annotation_only_imports_share_semantic_fingerprint():
 def test_reference_rejects_unsupported_games(header):
     game = chess.pgn.read_game(io.StringIO(header + "\n" + FIXTURE.read_text()))
     with pytest.raises(ValueError, match="unsupported"):
+        normalize_game(game)
+
+
+def test_result_header_must_match_the_movetext_token():
+    game = read_imported_game(io.StringIO((FIXTURE.parent / "parity-conflict.pgn").read_text()))
+    with pytest.raises(ValueError, match="conflicting_result"):
+        normalize_game(game)
+
+
+def test_player_names_are_trimmed_before_unknown_and_length_checks():
+    unknown = read_imported_game(
+        io.StringIO((FIXTURE.parent / "parity-padded-unknown.pgn").read_text())
+    )
+    with pytest.raises(ValueError, match="missing_or_invalid_players"):
+        normalize_game(unknown)
+    padded = ZERO_CASTLING.read_text()
+    assert records(padded)[0]["white"] == "Zero Castler"
+    long_name = "A" * 201
+    accepted = padded.replace('[White "  Zero Castler  "]', f'[White " {long_name[:200]} "]')
+    assert records(accepted)[0]["white"] == long_name[:200]
+    rejected = padded.replace('[White "  Zero Castler  "]', f'[White "{long_name}"]')
+    game = read_imported_game(io.StringIO(rejected))
+    with pytest.raises(ValueError, match="missing_or_invalid_players"):
         normalize_game(game)
 
 

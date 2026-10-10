@@ -71,7 +71,7 @@ choices, not recommendations; neither frequency nor outcomes establish move qual
 
 See [Metrics & data](METRICS.md#opening-position-metrics), the
 [versioned contract](../contracts/opening_positions.json), the
-[checked report](../reports/opening-positions.json), and
+[checked report](https://github.com/jfk-ssa/chess-analytics-lab/blob/c1e3040a3c9542626a3b8cb78e1e7475ea8bcdab/reports/opening-positions.json), and
 [publication evidence](../reports/opening-positions-checkpoint.json).
 
 ## Learning comes next

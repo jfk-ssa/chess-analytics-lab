@@ -1,5 +1,6 @@
 """Publication checks: bounded output, preserved evidence and fail-closed source drift."""
 
+import hashlib
 import importlib.util
 import json
 import shutil
@@ -12,6 +13,16 @@ ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("docs_site", ROOT / "scripts/build_docs_site.py")
 site = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(site)
+
+
+def test_materialized_positions_match_the_publication_checkpoint():
+    checkpoint = json.loads((ROOT / "reports/opening-positions-checkpoint.json").read_text())
+    target = ROOT / "reports/opening-positions.json"
+    assert target.is_file(), "run scripts/materialize_opening_positions.py before docs tests"
+    assert (
+        hashlib.sha256(target.read_bytes()).hexdigest()
+        == checkpoint["files"]["reports/opening-positions.json"]
+    )
 
 
 def test_site_publishes_guides_without_mutating_evidence(tmp_path):
@@ -152,6 +163,11 @@ def test_link_checker_catches_moved_github_modules_and_missing_anchors(tmp_path)
     )
     assert site.validate_site(output, ROOT) == 3
     page.write_text(f'<a href="{site.REPO_URL}docs/DEMO.md#missing">Demo</a>')
+    with pytest.raises(ValueError, match="Broken generated anchor"):
+        site.validate_site(output, ROOT)
+    page.write_text(f'<a href="{site.REPO_URL}src/chess_analytics/game_import.py#L1-L4">Code</a>')
+    assert site.validate_site(output, ROOT) == 1
+    page.write_text(f'<a href="{site.REPO_URL}src/chess_analytics/game_import.py#L99999">Code</a>')
     with pytest.raises(ValueError, match="Broken generated anchor"):
         site.validate_site(output, ROOT)
 

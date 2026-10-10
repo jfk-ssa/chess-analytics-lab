@@ -9,7 +9,9 @@ import json
 import re
 import unicodedata
 from datetime import date
+from typing import TextIO
 from urllib.parse import urlsplit
+from weakref import WeakKeyDictionary
 
 import chess
 import chess.pgn
@@ -66,6 +68,62 @@ def import_date(headers: chess.pgn.Headers) -> str | None:
         return None
 
 
+_RESULTS = frozenset({"1-0", "0-1", "1/2-1/2"})
+# python-chess keeps a Result header and drops a disagreeing movetext token.
+_RECORDED: WeakKeyDictionary[chess.pgn.Game, tuple[bool, str | None, str | None]] = (
+    WeakKeyDictionary()
+)
+
+
+class ImportGameBuilder(chess.pgn.GameBuilder):
+    """Remember the Result header and the movetext result before either is dropped."""
+
+    def begin_game(self) -> None:
+        super().begin_game()
+        self._result_header_present = False
+        self._result_header: str | None = None
+        self._movetext_result: str | None = None
+
+    def visit_header(self, tagname: str, tagvalue: str) -> None:
+        super().visit_header(tagname, tagvalue)
+        if tagname == "Result":
+            self._result_header_present = True
+            self._result_header = tagvalue
+
+    def visit_result(self, result: str) -> None:
+        self._movetext_result = result
+        super().visit_result(result)
+
+    def result(self) -> chess.pgn.Game:
+        game = super().result()
+        _RECORDED[game] = (
+            self._result_header_present,
+            self._result_header,
+            self._movetext_result,
+        )
+        return game
+
+
+def read_imported_game(handle: TextIO) -> chess.pgn.Game | None:
+    """Parse one game and retain both result spellings for conflict checks."""
+    return chess.pgn.read_game(handle, Visitor=ImportGameBuilder)
+
+
+def completed_result(game: chess.pgn.Game) -> str:
+    recorded = _RECORDED.get(game)
+    if recorded is None:
+        result = game.headers.get("Result")
+        if result not in _RESULTS:
+            raise ValueError("unfinished_or_missing_result")
+        return result
+    header_present, header, movetext = recorded
+    if movetext not in _RESULTS:
+        raise ValueError("unfinished_or_missing_result")
+    if header_present and header != movetext:
+        raise ValueError("conflicting_result")
+    return movetext
+
+
 def rated_value(headers: chess.pgn.Headers) -> bool | None:
     rated = folded(headers.get("Rated", ""))
     if rated in {"true", "false"}:
@@ -86,9 +144,9 @@ def normalize_game(game: chess.pgn.Game) -> dict:
         raise ValueError("unsupported_variant")
     if headers.get("FEN") or headers.get("SetUp", "0") != "0":
         raise ValueError("unsupported_setup")
-    result = headers.get("Result")
-    if result not in {"1-0", "0-1", "1/2-1/2"}:
-        raise ValueError("unfinished_or_missing_result")
+    result = completed_result(game)
+    # Trim and NFC-normalize before rejecting "?" or over-long names. The stored
+    # name is that normalized form; surrounding spaces do not make "?" a player.
     white, black = (
         unicodedata.normalize("NFC", headers.get(c, "").strip()) for c in ("White", "Black")
     )

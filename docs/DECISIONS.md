@@ -1,8 +1,8 @@
 # Decisions
 
 Each accepted choice is a short record in [docs/adr/](adr/). Add the next number
-when a choice should outlive the chat that made it. [Status](STATUS.md) records
-the latest measured state.
+when a choice should outlive the chat that made it. [Status](STATUS.md) is a
+short summary of the current checkout, not a log of new decisions.
 
 | Number | Date | Record |
 |---|---|---|
@@ -77,3 +77,6 @@ the latest measured state.
 | 0069 | 2026-10-10 | [Measured opening-position explorer](adr/0069-measured-opening-position-explorer.md) |
 | 0070 | 2026-10-10 | [Public transposition insights](adr/0070-public-transposition-insights.md) |
 | 0071 | 2026-10-10 | [Local PGN imports](adr/0071-local-pgn-imports.md) |
+| 0072 | 2026-10-10 | [Opening rankings stay outside the tip](adr/0072-opening-rankings-stay-outside-the-tip.md) |
+| 0073 | 2026-10-10 | [Status stays a summary](adr/0073-status-stays-a-summary.md) |
+| 0074 | 2026-10-10 | [Keep offline checks independent of publication artifacts](adr/0074-offline-checks-and-hidden-controls.md) |

@@ -2,6 +2,7 @@
 
 import importlib.util
 import io
+import json
 from pathlib import Path
 
 import chess
@@ -287,3 +288,11 @@ def test_route_balance_excludes_repetition_games_from_its_denominator():
         position = summary.position_details(db, ("p", key, 2, 0, 2), 2)
         assert position["alternative_route_share"] is None
         assert position["acyclic_games"] == 0
+
+
+def test_materialize_pin_matches_the_publication_checkpoint():
+    module = script("materialize_opening_positions")
+    checkpoint = json.loads((ROOT / "reports/opening-positions-checkpoint.json").read_text())
+    published = checkpoint["files"]["reports/opening-positions.json"]
+    assert published == module.EXPECTED_SHA256
+    assert module.PUBLICATION_COMMIT == "c1e3040a3c9542626a3b8cb78e1e7475ea8bcdab"

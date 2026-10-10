@@ -22,7 +22,7 @@ live evaluations are recorded separately.
 | Compare rules, Jev and Decisions | [Classifier comparison](CLASSIFIER_COMPARISON.md) | Shared-case scores, cost and conclusions readable directly on GitHub |
 | Reproduce optional classifier exercises | [Jev routing](JEV_ROUTING_RUNBOOK.md), [paired answers](JEV_END_TO_END.md), [Decisions](DECISIONS_ROUTING_RUNBOOK.md) | Offline harness/replay commands and separate live spending gates |
 | Operate or extend the pipeline | [Runbook](RUNBOOK.md) → [sources](DATA_SOURCES.md) → [orchestration](ORCHESTRATION.md) | Bounded acquisition, recovery, optional dbt/Dagster/Prefect |
-| Continue development | [Current status](STATUS.md) → [decision records](DECISIONS.md) | Completed phases, next gates and choices without needing the original chat |
+| Continue development | [Contributing](../CONTRIBUTING.md) → [current status](STATUS.md) → [decision records](DECISIONS.md) | Completed phases, next gates and choices; new decisions are ADRs only |
 
 ## Repository map
 
@@ -35,7 +35,7 @@ live evaluations are recorded separately.
 | `src/chess_analytics/orchestration/` | Optional local Dagster/Prefect wrappers over the same pipeline |
 | `contracts/`, `config/`, `evals/` | Definitions, bounded source plans, frozen questions and reference manifests |
 | `tests/fixtures/`, `tests/` | Tracked synthetic inputs, independent expected values and offline regressions |
-| `docs/adr/`, `docs/DECISIONS.md` | Numbered decision records and their index |
+| `docs/adr/`, `docs/DECISIONS.md` | Numbered decision records and their index. New decisions go here; [status](STATUS.md) stays a short summary |
 | `reports/` | Compact historical evidence and the original comparison report |
 | `site/`, `scripts/build_docs_site.py` | Static website assets and generation from maintained guides |
 | `work/`, `data/` | Ignored local outputs, raw attempts and bulk data; absent in a fresh clone |

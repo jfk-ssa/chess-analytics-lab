@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="{{ description }}">
+<title>{{ page_title }}</title>
+{% if active == "import-games.html" %}<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'none'; worker-src 'self'; img-src 'self'; style-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">{% endif %}
+<link rel="canonical" href="{{ canonical }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Chess Analytics Lab">
+<meta property="og:title" content="{{ og_title }}">
+<meta property="og:description" content="{{ description }}">
+<meta property="og:url" content="{{ canonical }}">
+<meta property="og:image" content="{{ site_url }}assets/social-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Chess Analytics Lab: data, analytics and evaluated AI">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ og_title }}">
+<meta name="twitter:description" content="{{ description }}">
+<meta name="twitter:image" content="{{ site_url }}assets/social-preview.png">
+<meta name="twitter:image:alt" content="Chess Analytics Lab: data, analytics and evaluated AI">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="stylesheet" href="assets/site.css?v={{ commit }}">
+<script defer src="assets/site.js?v={{ commit }}"></script></head>
+<body><a class="skip" href="#main">Skip to content</a><header class="topbar"><div class="nav-inner">
+<a class="brand" href="index.html">Chess Analytics Lab <span class="badge">Learning lab</span></a>
+<nav aria-label="Main navigation">{% for path, name in nav %}<a href="{{ path }}"{% if path == active %} aria-current="page"{% endif %}>{{ name }}</a>{% endfor %}</nav></div></header><main id="main">
+<div class="hero"><div class="eyebrow">Data • Analytics • Evaluated AI</div>
+<h1>{{ heading }}</h1>
+<p class="lead">{{ intro }}</p>{% if active != "index.html" %}<p class="source-note">Generated from maintained Markdown, contracts and recorded evidence. <a href="{{ repo_url }}docs/README.md">Repository guides</a></p>{% endif %}</div>{{ body }}</main>
+<footer>Source revision {% if commit == "local export" %}{{ commit }}{% else %}<a href="https://github.com/jfk-ssa/chess-analytics-lab/commit/{{ commit }}">{{ commit }}</a>{% endif %} · Static documentation ·
+No runtime model calls or account downloads.
+<a href="{{ repo_url }}docs/SITE.md">Build and publishing runbook</a></footer></body></html>

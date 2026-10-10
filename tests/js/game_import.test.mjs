@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {test} from 'node:test';
 import {Chess} from '../../site/assets/vendor/chess-1.4.0.mjs';
-import {LIMITS, framePgn, parseGame, importPgnFiles, analyzeGames, positionKey} from '../../site/assets/game-import-core.mjs';
+import {LIMITS, canonicalSan, framePgn, parseGame, importPgnFiles, analyzeGames, positionKey} from '../../site/assets/game-import-core.mjs';
 const fixture = readFileSync(new URL('../fixtures/imports/authored-games.pgn', import.meta.url), 'utf8');
 const duplicate = readFileSync(new URL('../fixtures/imports/annotated-duplicate.pgn', import.meta.url), 'utf8');
 const files = [{name: 'authored-games.pgn', text: fixture}];
@@ -129,6 +129,31 @@ test('canonical keys preserve castling and legal EP, exclude draw counters and p
   assert.equal(positionKey(pinned).split(' ').at(-1), '-');
   assert.equal(positionKey(board), positionKey(new Chess(board.fen().split(' ').slice(0, 4).join(' ') + ' 12 8')));
   assert.notEqual(positionKey(new Chess()), positionKey(new Chess(new Chess().fen().replace('KQkq', '-'))));
+});
+
+test('digit castling and trimmed player names match the Python import rules', async () => {
+  assert.equal(canonicalSan('0-0'), 'O-O');
+  assert.equal(canonicalSan('0-0-0+'), 'O-O-O+');
+  assert.equal(canonicalSan('0-0#'), 'O-O#');
+  assert.equal(canonicalSan('O-O'), 'O-O');
+  const text = readFileSync(new URL('../fixtures/imports/zero-castling.pgn', import.meta.url), 'utf8');
+  const parsed = await importPgnFiles([{name: 'zero-castling.pgn', text}]);
+  assert.equal(parsed.stats.accepted, 2);
+  assert.equal(parsed.records[0].white, 'Zero Castler');
+  assert.deepEqual(parsed.records[0].moves.slice(8, 10), ['e1g1', 'f8e7']);
+  assert.equal(parsed.records[0].moves.includes('e8g8'), true);
+  assert.equal(parsed.records[1].moves.at(-1), 'e1c1');
+  const unknown = readFileSync(new URL('../fixtures/imports/parity-padded-unknown.pgn', import.meta.url), 'utf8');
+  const rejected = await importPgnFiles([{name: 'parity-padded-unknown.pgn', text: unknown}]);
+  assert.equal(rejected.rejected[0].reason, 'missing_or_invalid_players');
+  const conflict = readFileSync(new URL('../fixtures/imports/parity-conflict.pgn', import.meta.url), 'utf8');
+  const disagreed = await importPgnFiles([{name: 'parity-conflict.pgn', text: conflict}]);
+  assert.equal(disagreed.rejected[0].reason, 'conflicting_result');
+  const longName = 'A'.repeat(201);
+  const tooLong = text.replace('[White "  Zero Castler  "]', `[White "${longName}"]`);
+  assert.equal((await importPgnFiles([{name: 'long.pgn', text: tooLong}])).rejected[0].reason, 'missing_or_invalid_players');
+  const trimmed = text.replace('[White "  Zero Castler  "]', `[White " ${'A'.repeat(200)} "]`);
+  assert.equal((await importPgnFiles([{name: 'trimmed.pgn', text: trimmed}])).records[0].white.length, 200);
 });
 
 test('Unicode header content remains data, generic IDs ignore annotations and promotion is legal', async () => {
