@@ -75,3 +75,4 @@ the latest measured state.
 | 0067 | 2026-10-10 | [Keep only referenced historical reports](adr/0067-keep-only-referenced-historical-reports.md) |
 | 0068 | 2026-10-09 | [Evidence-first site review improvements](adr/0068-evidence-first-site-review-improvements.md) |
 | 0069 | 2026-10-10 | [Measured opening-position explorer](adr/0069-measured-opening-position-explorer.md) |
+| 0070 | 2026-10-10 | [Public transposition insights](adr/0070-public-transposition-insights.md) |

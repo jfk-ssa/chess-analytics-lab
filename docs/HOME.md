@@ -29,7 +29,7 @@ and limitations retained alongside their results.
 | How does the pipeline work? | [Architecture](ARCHITECTURE.md) |
 | How are metrics defined? | [Definitions and denominators](METRICS.md) |
 | What do the models demonstrate? | [Measured comparison](CLASSIFIER_COMPARISON.md) |
-| Which opening positions recur across move orders? | [Position explorer and learning guide](TRANSPOSITION_LEARNING.md) |
+| Which opening positions recur across move orders? | [Transposition analysis](TRANSPOSITIONS.md) and [learning design](TRANSPOSITION_LEARNING.md) |
 | Can I reproduce a small example? | [Offline walkthrough](DEMO.md) |
 | What is complete and what comes next? | [Current project status](STATUS.md) |
 

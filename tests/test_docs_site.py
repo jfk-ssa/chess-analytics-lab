@@ -17,7 +17,7 @@ spec.loader.exec_module(site)
 def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     before = (ROOT / "reports/decisions-routing-comparison.html").read_bytes()
     result = site.build(ROOT, tmp_path / "output")
-    assert len(result["pages"]) == 6
+    assert len(result["pages"]) == 7
     assert result["local_links_checked"] > 50
     assert result["live_requests"] == result["data_downloads"] == 0
     output = tmp_path / "output"
@@ -60,6 +60,19 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     }
     assert {p.stem for p in (output / "assets/opening-positions").glob("*.svg")} == identifiers
     assert 'id="position-explorer"' in (output / "transpositions.html").read_text()
+    analytics = (output / "transpositions.html").read_text()
+    learning = (output / "opening-learning.html").read_text()
+    assert 'id="position-coverage-chart"' in analytics
+    assert 'id="position-depth-chart"' in analytics
+    assert 'id="position-scatter-chart"' in analytics
+    assert 'href="opening-learning.html#getting-more-games"' in analytics
+    assert "opening-learning.html" in (output / "sitemap.xml").read_text()
+    assert 'id="opening-data"' not in analytics
+    assert 'id="opening-data"' in learning
+    assert 'id="position-explorer"' not in learning
+    metrics = (output / "metrics.html").read_text()
+    assert "opening_positions.json" in metrics
+    assert "Alternative-route share" in metrics
     site.build(ROOT, output)  # A generated output is safely rebuildable.
 
 

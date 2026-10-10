@@ -15,7 +15,8 @@ The site is static: it cannot run the analyst, contact a model or download games
 | [Architecture](https://jfk-ssa.github.io/chess-analytics-lab/architecture.html) | [Architecture guide](ARCHITECTURE.md), stage descriptions in the builder | Clickable pipeline stages and implementation links |
 | [Metrics and data](https://jfk-ssa.github.io/chess-analytics-lab/metrics.html) | [Metrics](METRICS.md), [dictionary](DATA_DICTIONARY.md), versioned contracts | Searchable contracts/schemas and a denominator illustration |
 | [Demo](https://jfk-ssa.github.io/chess-analytics-lab/demo.html) | [Demo walkthrough](DEMO.md), synthetic dashboard screenshots | Actual example screens and copyable commands |
-| [Opening learning](https://jfk-ssa.github.io/chess-analytics-lab/transpositions.html) | [Transposition learning](TRANSPOSITION_LEARNING.md), checked corpus and position reports | Measured recurring/transposing rankings by cohort/opening, boards, routes, continuations, union coverage and an illustrative walkthrough |
+| [Transpositions](https://jfk-ssa.github.io/chess-analytics-lab/transpositions.html) | [Analysis guide](TRANSPOSITIONS.md), checked corpus and position reports | Rankings, route balance, coverage/depth/scatter charts, public fianchetto lenses and route comparisons |
+| [Opening learning](https://jfk-ssa.github.io/chess-analytics-lab/opening-learning.html) | [Transposition learning](TRANSPOSITION_LEARNING.md) | Illustrative board, lesson design and evaluation proposal |
 
 The [original full comparison report](https://jfk-ssa.github.io/chess-analytics-lab/reports/decisions-routing-comparison.html)
 is copied byte-for-byte from its tracked report, rather than rewritten. Historical
@@ -71,7 +72,7 @@ population findings or fresh model responses. To refresh them, run the full
 [offline demo](DEMO.md), capture those views and replace only the two named PNGs
 in `site/assets`. Never capture personal-provider settings or private games.
 
-On Opening learning, choose Elite or Public, then a recorded opening family.
+On Transpositions, choose Elite or Public, then a recorded opening family or public fianchetto lens.
 The default ranking requires multiple move orders; switch to recurring positions
 to include frequently repeated boards with one observed route. Select a row to
 inspect its board and common routes. Continuations show recorded choices, not

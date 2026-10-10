@@ -1,4 +1,4 @@
-# Data dictionary — M1–M3
+# Data dictionary
 
 **HTML version:** [Read this guide on the documentation site](https://jfk-ssa.github.io/chess-analytics-lab/metrics.html).
 
@@ -44,3 +44,24 @@ game has no `fact_move` row but remains in the sample manifest. The M3 source
 manifest and move manifest explicitly mark the archive partial and retain
 source/implementation/contract hashes. Only the observed prefix, not the full
 publisher archive, has a verified compressed-byte hash.
+
+
+## Opening-position publication
+
+Local visit shards retain source/provider/game identity, cohort, decision ply,
+full FEN, canonical position key and SHA-derived ID, complete UCI prefix, a
+repeated-position-prefix flag, next move, and recorded family/ECO. Per-position
+aggregation uses a game's earliest eligible visit. The compact tracked report
+publishes bounded rankings and examples; it is not the full visit database.
+
+Each view records its game denominator, distinct/recurring/transposing board
+counts, positions and frequency rankings. Each ranking includes a cumulative
+union-coverage curve with covered games, share and additional games for N=1..20.
+Position details retain acyclic games, leading-route games, alternative-route
+share, route remainder, complete known-family/ECO breadth and unknown-family
+counts. Public lenses have versioned move-sequence rules and matching-game
+denominators; white_g3_played_games distinguishes arrivals before and after g3.
+
+The report, configuration, contract, source and implementation hashes are checked
+by the site builder. Local full FEN preserves draw counters; the recognition key
+uses pieces, turn, castling and legal en passant only.

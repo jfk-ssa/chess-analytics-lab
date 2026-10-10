@@ -71,6 +71,20 @@ def position_details(db, row, denominator):
       where position_id=? group by all order by games desc,opening_family,eco limit 5""",
         [position_id],
     ).fetchall()
+    families, ecos, unknown = db.execute(
+        """select count(distinct opening_family) filter(where opening_family!='Unknown'),
+        count(distinct eco) filter(where eco is not null and eco!=''),
+        count(*) filter(where opening_family='Unknown')
+        from detail_visits where position_id=?""",
+        [position_id],
+    ).fetchone()
+    acyclic_games = games - loop_games
+    dominant = route_rows[0][1] if route_rows else 0
+    g3_games = db.execute(
+        "select count(*) from detail_visits where position_id=? "
+        "and list_contains(string_split(route,' '),'g2g3')",
+        [position_id],
+    ).fetchone()[0]
     return {
         "id": position_id,
         "position_key": key,
@@ -78,6 +92,14 @@ def position_details(db, row, denominator):
         "frequency": games / denominator,
         "acyclic_routes": route_count,
         "loop_prefix_games": loop_games,
+        "acyclic_games": acyclic_games,
+        "dominant_route_games": dominant,
+        "alternative_route_share": 1 - dominant / acyclic_games if acyclic_games else None,
+        "other_acyclic_route_games": acyclic_games - sum(row[1] for row in route_rows),
+        "distinct_recorded_families": families,
+        "distinct_recorded_ecos": ecos,
+        "unknown_family_games": unknown,
+        "white_g3_played_games": g3_games,
         "routes": routes,
         "next_move_games": sum(count for _, count in following),
         "continuations": continuations,
@@ -98,8 +120,33 @@ def coverage(db, positions):
     ).fetchone()[0]
 
 
-def summarize_view(db, family, denominator, top_n):
-    relation = db.table("cohort_visits")
+def coverage_curve(db, positions, denominator):
+    """Count a game's earliest ranked hit; cumulative unions do not double-count it."""
+    if not positions:
+        return []
+    identifiers = [row[0] for row in positions]
+    histogram = dict(
+        db.execute(
+            """with ranked as (select unnest(?) position_id,unnest(?) rank),
+        first_hit as (select provider,game_id,min(rank) first_rank
+        from selected_visits join ranked using(position_id) group by provider,game_id)
+        select first_rank,count(*) from first_hit group by first_rank""",
+            [identifiers, list(range(1, len(positions) + 1))],
+        ).fetchall()
+    )
+    covered = 0
+    result = []
+    for n in range(1, len(positions) + 1):
+        added = histogram.get(n, 0)
+        covered += added
+        result.append(
+            {"n": n, "games": covered, "share": covered / denominator, "additional_games": added}
+        )
+    return result
+
+
+def summarize_view(db, family, denominator, top_n, relation_name="cohort_visits"):
+    relation = db.table(relation_name)
     if family:
         relation = relation.filter("opening_family='" + family.replace("'", "''") + "'")
     relation.create_view("selected_visits", replace=True)
@@ -119,10 +166,12 @@ def summarize_view(db, family, denominator, top_n):
           order by games desc,position_id limit ?""",
             [top_n],
         ).fetchall()
+        curve = coverage_curve(db, rows, denominator)
         rankings[kind] = {
             "ids": [row[0] for row in rows],
-            "top_10_game_coverage": coverage(db, rows[:10]),
-            "top_20_game_coverage": coverage(db, rows),
+            "top_10_game_coverage": curve[min(10, len(curve)) - 1]["games"] if curve else 0,
+            "top_20_game_coverage": curve[-1]["games"] if curve else 0,
+            "coverage_curve": curve,
         }
         selected.update({row[0]: row for row in rows})
     db.execute(
@@ -142,6 +191,46 @@ def summarize_view(db, family, denominator, top_n):
     }
 
 
+LENSES = {
+    "d4-g3": {"label": "1.d4 with g3", "moves": ["d2d4", "g2g3"]},
+    "d4-g3-catalan": {
+        "label": "Catalan-style fianchetto",
+        "moves": ["d2d4", "c2c4", "g2g3", "f1g2", "e7e6", "d7d5"],
+    },
+    "d4-g3-kings-indian": {
+        "label": "King's Indian fianchetto",
+        "moves": ["d2d4", "c2c4", "g2g3", "f1g2", "g8f6", "g7g6", "f8g7", "d7d6"],
+    },
+}
+
+
+def summarize_lenses(db, cohort, plan):
+    """Curated move-sequence facets, independent of provider's later opening labels."""
+    result = {}
+    for name, definition in LENSES.items():
+        db.execute(
+            """create or replace temporary table lens_games as
+            select distinct provider,game_id from visits
+            where cohort=? and ply=? and starts_with(route,'d2d4 ')
+            and list_has_all(string_split(route,' '),?)""",
+            [cohort, plan["max_ply"], definition["moves"]],
+        )
+        count = db.execute("select count(*) from lens_games").fetchone()[0]
+        if not count:
+            continue
+        db.execute("""create or replace temporary table lens_visits as
+            select * from cohort_visits join lens_games using(provider,game_id)""")
+        view = summarize_view(db, None, count, plan["published_positions_per_view"], "lens_visits")
+        view["lens"] = {
+            "version": "1.0.0",
+            **definition,
+            "rule": "First White move d4; all listed UCI moves played within the opening window.",
+            "includes_pre_g3_positions": True,
+        }
+        result[name] = view
+    return result
+
+
 def summarize(snapshot, output, plan):
     snapshot, output = snapshot.resolve(), output.resolve()
     manifest = read_json(snapshot / "manifest.json")
@@ -156,7 +245,7 @@ def summarize(snapshot, output, plan):
     started = time.monotonic()
     result = {
         "kind": "observed_white_opening_positions",
-        "version": "1.0.0",
+        "version": "1.1.0",
         "created_at": now(),
         "visit_snapshot_id": manifest["snapshot_id"],
         "visit_manifest_sha256": digest(snapshot / "manifest.json"),
@@ -238,6 +327,7 @@ def summarize(snapshot, output, plan):
                 data["views"][family] = summarize_view(
                     db, family, count, plan["published_positions_per_view"]
                 )
+            data["views"].update(summarize_lenses(db, cohort, plan))
             result["cohorts"][cohort] = data
             db.execute("drop table cohort_visits")
     result["elapsed_seconds"] = round(time.monotonic() - started, 2)

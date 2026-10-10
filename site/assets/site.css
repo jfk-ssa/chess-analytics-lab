@@ -658,3 +658,29 @@ figure .full-size {
   .position-detail {
     scroll-margin-top:18px}
 }
+
+.position-chart-panel {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+.position-chart {
+  width: 100%;
+  height: auto;
+  max-height: 380px;
+  min-width: 560px;
+  font-family: inherit;
+  font-size: 15px;
+  fill: #263b31;
+}
+.chart-tick { font-size: 13px; }
+.chart-point { cursor: pointer; }
+.chart-point:focus { outline: 3px solid #986321; stroke-width: 4; }
+.chart-legend { display: flex; gap: 1.5rem; flex-wrap: wrap; margin: .5rem 0; }
+.chart-series-0 { color: #17664d; }
+.chart-series-1 { color: #8a5425; }
+.chart-legend span::before { content: '━ '; font-weight: 700; }
+.route-flow { border-right: 3px solid #789b8d; padding-right: .8rem; }
+.route-flow li { padding: .7rem; background: #f1f5f1; border-radius: 5px; margin: .5rem 0; }
+.route-flow-endpoint { font-weight: 600; text-align: right; color: #17664d; }
+.position-ranking table { min-width: 670px; }

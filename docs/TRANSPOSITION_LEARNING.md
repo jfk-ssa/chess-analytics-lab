@@ -1,8 +1,10 @@
 # Learning opening strategy through transpositions
 
-**HTML version:** [Open the interactive learning page](https://jfk-ssa.github.io/chess-analytics-lab/transpositions.html).
+**HTML version:** [Open the interactive learning page](https://jfk-ssa.github.io/chess-analytics-lab/opening-learning.html).
 
 Decision recorded: October 9, 2026; position analysis added October 10. Status: checked training-game corpus, derived White opening visits, and measured recurring/transposing rankings. The website explorer uses retained games; its separate two-route walkthrough is illustrative. Strategic lessons, personalized practice and measured learning benefits remain proposed.
+
+For measured public-corpus rankings and charts, use [Transpositions](TRANSPOSITIONS.md).
 
 ## What you can explore now
 
