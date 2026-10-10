@@ -123,6 +123,16 @@ function ratedValue(headers) {
   if (/^(casual|unrated)\b/i.test(headers.Event || '')) return false;
   return null;
 }
+// Trim and NFC-normalize before the unknown-player and length checks.
+function playerName(value) {
+  const name = String(value ?? '').trim().normalize('NFC');
+  if (!name || name === '?' || name.length > 200) throw new Error('missing_or_invalid_players');
+  return name;
+}
+// chess.js strict mode rejects digit castling. 0-0 and 0-0-0 are the same moves as O-O and O-O-O.
+export function canonicalSan(token) {
+  return token.replace(/^0-0-0(?=$|[+#])/, 'O-O-O').replace(/^0-0(?=$|[+#])/, 'O-O');
+}
 export async function parseGame(frame, keyCache = new Map()) {
   const h = frame.headers;
   if (frame.errors.length) throw new Error(frame.errors[0]);
@@ -130,7 +140,8 @@ export async function parseGame(frame, keyCache = new Map()) {
   if (h.FEN || (h.SetUp && h.SetUp !== '0')) throw new Error('unsupported_setup');
   if (!RESULTS.has(frame.result)) throw new Error('unfinished_or_missing_result');
   if (h.Result && h.Result !== frame.result) throw new Error('conflicting_result');
-  if (!h.White || !h.Black || [h.White, h.Black].some(name => !name.trim() || name === '?' || name.length > 200)) throw new Error('missing_or_invalid_players');
+  const white = playerName(h.White);
+  const black = playerName(h.Black);
   const board = new Chess();
   const seen = new Set([positionKey(board)]);
   let repeat = false;
@@ -139,7 +150,7 @@ export async function parseGame(frame, keyCache = new Map()) {
   const visits = [];
   for (let i = 0; i < frame.moves.length; i++) {
     let move;
-    try { move = board.move(frame.moves[i], {strict: true}); } catch { throw new Error('illegal_or_invalid_mainline'); }
+    try { move = board.move(canonicalSan(frame.moves[i]), {strict: true}); } catch { throw new Error('illegal_or_invalid_mainline'); }
     const uci = move.from + move.to + (move.promotion || '');
     moves.push(uci); sans.push(move.san);
     if (i < 20) {
@@ -155,8 +166,6 @@ export async function parseGame(frame, keyCache = new Map()) {
     }
   }
   visits.forEach(visit => visit.next_move = moves[visit.ply] || null);
-  const white = h.White.trim().normalize('NFC');
-  const black = h.Black.trim().normalize('NFC');
   const date = dateValue(h);
   const identity = providerIdentity(h);
   const semantic = JSON.stringify([fold(white), fold(black), date, moves]);
