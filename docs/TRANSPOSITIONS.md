@@ -83,6 +83,6 @@ aggregation, and engine review remain separate extensions.
 
 ## Compare a local export
 
-[Analyze my games](GAME_IMPORT.md) compares selected White games from local
+[Analyze games](GAME_IMPORT.md) compares selected White games from local
 Chess.com/Lichess PGNs with these published study boards. The personal denominator
 includes short games by default and stays separate from the public cohorts.

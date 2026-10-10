@@ -156,6 +156,9 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     metrics = (output / "metrics.html").read_text()
     assert "opening_positions.json" in metrics
     assert "Alternative-route share" in metrics
+    index = (output / "index.html").read_text()
+    assert 'class="cards preview-cards"' in index
+    assert "Drop in a PGN" in index
     site.build(ROOT, output)  # A generated output is safely rebuildable.
 
 
@@ -187,6 +190,37 @@ def test_transposition_routes_share_one_legal_position():
     assert routes[0]["states"][-1]["position_key"] == routes[1]["states"][-1]["position_key"]
     assert routes[0]["states"][-1]["to_move"] == "White"
     assert len(routes[0]["states"]) == 7
+
+
+def test_homepage_preview_reads_checked_reports():
+    html = site.homepage_preview(ROOT)
+    corpus = json.loads((ROOT / "reports/opening-corpus.json").read_text())
+    positions = json.loads((ROOT / "reports/opening-positions.json").read_text())
+    elite = positions["cohorts"]["elite_reference"]["views"]["all"]
+    checkpoint = json.loads((ROOT / "reports/decisions-checkpoint.json").read_text())
+    run = next(
+        item
+        for item in checkpoint["runs"]
+        if item["report"] == "decisions-historical-test.json" and item["split"] == "test"
+    )
+    assert f"{corpus['counts']['training_games']:,}" in html
+    assert f"{elite['transposing_positions']:,}" in html
+    assert f"{elite['denominator_games']:,}" in html
+    assert f"{run['correct']}/{run['cases']}" in html
+    assert "This is route choice, not a correct chess answer." in html
+    assert "Drop in a PGN" in html
+    assert "Analyze games" in html
+    analyze = html.split('href="import-games.html"', 1)[1]
+    assert "preview-stat" not in analyze
+    assert 'role="img"' in html
+    assert "vertical axis runs from 0 to 0.50" in html
+    for href in (
+        "architecture.html",
+        "transpositions.html",
+        "comparison.html",
+        "import-games.html",
+    ):
+        assert f'class="card preview-card" href="{href}"' in html
 
 
 def test_opening_corpus_panel_matches_the_checked_report():

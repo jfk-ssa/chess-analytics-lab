@@ -803,6 +803,88 @@ def validate_site(output, repo=None):
     return checked
 
 
+def elite_compression_sparkline(series):
+    """Plot Elite endpoint compression on a fixed 0–0.50 axis."""
+    plies = [row["ply"] for row in series]
+    values = [row["endpoint_compression"] for row in series]
+    if plies != list(range(6, 21, 2)):
+        raise ValueError("Elite compression plies differ from the published 6–20 series")
+    if any(not isinstance(value, (int, float)) or not 0 <= value <= 0.5 for value in values):
+        raise ValueError("Elite endpoint compression is outside the 0–0.50 axis")
+    left, right, baseline, top = 8, 232, 46, 6
+    step = (right - left) / (len(values) - 1)
+    coords = []
+    for index, value in enumerate(values):
+        x = left + index * step
+        y = baseline - (value / 0.5) * (baseline - top)
+        coords.append((round(x, 2), round(y, 2)))
+    peak = max(range(len(values)), key=lambda index: values[index])
+    points = " ".join(f"{x:.2f},{y:.2f}" for x, y in coords)
+    polygon = f"{points} {coords[-1][0]:.2f},{baseline:.2f} {coords[0][0]:.2f},{baseline:.2f}"
+    label = (
+        f"Elite endpoint compression from ply {plies[0]} to ply {plies[-1]}. "
+        f"The series is {', '.join(f'{value:.3f}' for value in values)}. "
+        "The vertical axis runs from 0 to 0.50."
+    )
+    return {
+        "points": points,
+        "polygon": polygon,
+        "peak_x": f"{coords[peak][0]:.2f}",
+        "peak_y": f"{coords[peak][1]:.2f}",
+        "label": label,
+        "first_ply": plies[0],
+        "last_ply": plies[-1],
+    }
+
+
+def historical_route_score(repo):
+    """Return Decisions correct routes on the retained historical test split."""
+    checkpoint = json.loads((repo / "reports/decisions-checkpoint.json").read_text())
+    runs = [
+        item
+        for item in checkpoint["runs"]
+        if item["report"] == "decisions-historical-test.json" and item["split"] == "test"
+    ]
+    if len(runs) != 1:
+        raise ValueError("Decisions historical test route score is missing")
+    run = runs[0]
+    report_path = repo / "reports" / run["report"]
+    if digest(report_path.read_bytes()) != checkpoint["files"][run["report"]]:
+        raise ValueError("Frozen comparison report hash changed: " + run["report"])
+    scoring = json.loads(report_path.read_text())["scoring"]
+    if scoring.get("kind") != "decisions_routing_scoring":
+        raise ValueError("Decisions historical score is not a routing score")
+    if (scoring["correct"], scoring["cases"]) != (run["correct"], run["cases"]):
+        raise ValueError("Decisions historical route score does not reconcile")
+    if not 0 <= scoring["correct"] <= scoring["cases"] or scoring["cases"] <= 0:
+        raise ValueError("Decisions historical route score is outside its case count")
+    return scoring["correct"], scoring["cases"]
+
+
+def homepage_preview(repo):
+    """Four homepage cards. Counts come from checked reports, not from literals."""
+    corpus = json.loads((repo / "reports/opening-corpus.json").read_text())["counts"]
+    positions = checked_positions(repo)
+    elite = positions["cohorts"]["elite_reference"]
+    view = elite["views"]["all"]
+    if "transposing_positions" not in view or view["denominator_games"] <= 0:
+        raise ValueError("Elite all-view transposition count is missing")
+    if view["transposing_positions"] > view["denominator_games"]:
+        raise ValueError("Elite transposing positions exceed the Elite denominator")
+    correct, cases = historical_route_score(repo)
+    return render(
+        "preview_cards.html.j2",
+        training_games=f"{corpus['training_games']:,}",
+        transposing_positions=f"{view['transposing_positions']:,}",
+        elite_games=f"{view['denominator_games']:,}",
+        routes_correct=correct,
+        routes_total=cases,
+        routes_percent=f"{100 * correct / cases:.1f}",
+        route_bar=round(240 * correct / cases),
+        spark=elite_compression_sparkline(elite["compression_by_ply"]),
+    )
+
+
 def homepage_results(repo):
     # Reuse corpus reconciliation and frozen report checks before promoting values to the hero.
     opening_corpus(repo)
@@ -927,7 +1009,11 @@ def build(repo, output):
                 "A reproducible chess data pipeline, explicit analytical metrics, "
                 "and an AI analyst evaluated against checked evidence."
             ),
-            render("index_links.html.j2") + homepage_results(repo) + home + md(repo, "HOME.md"),
+            homepage_preview(repo)
+            + render("index_links.html.j2")
+            + homepage_results(repo)
+            + home
+            + md(repo, "HOME.md"),
         ),
         "architecture.html": (
             "From game records to checked answers",
