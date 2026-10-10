@@ -12,7 +12,7 @@ historical package and report names remain stable for source hashes.
 Lichess fixed complete archive / fixed byte prefix / synthetic PGN
   → chess_analytics.ingest: caps, parser, normalization, dedup, quarantine
   → chess_analytics.warehouse: checked immutable snapshots + current pointer
-  → platform_m2: local dbt copy, tests, published marts + recovery ledger
+  → chess_analytics.marts: local dbt copy, tests, published marts + recovery ledger
   → analytics_m3: selected moves, opening and clock definitions
   → analytics_m4: parameterized analysis and Streamlit views
   → analyst_m5: allowlisted read-only tools, bounded plan, evidence IDs

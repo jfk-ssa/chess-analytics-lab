@@ -228,7 +228,7 @@ def architecture():
         (
             "marts",
             "Optional marts",
-            "platform_m2/pipeline.py",
+            "src/chess_analytics/marts/pipeline.py",
             "Transform a copy through dbt; record lineage, validation and recovery.",
         ),
         (

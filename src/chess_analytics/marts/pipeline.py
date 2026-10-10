@@ -59,9 +59,19 @@ def validate_mart(directory: Path, *, require_name: bool = True) -> dict:
             """select sum(accepted_games), sum(eligible_games), sum(drawn_games),
                       sum(unknown_results), sum(marked_bots) from mart_game_outcomes"""
         ).fetchone()
-        players = con.execute("select count(*) from mart_player_outcomes").fetchone()[0]
-    observed = dict(zip(("accepted", "eligible", "drawn", "unknown", "bots"), row, strict=True))
-    observed["player_rows"] = players
+        player_row = con.execute("select count(*) from mart_player_outcomes").fetchone()
+    if row is None or player_row is None:
+        raise RuntimeError("mart query returned no row")
+    players = player_row[0]
+    accepted, eligible, drawn, unknown, bots = row
+    observed = {
+        "accepted": accepted,
+        "eligible": eligible,
+        "drawn": drawn,
+        "unknown": unknown,
+        "bots": bots,
+        "player_rows": players,
+    }
     if observed != manifest["observed"]:
         raise ValueError("mart counts differ from manifest")
     return manifest
@@ -99,7 +109,7 @@ def build_mart(
     attempt = root / "marts/attempts" / uuid.uuid4().hex
     attempt.mkdir(parents=True)
     started = time.monotonic()
-    state = {
+    state: dict[str, object] = {
         "status": "running",
         "started_at": now(),
         "dataset": dataset,
@@ -145,11 +155,19 @@ def build_mart(
                 """select sum(accepted_games), sum(eligible_games), sum(drawn_games),
                           sum(unknown_results), sum(marked_bots) from mart_game_outcomes"""
             ).fetchone()
-            players = con.execute("select count(*) from mart_player_outcomes").fetchone()[0]
-        observed = dict(
-            zip(("accepted", "eligible", "drawn", "unknown", "bots"), values, strict=True)
-        )
-        observed["player_rows"] = players
+            player_row = con.execute("select count(*) from mart_player_outcomes").fetchone()
+        if values is None or player_row is None:
+            raise RuntimeError("mart query returned no row")
+        players = player_row[0]
+        accepted, eligible, drawn, unknown, bots = values
+        observed = {
+            "accepted": accepted,
+            "eligible": eligible,
+            "drawn": drawn,
+            "unknown": unknown,
+            "bots": bots,
+            "player_rows": players,
+        }
         expected = {
             "accepted": source_report["counts"]["accepted"],
             "eligible": source_report["metric"]["denominator"],

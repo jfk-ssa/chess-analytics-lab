@@ -24,7 +24,7 @@ jobs:
       - run: uv run --locked --offline --no-editable chesslab demo
       - run: uv sync --locked --no-editable --extra dbt
       - run: uv run --locked --offline --no-editable --extra dbt pytest -q
-      - run: uv run --locked --offline --no-editable --extra dbt python -m platform_m2 transform --dataset tiny
+      - run: uv run --locked --offline --no-editable --extra dbt python -m chess_analytics.marts transform --dataset tiny
   portfolio:
     runs-on: ubuntu-latest
     steps:

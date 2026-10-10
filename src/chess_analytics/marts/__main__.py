@@ -1,4 +1,4 @@
-"""Local M2 commands. Run as python -m platform_m2 from the repository root."""
+"""Local M2 commands. Run as python -m chess_analytics.marts from the repository root."""
 
 import argparse
 import json
@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 from chess_analytics.common import read_json, writer_lock
-from platform_m2.pipeline import (
+from chess_analytics.marts.pipeline import (
     build_mart,
     checked_id,
     operational_report,

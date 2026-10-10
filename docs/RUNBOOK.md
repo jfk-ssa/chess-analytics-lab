@@ -35,7 +35,7 @@ the repository. [DATA_SOURCES.md](DATA_SOURCES.md) explains the source and
 observed coverage. The real dashboard uses the repository's `data/` by
 default. The demo dashboard uses the explicit `CHESSLAB_PROJECT` directory.
 
-For optional dbt, run `python -m platform_m2 transform --dataset tiny` after
+For optional dbt, run `python -m chess_analytics.marts transform --dataset tiny` after
 tiny ingest/build and use `report-mart`, `ops-report`, or `rollback-mart` as
 needed. Backfill accepts `--snapshot-id`; validate a known mart before
 rollback. [M2.md](M2.md) contains exact examples. [ORCHESTRATION.md](ORCHESTRATION.md)
