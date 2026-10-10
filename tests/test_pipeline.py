@@ -1,5 +1,6 @@
 import io
 import json
+from typing import ClassVar
 
 import duckdb
 import pytest
@@ -181,7 +182,7 @@ def test_cli_offline_and_no_live_command(project, tmp_path, capsys, monkeypatch)
 def test_download_checksum_success_and_no_network_reuse(project, tmp_path, monkeypatch):
     class Response(io.BytesIO):
         status = 200
-        headers = {}
+        headers: ClassVar[dict] = {}
 
     payload = b"bounded test archive"
     sample = tmp_path / "sample"
@@ -197,7 +198,7 @@ def test_download_checksum_success_and_no_network_reuse(project, tmp_path, monke
 def test_download_retry_cap_and_preserved_jobs(project, tmp_path, monkeypatch):
     class BrokenResponse(io.BytesIO):
         status = 200
-        headers = {}
+        headers: ClassVar[dict] = {}
 
         def read(self, size=-1):
             if self.tell():
