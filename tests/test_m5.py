@@ -99,7 +99,7 @@ def test_state_machine_limits_steps_before_data_access():
     core.CheckedTools = FakeTools
     try:
         with pytest.raises(ValueError, match="tool-step limit"):
-            execute_plan(Path("."), "question", plan)
+            execute_plan(Path(), "question", plan)
     finally:
         core.CheckedTools = original
 
