@@ -186,9 +186,12 @@ summary:focus-visible,
   .brand {
     white-space: normal;
   }
-  .nav-toggle {
+  html.js .nav-toggle {
     display: inline-flex;
     align-items: center;
+  }
+  html.js .nav-toggle[aria-expanded="false"] + .site-nav {
+    display: none;
   }
   .site-nav {
     grid-column: 1 / -1;

@@ -20,7 +20,6 @@ function setupNavigation() {
     toggle.setAttribute('aria-expanded', String(expanded));
     nav.hidden = !expanded;
   }
-  toggle.hidden = false;
   setMenuOpen(false);
   toggle.addEventListener('click', () => {
     closeGroups();

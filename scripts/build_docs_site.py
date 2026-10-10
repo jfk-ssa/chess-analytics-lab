@@ -65,6 +65,7 @@ ASSETS = {
     "vendor/chess-js-provenance.json": "site/assets/vendor/chess-js-provenance.json",
     "import-example.pgn": "tests/fixtures/imports/authored-games.pgn",
     "site.css": "site/assets/site.css",
+    "js-class.js": "site/assets/js-class.js",
     "site.js": "site/assets/site.js",
     "position-explorer.js": "site/assets/position-explorer.js",
     "position-charts.js": "site/assets/position-charts.js",

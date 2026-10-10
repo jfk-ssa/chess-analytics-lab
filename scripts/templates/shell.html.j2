@@ -21,10 +21,11 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="stylesheet" href="assets/site.css?v={{ commit }}">
+<script src="assets/js-class.js?v={{ commit }}"></script>
 <script defer src="assets/site.js?v={{ commit }}"></script></head>
 <body><a class="skip" href="#main">Skip to content</a><header class="topbar"><div class="nav-inner">
 <a class="brand" href="index.html">Chess Analytics Lab <span class="badge">Learning lab</span></a>
-<button class="nav-toggle" type="button" aria-controls="site-navigation" aria-expanded="false" hidden>Menu</button>
+<button class="nav-toggle" type="button" aria-controls="site-navigation" aria-expanded="false">Menu</button>
 <nav class="site-nav" id="site-navigation" aria-label="Main navigation">
 {% for name, path, children in nav %}
 {% if children %}

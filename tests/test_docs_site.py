@@ -85,7 +85,12 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
         assert navigation.toggle["type"] == "button"
         assert navigation.toggle["aria-controls"] in parser.ids
         assert navigation.toggle["aria-expanded"] == "false"
-        assert "hidden" in navigation.toggle  # No inert toggle before progressive enhancement.
+        assert "hidden" not in navigation.toggle
+        class_script = text.split('src="assets/js-class.js', 1)[0].rsplit("<script", 1)[1]
+        assert "defer" not in class_script and "async" not in class_script
+        if name == "import-games.html":
+            assert "script-src 'self'" in text
+            assert "unsafe-inline" not in text
         canonical = site.SITE_URL + ("" if name == "index.html" else name)
         assert f'<link rel="canonical" href="{canonical}">' in text
         assert f'<meta property="og:url" content="{canonical}">' in text
@@ -95,6 +100,10 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
         description = text.split('<meta name="description" content="', 1)[1].split('"', 1)[0]
         descriptions.add(description)
     assert len(descriptions) == len(result["pages"])
+    css = (output / "assets/site.css").read_text()
+    assert "html.js .nav-toggle" in css
+    assert 'html.js .nav-toggle[aria-expanded="false"] + .site-nav' in css
+    assert "classList.add('js')" in (output / "assets/js-class.js").read_text()
     assert (output / "favicon.ico").read_bytes() == (ROOT / "site/assets/favicon.ico").read_bytes()
     assert (output / "assets/opening-positions.json").read_bytes() == (
         ROOT / "reports/opening-positions.json"
