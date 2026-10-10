@@ -354,6 +354,31 @@ td.number,th.number {
   white-space:nowrap}
 .article>p,.article>ul,.article>ol {
   max-width:70ch}
+.article {
+  max-width:70ch}
+.article>.scroll {
+  max-width:100%}
+.research-cards {
+  display:grid;
+  gap:16px;
+  margin:24px 0}
+.research-card {
+  padding:20px 24px;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:white}
+.research-card h3 {
+  margin:0 0 16px;
+  font-size:16px}
+.research-card dl {
+  margin:0}
+.research-card dt {
+  color:var(--teal);
+  font-size:12px;
+  font-weight:650;
+  margin-top:16px}
+.research-card dd {
+  margin:4px 0 0}
 details[id],h2[id],h3[id] {
   scroll-margin-top:110px}
 figure a {
@@ -373,6 +398,35 @@ figure .full-size {
   border:1px solid var(--line);
   border-radius:var(--radius);
   background:white}
+.corpus-panel {
+  margin:28px 0;
+  padding:24px;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:white}
+.corpus-panel h2 {
+  margin:10px 0 14px}
+.corpus-stats {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+  margin:24px 0}
+.corpus-stat {
+  padding:16px;
+  border-radius:8px;
+  background:var(--soft)}
+.corpus-stat strong {
+  display:block;
+  color:var(--teal);
+  font-size:26px;
+  font-variant-numeric:tabular-nums}
+.corpus-stat small {
+  color:var(--muted)}
+#opening-cohort-count {
+  display:block;
+  color:var(--teal);
+  font-size:26px;
+  font-variant-numeric:tabular-nums}
 .opening-lab-header h2 {
   margin:14px 0 12px}
 .opening-lab-header p {
@@ -419,6 +473,10 @@ figure .full-size {
 .opening-explanation .callout {
   margin:20px 0}
 @media(max-width:750px) {
+  .corpus-panel {
+    padding:18px}
+  .corpus-stats {
+    grid-template-columns:1fr}
   .opening-lab {
     padding:18px}
   .opening-grid {

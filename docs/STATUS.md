@@ -353,3 +353,44 @@ converging, functional route/ply controls, and the shared guide styling at the
 existing narrow panel width. No new model call, game download, hosted build,
 deployment, or learning-effect measurement occurred. See the
 [local checkpoint](../reports/opening-learning-checkpoint.json).
+
+# Opening training corpus and publication — 2026-10-09
+
+Acquired the full November 2025 Lichess Elite ZIP (80,347,217 bytes), retaining
+original PGN, hashes, and a versioned `LichessURL` identity adapter. The existing
+legal ingestion accepted 278,481 rated games and excluded 1,765 unrated records;
+there were zero quarantines, conflicting duplicates, or failed snapshot checks.
+Coverage spans November 1–30. See [the ingestion receipt](../reports/elite-2025-11-ingestion.json).
+
+Combined that snapshot with all ten distinct pre-existing retained game sources.
+The checked immutable opening index `00e7a73fbf67c401e23b4b4b` contains
+1,295,879 unique accepted games; both players are at least 1000 in 1,232,182
+and strictly above 1000 in 1,231,872. Opening training selects 1,042,346 completed,
+at-least-20-ply games with known ratings and no marked bots, excluding 2013.
+Default Elite reference: 240,086 games. Broader public comparison: 802,260 games
+from nine ordered first-day prefixes. There were no cross-source overlaps;
+218 retained games have missing ratings and are excluded. See [the corpus report](../reports/opening-corpus.json)
+and preserved [pre-expansion inventory](../reports/retained-rating-inventory.json).
+
+The index is 141.8 MB DuckDB plus 91.9 MB Parquet. Selected game artifact formats
+across `data/` and `work/` total about 9.15 GB, including retained source/work copies
+and failed attempts. An interrupted import and two index failures (SQL alias and
+bounded temporary-disk exhaustion) remain retained under ignored staging paths.
+The successful builder deduplicates compact keys before joining metadata,
+limits RAM/temp disk to 1 GB/2 GB, and requires 3 GB free. Bulk games remain local;
+only compact reports and source code enter Git and static Pages. No paid model
+call or cloud database was used.
+
+The HTML adds checked corpus counts and a default-Elite cohort selector. Article
+tables now share prose width, and the research comparison renders as stacked
+cards. The wider corpus/board sections retain the dashboard layout. Publication
+uses the existing Pages workflow on `main`; the report records corpus evidence,
+while hosted CI and live deployment are separate acceptance observations.
+The local static build generated six pages and validated 76 local links; Ruff
+and whitespace checks passed. Browser inspection at the current 796px viewport
+confirmed three research cards, matching 632px article/table widths with no page
+overflow, and cohort counts of 240,086 / 802,260 / 1,042,346 when switching
+Elite / public / combined. This was a build and visual inspection, not a fresh
+unit-test suite or learning experiment. See [the corpus checkpoint](../reports/opening-training-checkpoint.json). The next step is the first-20-ply
+position/visit/edge publication and White lesson ranking. The graph, drills, engine-scored candidates, Black lessons, and measured
+learning outcomes are still proposed work.

@@ -67,6 +67,37 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
+def research_cards(content):
+    """Present the maintained research comparison as readable source cards."""
+
+    def replace(match):
+        table = match.group(0)
+        headers = re.findall(r"<th(?:\s[^>]*)?>(.*?)</th>", table, re.DOTALL)
+        if headers != [
+            "Primary source",
+            "Finding relevant to the design",
+            "Interpretation for this project",
+        ]:
+            return table
+        cards = []
+        for row in re.findall(r"<tr>(.*?)</tr>", table, re.DOTALL):
+            cells = re.findall(r"<td(?:\s[^>]*)?>(.*?)</td>", row, re.DOTALL)
+            if not cells:
+                continue
+            if len(cells) != 3:
+                raise ValueError("Research comparison must contain three cells per source")
+            source, finding, interpretation = cells
+            cards.append(
+                f'<section class="research-card"><h3>{source}</h3><dl>'
+                f"<dt>Research finding</dt><dd>{finding}</dd>"
+                f"<dt>What this suggests for our lessons</dt><dd>{interpretation}</dd>"
+                "</dl></section>"
+            )
+        return '<div class="research-cards">' + "".join(cards) + "</div>"
+
+    return re.sub(r"<table>.*?</table>", replace, content, flags=re.DOTALL)
+
+
 def md(repo, name):
     source = repo / "docs" / name
     text = source.read_text()
@@ -92,6 +123,11 @@ def md(repo, name):
     text = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", link, text)
     engine = markdown.Markdown(extensions=["fenced_code", "tables", "toc"])
     content = engine.convert(text)
+    if name == "TRANSPOSITION_LEARNING.md":
+        content = research_cards(content)
+    content = re.sub(
+        r"(<table>.*?</table>)", r'<div class="scroll">\1</div>', content, flags=re.DOTALL
+    )
     content = re.sub(r"<(/?)h1([ >])", r"<\1h2\2", content)
     return (
         '<div class="toc">On this page'
@@ -122,7 +158,7 @@ content="Local chess analytics, reproducible evidence and learning guides.">
 <p class="lead">{intro}</p><p class="source-note">Generated from maintained Markdown, contracts and
 recorded evidence. <a href="{REPO_URL}docs/README.md">Repository guides</a></p></div>{body}</main>
 <footer>Source revision {html.escape(commit)} · Static documentation ·
-No model calls or data acquisition.
+No runtime model calls or game downloads.
 <a href="{REPO_URL}docs/SITE.md">Build and publishing runbook</a></footer></body></html>'''
 
 
@@ -186,6 +222,54 @@ def architecture():
         + flow
         + details
     )
+
+
+def opening_corpus(repo):
+    report = json.loads((repo / "reports/opening-corpus.json").read_text())
+    counts = report["counts"]
+    if sum(report["rating_bands"].values()) != counts["training_games"]:
+        raise ValueError("opening corpus rating bands do not reconcile")
+    if sum(source["games"] for source in report["training_sources"]) != counts["training_games"]:
+        raise ValueError("opening corpus source summaries do not reconcile")
+    data = {
+        "counts": counts,
+        "sources": report["training_sources"],
+        "snapshot_id": report["snapshot_id"],
+    }
+    payload = json.dumps(data).replace("<", "\\u003c")
+    cards = "".join(
+        f'<div class="corpus-stat"><span>{label}</span><strong>{value:,}</strong>'
+        f"<small>{detail}</small></div>"
+        for label, value, detail in (
+            ("Unique retained games", counts["unique_retained_games"], "Fixtures excluded"),
+            ("Both players 1000+", counts["both_at_least_1000"], "Includes ratings exactly 1000"),
+            ("Opening corpus", counts["training_games"], "Completed games; at least ten moves"),
+        )
+    )
+    return f"""<section class="corpus-panel" aria-labelledby="corpus-title">
+<div class="eyebrow">Public games · White first</div>
+<h2 id="corpus-title">A stronger reference corpus</h2>
+<p>The default reference is Lichess Elite: both players rated 2300+, with at least
+one rated 2500+, and bullet excluded. The broader comparison corpus enforces a
+1000 rating floor for both players. Each cohort keeps its own denominator.</p>
+<div class="corpus-stats">{cards}</div>
+<div class="toolbar"><div><label for="opening-cohort">Explore a training cohort</label>
+<select id="opening-cohort"><option value="elite_reference">Elite reference · default</option>
+<option value="rated_public">Public games · both players 1000+</option>
+<option value="all">All eligible games · combined inventory</option></select></div>
+<div><strong id="opening-cohort-count">{counts["elite_training_games"]:,}</strong>
+<span>eligible games</span></div></div>
+<p id="opening-cohort-note" aria-live="polite">Full curated November 2025 file;
+stronger play is useful for reference study, but ratings do not certify every move.</p>
+<div class="scroll"><table><thead><tr><th>Source period</th><th>Cohort</th>
+<th>Games</th><th>Observed dates</th><th>Minimum player rating</th></tr></thead>
+<tbody id="opening-cohort-rows"></tbody></table></div>
+<p class="source-note">Counts come from a checked local game index. The full PGNs remain
+local; this page downloads no database. Opening-position analysis and drills are the
+next milestone. <a href="#getting-more-games">Sources, exclusions and costs</a></p>
+<noscript>The default Elite cohort contains {counts["elite_training_games"]:,} games.
+Enable JavaScript to switch the cohort summary.</noscript></section>
+<script type="application/json" id="opening-corpus-data">{payload}</script>"""
 
 
 def transposition_example():
@@ -561,7 +645,7 @@ def build(repo, output):
             "Learn the position. Recognize every route.",
             "Explore how opening sequences converge, why familiar positions may help decisions, "
             "and how we can evaluate the learning method.",
-            transpositions() + md(repo, "TRANSPOSITION_LEARNING.md"),
+            opening_corpus(repo) + transpositions() + md(repo, "TRANSPOSITION_LEARNING.md"),
         ),
     }
     for name, (title, intro, body) in bodies.items():
@@ -583,6 +667,7 @@ def build(repo, output):
     }
     source_files.update(repo / "docs" / name for name in PAGES)
     source_files.update(repo / "reports" / name for name in REPORTS)
+    source_files.add(repo / "reports/opening-corpus.json")
     source_files.update((repo / "contracts").glob("*.json"))
     source_files.update(
         repo / source for name, source in ASSETS.items() if (output / "assets" / name).is_file()

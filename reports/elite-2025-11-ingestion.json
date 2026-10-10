@@ -1,0 +1,60 @@
+{
+  "acquisition": {
+    "download_bytes": 80347217,
+    "download_sha256": "1ffa577aa0a1352fa04c9a890a6706049a3a79edc52810b136758d1e2a1a2eab",
+    "final_url": "https://database.nikonoel.fr/lichess_elite_2025-11.zip",
+    "hash_kind": "locally computed receipt, not publisher checksum",
+    "pgn_bytes": 267557755,
+    "pgn_file": "lichess_elite_2025-11.pgn",
+    "pgn_sha256": "6a6947c6b92c74f54a186fdc5f4e28354d92153ea24a45b54dee083fcc947594",
+    "publisher_checksum_verified": false,
+    "retrieved_at": "2026-10-10T01:01:46.071333+00:00",
+    "url": "https://database.nikonoel.fr/lichess_elite_2025-11.zip",
+    "zip_member": "lichess_elite_2025-11.pgn"
+  },
+  "adapter": {
+    "adapter_version": "elite-lichessurl-to-site-v1",
+    "at": "2026-10-10T01:02:38.924231+00:00",
+    "change": "restore original game URL to Site; preserve LichessURL and moves",
+    "games": 280246,
+    "original_sha256": "6a6947c6b92c74f54a186fdc5f4e28354d92153ea24a45b54dee083fcc947594",
+    "source_sha256": "938f4ce0cfe70aa328be287bffca4fbbbf8bd29c87a798a39ab3b4235b810ade"
+  },
+  "counts": {
+    "accepted": 278481,
+    "conflict": 0,
+    "duplicate": 0,
+    "excluded": 1765,
+    "quarantine": 0,
+    "seen": 280246
+  },
+  "coverage": {
+    "first_utc_date": "2025-11-01",
+    "last_utc_date": "2025-11-30",
+    "missing": {
+      "participant_rating": 0,
+      "played_at": 0,
+      "source_opening": 0,
+      "utc_date": 0
+    }
+  },
+  "kind": "complete_curated_elite_month_legal_ingestion",
+  "publisher_selection": "2500+ versus 2300+, standard chess, excluding bullet",
+  "quality_checks": {
+    "accepted_count": 0,
+    "game_keys": 0,
+    "no_orphans": 0,
+    "participant_scores": 0,
+    "player_keys": 0,
+    "rating_symmetry": 0,
+    "reconciliation": 0,
+    "required_game_fields": 0,
+    "score_conservation": 0,
+    "two_participants": 0,
+    "wins_equal_losses": 0
+  },
+  "reasons": {
+    "not_rated": 1765
+  },
+  "snapshot_id": "3a0dc0268a80fefdea4992cf"
+}

@@ -58,3 +58,36 @@ if (openingRaw) {
   });
   updateOpening();
 }
+
+const corpusRaw = document.getElementById('opening-corpus-data');
+if (corpusRaw) {
+  const corpus = JSON.parse(corpusRaw.textContent);
+  const cohort = document.getElementById('opening-cohort');
+  function updateCorpus() {
+    const selected = cohort.value;
+    const sources = corpus.sources.filter(source => selected === 'all' || source.cohort === selected);
+    const total = sources.reduce((sum, source) => sum + source.games, 0);
+    document.getElementById('opening-cohort-count').textContent = total.toLocaleString('en-US');
+    document.getElementById('opening-cohort-note').textContent = selected === 'elite_reference' ?
+      'Full curated November 2025 file; both players 2300+, one 2500+, bullet excluded. Ratings do not certify every move.' :
+      selected === 'rated_public' ?
+      'Nine monthly archive prefixes. Both players 1000+; observed first-day windows, not monthwide samples.' :
+      'Combined eligible inventory. Keep Elite and broader-cohort frequencies separate when selecting lessons.';
+    const body = document.getElementById('opening-cohort-rows');
+    body.replaceChildren();
+    sources.forEach(source => {
+      const tr = document.createElement('tr');
+      const cells = [source.period, source.cohort === 'elite_reference' ? 'Elite reference' : 'Public 1000+',
+        source.games.toLocaleString('en-US'), `${source.first_date} to ${source.last_date}`,
+        source.minimum_rating.toLocaleString('en-US')];
+      cells.forEach((value, index) => {
+        const td = textNode('td', value);
+        if (index === 2 || index === 4) td.className = 'number';
+        tr.append(td);
+      });
+      body.append(tr);
+    });
+  }
+  cohort.addEventListener('change', updateCorpus);
+  updateCorpus();
+}

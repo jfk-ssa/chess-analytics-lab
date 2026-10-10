@@ -600,13 +600,23 @@ The delivered guide shares the lab's documentation infrastructure and visual
 style. Its two legally replayed example routes illustrate position recognition;
 they do not constitute a personalized recommender or measured training result.
 
-The next functional milestone should reuse the existing retained PGNs, legal
-replay, game identities, cohort filters, and immutable DuckDB/Parquet snapshots.
+The opening game-index milestone now reuses the existing legal ingestion and
+immutable DuckDB/Parquet snapshots. It combines eleven sources into 1,295,879
+unique accepted games and selects 1,042,346 opening-training games. Require both
+players to have known ratings at least 1000, completed results, at least 20 plies,
+and no marked bots. Exclude January 2013 from current training. Default to the
+240,086-game November 2025 Elite reference cohort (both 2300+, one 2500+, no
+bullet), keeping its frequencies separate from the broader 802,260-game cohort.
+Use public reference games; personal-history weighting is optional future work.
+
+The next functional milestone should reuse this checked game index, full retained
+PGNs, legal replay, game identities, and immutable DuckDB/Parquet snapshots.
 Create versioned opening visits, positions, edges, and continuation summaries
 through a derived opening publication. Start with White and frequency within a
 declared cohort or player history; extend to Black after the first workflow is
-useful. Broader game acquisition is optional because retained data already
-supports an initial pilot. Keep learning recognition, decision quality, response
+useful. The complete curated Elite month and nine retained recent prefixes already
+support the first pilot. Further acquisition should follow a measured coverage
+need and an explicit byte/processing plan. Keep learning recognition, decision quality, response
 time, and mistaken transfer as separate outcomes. The
 [design guide](TRANSPOSITION_LEARNING.md) specifies the rationale, limitations,
 metrics, and proposed learning experiment.

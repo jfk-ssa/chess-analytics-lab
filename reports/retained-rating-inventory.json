@@ -1,0 +1,126 @@
+{
+  "date": "2026-10-09",
+  "fixture_and_companion_games_excluded": true,
+  "kind": "read_only_retained_corpus_rating_inventory",
+  "rating_definition": "Lichess performance ratings in PGN WhiteElo/BlackElo; both players must meet the threshold",
+  "sources": [
+    {
+      "both_above_1000": 120776,
+      "both_at_least_1000": 120783,
+      "manifest": "data/published/b57f51ff70cc3c1637e641c7/manifest.json",
+      "opening_eligible_1000": 115175,
+      "opening_eligible_2000": 609,
+      "period": "2013-01",
+      "snapshot_id": "b57f51ff70cc3c1637e641c7",
+      "source_sha256": "aa40b3671fa3cf1072eb182892cd90b0e1e003a4a5943492f64b77e7f3fd1635",
+      "total": 121332
+    },
+    {
+      "both_above_1000": 93091,
+      "both_at_least_1000": 93124,
+      "manifest": "work/m7-december-project/data/published/cb81c3aa96877be7db5ae552/manifest.json",
+      "opening_eligible_1000": 89878,
+      "opening_eligible_2000": 18130,
+      "period": "2025-12",
+      "snapshot_id": "cb81c3aa96877be7db5ae552",
+      "source_sha256": "86bce6acfcbff45e130eb8ce6959a8856b28486fd9ab21514b66c500e313ac36",
+      "total": 99307
+    },
+    {
+      "both_above_1000": 93492,
+      "both_at_least_1000": 93527,
+      "manifest": "work/m7-january-project/data/published/ac29d2596b9592d06a6f0c02/manifest.json",
+      "opening_eligible_1000": 90161,
+      "opening_eligible_2000": 18870,
+      "period": "2026-01",
+      "snapshot_id": "ac29d2596b9592d06a6f0c02",
+      "source_sha256": "ade7a77268aeecaa41ebb169180f571139ec6173f53b9855f8e5dc650b07e2f2",
+      "total": 99799
+    },
+    {
+      "both_above_1000": 92669,
+      "both_at_least_1000": 92700,
+      "manifest": "work/m7-february-project/data/published/a5fe34904b99d05ac5bca315/manifest.json",
+      "opening_eligible_1000": 89181,
+      "opening_eligible_2000": 17297,
+      "period": "2026-02",
+      "snapshot_id": "a5fe34904b99d05ac5bca315",
+      "source_sha256": "9940f0dc258af355714e201604bd85456cb8aa55a694b3cd874d953f0f74e657",
+      "total": 99585
+    },
+    {
+      "both_above_1000": 92710,
+      "both_at_least_1000": 92742,
+      "manifest": "work/m7-march-project/data/published/16da594543bc7d4760878d54/manifest.json",
+      "opening_eligible_1000": 89404,
+      "opening_eligible_2000": 16953,
+      "period": "2026-03",
+      "snapshot_id": "16da594543bc7d4760878d54",
+      "source_sha256": "07c341ed2c8ac01230006ebb796fed2ea9ae2d40c850845ca8fcd5858c226d97",
+      "total": 99555
+    },
+    {
+      "both_above_1000": 92067,
+      "both_at_least_1000": 92100,
+      "manifest": "work/m7-april-project/data/published/276aeae80962482673c7da80/manifest.json",
+      "opening_eligible_1000": 88747,
+      "opening_eligible_2000": 16875,
+      "period": "2026-04",
+      "snapshot_id": "276aeae80962482673c7da80",
+      "source_sha256": "e3f1453b9049692996856c31e3778dba08474665e9fe99d30bb502abf7cd46f7",
+      "total": 99578
+    },
+    {
+      "both_above_1000": 91656,
+      "both_at_least_1000": 91692,
+      "manifest": "work/m7-may-project/data/published/99053359d8e18d0c8d5906e9/manifest.json",
+      "opening_eligible_1000": 88119,
+      "opening_eligible_2000": 15733,
+      "period": "2026-05",
+      "snapshot_id": "99053359d8e18d0c8d5906e9",
+      "source_sha256": "6a6fc9ffd021d46f31d75288de6d3c3c29f420e4ba8f765fb011f5926f9f6f1f",
+      "total": 99505
+    },
+    {
+      "both_above_1000": 92343,
+      "both_at_least_1000": 92381,
+      "manifest": "work/m7-june-project/data/published/f571e46ce156f9badfe49096/manifest.json",
+      "opening_eligible_1000": 89061,
+      "opening_eligible_2000": 16044,
+      "period": "2026-06",
+      "snapshot_id": "f571e46ce156f9badfe49096",
+      "source_sha256": "7eae0f117b7073f6698f67094a216187ad38ada0aca19eac93d4d92646a3054f",
+      "total": 99530
+    },
+    {
+      "both_above_1000": 92332,
+      "both_at_least_1000": 92364,
+      "manifest": "work/m7-july-project/data/published/3f6265ca957d11f6454ca708/manifest.json",
+      "opening_eligible_1000": 88869,
+      "opening_eligible_2000": 16315,
+      "period": "2026-07",
+      "snapshot_id": "3f6265ca957d11f6454ca708",
+      "source_sha256": "3498240181e7d11766a0ba5d5acae605c5b54f0ec02d91678cb6dbd32ee0d2db",
+      "total": 99740
+    },
+    {
+      "both_above_1000": 92255,
+      "both_at_least_1000": 92288,
+      "manifest": "data/published/6cf51473f8da6ae6b12ea5c2/manifest.json",
+      "opening_eligible_1000": 88840,
+      "opening_eligible_2000": 19968,
+      "period": "2026-08",
+      "snapshot_id": "6cf51473f8da6ae6b12ea5c2",
+      "source_sha256": "26b999b2a346d5b42d309fa434d27f9e74ccd036e5ab5d41c7927548ff00fb7a",
+      "total": 99467
+    }
+  ],
+  "totals": {
+    "both_above_1000": 953391,
+    "both_at_least_1000": 953701,
+    "missing_either_rating": 218,
+    "recent_opening_eligible_1000": 802260,
+    "source_rows": 1017398,
+    "unique_provider_game_ids": 1017398
+  }
+}

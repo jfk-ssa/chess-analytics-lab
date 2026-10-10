@@ -1,0 +1,280 @@
+{
+  "artifacts": {
+    "opening_game.parquet": "bd74636c43d7393b99397d2ffeaae5ba8af675c5af37fbd46c91fc5210c691f8",
+    "warehouse.duckdb": "94e9d9c07ec00d9cb436cb7ff9d59bfbf645b6ad553526c53fa14ed4f02e517c"
+  },
+  "builder_sha256": "3302ad46f1af6c1fac2ec27533eba358a1bf76c9a98ceee362e9c64b68c3ed28",
+  "counts": {
+    "both_above_1000": 1231872,
+    "both_at_least_1000": 1232182,
+    "both_at_least_2000_training": 396271,
+    "duplicates_removed": 0,
+    "elite_below_publisher_rating_rule": 0,
+    "elite_training_games": 240086,
+    "missing_either_rating": 218,
+    "source_rows": 1295879,
+    "training_games": 1042346,
+    "unique_retained_games": 1295879
+  },
+  "created_at": "2026-10-10T01:16:28.551522+00:00",
+  "kind": "checked_opening_training_game_index",
+  "notes": [
+    "Both players meet the rating floor; source ratings are Lichess ratings.",
+    "No personal-history weighting; elite and broader frequency stay separate.",
+    "Game index points to legally validated full source PGNs; positions are derived later.",
+    "Monthly prefixes cover observed first-day windows; Elite is a curated month.",
+    "Historical foundation counts are reported but excluded from training."
+  ],
+  "policy": {
+    "default_reference_cohort": "elite_reference",
+    "elite": {
+      "listing_url": "https://database.nikonoel.fr/",
+      "max_decompressed_bytes": 1500000000,
+      "max_download_bytes": 200000000,
+      "max_games": 1000000,
+      "max_generated_bytes": 8000000000,
+      "max_record_bytes": 1000000,
+      "period": "2025-11",
+      "publisher_selection": "2500+ versus 2300+, standard chess, excluding bullet",
+      "timeout_seconds": 60,
+      "url": "https://database.nikonoel.fr/lichess_elite_2025-11.zip"
+    },
+    "exclude_marked_bots": true,
+    "historical_foundation_in_training": false,
+    "learner_color": "white",
+    "minimum_plies": 20,
+    "minimum_rating_both_players": 1000,
+    "require_completed_result": true,
+    "retained_source_manifests": [
+      "data/published/b57f51ff70cc3c1637e641c7/manifest.json",
+      "work/m7-december-project/data/published/cb81c3aa96877be7db5ae552/manifest.json",
+      "work/m7-january-project/data/published/ac29d2596b9592d06a6f0c02/manifest.json",
+      "work/m7-february-project/data/published/a5fe34904b99d05ac5bca315/manifest.json",
+      "work/m7-march-project/data/published/16da594543bc7d4760878d54/manifest.json",
+      "work/m7-april-project/data/published/276aeae80962482673c7da80/manifest.json",
+      "work/m7-may-project/data/published/99053359d8e18d0c8d5906e9/manifest.json",
+      "work/m7-june-project/data/published/f571e46ce156f9badfe49096/manifest.json",
+      "work/m7-july-project/data/published/3f6265ca957d11f6454ca708/manifest.json",
+      "data/published/6cf51473f8da6ae6b12ea5c2/manifest.json"
+    ],
+    "version": "1.0.0"
+  },
+  "rating_bands": {
+    "1000\u20131599": 329407,
+    "1600\u20131999": 316668,
+    "2000\u20132299": 121100,
+    "2300+": 275171
+  },
+  "resource_limits": {
+    "duckdb_memory_bytes": 1000000000,
+    "duckdb_temporary_bytes": 2000000000,
+    "free_disk_required_bytes": 3000000000
+  },
+  "snapshot_id": "00e7a73fbf67c401e23b4b4b",
+  "sources": [
+    {
+      "accepted": 278481,
+      "complete_archive": true,
+      "manifest": "data/elite/published/3a0dc0268a80fefdea4992cf/manifest.json",
+      "manifest_sha256": "e8eaf8aaadb8848170af9a1c7b6250353ff0630a3cc05dd6a21ddfb48bcab07c",
+      "period": "2025-11",
+      "snapshot_id": "3a0dc0268a80fefdea4992cf",
+      "source_file": "data/elite/elite-2025-11-compatible.pgn",
+      "source_kind": "complete_curated_elite_month",
+      "source_sha256": "938f4ce0cfe70aa328be287bffca4fbbbf8bd29c87a798a39ab3b4235b810ade"
+    },
+    {
+      "accepted": 121332,
+      "complete_archive": true,
+      "manifest": "data/published/b57f51ff70cc3c1637e641c7/manifest.json",
+      "manifest_sha256": "1bae0b6512983d7886d5559c833b556233f29b9feb9db40bfb2733d98a9e2499",
+      "period": "2013-01",
+      "snapshot_id": "b57f51ff70cc3c1637e641c7",
+      "source_file": "data/raw/lichess_db_standard_rated_2013-01.pgn.zst",
+      "source_kind": "historical_foundation",
+      "source_sha256": "aa40b3671fa3cf1072eb182892cd90b0e1e003a4a5943492f64b77e7f3fd1635"
+    },
+    {
+      "accepted": 99307,
+      "complete_archive": false,
+      "manifest": "work/m7-december-project/data/published/cb81c3aa96877be7db5ae552/manifest.json",
+      "manifest_sha256": "e8ca28ff4bd1bc452471aa48692509f5b8ce2bb237d51cd2231ad6aabef0e27b",
+      "period": "2025-12",
+      "snapshot_id": "cb81c3aa96877be7db5ae552",
+      "source_file": "work/m7-december-project/data/analytical/complete-2025-12-first-100000.pgn",
+      "source_kind": "bounded_standard_rated_prefix",
+      "source_sha256": "86bce6acfcbff45e130eb8ce6959a8856b28486fd9ab21514b66c500e313ac36"
+    },
+    {
+      "accepted": 99799,
+      "complete_archive": false,
+      "manifest": "work/m7-january-project/data/published/ac29d2596b9592d06a6f0c02/manifest.json",
+      "manifest_sha256": "938180e9dd1e9ba6005908e95dc54090da8bf27e53abee953bb2d25b8ea69808",
+      "period": "2026-01",
+      "snapshot_id": "ac29d2596b9592d06a6f0c02",
+      "source_file": "work/m7-january-project/data/analytical/complete-2026-01-first-100000.pgn",
+      "source_kind": "bounded_standard_rated_prefix",
+      "source_sha256": "ade7a77268aeecaa41ebb169180f571139ec6173f53b9855f8e5dc650b07e2f2"
+    },
+    {
+      "accepted": 99585,
+      "complete_archive": false,
+      "manifest": "work/m7-february-project/data/published/a5fe34904b99d05ac5bca315/manifest.json",
+      "manifest_sha256": "188ce86c41e1acd548abebd3e9a8ee4ef71f54d7defa90b8b20d4f009754d0b1",
+      "period": "2026-02",
+      "snapshot_id": "a5fe34904b99d05ac5bca315",
+      "source_file": "work/m7-february-project/data/analytical/complete-2026-02-first-100000.pgn",
+      "source_kind": "bounded_standard_rated_prefix",
+      "source_sha256": "9940f0dc258af355714e201604bd85456cb8aa55a694b3cd874d953f0f74e657"
+    },
+    {
+      "accepted": 99555,
+      "complete_archive": false,
+      "manifest": "work/m7-march-project/data/published/16da594543bc7d4760878d54/manifest.json",
+      "manifest_sha256": "c7849bb1ac87b551aeb3d243b97d60d2d54f8d1ef413f4aed1fe233ac005c842",
+      "period": "2026-03",
+      "snapshot_id": "16da594543bc7d4760878d54",
+      "source_file": "work/m7-march-project/data/analytical/complete-2026-03-first-100000.pgn",
+      "source_kind": "bounded_standard_rated_prefix",
+      "source_sha256": "07c341ed2c8ac01230006ebb796fed2ea9ae2d40c850845ca8fcd5858c226d97"
+    },
+    {
+      "accepted": 99578,
+      "complete_archive": false,
+      "manifest": "work/m7-april-project/data/published/276aeae80962482673c7da80/manifest.json",
+      "manifest_sha256": "9a6f64b686e8f7f530399b10fc941fa2f7472d6086f47fb47fb630bc8e977362",
+      "period": "2026-04",
+      "snapshot_id": "276aeae80962482673c7da80",
+      "source_file": "work/m7-april-project/data/analytical/complete-2026-04-first-100000.pgn",
+      "source_kind": "bounded_standard_rated_prefix",
+      "source_sha256": "e3f1453b9049692996856c31e3778dba08474665e9fe99d30bb502abf7cd46f7"
+    },
+    {
+      "accepted": 99505,
+      "complete_archive": false,
+      "manifest": "work/m7-may-project/data/published/99053359d8e18d0c8d5906e9/manifest.json",
+      "manifest_sha256": "6199ee9d2d34e70d147376586a6f0bd78525eb280342f96cfcf232fd74b36581",
+      "period": "2026-05",
+      "snapshot_id": "99053359d8e18d0c8d5906e9",
+      "source_file": "work/m7-may-project/data/analytical/complete-2026-05-first-100000.pgn",
+      "source_kind": "bounded_standard_rated_prefix",
+      "source_sha256": "6a6fc9ffd021d46f31d75288de6d3c3c29f420e4ba8f765fb011f5926f9f6f1f"
+    },
+    {
+      "accepted": 99530,
+      "complete_archive": false,
+      "manifest": "work/m7-june-project/data/published/f571e46ce156f9badfe49096/manifest.json",
+      "manifest_sha256": "3005175c10cbae73fbd284f779563ac1b33223ddcc09e933ab087a54159f9144",
+      "period": "2026-06",
+      "snapshot_id": "f571e46ce156f9badfe49096",
+      "source_file": "work/m7-june-project/data/analytical/complete-2026-06-first-100000.pgn",
+      "source_kind": "bounded_standard_rated_prefix",
+      "source_sha256": "7eae0f117b7073f6698f67094a216187ad38ada0aca19eac93d4d92646a3054f"
+    },
+    {
+      "accepted": 99740,
+      "complete_archive": false,
+      "manifest": "work/m7-july-project/data/published/3f6265ca957d11f6454ca708/manifest.json",
+      "manifest_sha256": "1aac83baf983864dac385fed00bcf2d8e1ab0586f4c8ceccafda13f7d60b583d",
+      "period": "2026-07",
+      "snapshot_id": "3f6265ca957d11f6454ca708",
+      "source_file": "work/m7-july-project/data/analytical/complete-2026-07-first-100000.pgn",
+      "source_kind": "bounded_standard_rated_prefix",
+      "source_sha256": "3498240181e7d11766a0ba5d5acae605c5b54f0ec02d91678cb6dbd32ee0d2db"
+    },
+    {
+      "accepted": 99467,
+      "complete_archive": false,
+      "manifest": "data/published/6cf51473f8da6ae6b12ea5c2/manifest.json",
+      "manifest_sha256": "1bcb99388e56b81cc7cbbc8f7773051d148bce74bfefd39d20b3219e6d463ece",
+      "period": "2026-08",
+      "snapshot_id": "6cf51473f8da6ae6b12ea5c2",
+      "source_file": "data/analytical/complete-2026-08-first-100000.pgn",
+      "source_kind": "bounded_standard_rated_prefix",
+      "source_sha256": "26b999b2a346d5b42d309fa434d27f9e74ccd036e5ab5d41c7927548ff00fb7a"
+    }
+  ],
+  "training_sources": [
+    {
+      "cohort": "elite_reference",
+      "first_date": "2025-11-01",
+      "games": 240086,
+      "last_date": "2025-11-30",
+      "minimum_rating": 2300,
+      "period": "2025-11"
+    },
+    {
+      "cohort": "rated_public",
+      "first_date": "2025-12-01",
+      "games": 89878,
+      "last_date": "2025-12-01",
+      "minimum_rating": 1000,
+      "period": "2025-12"
+    },
+    {
+      "cohort": "rated_public",
+      "first_date": "2026-01-01",
+      "games": 90161,
+      "last_date": "2026-01-01",
+      "minimum_rating": 1000,
+      "period": "2026-01"
+    },
+    {
+      "cohort": "rated_public",
+      "first_date": "2026-02-01",
+      "games": 89181,
+      "last_date": "2026-02-01",
+      "minimum_rating": 1000,
+      "period": "2026-02"
+    },
+    {
+      "cohort": "rated_public",
+      "first_date": "2026-03-01",
+      "games": 89404,
+      "last_date": "2026-03-01",
+      "minimum_rating": 1000,
+      "period": "2026-03"
+    },
+    {
+      "cohort": "rated_public",
+      "first_date": "2026-04-01",
+      "games": 88747,
+      "last_date": "2026-04-01",
+      "minimum_rating": 1000,
+      "period": "2026-04"
+    },
+    {
+      "cohort": "rated_public",
+      "first_date": "2026-05-01",
+      "games": 88119,
+      "last_date": "2026-05-01",
+      "minimum_rating": 1000,
+      "period": "2026-05"
+    },
+    {
+      "cohort": "rated_public",
+      "first_date": "2026-06-01",
+      "games": 89061,
+      "last_date": "2026-06-01",
+      "minimum_rating": 1000,
+      "period": "2026-06"
+    },
+    {
+      "cohort": "rated_public",
+      "first_date": "2026-07-01",
+      "games": 88869,
+      "last_date": "2026-07-01",
+      "minimum_rating": 1000,
+      "period": "2026-07"
+    },
+    {
+      "cohort": "rated_public",
+      "first_date": "2026-08-01",
+      "games": 88840,
+      "last_date": "2026-08-01",
+      "minimum_rating": 1000,
+      "period": "2026-08"
+    }
+  ],
+  "version": "1.0.0"
+}

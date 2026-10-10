@@ -15,7 +15,7 @@ The site is static: it cannot run the analyst, contact a model or download games
 | [Architecture](https://jfk-ssa.github.io/chess-analytics-lab/architecture.html) | [Architecture guide](ARCHITECTURE.md), stage descriptions in the builder | Clickable pipeline stages and implementation links |
 | [Metrics and data](https://jfk-ssa.github.io/chess-analytics-lab/metrics.html) | [Metrics](METRICS.md), [dictionary](DATA_DICTIONARY.md), versioned contracts | Searchable contracts/schemas and a denominator illustration |
 | [Demo](https://jfk-ssa.github.io/chess-analytics-lab/demo.html) | [Demo walkthrough](DEMO.md), synthetic dashboard screenshots | Actual example screens and copyable commands |
-| Opening learning (`transpositions.html`, local until the next deployment) | [Transposition learning](TRANSPOSITION_LEARNING.md) | Two legally replayed routes, board controls, and the research/integration plan |
+| [Opening learning](https://jfk-ssa.github.io/chess-analytics-lab/transpositions.html) | [Transposition learning](TRANSPOSITION_LEARNING.md), checked corpus report | Corpus counts and cohort selection, two legally replayed routes, and the research/integration plan |
 
 The [original full comparison report](https://jfk-ssa.github.io/chess-analytics-lab/reports/decisions-routing-comparison.html)
 is copied byte-for-byte from its tracked report, rather than rewritten. Historical
@@ -107,3 +107,10 @@ Markdown and uses the same visual style and navigation as the other guides.
 shared palette, licensing and screenshot refresh process. Fonts are bundled in
 both the site and local dashboard; no runtime font-service connection is needed.
 Demo images are constrained to 760px and link to their full-size originals.
+
+
+The corpus selector defaults to the Elite reference cohort (240,086 training
+games), with broader public (802,260) and combined views. These counts come from
+[the checked corpus report](../reports/opening-corpus.json), not runtime database
+queries. The website publishes no PGNs or full warehouses. Research sources use
+stacked cards; ordinary article tables align to the prose reading width.
