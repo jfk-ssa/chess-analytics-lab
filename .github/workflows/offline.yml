@@ -25,7 +25,6 @@ jobs:
       - run: node tests/js/import_parity.mjs tests/fixtures/imports/authored-games.pgn
       - run: node tests/js/import_parity.mjs tests/fixtures/imports/zero-castling.pgn
       - run: uv sync --locked --no-editable
-      - run: uv run --locked --offline --no-editable python scripts/materialize_opening_positions.py
       - run: uv run --locked --offline --no-editable ruff check .
       - run: uv run --locked --offline --no-editable ruff format --check .
       - run: uv run --locked --offline --no-editable basedpyright

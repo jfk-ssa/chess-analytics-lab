@@ -108,6 +108,9 @@ uv run --locked --offline --no-editable --extra dbt --extra dashboard basedpyrig
 
 Tests requiring ignored real archives skip in a fresh clone. After source edits,
 reinstall with the same extras and `--reinstall-package chess-analytics-lab`.
+The offline suite checks the opening-publication pin without requiring the
+generated rankings file. The separate [documentation checks](docs/SITE.md#build-and-preview-locally)
+require the `docs` extra and explicit restoration of that file before testing or building.
 See [demo troubleshooting](docs/DEMO.md#if-a-step-fails) for cache and snapshot issues.
 
 ## Detailed guides and historical records

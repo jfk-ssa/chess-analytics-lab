@@ -19,7 +19,9 @@ Guides and the dashboard use Inter Medium; see [the visual guide](DESIGN.md)
 and [the website runbook](SITE.md). Opening rankings, transposition views, the
 site review, and local PGN import are recorded in ADRs 0068–0072 and their
 receipts under `reports/`. Generated opening rankings are restored by the pinned
-publication hash rather than stored on the branch tip.
+publication hash rather than stored on the branch tip. Default offline checks
+validate the pin; the documentation gate restores and verifies the publication
+bytes separately (ADR 0074).
 
 This file stays a short summary: checkout structure, phase tracker, dataset
 versions, and limits. New decisions go only into [docs/adr](adr/). Do not append

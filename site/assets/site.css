@@ -471,7 +471,8 @@ noscript {
   border: 1px solid var(--line);
 }
 [hidden] {
-  display: none;
+  /* biome-ignore lint/complexity/noImportantStyles: Hidden UI must stay hidden across responsive display rules. */
+  display: none !important;
 }
 .fraction {
   display: flex;

@@ -33,6 +33,10 @@ SHA-256 `31a395044203532224cbb387475ef0bb790c8e88faac98bc9b2a12f5d500c46e` and
 does not rerun the corpus. A local visit snapshot can instead be summarized
 with `scripts/summarize_opening_positions.py`.
 
+This restoration is a preparation step for the documentation publication gate,
+which verifies the restored bytes against the checkpoint. The default offline
+suite verifies the pin without requiring the generated file or downloading it.
+
 ```sh
 uv run --locked --no-editable python scripts/materialize_opening_positions.py
 ```
