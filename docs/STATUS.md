@@ -394,3 +394,14 @@ Elite / public / combined. This was a build and visual inspection, not a fresh
 unit-test suite or learning experiment. See [the corpus checkpoint](../reports/opening-training-checkpoint.json). The next step is the first-20-ply
 position/visit/edge publication and White lesson ranking. The graph, drills, engine-scored candidates, Black lessons, and measured
 learning outcomes are still proposed work.
+
+
+Publication verified: corpus/layout commit `1d73a76` is on public `main`.
+[Pages build/deployment](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/38012940010)
+and [offline integrity](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/38012939899)
+both passed. The [live learning page](https://jfk-ssa.github.io/chess-analytics-lab/transpositions.html)
+and build manifest returned HTTP 200 with source revision `1d73a76`. The hosted
+page displayed the default Elite count and three research cards; article and
+table widths matched. See [the publication receipt](../reports/opening-learning-publication.json).
+This records the first corpus deployment; later documentation-only pushes can
+advance the footer revision without changing that evidence.
