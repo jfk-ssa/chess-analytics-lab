@@ -572,3 +572,89 @@ figure .full-size {
   .opening-board {
     max-width:none}
 }
+
+.position-explorer {
+  margin:28px 0;
+  padding:var(--panel-padding);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:white}
+.position-explorer h2 {
+  margin:10px 0 14px}
+.position-layout {
+  display:grid;
+  grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);
+  gap:24px;
+  align-items:start}
+.position-ranking {
+  margin:0;
+  max-height:720px}
+.position-detail {
+  scroll-margin-top:110px}
+.position-ranking table {
+  font-size:12px}
+.position-ranking th,.position-ranking td {
+  padding:10px 8px}
+.position-ranking caption {
+  text-align:left;
+  font-weight:650;
+  padding:0 0 12px}
+.position-ranking button {
+  padding:6px 8px;
+  text-align:left;
+  font-size:12px}
+.position-ranking button[aria-pressed=true] {
+  border-color:var(--teal);
+  background:var(--soft);
+  font-weight:650}
+.position-label {
+  display:block;
+  margin-top:5px;
+  color:var(--muted)}
+.position-detail {
+  min-width:0;
+  padding:18px;
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:8px}
+.position-detail h3 {
+  margin:0 0 14px}
+.position-detail h4 {
+  font-size:14px;
+  margin:24px 0 10px}
+.position-detail img {
+  width:100%;
+  max-width:420px;
+  height:auto;
+  display:block}
+.position-routes {
+  padding-left:22px}
+.position-routes li {
+  margin:12px 0}
+.position-routes small {
+  display:block;
+  color:var(--muted);
+  margin:6px 0}
+.position-inventory-table {
+  max-height:360px}
+.position-explorer select {
+  width:100%}
+.position-explorer .toolbar>div {
+  flex:1 1 220px;
+  min-width:0}
+@media(max-width:900px) {
+  .position-layout {
+    grid-template-columns:1fr}
+  .position-detail {
+    max-width:640px}
+}
+@media(max-width:750px) {
+  .position-explorer {
+    padding:18px}
+  .position-ranking table {
+    min-width:460px}
+  .position-ranking {
+    max-height:520px}
+  .position-detail {
+    scroll-margin-top:18px}
+}

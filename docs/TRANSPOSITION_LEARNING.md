@@ -2,7 +2,17 @@
 
 **HTML version:** [Open the interactive learning page](https://jfk-ssa.github.io/chess-analytics-lab/transpositions.html).
 
-Decision recorded: October 9, 2026. Status: checked training-game corpus plus research and integration design. The full Chess Analytics Lab repository has been relocated into the linked project folder. The game selection is implemented; opening-position models and training exercises described here are proposed work. The HTML board walkthrough is a legal, illustrative example.
+Decision recorded: October 9, 2026; position analysis added October 10. Status: checked training-game corpus, derived White opening visits, and measured recurring/transposing rankings. The website explorer uses retained games; its separate two-route walkthrough is illustrative. Strategic lessons, personalized practice and measured learning benefits remain proposed.
+
+## What you can explore now
+
+The [measured rankings](../reports/opening-positions.json) cover White decisions after Black's moves 3–10, using the 240,086 Elite games and 802,260 broader public games separately. Each view shows the top 20 recurring positions or the top 20 positions reached through multiple move orders. Select a board to inspect up to three common arrival routes, five observed White continuations, and recorded family/ECO labels.
+
+The opening filter offers the twelve largest known recorded families per cohort with at least 1,000 games; complete family counts are also published. Family frequencies use eligible games carrying that label. All-opening frequencies use all eligible cohort games. Recorded opening tags describe games and may span several positions; one exact board may carry several opening labels.
+
+A game contributes once per position, using its earliest visit inside the window. A prefix containing a repeated canonical position contributes to frequency but does not add an acyclic arrival route. At least two distinct acyclic UCI prefixes are required for the transposing ranking. Top-10/top-20 game coverage is the union of games reaching any selected board, rather than a sum of overlapping frequencies. The convergence-by-depth table separately compares distinct move orders and their exact endpoints at a fixed ply.
+
+The [metric contract](../contracts/opening_positions.json), [extraction plan](../config/opening-positions.json) and [publication receipt](../reports/opening-positions-checkpoint.json) define the scope and bind the code/report hashes. Full FEN, game identities, routes, continuation moves and source lineage remain in local hash-checked Parquet visit shards. The browser loads a compact report and pre-rendered boards; it does not query a provider or acquire games. Common continuations are observations, not quality scores or recommendations.
 
 ## Motivation
 
@@ -59,7 +69,7 @@ The checked combined inventory contains **1,295,879 unique accepted games** from
 
 Deduplication by provider and game ID found no overlapping accepted games across these sources. Elite covers November 1–30; each general-public prefix covers the first day of its month. The HTML corpus panel reads exact reconciled totals and per-source windows from [the checked opening corpus report](../reports/opening-corpus.json). The [pre-expansion rating inventory](../reports/retained-rating-inventory.json) preserves the earlier counts before Elite was added.
 
-The August analytical publication separately contains 330,956 moves from 4,924 hash-selected games, including ten zero-ply selections. This historical clock-analysis sample is not the opening corpus. The opening game index points to retained, legally validated full PGNs; deriving the first 20 plies of each selected game is the next step. See [data sources](DATA_SOURCES.md) and [M3 coverage](../reports/M3-coverage.json).
+The August analytical publication separately contains 330,956 moves from 4,924 hash-selected games, including ten zero-ply selections. This historical clock-analysis sample is not the opening corpus. The opening game index points to retained, legally validated full PGNs; the separate position pass now derives White decisions through the first 20 plies. See [data sources](DATA_SOURCES.md) and [M3 coverage](../reports/M3-coverage.json).
 
 Initially rank White-to-move positions within a declared rating/time-control cohort from the public sources. Personal weighting is optional future work; the current corpus does not require a personal account.
 Use all moves by both players to reconstruct the routes. For White training, use White-to-move decision positions. When a personal account is selected, also filter to games where that account is White. Black replies remain part of those lessons because they determine which position White faces next. Black training later uses the corresponding learner-color filter; it must not assume that a color-swapped position preserves chess meaning.
@@ -118,11 +128,11 @@ An exact transposition and a similar pawn structure serve different lessons. Exa
 
 Reuse the existing bounded ingestion → legal PGN replay → immutable Parquet/DuckDB snapshot → optional dbt marts → analytics → checked publication workflow. Keep the versioned `warehouse.duckdb` snapshots and existing `fact_game`, `fact_player_game`, and sampled `fact_move` relations as the foundation. This work does not need another database engine.
 
-The current [move extractor](../src/chess_analytics/corpus/moves.py) already records UCI moves, side, ply, clocks, and source evaluations for hash-selected accepted games. It does not record position keys or complete board states. Extend replay to emit opening visits and legal transitions, retaining the source/game IDs and snapshot lineage, rather than infer transpositions from opening tags.
+The existing [move extractor](../src/chess_analytics/corpus/moves.py) records UCI moves, side, ply, clocks, and source evaluations for a separate hash-selected clock-analysis sample. The new [opening extractor](../scripts/build_opening_positions.py) replays the checked opening index's retained PGNs, records canonical positions and complete arrival prefixes, and retains source/game identities. [Aggregation](../scripts/summarize_opening_positions.py) deduplicates game/position visits and publishes the bounded rankings. Transpositions are detected from legal board states, not opening tags.
 
-Read a checked source snapshot and its retained PGNs; create a new derived opening snapshot with position/visit/edge Parquet files and corresponding DuckDB tables. Follow the lab's immutable publication and pointer-validation pattern. Original foundation and analytical snapshots must remain reproducible. Existing dbt models and analytical tools can join the new relations through provider/game IDs and explicit snapshot identity.
+The opening pass reads a checked source snapshot and its retained PGNs into a new immutable, per-source visit publication. It checks source and warehouse hashes, ordinals/game identities, expected prefix lengths and game totals. A resumable staging directory records per-source receipts; changed resumed shard bytes fail closed. The manifest binds corpus identity, configuration and builder hash, and the pointer is replaced only after successful publication. Summary DuckDB work stays outside the immutable publication. Original foundation and analytical snapshots remain intact. Persisted edge models and dashboard/analyst tools remain follow-up work.
 
-The checked opening-game index selects 1,042,346 games. An opening-only pass can process their first 20 plies without retaining every later move. Record that selection as a new extraction plan so it cannot be mistaken for the existing clock-analysis sample. Source evaluations are optional and sparse; transposition detection requires legal moves, not engine annotations.
+The checked opening-game index selects 1,042,346 games. This opening-only pass records eight White decisions per game at plies 6, 8, …, 20, totaling 8,338,768 visits before game/position deduplication. It parses the next move when present to capture a continuation. Its own extraction plan separates it from the clock-analysis sample. No engine annotations or model calls are required.
 
 Python-chess is already pinned at 1.11.2. Use it for legal replay and canonical position generation; DuckDB/dbt handles aggregation and joins. Record source/snapshot hashes, parser and position-key versions, depth cutoff, inclusion rules, and build configuration in the derived manifest. Extend the versioned metric contracts and publication checks before exposing graph statistics through the dashboard or analyst.
 
@@ -135,7 +145,7 @@ Python-chess is already pinned at 1.11.2. Use it for legal replay and canonical 
 | `chess_transposition_summary` | opening snapshot ID × cohort ID × learner color × position ID × analytical depth window | Count visits, distinct arrival routes, and route coverage |
 | `chess_training_attempts` | attempt ID | Record lesson version, presented route, response, accuracy, and time |
 
-These are proposed relations, not implemented tables. Follow [the existing architecture](ARCHITECTURE.md), [metric contracts](METRICS.md), and checked analytical publication pattern. Add an opening snapshot contract and its own validated pointer rather than modifying a frozen analytical publication in place. The existing numerical and classifier reference cases retain their original data identities and claims.
+These are proposed warehouse relations, not implemented dbt tables. The visit Parquet files and compact ranking report cover the first White frequency/convergence analysis. Persisted normalized edge relations and analytical-tool integration remain future work. Follow [the existing architecture](ARCHITECTURE.md) and [metric contracts](METRICS.md); existing numerical and classifier reference cases retain their data identities and claims.
 Training attempts are new observations with their own schema and retention policy; they should not be treated as game-source data. They can use a separately managed relation alongside the same DuckDB/Parquet analytics, with a later storage decision if concurrent writes become necessary. A graph database is unnecessary for the first version: node, edge, and visit tables are sufficient, and the interface can receive a bounded graph extract.
 
 The [Lichess opening explorer](https://github.com/lichess-org/lila-openingexplorer#public-http-api) provides position-based statistics that could supplement the selected history. Cache and label those observations with their own filters and retrieval times. They provide comparative context and do not replace the captured game routes.
@@ -167,9 +177,9 @@ Opening decision time from a game clock requires careful treatment of increments
 ## Next implementation sequence
 
 1. Use the checked opening-game index and declare a White rating/time-control cohort; the default Elite selection is implemented. Use a personal game export later if personalized prioritization is requested.
-2. Add visit, position, move, and continuation models to the existing databases. Compute White frequencies and transposition summaries before selecting an opening family.
+2. Inspect the implemented White frequencies, shared positions and continuations, then select an opening family. Add persisted edge models and analytical-tool integration when the lessons need them.
 3. Author a small set of shared-position lessons and route-specific exceptions, then produce a bounded map and drills.
 4. Run the learning pilot and inspect recognition, move quality, time, and mistaken transfer.
 5. Extend learner-color filtering and lessons to Black; compare with the optional most-frequent policy.
 
-The relocated lab supplies the ingestion, legal replay, warehouse, corpus rating filters, and static documentation infrastructure. The checked game index is implemented. The next functional step is the derived position/visit/edge snapshot and measured White lesson ranking within the default Elite reference cohort.
+The lab supplies ingestion, legal replay, warehouse, corpus rating filters, and static documentation. The checked game index, derived White visit snapshot and measured position rankings are implemented. The next functional step is to select a small set of frequent convergent positions, author strategic explanations and route-specific exceptions, and evaluate practice before expanding the trainer or acquiring more games.

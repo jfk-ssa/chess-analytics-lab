@@ -609,12 +609,13 @@ and no marked bots. Exclude January 2013 from current training. Default to the
 bullet), keeping its frequencies separate from the broader 802,260-game cohort.
 Use public reference games; personal-history weighting is optional future work.
 
-The next functional milestone should reuse this checked game index, full retained
-PGNs, legal replay, game identities, and immutable DuckDB/Parquet snapshots.
-Create versioned opening visits, positions, edges, and continuation summaries
-through a derived opening publication. Start with White and frequency within a
-declared cohort or player history; extend to Black after the first workflow is
-useful. The complete curated Elite month and nine retained recent prefixes already
+The implemented October 10 position pass reuses the checked game index, retained
+PGNs, legal replay and immutable publication pattern. It records White decisions
+at plies 6–20, canonical FEN keys, complete arrival prefixes and observed next
+moves. The compact report ranks recurring and transposing boards, reports union
+coverage, and breaks down recorded opening families/ECO. The static explorer keeps
+Elite and public denominators separate. Strategic lessons, persisted edge models,
+Black study and learning evaluation remain future work. The curated Elite month and nine prefixes already
 support the first pilot. Further acquisition should follow a measured coverage
 need and an explicit byte/processing plan. Keep learning recognition, decision quality, response
 time, and mistaken transfer as separate outcomes. The

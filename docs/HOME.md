@@ -7,7 +7,8 @@ keep the system reproducible; dbt models and recovery checks demonstrate how
 the data is validated before publication.
 
 The dashboard runs locally. The website lets you inspect recorded results,
-try illustrative controls, and follow the offline demo.
+explore measured opening positions and move orders, try illustrative controls,
+and follow the offline demo.
 
 ## What the comparison teaches
 
@@ -28,6 +29,7 @@ and limitations retained alongside their results.
 | How does the pipeline work? | [Architecture](ARCHITECTURE.md) |
 | How are metrics defined? | [Definitions and denominators](METRICS.md) |
 | What do the models demonstrate? | [Measured comparison](CLASSIFIER_COMPARISON.md) |
+| Which opening positions recur across move orders? | [Position explorer and learning guide](TRANSPOSITION_LEARNING.md) |
 | Can I reproduce a small example? | [Offline walkthrough](DEMO.md) |
 | What is complete and what comes next? | [Current project status](STATUS.md) |
 

@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "learner_color": "white",
+  "min_ply": 6,
+  "max_ply": 20,
+  "position_key_version": "standard-fen-first-four-legal-ep-1.0",
+  "cohorts": ["elite_reference", "rated_public"],
+  "minimum_free_bytes": 6000000000,
+  "max_output_bytes": 8000000000,
+  "memory_limit_bytes": 1000000000,
+  "temp_limit_bytes": 2000000000,
+  "published_positions_per_view": 20,
+  "minimum_opening_games": 1000
+}

@@ -14,6 +14,35 @@ With the dashboard and docs extras installed, the locked offline suite passed **
 
 ## Publication and presentation
 
+### Measured opening-position explorer — 2026-10-10
+
+Implemented a separate White opening visit publication over all **1,042,346**
+selected games: **8,338,768** visits at plies 6–20, with full FEN, canonical keys,
+complete UCI arrival prefixes, next moves and source/game lineage. The immutable
+derived snapshot is `bd299fb6ebbced2145f1161b`, based on checked opening corpus
+`00e7a73fbf67c401e23b4b4b`. Published visit artifacts occupy **436,694,803 bytes**.
+Original corpus and frozen evaluations remain intact; no new acquisition or live calls.
+
+The [position report](../reports/opening-positions.json) separates the **240,086**
+Elite games and **802,260** public prefix games. Top 20 transposing positions reach
+**56,861** distinct Elite games (**23.68%**) and **115,042** public games (**14.34%**).
+Each game counts once per board; repeated-position arrival prefixes do not add
+acyclic move orders. Family views use their own recorded-label denominators.
+The website adds rankings for recurring/transposing boards, twelve opening-family
+filters per cohort, boards, route shares, observed continuations, complete family
+counts and convergence by depth. Strategic lessons and measured learning benefits
+remain proposed. [ADR 0069](adr/0069-measured-opening-position-explorer.md) records scope.
+
+Independent raw-visit checks reconcile game counts and top-10/top-20 union coverage
+for all **52** published rankings. The locked docs/dashboard offline suite passes
+**135 tests**, with 15 skips; Ruff check/format and basedpyright pass. Site build
+checks **242** links and generates 420 board SVGs. Browser checks cover cohort and
+family filters, ranking mode, keyboard row selection, board updates and console
+errors. Checked desktop/narrow widths are 1500/487 CSS pixels with no page-wide
+overflow; narrow row selection moves focus to the board panel. Screen-reader use
+and a physical phone were not tested. See the [publication receipt](../reports/opening-positions-checkpoint.json).
+Hosted checks/deployment remain separate from these local results.
+
 ### Site review improvements — 2026-10-09
 
 Implemented an evidence-led portfolio homepage, explicit opening-learning status,
