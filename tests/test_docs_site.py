@@ -20,46 +20,56 @@ spec.loader.exec_module(site)
 class NavigationParser(HTMLParser):
     def __init__(self):
         super().__init__()
-        self.in_navigation = False
+        self.in_header = False
+        self.nav_depth = 0
         self.links = []
-        self.toggle = {}
 
     def handle_starttag(self, tag, attrs):
         attributes = dict(attrs)
-        if tag == "nav" and attributes.get("id") == "site-navigation":
-            self.in_navigation = True
-        if tag == "button" and attributes.get("aria-controls") == "site-navigation":
-            self.toggle = attributes
-        if self.in_navigation and tag == "a":
+        if tag == "header" and attributes.get("id") == "site-navigation":
+            self.in_header = True
+        if self.in_header and tag == "nav":
+            self.nav_depth += 1
+        if self.nav_depth and tag == "a":
             self.links.append(attributes)
 
     def handle_endtag(self, tag):
-        if tag == "nav":
-            self.in_navigation = False
+        if tag == "nav" and self.nav_depth:
+            self.nav_depth -= 1
+        if tag == "header" and self.in_header:
+            self.in_header = False
 
 
-def _header_nav_max_width(css: str) -> str:
-    """Return the max-width of the media query that restyles the header navigation."""
-    found = None
-    for match in re.finditer(r"@media\s*\(\s*max-width:\s*(\d+)px\s*\)\s*\{", css):
-        depth = 1
-        index = match.end()
-        while index < len(css) and depth:
-            depth += (css[index] == "{") - (css[index] == "}")
-            index += 1
-        block = css[match.end() : index - 1]
-        if ".nav-toggle" in block and ".site-nav" in block:
-            assert found is None, "header navigation is restyled by more than one media query"
-            found = match.group(1)
-    assert found is not None, "header navigation media query not found"
-    return found
+def _media_block(css: str, header: str) -> str:
+    match = re.search(header, css)
+    assert match is not None, header
+    depth = 1
+    index = match.end()
+    while index < len(css) and depth:
+        depth += (css[index] == "{") - (css[index] == "}")
+        index += 1
+    return css[match.end() : index - 1]
 
 
-def test_header_breakpoint_matches_between_css_and_javascript():
-    css_width = _header_nav_max_width((ROOT / "site/assets/site.css").read_text())
+def test_header_layouts_fit_without_a_horizontal_scroller():
+    """390, 768 and 1280 stay in CSS: no JS breakpoint and no overflow scroller."""
+    css = (ROOT / "site/assets/site.css").read_text()
     script = (ROOT / "site/assets/site.js").read_text()
-    js_widths = re.findall(r"matchMedia\(\s*['\"]\(max-width:\s*(\d+)px\)['\"]\s*\)", script)
-    assert js_widths == [css_width]
+    assert "matchMedia" not in script
+    assert ".nav-compact {\n  display: none;" in css
+    wide = _media_block(css, r"@media\s*\(\s*max-width:\s*960px\s*\)\s*\{")
+    phone = _media_block(css, r"@media\s*\(\s*max-width:\s*600px\s*\)\s*\{")
+    tablet = _media_block(
+        css, r"@media\s*\(\s*min-width:\s*601px\s*\)\s*and\s*\(\s*max-width:\s*960px\s*\)\s*\{"
+    )
+    assert "position: static" in wide and "overflow-x: clip" in wide
+    assert ".nav-primary" in wide and "display: none" in wide
+    assert "flex-direction: column" in phone
+    assert "min-height: 44px" in phone and "min-height: 24px" in phone
+    assert "flex-wrap: wrap" in phone and "display: contents" in phone
+    assert "repeat(5, minmax(0, 1fr))" in tablet
+    assert "Analyze games" in (ROOT / "scripts/build_docs_site.py").read_text()
+    assert "Analyze my games" not in (ROOT / "scripts/build_docs_site.py").read_text()
 
 
 def test_materialized_positions_match_the_publication_checkpoint():
@@ -99,20 +109,12 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
         navigation = NavigationParser()
         navigation.feed(text)
         destinations = [link["href"] for link in navigation.links]
-        assert len(destinations) == len(result["pages"])
+        expected = [path for _, path in site.PRIMARY_NAV + site.LAB_NAV]
+        assert destinations == expected + expected
         assert set(destinations) == set(result["pages"])
-        assert destinations.index("opening-learning.html") < destinations.index(
-            "transpositions.html"
-        )
-        assert [
-            link["href"] for link in navigation.links if link.get("aria-current") == "page"
-        ] == [name]
-        assert navigation.toggle["type"] == "button"
-        assert navigation.toggle["aria-controls"] in parser.ids
-        assert navigation.toggle["aria-expanded"] == "false"
-        assert "hidden" not in navigation.toggle
-        class_script = text.split('src="assets/js-class.js', 1)[0].rsplit("<script", 1)[1]
-        assert "defer" not in class_script and "async" not in class_script
+        current = [link["href"] for link in navigation.links if link.get("aria-current") == "page"]
+        assert current == [href for href in destinations if href == name]
+        assert "nav-toggle" not in text and "js-class.js" not in text and "nav-group" not in text
         if name == "import-games.html":
             assert "script-src 'self'" in text
             assert "unsafe-inline" not in text
@@ -126,9 +128,8 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
         descriptions.add(description)
     assert len(descriptions) == len(result["pages"])
     css = (output / "assets/site.css").read_text()
-    assert "html.js .nav-toggle" in css
-    assert 'html.js .nav-toggle[aria-expanded="false"] + .site-nav' in css
-    assert "classList.add('js')" in (output / "assets/js-class.js").read_text()
+    assert ".nav-compact" in css and "nav-toggle" not in css and "html.js" not in css
+    assert not (output / "assets/js-class.js").exists()
     assert (output / "favicon.ico").read_bytes() == (ROOT / "site/assets/favicon.ico").read_bytes()
     assert (output / "assets/opening-positions.json").read_bytes() == (
         ROOT / "reports/opening-positions.json"

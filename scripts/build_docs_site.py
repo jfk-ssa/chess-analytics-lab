@@ -65,7 +65,6 @@ ASSETS = {
     "vendor/chess-js-provenance.json": "site/assets/vendor/chess-js-provenance.json",
     "import-example.pgn": "tests/fixtures/imports/authored-games.pgn",
     "site.css": "site/assets/site.css",
-    "js-class.js": "site/assets/js-class.js",
     "site.js": "site/assets/site.js",
     "position-explorer.js": "site/assets/position-explorer.js",
     "position-charts.js": "site/assets/position-charts.js",
@@ -79,27 +78,19 @@ ASSETS = {
     "fonts/LICENSE.inter.txt": "src/chess_analytics/dashboard/static/fonts/LICENSE.inter.txt",
     "fonts/provenance.json": "site/assets/fonts/provenance.json",
 }
-NAV = (
-    ("Home", "index.html", ()),
-    (
-        "Openings",
-        None,
-        (
-            ("opening-learning.html", "Opening learning"),
-            ("transpositions.html", "Transpositions"),
-        ),
-    ),
-    ("Analyze my games", "import-games.html", ()),
-    (
-        "The lab",
-        None,
-        (
-            ("demo.html", "Run the demo"),
-            ("metrics.html", "Metrics & data"),
-            ("comparison.html", "AI comparison"),
-            ("architecture.html", "Architecture"),
-        ),
-    ),
+PRIMARY_NAV = (
+    ("Home", "index.html"),
+    ("Data pipeline", "architecture.html"),
+    ("Transpositions", "transpositions.html"),
+    ("Analyze games", "import-games.html"),
+    ("AI analyst", "comparison.html"),
+)
+LAB_NAV = (
+    ("Metrics & data", "metrics.html"),
+    ("Architecture", "architecture.html"),
+    ("Run the demo", "demo.html"),
+    ("AI comparison", "comparison.html"),
+    ("Opening learning", "opening-learning.html"),
 )
 
 
@@ -240,7 +231,8 @@ def shell(title, active, intro, body, commit):
         canonical=canonical,
         active=active,
         commit=commit,
-        nav=NAV,
+        primary_nav=PRIMARY_NAV,
+        lab_nav=LAB_NAV,
         body=body,
         site_url=SITE_URL,
         repo_url=REPO_URL,
