@@ -1,6 +1,6 @@
 # 0075. Group site navigation and collapse it on mobile
 
-- Status: accepted
+- Status: superseded by [0076](0076-visible-site-navigation.md)
 - Date: 2026-10-10
 
 The eight-link header had grown into a long, wrapping row. Use four entries:
