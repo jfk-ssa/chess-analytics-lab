@@ -16,6 +16,7 @@ live evaluations are recorded separately.
 | Understand the system | [Architecture](ARCHITECTURE.md) → [data dictionary](DATA_DICTIONARY.md) | Pipeline, code boundaries, table grain and provenance |
 | Understand an analysis | [Metric contracts](METRICS.md) → [opening memo](M4-OPENINGS.md) / [clock memo](M4-CLOCK.md) | Denominators, cohort filters, missingness and limits |
 | Explore measured positions | [Transpositions](TRANSPOSITIONS.md) | [Interactive analytics](https://jfk-ssa.github.io/chess-analytics-lab/transpositions.html), route balance, coverage and public lenses |
+| Analyze local game exports | [Local PGN guide](GAME_IMPORT.md) | Select Chess.com/Lichess files and a player per provider; inspect White-game recurrence and selected public-set coverage |
 | Explore opening learning | [Transposition learning](TRANSPOSITION_LEARNING.md) | [Interactive HTML](https://jfk-ssa.github.io/chess-analytics-lab/opening-learning.html), illustrative walkthrough, learning rationale and evaluation design |
 | Assess the AI evidence | [Evaluation guide](EVALUATION.md) → [evidence index](EVIDENCE_INDEX.md) | Fixture tests versus actual responses; frozen references and retained failures |
 | Compare rules, Jev and Decisions | [Classifier comparison](CLASSIFIER_COMPARISON.md) | Shared-case scores, cost and conclusions readable directly on GitHub |

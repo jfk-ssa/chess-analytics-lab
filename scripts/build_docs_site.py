@@ -26,6 +26,7 @@ PAGES = {
     "METRICS.md": "metrics.html",
     "DATA_DICTIONARY.md": "metrics.html",
     "DEMO.md": "demo.html",
+    "GAME_IMPORT.md": "import-games.html",
     "TRANSPOSITIONS.md": "transpositions.html",
     "TRANSPOSITION_LEARNING.md": "opening-learning.html",
 }
@@ -46,6 +47,13 @@ REPORTS = (
     "M8-e2e-checkpoint.json",
 )
 ASSETS = {
+    "game-import-core.mjs": "site/assets/game-import-core.mjs",
+    "game-import-worker.mjs": "site/assets/game-import-worker.mjs",
+    "game-import-ui.js": "site/assets/game-import-ui.js",
+    "vendor/chess-1.4.0.mjs": "site/assets/vendor/chess-1.4.0.mjs",
+    "vendor/LICENSE.chess-js.txt": "site/assets/vendor/LICENSE.chess-js.txt",
+    "vendor/chess-js-provenance.json": "site/assets/vendor/chess-js-provenance.json",
+    "import-example.pgn": "tests/fixtures/imports/authored-games.pgn",
     "site.css": "site/assets/site.css",
     "site.js": "site/assets/site.js",
     "position-explorer.js": "site/assets/position-explorer.js",
@@ -67,6 +75,7 @@ NAV = (
     ("metrics.html", "Metrics & data"),
     ("transpositions.html", "Transpositions"),
     ("opening-learning.html", "Opening learning"),
+    ("import-games.html", "Analyze my games"),
     ("demo.html", "Run the demo"),
 )
 
@@ -199,6 +208,14 @@ def shell(title, active, intro, body, commit):
     canonical = SITE_URL + ("" if active == "index.html" else active)
     page_title = title if active == "index.html" else title + " · Chess Analytics Lab"
     description = html.escape(intro, quote=True)
+    csp = (
+        '<meta http-equiv="Content-Security-Policy" content="default-src \'self\'; '
+        "script-src 'self'; connect-src 'none'; worker-src 'self'; "
+        "img-src 'self'; style-src 'self'; font-src 'self'; object-src 'none'; "
+        "base-uri 'none'; form-action 'none'\">"
+        if active == "import-games.html"
+        else ""
+    )
     source_note = (
         '<p class="source-note">Generated from maintained Markdown, contracts and '
         f'recorded evidence. <a href="{REPO_URL}docs/README.md">Repository guides</a></p>'
@@ -219,6 +236,7 @@ def shell(title, active, intro, body, commit):
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="{description}">
 <title>{html.escape(page_title)}</title>
+{csp}
 <link rel="canonical" href="{canonical}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Chess Analytics Lab">
@@ -245,7 +263,7 @@ def shell(title, active, intro, body, commit):
 <h1>{html.escape(title)}</h1>
 <p class="lead">{intro}</p>{source_note}</div>{body}</main>
 <footer>Source revision {revision} · Static documentation ·
-No runtime model calls or game downloads.
+No runtime model calls or account downloads.
 <a href="{REPO_URL}docs/SITE.md">Build and publishing runbook</a></footer></body></html>'''
 
 
@@ -619,6 +637,130 @@ to explore both cohorts, opening families, boards, routes and continuations.</no
 <script defer src="assets/position-explorer.js"></script>'''
 
 
+def game_import(repo, output):
+    """Publish only checked public reference examples; imported records stay on the device."""
+    vendor = repo / "site/assets/vendor"
+    provenance = json.loads((vendor / "chess-js-provenance.json").read_text())
+    if set(provenance["files"]) != {"chess-1.4.0.mjs", "LICENSE.chess-js.txt"}:
+        raise ValueError("Unexpected vendored chess assets")
+    for name, expected in provenance["files"].items():
+        if digest((vendor / name).read_bytes()) != expected:
+            raise ValueError("Vendored chess library hash changed")
+    data = checked_positions(repo)
+    reference = {"corpus_snapshot_id": data["corpus_snapshot_id"], "cohorts": {}}
+    for name, cohort in data["cohorts"].items():
+        reference["cohorts"][name] = {
+            "views": {
+                key: {
+                    "label": (
+                        view["lens"]["label"]
+                        if view.get("lens")
+                        else "All openings"
+                        if key == "all"
+                        else key
+                    ),
+                    "rankings": {kind: rank["ids"] for kind, rank in view["rankings"].items()},
+                    "positions": {
+                        identifier: {
+                            "position_key": position["position_key"],
+                            "routes": [{"uci": route["uci"]} for route in position["routes"]],
+                        }
+                        for identifier, position in view["positions"].items()
+                    },
+                }
+                for key, view in cohort["views"].items()
+            }
+        }
+    pieces = output / "assets/pieces"
+    pieces.mkdir()
+    for symbol in "PNBRQKpnbrqk":
+        name = ("w" if symbol.isupper() else "b") + symbol.upper() + ".svg"
+        (pieces / name).write_text(chess.svg.piece(chess.Piece.from_symbol(symbol), size=45))
+    example = {
+        "name": "authored-games.pgn",
+        "text": (repo / "tests/fixtures/imports/authored-games.pgn").read_text(),
+    }
+    encoded_reference = json.dumps(reference, separators=(",", ":")).replace("<", "\\u003c")
+    encoded_example = json.dumps(example).replace("<", "\\u003c")
+    return (
+        """<section class="game-import" aria-labelledby="import-title">
+<h2 id="import-title">Analyze your exported games</h2>
+<p>Choose plain PGN files exported from Chess.com or Lichess. Your files stay on this
+device; legal replay and analysis run in a browser worker.
+Each import replaces the current session.</p>
+<label for="import-files">Choose PGN files</label>
+<input type="file" id="import-files" accept=".pgn,text/plain,application/x-chess-pgn" multiple>
+<p class="source-note">Up to 20 files, 10 MiB total, 5,000 games and 1,000 plies per game.
+Standard chess from the initial board, completed games only. Invalid records and
+unsupported games receive visible dispositions. No account connection is needed.</p>
+<div class="import-actions"><button type="button" id="import-example">Try authored example</button>
+<button type="button" id="import-cancel" hidden>Cancel processing</button>
+<button type="button" id="import-clear" disabled>Clear session</button>
+<button type="button" id="import-download" disabled>Download analysis JSON</button></div>
+<p id="import-status" class="stats" role="status" aria-live="polite">
+Choose PGN files or try the authored example.</p>
+<div id="import-summary"></div>
+<div id="import-selection" hidden><fieldset id="import-filters">
+<legend>Choose your player and comparison scope</legend>
+<p>Select the player separately for each provider. Matching usernames are not
+linked automatically. This release analyzes your White games and reports Black games separately.</p>
+<div id="import-players" class="toolbar"></div>
+<div class="toolbar"><div><label for="import-since">Start date (optional)</label>
+<input type="date" id="import-since"></div>
+<div><label for="import-until">End date (optional)</label>
+<input type="date" id="import-until"></div>
+<div><label for="import-time-control">Time control</label><select id="import-time-control">
+<option value="all">All time controls</option></select></div>
+<div><label for="import-rated">Rated status</label><select id="import-rated">
+<option value="all">All / include unknown</option><option value="true">Known rated</option>
+<option value="false">Known casual / unrated</option><option value="unknown">Unknown status</option>
+</select></div></div>
+<p class="source-note">Missing ratings do not exclude games.
+Date filters visibly exclude undated games;
+platform ratings and reference cohorts are not interchangeable.
+Exported rated status may be unknown.</p>
+<label class="import-check"><input type="checkbox" id="import-minimum20">
+Require at least 20 plies for comparison with the public eligibility policy</label>
+<h3>Choose a bounded public study set</h3>
+<div class="toolbar"><div><label for="import-cohort">Reference cohort</label>
+<select id="import-cohort"><option value="elite_reference">Elite reference</option>
+<option value="rated_public">Public 1000+</option></select></div>
+<div><label for="import-view">Reference opening family or lens</label>
+<select id="import-view"></select></div>
+<div><label for="import-kind">Reference ranking</label><select id="import-kind">
+<option value="transposing">Multiple move orders</option>
+<option value="recurring">All recurring positions</option></select></div>
+<div><label for="import-n">Number of reference positions</label>
+<select id="import-n">"""
+        + "".join(
+            f'<option value="{n}"' + (" selected" if n == 20 else "") + f">{n}</option>"
+            for n in range(1, 21)
+        )
+        + """</select></div></div>
+<p>The comparison uses selected published boards and up to three recorded route examples
+per board. A position outside this set has not been checked against the full corpus.
+A route departure is not a mistake; comparison stops when an example ends.</p>
+</fieldset><button type="button" id="import-analyze" disabled>
+Analyze selected White games</button></div>
+<div id="import-results" aria-live="polite"></div>
+<noscript>Local game import needs JavaScript and browser workers. The public
+<a href="transpositions.html">Transposition analysis</a>
+remains available without an import.</noscript>
+<p class="source-note">No persistent browser storage, server upload, username download,
+engine scoring or model call. Clearing/reloading removes the session; explicitly downloaded
+reports remain on your device. <a href="assets/import-example.pgn" download>
+Download authored PGN example</a></p>
+</section><script type="application/json" id="import-reference-data">"""
+        + encoded_reference
+        + """</script>
+<script type="application/json" id="import-example-data">"""
+        + encoded_example
+        + """</script>
+<script defer src="assets/position-charts.js"></script>
+<script type="module" src="assets/game-import-ui.js"></script>"""
+    )
+
+
 def transposition_example():
     """Replay two legal illustrative routes; retain full FEN and opening identity."""
     routes = []
@@ -786,6 +928,7 @@ def definitions(repo):
         "opening_player_score.json",
         "opening_adjusted_score.json",
         "opening_positions.json",
+        "imported_games.json",
         "clock_pressure_error_proxy.json",
         "evaluation_coverage.json",
     )
@@ -1096,6 +1239,12 @@ def build(repo, output):
             + md(repo, "TRANSPOSITIONS.md")
             + '<p id="opening-lab-title">The illustrative board has moved to '
             '<a href="opening-learning.html#opening-lab-title">Opening learning</a>.</p>',
+        ),
+        "import-games.html": (
+            "Bring your games. Find familiar positions.",
+            "Import Chess.com or Lichess PGN files locally and compare your White games "
+            "with a bounded public study set.",
+            game_import(repo, output) + md(repo, "GAME_IMPORT.md"),
         ),
         "opening-learning.html": (
             "Learn the position. Recognize every route.",

@@ -84,6 +84,7 @@ reliable ingestion, not contemporary chess behavior. See [data sources](docs/DAT
 |---|---|
 | Understand the pipeline and code | [Architecture](docs/ARCHITECTURE.md) and [repository map](docs/README.md#repository-map) |
 | Understand findings and denominators | [Opening memo](docs/M4-OPENINGS.md), [clock memo](docs/M4-CLOCK.md), [metrics](docs/METRICS.md) |
+| Analyze local game exports | [Local PGN guide](docs/GAME_IMPORT.md): browser-only White-game analysis with explicit provider/player selection |
 | Design opening lessons | [Opening learning](https://jfk-ssa.github.io/chess-analytics-lab/opening-learning.html) and [maintained rationale](docs/TRANSPOSITION_LEARNING.md) |
 | Explore measured transpositions | [Interactive HTML](https://jfk-ssa.github.io/chess-analytics-lab/transpositions.html); public position rankings, route balance, coverage, fianchetto lenses and [definitions](docs/TRANSPOSITIONS.md) |
 | Evaluate the AI claims | [Evaluation guide](docs/EVALUATION.md), [evidence index](docs/EVIDENCE_INDEX.md) |

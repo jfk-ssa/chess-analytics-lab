@@ -76,3 +76,22 @@ would hide that difference. Their alternative-route shares are 0.71% and 66.72%.
 
 Charts and rankings describe selected public games. They do not establish learning
 improvement, personal encounter rates, engine quality, or causal outcome differences.
+
+
+## Local imported-game metrics
+
+[The import contract](../contracts/imported_games.json) defines a separate personal
+population. Selected valid completed Standard White games include short games by
+default; matched Black games, unmatched players and explicit filter exclusions
+are reported separately. No public rating floor is silently applied.
+
+| Metric | Definition | Interpretation |
+| --- | --- | --- |
+| Personal board frequency | Earliest eligible board visits / selected White games | Plies 6–20; short games remain in the denominator |
+| Study-set coverage | Union of White games reaching the first N selected published boards / selected White games | N=1..20; selected set only, not full-corpus novelty |
+| Personal alternative-route share | 1 − leading acyclic route games / acyclic position games | Repetition-prefix arrivals excluded; null for no acyclic arrivals |
+| First departure and re-entry | First differing move while selected examples define a continuation; later selected canonical-board hit | Stops at example endpoints; not move quality or a mistake count |
+
+Counts reconcile imports, duplicates, conflicts, rejections and failed files.
+Unknown date/time/rated metadata stays unknown. Personal results do not change
+public reports. See [the local game guide](GAME_IMPORT.md).

@@ -632,7 +632,11 @@ figures and adds alternative-route share, complete union coverage curves,
 recorded-label breadth and public d4/g3 move-sequence facets. Charts and route
 comparisons have table/text alternatives. Learning gains remain unmeasured.
 
-A subsequent PR will accept Chess.com/Lichess PGN files on the device, with
+The second branch implements Chess.com/Lichess PGN files on the device, with
 provider-neutral normalization, explicit player selection, visible exclusions,
-and a bounded public-reference overlay. No personal account collection is part
+and a bounded public-reference overlay. The default White-game denominator
+includes short games; a minimum-20-ply comparison filter is explicit. Full mainlines
+are legally replayed with pinned chess.js and checked against independent Python
+normalization. Files stay in a worker without network or persistence; clearing,
+canceling, reloading and timeouts remove the session. No personal account collection is part
 of development. Username/API downloads are excluded from this delivery.

@@ -10,13 +10,15 @@ The site is static: it cannot run the analyst, contact a model or download games
 
 | Published page | Maintained sources | What HTML adds |
 | --- | --- | --- |
-| [Homepage](https://jfk-ssa.github.io/chess-analytics-lab/) | [Portfolio introduction](HOME.md), corpus/final-answer checkpoints, fixture reference | Report-backed outcomes, stack, author/source links and five learning paths |
+| [Homepage](https://jfk-ssa.github.io/chess-analytics-lab/) | [Portfolio introduction](HOME.md), corpus/final-answer checkpoints, fixture reference | Report-backed outcomes, stack, author/source links and learning paths |
 | [Comparison](https://jfk-ssa.github.io/chess-analytics-lab/comparison.html) | [Classifier summary](CLASSIFIER_COMPARISON.md), frozen reports and cases | Question-level routing and threshold exploration |
 | [Architecture](https://jfk-ssa.github.io/chess-analytics-lab/architecture.html) | [Architecture guide](ARCHITECTURE.md), stage descriptions in the builder | Clickable pipeline stages and implementation links |
 | [Metrics and data](https://jfk-ssa.github.io/chess-analytics-lab/metrics.html) | [Metrics](METRICS.md), [dictionary](DATA_DICTIONARY.md), versioned contracts | Searchable contracts/schemas and a denominator illustration |
 | [Demo](https://jfk-ssa.github.io/chess-analytics-lab/demo.html) | [Demo walkthrough](DEMO.md), synthetic dashboard screenshots | Actual example screens and copyable commands |
 | [Transpositions](https://jfk-ssa.github.io/chess-analytics-lab/transpositions.html) | [Analysis guide](TRANSPOSITIONS.md), checked corpus and position reports | Rankings, route balance, coverage/depth/scatter charts, public fianchetto lenses and route comparisons |
 | [Opening learning](https://jfk-ssa.github.io/chess-analytics-lab/opening-learning.html) | [Transposition learning](TRANSPOSITION_LEARNING.md) | Illustrative board, lesson design and evaluation proposal |
+
+| [Analyze my games](https://jfk-ssa.github.io/chess-analytics-lab/import-games.html) | [Local PGN guide](GAME_IMPORT.md), [import contract](../contracts/imported_games.json), authored fixtures | Local worker replay, explicit provider/player selection, bounded reference coverage and summary download |
 
 The [original full comparison report](https://jfk-ssa.github.io/chess-analytics-lab/reports/decisions-routing-comparison.html)
 is copied byte-for-byte from its tracked report, rather than rewritten. Historical
@@ -145,12 +147,13 @@ Demo images are constrained to 760px and link to their full-size originals.
 The corpus selector defaults to the Elite reference cohort (240,086 training
 games), with broader public (802,260) and combined views. These counts come from
 [the checked corpus report](../reports/opening-corpus.json), not runtime database
-queries. The website publishes no PGNs or full warehouses. Research sources use
+queries. The website publishes no account PGNs or full warehouses; its downloadable
+PGN example contains authored fixtures. Research sources use
 stacked cards; ordinary article tables align to the prose reading width.
 
 ## Site review improvements
 
-The six current guide pages have distinct descriptions, self-canonical URLs,
+The eight current pages have distinct descriptions, self-canonical URLs,
 Open Graph and Twitter sharing tags, a shared 1200×630 PNG preview and SVG/ICO
 favicons. The homepage canonical URL is the directory URL. Sharing metadata is
 checked locally; provider preview caches may need to be refreshed after deployment.
@@ -167,3 +170,32 @@ the page. Maintain visible keyboard focus and the approved 78ch reading measure.
 The favicon is an original geometric rook; the sharing card is original
 typographic artwork. Neither depicts a measured result. They are tracked public
 assets and require no runtime image service.
+
+
+## Local game imports
+
+Serve the build over HTTP; module workers require a secure context (HTTPS or
+localhost). Choose UTF-8 Chess.com/Lichess PGNs, select a player per provider, and
+analyze selected White games. Try the authored example without an account export.
+Imports replace the current session, run in a dedicated worker and use no network
+or browser persistence. The import page blocks runtime connections with
+`connect-src 'none'`. Clear, cancellation, reload and the 60-second processing
+limit terminate the worker. Downloaded summaries remain on the user's device.
+The limits are 20 files, 10 MiB, 5,000 framed games, 1,000 plies per game and
+32 nested variation levels. Caps reject the session; malformed framing contributes
+no partial file. Unsupported completed-game records receive visible dispositions.
+
+The canonical-key and normalization checks compare the browser's pinned chess.js
+implementation with independent python-chess replay. Node 24 is used for browser
+logic tests in offline CI. No npm install or runtime CDN is needed:
+
+```sh
+node --test tests/js/game_import.test.mjs
+uv run --locked --offline --no-editable --extra docs pytest -q tests/test_game_import.py tests/test_docs_site.py
+node scripts/check_game_import.mjs work/game-import-performance.json
+```
+
+The performance script generates at most 5,000 unique-ID authored 20-ply games;
+it does not read account files or contact either provider. Its timings are local
+fixture evidence, not guarantees for long games, mobile hardware or account history.
+See [the verification receipt](../reports/game-import-verification.json).
