@@ -13,3 +13,7 @@ __pycache__/
 /artifacts/
 /work/
 .DS_Store
+# Generated opening rankings. Restore with scripts/materialize_opening_positions.py
+# or regenerate with scripts/summarize_opening_positions.py. The publication
+# hash remains in reports/opening-positions-checkpoint.json.
+/reports/opening-positions.json

@@ -77,3 +77,4 @@ the latest measured state.
 | 0069 | 2026-10-10 | [Measured opening-position explorer](adr/0069-measured-opening-position-explorer.md) |
 | 0070 | 2026-10-10 | [Public transposition insights](adr/0070-public-transposition-insights.md) |
 | 0071 | 2026-10-10 | [Local PGN imports](adr/0071-local-pgn-imports.md) |
+| 0072 | 2026-10-10 | [Opening rankings stay outside the tip](adr/0072-opening-rankings-stay-outside-the-tip.md) |

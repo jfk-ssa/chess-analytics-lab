@@ -472,6 +472,12 @@ def validate_ranking(kind, ranking, view, expected, limit):
 def checked_positions(repo):
     """Validate compact publication against its checked corpus and build receipt."""
     source = repo / "reports/opening-positions.json"
+    if not source.is_file():
+        raise ValueError(
+            "reports/opening-positions.json is absent. Restore the pinned publication "
+            "with scripts/materialize_opening_positions.py, or regenerate it from the "
+            "local visit snapshot with scripts/summarize_opening_positions.py."
+        )
     data = json.loads(source.read_text())
     corpus = json.loads((repo / "reports/opening-corpus.json").read_text())
     contract = json.loads((repo / "contracts/opening_positions.json").read_text())

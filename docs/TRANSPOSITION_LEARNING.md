@@ -8,7 +8,7 @@ For measured public-corpus rankings and charts, use [Transpositions](TRANSPOSITI
 
 ## What you can explore now
 
-The [measured rankings](../reports/opening-positions.json) cover White decisions after Black's moves 3–10, using the 240,086 Elite games and 802,260 broader public games separately. Each view shows the top 20 recurring positions or the top 20 positions reached through multiple move orders. Select a board to inspect up to three common arrival routes, five observed White continuations, and recorded family/ECO labels.
+The [measured rankings](https://github.com/jfk-ssa/chess-analytics-lab/blob/c1e3040a3c9542626a3b8cb78e1e7475ea8bcdab/reports/opening-positions.json) cover White decisions after Black's moves 3–10, using the 240,086 Elite games and 802,260 broader public games separately. Each view shows the top 20 recurring positions or the top 20 positions reached through multiple move orders. Select a board to inspect up to three common arrival routes, five observed White continuations, and recorded family/ECO labels.
 
 The opening filter offers the twelve largest known recorded families per cohort with at least 1,000 games; complete family counts are also published. Family frequencies use eligible games carrying that label. All-opening frequencies use all eligible cohort games. Recorded opening tags describe games and may span several positions; one exact board may carry several opening labels.
 
