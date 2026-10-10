@@ -8,6 +8,7 @@ import json
 import re
 import shutil
 import subprocess
+from decimal import Decimal
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
@@ -65,6 +66,51 @@ NAV = (
 
 def digest(data):
     return hashlib.sha256(data).hexdigest()
+
+
+NUMERIC_COLUMNS = {
+    "Correct routes": "number",
+    "Correct final answers": "number",
+    "Gross API cost per run": "currency",
+    "Gross total": "currency",
+    "Accepted games": "number",
+    "Retained games": "number",
+    "Training games": "number",
+}
+
+
+def aligned_table(table):
+    """Declare alignment by column; annotations cannot change a cell's role."""
+    headers = re.findall(r"<th(?:\s[^>]*)?>(.*?)</th>", table, re.DOTALL)
+    roles = [NUMERIC_COLUMNS.get(re.sub(r"<[^>]+>", "", h), "text") for h in headers]
+
+    def row_layout(match):
+        index = 0
+
+        def cell_layout(cell):
+            nonlocal index
+            tag, attrs, value = cell.groups()
+            role = roles[index] if index < len(roles) else "text"
+            index += 1
+            if tag == "th":
+                attrs += ' scope="col"'
+            if role != "text":
+                attrs += ' class="number"'
+            if role == "currency" and tag == "td":
+                amount = re.fullmatch(r"\$(\d+(?:\.\d+)?)(?:\s*\((simulated)\))?", value.strip())
+                if amount is None:
+                    raise ValueError(f"Unrecognized currency cell: {value}")
+                decimal = Decimal(amount[1])
+                precision = max(9, -decimal.as_tuple().exponent)
+                value = f'<span class="cell-value">${decimal:.{precision}f}</span>'
+                if amount[2]:
+                    value += '<small class="cell-note">Simulated</small>'
+            return f"<{tag}{attrs}>{value}</{tag}>"
+
+        row = re.sub(r"<(th|td)([^>]*)>(.*?)</\1>", cell_layout, match[1], flags=re.DOTALL)
+        return f"<tr>{row}</tr>"
+
+    return re.sub(r"<tr>(.*?)</tr>", row_layout, table, flags=re.DOTALL)
 
 
 def research_cards(content):
@@ -127,15 +173,7 @@ def md(repo, name):
         content = research_cards(content)
 
     def table_layout(match):
-        table = match.group(0)
-        headers = re.findall(r"<th(?:\s[^>]*)?>(.*?)</th>", table, re.DOTALL)
-        wide = (
-            name == "CLASSIFIER_COMPARISON.md"
-            or len(headers) >= 4
-            or "Proposed relation" in headers
-        )
-        css = "scroll article-table-wide" if wide else "scroll"
-        return f'<div class="{css}">{table}</div>'
+        return '<div class="scroll">' + aligned_table(match.group(0)) + "</div>"
 
     content = re.sub(r"<table>.*?</table>", table_layout, content, flags=re.DOTALL)
     content = re.sub(r"<(/?)h1([ >])", r"<\1h2\2", content)
@@ -273,7 +311,8 @@ one rated 2500+, and bullet excluded. The broader comparison corpus enforces a
 <p id="opening-cohort-note" aria-live="polite">Full curated November 2025 file;
 stronger play is useful for reference study, but ratings do not certify every move.</p>
 <div class="scroll"><table><thead><tr><th>Source period</th><th>Cohort</th>
-<th>Games</th><th>Observed dates</th><th>Minimum player rating</th></tr></thead>
+<th class="number" scope="col">Games</th><th>Observed dates</th>
+<th class="number" scope="col">Minimum player rating</th></tr></thead>
 <tbody id="opening-cohort-rows"></tbody></table></div>
 <p class="source-note">Counts come from a checked local game index. The full PGNs remain
 local; this page downloads no database. Opening-position analysis and drills are the
@@ -429,7 +468,8 @@ with JavaScript disabled.</noscript>
 <caption>Saved route choices; colored cells show agreement with reviewed labels.</caption>
 <thead><tr><th>ID</th><th>Question</th><th>Expected route</th>
 <th>Rules</th><th>Jev run 1</th><th>Jev run 2</th>
-<th>Decisions</th><th>Chosen-option probability</th><th>Explored gate</th></tr></thead>
+<th>Decisions</th><th class="number" scope="col">Chosen-option probability</th>
+<th>Explored gate</th></tr></thead>
 <tbody id="routing-rows"></tbody></table></div>
 <script type="application/json" id="routing-data">"""
         + encoded
@@ -476,7 +516,9 @@ placeholder="Try denominator, rating, clock or missing">
 <p id="search-status" aria-live="polite">9 definitions or schemas shown</p>"""
         + "".join(cards)
         + """
-<h2>Why the denominator matters</h2><p>This worked illustration starts with the authored demo:
+<section class="example-panel" aria-labelledby="denominator-title">
+<h2 id="denominator-title">Why the denominator matters</h2>
+<p>This worked illustration starts with the authored demo:
 3 proxy errors among 6 evaluable moves. Change the number of moves with missing evaluations;
 they change coverage, while the proxy rate stays tied to evaluable moves.</p>
 <div class="toolbar"><div><label for="missing-moves">
@@ -485,7 +527,7 @@ Missing evaluations: <span id="missing-value">2</span></label>
 <div class="fraction"><div>Proxy rate<br><strong id="proxy-rate">3 / 6 = 50.0%</strong></div>
 <div>Evaluation coverage<br><strong id="coverage-rate">6 / 8 = 75.0%</strong></div></div>
 <p class="source-note">Other slider values are hypothetical examples,
-not new observations or model results.</p>"""
+not new observations or model results.</p></section>"""
     )
 
 

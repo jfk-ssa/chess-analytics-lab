@@ -1,0 +1,41 @@
+{
+  "kind": "shared_layout_local_checkpoint",
+  "date": "2026-10-09",
+  "pages": [
+    "index",
+    "comparison",
+    "architecture",
+    "metrics",
+    "transpositions",
+    "demo"
+  ],
+  "sources_sha256": {
+    "docs/DESIGN.md": "9053112944907d4d7331133a8f68dc77b43d25ea84539a5340a8ff811923f3f3",
+    "scripts/build_docs_site.py": "f911caa4f217493a95ea041e074690c757a3b4da6bc3b8e2b2d56bde8d9ed92f",
+    "site/assets/site.css": "c5b18a48f94d43e174ad3f7e3d774d23cff8cdc2e4a6e30224964f239b7a6b9e",
+    "site/assets/site.js": "3322eca66a946918eedfe409e10bdabd251fa0fecd0c68463cb4d35d41b66be6"
+  },
+  "browser_observations": {
+    "desktop_css_width": 1600,
+    "narrow_css_width": 487,
+    "requested_narrow_override": 390,
+    "narrow_note": "Browser zoom makes observed CSS viewport 487px; override restored afterwards.",
+    "page_overflow": false,
+    "all_desktop_outer_width": 1064,
+    "demo_image_width": 760,
+    "numeric_headers_and_costs": "right",
+    "simulated_note": "separate small note under aligned amount",
+    "grid_gap": "16px",
+    "contents_padding": "12px 24px",
+    "homepage_last_card": "full span",
+    "denominator": "one panel"
+  },
+  "repaired_preview_issue": "Circular spacing-token references corrected before publication",
+  "local_build": {
+    "pages": 6,
+    "links_validated": 76,
+    "unit_suite_run": false,
+    "paid_model_calls": 0
+  },
+  "publication": "Verify separately through Pages workflow and live source revision"
+}

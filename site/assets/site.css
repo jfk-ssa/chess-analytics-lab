@@ -18,7 +18,11 @@
   --font-heading:var(--font-body);
   --radius:10px;
   --space-unit:4px;
-  --reading-width:78ch}
+  --reading-width:78ch;
+  --page-width:1120px;
+  --panel-padding:24px;
+  --grid-gap:16px;
+  --image-width:760px}
 * {
   box-sizing:border-box}
 html {
@@ -80,7 +84,7 @@ nav a[aria-current=page] {
   font-weight:650;
   border-bottom:2px solid var(--teal)}
 main {
-  max-width:1120px;
+  max-width:var(--page-width);
   margin:auto;
   padding:42px 28px 70px}
 .eyebrow {
@@ -125,7 +129,7 @@ h3 {
 .cards,.pipeline {
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:16px;
+  gap:var(--grid-gap);
   margin:28px 0}
 .card,.pipeline a {
   background:white;
@@ -244,13 +248,15 @@ code:not(pre code) {
   margin:6px 0 14px;
   min-width:112px}
 .toc {
-  max-width:var(--reading-width);
+  width:100%;
   margin:24px 0;
   border:1px solid var(--line);
   border-radius:8px;
-  padding:12px 18px;
+  padding:12px var(--panel-padding);
   background:white;
   font-size:14px}
+.toc>ul {
+  max-width:var(--reading-width)}
 .toc ul {
   margin:8px 0}
 .article>h1 {
@@ -287,10 +293,18 @@ details pre {
   border-radius:40px;
   color:var(--muted)}
 figure {
-  margin:28px auto;
-  max-width:760px}
-figure img {
+  margin:28px 0;
   width:100%;
+  padding:var(--panel-padding);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:white}
+figure>a:first-child {
+  max-width:var(--image-width)}
+figure img {
+  width:auto;
+  max-width:100%;
+  display:block;
   height:auto;
   border:1px solid var(--line);
   border-radius:var(--radius)}
@@ -355,19 +369,45 @@ table {
   font-variant-numeric:tabular-nums}
 td.number,th.number {
   text-align:right;
-  white-space:nowrap}
-.article>p,.article>ul,.article>ol,.article>pre,.article>blockquote,.article>.research-cards {
+  white-space:normal}
+main>p,main section>p,.article>p,.article>ul,.article>ol,.article>blockquote {
   max-width:var(--reading-width)}
 .article>.scroll {
-  max-width:var(--reading-width)}
-.article>.article-table-wide {
+  width:100%;
   max-width:100%}
+.research-card>h3,.research-card>dl,.card>p,figcaption {
+  max-width:var(--reading-width)}
+.cards>.card:last-child:nth-child(odd) {
+  grid-column:1 / -1}
+.example-panel {
+  margin:28px 0;
+  padding:var(--panel-padding);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:white}
+.example-panel h2 {
+  margin-top:0}
+.example-panel>.toolbar {
+  margin:20px 0}
+.example-panel>.fraction {
+  margin:20px 0}
+.cell-value {
+  white-space:nowrap}
+.cell-note {
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:12px}
+@media(max-width:750px) {
+  .example-panel,figure {
+    padding:18px}
+}
 .research-cards {
   display:grid;
-  gap:16px;
+  gap:var(--grid-gap);
   margin:24px 0}
 .research-card {
-  padding:20px 24px;
+  padding:var(--panel-padding);
   border:1px solid var(--line);
   border-radius:var(--radius);
   background:white}
@@ -398,13 +438,13 @@ figure .full-size {
 
 .opening-lab {
   margin:28px 0;
-  padding:24px;
+  padding:var(--panel-padding);
   border:1px solid var(--line);
   border-radius:var(--radius);
   background:white}
 .corpus-panel {
   margin:28px 0;
-  padding:24px;
+  padding:var(--panel-padding);
   border:1px solid var(--line);
   border-radius:var(--radius);
   background:white}
@@ -413,7 +453,7 @@ figure .full-size {
 .corpus-stats {
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:16px;
+  gap:var(--grid-gap);
   margin:24px 0}
 .corpus-stat {
   padding:16px;

@@ -419,3 +419,27 @@ existing 1600px viewport showed matching 704.6px prose/contents widths and a
 overflow or nested contents panel. Six pages built and 76 local links validated;
 Ruff and whitespace checks passed. No local unit tests or model calls were run.
 The existing main-branch Pages workflow publishes this presentation change.
+
+
+## Shared canvas and numeric alignment — 2026-10-09
+
+Applied the owner's approved [layout specification](DESIGN.md): full-width
+contents/table/research/figure frames, inner 78ch prose, shared spacing tokens,
+and a full-span final homepage card. The denominator explanation, slider,
+results and caveat are one panel. Comparison numeric columns now declare their
+roles; headers and values align right, cost precision is consistently nine
+places, and `Simulated` is a separate note. Dynamic probability, corpus count
+and rating columns also declare numeric roles. Frozen report bytes remain intact.
+
+Browser inspection covered all six pages at a 1600px CSS viewport and a narrow
+487px CSS viewport (390px viewport override at the browser's current zoom).
+Desktop contents and article-table wrappers shared the 1064px canvas; screenshot
+frames were 1064px with images capped at 760px. The final homepage card spans the
+canvas. All six pages had no page-wide horizontal overflow at either width.
+Numeric table headers and every displayed cost were right-aligned. An initial
+preview exposed circular spacing-token references; those were corrected before
+publication, and the preview then showed a 16px grid gap and 12px/24px contents
+padding. See [the local layout checkpoint](../reports/shared-layout-checkpoint.json).
+Six pages built, 76 local links validated, and Ruff/whitespace checks passed.
+No local unit suite or paid model calls were run. Existing hosted workflows
+provide separate build/deployment and integrity evidence on the published commit.

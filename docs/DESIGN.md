@@ -15,20 +15,70 @@ and measured values.
 | Code and technical identifiers | Existing system monospace | Separates execution instructions and identifiers |
 | Numbers in tables | Tabular numerals; numeric cells aligned right | Easier comparison across rows |
 
-Guide body text uses Medium (500) at 14px with 1.55 line height, 0.01em letter spacing and prose
-limited using a shared `78ch` reading-width token. The page title scales from
-28px to 36px; section headings are 23px. Paragraphs, lists, code blocks, research
-cards, ordinary tables, and the compact contents panel use the reading column.
-Headings can extend beyond it. Comparison-guide tables, tables with four or more
-columns, and proposed-relation tables explicitly use the wider page canvas,
-with horizontal scrolling contained inside their wrapper when needed. All
-sections share a left edge. The contents panel has one border and reduced
-padding; the Markdown TOC's redundant wrapper is removed during rendering.
-The opening-research comparison retains stacked source cards with finding and
-lesson-implication labels. Navigation and tables use the same family.
-Dashboard body text is 14px and the main title approximately 32px, using
-Streamlit's native spacing. Use size and spacing before extra bold. Browser
-zoom remains available; avoid fixed-height prose that clips enlarged text.
+Guide body text uses Inter Medium (500) at 14px/1.55 with 0.01em tracking.
+The page title scales from 28px to 36px; section headings are 23px. Dashboard
+body text remains 14px with approximately 32px headings and native Streamlit
+spacing. Use size and spacing before extra bold; enlarged text must reflow.
+
+## Layout specification — approved October 9, 2026
+
+One outer canvas establishes the left and right edges of each page. Reading
+measure is an inner text limit, not a competing width for bordered components.
+
+| Token / rule | Value | Applies to |
+|---|---|---|
+| Page width | `--page-width: 1120px` including page padding | Shared main canvas; 1064px usable content at the desktop maximum |
+| Reading measure | `--reading-width: 78ch` | Paragraphs, lists, text inside panels and research cards |
+| Panel padding | `--panel-padding: 24px`, 18px on narrow screens | Example panels and screenshot frames; other compact components have documented smaller spacing |
+| Grid gap | `--grid-gap: 16px` | Card, research and corpus grids |
+| Screenshot limit | `--image-width: 760px` | Image inside its full-width figure frame, aligned left |
+| Compact contents | Full canvas; 12px vertical / 24px horizontal padding | One border, with contents text limited to 78ch |
+| Small disclosures | Full canvas; 14px vertical / 20px horizontal padding | Searchable definition/schema panels |
+
+### Component boundaries
+
+- Contents panels, tables, research-card frames, screenshots and interactive
+  panels use the full available outer width. No per-page table-width heuristic.
+- Prose stays at 78ch inside that canvas. Headings may extend beyond it. Code
+  blocks use the canvas and contained scrolling for long lines.
+- Home cards use two equal columns; an unmatched fifth card spans the final row.
+  At 750px and below, grids become a single column.
+- The denominator example is one panel containing its explanation, slider,
+  results and caveat. Related content does not acquire independent outer edges.
+- Screenshots retain their 760px image limit inside full-width figure frames.
+  Captions and full-size links align with the image. Do not upscale small assets.
+- Tables scroll inside their container when their minimum width exceeds the
+  viewport. Paragraphs never require horizontal scrolling.
+- Keep one contents border; strip the generated Markdown TOC wrapper.
+
+### Table alignment contract
+
+Declare each numeric or currency column by its header/role in the builder or
+interactive row renderer. Do not infer alignment from individual cell strings.
+Text headers/cells align left. Numeric headers/cells align right with tabular
+numerals. An annotation cannot change a column's alignment.
+
+Currency values in the comparison guide display at least nine decimal places,
+padding with zeros and preserving greater source precision if present. The
+underlying report values remain unchanged. Put `Simulated` below the aligned
+amount in smaller muted text. Numeric values stay together; headings may wrap.
+Dynamic probability and corpus count/rating columns follow the same contract.
+
+### Visual acceptance examples
+
+| Page / example | Required observation |
+|---|---|
+| Comparison final-answer table | Numeric headers and all three amounts align right; simulated amount has a separate note |
+| Homepage paths / contents / table | Shared outer edges; equal paired cards and full-span final card; no nested contents border |
+| Metrics denominator example | Explanation, slider, results and caveat share one full-width panel |
+| Opening learning research and corpus | Full-width frames with bounded text; cohort controls and legal board remain usable |
+| Demo screenshots | Full-width figure frame, image at most 760px, working full-size link |
+| All six pages | Common canvas, readable prose, no page-wide horizontal overflow; narrow-screen content reflows |
+
+Record actual browser observations and viewport sizes in status. Build/link/lint
+checks and existing hosted CI are separate from visual acceptance. These rules
+apply to current generated guides; the frozen comparison report remains its
+original historical artifact.
 
 The shared palette is warm paper `#faf9f5`, dark teal text `#203433`, muted text
 `#586c69`, action teal `#116559`, pale panels `#eaf1eb`, borders `#d7ded7` and
@@ -62,7 +112,7 @@ project's GPL. See [third-party notices](../THIRD_PARTY_NOTICES.md).
 
 ## Images and evidence
 
-Dashboard screenshots are captured from the actual synthetic demo. Display them
+Dashboard screenshots are captured from the actual synthetic demo. Display the image inside a full-width figure frame
 at no more than 760px wide and provide a full-size image link rather than
 stretching small images across the page. Recapture Overview and the
 `portfolio-opening` replay after a dashboard appearance change. The screenshots
