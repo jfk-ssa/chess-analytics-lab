@@ -17,7 +17,8 @@
   --font-body:"Inter",system-ui,-apple-system,sans-serif;
   --font-heading:var(--font-body);
   --radius:10px;
-  --space-unit:4px}
+  --space-unit:4px;
+  --reading-width:78ch}
 * {
   box-sizing:border-box}
 html {
@@ -109,7 +110,7 @@ h3 {
   font-size:18px;
   line-height:1.4}
 .lead {
-  max-width:800px;
+  max-width:var(--reading-width);
   font-size:17px;
   color:var(--muted)}
 .hero {
@@ -117,6 +118,7 @@ h3 {
   border-bottom:1px solid var(--line)}
 .source-note {
   font-size:13px;
+  max-width:var(--reading-width);
   color:var(--muted)}
 .source-note a {
   margin-right:10px}
@@ -242,9 +244,11 @@ code:not(pre code) {
   margin:6px 0 14px;
   min-width:112px}
 .toc {
+  max-width:var(--reading-width);
+  margin:24px 0;
   border:1px solid var(--line);
   border-radius:8px;
-  padding:15px 22px;
+  padding:12px 18px;
   background:white;
   font-size:14px}
 .toc ul {
@@ -352,11 +356,11 @@ table {
 td.number,th.number {
   text-align:right;
   white-space:nowrap}
-.article>p,.article>ul,.article>ol {
-  max-width:70ch}
-.article {
-  max-width:70ch}
+.article>p,.article>ul,.article>ol,.article>pre,.article>blockquote,.article>.research-cards {
+  max-width:var(--reading-width)}
 .article>.scroll {
+  max-width:var(--reading-width)}
+.article>.article-table-wide {
   max-width:100%}
 .research-cards {
   display:grid;

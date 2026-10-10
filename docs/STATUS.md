@@ -405,3 +405,17 @@ page displayed the default Elite count and three research cards; article and
 table widths matched. See [the publication receipt](../reports/opening-learning-publication.json).
 This records the first corpus deployment; later documentation-only pushes can
 advance the footer revision without changing that evidence.
+
+
+## Reading-column refinement — 2026-10-09
+
+Applied owner-approved `78ch` prose, ordinary table, research-card and contents
+widths. Removed the blanket article maximum, allowing headings and explicitly
+marked analytical tables to use the wider canvas. Comparison-guide tables,
+four-plus-column tables and proposed-relation tables use that wider layout.
+The contents panel has one border and smaller padding. A local preview at the
+existing 1600px viewport showed matching 704.6px prose/contents widths and a
+1064px analytical table within the shared left-aligned canvas, with no page
+overflow or nested contents panel. Six pages built and 76 local links validated;
+Ruff and whitespace checks passed. No local unit tests or model calls were run.
+The existing main-branch Pages workflow publishes this presentation change.

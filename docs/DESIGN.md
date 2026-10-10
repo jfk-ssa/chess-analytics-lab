@@ -16,12 +16,16 @@ and measured values.
 | Numbers in tables | Tabular numerals; numeric cells aligned right | Easier comparison across rows |
 
 Guide body text uses Medium (500) at 14px with 1.55 line height, 0.01em letter spacing and prose
-limited to roughly 70 characters per line. The page title scales from 28px to
-36px; section headings are 23px. Ordinary article headings, paragraphs, lists,
-and tables share the same 70-character reading column. Wide tables scroll inside
-that column; numeric dashboard tables and the interactive board use the wider
-canvas. The opening-research comparison renders as stacked source cards with
-finding and lesson-implication labels. Navigation and tables use the same family.
+limited using a shared `78ch` reading-width token. The page title scales from
+28px to 36px; section headings are 23px. Paragraphs, lists, code blocks, research
+cards, ordinary tables, and the compact contents panel use the reading column.
+Headings can extend beyond it. Comparison-guide tables, tables with four or more
+columns, and proposed-relation tables explicitly use the wider page canvas,
+with horizontal scrolling contained inside their wrapper when needed. All
+sections share a left edge. The contents panel has one border and reduced
+padding; the Markdown TOC's redundant wrapper is removed during rendering.
+The opening-research comparison retains stacked source cards with finding and
+lesson-implication labels. Navigation and tables use the same family.
 Dashboard body text is 14px and the main title approximately 32px, using
 Streamlit's native spacing. Use size and spacing before extra bold. Browser
 zoom remains available; avoid fixed-height prose that clips enlarged text.

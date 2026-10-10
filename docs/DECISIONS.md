@@ -1219,3 +1219,15 @@ for genuinely wide tables. Render the research comparison as stacked source
 cards with finding and lesson-implication labels; Markdown remains the maintained
 three-column source. Use the wider canvas for the corpus dashboard and board.
 Retain Inter Medium, existing colors, and the compact type scale.
+
+## 2026-10-09 — Wider prose and explicit analytical table widths
+
+The owner approved refining the preceding reading-width change: use `78ch`
+prose and contents, keep headings free to extend, and let comparison tables and
+dense analytical tables use the full page canvas. Remove the article-wide
+maximum; constrain individual reading blocks instead. Ordinary tables and
+research cards retain the reading measure. The builder explicitly marks
+comparison-guide tables, four-plus-column tables, and proposed-relation tables
+as wide. Contain table overflow rather than expanding the page. Remove the
+nested Markdown contents wrapper and reduce the remaining panel's padding.
+Use one shared CSS reading-width token and preserve the common left edge.

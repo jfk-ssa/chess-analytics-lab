@@ -125,13 +125,24 @@ def md(repo, name):
     content = engine.convert(text)
     if name == "TRANSPOSITION_LEARNING.md":
         content = research_cards(content)
-    content = re.sub(
-        r"(<table>.*?</table>)", r'<div class="scroll">\1</div>', content, flags=re.DOTALL
-    )
+
+    def table_layout(match):
+        table = match.group(0)
+        headers = re.findall(r"<th(?:\s[^>]*)?>(.*?)</th>", table, re.DOTALL)
+        wide = (
+            name == "CLASSIFIER_COMPARISON.md"
+            or len(headers) >= 4
+            or "Proposed relation" in headers
+        )
+        css = "scroll article-table-wide" if wide else "scroll"
+        return f'<div class="{css}">{table}</div>'
+
+    content = re.sub(r"<table>.*?</table>", table_layout, content, flags=re.DOTALL)
     content = re.sub(r"<(/?)h1([ >])", r"<\1h2\2", content)
+    toc = re.sub(r'^<div class="toc">\s*|\s*</div>\s*$', "", engine.toc)
     return (
-        '<div class="toc">On this page'
-        + engine.toc
+        '<div class="toc" role="navigation" aria-label="On this page"><strong>On this page</strong>'
+        + toc
         + '</div><article class="article">'
         + content
         + "</article>"
