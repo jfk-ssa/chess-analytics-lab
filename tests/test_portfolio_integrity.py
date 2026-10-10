@@ -6,8 +6,8 @@ import shutil
 
 import pytest
 
-from analyst_m5.evaluation import score_case_portfolio
-from analyst_m5.provider import price_usage, validate_personal_config
+from chess_analytics.analyst.evaluation import score_case_portfolio
+from chess_analytics.analyst.provider import price_usage, validate_personal_config
 from chess_analytics.cli import fixture_plan
 from chess_analytics.common import digest, read_json, write_json
 from chess_analytics.corpus.moves import write_sampled_moves

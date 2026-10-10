@@ -6,9 +6,15 @@ import json
 import os
 from pathlib import Path
 
-from analyst_m5.evaluation import score_case_m7
-from analyst_m5.experiment import _load_named_key
-from analyst_m5.provider import KEY_ENV, _default_transport, live_answer, price_usage, quote_request
+from chess_analytics.analyst.evaluation import score_case_m7
+from chess_analytics.analyst.experiment import _load_named_key
+from chess_analytics.analyst.provider import (
+    KEY_ENV,
+    _default_transport,
+    live_answer,
+    price_usage,
+    quote_request,
+)
 from chess_analytics.common import write_json
 
 CASE_IDS = (
@@ -34,10 +40,10 @@ CONFIG = {
     "api_key_env": KEY_ENV,
 }
 FROZEN_FILES = (
-    "analyst_m5/provider.py",
-    "analyst_m5/core.py",
-    "analyst_m5/tools.py",
-    "analyst_m5/evaluation.py",
+    "src/chess_analytics/analyst/provider.py",
+    "src/chess_analytics/analyst/core.py",
+    "src/chess_analytics/analyst/tools.py",
+    "src/chess_analytics/analyst/evaluation.py",
     "evals/cases/m7_holdout_v11.json",
     "reports/M3-analytical-manifest.json",
     "scripts/dev_m7_sol.py",

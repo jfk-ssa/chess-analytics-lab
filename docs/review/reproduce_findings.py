@@ -4,8 +4,8 @@ from pathlib import Path
 
 import duckdb
 
-from analyst_m5.evaluation import _subset
-from analyst_m5.provider import validate_personal_config
+from chess_analytics.analyst.evaluation import _subset
+from chess_analytics.analyst.provider import validate_personal_config
 from chess_analytics.cli import fixture_plan
 from chess_analytics.common import digest, read_json, write_json
 from chess_analytics.corpus.moves import selected, write_sampled_moves

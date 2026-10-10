@@ -5,7 +5,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from analyst_m5.experiment import run
+from chess_analytics.analyst.experiment import run
 from chess_analytics.common import write_json
 
 

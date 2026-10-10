@@ -4,7 +4,7 @@ The analyst turns a typed or model-proposed plan into at most four allowlisted,
 read-only metric actions. Each result is computed by checked tools against one
 analytical snapshot; evidence IDs bind dataset, action arguments and result.
 The evaluator is separate from the planner. It compares answers to frozen
-references and checks tool/filter and access boundaries. `analyst_m5/core.py`,
+references and checks tool/filter and access boundaries. `src/chess_analytics/analyst/core.py`,
 `tools.py`, `provider.py`, `evaluation.py`, and `experiment.py` are the current
 implementation files. Restricted free-form SQL is disabled.
 
@@ -42,7 +42,7 @@ not a rewrite of frozen results.
 
 For offline replay, first run `chesslab demo --scope all`, then use the command
 in [DEMO.md](DEMO.md). Historical fixture harness checks are available with
-`python -m analyst_m5 eval --split both` **only when its matching analytical
+`python -m chess_analytics.analyst eval --split both` **only when its matching analytical
 snapshot is available**; that command writes a local report. The immutable
 tracked M5 report remains readable without it. No live evaluation command is
 part of the quickstart. A new experiment requires a new freeze, reference

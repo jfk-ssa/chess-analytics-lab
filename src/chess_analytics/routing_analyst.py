@@ -8,9 +8,9 @@ import os
 import time
 from pathlib import Path
 
-from analyst_m5 import provider
-from analyst_m5.experiment import _resolve_config
-from analyst_m5.tools import CheckedTools
+from chess_analytics.analyst import provider
+from chess_analytics.analyst.experiment import _resolve_config
+from chess_analytics.analyst.tools import CheckedTools
 from chess_analytics.routing_study import _sha, _write, cases, score
 
 KEY_NAME = provider.KEY_ENV
@@ -72,7 +72,11 @@ def preflight(repo: Path, data_project: Path, split: str = "test") -> dict:
                 "reserved_cost_usd": quote["reserved_cost_usd"],
             }
         )
-    paths = ("analyst_m5/provider.py", "analyst_m5/core.py", "analyst_m5/tools.py")
+    paths = (
+        "src/chess_analytics/analyst/provider.py",
+        "src/chess_analytics/analyst/core.py",
+        "src/chess_analytics/analyst/tools.py",
+    )
     return {
         "kind": "m8_existing_analyst_preflight_no_model_calls",
         "split": split,

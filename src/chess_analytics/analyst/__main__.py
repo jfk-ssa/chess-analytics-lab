@@ -4,9 +4,9 @@ import argparse
 import json
 from pathlib import Path
 
-from analyst_m5.core import execute_plan, replay
-from analyst_m5.evaluation import save
-from analyst_m5.provider import recorded_live_answer
+from chess_analytics.analyst.core import execute_plan, replay
+from chess_analytics.analyst.evaluation import save
+from chess_analytics.analyst.provider import recorded_live_answer
 
 
 def main(argv=None):

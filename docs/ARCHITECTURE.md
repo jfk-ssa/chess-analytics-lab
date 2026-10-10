@@ -5,7 +5,7 @@
 Chess Analytics Lab uses one Python/SQL repository and local DuckDB files.
 `chesslab` provides the foundation ingestion and two offline demos. The
 analytical source command is `python -m chess_analytics.corpus`; the checked analyst is
-`python -m analyst_m5`. These functional commands are the entry points while
+`python -m chess_analytics.analyst`. These functional commands are the entry points while
 historical package and report names remain stable for source hashes.
 
 ```text
@@ -15,7 +15,7 @@ Lichess fixed complete archive / fixed byte prefix / synthetic PGN
   → chess_analytics.marts: local dbt copy, tests, published marts + recovery ledger
   → chess_analytics.corpus: selected moves, opening and clock definitions
   → chess_analytics.dashboard: parameterized analysis and Streamlit views
-  → analyst_m5: allowlisted read-only tools, bounded plan, evidence IDs
+  → chess_analytics.analyst: allowlisted read-only tools, bounded plan, evidence IDs
   → frozen references + scorer + preserved attempts and costs
 ```
 

@@ -101,7 +101,7 @@ This invokes the same checked replay path without Streamlit. The question must
 match the recorded fixture exactly:
 
 ```sh
-uv run --locked --offline --no-editable --extra dashboard python -m analyst_m5 \
+uv run --locked --offline --no-editable --extra dashboard python -m chess_analytics.analyst \
   --project work/portfolio-demo/project replay \
   'What share of tagged eligible fixture games used the Sicilian Defense?' \
   --fixture work/portfolio-demo/project/evals/replay_plans/portfolio-opening.json

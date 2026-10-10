@@ -82,7 +82,7 @@ needs `--sandbox-attempt`. Frozen case files and live reports stay the evidence.
 
 ## Analyst and provider incidents
 
-`python -m analyst_m5` exposes `typed`, `replay`, `eval`, and `live`. Use the
+`python -m chess_analytics.analyst` exposes `typed`, `replay`, `eval`, and `live`. Use the
 first two for offline questions; [EVALUATION.md](EVALUATION.md) explains the
 case splits and evidence. `eval` needs its matching analytical snapshot.
 The default demo does not read a credential. The live adapter is disabled
@@ -91,7 +91,7 @@ without a personal config or explicitly capped experiment, and reads only
 variable; no workplace credential is discovered or used. Never commit the
 key, paste it into a report, or infer spending authorization from credits.
 
-For a future authorized frozen experiment, `python -m analyst_m5.experiment
+For a future authorized frozen experiment, `python -m chess_analytics.analyst.experiment
 prepare --max-run-usd CAP --preflight work/new-preflight.json` makes a quote
 without loading a key; `run` requires that exact preflight, a separate explicit
 cap and `--env-file work/.env`. [M6.md](M6.md) documents historical usage.

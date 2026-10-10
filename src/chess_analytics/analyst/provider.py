@@ -11,8 +11,8 @@ import urllib.request
 import uuid
 from pathlib import Path
 
-from analyst_m5.core import execute_plan
-from analyst_m5.tools import CheckedTools
+from chess_analytics.analyst.core import execute_plan
+from chess_analytics.analyst.tools import CheckedTools
 from chess_analytics.common import write_json
 
 KEY_ENV = "CHESSLAB_OPENAI_API_KEY"
@@ -112,7 +112,7 @@ def cache_rates(config: dict) -> tuple[float, float]:
     )
 
 
-def price_usage(config: dict, usage: dict) -> tuple[float, str]:
+def price_usage(config: dict, usage: object) -> tuple[float, str]:
     """Price reported tokens; missing cache detail uses a conservative input bound."""
     if not isinstance(usage, dict) or not all(
         type(usage.get(key)) is int and usage[key] >= 0 for key in ("input_tokens", "output_tokens")
@@ -516,9 +516,11 @@ def live_answer(
     """One capped planning request; all numerical answers come from checked tools."""
     if (config_path is None) == (config is None):
         raise ValueError("provide either personal config path or explicit config")
-    config = validate_personal_config(
-        config if config is not None else json.loads(config_path.read_text())
-    )
+    if config is None:
+        assert config_path is not None
+        config = validate_personal_config(json.loads(config_path.read_text()))
+    else:
+        config = validate_personal_config(config)
     quote = quote_request(project, question, config, condition)
     reserved_usd = quote["reserved_cost_usd"]
     if remaining_usd is not None and (

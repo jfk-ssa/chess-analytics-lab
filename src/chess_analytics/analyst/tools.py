@@ -30,6 +30,13 @@ def _exact_keys(value: dict, allowed: set[str]):
         raise ValueError("unknown or malformed filter")
 
 
+def _row(connection, sql: str, message: str):
+    row = connection.execute(sql).fetchone()
+    if row is None:
+        raise RuntimeError(message)
+    return row
+
+
 class CheckedTools:
     def __init__(self, project: Path):
         self.project = project
@@ -74,11 +81,13 @@ class CheckedTools:
                           and not marked_bot and nullif(trim(source_opening), '') is not null
                         group by 1 order by games desc, opening_family limit 501"""
                     ).fetchall()
-                    denominator = con.execute(
+                    denominator = _row(
+                        con,
                         """select count(*) from fact_game
                         where result in ('1-0','0-1','1/2-1/2') and not marked_bot
-                          and nullif(trim(source_opening), '') is not null"""
-                    ).fetchone()[0]
+                          and nullif(trim(source_opening), '') is not null""",
+                        "grouped opening query returned no row",
+                    )[0]
                 return {
                     "metric_id": metric_id,
                     "analytical_id": self.dataset_id,
@@ -112,11 +121,13 @@ class CheckedTools:
             if filters or group_by:
                 raise ValueError("draw rate takes no filters")
             with duckdb.connect(str(self.snapshot / "warehouse.duckdb"), read_only=True) as con:
-                numerator, denominator = con.execute(
+                numerator, denominator = _row(
+                    con,
                     """select count(*) filter (where result = '1/2-1/2'), count(*)
                     from fact_game where result in ('1-0','0-1','1/2-1/2')
-                    and not marked_bot"""
-                ).fetchone()
+                    and not marked_bot""",
+                    "draw rate query returned no row",
+                )
             return {
                 "metric_id": metric_id,
                 "version": "1.0.0",

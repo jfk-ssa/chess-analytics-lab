@@ -47,7 +47,6 @@ CAVEATS_SCORE = [
 ]
 WORKSPACE_DIRECTORIES = (
     "src",
-    "analyst_m5",
     "contracts",
     "docs",
     "scripts",
@@ -839,8 +838,8 @@ def question_rows(campaign: dict) -> list[tuple[str, str]]:
 
 
 def build_cases(project: Path, campaign: dict) -> dict:
-    from analyst_m5.core import execute_plan
-    from analyst_m5.evaluation import score_case_m7
+    from chess_analytics.analyst.core import execute_plan
+    from chess_analytics.analyst.evaluation import score_case_m7
 
     m3 = json.loads((project / "reports/M3-independent-reference.json").read_text())
     ref = json.loads((project / campaign["reference"]).read_text())

@@ -240,13 +240,13 @@ def architecture():
         (
             "analyst",
             "Checked analyst",
-            "analyst_m5/tools.py",
+            "src/chess_analytics/analyst/tools.py",
             "Allowlisted read-only actions compute values and bind evidence IDs to the snapshot.",
         ),
         (
             "evaluate",
             "Independent scoring",
-            "analyst_m5/evaluation.py",
+            "src/chess_analytics/analyst/evaluation.py",
             "Compare responses with frozen references and retain failures, repetitions and costs.",
         ),
     )

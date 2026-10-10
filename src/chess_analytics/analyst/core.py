@@ -8,7 +8,7 @@ import sys
 import time
 from pathlib import Path
 
-from analyst_m5.tools import CheckedTools
+from chess_analytics.analyst.tools import CheckedTools
 
 STATUSES = {"answered", "needs_clarification", "unsupported"}
 MAX_STEPS = 4
@@ -24,7 +24,7 @@ def run_killable_tool(project: Path, name: str, args: dict, timeout_seconds=MAX_
     clean_env = {"PATH": os.defpath, "PYTHONNOUSERSITE": "1"}
     try:
         completed = subprocess.run(
-            [sys.executable, "-m", "analyst_m5.tool_worker"],
+            [sys.executable, "-m", "chess_analytics.analyst.tool_worker"],
             input=request,
             text=True,
             capture_output=True,

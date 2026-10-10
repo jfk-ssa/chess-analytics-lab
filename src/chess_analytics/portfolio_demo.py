@@ -3,8 +3,8 @@
 import shutil
 from pathlib import Path
 
-from analyst_m5.core import replay
-from analyst_m5.evaluation import score_case_portfolio
+from chess_analytics.analyst.core import replay
+from chess_analytics.analyst.evaluation import score_case_portfolio
 from chess_analytics.cli import fixture_plan
 from chess_analytics.common import digest, read_json, write_json, writer_lock
 from chess_analytics.corpus.metrics import clock_pressure, opening_player_score, opening_usage

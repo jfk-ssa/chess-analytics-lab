@@ -4,9 +4,9 @@ import json
 
 import pytest
 
-from analyst_m5.core import replay
-from analyst_m5.evaluation import score_case_portfolio
-from analyst_m5.provider import live_answer, quote_request
+from chess_analytics.analyst.core import replay
+from chess_analytics.analyst.evaluation import score_case_portfolio
+from chess_analytics.analyst.provider import live_answer, quote_request
 from chess_analytics.common import read_json
 from chess_analytics.dashboard.analysis import current_snapshot
 from chess_analytics.portfolio_demo import QUESTIONS, run

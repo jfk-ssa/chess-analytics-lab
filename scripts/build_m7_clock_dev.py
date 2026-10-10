@@ -4,8 +4,8 @@ import hashlib
 import json
 from pathlib import Path
 
-from analyst_m5.core import execute_plan
-from analyst_m5.evaluation import score_case_m6_holdout
+from chess_analytics.analyst.core import execute_plan
+from chess_analytics.analyst.evaluation import score_case_m6_holdout
 from chess_analytics.common import write_json
 
 PROJECT = Path(__file__).resolve().parents[1]

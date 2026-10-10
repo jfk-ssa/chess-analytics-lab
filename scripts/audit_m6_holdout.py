@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from analyst_m5.core import _evidence_id
+from chess_analytics.analyst.core import _evidence_id
 from chess_analytics.common import write_json
 
 

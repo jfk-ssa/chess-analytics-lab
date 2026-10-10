@@ -8,8 +8,8 @@ from pathlib import Path
 
 import pytest
 
-from analyst_m5.evaluation import score_case_m7
-from analyst_m5.experiment import prepare, run
+from chess_analytics.analyst.evaluation import score_case_m7
+from chess_analytics.analyst.experiment import prepare, run
 
 PROJECT = Path(__file__).resolve().parents[1]
 
@@ -46,7 +46,7 @@ def test_full_m7_preflight_fits_approved_cumulative_cap():
 
 
 def test_single_transport_retry_is_logged_and_charged(tmp_path, monkeypatch):
-    from analyst_m5 import experiment
+    from chess_analytics.analyst import experiment
 
     cases = [
         {"id": "a", "question": "A", "category": "basic_calculation"},

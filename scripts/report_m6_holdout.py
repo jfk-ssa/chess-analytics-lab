@@ -6,7 +6,7 @@ import json
 from collections import defaultdict
 from pathlib import Path
 
-from analyst_m5.provider import price_usage
+from chess_analytics.analyst.provider import price_usage
 from chess_analytics.common import write_json
 from scripts.report_m6_live import _model_text
 

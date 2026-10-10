@@ -6,7 +6,7 @@ from pathlib import Path
 
 import streamlit as st  # pyright: ignore[reportMissingImports]
 
-from analyst_m5.core import execute_plan, replay
+from chess_analytics.analyst.core import execute_plan, replay
 from chess_analytics.dashboard.analysis import (
     BUCKETS,
     clock_analysis,

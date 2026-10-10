@@ -4,7 +4,7 @@ import json
 import sys
 from pathlib import Path
 
-from analyst_m5.tools import CheckedTools
+from chess_analytics.analyst.tools import CheckedTools
 
 
 def main():
