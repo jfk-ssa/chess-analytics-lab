@@ -80,3 +80,4 @@ short summary of the current checkout, not a log of new decisions.
 | 0072 | 2026-10-10 | [Opening rankings stay outside the tip](adr/0072-opening-rankings-stay-outside-the-tip.md) |
 | 0073 | 2026-10-10 | [Status stays a summary](adr/0073-status-stays-a-summary.md) |
 | 0074 | 2026-10-10 | [Keep offline checks independent of publication artifacts](adr/0074-offline-checks-and-hidden-controls.md) |
+| 0075 | 2026-10-10 | [Group site navigation and collapse it on mobile](adr/0075-grouped-site-navigation.md) |

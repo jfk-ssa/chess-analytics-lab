@@ -79,14 +79,26 @@ ASSETS = {
     "fonts/provenance.json": "site/assets/fonts/provenance.json",
 }
 NAV = (
-    ("index.html", "Start here"),
-    ("comparison.html", "Comparison"),
-    ("architecture.html", "Architecture"),
-    ("metrics.html", "Metrics & data"),
-    ("transpositions.html", "Transpositions"),
-    ("opening-learning.html", "Opening learning"),
-    ("import-games.html", "Analyze my games"),
-    ("demo.html", "Run the demo"),
+    ("Home", "index.html", ()),
+    (
+        "Openings",
+        None,
+        (
+            ("opening-learning.html", "Opening learning"),
+            ("transpositions.html", "Transpositions"),
+        ),
+    ),
+    ("Analyze my games", "import-games.html", ()),
+    (
+        "The lab",
+        None,
+        (
+            ("demo.html", "Run the demo"),
+            ("metrics.html", "Metrics & data"),
+            ("comparison.html", "AI comparison"),
+            ("architecture.html", "Architecture"),
+        ),
+    ),
 )
 
 

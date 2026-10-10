@@ -22,6 +22,8 @@ receipts under `reports/`. Generated opening rankings are restored by the pinned
 publication hash rather than stored on the branch tip. Default offline checks
 validate the pin; the documentation gate restores and verifies the publication
 bytes separately (ADR 0074).
+The shared header groups opening study and lab guides, with a compact mobile
+Menu and native disclosure fallback (ADR 0075).
 
 This file stays a short summary: checkout structure, phase tracker, dataset
 versions, and limits. New decisions go only into [docs/adr](adr/). Do not append

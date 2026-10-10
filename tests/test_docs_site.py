@@ -4,6 +4,7 @@ import hashlib
 import importlib.util
 import json
 import shutil
+from html.parser import HTMLParser
 from pathlib import Path
 
 import pytest
@@ -13,6 +14,27 @@ ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("docs_site", ROOT / "scripts/build_docs_site.py")
 site = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(site)
+
+
+class NavigationParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.in_navigation = False
+        self.links = []
+        self.toggle = {}
+
+    def handle_starttag(self, tag, attrs):
+        attributes = dict(attrs)
+        if tag == "nav" and attributes.get("id") == "site-navigation":
+            self.in_navigation = True
+        if tag == "button" and attributes.get("aria-controls") == "site-navigation":
+            self.toggle = attributes
+        if self.in_navigation and tag == "a":
+            self.links.append(attributes)
+
+    def handle_endtag(self, tag):
+        if tag == "nav":
+            self.in_navigation = False
 
 
 def test_materialized_positions_match_the_publication_checkpoint():
@@ -49,6 +71,21 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
         parser = site.SiteLinks()
         text = (output / name).read_text()
         parser.feed(text)
+        navigation = NavigationParser()
+        navigation.feed(text)
+        destinations = [link["href"] for link in navigation.links]
+        assert len(destinations) == len(result["pages"])
+        assert set(destinations) == set(result["pages"])
+        assert destinations.index("opening-learning.html") < destinations.index(
+            "transpositions.html"
+        )
+        assert [
+            link["href"] for link in navigation.links if link.get("aria-current") == "page"
+        ] == [name]
+        assert navigation.toggle["type"] == "button"
+        assert navigation.toggle["aria-controls"] in parser.ids
+        assert navigation.toggle["aria-expanded"] == "false"
+        assert "hidden" in navigation.toggle  # No inert toggle before progressive enhancement.
         canonical = site.SITE_URL + ("" if name == "index.html" else name)
         assert f'<link rel="canonical" href="{canonical}">' in text
         assert f'<meta property="og:url" content="{canonical}">' in text
