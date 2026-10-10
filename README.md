@@ -104,6 +104,11 @@ uv run --locked --offline --no-editable --extra dbt --extra dashboard pytest -q
 uv run --locked --offline --no-editable --extra dbt --extra dashboard ruff check .
 uv run --locked --offline --no-editable --extra dbt --extra dashboard ruff format --check .
 uv run --locked --offline --no-editable --extra dbt --extra dashboard basedpyright
+```
+
+Install the git hooks after the toolset is present:
+
+```sh
 pre-commit install
 pre-commit install --hook-type commit-msg
 ```
