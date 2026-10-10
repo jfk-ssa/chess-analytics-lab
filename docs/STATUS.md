@@ -1,8 +1,17 @@
-# Status — 2026-10-09
+# Status — 2026-10-10
 
 **M0–M7 accepted locally; M8 routing and end-to-end Jev comparisons measured, with no production promotion. Portfolio hardening verified locally and in a fresh export; GPL-3.0-or-later selected for original project code.** This is a new standalone local Git
 repository; projects 1–3 remain together. The portfolio repository is public at
 https://github.com/jfk-ssa/chess-analytics-lab.
+
+## Unreferenced historical reports — 2026-10-10
+
+88 report files that no test, script, guide, or kept report names were removed.
+They remain on tag `archive/reports-before-prune-2026-10-10` (commit `523718f`).
+Every eval case file is still named by a builder or a test, including all
+twelve M7 holdout sets, so those files stay. The locked offline suite passed
+**99 tests** with 17 expected skips, Ruff passed, and the tiny demo completed.
+No live calls.
 
 ## Current documentation and publication — 2026-10-07
 

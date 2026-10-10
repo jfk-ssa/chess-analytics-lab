@@ -1158,3 +1158,14 @@ tracking; use Streamlit's native spacing with base weight 500. Bundle pinned
 Fontsource Inter 5.3.0 locally with OFL license/provenance. Refresh the actual
 synthetic demo images and current style documentation. Earlier trials and
 frozen report styling remain historical evidence, not active design choices.
+
+## 2026-10-10 — Keep only referenced historical reports
+
+Tracked reports that no test, script, current guide, or kept report names are
+removed from the checkout. The full set remains on tag
+`archive/reports-before-prune-2026-10-10` at commit `523718f`. Eval case files
+stay. Each M7 holdout version is still named by a builder, and the M5, M6,
+Jev, and Decisions sets are still read by code. A filename built with
+an f-string or brace expansion counts as a reference, so the December Sol runs
+and the M6 v2 run/audit triples stay. Files named by `repository-review.json`
+or `reports/M0-M1.md` stay with those records.
