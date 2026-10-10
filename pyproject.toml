@@ -46,6 +46,15 @@ target-version = "py312"
 line-length = 100
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "B", "UP", "SIM", "PTH", "RUF", "N"]
+select = ["E", "F", "I", "B", "UP", "SIM", "PTH", "RUF", "N", "C90"]
+# Current ceiling. Two historical modules sit above it and are ignored per file
+# until a later split; new code should stay at or below this.
+mccabe.max-complexity = 22
 # En dashes, minus signs, and similar marks are intentional in questions and reports.
 allowed-confusables = ["–", "−", "×", "～"]
+
+[tool.ruff.lint.per-file-ignores]
+# Case builders and the paired end-to-end runner exceed the complexity ceiling.
+# Leave them alone here; a later change can split them and drop the ignore.
+"scripts/build_m5_cases.py" = ["C901"]
+"src/chess_analytics/jev_e2e.py" = ["C901"]
