@@ -27,3 +27,10 @@ repos:
     hooks:
       - id: uv-lock
         args: ["--check"]
+  - repo: https://github.com/biomejs/pre-commit
+    rev: v0.6.1
+    hooks:
+      - id: biome-check
+        additional_dependencies: ["@biomejs/biome@2.5.15"]
+        files: ^site/assets/
+        exclude: ^site/assets/vendor/
