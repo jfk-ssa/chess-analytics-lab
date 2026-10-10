@@ -12,7 +12,8 @@ command. Pins, families, question wording, and live-gate accounting live in
 that config. Historical preflight JSON still names the old scripts and is
 unchanged. Checkpoint, clock-dev, and repetition helpers remain. The locked
 offline suite passed **103 tests** with 17 expected skips, and Ruff passed.
-No live calls.
+With the dbt extra, **105 tests** passed, 15 skipped, and the tiny transform
+published. No live calls.
 
 ## Current documentation and publication — 2026-10-07
 
