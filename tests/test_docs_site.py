@@ -68,6 +68,8 @@ def test_header_layouts_fit_without_a_horizontal_scroller():
     assert "min-height: 44px" in phone and "min-height: 24px" in phone
     assert "flex-wrap: wrap" in phone and "display: contents" in phone
     assert "repeat(5, minmax(0, 1fr))" in tablet
+    assert ".cards.preview-cards" in css
+    assert "grid-template-columns: minmax(0, 1fr);" in css
     assert "Analyze games" in (ROOT / "scripts/build_docs_site.py").read_text()
     assert "Analyze my games" not in (ROOT / "scripts/build_docs_site.py").read_text()
 
