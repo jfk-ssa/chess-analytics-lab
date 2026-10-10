@@ -1,7 +1,7 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
   "files": {
-    "includes": ["site/assets/**", "!site/assets/vendor/**"]
+    "includes": ["site/assets/**", "!site/assets/vendor"]
   },
   "formatter": {
     "enabled": true,
@@ -12,7 +12,10 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "preset": "recommended",
+      "style": {
+        "noDescendingSpecificity": "off"
+      }
     }
   },
   "javascript": {
