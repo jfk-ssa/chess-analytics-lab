@@ -19,6 +19,7 @@ jobs:
       - run: uv sync --locked --no-editable
       - run: uv run --locked --offline --no-editable ruff check .
       - run: uv run --locked --offline --no-editable ruff format --check .
+      - run: uv run --locked --offline --no-editable basedpyright
       - run: uv run --locked --offline --no-editable pytest -q
       - run: uv run --locked --offline --no-editable chesslab demo
       - run: uv sync --locked --no-editable --extra dbt

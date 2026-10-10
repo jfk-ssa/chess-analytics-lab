@@ -100,6 +100,8 @@ not need to read or execute them all to use the current demo.
 uv sync --locked --no-editable --extra dbt --extra dashboard
 uv run --locked --offline --no-editable --extra dbt --extra dashboard pytest -q
 uv run --locked --offline --no-editable --extra dbt --extra dashboard ruff check .
+uv run --locked --offline --no-editable --extra dbt --extra dashboard ruff format --check .
+uv run --locked --offline --no-editable --extra dbt --extra dashboard basedpyright
 ```
 
 Tests requiring ignored real archives skip in a fresh clone. After source edits,
