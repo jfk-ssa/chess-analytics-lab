@@ -3,6 +3,7 @@
 import hashlib
 import importlib.util
 import json
+import re
 import shutil
 from html.parser import HTMLParser
 from pathlib import Path
@@ -35,6 +36,30 @@ class NavigationParser(HTMLParser):
     def handle_endtag(self, tag):
         if tag == "nav":
             self.in_navigation = False
+
+
+def _header_nav_max_width(css: str) -> str:
+    """Return the max-width of the media query that restyles the header navigation."""
+    found = None
+    for match in re.finditer(r"@media\s*\(\s*max-width:\s*(\d+)px\s*\)\s*\{", css):
+        depth = 1
+        index = match.end()
+        while index < len(css) and depth:
+            depth += (css[index] == "{") - (css[index] == "}")
+            index += 1
+        block = css[match.end() : index - 1]
+        if ".nav-toggle" in block and ".site-nav" in block:
+            assert found is None, "header navigation is restyled by more than one media query"
+            found = match.group(1)
+    assert found is not None, "header navigation media query not found"
+    return found
+
+
+def test_header_breakpoint_matches_between_css_and_javascript():
+    css_width = _header_nav_max_width((ROOT / "site/assets/site.css").read_text())
+    script = (ROOT / "site/assets/site.js").read_text()
+    js_widths = re.findall(r"matchMedia\(\s*['\"]\(max-width:\s*(\d+)px\)['\"]\s*\)", script)
+    assert js_widths == [css_width]
 
 
 def test_materialized_positions_match_the_publication_checkpoint():

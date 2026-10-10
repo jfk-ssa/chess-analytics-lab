@@ -36,7 +36,9 @@ with CPU slowed 4× and the network at 400 ms / 400 kbps, found the compact Menu
 already in the first frame on the homepage and transpositions page.
 Navigation-attributed layout shift was 0 on both; the homepage's remaining
 shift was 0.00016 from a one-pixel text move, and transpositions retained a
-0.020 position-explorer shift. The documentation suite passed 15 tests. Ruff
-check/format and Biome 2.5.15 passed for this change. These are local UI and
+0.020 position-explorer shift. The documentation suite passed 16 tests,
+including a check that the header `max-width` in `site.css` and the
+`matchMedia` query in `site.js` are the same value. Ruff check/format and
+Biome 2.5.15 passed for this change. These are local UI and
 authored fixture checks, not screen-reader certification or measured learning
 outcomes.
