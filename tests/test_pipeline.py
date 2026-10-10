@@ -162,9 +162,12 @@ def test_read_only_snapshot_and_writer_lock(project, tmp_path):
         with pytest.raises(duckdb.Error):
             c.execute("delete from fact_game")
         assert draw_rate(c, project)["denominator"] == 20
-    with writer_lock(tmp_path), pytest.raises(ValueError, match="another local writer"):
-        with writer_lock(tmp_path):
-            pass
+    with (
+        writer_lock(tmp_path),
+        pytest.raises(ValueError, match="another local writer"),
+        writer_lock(tmp_path),
+    ):
+        pass
 
 
 def test_cli_offline_and_no_live_command(project, tmp_path, capsys, monkeypatch):
