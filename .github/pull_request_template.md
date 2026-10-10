@@ -1,8 +1,14 @@
-## Summary
+## Why
 
-<!-- What changed, and why. Keep fixture, replay, and live results distinct. -->
+<!-- The problem or decision this change addresses. -->
 
-## Test plan
+## What changed
+
+<!-- The behavior or files that changed. -->
+
+## How it was tested
+
+<!-- Keep fixture, replay, and live results distinct. -->
 
 - [ ] `uv run --locked --offline --no-editable ruff check .`
 - [ ] `uv run --locked --offline --no-editable ruff format --check .`
@@ -10,6 +16,10 @@
 - [ ] `uv run --locked --offline --no-editable pytest -q`
 - [ ] No live provider calls, credential reads, or new downloads
 
-## Notes
+## Risk or rollback
 
-<!-- Optional: skipped real-data tests, docs, or follow-ups. -->
+<!-- What could break, and how to revert this squash commit. -->
+
+## Stacked pull requests
+
+<!-- If this depends on another open pull request, keep this draft and write: Stacked on #N, merge after -->
