@@ -4,6 +4,18 @@
 repository; projects 1–3 remain together. The portfolio repository is public at
 https://github.com/jfk-ssa/chess-analytics-lab.
 
+## Analyst module split — 2026-10-10
+
+Plan recovery, pricing, and frozen preflight now live beside the Responses
+adapter. `provider` and `experiment` still re-export the functions tests and
+scripts import. Case-builder complexity fell from 39 to 21 and the Jev run from
+34 to 20. The locked offline suite passed **103 tests** with 17 expected skips,
+and Ruff passed. With the dbt extra, **105 tests** passed, 15 skipped, and the
+tiny transform published. The tiny source hash stayed
+`130df65e85d18e78bbafd89daf6696c2596e03abf939adf47f2dcbdc4d33e75b` and the draw
+rate stayed 0.2. The snapshot id is `7f6e7510017f1ed5e17b0fef` because the
+implementation hash includes the new modules. No live calls.
+
 ## M7 campaign command — 2026-10-10
 
 The twelve copied month and holdout builders are one `chesslab m7 --campaign`
