@@ -8,7 +8,9 @@ Decision records are indexed in [DECISIONS.md](DECISIONS.md). Milestone counts a
 
 Milestone packages live under `src/chess_analytics/` as `marts`, `corpus`, `dashboard`, `analyst`, and `orchestration`. Plan recovery, pricing, and frozen preflight sit beside the Responses adapter. `provider` and `experiment` still re-export the functions tests and scripts import. The twelve copied month and holdout builders are one `chesslab m7 --campaign` command. Historical preflight JSON still names the old scripts. Offline CI runs on pushes to `main` and on pull requests, with Ruff format checking, basedpyright on `src/`, and Actions pinned to commit SHAs.
 
-With the dashboard extra installed, the locked offline suite passed **115 tests** and skipped 16. Ruff check, Ruff format, and basedpyright passed. The tiny source hash stayed `130df65e85d18e78bbafd89daf6696c2596e03abf939adf47f2dcbdc4d33e75b` and the draw rate stayed 0.2. The snapshot id is `bcdba5157163d9fd032a50fa` because the implementation hash includes the moved modules. No live calls.
+With the dashboard and docs extras installed, the locked offline suite passed **121 tests** and skipped 15. Ruff check, Ruff format, and basedpyright passed. The tiny source hash stayed `130df65e85d18e78bbafd89daf6696c2596e03abf939adf47f2dcbdc4d33e75b` and the draw rate stayed 0.2. The snapshot id is `bcdba5157163d9fd032a50fa` because the implementation hash includes the moved modules. No live calls.
+
+101 report files that nothing in the checkout names were removed. They remain on tag `archive/reports-before-main-prune-2026-10-10` at `2fa1fbb`. December Sol runs, the M6 v2 run and audit triples, and every eval case file stay.
 
 ## Publication and presentation
 

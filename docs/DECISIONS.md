@@ -72,3 +72,4 @@ the latest measured state.
 | 0064 | 2026-10-09 | [Wider prose and explicit analytical table widths](adr/0064-wider-prose-and-explicit-analytical-table-widths.md) |
 | 0065 | 2026-10-09 | [Shared outer canvas and semantic table columns](adr/0065-shared-outer-canvas-and-semantic-table-columns.md) |
 | 0066 | 2026-10-10 | [One M7 campaign command](adr/0066-one-m7-campaign-command.md) |
+| 0067 | 2026-10-10 | [Keep only referenced historical reports](adr/0067-keep-only-referenced-historical-reports.md) |
