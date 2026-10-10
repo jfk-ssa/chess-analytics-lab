@@ -85,12 +85,14 @@ The shared palette is warm paper `#faf9f5`, dark teal text `#203433`, muted text
 an orange text/focus accent `#a84a1f`. Its contrast is 5.44:1 on paper and 4.99:1
 on pale panels. The muted text on paper meets normal-text contrast
 requirements. Keep textual error labels alongside color; color alone is not a
-sufficient explanation. Maintain visible keyboard focus, wrapping navigation,
+sufficient explanation. Maintain visible keyboard focus, responsive navigation,
 scrollable tables and reduced-motion support. Spacing uses a 4px base with
 larger gaps between sections; cards have subtle borders and restrained corners.
 
 The homepage adds a three-column results grid, stacked at 750px and below.
-The header becomes non-sticky at that breakpoint. The opening board fills its
+The header becomes non-sticky and, when JavaScript has marked the page, collapses
+behind Menu at 960px and below before the first paint. Without JavaScript the
+links stay visible. Openings and The lab contain native disclosure groups on all pages. The opening board fills its
 mobile column. Comparison question details stay collapsed until opened, with
 a 320px Question column in a contained table. Definition JSON wraps long lines;
 executable command blocks keep contained scrolling. The original comparison

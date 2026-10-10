@@ -65,6 +65,26 @@ that HTML. Page markup lives in `scripts/templates`. Edit the Markdown, contract
 templates, or `site/assets/site.css` and `site/assets/site.js`, then rebuild. The
 optional `docs` extra pins Markdown and Jinja2; the application does not need them.
 
+## Navigation
+
+Every generated page uses the same four top-level entries: Home, Openings,
+Analyze my games, and The lab. Openings lists Opening learning before
+Transpositions. The lab lists Run the demo, Metrics & data, AI comparison, and
+Architecture. The current page has `aria-current="page"`; its group is also
+highlighted when collapsed.
+
+At 960 CSS pixels and below, the links collapse behind a Menu button before the
+desktop row would wrap. A same-origin script in the page head, not deferred and
+allowed by `script-src 'self'`, adds a `js` class before first paint. CSS then
+shows Menu and hides the link list, so the compact header is the first frame.
+The header scrolls with the page at that size. Groups use native
+`details`/`summary` disclosures: click, Enter, or Space opens them; Tab follows
+the links. JavaScript keeps one group open, handles outside clicks and Escape,
+and preserves focus when changing between mobile and desktop. Without
+JavaScript, the class is absent, the navigation stays visible, Menu stays
+undisplayed, and the native disclosures still expose all links. This navigation
+adds no dependency, provider request, persistence, or custom ARIA menu roles.
+
 ## Learn from the interactions
 
 On Comparison, start with the 40 shared historical questions to compare rules,
