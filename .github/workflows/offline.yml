@@ -20,6 +20,9 @@ jobs:
         with:
           node-version: "24"
       - run: node --test tests/js/game_import.test.mjs
+      - run: node scripts/check_game_import.mjs
+      - run: node tests/js/import_parity.mjs tests/fixtures/imports/authored-games.pgn
+      - run: node tests/js/import_parity.mjs tests/fixtures/imports/zero-castling.pgn
       - run: uv sync --locked --no-editable
       - run: uv run --locked --offline --no-editable ruff check .
       - run: uv run --locked --offline --no-editable ruff format --check .
