@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 from streamlit.testing.v1 import AppTest
 
-import analytics_m4.analysis as analysis
+import chess_analytics.dashboard.analysis as analysis
 from chess_analytics.common import write_json
 
 project = Path.cwd()
@@ -24,7 +24,9 @@ def empty_bucket(*args, **kwargs):
 
 
 with patch.object(analysis, "clock_analysis", empty_bucket):
-    app = AppTest.from_file(str(project / "analytics_m4/dashboard.py"), default_timeout=30).run()
+    app = AppTest.from_file(
+        str(project / "src/chess_analytics/dashboard/dashboard.py"), default_timeout=30
+    ).run()
     app.sidebar.radio[0].set_value("Clock pressure").run()
     errors = [x.message for x in app.exception]
 write_json(

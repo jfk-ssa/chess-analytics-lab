@@ -11,7 +11,7 @@ chess-analytics-lab`.
 
 For the complete credential-free path, run `chesslab demo --scope all`, then
 `CHESSLAB_PROJECT="$PWD/work/portfolio-demo/project" streamlit run
-analytics_m4/dashboard.py`. [DEMO.md](DEMO.md) contains the full checked
+src/chess_analytics/dashboard/dashboard.py`. [DEMO.md](DEMO.md) contains the full checked
 commands and expected values. The original `chesslab demo` is the smaller
 foundation-only fixture. Both are synthetic and local. The complete demo
 writes only to ignored `work/portfolio-demo`, separate from real data.
@@ -29,13 +29,13 @@ uv run --locked --offline --no-editable python \
 ```
 
 The analytical August prefix is deliberately bounded and must be acquired
-manually. `python -m analytics_m3` supports `acquire`, `extract`, `ingest`,
+manually. `python -m chess_analytics.corpus` supports `acquire`, `extract`, `ingest`,
 `moves`, and `report` in that order. `--data-dir` moves bulk output outside
 the repository. [DATA_SOURCES.md](DATA_SOURCES.md) explains the source and
 observed coverage. The real dashboard uses the repository's `data/` by
 default. The demo dashboard uses the explicit `CHESSLAB_PROJECT` directory.
 
-For optional dbt, run `python -m platform_m2 transform --dataset tiny` after
+For optional dbt, run `python -m chess_analytics.marts transform --dataset tiny` after
 tiny ingest/build and use `report-mart`, `ops-report`, or `rollback-mart` as
 needed. Backfill accepts `--snapshot-id`; validate a known mart before
 rollback. [M2.md](M2.md) contains exact examples. [ORCHESTRATION.md](ORCHESTRATION.md)
@@ -83,7 +83,7 @@ command. Frozen case files and live reports stay the evidence.
 
 ## Analyst and provider incidents
 
-`python -m analyst_m5` exposes `typed`, `replay`, `eval`, and `live`. Use the
+`python -m chess_analytics.analyst` exposes `typed`, `replay`, `eval`, and `live`. Use the
 first two for offline questions; [EVALUATION.md](EVALUATION.md) explains the
 case splits and evidence. `eval` needs its matching analytical snapshot.
 The default demo does not read a credential. The live adapter is disabled
@@ -92,7 +92,7 @@ without a personal config or explicitly capped experiment, and reads only
 variable; no workplace credential is discovered or used. Never commit the
 key, paste it into a report, or infer spending authorization from credits.
 
-For a future authorized frozen experiment, `python -m analyst_m5.experiment
+For a future authorized frozen experiment, `python -m chess_analytics.analyst.experiment
 prepare --max-run-usd CAP --preflight work/new-preflight.json` makes a quote
 without loading a key; `run` requires that exact preflight, a separate explicit
 cap and `--env-file work/.env`. [M6.md](M6.md) documents historical usage.

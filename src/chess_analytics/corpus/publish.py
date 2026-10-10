@@ -8,14 +8,14 @@ from pathlib import Path
 
 import duckdb
 
-from analytics_m3.moves import SAMPLE_MODULUS, write_sampled_moves
-from analytics_m3.source import extracted_path
 from chess_analytics.common import digest, guard_disk, hash_json, now, read_json, write_json
+from chess_analytics.corpus.moves import SAMPLE_MODULUS, write_sampled_moves
+from chess_analytics.corpus.source import extracted_path
 from chess_analytics.warehouse.snapshots import current, report
 
 
 def analytics_hash(project: Path) -> str:
-    paths = sorted((project / "analytics_m3").glob("*.py"))
+    paths = sorted((project / "src/chess_analytics/corpus").glob("*.py"))
     paths += sorted((project / "contracts").glob("*.json"))
     return hash_json({str(path.relative_to(project)): digest(path) for path in paths})
 

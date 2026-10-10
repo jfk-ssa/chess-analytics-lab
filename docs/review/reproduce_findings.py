@@ -4,13 +4,13 @@ from pathlib import Path
 
 import duckdb
 
-from analyst_m5.evaluation import _subset
-from analyst_m5.provider import validate_personal_config
-from analytics_m3.moves import selected, write_sampled_moves
-from analytics_m3.publish import build_analytical
-from analytics_m3.source import extracted_path
+from chess_analytics.analyst.evaluation import _subset
+from chess_analytics.analyst.provider import validate_personal_config
 from chess_analytics.cli import fixture_plan
 from chess_analytics.common import digest, read_json, write_json
+from chess_analytics.corpus.moves import selected, write_sampled_moves
+from chess_analytics.corpus.publish import build_analytical
+from chess_analytics.corpus.source import extracted_path
 from chess_analytics.ingest.pipeline import ingest
 from chess_analytics.warehouse.snapshots import build
 
@@ -66,7 +66,7 @@ out["duplicate"] = {
 # A real isolated publication with two different valid sources sharing game ID/ply count.
 p = work / "project"
 p.mkdir(exist_ok=True)
-for name in ("src", "contracts", "analytics_m3"):
+for name in ("src", "contracts"):
     shutil.copytree(project / name, p / name, dirs_exist_ok=True)
 shutil.copy2(project / "uv.lock", p / "uv.lock")
 write_json(p / "config/datasets.json", {"analytical": plan})

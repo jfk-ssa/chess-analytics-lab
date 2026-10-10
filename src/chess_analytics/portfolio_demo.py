@@ -3,14 +3,14 @@
 import shutil
 from pathlib import Path
 
-from analyst_m5.core import replay
-from analyst_m5.evaluation import score_case_portfolio
-from analytics_m3.metrics import clock_pressure, opening_player_score, opening_usage
-from analytics_m3.publish import build_analytical
-from analytics_m3.source import extracted_path
-from analytics_m4.analysis import clock_analysis, opening_catalog
+from chess_analytics.analyst.core import replay
+from chess_analytics.analyst.evaluation import score_case_portfolio
 from chess_analytics.cli import fixture_plan
 from chess_analytics.common import digest, read_json, write_json, writer_lock
+from chess_analytics.corpus.metrics import clock_pressure, opening_player_score, opening_usage
+from chess_analytics.corpus.publish import build_analytical
+from chess_analytics.corpus.source import extracted_path
+from chess_analytics.dashboard.analysis import clock_analysis, opening_catalog
 from chess_analytics.ingest.pipeline import ingest
 from chess_analytics.warehouse.snapshots import build, report
 
@@ -23,7 +23,7 @@ QUESTIONS = {
 
 def _stage_project(source_project: Path, project: Path) -> None:
     project.mkdir(parents=True, exist_ok=True)
-    for directory in ("src", "contracts", "analytics_m3"):
+    for directory in ("src", "contracts"):
         shutil.copytree(source_project / directory, project / directory, dirs_exist_ok=True)
     shutil.copy2(source_project / "uv.lock", project / "uv.lock")
     (project / "reports").mkdir(exist_ok=True)

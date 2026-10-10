@@ -6,7 +6,7 @@ import math
 import time
 from pathlib import Path
 
-from analyst_m5.core import replay
+from chess_analytics.analyst.core import replay
 from chess_analytics.common import write_json
 
 

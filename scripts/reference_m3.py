@@ -1,4 +1,4 @@
-"""Independent PGN-header/comment tally for M3; does not use analytics_m3 metric code."""
+"""Independent PGN-header/comment tally for M3; does not use chess_analytics.corpus metric code."""
 
 import hashlib
 import io

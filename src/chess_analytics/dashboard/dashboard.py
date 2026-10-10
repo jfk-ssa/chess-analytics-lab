@@ -1,4 +1,4 @@
-"""Run locally: streamlit run analytics_m4/dashboard.py."""
+"""Run locally: streamlit run src/chess_analytics/dashboard/dashboard.py."""
 
 import json
 import os
@@ -6,8 +6,8 @@ from pathlib import Path
 
 import streamlit as st
 
-from analyst_m5.core import execute_plan, replay
-from analytics_m4.analysis import (
+from chess_analytics.analyst.core import execute_plan, replay
+from chess_analytics.dashboard.analysis import (
     BUCKETS,
     clock_analysis,
     coverage,
@@ -16,7 +16,7 @@ from analytics_m4.analysis import (
     opening_comparison,
 )
 
-PROJECT = Path(os.environ.get("CHESSLAB_PROJECT", Path(__file__).resolve().parents[1])).resolve()
+PROJECT = Path(os.environ.get("CHESSLAB_PROJECT", Path(__file__).resolve().parents[3])).resolve()
 st.set_page_config(page_title="Chess Analytics Lab", layout="wide")
 st.title("Chess Analytics Lab")
 

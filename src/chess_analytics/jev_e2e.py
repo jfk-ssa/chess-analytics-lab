@@ -8,11 +8,11 @@ import tempfile
 import time
 from pathlib import Path
 
-from analyst_m5 import provider
-from analyst_m5.core import _evidence_id, execute_plan
-from analyst_m5.evaluation import score_case_m7, score_case_portfolio
-from analyst_m5.experiment import _resolve_config
-from analyst_m5.tools import CheckedTools
+from chess_analytics.analyst import provider
+from chess_analytics.analyst.core import _evidence_id, execute_plan
+from chess_analytics.analyst.evaluation import score_case_m7, score_case_portfolio
+from chess_analytics.analyst.experiment import _resolve_config
+from chess_analytics.analyst.tools import CheckedTools
 from chess_analytics.routing_analyst import _key_from_file
 from chess_analytics.routing_study import (
     MODEL,
@@ -154,10 +154,10 @@ def preflight(repo: Path, data_project: Path) -> dict:
             }
         )
     source_paths = (
-        "analyst_m5/provider.py",
-        "analyst_m5/core.py",
-        "analyst_m5/tools.py",
-        "analyst_m5/evaluation.py",
+        "src/chess_analytics/analyst/provider.py",
+        "src/chess_analytics/analyst/core.py",
+        "src/chess_analytics/analyst/tools.py",
+        "src/chess_analytics/analyst/evaluation.py",
         "src/chess_analytics/routing_study.py",
     )
     return {

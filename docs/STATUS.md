@@ -15,6 +15,17 @@ offline suite passed **103 tests** with 17 expected skips, and Ruff passed.
 With the dbt extra, **105 tests** passed, 15 skipped, and the tiny transform
 published. No live calls.
 
+## Functional package names — 2026-10-10
+
+`platform_m2`, `analytics_m3`, `analytics_m4`, `analyst_m5`, and `orchestration`
+now live under `src/chess_analytics/` as `marts`, `corpus`, `dashboard`,
+`analyst`, and `orchestration`. Commands follow those names. Published reports
+keep their original path hashes. The tiny demo source hash and draw rate are
+unchanged; its snapshot id is now `97d637ad66e2a11bc065900c` because the
+implementation hash includes the moved files. With the dbt extra, **105 tests**
+passed, 15 skipped, and `python -m chess_analytics.marts transform --dataset tiny`
+published. No live calls.
+
 ## Current documentation and publication — 2026-10-07
 
 The first-visit review is complete: the README now includes clone/setup and

@@ -6,8 +6,13 @@ import pytest
 from chess_analytics.cli import fixture_plan
 from chess_analytics.common import read_json
 from chess_analytics.ingest.pipeline import ingest
+from chess_analytics.marts.pipeline import (
+    build_mart,
+    operational_report,
+    rollback_mart,
+    validate_mart,
+)
 from chess_analytics.warehouse.snapshots import build, current
-from platform_m2.pipeline import build_mart, operational_report, rollback_mart, validate_mart
 
 DBT = Path(sys.executable).with_name("dbt")
 pytestmark = pytest.mark.skipif(not DBT.exists(), reason="install the optional dbt extra")

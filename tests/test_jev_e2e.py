@@ -5,8 +5,8 @@ import shutil
 
 import pytest
 
-from analyst_m5.core import execute_plan
 from chess_analytics import jev_e2e
+from chess_analytics.analyst.core import execute_plan
 from chess_analytics.portfolio_demo import run as build_demo
 from chess_analytics.routing_study import LABELS
 
@@ -17,10 +17,10 @@ def _prepared(tmp_path, project, monkeypatch):
     data_project = demo / "project"
     study = tmp_path / "study"
     for name in (
-        "analyst_m5/provider.py",
-        "analyst_m5/core.py",
-        "analyst_m5/tools.py",
-        "analyst_m5/evaluation.py",
+        "src/chess_analytics/analyst/provider.py",
+        "src/chess_analytics/analyst/core.py",
+        "src/chess_analytics/analyst/tools.py",
+        "src/chess_analytics/analyst/evaluation.py",
         "src/chess_analytics/routing_study.py",
     ):
         destination = study / name

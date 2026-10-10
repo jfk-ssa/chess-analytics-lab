@@ -4,8 +4,8 @@ from pathlib import Path
 
 import duckdb
 
-from analytics_m3.publish import validate_analytical
 from chess_analytics.common import digest
+from chess_analytics.corpus.publish import validate_analytical
 
 BUCKETS = {"under_10", "10_to_29", "30_to_59", "60_plus"}
 

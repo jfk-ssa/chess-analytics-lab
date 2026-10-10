@@ -45,9 +45,9 @@ ASSETS = {
     "demo-overview.png": "site/assets/demo-overview.png",
     "demo-analyst.png": "site/assets/demo-analyst.png",
     "fonts/inter-latin-wght-normal.woff2": (
-        "analytics_m4/static/fonts/inter-latin-wght-normal.woff2"
+        "src/chess_analytics/dashboard/static/fonts/inter-latin-wght-normal.woff2"
     ),
-    "fonts/LICENSE.inter.txt": "analytics_m4/static/fonts/LICENSE.inter.txt",
+    "fonts/LICENSE.inter.txt": "src/chess_analytics/dashboard/static/fonts/LICENSE.inter.txt",
     "fonts/provenance.json": "site/assets/fonts/provenance.json",
 }
 NAV = (
@@ -139,25 +139,25 @@ def architecture():
         (
             "marts",
             "Optional marts",
-            "platform_m2/pipeline.py",
+            "src/chess_analytics/marts/pipeline.py",
             "Transform a copy through dbt; record lineage, validation and recovery.",
         ),
         (
             "metrics",
             "Opening & clock metrics",
-            "analytics_m4/analysis.py",
+            "src/chess_analytics/dashboard/analysis.py",
             "Apply explicit cohorts, denominators, missingness and observed-prefix caveats.",
         ),
         (
             "analyst",
             "Checked analyst",
-            "analyst_m5/tools.py",
+            "src/chess_analytics/analyst/tools.py",
             "Allowlisted read-only actions compute values and bind evidence IDs to the snapshot.",
         ),
         (
             "evaluate",
             "Independent scoring",
-            "analyst_m5/evaluation.py",
+            "src/chess_analytics/analyst/evaluation.py",
             "Compare responses with frozen references and retain failures, repetitions and costs.",
         ),
     )

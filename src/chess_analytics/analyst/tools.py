@@ -5,9 +5,14 @@ from pathlib import Path
 
 import duckdb
 
-from analytics_m3.metrics import BUCKETS, clock_pressure, opening_player_score, opening_usage
-from analytics_m4.analysis import coverage, current_snapshot, opening_comparison
 from chess_analytics.common import digest
+from chess_analytics.corpus.metrics import (
+    BUCKETS,
+    clock_pressure,
+    opening_player_score,
+    opening_usage,
+)
+from chess_analytics.dashboard.analysis import coverage, current_snapshot, opening_comparison
 
 CONTRACTS = {
     "game_draw_rate": "game_draw_rate.json",

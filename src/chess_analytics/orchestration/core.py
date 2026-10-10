@@ -45,7 +45,7 @@ def verify(project: Path, data_dir: Path, dataset: str) -> dict:
 
 
 def transform(project: Path, data_dir: Path, dataset: str) -> dict:
-    from platform_m2.pipeline import build_mart, validate_mart
+    from chess_analytics.marts.pipeline import build_mart, validate_mart
 
     executable = Path(sys.executable).with_name("dbt")
     if not executable.exists():

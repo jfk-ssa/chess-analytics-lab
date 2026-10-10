@@ -10,10 +10,10 @@ from pathlib import Path
 
 import pytest
 
-from analyst_m5.core import execute_plan, run_killable_tool
-from analyst_m5.evaluation import score_case, score_case_m6, score_case_m6_holdout
-from analyst_m5.experiment import _load_named_key, prepare, run
-from analyst_m5.provider import (
+from chess_analytics.analyst.core import execute_plan, run_killable_tool
+from chess_analytics.analyst.evaluation import score_case, score_case_m6, score_case_m6_holdout
+from chess_analytics.analyst.experiment import _load_named_key, prepare, run
+from chess_analytics.analyst.provider import (
     _default_transport,
     _extract_plan,
     _normalize_plan,
@@ -34,7 +34,7 @@ def test_provider_http_error_records_bounded_reason_without_key(monkeypatch):
             "https://api.openai.com/v1/responses", 400, "Bad Request", {}, body
         )
 
-    monkeypatch.setattr("analyst_m5.provider.urllib.request.urlopen", fail)
+    monkeypatch.setattr("chess_analytics.analyst.provider.urllib.request.urlopen", fail)
     with pytest.raises(
         RuntimeError, match="provider HTTP 400: invalid_request_error: temporary issue"
     ):

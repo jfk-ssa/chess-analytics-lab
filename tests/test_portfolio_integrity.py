@@ -6,13 +6,13 @@ import shutil
 
 import pytest
 
-from analyst_m5.evaluation import score_case_portfolio
-from analyst_m5.provider import price_usage, validate_personal_config
-from analytics_m3.moves import write_sampled_moves
-from analytics_m3.publish import build_analytical
-from analytics_m3.source import extracted_path
+from chess_analytics.analyst.evaluation import score_case_portfolio
+from chess_analytics.analyst.provider import price_usage, validate_personal_config
 from chess_analytics.cli import fixture_plan
 from chess_analytics.common import digest, read_json, write_json
+from chess_analytics.corpus.moves import write_sampled_moves
+from chess_analytics.corpus.publish import build_analytical
+from chess_analytics.corpus.source import extracted_path
 from chess_analytics.ingest.pipeline import ingest
 from chess_analytics.warehouse.snapshots import build
 
@@ -77,7 +77,7 @@ def selected_record(eval_cp="0.10"):
 def isolated_project(project, tmp_path):
     isolated = tmp_path / "project"
     isolated.mkdir()
-    for directory in ("src", "contracts", "analytics_m3"):
+    for directory in ("src", "contracts"):
         shutil.copytree(project / directory, isolated / directory)
     shutil.copy2(project / "uv.lock", isolated / "uv.lock")
     plan = fixture_plan(isolated)

@@ -36,7 +36,7 @@ any real archive.
 
 With network access and sufficient disk space, the bounded foundation sequence
 is `chesslab ingest --dataset foundation`, then `build`, `validate`, and
-`report` for that dataset. The analytical sequence is `python -m analytics_m3
+`report` for that dataset. The analytical sequence is `python -m chess_analytics.corpus
 acquire`, `extract`, `ingest`, `moves`, then `report`. Check
 [RUNBOOK.md](RUNBOOK.md) for exact commands and recovery. Acquisition is manual;
 no import or test collection downloads data. The 40 MB prefix is a range

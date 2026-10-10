@@ -4,7 +4,7 @@ Dagster and Prefect are optional views over one Chess Analytics Lab pipeline. Th
 Dagster graph has `staged_games → published_snapshot → verified_metric` assets;
 the Prefect flow has the corresponding `stage_source → publish_snapshot →
 verify_metric` tasks. With dbt enabled, each adds a fourth analytical-mart step.
-Both call `orchestration/core.py`, which delegates parsing,
+Both call `src/chess_analytics/orchestration/core.py`, which delegates parsing,
 validation, publication, and metric calculation to the existing `chess_analytics`
 package. The default dataset is the committed tiny synthetic fixture. There is no
 schedule, cloud account, model call, or paid service in these demos.
@@ -24,10 +24,10 @@ tiny run:
 ```sh
 mkdir -p data/dagster-home
 cp config/dagster.yaml data/dagster-home/dagster.yaml
-DAGSTER_DISABLE_TELEMETRY=1 work/dagster-venv/bin/dagster asset list -m orchestration.dagster_app
+DAGSTER_DISABLE_TELEMETRY=1 work/dagster-venv/bin/dagster asset list -m chess_analytics.orchestration.dagster_app
 DAGSTER_HOME="$PWD/data/dagster-home" DAGSTER_DISABLE_TELEMETRY=1 \
   CHESSLAB_DATA_DIR="$PWD/data/dagster-demo" \
-  work/dagster-venv/bin/dagster asset materialize -m orchestration.dagster_app --select '*'
+  work/dagster-venv/bin/dagster asset materialize -m chess_analytics.orchestration.dagster_app --select '*'
 ```
 
 For the local Dagster UI, run:
@@ -35,7 +35,7 @@ For the local Dagster UI, run:
 ```sh
 DAGSTER_HOME="$PWD/data/dagster-home" DAGSTER_DISABLE_TELEMETRY=1 \
   CHESSLAB_DATA_DIR="$PWD/data/dagster-demo" \
-  work/dagster-venv/bin/dagster dev -m orchestration.dagster_app
+  work/dagster-venv/bin/dagster dev -m chess_analytics.orchestration.dagster_app
 ```
 
 Open the localhost address printed by Dagster. Materialize the three assets from
@@ -46,7 +46,7 @@ Prefect one-off execution starts only an ephemeral local API:
 
 ```sh
 env -u PREFECT_API_KEY -u PREFECT_API_URL -u PREFECT_PROFILE \
-  work/prefect-venv/bin/python -m orchestration.prefect_app \
+  work/prefect-venv/bin/python -m chess_analytics.orchestration.prefect_app \
   --data-dir data/prefect-demo
 ```
 
@@ -64,7 +64,7 @@ env -u PREFECT_API_KEY -u PREFECT_API_URL -u PREFECT_PROFILE \
 ```sh
 env -u PREFECT_API_KEY -u PREFECT_PROFILE \
   PREFECT_API_URL=http://127.0.0.1:4200/api \
-  work/prefect-venv/bin/python -m orchestration.prefect_app \
+  work/prefect-venv/bin/python -m chess_analytics.orchestration.prefect_app \
   --data-dir data/prefect-demo --serve
 ```
 

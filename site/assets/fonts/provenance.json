@@ -5,9 +5,9 @@
     "version": "5.3.0",
     "tarball_url": "https://registry.npmjs.org/@fontsource-variable/inter/-/inter-5.3.0.tgz",
     "tarball_sha256": "d26710dd38e7217484a1d47ee76c024977ec550548876f26d06ed1844af09a14",
-    "font_path": "analytics_m4/static/fonts/inter-latin-wght-normal.woff2",
+    "font_path": "src/chess_analytics/dashboard/static/fonts/inter-latin-wght-normal.woff2",
     "font_sha256": "3100e775e8616cd2611beecfa23a4263d7037586789b43f035236a2e6fbd4c62",
-    "license_path": "analytics_m4/static/fonts/LICENSE.inter.txt",
+    "license_path": "src/chess_analytics/dashboard/static/fonts/LICENSE.inter.txt",
     "license_sha256": "3b0a5fca3d17942cde889069889dedbbbd075e9b599968c82a95f4d944e9b345"
   }
 ]

@@ -6,10 +6,10 @@ from pathlib import Path
 
 import pytest
 
-from analyst_m5.core import execute_plan
-from analyst_m5.evaluation import score_case
-from analyst_m5.provider import live_answer, validate_personal_config
-from analyst_m5.tools import CheckedTools
+from chess_analytics.analyst.core import execute_plan
+from chess_analytics.analyst.evaluation import score_case
+from chess_analytics.analyst.provider import live_answer, validate_personal_config
+from chess_analytics.analyst.tools import CheckedTools
 
 
 def _case_answer():
@@ -93,7 +93,7 @@ def test_state_machine_limits_steps_before_data_access():
         def __init__(self, project):
             pass
 
-    from analyst_m5 import core
+    from chess_analytics.analyst import core
 
     original = core.CheckedTools
     core.CheckedTools = FakeTools
@@ -128,7 +128,7 @@ def test_live_requires_explicit_personal_configuration():
 
 
 def test_live_cap_prevents_transport_before_any_request(tmp_path, monkeypatch):
-    from analyst_m5 import provider
+    from chess_analytics.analyst import provider
 
     class FakeTools:
         dataset_id = "a" * 24

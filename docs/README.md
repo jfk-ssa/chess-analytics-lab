@@ -26,10 +26,10 @@ live evaluations are recorded separately.
 | Location | Purpose |
 |---|---|
 | `src/chess_analytics/` | Foundation CLI, ingestion/warehouse, offline demo and optional classifier studies |
-| `platform_m2/`, `dbt/` | Local marts and their validation/recovery path |
-| `analytics_m3/`, `analytics_m4/` | Analytical source/moves, parameterized metrics, Streamlit dashboard |
-| `analyst_m5/` | Checked read-only tools, typed plans, provider adapter and evaluation harness |
-| `orchestration/` | Optional local Dagster/Prefect wrappers over the same pipeline |
+| `src/chess_analytics/marts/`, `dbt/` | Local marts and their validation/recovery path |
+| `src/chess_analytics/corpus/`, `src/chess_analytics/dashboard/` | Analytical source/moves, parameterized metrics, Streamlit dashboard |
+| `src/chess_analytics/analyst/` | Checked read-only tools, typed plans, provider adapter and evaluation harness |
+| `src/chess_analytics/orchestration/` | Optional local Dagster/Prefect wrappers over the same pipeline |
 | `contracts/`, `config/`, `evals/` | Definitions, bounded source plans, frozen questions and reference manifests |
 | `tests/fixtures/`, `tests/` | Tracked synthetic inputs, independent expected values and offline regressions |
 | `reports/` | Compact historical evidence and the original comparison report |
@@ -37,11 +37,11 @@ live evaluations are recorded separately.
 | `work/`, `data/` | Ignored local outputs, raw attempts and bulk data; absent in a fresh clone |
 | `auxiliary-examples/` | Separate business communication and observability examples, outside the chess application |
 
-Paths with `m2`–`m5` identify where components were introduced; `M0`–`M8` files
-record development milestones. They are not instructions to rerun all milestones
-or a requirement to read everything in order. Historical names and frozen hashes
-are retained deliberately; use the functional guides above as the public entry
-points.
+Milestone numbers in guides and reports record where components were introduced.
+The packages now use functional names under `src/chess_analytics/`. They are not
+instructions to rerun all milestones or a requirement to read everything in
+order. Published reports keep their original path hashes; use the functional
+guides above as the public entry points.
 
 ## Current guides versus historical records
 

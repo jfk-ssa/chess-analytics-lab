@@ -4,9 +4,9 @@ from pathlib import Path
 import pytest
 import zstandard
 
-from analytics_m3.moves import move_rows
-from analytics_m3.source import acquire_prefix, extract_complete_games
 from chess_analytics.common import digest, read_json
+from chess_analytics.corpus.moves import move_rows
+from chess_analytics.corpus.source import acquire_prefix, extract_complete_games
 
 
 def test_clock_proxy_uses_prior_same_side_and_mover_perspective():

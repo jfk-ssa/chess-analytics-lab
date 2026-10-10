@@ -5,7 +5,7 @@ import shutil
 
 import pytest
 
-from analyst_m5.tools import CheckedTools
+from chess_analytics.analyst.tools import CheckedTools
 from chess_analytics.portfolio_demo import run as build_demo
 from chess_analytics.routing_analyst import preflight as analyst_preflight
 from chess_analytics.routing_analyst import route_from_answer

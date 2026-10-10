@@ -9,8 +9,8 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-from analyst_m5.evaluation import score_case_m6, score_case_m6_holdout, score_case_m7
-from analyst_m5.provider import (
+from chess_analytics.analyst.evaluation import score_case_m6, score_case_m6_holdout, score_case_m7
+from chess_analytics.analyst.provider import (
     KEY_ENV,
     _default_transport,
     live_answer,
@@ -162,14 +162,14 @@ def prepare(
     )
     upper_bound = sum(cell["reserved_cost_usd"] for cell in cells) + retry_reservation
     frozen_files = [
-        "analyst_m5/provider.py",
-        "analyst_m5/core.py",
-        "analyst_m5/tools.py",
-        "analyst_m5/tool_worker.py",
-        "analyst_m5/evaluation.py",
-        "analyst_m5/experiment.py",
-        "analytics_m3/metrics.py",
-        "analytics_m4/analysis.py",
+        "src/chess_analytics/analyst/provider.py",
+        "src/chess_analytics/analyst/core.py",
+        "src/chess_analytics/analyst/tools.py",
+        "src/chess_analytics/analyst/tool_worker.py",
+        "src/chess_analytics/analyst/evaluation.py",
+        "src/chess_analytics/analyst/experiment.py",
+        "src/chess_analytics/corpus/metrics.py",
+        "src/chess_analytics/dashboard/analysis.py",
         case_file,
         manifest_file,
         "docs/METRICS.md",

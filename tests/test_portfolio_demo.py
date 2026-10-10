@@ -4,11 +4,11 @@ import json
 
 import pytest
 
-from analyst_m5.core import replay
-from analyst_m5.evaluation import score_case_portfolio
-from analyst_m5.provider import live_answer, quote_request
-from analytics_m4.analysis import current_snapshot
+from chess_analytics.analyst.core import replay
+from chess_analytics.analyst.evaluation import score_case_portfolio
+from chess_analytics.analyst.provider import live_answer, quote_request
 from chess_analytics.common import read_json
+from chess_analytics.dashboard.analysis import current_snapshot
 from chess_analytics.portfolio_demo import QUESTIONS, run
 
 
@@ -76,7 +76,9 @@ def test_six_dashboard_views_and_empty_buckets(project, tmp_path, monkeypatch):
     demo_project = tmp_path / "portfolio" / "project"
     run(project, demo_project.parent)
     monkeypatch.setenv("CHESSLAB_PROJECT", str(demo_project))
-    app = AppTest.from_file(str(project / "analytics_m4/dashboard.py"), default_timeout=30).run()
+    app = AppTest.from_file(
+        str(project / "src/chess_analytics/dashboard/dashboard.py"), default_timeout=30
+    ).run()
     views = (
         "Overview and coverage",
         "Opening comparisons",

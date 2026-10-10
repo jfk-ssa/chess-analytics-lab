@@ -5,7 +5,7 @@ import json
 import os
 from pathlib import Path
 
-PROJECT = Path(__file__).resolve().parents[1]
+PROJECT = Path(__file__).resolve().parents[3]
 
 # Use isolated project-local state. A cloud profile or inherited API key must not
 # quietly redirect this personal offline demo to an unrelated account.
@@ -20,7 +20,7 @@ if api_url and not api_url.startswith(("http://127.0.0.1:", "http://localhost:")
 
 from prefect import flow, task  # noqa: E402
 
-from orchestration import core  # noqa: E402
+from chess_analytics.orchestration import core  # noqa: E402
 
 
 @task(name="stage_source", retries=0)

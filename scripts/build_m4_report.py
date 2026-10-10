@@ -3,8 +3,13 @@
 import json
 from pathlib import Path
 
-from analytics_m4.analysis import clock_analysis, coverage, current_snapshot, opening_comparison
 from chess_analytics.common import write_json
+from chess_analytics.dashboard.analysis import (
+    clock_analysis,
+    coverage,
+    current_snapshot,
+    opening_comparison,
+)
 
 PROJECT = Path(__file__).resolve().parents[1]
 

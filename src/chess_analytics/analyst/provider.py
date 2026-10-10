@@ -11,8 +11,8 @@ import urllib.request
 import uuid
 from pathlib import Path
 
-from analyst_m5.core import execute_plan
-from analyst_m5.tools import CheckedTools
+from chess_analytics.analyst.core import execute_plan
+from chess_analytics.analyst.tools import CheckedTools
 from chess_analytics.common import write_json
 
 KEY_ENV = "CHESSLAB_OPENAI_API_KEY"
