@@ -111,7 +111,7 @@ See [demo troubleshooting](docs/DEMO.md#if-a-step-fails) for cache and snapshot 
 ## Detailed guides and historical records
 
 - [Architecture](docs/ARCHITECTURE.md) and [evidence index](docs/EVIDENCE_INDEX.md)
-- [Local runbook](docs/RUNBOOK.md), [decisions](docs/DECISIONS.md), and [project brief](docs/PROJECT_SPEC.md)
+- [Local runbook](docs/RUNBOOK.md), [decision records](docs/DECISIONS.md), and [project brief](docs/PROJECT_SPEC.md)
 - [Dagster and Prefect local adapters](docs/ORCHESTRATION.md); Airflow is a follow-up
 - [First-visit documentation review](docs/DOCUMENTATION_REVIEW.md); [historical repository review](docs/REPOSITORY_REVIEW.md) and [hardening plan](docs/PORTFOLIO_HANDOFF.md)
 - [Jev question-routing learning lab](docs/JEV_ROUTING_RUNBOOK.md), [measured comparison](reports/M8-routing-comparison.html), and [paired final-answer lab](docs/JEV_END_TO_END.md)
