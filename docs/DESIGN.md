@@ -89,10 +89,14 @@ sufficient explanation. Maintain visible keyboard focus, responsive navigation,
 scrollable tables and reduced-motion support. Spacing uses a 4px base with
 larger gaps between sections; cards have subtle borders and restrained corners.
 
-The homepage adds a three-column results grid, stacked at 750px and below.
-The header becomes non-sticky and, when JavaScript has marked the page, collapses
-behind Menu at 960px and below before the first paint. Without JavaScript the
-links stay visible. Openings and The lab contain native disclosure groups on all pages. The opening board fills its
+The homepage adds four report-backed preview cards under the hero, then a
+three-column results grid. The preview cards are two columns above 960px and
+one column at 960px and below. The results grid stacks at 750px and below.
+The header stays sticky above 960px, with five primary links and a Lab strip.
+At 960px and below it scrolls with the page. From 601px to 960px those links
+are five-column grids. At 600px and below the primary links are full-width
+44px rows and Lab is one wrapping line. There is no Menu button and no
+disclosure dropdown. The opening board fills its
 mobile column. Comparison question details stay collapsed until opened, with
 a 320px Question column in a contained table. Definition JSON wraps long lines;
 executable command blocks keep contained scrolling. The original comparison

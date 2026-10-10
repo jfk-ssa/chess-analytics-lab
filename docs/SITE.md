@@ -10,7 +10,7 @@ The site is static: it cannot run the analyst, contact a model or download games
 
 | Published page | Maintained sources | What HTML adds |
 | --- | --- | --- |
-| [Homepage](https://jfk-ssa.github.io/chess-analytics-lab/) | [Portfolio introduction](HOME.md), corpus/final-answer checkpoints, fixture reference | Report-backed outcomes, stack, author/source links and learning paths |
+| [Homepage](https://jfk-ssa.github.io/chess-analytics-lab/) | [Portfolio introduction](HOME.md), corpus, Elite position, and Decisions routing reports | Preview cards for the pipeline, transpositions, analyst routes, and local PGN import, plus the earlier outcome grid |
 | [Comparison](https://jfk-ssa.github.io/chess-analytics-lab/comparison.html) | [Classifier summary](CLASSIFIER_COMPARISON.md), frozen reports and cases | Question-level routing and threshold exploration |
 | [Architecture](https://jfk-ssa.github.io/chess-analytics-lab/architecture.html) | [Architecture guide](ARCHITECTURE.md), stage descriptions in the builder | Clickable pipeline stages and implementation links |
 | [Metrics and data](https://jfk-ssa.github.io/chess-analytics-lab/metrics.html) | [Metrics](METRICS.md), [dictionary](DATA_DICTIONARY.md), versioned contracts | Searchable contracts/schemas and a denominator illustration |
@@ -18,7 +18,7 @@ The site is static: it cannot run the analyst, contact a model or download games
 | [Transpositions](https://jfk-ssa.github.io/chess-analytics-lab/transpositions.html) | [Analysis guide](TRANSPOSITIONS.md), checked corpus and position reports | Rankings, route balance, coverage/depth/scatter charts, public fianchetto lenses and route comparisons |
 | [Opening learning](https://jfk-ssa.github.io/chess-analytics-lab/opening-learning.html) | [Transposition learning](TRANSPOSITION_LEARNING.md) | Illustrative board, lesson design and evaluation proposal |
 
-| [Analyze my games](https://jfk-ssa.github.io/chess-analytics-lab/import-games.html) | [Local PGN guide](GAME_IMPORT.md), [import contract](../contracts/imported_games.json), authored fixtures | Local worker replay, explicit provider/player selection, bounded reference coverage and summary download |
+| [Analyze games](https://jfk-ssa.github.io/chess-analytics-lab/import-games.html) | [Local PGN guide](GAME_IMPORT.md), [import contract](../contracts/imported_games.json), authored fixtures | Local worker replay, explicit provider/player selection, bounded reference coverage and summary download |
 
 The [original full comparison report](https://jfk-ssa.github.io/chess-analytics-lab/reports/decisions-routing-comparison.html)
 is copied byte-for-byte from its tracked report, rather than rewritten. Historical
@@ -67,23 +67,20 @@ optional `docs` extra pins Markdown and Jinja2; the application does not need th
 
 ## Navigation
 
-Every generated page uses the same four top-level entries: Home, Openings,
-Analyze my games, and The lab. Openings lists Opening learning before
-Transpositions. The lab lists Run the demo, Metrics & data, AI comparison, and
-Architecture. The current page has `aria-current="page"`; its group is also
-highlighted when collapsed.
+Every generated page shows the same links. No group is behind a dropdown or a
+Menu button. Primary links are Home, Data pipeline, Transpositions, Analyze
+games, and AI analyst. The Lab strip lists Metrics & data, Architecture, Run
+the demo, AI comparison, and Opening learning. Data pipeline and Architecture
+both open the architecture guide. AI analyst and AI comparison both open the
+comparison guide. Each link to the current page has `aria-current="page"`.
 
-At 960 CSS pixels and below, the links collapse behind a Menu button before the
-desktop row would wrap. A same-origin script in the page head, not deferred and
-allowed by `script-src 'self'`, adds a `js` class before first paint. CSS then
-shows Menu and hides the link list, so the compact header is the first frame.
-The header scrolls with the page at that size. Groups use native
-`details`/`summary` disclosures: click, Enter, or Space opens them; Tab follows
-the links. JavaScript keeps one group open, handles outside clicks and Escape,
-and preserves focus when changing between mobile and desktop. Without
-JavaScript, the class is absent, the navigation stays visible, Menu stays
-undisplayed, and the native disclosures still expose all links. This navigation
-adds no dependency, provider request, persistence, or custom ARIA menu roles.
+Above 960 CSS pixels the header is sticky. From 601px through 960px it scrolls
+away and both rows are five-column grids. At 600px and below the primary links
+are full-width 44px rows and Lab is one wrapping line of text links at least
+24px tall. The compact header is CSS, so it does not wait for JavaScript and
+does not shift into place. `site.js` no longer watches a navigation breakpoint.
+This navigation adds no dependency, provider request, persistence, or custom
+ARIA menu roles.
 
 ## Learn from the interactions
 
@@ -193,9 +190,14 @@ favicons. The homepage canonical URL is the directory URL. Sharing metadata is
 checked locally; provider preview caches may need to be refreshed after deployment.
 The original full report remains a byte-preserved historical artifact.
 
-The homepage promotes counts from the reconciled corpus report and matching
-paired-answer checkpoints. These checks establish agreement among retained
-artifacts; they do not rerun a live evaluation or rebuild the bulk corpus.
+The homepage promotes counts from the reconciled corpus report, the restored
+Elite position publication, the Decisions historical routing score, and the
+matching paired-answer checkpoints. The position file is not on the branch
+tip; the Pages build restores it before generation, and the preview fails
+closed with the same missing-file error as the transpositions page. These
+checks establish agreement among retained artifacts; they do not rerun a live
+evaluation or rebuild the bulk corpus. The Analyze games preview is a PGN
+teaser and has no count.
 The full question table is collapsed by default and has a wider Question column
 inside a keyboard-focusable horizontal scroll region. The frozen report opens
 through a link rather than a nested iframe. Mobile navigation scrolls away with

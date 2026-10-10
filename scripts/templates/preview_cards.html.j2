@@ -1,0 +1,60 @@
+<div class="cards preview-cards">
+<a class="card preview-card" href="architecture.html">
+<span class="preview-kicker">Data pipeline</span>
+<span class="preview-stat">{{ training_games }}</span>
+<p>Opening-corpus training games. Completed games with at least ten moves, after the archives land in Parquet and DuckDB.</p>
+<div class="stages">
+<ol>
+<li><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="var(--teal)"/></svg>Lichess archives</li>
+<li><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="var(--teal)"/></svg>Parquet / DuckDB</li>
+<li><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="var(--teal)"/></svg>dbt marts</li>
+<li><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="var(--teal)"/></svg>Metrics</li>
+<li><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="var(--accent)"/></svg>Dashboard</li>
+</ol>
+<svg viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true">
+<line x1="0" y1="4" x2="100" y2="4" stroke="var(--line)" stroke-width="2"/>
+</svg>
+</div>
+<span class="preview-source">reports/opening-corpus.json · counts.training_games</span>
+</a>
+<a class="card preview-card" href="transpositions.html">
+<span class="preview-kicker">Transpositions</span>
+<span class="preview-stat">{{ transposing_positions }}</span>
+<p>Elite positions reached by two or more move orders, inside {{ elite_games }} Elite games.</p>
+<div class="spark">
+<svg viewBox="0 0 240 52" role="img" aria-label="{{ spark.label | e }}">
+<title>Elite endpoint compression by ply</title>
+<line x1="8" y1="46" x2="232" y2="46" stroke="var(--line)" stroke-width="1"/>
+<polygon points="{{ spark.polygon }}" fill="var(--soft)"/>
+<polyline points="{{ spark.points }}" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="{{ spark.peak_x }}" cy="{{ spark.peak_y }}" r="2.5" fill="var(--accent)"/>
+</svg>
+<div class="spark-scale"><span>Ply {{ spark.first_ply }}</span><span>Axis 0–0.50</span><span>Ply {{ spark.last_ply }}</span></div>
+</div>
+<span class="preview-source">reports/opening-positions.json · cohorts.elite_reference.views.all.transposing_positions</span>
+</a>
+<a class="card preview-card" href="comparison.html">
+<span class="preview-kicker">AI analyst</span>
+<span class="preview-stat">{{ routes_correct }}/{{ routes_total }}</span>
+<p>Decisions correct routes on the same {{ routes_total }} historical questions ({{ routes_percent }}%). This is route choice, not a correct chess answer.</p>
+<svg viewBox="0 0 240 36" width="100%" height="36" role="img" aria-label="{{ routes_correct }} of {{ routes_total }} routes correct">
+<rect x="0" y="12" width="240" height="10" rx="5" fill="var(--line)"/>
+<rect x="0" y="12" width="{{ route_bar }}" height="10" rx="5" fill="var(--teal)"/>
+</svg>
+<span class="preview-source">reports/decisions-checkpoint.json · decisions-historical-test.json scoring</span>
+</a>
+<a class="card preview-card" href="import-games.html">
+<span class="preview-kicker">Analyze games</span>
+<div class="drop">
+<svg width="36" height="44" viewBox="0 0 36 44" aria-hidden="true">
+<path d="M8 2h14l10 10v28a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" fill="white" stroke="var(--teal)" stroke-width="1.5"/>
+<path d="M22 2v10h10" fill="none" stroke="var(--teal)" stroke-width="1.5"/>
+<path d="M18 32V20M13 25l5-5 5 5" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+<div>
+<strong>Drop in a PGN</strong>
+<span>Choose a player, then compare White games with the public study set. Nothing is uploaded.</span>
+</div>
+</div>
+</a>
+</div>
