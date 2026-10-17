@@ -19,7 +19,7 @@ live evaluations are recorded separately.
 | Analyze local game exports | [Local PGN guide](GAME_IMPORT.md) | Select Chess.com/Lichess files and a player per provider; inspect White-game recurrence and selected public-set coverage |
 | Explore opening learning | [Transposition learning](TRANSPOSITION_LEARNING.md) | [Interactive HTML](https://jfk-ssa.github.io/chess-analytics-lab/opening-learning.html), illustrative walkthrough, learning rationale and evaluation design |
 | Assess the AI evidence | [Evaluation guide](EVALUATION.md) → [evidence index](EVIDENCE_INDEX.md) | Fixture tests versus actual responses; frozen references and retained failures |
-| Call the checked tools from another client | [MCP guide](MCP.md) | Optional stdio server; per-call evidence; planner scores do not transfer |
+| Call the checked tools from another client | [MCP guide](MCP.md) | Optional stdio server; per-call evidence; planner scores do not transfer. [Real August prefix](MCP_EXAMPLE.md) |
 | Score a position locally | [Engine checks](ENGINE.md) | Configured local engine and opening continuations; not a new accuracy claim |
 | Compare rules, Jev and Decisions | [Classifier comparison](CLASSIFIER_COMPARISON.md) | Shared-case scores, cost and conclusions readable directly on GitHub |
 | Reproduce optional classifier exercises | [Jev routing](JEV_ROUTING_RUNBOOK.md), [paired answers](JEV_END_TO_END.md), [Decisions](DECISIONS_ROUTING_RUNBOOK.md) | Offline harness/replay commands and separate live spending gates |
@@ -35,6 +35,7 @@ live evaluations are recorded separately.
 | `src/chess_analytics/corpus/`, `src/chess_analytics/dashboard/` | Analytical source/moves, parameterized metrics, Streamlit dashboard |
 | `src/chess_analytics/analyst/` | Checked read-only tools, typed plans, provider adapter, evaluation harness, and optional stdio MCP server |
 | `docs/MCP.md` | How to run the optional stdio MCP server from Claude Desktop or Cursor |
+| `docs/MCP_EXAMPLE.md` | Recorded MCP calls on the real August prefix, with evidence IDs and local reproduction limits |
 | `docs/ENGINE.md` | Local engine checks and opening continuations; what was verified |
 | `src/chess_analytics/orchestration/` | Optional local Dagster/Prefect wrappers over the same pipeline |
 | `contracts/`, `config/`, `evals/` | Definitions, bounded source plans, frozen questions and reference manifests |

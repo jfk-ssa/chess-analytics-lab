@@ -30,7 +30,8 @@ are per call. On-demand local engine checks and opening-continuation lookups
 are checked tools ([ADR 0078](adr/0078-engine-grounded-checked-tools.md));
 engine_v1 measures those tools on fixed cases ([ADR 0079](adr/0079-engine-tool-evaluation.md))
 as harness and tool behavior, not model accuracy, and corpus-wide Stockfish
-enrichment remains a follow-up.
+enrichment remains a follow-up. A recorded session on the real August prefix
+is in [the worked example](MCP_EXAMPLE.md) ([ADR 0080](adr/0080-mcp-worked-example.md)).
 
 This file stays a short summary: checkout structure, phase tracker, dataset
 versions, and limits. New decisions go only into [docs/adr](adr/). Do not append
