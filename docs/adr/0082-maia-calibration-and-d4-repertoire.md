@@ -14,8 +14,11 @@ change the pinned Maia-3 commit, the weights hashes, or the evidence-ID rule.
 ## Decision
 
 Maia-3 trained on Lichess blitz from January 2023 through July 2025, so a
-calibration set has to start in August 2025. The checked opening-corpus
-report lists every training source inside that window:
+calibration set has to start in August 2025. "Training source" below means a
+row in the opening-corpus training index (`training_sources` in
+`reports/opening-corpus.json`), not a slice of Maia-3's own training data.
+At the time of writing (2026-10-17) that report lists every such row inside
+the holdout window:
 
 | Period | Cohort | Games | Dates in the report |
 |---|---|---:|---|
@@ -30,17 +33,20 @@ report lists every training source inside that window:
 | 2026-07 | rated_public | 88,869 | 2026-07-01 only |
 | 2026-08 | rated_public | 88,840 | 2026-08-01 only |
 
-That is 1,042,346 games, the whole training index. There is no August,
-September, or October 2025 slice. The 2013-01 foundation source is not in
-the training index. The DuckDB game index and the PGNs it points at are not
-in this checkout (`/data/*` is gitignored and the paths are absent), so no
-log-loss, top-1, top-3, or reliability figure was computed on those games.
-`calibration_report` returns `opening_index_absent` unless the caller passes
-rows that were actually extracted. Those rows are a game index, not a
-metrics snapshot. A later run that has the files must also keep Lichess
-blitz only: estimated time is base plus 40 times the increment, and blitz
-is 180 up to 480 seconds. The November elite month excludes bullet and is
-not a blitz sample.
+At the time of writing that is 1,042,346 games, the whole opening-corpus
+training index. There is no August, September, or October 2025 slice. The
+2013-01 foundation source is not in that index. Later counts belong in the
+report, not in this paragraph.
+
+`score_played`, `reliability`, `calibration_report`, and `lichess_blitz` are
+scaffolding for the calibration follow-up. There is no step yet that extracts
+played-move rows from the PGNs. That follow-up is where these functions get a
+caller. Until then `calibration_report` returns `played_moves_not_extracted`
+and `measured: false`, whether or not the index is on disk. Rows that a
+caller does pass are still a game index, not a metrics snapshot. The
+follow-up must also keep Lichess blitz only: estimated time is base plus 40
+times the increment, and blitz is 180 up to 480 seconds. The November elite
+month excludes bullet and is not a blitz sample.
 
 `maia_v1` freezes four calls and compares displayed probabilities with
 absolute tolerance `1e-4`. Thread and batch noise is about 1e-6, which is
@@ -68,8 +74,8 @@ prompt is unchanged. No corpus accuracy claim is made.
 
 ## Implementation steps
 
-1. Read `reports/opening-corpus.json` and keep training sources whose period is `2025-08` or later. Record the game counts. Leave `measured` false when the index file is absent.
-2. Score played-move rows with log-loss and top-1/top-3, and score predicted-versus-observed pairs in ten probability bins. Test that math on synthetic rows.
+1. Read `reports/opening-corpus.json` and keep opening-corpus training-index rows whose period is `2025-08` or later. Record the game counts. Leave `measured` false until a caller passes played-move rows.
+2. Provide log-loss, top-1/top-3, reliability bins, and the Lichess blitz window as functions with no PGN caller. Test that math on synthetic rows. The calibration follow-up is what calls them.
 3. Freeze `evals/cases/maia_v1.json` and `evals/references/maia_v1.json`. Compare with tolerance `1e-4`. Skip without config, without the extra, or on an unmeasured platform.
 4. Build the 1.d4 view by calling `predict_human_moves`. Keep the existing caveats.
 
@@ -77,7 +83,7 @@ prompt is unchanged. No corpus accuracy claim is made.
 
 A reader can treat the reply probabilities as counts of games. The caveats
 say not to. The corpus months are held out from Maia-3's training window,
-and this checkout still has not scored the model on them. Elite is a
+and nothing in this change extracts played moves from them. Elite is a
 different population from Lichess blitz. Apple Silicon numerics remain
 unmeasured, so that platform does not pass or fail `maia_v1`. The pinned
 internals can still move; this record does not repin them.
