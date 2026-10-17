@@ -1,0 +1,88 @@
+[Event "Rated Blitz game"]
+[Site "https://lichess.org/aaaaaaaa"]
+[White "A"]
+[Black "B"]
+[Result "1-0"]
+[WhiteElo "1500"]
+[BlackElo "1600"]
+[TimeControl "180+0"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O Be7 6. Re1 b5 1-0
+
+[Event "Rated Rapid game"]
+[Site "https://lichess.org/bbbbbbbb"]
+[White "C"]
+[Black "D"]
+[Result "1-0"]
+[WhiteElo "1500"]
+[BlackElo "1500"]
+[TimeControl "600+0"]
+
+1. e4 1-0
+
+[Event "Rated Bullet game"]
+[Site "https://lichess.org/cccccccc"]
+[White "E"]
+[Black "F"]
+[Result "1-0"]
+[WhiteElo "1500"]
+[BlackElo "1500"]
+[TimeControl "60+0"]
+
+1. d4 1-0
+
+[Event "Rated Blitz game"]
+[Site "https://lichess.org/dddddddd"]
+[White "Bot"]
+[Black "G"]
+[Result "1-0"]
+[WhiteElo "1500"]
+[BlackElo "1500"]
+[WhiteTitle "BOT"]
+[TimeControl "180+0"]
+
+1. e4 1-0
+
+[Event "Rated Blitz game"]
+[Site "https://lichess.org/eeeeeeee"]
+[White "H"]
+[Black "I"]
+[Result "1-0"]
+[WhiteElo "1500"]
+[BlackElo "?"]
+[TimeControl "180+0"]
+
+1. e4 1-0
+
+[Event "Rated Blitz game"]
+[Site "https://lichess.org/ffffffff"]
+[White "J"]
+[Black "K"]
+[Result "1-0"]
+[WhiteElo "2200"]
+[BlackElo "2400"]
+[TimeControl "180+0"]
+
+1. d4 e5 1-0
+
+[Event "Rated Blitz game"]
+[Site "https://lichess.org/gggggggg"]
+[White "L"]
+[Black "M"]
+[Result "1-0"]
+[WhiteElo "900"]
+[BlackElo "1100"]
+[TimeControl "240+0"]
+
+1. e4 e5 1-0
+
+[Event "Rated Blitz game"]
+[Site "https://lichess.org/hhhhhhhh"]
+[White "N"]
+[Black "O"]
+[Result "1-0"]
+[WhiteElo "6000"]
+[BlackElo "1500"]
+[TimeControl "180+0"]
+
+1. e4 1-0

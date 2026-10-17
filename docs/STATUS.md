@@ -40,6 +40,9 @@ the repository. `maia_v1` checks four displayed probabilities with tolerance
 ([ADR 0082](adr/0082-maia-calibration-and-d4-repertoire.md)).
 The measurement plan for the local November 2025 elite file and one pinned
 public prefix is [ADR 0083](adr/0083-maia-corpus-calibration-plan.md).
+`python -m chess_analytics.analyst.maia_corpus` scores one of those
+populations at a time and writes one gitignored JSON file and one gitignored
+Markdown file.
 Holdout periods and game counts are the opening-corpus training index in
 [opening-corpus.json](../reports/opening-corpus.json). No played-move log-loss
 has been computed from those games.

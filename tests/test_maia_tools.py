@@ -95,6 +95,8 @@ def test_torch_is_not_imported_by_the_default_modules():
     for relative in (
         "src/chess_analytics/analyst/maia.py",
         "src/chess_analytics/analyst/maia_worker.py",
+        "src/chess_analytics/analyst/maia_corpus.py",
+        "src/chess_analytics/analyst/maia_report.py",
         "src/chess_analytics/analyst/maia_pins.py",
         "src/chess_analytics/analyst/maia_trust.py",
         "src/chess_analytics/analyst/tools.py",
@@ -103,11 +105,16 @@ def test_torch_is_not_imported_by_the_default_modules():
         "src/chess_analytics/cli.py",
     ):
         assert all(name.split(".")[0] not in {"torch", "maia3"} for name in _imports(relative))
+    imported_before = "torch" in sys.modules
     import chess_analytics.analyst.maia as maia_module
+    import chess_analytics.analyst.maia_corpus as corpus_module
+    import chess_analytics.analyst.maia_report as report_module
 
     assert maia_module.predict_human_moves
-    assert importlib.util.find_spec("torch") is None
-    assert "torch" not in sys.modules
+    assert corpus_module.calibrate
+    assert report_module.metrics
+    if not imported_before:
+        assert "torch" not in sys.modules
 
 
 def test_historical_planner_does_not_offer_the_model():

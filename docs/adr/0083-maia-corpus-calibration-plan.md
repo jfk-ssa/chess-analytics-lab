@@ -55,9 +55,11 @@ Tied probabilities share a rank.
 
 Score with the existing `score_played` and `reliability` helpers.
 `score_played` is natural-log loss plus top-1 and top-3 rates. It rejects a
-played probability that is not finite and positive. A played move the model
-scores at zero is counted as an exclusion and left out of the loss, not
-allowed to abort the report. `reliability` bins a predicted probability
+played probability that is not finite and positive, so the corpus caller
+does not pass those rows into it. A played move the model scores at zero
+counts as a top-1 miss and a top-3 miss, and stays out of log-loss only.
+The report records `zero_probability_count` and `zero_probability_share`.
+A share above 1% is a warning on stderr. `reliability` bins a predicted probability
 against an observed frequency. Feeding it only the played move would make
 every observation 1. The batch extractor therefore keeps every legal move's
 probability, and each legal move is one reliability row: predicted is the
@@ -67,17 +69,17 @@ The checked tool's display `top_k` is not the reliability input.
 `predict_human_moves` starts one worker process per call, one position, with
 a 30-second kill. Twenty thousand games times 12 plies is on the order of
 240,000 process starts per population. That is the wrong loop for this
-sample. A later pull request adds a batch extractor that loads the pinned
+sample. `python -m chess_analytics.analyst.maia_corpus` loads the pinned
 checkpoint once and scores many positions under the same CPU, float32, and
-hash rules. This plan does not add that extractor.
+hash rules. Each forward pass is still one position.
 
 The report gives log-loss, top-1, and top-3, each with the position count,
 the game count, and a 95% interval. The interval is a percentile bootstrap
 that resamples games and keeps every scored ply of a drawn game, 400
 repetitions, the same repetition count the M4 focal-player bootstrap uses.
-`score_played` does not compute intervals today; the implementation adds
-them beside that helper. The same figures are split by the mover's rating
-band and by ply. Bands match the opening-corpus labels already in
+`score_played` does not compute intervals. `maia_report.py` adds them beside
+that helper and renders the Markdown. It does not import torch. The same
+figures are split by the mover's rating band and by ply. Bands match the opening-corpus labels already in
 `reports/opening-corpus.json`: 1000–1599, 1600–1999, 2000–2299, and 2300+,
 plus a below-1000 band when a mover is below 1000. A small band is reported
 with its own `n`. It is not dropped and not merged into another band.
@@ -146,15 +148,23 @@ recommendation is the row this plan will follow if he does not.
 
 ## Report file
 
-The implementation writes `reports/maia-corpus-calibration.json` after a real
-run. This pull request does not create that file and does not fill in scores.
-The shape below is the contract. `null` means "not measured yet". There is
-no pooled population.
+Each run writes one JSON file and one Markdown file for one population.
+There is no `populations` list and no pooled score. Both paths are
+gitignored (`/reports/maia-corpus-calibration-*`):
+
+- `reports/maia-corpus-calibration-elite.json` and `.md`
+- `reports/maia-corpus-calibration-public.json` and `.md`
+
+No measured corpus score is committed. `null` below means no positions were
+scored. The public file is the example. The elite file uses the same keys,
+with `id` `elite_2025_11`, `blitz_filter` false, and without the one-day
+caveat.
 
 ```json
 {
   "kind": "maia_corpus_calibration",
   "measured": false,
+  "reason": "no_eligible_games",
   "seed": 20251017,
   "plies": 12,
   "sample_target_games": 20000,
@@ -173,45 +183,25 @@ no pooled population.
     "unit": "game",
     "interval": "percentile_95"
   },
-  "populations": [
-    {
-      "id": "elite_2025_11",
-      "source_file": "data/opening-sources/elite/lichess_elite_2025-11.pgn",
-      "adapted_file": "data/elite/elite-2025-11-compatible.pgn",
-      "blitz_filter": false,
-      "sample_target_met": null,
-      "n_games": null,
-      "n_positions": null,
-      "excluded_zero_probability": null,
-      "log_loss": null,
-      "log_loss_interval": null,
-      "top1": null,
-      "top1_interval": null,
-      "top3": null,
-      "top3_interval": null,
-      "by_rating_band": [],
-      "by_ply": [],
-      "reliability": []
-    },
-    {
-      "id": "public_2026_08_blitz",
-      "source_file": "data/analytical/complete-2026-08-first-100000.pgn",
-      "blitz_filter": true,
-      "sample_target_met": null,
-      "n_games": null,
-      "n_positions": null,
-      "excluded_zero_probability": null,
-      "log_loss": null,
-      "log_loss_interval": null,
-      "top1": null,
-      "top1_interval": null,
-      "top3": null,
-      "top3_interval": null,
-      "by_rating_band": [],
-      "by_ply": [],
-      "reliability": []
-    }
-  ],
+  "population": {
+    "id": "public_2026_08_blitz",
+    "source_file": "data/analytical/complete-2026-08-first-100000.pgn",
+    "blitz_filter": true,
+    "sample_target_met": false,
+    "n_games": 0,
+    "n_positions": 0,
+    "zero_probability_count": 0,
+    "zero_probability_share": null,
+    "log_loss": null,
+    "log_loss_interval": null,
+    "top1": null,
+    "top1_interval": null,
+    "top3": null,
+    "top3_interval": null,
+    "by_rating_band": [],
+    "by_ply": [],
+    "reliability": []
+  },
   "paper_top1_context": {
     "range": [0.55, 0.57],
     "role": "context_only",
@@ -222,15 +212,20 @@ no pooled population.
     "months_are_after_the_training_window_not_a_designed_sample",
     "platform_unmeasured_outside_linux_x86_64",
     "same_machine_only",
-    "populations_not_pooled"
+    "populations_not_pooled",
+    "public_sample_is_the_2026-08-01_prefix"
   ]
 }
 ```
 
 Each `by_rating_band` and `by_ply` entry carries `n_games`, `n_positions`,
-the three scores, and the three intervals. `reliability` entries are the ten
-bins from the existing helper: `low`, `high`, `count`, `mean_predicted`,
-`mean_observed`.
+the three scores, and the three intervals. The Markdown tables for those
+splits print the intervals too. `reliability` entries are the ten bins from
+the existing helper: `low`, `high`, `count`, `mean_predicted`,
+`mean_observed`. A played probability of zero increments
+`zero_probability_count` and counts as a top-1 and top-3 miss. It is not a
+log-loss row. The public Markdown also says the sample is the ordered
+2026-08-01 prefix, not a full month.
 
 ## Reproduction commands
 
@@ -239,17 +234,21 @@ checks the SHA-256 and refuses any other bytes. It does not run on import,
 in tests, or in CI.
 
 ```sh
-uv sync --locked --extra maia
+uv sync --locked --extra maia --extra dbt
 uv run --locked --no-editable python scripts/fetch_maia_weights.py \
-  --alias 23M --dest data/models
+  --alias 23M --dest data/models --write-config
 ```
 
-Public prefix, only after John approves the download. From the repository
-root, after `uv sync --locked --no-editable --extra dbt`:
+`--write-config` writes `config/maia.json`. It refuses to overwrite that file
+unless `--force` is set, and it checks that before downloading. The JSON
+document is on stdout. The install hint and the do-not-commit line are on
+stderr. The hint is `uv sync --locked --extra maia --extra dbt`.
+
+Public prefix, already approved with this plan. From the repository root:
 
 ```sh
-.venv/bin/python -m chess_analytics.corpus acquire
-.venv/bin/python -m chess_analytics.corpus extract
+uv run --locked --no-editable python -m chess_analytics.corpus acquire
+uv run --locked --no-editable python -m chess_analytics.corpus extract
 ```
 
 `acquire` writes
@@ -259,9 +258,35 @@ root, after `uv sync --locked --no-editable --extra dbt`:
 pinned hash is reused. These commands are manual. Nothing in import or test
 collection downloads data.
 
-The batch extractor and the report command do not exist yet. They land in
-later pull requests. The extractor is its own pull request. The sampler and
-the report follow it. Neither runs until this plan is accepted.
+Score one population per command. On macOS, prefix the scorer with
+`caffeinate -i`. Elite and public can run in two terminals. Stderr prints
+progress every 10 batches (done/total positions, elapsed, and an ETA after
+the first batch) and a finished line.
+
+```sh
+caffeinate -i uv run --locked --no-editable python -m chess_analytics.analyst.maia_corpus \
+  --pgn data/opening-sources/elite/lichess_elite_2025-11.pgn \
+  --population elite \
+  --json reports/maia-corpus-calibration-elite.json \
+  --markdown reports/maia-corpus-calibration-elite.md
+caffeinate -i uv run --locked --no-editable python -m chess_analytics.analyst.maia_corpus \
+  --pgn data/analytical/complete-2026-08-first-100000.pgn \
+  --population public \
+  --json reports/maia-corpus-calibration-public.json \
+  --markdown reports/maia-corpus-calibration-public.md
+```
+
+Smoke the public scorer before the full sample. Multiply that elapsed time
+by about 200 for the 20,000-game run:
+
+```sh
+uv run --locked --no-editable python -m chess_analytics.analyst.maia_corpus \
+  --pgn data/analytical/complete-2026-08-first-100000.pgn \
+  --population public \
+  --sample-size 100 --bootstrap 20 \
+  --json /tmp/maia-corpus-smoke.json \
+  --markdown /tmp/maia-corpus-smoke.md
+```
 
 ## Impact
 
@@ -278,9 +303,9 @@ planner prompt is unchanged. No corpus accuracy number is produced here.
    August 2026 prefix. Skip the download when the verified cache is present.
    Read the elite games from the local original PGN, using the adapted file
    when the caller needs the corpus `Site` header.
-4. In a separate pull request, add a batch extractor. One process loads the
-   checkpoint. It returns the played move's probability and rank, and the
-   full legal distribution used by `reliability`. It does not call
+4. The batch extractor is `maia_corpus`. One process loads the checkpoint.
+   It returns the played move's probability and rank, and the full legal
+   distribution used by `reliability`. It does not call
    `predict_human_moves` once per ply.
 5. Draw the fixed-seed sample. Keep public games inside `lichess_blitz`.
    Keep the elite headline on the curated month. Write one report object per

@@ -101,23 +101,26 @@ def _load(cfg, torch):
     return model
 
 
-def _infer(model, cfg, request: dict, torch) -> dict:
+def _move_tables():
+    from maia3.utils import get_all_possible_moves  # pyright: ignore[reportMissingImports]
+
+    moves = get_all_possible_moves()
+    index = {move: i for i, move in enumerate(moves)}
+    return index, {i: move for move, i in index.items()}
+
+
+def _infer(model, cfg, request: dict, torch, tables=None) -> dict:
     import chess
     from maia3.dataset import (  # pyright: ignore[reportMissingImports]
         get_historical_tokens,
         get_legal_moves_mask,
         tokenize_board,
     )
-    from maia3.utils import (  # pyright: ignore[reportMissingImports]
-        get_all_possible_moves,
-        mirror_move,
-    )
+    from maia3.utils import mirror_move  # pyright: ignore[reportMissingImports]
 
     boards = [chess.Board(fen) for fen in request["boards"]]
     current = boards[-1]
-    moves = get_all_possible_moves()
-    index = {move: i for i, move in enumerate(moves)}
-    reverse = {i: move for move, i in index.items()}
+    index, reverse = _move_tables() if tables is None else tables
     history = deque((tokenize_board(board) for board in boards), maxlen=cfg.history)
     tokens = get_historical_tokens(history, cfg, 0.0, 0.0, 0.0, 0.0).unsqueeze(0)
     mask = get_legal_moves_mask(current, index)
@@ -142,7 +145,7 @@ def _infer(model, cfg, request: dict, torch) -> dict:
     }
 
 
-def _real(request: dict, path: Path) -> dict:
+def _prepare(request: dict, path: Path):
     if request.get("device") != "cpu" or request.get("dtype") != "float32":
         raise RuntimeError("maia worker refuses a non-cpu or non-float32 request")
     try:
@@ -171,7 +174,12 @@ def _real(request: dict, path: Path) -> dict:
     cfg.device = "cpu"
     cfg.use_amp = False
     cfg.trust_checkpoint = False
-    return _infer(_load(cfg, torch), cfg, request, torch)
+    return _load(cfg, torch), cfg, torch
+
+
+def _real(request: dict, path: Path) -> dict:
+    model, cfg, torch = _prepare(request, path)
+    return _infer(model, cfg, request, torch)
 
 
 def predict(request: dict) -> dict:
@@ -181,7 +189,55 @@ def predict(request: dict) -> dict:
     return _real(request, path)
 
 
-def main() -> int:
+def _serve_batch() -> None:
+    """Load the checkpoint once and score newline-delimited batches."""
+    header = json.loads(sys.stdin.readline())
+    path = Path(header["weights_path"])
+    fake = _fake_payload(path)
+    prepared = None if fake is not None else _prepare(header, path)
+    tables = None if fake is not None else _move_tables()
+    for line in sys.stdin:
+        message = json.loads(line)
+        if message.get("done"):
+            return
+        positions = message["positions"]
+        if fake is not None:
+            results = [
+                {
+                    "moves": fake["moves"],
+                    "wdl": fake["wdl"],
+                    "torch_version": None,
+                    "platform": _platform(),
+                }
+                for _position in positions
+            ]
+        else:
+            if prepared is None:
+                raise RuntimeError("maia checkpoint was not loaded")
+            model, cfg, torch = prepared
+            results = [
+                _infer(model, cfg, {**header, **position}, torch, tables) for position in positions
+            ]
+        print(json.dumps({"ok": True, "results": results}), flush=True)
+
+
+def _batch_main() -> int:
+    os.environ["HF_HUB_OFFLINE"] = "1"
+    os.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
+    try:
+        _serve_batch()
+    except _UnavailableError:
+        print(json.dumps({"ok": False, "reason": "maia_unavailable"}), flush=True)
+    except Exception as exc:
+        print(json.dumps({"ok": False, "reason": "maia_failed", "error": str(exc)}), flush=True)
+        return 1
+    return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = sys.argv[1:] if argv is None else argv
+    if "--batch" in args:
+        return _batch_main()
     os.environ["HF_HUB_OFFLINE"] = "1"
     os.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
     try:

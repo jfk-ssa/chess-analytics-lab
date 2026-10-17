@@ -77,7 +77,7 @@ import, during tests, or in CI.
 that Git does not ignore. It also prints:
 
 ```text
-uv sync --locked --extra maia
+uv sync --locked --extra maia --extra dbt
 ```
 
 That extra installs torch and Maia-3 at the pinned commit. The default
@@ -133,9 +133,65 @@ does not download the weights and does not install the `maia` extra.
 
 It does not merge centipawn loss into the distribution. It does not sample
 moves. It does not accept a time-control argument other than the fixed
-Lichess blitz scale. It does not yet extract played moves from the opening-game index, so it does
-not score the model on those games. Opening accuracy for Maia-3 is
-not in the paper.
+Lichess blitz scale. Opening accuracy for Maia-3 is not in the paper.
+
+## Corpus calibration
+
+`python -m chess_analytics.analyst.maia_corpus` reads one local PGN and writes
+one population. Elite and public stay in separate files. The public run keeps
+Lichess blitz only (`lichess_blitz`). The elite run scores the curated month
+and records how many of those games would pass the same window. The sample is
+a fixed-seed draw of up to 20,000 games, seed `20251017`, first 12 plies.
+One worker process loads the checkpoint and scores batches. It does not start
+a process per position.
+
+Install, then fetch the pinned 23M weights (91,799,307 bytes).
+`--write-config` writes `config/maia.json` and refuses to overwrite it
+without `--force`. The JSON document is on stdout. The install hint and the
+do-not-commit line are on stderr. Do not commit the config. The August
+prefix download was approved with ADR 0083. On a Mac, sync both extras so a
+later `uv sync` does not drop torch or dbt. Prefix a long scorer with
+`caffeinate -i`. Elite and public can run in two terminals. Stderr prints
+progress every 10 batches, with an ETA after the first batch, and a finished
+line.
+
+```sh
+uv sync --locked --extra maia --extra dbt
+uv run --locked --no-editable python scripts/fetch_maia_weights.py \
+  --alias 23M --dest data/models --write-config
+uv run --locked --no-editable python -m chess_analytics.corpus acquire
+uv run --locked --no-editable python -m chess_analytics.corpus extract
+caffeinate -i uv run --locked --no-editable python -m chess_analytics.analyst.maia_corpus \
+  --pgn data/opening-sources/elite/lichess_elite_2025-11.pgn \
+  --population elite \
+  --json reports/maia-corpus-calibration-elite.json \
+  --markdown reports/maia-corpus-calibration-elite.md
+caffeinate -i uv run --locked --no-editable python -m chess_analytics.analyst.maia_corpus \
+  --pgn data/analytical/complete-2026-08-first-100000.pgn \
+  --population public \
+  --json reports/maia-corpus-calibration-public.json \
+  --markdown reports/maia-corpus-calibration-public.md
+```
+
+Smoke the public scorer first. Multiply its elapsed time by about 200 for
+the 20,000-game run:
+
+```sh
+uv run --locked --no-editable python -m chess_analytics.analyst.maia_corpus \
+  --pgn data/analytical/complete-2026-08-first-100000.pgn \
+  --population public \
+  --sample-size 100 --bootstrap 20 \
+  --json /tmp/maia-corpus-smoke.json \
+  --markdown /tmp/maia-corpus-smoke.md
+```
+
+`acquire` reuses a cached prefix when the pinned SHA-256 matches. The public
+sample is the ordered 2026-08-01 prefix, not a full month. Report paths
+matching `reports/maia-corpus-calibration-*` are gitignored. A played
+probability of zero is a top-1 and top-3 miss and stays out of log-loss; a
+share above 1% is a stderr warning. The paper's 55–57% top-1 range is
+printed as context and is not a pass/fail bar. A run on Apple Silicon is
+same-machine only. `maia_v1` still skips there.
 
 ## Replies to 1.d4
 
