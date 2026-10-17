@@ -35,7 +35,11 @@ is in [the worked example](MCP_EXAMPLE.md) ([ADR 0080](adr/0080-mcp-worked-examp
 `predict_human_moves` estimates a rating-conditioned legal-move distribution
 from a local Maia-3 checkpoint
 ([ADR 0081](adr/0081-human-move-prediction-maia3.md)). The weights are not in
-the repository. There is no frozen calibration yet.
+the repository. `maia_v1` checks four displayed probabilities with tolerance
+1e-4 on the measured platform
+([ADR 0082](adr/0082-maia-calibration-and-d4-repertoire.md)). The 1,042,346-game
+opening index is November 2025 through August 2026, and its files are not in
+this checkout, so no corpus log-loss was measured.
 
 This file stays a short summary: checkout structure, phase tracker, dataset
 versions, and limits. New decisions go only into [docs/adr](adr/). Do not append

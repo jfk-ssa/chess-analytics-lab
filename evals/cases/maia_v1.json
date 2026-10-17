@@ -1,0 +1,62 @@
+[
+  {
+    "id": "start_1500",
+    "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    "moves": null,
+    "rating_self": 1500,
+    "rating_opp": 1500,
+    "top_k": 8,
+    "top_move": "e2e4",
+    "probabilities": {
+      "e2e4": 0.6478,
+      "d2d4": 0.244,
+      "c2c4": 0.0233,
+      "g1f3": 0.0213
+    }
+  },
+  {
+    "id": "d4_1200",
+    "fen": null,
+    "moves": ["d2d4"],
+    "rating_self": 1200,
+    "rating_opp": 1200,
+    "top_k": 8,
+    "top_move": "d7d5",
+    "probabilities": {
+      "d7d5": 0.5485,
+      "e7e5": 0.1031,
+      "g8f6": 0.1001,
+      "e7e6": 0.0844
+    }
+  },
+  {
+    "id": "d4_1500",
+    "fen": null,
+    "moves": ["d2d4"],
+    "rating_self": 1500,
+    "rating_opp": 1500,
+    "top_k": 8,
+    "top_move": "d7d5",
+    "probabilities": {
+      "d7d5": 0.491,
+      "g8f6": 0.1404,
+      "e7e6": 0.0943,
+      "e7e5": 0.0881
+    }
+  },
+  {
+    "id": "d4_1800",
+    "fen": null,
+    "moves": ["d2d4"],
+    "rating_self": 1800,
+    "rating_opp": 1800,
+    "top_k": 8,
+    "top_move": "d7d5",
+    "probabilities": {
+      "d7d5": 0.4239,
+      "g8f6": 0.2078,
+      "e7e6": 0.0974,
+      "e7e5": 0.0632
+    }
+  }
+]
