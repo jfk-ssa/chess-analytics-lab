@@ -39,7 +39,8 @@ recorded fixture plans run without a key. A live provider path exists but
 requires personal configuration, an explicit finite gross cap and named key;
 its requests/results are logged separately. Evidence IDs bind tool name,
 arguments, result and dataset ID. Scoring is external to the agent; historical
-M5–M7 rubrics remain frozen and new fixture checks use `portfolio-1.0`.
+M5–M7 rubrics remain frozen, portfolio fixture checks use `portfolio-1.0`,
+and engine-tool fixture checks use `engine-1.0`.
 
 The same allowlisted tools are available outside that planner through
 `chesslab mcp`, a stdio-only MCP server described in [MCP](MCP.md). Each call

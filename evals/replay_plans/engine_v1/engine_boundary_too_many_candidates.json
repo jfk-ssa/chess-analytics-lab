@@ -1,0 +1,27 @@
+{
+  "kind": "fixture_plan_no_model_response",
+  "plan": {
+    "actions": [
+      {
+        "args": {
+          "candidates": [
+            "a2a3",
+            "a2a4",
+            "b1a3",
+            "b1c3",
+            "b2b3",
+            "b2b4",
+            "c2c3"
+          ],
+          "cohort": "elite_reference",
+          "depth": 12,
+          "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+        },
+        "tool": "compare_candidate_moves"
+      }
+    ],
+    "interpretation": "descriptive_observed_prefix",
+    "status": "answered"
+  },
+  "question": "Compare these seven candidate moves from the starting position."
+}

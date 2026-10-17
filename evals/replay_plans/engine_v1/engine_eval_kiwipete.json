@@ -1,0 +1,17 @@
+{
+  "kind": "fixture_plan_no_model_response",
+  "plan": {
+    "actions": [
+      {
+        "args": {
+          "depth": 12,
+          "fen": "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -"
+        },
+        "tool": "evaluate_position"
+      }
+    ],
+    "interpretation": "descriptive_observed_prefix",
+    "status": "answered"
+  },
+  "question": "What is the configured engine's depth-12 score for the kiwipete position?"
+}

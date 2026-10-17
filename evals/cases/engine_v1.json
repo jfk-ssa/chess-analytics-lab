@@ -1,0 +1,875 @@
+[
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "boundary",
+    "comparison": {
+      "counts": "exact",
+      "nodes": "recorded_not_gated",
+      "rates_absolute_tolerance": 1e-06,
+      "score_mate_depth_seldepth_best_move_pv": "exact_when_binary_matches"
+    },
+    "dataset_id": null,
+    "expected_error": null,
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "forbidden_caveats": [
+      "engine_eval_depth_limited",
+      "engine_not_ground_truth"
+    ],
+    "group": "boundary",
+    "id": "engine_boundary_best_move_truth",
+    "question": "Is the engine best move the true best move?",
+    "reference_key": null,
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "requires_engine_binary": false,
+    "requires_opening_fixture": false,
+    "result_path": [],
+    "rubric_version": "engine-1.0",
+    "severity": "high",
+    "source_annotation_id": null,
+    "split": "engine_v1"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "boundary",
+    "comparison": {
+      "counts": "exact",
+      "nodes": "recorded_not_gated",
+      "rates_absolute_tolerance": 1e-06,
+      "score_mate_depth_seldepth_best_move_pv": "exact_when_binary_matches"
+    },
+    "dataset_id": null,
+    "expected_error": null,
+    "expected_result": null,
+    "expected_status": "unsupported",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "forbidden_caveats": [
+      "engine_eval_depth_limited",
+      "engine_not_ground_truth"
+    ],
+    "group": "boundary",
+    "id": "engine_boundary_causal",
+    "question": "Did the engine score cause the game result?",
+    "reference_key": null,
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "requires_engine_binary": false,
+    "requires_opening_fixture": false,
+    "result_path": [],
+    "rubric_version": "engine-1.0",
+    "severity": "high",
+    "source_annotation_id": null,
+    "split": "engine_v1"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "boundary",
+    "comparison": {
+      "counts": "exact",
+      "nodes": "recorded_not_gated",
+      "rates_absolute_tolerance": 1e-06,
+      "score_mate_depth_seldepth_best_move_pv": "exact_when_binary_matches"
+    },
+    "dataset_id": null,
+    "expected_error": "depth is outside the checked limit",
+    "expected_result": null,
+    "expected_status": "tool_rejected",
+    "expected_tool": "evaluate_position",
+    "expected_tool_args": {
+      "depth": 17,
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    },
+    "forbidden_caveats": [],
+    "group": "boundary",
+    "id": "engine_boundary_depth",
+    "question": "Evaluate the starting position at depth 17.",
+    "reference_key": null,
+    "required_caveats": [],
+    "requires_engine_binary": false,
+    "requires_opening_fixture": false,
+    "result_path": [],
+    "rubric_version": "engine-1.0",
+    "severity": "high",
+    "source_annotation_id": null,
+    "split": "engine_v1"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "boundary",
+    "comparison": {
+      "counts": "exact",
+      "nodes": "recorded_not_gated",
+      "rates_absolute_tolerance": 1e-06,
+      "score_mate_depth_seldepth_best_move_pv": "exact_when_binary_matches"
+    },
+    "dataset_id": null,
+    "expected_error": "illegal move prefix",
+    "expected_result": null,
+    "expected_status": "tool_rejected",
+    "expected_tool": "evaluate_position",
+    "expected_tool_args": {
+      "depth": 12,
+      "moves": [
+        "e2e5"
+      ]
+    },
+    "forbidden_caveats": [],
+    "group": "boundary",
+    "id": "engine_boundary_illegal_prefix",
+    "question": "Evaluate the position after the move e2e5 from the start.",
+    "reference_key": null,
+    "required_caveats": [],
+    "requires_engine_binary": false,
+    "requires_opening_fixture": false,
+    "result_path": [],
+    "rubric_version": "engine-1.0",
+    "severity": "high",
+    "source_annotation_id": null,
+    "split": "engine_v1"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "boundary",
+    "comparison": {
+      "counts": "exact",
+      "nodes": "recorded_not_gated",
+      "rates_absolute_tolerance": 1e-06,
+      "score_mate_depth_seldepth_best_move_pv": "exact_when_binary_matches"
+    },
+    "dataset_id": null,
+    "expected_error": "invalid fen",
+    "expected_result": null,
+    "expected_status": "tool_rejected",
+    "expected_tool": "evaluate_position",
+    "expected_tool_args": {
+      "depth": 12,
+      "fen": "not-a-fen"
+    },
+    "forbidden_caveats": [],
+    "group": "boundary",
+    "id": "engine_boundary_malformed_fen",
+    "question": "Evaluate this FEN: not-a-fen.",
+    "reference_key": null,
+    "required_caveats": [],
+    "requires_engine_binary": false,
+    "requires_opening_fixture": false,
+    "result_path": [],
+    "rubric_version": "engine-1.0",
+    "severity": "high",
+    "source_annotation_id": null,
+    "split": "engine_v1"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "boundary",
+    "comparison": {
+      "counts": "exact",
+      "nodes": "recorded_not_gated",
+      "rates_absolute_tolerance": 1e-06,
+      "score_mate_depth_seldepth_best_move_pv": "exact_when_binary_matches"
+    },
+    "dataset_id": null,
+    "expected_error": "engine is not configured",
+    "expected_result": null,
+    "expected_status": "tool_rejected",
+    "expected_tool": "evaluate_position",
+    "expected_tool_args": {
+      "depth": 12,
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    },
+    "forbidden_caveats": [],
+    "group": "boundary",
+    "id": "engine_boundary_missing_engine",
+    "question": "Score the starting position with the local engine.",
+    "reference_key": null,
+    "required_caveats": [],
+    "requires_engine_binary": false,
+    "requires_opening_fixture": false,
+    "result_path": [],
+    "rubric_version": "engine-1.0",
+    "severity": "high",
+    "source_annotation_id": null,
+    "split": "engine_v1"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "boundary",
+    "comparison": {
+      "counts": "exact",
+      "nodes": "recorded_not_gated",
+      "rates_absolute_tolerance": 1e-06,
+      "score_mate_depth_seldepth_best_move_pv": "exact_when_binary_matches"
+    },
+    "dataset_id": null,
+    "expected_error": null,
+    "expected_result": {
+      "available": false,
+      "cohort": "elite_reference",
+      "cohort_games": null,
+      "continuations": [],
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "frequency": null,
+      "limits": [
+        "White decisions in the configured opening window only.",
+        "Each game counts once, at its earliest visit to the position.",
+        "Observed frequency is not move quality."
+      ],
+      "next_move_games": null,
+      "position_games": null,
+      "position_id": "05bd4852088c5cfdb74e9b43",
+      "position_key": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -",
+      "reason": "opening_source_not_configured",
+      "source_kind": null,
+      "source_sha256": null,
+      "truncated": false,
+      "visit_snapshot_id": null,
+      "window": null
+    },
+    "expected_status": "answered",
+    "expected_tool": "position_continuations",
+    "expected_tool_args": {
+      "cohort": "elite_reference",
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    },
+    "forbidden_caveats": [
+      "engine_eval_depth_limited",
+      "engine_not_ground_truth"
+    ],
+    "group": "boundary",
+    "id": "engine_boundary_missing_openings",
+    "question": "Which White moves does the opening corpus show from the starting position?",
+    "reference_key": null,
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "requires_engine_binary": false,
+    "requires_opening_fixture": false,
+    "result_path": [],
+    "rubric_version": "engine-1.0",
+    "severity": "high",
+    "source_annotation_id": null,
+    "split": "engine_v1"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "boundary",
+    "comparison": {
+      "counts": "exact",
+      "nodes": "recorded_not_gated",
+      "rates_absolute_tolerance": 1e-06,
+      "score_mate_depth_seldepth_best_move_pv": "exact_when_binary_matches"
+    },
+    "dataset_id": null,
+    "expected_error": "unsupported tool or arguments",
+    "expected_result": null,
+    "expected_status": "tool_rejected",
+    "expected_tool": "evaluate_position",
+    "expected_tool_args": {
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "uci": "go infinite"
+    },
+    "forbidden_caveats": [],
+    "group": "boundary",
+    "id": "engine_boundary_raw_uci",
+    "question": "Send the engine the UCI string go infinite.",
+    "reference_key": null,
+    "required_caveats": [],
+    "requires_engine_binary": false,
+    "requires_opening_fixture": false,
+    "result_path": [],
+    "rubric_version": "engine-1.0",
+    "severity": "high",
+    "source_annotation_id": null,
+    "split": "engine_v1"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "boundary",
+    "comparison": {
+      "counts": "exact",
+      "nodes": "recorded_not_gated",
+      "rates_absolute_tolerance": 1e-06,
+      "score_mate_depth_seldepth_best_move_pv": "exact_when_binary_matches"
+    },
+    "dataset_id": null,
+    "expected_error": "invalid candidate moves",
+    "expected_result": null,
+    "expected_status": "tool_rejected",
+    "expected_tool": "compare_candidate_moves",
+    "expected_tool_args": {
+      "candidates": [
+        "a2a3",
+        "a2a4",
+        "b1a3",
+        "b1c3",
+        "b2b3",
+        "b2b4",
+        "c2c3"
+      ],
+      "cohort": "elite_reference",
+      "depth": 12,
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    },
+    "forbidden_caveats": [],
+    "group": "boundary",
+    "id": "engine_boundary_too_many_candidates",
+    "question": "Compare these seven candidate moves from the starting position.",
+    "reference_key": null,
+    "required_caveats": [],
+    "requires_engine_binary": false,
+    "requires_opening_fixture": false,
+    "result_path": [],
+    "rubric_version": "engine-1.0",
+    "severity": "high",
+    "source_annotation_id": null,
+    "split": "engine_v1"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "compare_candidate_moves",
+    "comparison": {
+      "counts": "exact",
+      "nodes": "recorded_not_gated",
+      "rates_absolute_tolerance": 1e-06,
+      "score_mate_depth_seldepth_best_move_pv": "exact_when_binary_matches"
+    },
+    "dataset_id": null,
+    "expected_error": null,
+    "expected_result": {
+      "candidates": [
+        {
+          "observed_games": null,
+          "observed_share": null,
+          "san": "e4",
+          "uci": "e2e4"
+        },
+        {
+          "observed_games": null,
+          "observed_share": null,
+          "san": "d4",
+          "uci": "d2d4"
+        }
+      ],
+      "caveats": [
+        "engine_eval_depth_limited",
+        "engine_not_ground_truth"
+      ],
+      "cohort": "elite_reference",
+      "cohort_games": null,
+      "continuations_available": false,
+      "continuations_reason": "opening_source_not_configured",
+      "depth_requested": 12,
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "position_games": null,
+      "position_key": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -",
+      "side_to_move": "white",
+      "source_kind": null
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_candidate_moves",
+    "expected_tool_args": {
+      "candidates": [
+        "e2e4",
+        "d2d4"
+      ],
+      "cohort": "elite_reference",
+      "depth": 12,
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    },
+    "forbidden_caveats": [],
+    "group": "answerable",
+    "id": "engine_compare_candidates",
+    "question": "At depth 12, how do e4 and d4 compare with the engine best move with no opening file?",
+    "reference_key": "engine_compare_candidates",
+    "required_caveats": [
+      "engine_eval_depth_limited",
+      "engine_not_ground_truth",
+      "observed_prefix_only"
+    ],
+    "requires_engine_binary": true,
+    "requires_opening_fixture": false,
+    "result_path": [],
+    "rubric_version": "engine-1.0",
+    "severity": "medium",
+    "source_annotation_id": null,
+    "split": "engine_v1"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "compare_candidate_moves",
+    "comparison": {
+      "counts": "exact",
+      "nodes": "recorded_not_gated",
+      "rates_absolute_tolerance": 1e-06,
+      "score_mate_depth_seldepth_best_move_pv": "exact_when_binary_matches"
+    },
+    "dataset_id": null,
+    "expected_error": null,
+    "expected_result": {
+      "candidates": [
+        {
+          "observed_games": 0,
+          "observed_share": 0.0,
+          "san": "e4",
+          "uci": "e2e4"
+        },
+        {
+          "observed_games": 2,
+          "observed_share": 0.6666666666666666,
+          "san": "d4",
+          "uci": "d2d4"
+        }
+      ],
+      "caveats": [
+        "engine_eval_depth_limited",
+        "engine_not_ground_truth"
+      ],
+      "cohort": "elite_reference",
+      "cohort_games": 4,
+      "continuations_available": true,
+      "continuations_reason": null,
+      "depth_requested": 12,
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "position_games": 3,
+      "position_key": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -",
+      "side_to_move": "white",
+      "source_kind": "visit_shards"
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_candidate_moves",
+    "expected_tool_args": {
+      "candidates": [
+        "e2e4",
+        "d2d4"
+      ],
+      "cohort": "elite_reference",
+      "depth": 12,
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    },
+    "forbidden_caveats": [],
+    "group": "answerable",
+    "id": "engine_compare_with_frequency",
+    "question": "At depth 12, how do e4 and d4 compare with the engine best move on the fixture shard?",
+    "reference_key": "engine_compare_with_frequency",
+    "required_caveats": [
+      "engine_eval_depth_limited",
+      "engine_not_ground_truth",
+      "observed_prefix_only"
+    ],
+    "requires_engine_binary": true,
+    "requires_opening_fixture": true,
+    "result_path": [],
+    "rubric_version": "engine-1.0",
+    "severity": "medium",
+    "source_annotation_id": null,
+    "split": "engine_v1"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "position_continuations",
+    "comparison": {
+      "counts": "exact",
+      "nodes": "recorded_not_gated",
+      "rates_absolute_tolerance": 1e-06,
+      "score_mate_depth_seldepth_best_move_pv": "exact_when_binary_matches"
+    },
+    "dataset_id": null,
+    "expected_error": null,
+    "expected_result": {
+      "available": true,
+      "cohort": "elite_reference",
+      "cohort_games": 4,
+      "continuations": [
+        {
+          "games": 2,
+          "san": "d4",
+          "share_of_position_games": 0.6666666666666666,
+          "uci": "d2d4"
+        }
+      ],
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "frequency": 0.75,
+      "limits": [
+        "White decisions in the configured opening window only.",
+        "Each game counts once, at its earliest visit to the position.",
+        "Observed frequency is not move quality."
+      ],
+      "next_move_games": 2,
+      "position_games": 3,
+      "position_id": "05bd4852088c5cfdb74e9b43",
+      "position_key": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -",
+      "reason": null,
+      "source_kind": "visit_shards",
+      "truncated": false,
+      "visit_snapshot_id": "e17e17e17e17e17e17e17e17",
+      "window": {
+        "learner_color": "white",
+        "max_ply": 20,
+        "min_ply": 6
+      }
+    },
+    "expected_status": "answered",
+    "expected_tool": "position_continuations",
+    "expected_tool_args": {
+      "cohort": "elite_reference",
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    },
+    "forbidden_caveats": [
+      "engine_eval_depth_limited",
+      "engine_not_ground_truth"
+    ],
+    "group": "answerable",
+    "id": "engine_continuations_elite",
+    "question": "Which elite_reference White moves does the fixture shard show from the start?",
+    "reference_key": "engine_continuations_elite",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "requires_engine_binary": false,
+    "requires_opening_fixture": true,
+    "result_path": [],
+    "rubric_version": "engine-1.0",
+    "severity": "medium",
+    "source_annotation_id": null,
+    "split": "engine_v1"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "position_continuations",
+    "comparison": {
+      "counts": "exact",
+      "nodes": "recorded_not_gated",
+      "rates_absolute_tolerance": 1e-06,
+      "score_mate_depth_seldepth_best_move_pv": "exact_when_binary_matches"
+    },
+    "dataset_id": null,
+    "expected_error": null,
+    "expected_result": {
+      "available": true,
+      "cohort": "rated_public",
+      "cohort_games": 7,
+      "continuations": [
+        {
+          "games": 1,
+          "san": "e4",
+          "share_of_position_games": 1.0,
+          "uci": "e2e4"
+        }
+      ],
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "frequency": 0.14285714285714285,
+      "limits": [
+        "White decisions in the configured opening window only.",
+        "Each game counts once, at its earliest visit to the position.",
+        "Observed frequency is not move quality."
+      ],
+      "next_move_games": 1,
+      "position_games": 1,
+      "position_id": "05bd4852088c5cfdb74e9b43",
+      "position_key": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -",
+      "reason": null,
+      "source_kind": "visit_shards",
+      "truncated": false,
+      "visit_snapshot_id": "e17e17e17e17e17e17e17e17",
+      "window": {
+        "learner_color": "white",
+        "max_ply": 20,
+        "min_ply": 6
+      }
+    },
+    "expected_status": "answered",
+    "expected_tool": "position_continuations",
+    "expected_tool_args": {
+      "cohort": "rated_public",
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    },
+    "forbidden_caveats": [
+      "engine_eval_depth_limited",
+      "engine_not_ground_truth"
+    ],
+    "group": "answerable",
+    "id": "engine_continuations_rated",
+    "question": "Which rated_public White moves does the synthetic fixture shard show from the start?",
+    "reference_key": "engine_continuations_rated",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "requires_engine_binary": false,
+    "requires_opening_fixture": true,
+    "result_path": [],
+    "rubric_version": "engine-1.0",
+    "severity": "medium",
+    "source_annotation_id": null,
+    "split": "engine_v1"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "source_crosscheck",
+    "comparison": {
+      "counts": "exact",
+      "nodes": "recorded_not_gated",
+      "rates_absolute_tolerance": 1e-06,
+      "score_mate_depth_seldepth_best_move_pv": "exact_when_binary_matches"
+    },
+    "dataset_id": null,
+    "expected_error": null,
+    "expected_result": {
+      "caveats": [
+        "engine_eval_depth_limited",
+        "engine_not_ground_truth"
+      ],
+      "depth_requested": 12,
+      "fen": "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2",
+      "position_key": "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq -",
+      "side_to_move": "black"
+    },
+    "expected_status": "answered",
+    "expected_tool": "evaluate_position",
+    "expected_tool_args": {
+      "depth": 12,
+      "fen": "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2"
+    },
+    "forbidden_caveats": [],
+    "group": "answerable",
+    "id": "engine_crosscheck_source_eval",
+    "question": "What is the depth-12 engine score after 1. e4 c5 2. Nf3 in the portfolio fixture?",
+    "reference_key": "engine_crosscheck_source_eval",
+    "required_caveats": [
+      "engine_eval_depth_limited",
+      "engine_not_ground_truth",
+      "observed_prefix_only"
+    ],
+    "requires_engine_binary": true,
+    "requires_opening_fixture": false,
+    "result_path": [],
+    "rubric_version": "engine-1.0",
+    "severity": "medium",
+    "source_annotation_id": "portfolio_game0_ply3",
+    "split": "engine_v1"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "evaluate_position",
+    "comparison": {
+      "counts": "exact",
+      "nodes": "recorded_not_gated",
+      "rates_absolute_tolerance": 1e-06,
+      "score_mate_depth_seldepth_best_move_pv": "exact_when_binary_matches"
+    },
+    "dataset_id": null,
+    "expected_error": null,
+    "expected_result": {
+      "caveats": [
+        "engine_eval_depth_limited",
+        "engine_not_ground_truth"
+      ],
+      "depth_requested": 12,
+      "fen": "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1",
+      "position_key": "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -",
+      "side_to_move": "white"
+    },
+    "expected_status": "answered",
+    "expected_tool": "evaluate_position",
+    "expected_tool_args": {
+      "depth": 12,
+      "fen": "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -"
+    },
+    "forbidden_caveats": [],
+    "group": "answerable",
+    "id": "engine_eval_kiwipete",
+    "question": "What is the configured engine's depth-12 score for the kiwipete position?",
+    "reference_key": "engine_eval_kiwipete",
+    "required_caveats": [
+      "engine_eval_depth_limited",
+      "engine_not_ground_truth",
+      "observed_prefix_only"
+    ],
+    "requires_engine_binary": true,
+    "requires_opening_fixture": false,
+    "result_path": [],
+    "rubric_version": "engine-1.0",
+    "severity": "medium",
+    "source_annotation_id": null,
+    "split": "engine_v1"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "evaluate_position",
+    "comparison": {
+      "counts": "exact",
+      "nodes": "recorded_not_gated",
+      "rates_absolute_tolerance": 1e-06,
+      "score_mate_depth_seldepth_best_move_pv": "exact_when_binary_matches"
+    },
+    "dataset_id": null,
+    "expected_error": null,
+    "expected_result": {
+      "caveats": [
+        "engine_eval_depth_limited",
+        "engine_not_ground_truth"
+      ],
+      "depth_requested": 12,
+      "fen": "7k/8/5KQ1/8/8/8/8/8 w - - 0 1",
+      "position_key": "7k/8/5KQ1/8/8/8/8/8 w - -",
+      "side_to_move": "white"
+    },
+    "expected_status": "answered",
+    "expected_tool": "evaluate_position",
+    "expected_tool_args": {
+      "depth": 12,
+      "fen": "7k/8/5KQ1/8/8/8/8/8 w - - 0 1"
+    },
+    "forbidden_caveats": [],
+    "group": "answerable",
+    "id": "engine_eval_mate_in_one",
+    "question": "What is the configured engine's depth-12 score for this mate-in-one position?",
+    "reference_key": "engine_eval_mate_in_one",
+    "required_caveats": [
+      "engine_eval_depth_limited",
+      "engine_not_ground_truth",
+      "observed_prefix_only"
+    ],
+    "requires_engine_binary": true,
+    "requires_opening_fixture": false,
+    "result_path": [],
+    "rubric_version": "engine-1.0",
+    "severity": "medium",
+    "source_annotation_id": null,
+    "split": "engine_v1"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "evaluate_position",
+    "comparison": {
+      "counts": "exact",
+      "nodes": "recorded_not_gated",
+      "rates_absolute_tolerance": 1e-06,
+      "score_mate_depth_seldepth_best_move_pv": "exact_when_binary_matches"
+    },
+    "dataset_id": null,
+    "expected_error": null,
+    "expected_result": {
+      "caveats": [
+        "engine_eval_depth_limited",
+        "engine_not_ground_truth"
+      ],
+      "depth_requested": 12,
+      "fen": "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+      "position_key": "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq -",
+      "side_to_move": "white"
+    },
+    "expected_status": "answered",
+    "expected_tool": "evaluate_position",
+    "expected_tool_args": {
+      "depth": 12,
+      "moves": [
+        "e2e4",
+        "e7e5"
+      ]
+    },
+    "forbidden_caveats": [],
+    "group": "answerable",
+    "id": "engine_eval_prefix",
+    "question": "What is the configured engine's depth-12 score after 1. e4 e5?",
+    "reference_key": "engine_eval_prefix",
+    "required_caveats": [
+      "engine_eval_depth_limited",
+      "engine_not_ground_truth",
+      "observed_prefix_only"
+    ],
+    "requires_engine_binary": true,
+    "requires_opening_fixture": false,
+    "result_path": [],
+    "rubric_version": "engine-1.0",
+    "severity": "medium",
+    "source_annotation_id": null,
+    "split": "engine_v1"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "evaluate_position",
+    "comparison": {
+      "counts": "exact",
+      "nodes": "recorded_not_gated",
+      "rates_absolute_tolerance": 1e-06,
+      "score_mate_depth_seldepth_best_move_pv": "exact_when_binary_matches"
+    },
+    "dataset_id": null,
+    "expected_error": null,
+    "expected_result": {
+      "caveats": [
+        "engine_eval_depth_limited",
+        "engine_not_ground_truth"
+      ],
+      "depth_requested": 12,
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "position_key": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -",
+      "side_to_move": "white"
+    },
+    "expected_status": "answered",
+    "expected_tool": "evaluate_position",
+    "expected_tool_args": {
+      "depth": 12,
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    },
+    "forbidden_caveats": [],
+    "group": "answerable",
+    "id": "engine_eval_start",
+    "question": "What is the configured engine's depth-12 score for the starting position?",
+    "reference_key": "engine_eval_start",
+    "required_caveats": [
+      "engine_eval_depth_limited",
+      "engine_not_ground_truth",
+      "observed_prefix_only"
+    ],
+    "requires_engine_binary": true,
+    "requires_opening_fixture": false,
+    "result_path": [],
+    "rubric_version": "engine-1.0",
+    "severity": "medium",
+    "source_annotation_id": null,
+    "split": "engine_v1"
+  }
+]

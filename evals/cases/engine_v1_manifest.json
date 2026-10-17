@@ -1,0 +1,80 @@
+{
+  "answerable": 9,
+  "boundary": 9,
+  "built_by": [
+    "scripts/build_engine_v1_cases.py",
+    "scripts/reference_engine_v1.py"
+  ],
+  "canonicalization": "sha256 of json.dumps(cases sorted by id, sort_keys=True) utf-8",
+  "case_file": "evals/cases/engine_v1.json",
+  "case_file_sha256": "52cfc13cefb79c6f1eb7a18b17daf3ac1142f1a1f617d5d702c12e2dd94605bb",
+  "case_set_sha256": "f102f5374c54ff2ae88456286adc917bacb5c1c41b59777ab9deef1c76e32582",
+  "cases": 18,
+  "categories": {
+    "boundary": 9,
+    "compare_candidate_moves": 2,
+    "evaluate_position": 4,
+    "position_continuations": 2,
+    "source_crosscheck": 1
+  },
+  "comparison": {
+    "binary_mismatch": "skip; not scored as a tool failure",
+    "different_binary": "If the configured file's SHA-256 is not the reference hash, engine comparison does not run.",
+    "missing_engine": "skip",
+    "nodes": "recorded_not_gated",
+    "rates_absolute_tolerance": 1e-06,
+    "score_mate_depth_seldepth_best_move_pv": "exact"
+  },
+  "engine": {
+    "available": true,
+    "binary_bytes": 40418008,
+    "binary_path_recorded": false,
+    "binary_sha256": "00628bd9c9855c1b7ff93d7f8d51b413586cdc6336fe637f9a14a61531a05aca",
+    "host_claim": "One machine on the day this file was written. Not a claim that another CPU or build repeats it.",
+    "launch": "direct python-chess SimpleEngine; not the checked tool parent-death wrapper",
+    "name": "Stockfish 16",
+    "settings": {
+      "clear_hash_before_each_search": true,
+      "depth": 12,
+      "hash_mb": 16,
+      "movetime": null,
+      "multipv_sent": false,
+      "options_set": [
+        "Clear Hash",
+        "Hash",
+        "Threads",
+        "UCI_AnalyseMode",
+        "UCI_LimitStrength",
+        "Use NNUE"
+      ],
+      "ponder_sent": false,
+      "threads": 1,
+      "uci_analyse_mode": true,
+      "uci_limit_strength": false,
+      "use_nnue": true
+    }
+  },
+  "kind": "engine_v1 fixture and replay evidence; not model accuracy",
+  "live_provider": "no live run; a future live run needs its own freeze and a finite cap",
+  "opening_fixture": {
+    "kind": "synthetic_visit_rows",
+    "parquet_bytes": "materialized locally from the frozen rows; not a committed artifact",
+    "path": "evals/fixtures/engine_v1/rows.json",
+    "published_ranking_report": "not in this checkout",
+    "published_shards": "not in this checkout"
+  },
+  "reference_file": "evals/references/engine_v1.json",
+  "reference_sha256": "2f7793e7a204d9cbd28dadc181bba13be132db2a0395d95da78a242948d3c5fb",
+  "replay_plan_dir": "evals/replay_plans/engine_v1",
+  "replay_plans": 18,
+  "replay_plans_sha256": "48d1f56609e5c5de82f94687fdc340d7527a0d57cd19f63e73d1b0031d5901be",
+  "rows_file": "evals/fixtures/engine_v1/rows.json",
+  "rows_sha256": "3bc541fdd0dd7e5f8f571565d44e9881d82b8442cf4bf62bd6e3dba81df73db4",
+  "rubric_version": "engine-1.0",
+  "source_eval_crosscheck": {
+    "corpus_source_evals": "not used; the analytical corpus is not in this checkout",
+    "equality_required": false,
+    "fixture": "tests/fixtures/portfolio_annotated.pgn"
+  },
+  "why_this_size": "Eighteen cases cover the three tools, two cross-checks, and the named safety limits. The set is not a sample of positions."
+}

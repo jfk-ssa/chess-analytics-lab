@@ -16,6 +16,7 @@ implementation files. Restricted free-form SQL is disabled.
 | Live M6 release | Actual Luna responses on a frozen holdout | 40/40, 38/40, 40/40 across three runs; 118/120 total; two safe incorrect abstentions retained |
 | Live M7 accepted gate | Actual Sol responses on a new-date December 1 prefix, fixed 50-case set | 50/50 in each of three repetitions; 150/150 evidence/access audits; no repairs or retries in the complete runs |
 | Failed/stopped live attempts | Real provider or sandbox errors and scored misses | Preserved separately in [M6 release](M6-RELEASE.md), [M7 timeline](M7.md), and [December checkpoint](M7-DECEMBER.md) |
+| Engine-tool fixture / replay | Fixed plans for the local engine tools, scored with no model | 18 `engine_v1` cases under rubric `engine-1.0`; harness and tool behavior only; no live provider run |
 
 The M7 checkpoint covers 41 answerable and nine boundary cases per run, with
 five high-severity boundary cases included. All gates in the frozen
@@ -58,7 +59,31 @@ labeled replay using saved Luna answers. Neither gate is promoted. Follow the
 [Jev](JEV_ROUTING_RUNBOOK.md) and [Decisions](DECISIONS_ROUTING_RUNBOOK.md) runbooks
 for offline harness/replay paths; a new live experiment requires its own cap.
 
-Local engine and opening-continuation tools are not part of the frozen M5–M7
-scores. This checkout does not add cases, independent references, or a scorer
-rubric for them, and an engine call is not a model-accuracy result. Scoring
-those tools is a separate follow-up: a new freeze, references, and rubric.
+## Engine-tool fixture and replay
+
+This section is separate from the M5–M7 model scores above. `engine_v1` freezes
+18 cases, replay plans of kind `fixture_plan_no_model_response`, and references
+for `evaluate_position`, `position_continuations`, and `compare_candidate_moves`
+([ADR 0079](adr/0079-engine-tool-evaluation.md)). The rubric is `engine-1.0`.
+It does not replace `portfolio-1.0` or the historical scorers. The historical
+live-provider prompt does not offer these tools.
+
+Nine cases are answerable and nine are boundary cases. The set is one case per
+tool contract and one per named safety limit, plus a second continuation cohort
+and one source-evaluation cross-check. It is not a sample of positions and not
+a model-accuracy claim. No live provider run is part of this result. A future
+live run needs its own freeze and a finite cap.
+
+Opening counts come from five synthetic visit rows in
+`evals/fixtures/engine_v1/rows.json`. Published visit shards and
+`reports/opening-positions.json` are not in this checkout, and the fixture
+frequencies are not corpus frequencies. Source evaluations are re-read from
+`tests/fixtures/portfolio_annotated.pgn`. Equality between a source evaluation
+and an engine score is not required.
+
+Score, mate, depth, selective depth, best move, and principal variation are
+exact when the configured binary's SHA-256 matches the reference. Node counts
+are recorded and do not fail the check. A missing engine or a different binary
+skips the engine comparison. CI does not download Stockfish. The manifest
+`evals/cases/engine_v1_manifest.json` records the hashes, the engine identity,
+and the settings used for the frozen reference.
