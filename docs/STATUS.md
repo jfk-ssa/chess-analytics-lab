@@ -28,7 +28,9 @@ stdio to an external MCP client (`chesslab mcp`, optional `mcp` extra); see
 [MCP](MCP.md) and [ADR 0077](adr/0077-stdio-mcp-checked-tools.md). Guarantees
 are per call. On-demand local engine checks and opening-continuation lookups
 are checked tools ([ADR 0078](adr/0078-engine-grounded-checked-tools.md));
-corpus-wide Stockfish enrichment and a new evaluation set remain follow-ups.
+engine_v1 measures those tools on fixed cases ([ADR 0079](adr/0079-engine-tool-evaluation.md))
+as harness and tool behavior, not model accuracy, and corpus-wide Stockfish
+enrichment remains a follow-up.
 
 This file stays a short summary: checkout structure, phase tracker, dataset
 versions, and limits. New decisions go only into [docs/adr](adr/). Do not append

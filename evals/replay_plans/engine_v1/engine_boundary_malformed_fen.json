@@ -1,0 +1,17 @@
+{
+  "kind": "fixture_plan_no_model_response",
+  "plan": {
+    "actions": [
+      {
+        "args": {
+          "depth": 12,
+          "fen": "not-a-fen"
+        },
+        "tool": "evaluate_position"
+      }
+    ],
+    "interpretation": "descriptive_observed_prefix",
+    "status": "answered"
+  },
+  "question": "Evaluate this FEN: not-a-fen."
+}

@@ -1,0 +1,22 @@
+{
+  "kind": "fixture_plan_no_model_response",
+  "plan": {
+    "actions": [
+      {
+        "args": {
+          "candidates": [
+            "e2e4",
+            "d2d4"
+          ],
+          "cohort": "elite_reference",
+          "depth": 12,
+          "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+        },
+        "tool": "compare_candidate_moves"
+      }
+    ],
+    "interpretation": "descriptive_observed_prefix",
+    "status": "answered"
+  },
+  "question": "At depth 12, how do e4 and d4 compare with the engine best move with no opening file?"
+}

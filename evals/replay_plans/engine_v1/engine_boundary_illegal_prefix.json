@@ -1,0 +1,19 @@
+{
+  "kind": "fixture_plan_no_model_response",
+  "plan": {
+    "actions": [
+      {
+        "args": {
+          "depth": 12,
+          "moves": [
+            "e2e5"
+          ]
+        },
+        "tool": "evaluate_position"
+      }
+    ],
+    "interpretation": "descriptive_observed_prefix",
+    "status": "answered"
+  },
+  "question": "Evaluate the position after the move e2e5 from the start."
+}

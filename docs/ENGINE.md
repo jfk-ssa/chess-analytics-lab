@@ -6,10 +6,25 @@ one position, and the centipawn gap between a candidate and the engine's
 best move. That score is depth-limited evidence. It is not ground truth, and
 it is not a model-accuracy result.
 
-No frozen case, reference, or scorer covers these tools. Scoring them is a
-separate follow-up and needs its own freeze. The historical live-provider
-prompt does not offer the tools. Typed plans and `chesslab mcp` do, because
-both read the same registry.
+`engine_v1` is the frozen measurement for these tools
+([ADR 0079](adr/0079-engine-tool-evaluation.md)). It scores harness and tool
+behavior on 18 fixed cases. It is not a model-accuracy result, and this
+repository does not claim a live provider run for it. A future live run needs
+its own freeze and a finite cap. The historical live-provider prompt does not
+offer the tools. Typed plans and `chesslab mcp` do, because both read the same
+registry.
+
+`scripts/build_engine_v1_cases.py` writes the questions, the structural
+expectations, and the replay plans. `scripts/reference_engine_v1.py --write`
+records scores from a direct UCI process when `config/engine.json` names a
+binary. It does not call the checked tools. `scripts/check_engine_v1.py`
+compares tool output with that reference. Score, mate, depth, selective depth,
+best move, and principal variation must match exactly when the binary SHA-256
+matches. Node counts are reported and do not fail the check. A missing engine,
+a missing file, a config hash mismatch, or a different binary skips the engine
+comparison and is not a tool failure. Opening tallies and the source-annotation
+parse still run. CI does not download Stockfish. The manifest records the
+binary hash and the settings used for the frozen reference.
 
 ## Tools
 
@@ -129,7 +144,11 @@ config is missing. Observed games are null in that case.
 
 Same binary, one thread, a fixed hash, and a cleared hash matched on this
 machine for the positions and depths in
-[ADR 0078](adr/0078-engine-grounded-checked-tools.md). Two threads did not
+[ADR 0078](adr/0078-engine-grounded-checked-tools.md). The `engine_v1`
+reference used that same binary and the same pinned settings at depth 12.
+On this machine the direct process and the checked tools agreed, including
+node counts. That agreement is not claimed for another machine, and the check
+does not fail on a node-count difference. Two threads did not
 match. Skipping the hash clear did not match. Hash size changed the result
 between 1 MB and 16 MB. `UCI_AnalyseMode` did not change the one pair of
 searches where it was toggled. No second machine was tried. An external NNUE

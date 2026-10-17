@@ -1,0 +1,20 @@
+{
+  "kind": "fixture_plan_no_model_response",
+  "plan": {
+    "actions": [
+      {
+        "args": {
+          "depth": 12,
+          "moves": [
+            "e2e4",
+            "e7e5"
+          ]
+        },
+        "tool": "evaluate_position"
+      }
+    ],
+    "interpretation": "descriptive_observed_prefix",
+    "status": "answered"
+  },
+  "question": "What is the configured engine's depth-12 score after 1. e4 e5?"
+}

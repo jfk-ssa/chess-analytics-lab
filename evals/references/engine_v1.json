@@ -1,0 +1,533 @@
+{
+  "case_set": "engine_v1",
+  "case_set_sha256": "f102f5374c54ff2ae88456286adc917bacb5c1c41b59777ab9deef1c76e32582",
+  "cases": {
+    "engine_compare_candidates": {
+      "after_best": {
+        "best_move": {
+          "san": "c5",
+          "uci": "c7c5"
+        },
+        "depth": 12,
+        "nodes": 22903,
+        "pv": [
+          "c7c5",
+          "g1f3",
+          "d7d6",
+          "c2c3",
+          "g8f6",
+          "d1c2",
+          "e7e5",
+          "d2d4"
+        ],
+        "seldepth": 13,
+        "white_cp": 34,
+        "white_mate": null
+      },
+      "best_uci": "e2e4",
+      "candidates": [
+        {
+          "cp_loss_vs_best": 0,
+          "is_engine_best": true,
+          "san": "e4",
+          "search": {
+            "best_move": {
+              "san": "c5",
+              "uci": "c7c5"
+            },
+            "depth": 12,
+            "nodes": 22903,
+            "pv": [
+              "c7c5",
+              "g1f3",
+              "d7d6",
+              "c2c3",
+              "g8f6",
+              "d1c2",
+              "e7e5",
+              "d2d4"
+            ],
+            "seldepth": 13,
+            "white_cp": 34,
+            "white_mate": null
+          },
+          "uci": "e2e4"
+        },
+        {
+          "cp_loss_vs_best": 2,
+          "is_engine_best": false,
+          "san": "d4",
+          "search": {
+            "best_move": {
+              "san": "d5",
+              "uci": "d7d5"
+            },
+            "depth": 12,
+            "nodes": 30201,
+            "pv": [
+              "d7d5",
+              "c2c4",
+              "e7e6",
+              "b1c3",
+              "g8f6",
+              "g1f3",
+              "f8e7",
+              "c1f4"
+            ],
+            "seldepth": 15,
+            "white_cp": 32,
+            "white_mate": null
+          },
+          "uci": "d2d4"
+        }
+      ],
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "kind": "compare_candidate_moves",
+      "root": {
+        "best_move": {
+          "san": "e4",
+          "uci": "e2e4"
+        },
+        "depth": 12,
+        "nodes": 35836,
+        "pv": [
+          "e2e4",
+          "e7e5",
+          "g1f3",
+          "g8f6",
+          "d2d4",
+          "f6e4",
+          "f3e5",
+          "e4f6"
+        ],
+        "seldepth": 16,
+        "white_cp": 40,
+        "white_mate": null
+      }
+    },
+    "engine_compare_with_frequency": {
+      "after_best": {
+        "best_move": {
+          "san": "c5",
+          "uci": "c7c5"
+        },
+        "depth": 12,
+        "nodes": 22903,
+        "pv": [
+          "c7c5",
+          "g1f3",
+          "d7d6",
+          "c2c3",
+          "g8f6",
+          "d1c2",
+          "e7e5",
+          "d2d4"
+        ],
+        "seldepth": 13,
+        "white_cp": 34,
+        "white_mate": null
+      },
+      "best_uci": "e2e4",
+      "candidates": [
+        {
+          "cp_loss_vs_best": 0,
+          "is_engine_best": true,
+          "san": "e4",
+          "search": {
+            "best_move": {
+              "san": "c5",
+              "uci": "c7c5"
+            },
+            "depth": 12,
+            "nodes": 22903,
+            "pv": [
+              "c7c5",
+              "g1f3",
+              "d7d6",
+              "c2c3",
+              "g8f6",
+              "d1c2",
+              "e7e5",
+              "d2d4"
+            ],
+            "seldepth": 13,
+            "white_cp": 34,
+            "white_mate": null
+          },
+          "uci": "e2e4"
+        },
+        {
+          "cp_loss_vs_best": 2,
+          "is_engine_best": false,
+          "san": "d4",
+          "search": {
+            "best_move": {
+              "san": "d5",
+              "uci": "d7d5"
+            },
+            "depth": 12,
+            "nodes": 30201,
+            "pv": [
+              "d7d5",
+              "c2c4",
+              "e7e6",
+              "b1c3",
+              "g8f6",
+              "g1f3",
+              "f8e7",
+              "c1f4"
+            ],
+            "seldepth": 15,
+            "white_cp": 32,
+            "white_mate": null
+          },
+          "uci": "d2d4"
+        }
+      ],
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "kind": "compare_candidate_moves",
+      "root": {
+        "best_move": {
+          "san": "e4",
+          "uci": "e2e4"
+        },
+        "depth": 12,
+        "nodes": 35836,
+        "pv": [
+          "e2e4",
+          "e7e5",
+          "g1f3",
+          "g8f6",
+          "d2d4",
+          "f6e4",
+          "f3e5",
+          "e4f6"
+        ],
+        "seldepth": 16,
+        "white_cp": 40,
+        "white_mate": null
+      }
+    },
+    "engine_crosscheck_source_eval": {
+      "equality_with_engine_required": false,
+      "fen": "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2",
+      "kind": "evaluate_position",
+      "search": {
+        "best_move": {
+          "san": "d6",
+          "uci": "d7d6"
+        },
+        "depth": 12,
+        "nodes": 28016,
+        "pv": [
+          "d7d6",
+          "d2d4",
+          "c5d4",
+          "d1d4",
+          "e7e5",
+          "d4d1"
+        ],
+        "seldepth": 15,
+        "white_cp": 34,
+        "white_mate": null
+      },
+      "source_annotation_id": "portfolio_game0_ply3",
+      "source_white_cp": -250,
+      "source_white_mate": null,
+      "white_cp_minus_source": 284
+    },
+    "engine_eval_kiwipete": {
+      "fen": "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1",
+      "kind": "evaluate_position",
+      "search": {
+        "best_move": {
+          "san": "Bxa6",
+          "uci": "e2a6"
+        },
+        "depth": 12,
+        "nodes": 28166,
+        "pv": [
+          "e2a6",
+          "b4c3",
+          "d2c3",
+          "e6d5",
+          "e5g4",
+          "h3g2",
+          "h1g1",
+          "f6h5"
+        ],
+        "seldepth": 16,
+        "white_cp": -122,
+        "white_mate": null
+      }
+    },
+    "engine_eval_mate_in_one": {
+      "fen": "7k/8/5KQ1/8/8/8/8/8 w - - 0 1",
+      "kind": "evaluate_position",
+      "search": {
+        "best_move": {
+          "san": "Qg7#",
+          "uci": "g6g7"
+        },
+        "depth": 12,
+        "nodes": 281,
+        "pv": [
+          "g6g7"
+        ],
+        "seldepth": 2,
+        "white_cp": null,
+        "white_mate": 1
+      }
+    },
+    "engine_eval_prefix": {
+      "fen": "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+      "kind": "evaluate_position",
+      "search": {
+        "best_move": {
+          "san": "Nf3",
+          "uci": "g1f3"
+        },
+        "depth": 12,
+        "nodes": 27410,
+        "pv": [
+          "g1f3",
+          "g8f6",
+          "f3e5",
+          "f6e4",
+          "d1h5",
+          "d8f6",
+          "b1c3",
+          "e4c3"
+        ],
+        "seldepth": 12,
+        "white_cp": 43,
+        "white_mate": null
+      }
+    },
+    "engine_eval_start": {
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "kind": "evaluate_position",
+      "search": {
+        "best_move": {
+          "san": "e4",
+          "uci": "e2e4"
+        },
+        "depth": 12,
+        "nodes": 35836,
+        "pv": [
+          "e2e4",
+          "e7e5",
+          "g1f3",
+          "g8f6",
+          "d2d4",
+          "f6e4",
+          "f3e5",
+          "e4f6"
+        ],
+        "seldepth": 16,
+        "white_cp": 40,
+        "white_mate": null
+      }
+    }
+  },
+  "comparison": {
+    "binary_mismatch": "skip; not scored as a tool failure",
+    "different_binary": "If the configured file's SHA-256 is not the reference hash, engine comparison does not run.",
+    "missing_engine": "skip",
+    "nodes": "recorded_not_gated",
+    "rates_absolute_tolerance": 1e-06,
+    "score_mate_depth_seldepth_best_move_pv": "exact"
+  },
+  "engine": {
+    "available": true,
+    "binary_bytes": 40418008,
+    "binary_path_recorded": false,
+    "binary_sha256": "00628bd9c9855c1b7ff93d7f8d51b413586cdc6336fe637f9a14a61531a05aca",
+    "host_claim": "One machine on the day this file was written. Not a claim that another CPU or build repeats it.",
+    "launch": "direct python-chess SimpleEngine; not the checked tool parent-death wrapper",
+    "name": "Stockfish 16",
+    "settings": {
+      "clear_hash_before_each_search": true,
+      "depth": 12,
+      "hash_mb": 16,
+      "movetime": null,
+      "multipv_sent": false,
+      "options_set": [
+        "Clear Hash",
+        "Hash",
+        "Threads",
+        "UCI_AnalyseMode",
+        "UCI_LimitStrength",
+        "Use NNUE"
+      ],
+      "ponder_sent": false,
+      "threads": 1,
+      "uci_analyse_mode": true,
+      "uci_limit_strength": false,
+      "use_nnue": true
+    }
+  },
+  "generated_utc": "2026-10-17T16:12:12+00:00",
+  "kind": "engine_v1 independent reference; no checked-tool calls and no model responses",
+  "opening": {
+    "cohorts": {
+      "elite_reference": {
+        "available": true,
+        "cohort": "elite_reference",
+        "cohort_games": 4,
+        "continuations": [
+          {
+            "games": 2,
+            "san": "d4",
+            "share_of_position_games": 0.6666666666666666,
+            "uci": "d2d4"
+          }
+        ],
+        "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "frequency": 0.75,
+        "limits": [
+          "White decisions in the configured opening window only.",
+          "Each game counts once, at its earliest visit to the position.",
+          "Observed frequency is not move quality."
+        ],
+        "next_move_games": 2,
+        "position_games": 3,
+        "position_id": "05bd4852088c5cfdb74e9b43",
+        "position_key": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -",
+        "reason": null,
+        "source_kind": "visit_shards",
+        "truncated": false,
+        "visit_snapshot_id": "e17e17e17e17e17e17e17e17",
+        "window": {
+          "learner_color": "white",
+          "max_ply": 20,
+          "min_ply": 6
+        }
+      },
+      "rated_public": {
+        "available": true,
+        "cohort": "rated_public",
+        "cohort_games": 7,
+        "continuations": [
+          {
+            "games": 1,
+            "san": "e4",
+            "share_of_position_games": 1.0,
+            "uci": "e2e4"
+          }
+        ],
+        "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "frequency": 0.14285714285714285,
+        "limits": [
+          "White decisions in the configured opening window only.",
+          "Each game counts once, at its earliest visit to the position.",
+          "Observed frequency is not move quality."
+        ],
+        "next_move_games": 1,
+        "position_games": 1,
+        "position_id": "05bd4852088c5cfdb74e9b43",
+        "position_key": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -",
+        "reason": null,
+        "source_kind": "visit_shards",
+        "truncated": false,
+        "visit_snapshot_id": "e17e17e17e17e17e17e17e17",
+        "window": {
+          "learner_color": "white",
+          "max_ply": 20,
+          "min_ply": 6
+        }
+      }
+    },
+    "kind": "synthetic_visit_shard",
+    "not_a_corpus_frequency": true,
+    "rows_file": "evals/fixtures/engine_v1/rows.json",
+    "rows_sha256": "3bc541fdd0dd7e5f8f571565d44e9881d82b8442cf4bf62bd6e3dba81df73db4"
+  },
+  "repeat": {
+    "node_deltas": {
+      "engine_compare_candidates": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "engine_compare_with_frequency": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "engine_crosscheck_source_eval": [
+        0
+      ],
+      "engine_eval_kiwipete": [
+        0
+      ],
+      "engine_eval_mate_in_one": [
+        0
+      ],
+      "engine_eval_prefix": [
+        0
+      ],
+      "engine_eval_start": [
+        0
+      ]
+    },
+    "nodes": "recorded_not_gated",
+    "score_mate_depth_seldepth_best_move_pv": "matched",
+    "sessions": 2
+  },
+  "source_annotations": [
+    {
+      "available": true,
+      "centipawn_substituted_for_mate": false,
+      "equality_with_engine_required": false,
+      "fen": "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2",
+      "fixture": "tests/fixtures/portfolio_annotated.pgn",
+      "game_index": 0,
+      "id": "portfolio_game0_ply3",
+      "missing_stored_as_zero": false,
+      "ply": 3,
+      "raw_eval": "-2.50",
+      "role": "engine_case",
+      "site": "https://lichess.org/00000013",
+      "uci": "g1f3",
+      "white_cp": -250,
+      "white_mate": null
+    },
+    {
+      "available": false,
+      "centipawn_substituted_for_mate": false,
+      "equality_with_engine_required": false,
+      "fen": "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
+      "fixture": "tests/fixtures/portfolio_annotated.pgn",
+      "game_index": 3,
+      "id": "portfolio_game3_ply1_missing",
+      "missing_stored_as_zero": false,
+      "ply": 1,
+      "raw_eval": null,
+      "role": "missing_not_zero",
+      "site": "https://lichess.org/00000082",
+      "uci": "e2e4",
+      "white_cp": null,
+      "white_mate": null
+    },
+    {
+      "available": true,
+      "centipawn_substituted_for_mate": false,
+      "equality_with_engine_required": false,
+      "fen": "rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR b KQkq - 1 3",
+      "fixture": "tests/fixtures/portfolio_annotated.pgn",
+      "game_index": 3,
+      "id": "portfolio_game3_ply5_mate",
+      "missing_stored_as_zero": false,
+      "ply": 5,
+      "raw_eval": "#3",
+      "role": "mate_not_centipawns",
+      "site": "https://lichess.org/00000082",
+      "uci": "b1c3",
+      "white_cp": null,
+      "white_mate": 3
+    }
+  ]
+}
