@@ -37,7 +37,10 @@ calls for that process.
 Each tool result includes the snapshot's dataset ID and an evidence ID. The
 evidence ID is the same value `execute_plan` records for the same dataset,
 tool, arguments, and result: `ev_` plus the first 20 hex characters of the
-SHA-256 of that canonical JSON. Tools that already return caveats include
+SHA-256 of that canonical JSON. `predict_human_moves` is the exception. Its
+probabilities are not bit-stable, so the hash covers the position, ratings,
+`top_k`, `min_prob`, and the pinned model identity, and leaves the probability
+and win/draw/loss floats out. Tools that already return caveats include
 those caveats on the envelope. The underlying tool result is unchanged.
 
 A call is killed at 30 seconds. Output larger than 1 MB is rejected. The
@@ -67,6 +70,7 @@ Those scores do not transfer to it.
 | `evaluate_position` | `fen` or `moves`, optional `depth` |
 | `position_continuations` | `cohort`, and `fen` or `moves` |
 | `compare_candidate_moves` | `cohort`, `candidates` (1–6), and `fen` or `moves`; optional `depth` |
+| `predict_human_moves` | `rating_self`, `rating_opp`, and `fen` or `moves`; optional `model`, `top_k`, `min_prob` |
 
 `evaluate_position` and `compare_candidate_moves` need a local engine config.
 `position_continuations` needs local opening data. Neither is downloaded.
@@ -75,6 +79,14 @@ Depth is at most 16. Engine results include `engine_eval_depth_limited` and
 the frozen M5–M7 results do not transfer to them. The historical live planner
 prompt does not offer these three tools. Setup, the opening-data gap in CI,
 and what was actually repeated on one machine are in [ENGINE](ENGINE.md).
+
+`predict_human_moves` needs a local Maia-3 config and the optional `maia`
+extra. Without the config the result is `maia_not_configured`. Without torch
+or the pinned Maia-3 code it is `maia_unavailable`. Probabilities are rounded
+to 4 decimal places and carry `model_estimate_not_observation` and
+`blitz_trained_rating_scale`. They are a Lichess-blitz model estimate, not a
+count of games and not an engine score. The historical live planner prompt
+does not offer this tool. Setup and the weights licence are in [MAIA](MAIA.md).
 
 A grouped `query_metric` sends `"filters": {}`. Clock buckets are `under_10`,
 `10_to_29`, `30_to_59`, and `60_plus`. Colors are `white` or `black`.

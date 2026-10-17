@@ -69,8 +69,13 @@ def test_schema_and_unknown_tool_do_not_start_the_worker(analytical_project, mon
             {"metric_id": "opening_usage", "filters": {}, "sql": "select 1"},
         )
         unknown = await client.call_tool("run_readonly_query", {"sql": "select 1"})
+        maia = await client.call_tool(
+            "predict_human_moves",
+            {"fen": "x", "rating_self": 5001, "rating_opp": 1500},
+        )
         assert rejected.is_error and rejected.content[0].text == "invalid tool arguments"
         assert unknown.is_error and unknown.content[0].text == "unsupported tool"
+        assert maia.is_error and maia.content[0].text == "invalid tool arguments"
 
     _drive(build_server(analytical_project), check)
 

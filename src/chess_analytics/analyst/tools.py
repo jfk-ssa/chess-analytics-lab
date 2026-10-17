@@ -6,6 +6,7 @@ from pathlib import Path
 import duckdb
 
 from chess_analytics.analyst import engine as engine_tools
+from chess_analytics.analyst import maia as maia_tools
 from chess_analytics.analyst.openings import position_continuations as read_continuations
 from chess_analytics.analyst.tool_catalog import ALLOWED_GROUP_BY, CONTRACTS, TOOLS_BY_NAME
 from chess_analytics.common import digest
@@ -284,6 +285,28 @@ class CheckedTools:
             fen=fen,
             moves=moves,
             depth=depth,
+        )
+
+    def predict_human_moves(
+        self,
+        rating_self: int | None = None,
+        rating_opp: int | None = None,
+        fen: str | None = None,
+        moves: list[str] | None = None,
+        model: str | None = None,
+        top_k: int | None = None,
+        min_prob: float | None = None,
+    ) -> dict:
+        return maia_tools.predict_human_moves(
+            self.project,
+            self.dataset_id,
+            rating_self=rating_self,
+            rating_opp=rating_opp,
+            fen=fen,
+            moves=moves,
+            model=model,
+            top_k=top_k,
+            min_prob=min_prob,
         )
 
     def execute(self, name: str, args: dict) -> dict:

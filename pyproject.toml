@@ -37,12 +37,29 @@ dashboard = [
 mcp = [
     "mcp==2.3.0",
 ]
+# Linux PyPI torch 2.14.1 depends on CUDA libraries. The CPU index build is
+# the one this tool runs. macOS keeps the PyPI arm64 wheel.
+maia = [
+    "torch==2.14.1 ; sys_platform != 'linux'",
+    "torch==2.14.1+cpu ; sys_platform == 'linux'",
+    "maia3 @ git+https://github.com/CSSLab/maia3.git@1e13597c42d4858b7cfd7cfdae01e297263364b2",
+]
 
 [dependency-groups]
 dev = [
     "basedpyright==1.40.2",
     "pytest==9.1.1",
     "ruff==0.17.0",
+]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cpu", marker = "sys_platform == 'linux'" },
 ]
 
 [tool.basedpyright]

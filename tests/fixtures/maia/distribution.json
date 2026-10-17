@@ -1,0 +1,5 @@
+{
+  "kind": "fake_maia_distribution",
+  "moves": {"e2e4": 0.5, "d2d4": 0.3, "e7e5": 0.2},
+  "wdl": {"win": 0.34, "draw": 0.33, "loss": 0.33}
+}

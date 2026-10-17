@@ -16,6 +16,8 @@ INSTRUCTIONS = (
     "Read-only checked chess tools for one local analytical snapshot. "
     "Each call returns that snapshot's dataset id and an evidence id. "
     "Engine scores are depth-limited local evidence, not ground truth. "
+    "Human-move probabilities are Maia-3 model estimates on the Lichess blitz "
+    "rating scale, not observations and not engine evaluations. "
     "Checks are per call. This server does not apply the repository planner's "
     "four-step limit, and that planner's evaluation scores do not transfer here."
 )
@@ -45,6 +47,16 @@ def _contract_file(project: Path, uri: str) -> Path:
     if path.parent != (project / "contracts").resolve() or not path.is_file():
         raise ValueError("unsupported contract resource")
     return path
+
+
+def rejection(name: str, args) -> str | None:
+    """Return an error when the call must not start a worker."""
+    spec = TOOLS_BY_NAME.get(name)
+    if spec is None:
+        return "unsupported tool"
+    if not isinstance(args, dict) or not arguments_match(spec.input_schema, args):
+        return "invalid tool arguments"
+    return None
 
 
 def _envelope(dataset_id: str, name: str, args: dict, result: dict) -> dict:
@@ -95,12 +107,10 @@ def build_server(project: Path, *, call_limit: int = SESSION_CALL_LIMIT):
         calls["count"] += 1
         if calls["count"] > limit:
             return _fail("session tool-call limit reached")
-        spec = TOOLS_BY_NAME.get(params.name)
         args = params.arguments if params.arguments is not None else {}
-        if spec is None:
-            return _fail("unsupported tool")
-        if not isinstance(args, dict) or not arguments_match(spec.input_schema, args):
-            return _fail("invalid tool arguments")
+        reason = rejection(params.name, args)
+        if reason:
+            return _fail(reason)
         try:
             dataset_id, result = await anyio.to_thread.run_sync(
                 partial(run_killable_tool, root, params.name, args)

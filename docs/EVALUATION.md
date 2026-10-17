@@ -81,6 +81,11 @@ frequencies are not corpus frequencies. Source evaluations are re-read from
 `tests/fixtures/portfolio_annotated.pgn`. Equality between a source evaluation
 and an engine score is not required.
 
+`predict_human_moves` is not part of `engine_v1` and has no frozen accuracy
+set. A later change can add `maia_v1` on Lichess months from August 2025
+onward. That calibration is not this result. The historical live-provider
+prompt does not offer the tool.
+
 Score, mate, depth, selective depth, best move, and principal variation are
 exact when the configured binary's SHA-256 matches the reference. Node counts
 are recorded and do not fail the check. A missing engine or a different binary

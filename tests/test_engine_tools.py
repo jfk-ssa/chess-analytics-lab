@@ -65,8 +65,9 @@ def test_example_configs_do_not_name_a_real_binary():
 
 
 def test_registry_publishes_the_new_tools_and_rejects_unbounded_input():
-    assert [spec.name for spec in TOOLS][:7] == HISTORICAL_TOOLS
-    assert [spec.name for spec in TOOLS][-3:] == [
+    names = [spec.name for spec in TOOLS]
+    assert names[:7] == HISTORICAL_TOOLS
+    assert names[7:10] == [
         "evaluate_position",
         "position_continuations",
         "compare_candidate_moves",
