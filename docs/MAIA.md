@@ -16,9 +16,10 @@ internals are not a stable API, which is why the commit is pinned.
 
 The historical live-provider prompt does not offer this tool. Typed plans and
 `chesslab mcp` do, because both read the same registry. `maia_v1` compares
-four displayed probabilities with tolerance 1e-4. A corpus log-loss on games
-from August 2025 onward was not measured: the checked index is November 2025
-through August 2026, and the index files are not in this checkout. See
+four displayed probabilities with tolerance 1e-4. Holdout periods and game
+counts are the opening-corpus training index in
+[opening-corpus.json](../reports/opening-corpus.json). No played-move log-loss
+has been computed from those games. See
 [ADR 0082](adr/0082-maia-calibration-and-d4-repertoire.md).
 
 ## Tool
@@ -132,8 +133,8 @@ does not download the weights and does not install the `maia` extra.
 
 It does not merge centipawn loss into the distribution. It does not sample
 moves. It does not accept a time-control argument other than the fixed
-Lichess blitz scale. It does not score the model on the opening-game index,
-because that index is not in this checkout. Opening accuracy for Maia-3 is
+Lichess blitz scale. It does not yet extract played moves from the opening-game index, so it does
+not score the model on those games. Opening accuracy for Maia-3 is
 not in the paper.
 
 ## Replies to 1.d4
