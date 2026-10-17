@@ -1,0 +1,5 @@
+{
+  "version": "1",
+  "binary_path": "/absolute/path/to/stockfish",
+  "binary_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+}
