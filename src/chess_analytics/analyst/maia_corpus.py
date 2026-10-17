@@ -5,30 +5,49 @@ Torch stays in the worker. A fake weights file never imports it.
 """
 
 import argparse
+import contextlib
 import json
 import math
 import random
 import re
+import select
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
+from typing import NoReturn
 
 import chess
 import chess.pgn
 
-from chess_analytics.analyst.maia import _child_env, _load_config, _verify
+from chess_analytics.analyst.maia import (
+    HISTORY_BOARDS,
+    _child_env,
+    _load_config,
+    _verify,
+    clamp_rating,
+)
 from chess_analytics.analyst.maia_pins import PINS
-from chess_analytics.analyst.maia_trust import lichess_blitz, reliability, score_played
-from chess_analytics.analyst.tool_catalog import MAIA_MAX_RATING, MAIA_MIN_RATING
+from chess_analytics.analyst.maia_report import (
+    BANDS,
+    ZERO_SHARE_WARN,
+    add_reliability,
+    empty_bins,
+    finish_bins,
+    labeled,
+    metrics,
+    render_markdown,
+)
+from chess_analytics.analyst.maia_trust import lichess_blitz
 
 SEED = 20251017
 SAMPLE_TARGET = 20_000
 PLIES = 12
-HISTORY = 8
 BATCH = 64
 BOOTSTRAP = 400
-BANDS = ("below-1000", "1000–1599", "1600–1999", "2000–2299", "2300+")
+READ_TIMEOUT = 600
+PROGRESS_EVERY = 10
 POPULATIONS = {
     "elite": {"id": "elite_2025_11", "blitz_only": False},
     "public": {"id": "public_2026_08_blitz", "blitz_only": True},
@@ -39,6 +58,7 @@ CAVEATS = (
     "platform_unmeasured_outside_linux_x86_64",
     "same_machine_only",
     "populations_not_pooled",
+    "public_sample_is_the_2026-08-01_prefix",
 )
 _CLOCK = re.compile(r"(\d+)\+(\d+)")
 
@@ -55,10 +75,6 @@ def _band(rating: int) -> str:
     return BANDS[4]
 
 
-def _clamp(rating: int) -> int:
-    return min(MAIA_MAX_RATING, max(MAIA_MIN_RATING, rating))
-
-
 def _visitor(limit: int):
     class Prefix(chess.pgn.BaseVisitor):
         def __init__(self) -> None:
@@ -69,11 +85,10 @@ def _visitor(limit: int):
         def visit_header(self, tagname: str, tagvalue: str) -> None:
             self.headers[tagname] = tagvalue
 
-        def visit_move(self, board: chess.Board, move: chess.Move):
-            if len(self.moves) >= limit:
-                return chess.pgn.SKIP
-            self.moves.append(move.uci())
-            return None
+        def visit_move(self, board: chess.Board, move: chess.Move) -> None:
+            # visit_move's return value is ignored. Record the prefix and keep parsing.
+            if len(self.moves) < limit:
+                self.moves.append(move.uci())
 
         def handle_error(self, error: Exception) -> None:
             self.bad = True
@@ -157,23 +172,23 @@ def _positions(game: dict, index: int):
     series = [board.copy()]
     for ply, uci in enumerate(game["moves"], start=1):
         white_turn = board.turn == chess.WHITE
-        self_rating = _clamp(game["white"] if white_turn else game["black"])
-        opp_rating = _clamp(game["black"] if white_turn else game["white"])
+        self_rating = clamp_rating(game["white"] if white_turn else game["black"])
+        opp_rating = clamp_rating(game["black"] if white_turn else game["white"])
         yield {
             "game": index,
             "ply": ply,
             "band": _band(self_rating),
             "played": uci,
-            "boards": [item.fen() for item in series[-HISTORY:]],
+            "boards": [item.fen() for item in series[-HISTORY_BOARDS:]],
             "rating_self": self_rating,
             "rating_opp": opp_rating,
-            "legal": {move.uci() for move in board.legal_moves},
+            "legal": sorted(move.uci() for move in board.legal_moves),
         }
         board.push(chess.Move.from_uci(uci))
         series.append(board.copy())
 
 
-def _mass(raw, legal: set[str]) -> dict[str, float]:
+def _mass(raw, legal: list[str]) -> dict[str, float]:
     if not isinstance(raw, dict):
         return {}
     kept = []
@@ -189,7 +204,8 @@ def _mass(raw, legal: set[str]) -> dict[str, float]:
     return {uci: prob / total for uci, prob in kept}
 
 
-def _outcome(position: dict, raw) -> tuple[dict | None, list[dict]]:
+def _outcome(position: dict, raw) -> tuple[dict, list[dict]]:
+    """Zero played probability is a ranking miss. Log-loss drops it later."""
     mass = _mass(raw, position["legal"])
     played = position["played"]
     rows = [
@@ -197,9 +213,7 @@ def _outcome(position: dict, raw) -> tuple[dict | None, list[dict]]:
         for uci in position["legal"]
     ]
     probability = mass.get(played, 0.0)
-    if probability <= 0:
-        return None, rows
-    rank = 1 + sum(prob > probability for prob in mass.values())
+    rank = 0 if probability <= 0 else 1 + sum(prob > probability for prob in mass.values())
     return {
         "game": position["game"],
         "ply": position["ply"],
@@ -207,93 +221,6 @@ def _outcome(position: dict, raw) -> tuple[dict | None, list[dict]]:
         "probability": probability,
         "rank": rank,
     }, rows
-
-
-def _empty_bins() -> list[dict]:
-    return [
-        {"low": index / 10, "high": (index + 1) / 10, "count": 0, "predicted": 0.0, "observed": 0.0}
-        for index in range(10)
-    ]
-
-
-def _add_reliability(bins: list[dict], rows: list[dict]) -> None:
-    if not rows:
-        return
-    for bucket in reliability(rows):
-        slot = bins[int(bucket["low"] * 10)]
-        count = int(bucket["count"])
-        slot["count"] += count
-        if count and bucket["mean_predicted"] is not None:
-            slot["predicted"] += float(bucket["mean_predicted"]) * count
-            slot["observed"] += float(bucket["mean_observed"]) * count
-
-
-def _finish_bins(bins: list[dict]) -> list[dict]:
-    finished = []
-    for slot in bins:
-        count = slot["count"]
-        finished.append(
-            {
-                "low": slot["low"],
-                "high": slot["high"],
-                "count": count,
-                "mean_predicted": None if count == 0 else slot["predicted"] / count,
-                "mean_observed": None if count == 0 else slot["observed"] / count,
-            }
-        )
-    return finished
-
-
-def _interval(values: list[float]) -> list[float] | None:
-    """Same percentile ends as the M4 cluster bootstrap."""
-    if not values:
-        return None
-    ordered = sorted(values)
-    last = len(ordered) - 1
-    return [ordered[int(0.025 * last)], ordered[int(0.975 * last)]]
-
-
-def _bootstrap(rows: list[dict], seed: int, reps: int) -> dict:
-    grouped: dict[int, list[dict]] = {}
-    for row in rows:
-        grouped.setdefault(row["game"], []).append(row)
-    keys = list(grouped)
-    if not keys:
-        return {"log_loss": None, "top1": None, "top3": None}
-    rng = random.Random(seed)
-    samples = {"log_loss": [], "top1": [], "top3": []}
-    width = len(keys)
-    for _ in range(reps):
-        drawn = [item for _draw in range(width) for item in grouped[keys[rng.randrange(width)]]]
-        scored = score_played(drawn)
-        for name in samples:
-            samples[name].append(scored[name])
-    return {name: _interval(values) for name, values in samples.items()}
-
-
-def _metrics(rows: list[dict], seed: int, reps: int) -> dict:
-    scored = score_played(rows)
-    interval = _bootstrap(rows, seed, reps)
-    games = len({row["game"] for row in rows})
-    return {
-        "n_games": games,
-        "n_positions": scored["n"],
-        "log_loss": scored["log_loss"],
-        "log_loss_interval": interval["log_loss"],
-        "top1": scored["top1"],
-        "top1_interval": interval["top1"],
-        "top3": scored["top3"],
-        "top3_interval": interval["top3"],
-    }
-
-
-def _labeled(rows: list[dict], key: str, labels, seed: int, reps: int) -> list[dict]:
-    blocks = []
-    for label in labels:
-        block = _metrics([row for row in rows if row[key] == label], seed, reps)
-        block[key] = label
-        blocks.append(block)
-    return blocks
 
 
 def _open_worker(project: Path, spec: dict, alias: str, errors):
@@ -316,12 +243,33 @@ def _open_worker(project: Path, spec: dict, alias: str, errors):
     )
     if proc.stdin is None or proc.stdout is None:
         raise ValueError("maia worker pipes are missing")
-    proc.stdin.write(json.dumps(header) + "\n")
-    proc.stdin.flush()
+    try:
+        proc.stdin.write(json.dumps(header) + "\n")
+        proc.stdin.flush()
+    except BrokenPipeError:
+        _fail(proc, errors, "maia worker closed")
     return proc
 
 
-def _send(proc, positions: list[dict]) -> list[dict]:
+def _stderr(errors) -> str:
+    errors.seek(0)
+    return errors.read().strip()
+
+
+def _kill(proc) -> None:
+    if proc.poll() is None:
+        proc.kill()
+        with contextlib.suppress(subprocess.TimeoutExpired):
+            proc.wait(timeout=5)
+
+
+def _fail(proc, errors, fallback: str) -> NoReturn:
+    _kill(proc)
+    detail = _stderr(errors)
+    raise ValueError(detail or fallback)
+
+
+def _send(proc, positions: list[dict], errors, timeout: float) -> list[dict]:
     payload = [
         {
             "boards": position["boards"],
@@ -333,52 +281,70 @@ def _send(proc, positions: list[dict]) -> list[dict]:
     try:
         proc.stdin.write(json.dumps({"positions": payload}) + "\n")
         proc.stdin.flush()
-    except BrokenPipeError as exc:
-        line = proc.stdout.readline() if proc.stdout is not None else ""
-        raise ValueError(line.strip() or "maia worker closed") from exc
+    except BrokenPipeError:
+        _fail(proc, errors, "maia worker closed")
+    readable, _, _ = select.select([proc.stdout], [], [], timeout)
+    if not readable:
+        _fail(proc, errors, f"maia worker timed out after {timeout:g}s")
     line = proc.stdout.readline()
     if not line:
-        raise ValueError("maia worker closed")
+        _fail(proc, errors, "maia worker closed")
     message = json.loads(line)
     if not message.get("ok"):
-        raise ValueError(str(message.get("reason") or "maia failed"))
+        _fail(proc, errors, str(message.get("reason") or message.get("error") or "maia failed"))
     results = message["results"]
     if len(results) != len(positions):
-        raise ValueError("maia batch length mismatch")
+        _fail(proc, errors, "maia batch length mismatch")
     return results
 
 
-def _close(proc) -> None:
+def _close(proc, errors, timeout: float = 30) -> None:
     try:
         if proc.stdin is not None and proc.poll() is None:
-            proc.stdin.write(json.dumps({"done": True}) + "\n")
-            proc.stdin.flush()
-            proc.stdin.close()
-        proc.wait(timeout=30)
+            try:
+                proc.stdin.write(json.dumps({"done": True}) + "\n")
+                proc.stdin.flush()
+                proc.stdin.close()
+            except BrokenPipeError:
+                _fail(proc, errors, "maia worker closed")
+        proc.wait(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        _kill(proc)
+        raise
     finally:
-        if proc.poll() is None:
-            proc.kill()
+        _kill(proc)
 
 
-def _consume(proc, batch: list[dict], played: list[dict], bins: list[dict]) -> tuple[int, dict]:
-    excluded = 0
+def _progress(done: int, total: int, started: float, batches: int, every: int, final: bool) -> None:
+    if not final and batches != 1 and batches % every and done != total:
+        return
+    elapsed = time.monotonic() - started
+    if final:
+        print(f"maia corpus: finished {done}/{total} positions in {elapsed:.1f}s", file=sys.stderr)
+        return
+    eta = ""
+    if batches > 1 and done < total and done > 0:
+        eta = f", ETA {elapsed / done * (total - done):.0f}s"
+    print(f"maia corpus: {done}/{total} positions, elapsed {elapsed:.1f}s{eta}", file=sys.stderr)
+
+
+def _consume(proc, batch, played: list[dict], bins: list[dict], errors, timeout: float) -> dict:
     meta: dict = {}
-    for position, result in zip(batch, _send(proc, batch), strict=True):
+    for position, result in zip(batch, _send(proc, batch, errors, timeout), strict=True):
         row, reliability_rows = _outcome(position, result.get("moves"))
-        if row is None:
-            excluded += 1
-        else:
-            played.append(row)
-        _add_reliability(bins, reliability_rows)
+        played.append(row)
+        add_reliability(bins, reliability_rows)
         meta = result
-    return excluded, meta
+    return meta
 
 
-def _score(project: Path, spec: dict, alias: str, games: list[dict], batch_size: int):
+def _score(project, spec, alias, games, batch_size, progress_every, read_timeout):
     played: list[dict] = []
-    bins = _empty_bins()
-    excluded = 0
+    bins = empty_bins()
     meta: dict = {}
+    total = sum(len(game["moves"]) for game in games)
+    started = time.monotonic()
+    done = batches = 0
     with tempfile.TemporaryFile(mode="w+", encoding="utf-8") as errors:
         proc = _open_worker(project, spec, alias, errors)
         try:
@@ -388,33 +354,39 @@ def _score(project: Path, spec: dict, alias: str, games: list[dict], batch_size:
                     batch.append(position)
                     if len(batch) < batch_size:
                         continue
-                    count, meta = _consume(proc, batch, played, bins)
-                    excluded += count
+                    meta = _consume(proc, batch, played, bins, errors, read_timeout)
+                    done += len(batch)
+                    batches += 1
+                    _progress(done, total, started, batches, progress_every, False)
                     batch = []
             if batch:
-                count, meta = _consume(proc, batch, played, bins)
-                excluded += count
+                meta = _consume(proc, batch, played, bins, errors, read_timeout)
+                done += len(batch)
+                batches += 1
+                _progress(done, total, started, batches, progress_every, False)
+                batch = []
+            _close(proc, errors, read_timeout)
+        except Exception:
+            _kill(proc)
+            raise
         finally:
-            _close(proc)
-            errors.seek(0)
-            detail = errors.read()
-    return played, bins, excluded, meta, detail
+            _kill(proc)
+    _progress(done, total, started, batches, progress_every, True)
+    return played, bins, meta
 
 
-def _population(name: str, path: Path, stats: dict, rows, bins, excluded) -> dict:
+def _population(name: str, path: Path, stats: dict, rows, bins) -> dict:
     meta = POPULATIONS[name]
-    body = {
+    return {
         "id": meta["id"],
         "source_file": str(path),
         "blitz_filter": meta["blitz_only"],
         **stats,
-        "excluded_zero_probability": excluded,
         "by_rating_band": rows["by_rating_band"],
         "by_ply": rows["by_ply"],
-        "reliability": _finish_bins(bins),
-        **{key: rows["overall"][key] for key in rows["overall"]},
+        "reliability": finish_bins(bins),
+        **rows["overall"],
     }
-    return body
 
 
 def calibrate(
@@ -427,6 +399,8 @@ def calibrate(
     plies: int = PLIES,
     batch_size: int = BATCH,
     bootstrap: int = BOOTSTRAP,
+    progress_every: int = PROGRESS_EVERY,
+    read_timeout: float = READ_TIMEOUT,
 ) -> dict:
     """Score one PGN. `population` is `elite` or `public` and is never combined."""
     if population not in POPULATIONS:
@@ -442,30 +416,31 @@ def calibrate(
         pgn, blitz_only=blitz_only, sample_size=sample_size, seed=seed, plies=plies
     )
     meta: dict = {}
-    excluded = 0
-    bins = _empty_bins()
+    bins = empty_bins()
     played: list[dict] = []
     if games:
-        played, bins, excluded, meta, detail = _score(project, spec, alias, games, batch_size)
-        if not played and excluded == 0 and detail:
-            raise ValueError(detail.strip() or "maia failed")
-    overall = _metrics(played, seed, bootstrap)
+        played, bins, meta = _score(
+            project, spec, alias, games, batch_size, progress_every, read_timeout
+        )
+    overall = metrics(played, seed, bootstrap)
+    share = overall["zero_probability_share"] or 0
+    if share > ZERO_SHARE_WARN:
+        print(
+            f"maia corpus: zero played-move probability on {share:.1%} of positions",
+            file=sys.stderr,
+        )
     splits = {
         "overall": overall,
-        "by_rating_band": _labeled(played, "band", BANDS, seed, bootstrap),
-        "by_ply": _labeled(played, "ply", range(1, plies + 1), seed, bootstrap),
+        "by_rating_band": labeled(played, "band", BANDS, seed, bootstrap),
+        "by_ply": labeled(played, "ply", range(1, plies + 1), seed, bootstrap),
     }
-    measured = overall["n_positions"] > 0
-    if measured:
-        reason = None
-    elif not games:
-        reason = "no_eligible_games"
-    else:
-        reason = "played_probability_zero"
+    caveats = list(CAVEATS)
+    if population != "public":
+        caveats = [item for item in caveats if item != "public_sample_is_the_2026-08-01_prefix"]
     return {
         "kind": "maia_corpus_calibration",
-        "measured": measured,
-        "reason": reason,
+        "measured": overall["n_positions"] > 0,
+        "reason": None if overall["n_positions"] else "no_eligible_games",
         "seed": seed,
         "plies": plies,
         "sample_target_games": sample_size,
@@ -481,79 +456,10 @@ def calibrate(
             "platform": meta.get("platform"),
             "torch_version": meta.get("torch_version"),
         },
-        "population": _population(population, pgn, stats, splits, bins, excluded),
+        "population": _population(population, pgn, stats, splits, bins),
         "paper_top1_context": {"range": [0.55, 0.57], "role": "context_only", "pass_fail": False},
-        "caveats": list(CAVEATS),
+        "caveats": caveats,
     }
-
-
-def _fmt(value) -> str:
-    if value is None:
-        return ""
-    if isinstance(value, list):
-        return "[" + ", ".join(_fmt(item) for item in value) + "]"
-    return f"{float(value):.4f}"
-
-
-def _table(headers: list[str], rows: list[list[str]]) -> str:
-    head = "| " + " | ".join(headers) + " |"
-    rule = "|" + "|".join("---" for _ in headers) + "|"
-    body = ["| " + " | ".join(row) + " |" for row in rows]
-    return "\n".join([head, rule, *body])
-
-
-def _cells(row: dict, label) -> list[str]:
-    return [
-        str(label),
-        str(row["n_games"]),
-        str(row["n_positions"]),
-        _fmt(row["log_loss"]),
-        _fmt(row["top1"]),
-        _fmt(row["top3"]),
-    ]
-
-
-def render_markdown(report: dict) -> str:
-    """Short one-population report. It does not mention a second file's scores."""
-    pop = report["population"]
-    elite = ""
-    if not pop["blitz_filter"]:
-        elite = "Elite headline is the curated month. The blitz counts are a labeled subset.\n"
-    positions = str(pop["n_positions"])
-    scores = _table(
-        ["Score", "Estimate", "95% interval", "Positions"],
-        [
-            ["log-loss", _fmt(pop["log_loss"]), _fmt(pop["log_loss_interval"]), positions],
-            ["top-1", _fmt(pop["top1"]), _fmt(pop["top1_interval"]), positions],
-            ["top-3", _fmt(pop["top3"]), _fmt(pop["top3_interval"]), positions],
-        ],
-    )
-    bands = _table(
-        ["Band", "Games", "Positions", "Log-loss", "Top-1", "Top-3"],
-        [_cells(row, row["band"]) for row in pop["by_rating_band"]],
-    )
-    plies = _table(
-        ["Ply", "Games", "Positions", "Log-loss", "Top-1", "Top-3"],
-        [_cells(row, row["ply"]) for row in pop["by_ply"]],
-    )
-    state = "on" if pop["blitz_filter"] else "off"
-    met = str(pop["sample_target_met"]).lower()
-    return (
-        f"# Maia corpus calibration — {pop['id']}\n\n"
-        "One population. This file is not pooled with any other population.\n\n"
-        f"{elite}"
-        f"- Source: `{pop['source_file']}`\n"
-        f"- Blitz filter: {state}\n"
-        f"- Sample: {pop['sample_games']} games (target {report['sample_target_games']})\n"
-        f"- Sample target met: {met}\n"
-        f"- Scanned games passing `lichess_blitz`: {pop['games_passing_blitz']}\n"
-        f"- Sampled games passing `lichess_blitz`: {pop['sample_blitz_games']}\n"
-        f"- Positions: {positions}\n"
-        f"- Excluded, played probability zero: {pop['excluded_zero_probability']}\n\n"
-        f"{scores}\n\n## By rating band\n\n{bands}\n\n## By ply\n\n{plies}\n\n"
-        "The 55–57% top-1 range is context only. It is not a pass/fail bar.\n"
-        "Intervals resample games and keep every scored ply of a drawn game.\n"
-    )
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -568,6 +474,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--plies", type=int, default=PLIES)
     parser.add_argument("--batch-size", type=int, default=BATCH)
     parser.add_argument("--bootstrap", type=int, default=BOOTSTRAP)
+    parser.add_argument("--progress-every", type=int, default=PROGRESS_EVERY)
+    parser.add_argument("--read-timeout", type=float, default=READ_TIMEOUT)
     args = parser.parse_args(argv)
     try:
         report = calibrate(
@@ -579,8 +487,16 @@ def main(argv: list[str] | None = None) -> int:
             plies=args.plies,
             batch_size=args.batch_size,
             bootstrap=args.bootstrap,
+            progress_every=args.progress_every,
+            read_timeout=args.read_timeout,
         )
-    except (OSError, ValueError, json.JSONDecodeError) as exc:
+    except (
+        OSError,
+        ValueError,
+        json.JSONDecodeError,
+        subprocess.TimeoutExpired,
+        TimeoutError,
+    ) as exc:
         print(f"maia corpus: {exc}", file=sys.stderr)
         return 1
     args.json.parent.mkdir(parents=True, exist_ok=True)

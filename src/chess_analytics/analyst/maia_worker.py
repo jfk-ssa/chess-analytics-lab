@@ -101,23 +101,26 @@ def _load(cfg, torch):
     return model
 
 
-def _infer(model, cfg, request: dict, torch) -> dict:
+def _move_tables():
+    from maia3.utils import get_all_possible_moves  # pyright: ignore[reportMissingImports]
+
+    moves = get_all_possible_moves()
+    index = {move: i for i, move in enumerate(moves)}
+    return index, {i: move for move, i in index.items()}
+
+
+def _infer(model, cfg, request: dict, torch, tables=None) -> dict:
     import chess
     from maia3.dataset import (  # pyright: ignore[reportMissingImports]
         get_historical_tokens,
         get_legal_moves_mask,
         tokenize_board,
     )
-    from maia3.utils import (  # pyright: ignore[reportMissingImports]
-        get_all_possible_moves,
-        mirror_move,
-    )
+    from maia3.utils import mirror_move  # pyright: ignore[reportMissingImports]
 
     boards = [chess.Board(fen) for fen in request["boards"]]
     current = boards[-1]
-    moves = get_all_possible_moves()
-    index = {move: i for i, move in enumerate(moves)}
-    reverse = {i: move for move, i in index.items()}
+    index, reverse = _move_tables() if tables is None else tables
     history = deque((tokenize_board(board) for board in boards), maxlen=cfg.history)
     tokens = get_historical_tokens(history, cfg, 0.0, 0.0, 0.0, 0.0).unsqueeze(0)
     mask = get_legal_moves_mask(current, index)
@@ -186,56 +189,35 @@ def predict(request: dict) -> dict:
     return _real(request, path)
 
 
-def _note_pid(payload: dict) -> None:
-    target = payload.get("pid_file")
-    if isinstance(target, str):
-        with Path(target).open("a", encoding="utf-8") as handle:
-            handle.write(f"{os.getpid()}\n")
-
-
-def _trace(payload: dict, request: dict) -> None:
-    target = payload.get("echo_request")
-    if not isinstance(target, str):
-        return
-    row = {
-        "boards": len(request["boards"]),
-        "rating_opp": request["rating_opp"],
-        "rating_self": request["rating_self"],
-    }
-    with Path(target).open("a", encoding="utf-8") as handle:
-        handle.write(json.dumps(row) + "\n")
-
-
 def _serve_batch() -> None:
     """Load the checkpoint once and score newline-delimited batches."""
     header = json.loads(sys.stdin.readline())
     path = Path(header["weights_path"])
     fake = _fake_payload(path)
     prepared = None if fake is not None else _prepare(header, path)
+    tables = None if fake is not None else _move_tables()
     for line in sys.stdin:
         message = json.loads(line)
         if message.get("done"):
             return
         positions = message["positions"]
         if fake is not None:
-            _note_pid(fake)
-            results = []
-            for position in positions:
-                request = {**header, **position}
-                _trace(fake, request)
-                results.append(
-                    {
-                        "moves": fake["moves"],
-                        "wdl": fake["wdl"],
-                        "torch_version": None,
-                        "platform": _platform(),
-                    }
-                )
+            results = [
+                {
+                    "moves": fake["moves"],
+                    "wdl": fake["wdl"],
+                    "torch_version": None,
+                    "platform": _platform(),
+                }
+                for _position in positions
+            ]
         else:
             if prepared is None:
                 raise RuntimeError("maia checkpoint was not loaded")
             model, cfg, torch = prepared
-            results = [_infer(model, cfg, {**header, **position}, torch) for position in positions]
+            results = [
+                _infer(model, cfg, {**header, **position}, torch, tables) for position in positions
+            ]
         print(json.dumps({"ok": True, "results": results}), flush=True)
 
 

@@ -29,6 +29,7 @@ from chess_analytics.analyst.tool_catalog import (
 )
 from chess_analytics.common import digest
 
+HISTORY_BOARDS = 8
 _SHA256 = re.compile(r"[0-9a-f]{64}")
 _REVISION = re.compile(r"[0-9a-f]{40}")
 _MODEL_KEYS = {
@@ -159,13 +160,17 @@ def _boards(fen: str | None, moves: list[str] | None) -> tuple[chess.Board, list
     for uci in moves:
         cursor.push(chess.Move.from_uci(uci))
         series.append(cursor.copy())
-    return board, series[-8:]
+    return board, series[-HISTORY_BOARDS:]
+
+
+def clamp_rating(value: int) -> int:
+    return min(MAIA_MAX_RATING, max(MAIA_MIN_RATING, value))
 
 
 def _rating(value, label: str) -> int:
     if isinstance(value, bool) or not isinstance(value, int):
         raise ValueError(f"{label} must be an integer")
-    return min(MAIA_MAX_RATING, max(MAIA_MIN_RATING, value))
+    return clamp_rating(value)
 
 
 def _top_k(value) -> int:
