@@ -23,7 +23,10 @@ publication hash rather than stored on the branch tip. Default offline checks
 validate the pin; the documentation gate restores and verifies the publication
 bytes separately (ADR 0074).
 The shared header shows five primary guides and a visible Lab strip, with no
-Menu or dropdowns (ADR 0076).
+Menu or dropdowns (ADR 0076). Checked tools can also be served read-only over
+stdio to an external MCP client (`chesslab mcp`, optional `mcp` extra); see
+[MCP](MCP.md) and [ADR 0077](adr/0077-stdio-mcp-checked-tools.md). Guarantees
+are per call.
 
 This file stays a short summary: checkout structure, phase tracker, dataset
 versions, and limits. New decisions go only into [docs/adr](adr/). Do not append
@@ -55,7 +58,7 @@ email addresses, customer identifiers, and internal ticket links.
 
 ## Current dataset versions
 
-- Current tiny demo on this checkout: snapshot `bcdba5157163d9fd032a50fa`, source SHA-256 `130df65e85d18e78bbafd89daf6696c2596e03abf939adf47f2dcbdc4d33e75b`, draw rate 0.2. Snapshot ids include the implementation hash, so a source-tree change produces a new id.
+- Current tiny demo on this checkout: snapshot `d1d8cff7ff712770a1cd06fb`, source SHA-256 `130df65e85d18e78bbafd89daf6696c2596e03abf939adf47f2dcbdc4d33e75b`, draw rate 0.2. Snapshot ids include the implementation hash and the lock, so this source and lock change produces a new id.
 - Foundation source: complete `lichess_db_standard_rated_2013-01.pgn.zst`, 17,761,302 compressed bytes; 92,811,021 decompressed bytes scanned.
 - Source SHA256: `aa40b3671fa3cf1072eb182892cd90b0e1e003a4a5943492f64b77e7f3fd1635`.
 - Foundation snapshot: `b57f51ff70cc3c1637e641c7` in ignored `data/published/`.
