@@ -157,12 +157,13 @@ def render_markdown(report: dict) -> str:
     if pop["id"] == "public_2026_08_blitz":
         notes.append("The public sample is the ordered 2026-08-01 prefix, not a full month.")
     positions = str(pop["n_positions"])
+    scored = str(pop["n_positions"] - pop["zero_probability_count"])
     share = pop["zero_probability_share"]
     share_text = "" if share is None else f" ({share:.1%})"
     scores = _table(
         ["Score", "Estimate", "95% interval", "Positions"],
         [
-            ["log-loss", _fmt(pop["log_loss"]), _fmt(pop["log_loss_interval"]), positions],
+            ["log-loss", _fmt(pop["log_loss"]), _fmt(pop["log_loss_interval"]), scored],
             ["top-1", _fmt(pop["top1"]), _fmt(pop["top1_interval"]), positions],
             ["top-3", _fmt(pop["top3"]), _fmt(pop["top3_interval"]), positions],
         ],

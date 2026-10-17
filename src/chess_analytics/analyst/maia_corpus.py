@@ -8,6 +8,7 @@ import argparse
 import contextlib
 import json
 import math
+import os
 import random
 import re
 import select
@@ -47,6 +48,7 @@ PLIES = 12
 BATCH = 64
 BOOTSTRAP = 400
 READ_TIMEOUT = 600
+CLOSE_TIMEOUT = 30
 PROGRESS_EVERY = 10
 POPULATIONS = {
     "elite": {"id": "elite_2025_11", "blitz_only": False},
@@ -263,10 +265,38 @@ def _kill(proc) -> None:
             proc.wait(timeout=5)
 
 
-def _fail(proc, errors, fallback: str) -> NoReturn:
+def _fail(proc, errors, primary: str) -> NoReturn:
     _kill(proc)
     detail = _stderr(errors)
-    raise ValueError(detail or fallback)
+    if detail and detail not in primary:
+        primary = f"{primary}\n{detail}"
+    raise ValueError(primary)
+
+
+def _read_line(stream, timeout: float) -> str:
+    """One stdout line. A partial line still has to arrive before the deadline."""
+    deadline = time.monotonic() + timeout
+    fd = stream.fileno()
+    blocking = os.get_blocking(fd)
+    os.set_blocking(fd, False)
+    parts: list[bytes] = []
+    try:
+        while True:
+            remaining = deadline - time.monotonic()
+            ready = remaining > 0 and select.select([fd], [], [], remaining)[0]
+            if not ready:
+                raise TimeoutError
+            try:
+                piece = os.read(fd, 65536)
+            except BlockingIOError:
+                continue
+            if not piece:
+                return ""
+            parts.append(piece)
+            if b"\n" in piece:
+                return b"".join(parts).split(b"\n", 1)[0].decode()
+    finally:
+        os.set_blocking(fd, blocking)
 
 
 def _send(proc, positions: list[dict], errors, timeout: float) -> list[dict]:
@@ -283,15 +313,16 @@ def _send(proc, positions: list[dict], errors, timeout: float) -> list[dict]:
         proc.stdin.flush()
     except BrokenPipeError:
         _fail(proc, errors, "maia worker closed")
-    readable, _, _ = select.select([proc.stdout], [], [], timeout)
-    if not readable:
+    try:
+        line = _read_line(proc.stdout, timeout)
+    except TimeoutError:
         _fail(proc, errors, f"maia worker timed out after {timeout:g}s")
-    line = proc.stdout.readline()
     if not line:
         _fail(proc, errors, "maia worker closed")
     message = json.loads(line)
     if not message.get("ok"):
-        _fail(proc, errors, str(message.get("reason") or message.get("error") or "maia failed"))
+        primary = str(message.get("error") or message.get("reason") or "maia failed")
+        _fail(proc, errors, primary)
     results = message["results"]
     if len(results) != len(positions):
         _fail(proc, errors, "maia batch length mismatch")
@@ -309,8 +340,7 @@ def _close(proc, errors, timeout: float = 30) -> None:
                 _fail(proc, errors, "maia worker closed")
         proc.wait(timeout=timeout)
     except subprocess.TimeoutExpired:
-        _kill(proc)
-        raise
+        _fail(proc, errors, f"maia worker timed out after {timeout:g}s")
     finally:
         _kill(proc)
 
@@ -365,7 +395,7 @@ def _score(project, spec, alias, games, batch_size, progress_every, read_timeout
                 batches += 1
                 _progress(done, total, started, batches, progress_every, False)
                 batch = []
-            _close(proc, errors, read_timeout)
+            _close(proc, errors, CLOSE_TIMEOUT)
         except Exception:
             _kill(proc)
             raise
@@ -403,6 +433,8 @@ def calibrate(
     read_timeout: float = READ_TIMEOUT,
 ) -> dict:
     """Score one PGN. `population` is `elite` or `public` and is never combined."""
+    if progress_every < 1:
+        raise ValueError("--progress-every must be at least 1")
     if population not in POPULATIONS:
         raise ValueError("unknown maia population")
     config = _load_config(project)
