@@ -23,3 +23,4 @@ __pycache__/
 # or regenerate with scripts/summarize_opening_positions.py. The publication
 # hash remains in reports/opening-positions-checkpoint.json.
 /reports/opening-positions.json
+/reports/maia-corpus-calibration-*

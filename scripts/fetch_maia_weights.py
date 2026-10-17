@@ -14,7 +14,7 @@ from pathlib import Path
 
 from chess_analytics.analyst.maia_pins import CODE_COMMIT, CODE_REPO, PINS, RATING_SCALE
 
-INSTALL_LINE = "uv sync --locked --extra maia"
+INSTALL_LINE = "uv sync --locked --extra maia --extra dbt"
 
 
 def weights_url(pin: dict) -> str:
@@ -111,10 +111,19 @@ def main(argv: list[str] | None = None, opener=None) -> int:
     parser.add_argument("--config", type=Path)
     parser.add_argument("--dest", type=Path)
     parser.add_argument("--project", type=Path)
+    parser.add_argument("--write-config", action="store_true")
+    parser.add_argument("--force", action="store_true")
     args = parser.parse_args(argv)
     project = (args.project or Path.cwd()).resolve()
+    config_path = project / "config" / "maia.json"
+    if args.write_config and config_path.exists() and not args.force:
+        print(
+            f"maia download refused: {config_path} exists; pass --force to overwrite",
+            file=sys.stderr,
+        )
+        return 1
     try:
-        alias = args.alias or alias_from_config(args.config or (project / "config" / "maia.json"))
+        alias = args.alias or alias_from_config(args.config or config_path)
         dest = args.dest or Path("data/models")
         dest = dest if dest.is_absolute() else project / dest
         final = dest / PINS[alias]["filename"]
@@ -124,9 +133,18 @@ def main(argv: list[str] | None = None, opener=None) -> int:
     except ValueError as exc:
         print(f"maia download refused: {exc}", file=sys.stderr)
         return 1
+    if args.write_config:
+        config_path.parent.mkdir(parents=True, exist_ok=True)
+        config_path.write_text(
+            json.dumps(document, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
     print(json.dumps(document, indent=2, sort_keys=True))
-    print(INSTALL_LINE)
-    print("Do not commit the weights. Do not put this tool behind a public service.")
+    print(INSTALL_LINE, file=sys.stderr)
+    print(
+        "Do not commit the weights. Do not put this tool behind a public service.",
+        file=sys.stderr,
+    )
     return 0
 
 

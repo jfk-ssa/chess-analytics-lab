@@ -122,4 +122,52 @@ def test_destination_must_be_gitignored_and_alias_can_come_from_config(tmp_path)
         opener=opener,
     )
     assert code == 1
-    assert module.INSTALL_LINE == "uv sync --locked --extra maia"
+    assert module.INSTALL_LINE == "uv sync --locked --extra maia --extra dbt"
+    assert module.path_is_gitignored(ROOT, ROOT / "reports/maia-corpus-calibration-public.json")
+    assert module.path_is_gitignored(ROOT, ROOT / "reports/maia-corpus-calibration-elite.md")
+
+
+def test_write_config_refuses_to_clobber_and_keeps_stdout_json(tmp_path, monkeypatch, capsys):
+    module = _load()
+    document = {"default_alias": "23M", "models": {}, "version": "1"}
+    calls = []
+
+    def fake_fetch(alias, dest, opener, pins=None):
+        calls.append(alias)
+        dest.mkdir(parents=True, exist_ok=True)
+        return document
+
+    monkeypatch.setattr(module, "fetch_weights", fake_fetch)
+    monkeypatch.setattr(module, "path_is_gitignored", lambda *_args: True)
+    project = tmp_path / "proj"
+    config = project / "config" / "maia.json"
+    args = ["--alias", "23M", "--dest", "data/models", "--project", str(project), "--write-config"]
+
+    def opener(_url):
+        raise AssertionError("download started")
+
+    written = module.main(args, opener=opener)
+    out, err = capsys.readouterr()
+    assert written == 0
+    assert calls == ["23M"]
+    assert json.loads(out) == document
+    assert module.INSTALL_LINE in err
+    assert "Do not commit" in err
+    assert module.INSTALL_LINE not in out
+    assert json.loads(config.read_text()) == document
+
+    refused = module.main(args, opener=opener)
+    refused_out, refused_err = capsys.readouterr()
+    assert refused == 1
+    assert calls == ["23M"]
+    assert refused_out == ""
+    assert "exists" in refused_err
+    assert json.loads(config.read_text()) == document
+
+    forced = module.main([*args, "--force"], opener=opener)
+    forced_out, forced_err = capsys.readouterr()
+    assert forced == 0
+    assert calls == ["23M", "23M"]
+    assert json.loads(forced_out) == document
+    assert module.INSTALL_LINE in forced_err
+    assert module.INSTALL_LINE not in forced_out
