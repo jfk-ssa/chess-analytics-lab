@@ -88,3 +88,4 @@ short summary of the current checkout, not a log of new decisions.
 | 0080 | 2026-10-17 | [MCP worked example on the real August prefix](adr/0080-mcp-worked-example.md) |
 | 0081 | 2026-10-17 | [Human-move prediction with Maia-3](adr/0081-human-move-prediction-maia3.md) |
 | 0082 | 2026-10-17 | [Maia calibration limit and the 1.d4 reply view](adr/0082-maia-calibration-and-d4-repertoire.md) |
+| 0083 | 2026-10-17 | [Maia corpus calibration plan](adr/0083-maia-corpus-calibration-plan.md) |
