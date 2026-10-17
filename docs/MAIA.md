@@ -15,9 +15,12 @@ through a small adapter so an official API can replace them later. Those
 internals are not a stable API, which is why the commit is pinned.
 
 The historical live-provider prompt does not offer this tool. Typed plans and
-`chesslab mcp` do, because both read the same registry. There is no frozen
-accuracy set yet. A later change can calibrate against Lichess months from
-August 2025 onward and add `maia_v1`. This page does not claim that result.
+`chesslab mcp` do, because both read the same registry. `maia_v1` compares
+four displayed probabilities with tolerance 1e-4. Holdout periods and game
+counts are the opening-corpus training index in
+[opening-corpus.json](../reports/opening-corpus.json). No played-move log-loss
+has been computed from those games. See
+[ADR 0082](adr/0082-maia-calibration-and-d4-repertoire.md).
 
 ## Tool
 
@@ -130,7 +133,25 @@ does not download the weights and does not install the `maia` extra.
 
 It does not merge centipawn loss into the distribution. It does not sample
 moves. It does not accept a time-control argument other than the fixed
-Lichess blitz scale. It does not calibrate the model against the corpus.
-Opening accuracy for Maia-3 is not in the paper. Use corpus frequencies where
-the counts are decent, and treat Maia as a backstop for sparse nodes only
-after that calibration exists.
+Lichess blitz scale. It does not yet extract played moves from the opening-game index, so it does
+not score the model on those games. Opening accuracy for Maia-3 is
+not in the paper.
+
+## Replies to 1.d4
+
+`scripts/maia_d4_repertoire.py` calls `predict_human_moves` after `d2d4` at
+1200, 1500, and 1800, with both players at that rating. `--eval` prints
+`score_maia_v1` instead. The two caveats stay
+on the view. On one `linux-x86_64` run with torch `2.14.1+cpu`, float32, and
+one thread, the top replies were:
+
+| Rating | d5 | Nf6 | e6 | e5 |
+|---:|---:|---:|---:|---:|
+| 1200 | 0.5485 | 0.1001 | 0.0844 | 0.1031 |
+| 1500 | 0.4910 | 0.1404 | 0.0943 | 0.0881 |
+| 1800 | 0.4239 | 0.2078 | 0.0974 | 0.0632 |
+
+At 1200, e5 is ahead of Nf6. At 1500 and 1800, Nf6 is the second reply.
+These are model estimates from that run. They are not counts of games.
+`maia_v1` stores the same displayed values and allows an absolute difference
+of 0.0001. Another platform skips that check.

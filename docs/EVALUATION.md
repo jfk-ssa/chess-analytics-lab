@@ -81,10 +81,14 @@ frequencies are not corpus frequencies. Source evaluations are re-read from
 `tests/fixtures/portfolio_annotated.pgn`. Equality between a source evaluation
 and an engine score is not required.
 
-`predict_human_moves` is not part of `engine_v1` and has no frozen accuracy
-set. A later change can add `maia_v1` on Lichess months from August 2025
-onward. That calibration is not this result. The historical live-provider
-prompt does not offer the tool.
+`predict_human_moves` is not part of `engine_v1`. `maia_v1` freezes four
+calls and compares displayed probabilities with absolute tolerance 1e-4
+([ADR 0082](adr/0082-maia-calibration-and-d4-repertoire.md)). The check skips
+without a local Maia config, without the `maia` extra, or on a platform other
+than the one named in `evals/references/maia_v1.json`. It is not a corpus
+accuracy score. Holdout periods and game counts are the opening-corpus
+training index in [opening-corpus.json](../reports/opening-corpus.json).
+The historical live-provider prompt does not offer the tool.
 
 Score, mate, depth, selective depth, best move, and principal variation are
 exact when the configured binary's SHA-256 matches the reference. Node counts

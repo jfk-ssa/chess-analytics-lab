@@ -96,6 +96,7 @@ def test_torch_is_not_imported_by_the_default_modules():
         "src/chess_analytics/analyst/maia.py",
         "src/chess_analytics/analyst/maia_worker.py",
         "src/chess_analytics/analyst/maia_pins.py",
+        "src/chess_analytics/analyst/maia_trust.py",
         "src/chess_analytics/analyst/tools.py",
         "src/chess_analytics/analyst/core.py",
         "src/chess_analytics/analyst/tool_catalog.py",

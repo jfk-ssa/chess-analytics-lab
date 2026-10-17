@@ -1,0 +1,13 @@
+{
+  "split": "maia_v1",
+  "probability_tolerance": 0.0001,
+  "platform": "linux-x86_64",
+  "torch_version": "2.14.1+cpu",
+  "threads": 1,
+  "dtype": "float32",
+  "weights_sha256": "bce6cd1af5f0399ac7eed33fabb7a6a2ef6193662c2740f262bf93af7bfb3569",
+  "code_commit": "1e13597c42d4858b7cfd7cfdae01e297263364b2",
+  "alias": "23M",
+  "rating_scale": "lichess-blitz",
+  "note": "Displayed probabilities from one linux-x86_64 fp32 CPU run at one thread. Thread and batch noise is about 1e-6, under one displayed digit. A different platform skips. Apple Silicon was not measured."
+}
