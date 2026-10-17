@@ -1,5 +1,6 @@
 """Offline Maia comparison and repertoire view. No weight download."""
 
+import importlib.util
 import math
 from pathlib import Path
 
@@ -183,7 +184,31 @@ def test_maia_v1_skips_before_any_worker_and_pins_the_frozen_file(tmp_path, monk
     assert cases[2]["top_move"] == "d7d5"
 
 
-def test_repertoire_script_does_not_download():
+def test_maia_v1_runs_on_the_real_project_when_configured():
+    result = score_maia_v1(ROOT)
+    if result["skipped"]:
+        pytest.skip(result["reason"])
+    assert result["failures"] == []
+
+
+def _repertoire_script():
+    path = ROOT / "scripts/maia_d4_repertoire.py"
+    spec = importlib.util.spec_from_file_location("maia_d4_repertoire", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_repertoire_script_does_not_download(capsys, monkeypatch):
     source = (ROOT / "scripts/maia_d4_repertoire.py").read_text()
     assert "urlopen" not in source
+    assert "--eval" in source
     assert "if __name__" in source
+    module = _repertoire_script()
+    monkeypatch.setattr(
+        module,
+        "score_maia_v1",
+        lambda _project: {"skipped": True, "reason": "maia_not_configured", "failures": []},
+    )
+    assert module.main(["--eval"], ROOT) == 0
+    assert "maia_not_configured" in capsys.readouterr().out

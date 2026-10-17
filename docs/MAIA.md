@@ -139,7 +139,8 @@ not in the paper.
 ## Replies to 1.d4
 
 `scripts/maia_d4_repertoire.py` calls `predict_human_moves` after `d2d4` at
-1200, 1500, and 1800, with both players at that rating. The two caveats stay
+1200, 1500, and 1800, with both players at that rating. `--eval` prints
+`score_maia_v1` instead. The two caveats stay
 on the view. On one `linux-x86_64` run with torch `2.14.1+cpu`, float32, and
 one thread, the top replies were:
 
