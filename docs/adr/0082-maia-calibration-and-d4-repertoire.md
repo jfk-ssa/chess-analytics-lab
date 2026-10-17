@@ -68,9 +68,11 @@ counts into the probabilities.
 
 Offline tests cover the comparison math, the month inventory, the blitz
 window, the skip gate, and the 1.d4 view against the fake distribution.
-The weight comparison runs only when `config/maia.json` and the `maia`
-extra are both present, and only on `linux-x86_64`. The historical planner
-prompt is unchanged. No corpus accuracy claim is made.
+The project test calls `score_maia_v1` on the repository root and skips with
+that function's own reason unless `config/maia.json`, the `maia` extra, and
+the reference platform are all present. `scripts/maia_d4_repertoire.py --eval`
+prints the same result. The historical planner prompt is unchanged. No corpus
+accuracy claim is made.
 
 ## Implementation steps
 
