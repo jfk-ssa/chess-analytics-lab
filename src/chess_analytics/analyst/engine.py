@@ -19,6 +19,7 @@ from chess_analytics.analyst.tool_catalog import (
     MAX_MOVE_PREFIX,
     OPENING_COHORTS,
 )
+from chess_analytics.analyst.worker_launch import worker_command
 from chess_analytics.common import digest
 
 THREADS = 1
@@ -26,12 +27,6 @@ HASH_MB = 16
 PV_LIMIT = 8
 _SHA256 = re.compile(r"[0-9a-f]{64}")
 _UCI = re.compile(r"[a-h][1-8][a-h][1-8][qrbn]?")
-# Linux only: the engine process dies with the worker. Verified by SIGKILL of the parent.
-_PARENT_DEATH = (
-    "import ctypes, os, sys\n"
-    "ctypes.CDLL('libc.so.6').prctl(1, 9)\n"
-    "os.execv(sys.argv[1], sys.argv[1:])\n"
-)
 _REQUIRED_OPTIONS = ("Threads", "Hash", "Clear Hash")
 _PREFERRED_OPTIONS = (
     ("UCI_AnalyseMode", True),
@@ -282,8 +277,8 @@ def _command(binary: Path) -> list[str]:
     The hash is still the configured file, not this interpreter.
     """
     if binary.suffix == ".py":
-        return [sys.executable, "-c", _PARENT_DEATH, sys.executable, str(binary)]
-    return [sys.executable, "-c", _PARENT_DEATH, str(binary)]
+        return worker_command([sys.executable, str(binary)])
+    return worker_command([str(binary)])
 
 
 class _EngineSession:

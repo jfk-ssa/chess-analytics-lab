@@ -231,10 +231,10 @@ def score_maia_v1(project: Path) -> dict:
         return _skipped("maia_not_configured", host)
     if not _runtime_present():
         return _skipped("maia_unavailable", host)
-    cases = read_json(project / "evals/cases/maia_v1.json")
     reference = read_json(project / "evals/references/maia_v1.json")
     if host != reference["platform"]:
         return _skipped("platform_unmeasured", host)
+    cases = read_json(project / "evals/cases/maia_v1.json")
     tolerance = float(reference["probability_tolerance"])
     failures = []
     for case in cases:

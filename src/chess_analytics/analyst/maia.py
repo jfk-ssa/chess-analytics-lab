@@ -27,6 +27,7 @@ from chess_analytics.analyst.tool_catalog import (
     MAIA_PROBABILITY_DECIMALS,
     MAX_MOVE_PREFIX,
 )
+from chess_analytics.analyst.worker_launch import worker_command
 from chess_analytics.common import digest
 
 HISTORY_BOARDS = 8
@@ -59,11 +60,6 @@ _PROVENANCE_KEYS = (
     "rating_scale",
 )
 _WDL_LABEL = "human-outcome prediction, not engine evaluation"
-_PARENT_DEATH = (
-    "import ctypes, os, sys\n"
-    "ctypes.CDLL('libc.so.6').prctl(1, 9)\n"
-    "os.execv(sys.argv[1], sys.argv[1:])\n"
-)
 _THREAD_ENV = ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS", "NUMEXPR_NUM_THREADS")
 
 
@@ -368,14 +364,7 @@ def _child_env(threads: int) -> dict:
 
 
 def _run_worker(project: Path, payload: dict, threads: int) -> dict:
-    command = [
-        sys.executable,
-        "-c",
-        _PARENT_DEATH,
-        sys.executable,
-        "-m",
-        "chess_analytics.analyst.maia_worker",
-    ]
+    command = worker_command([sys.executable, "-m", "chess_analytics.analyst.maia_worker"])
     try:
         completed = subprocess.run(
             command,

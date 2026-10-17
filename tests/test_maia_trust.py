@@ -168,9 +168,28 @@ def test_maia_v1_skips_before_any_worker_and_pins_the_frozen_file(tmp_path, monk
     weights = tmp_path / "weights.json"
     weights.write_text(DISTRIBUTION.read_text())
     write_maia(tmp_path, weights)
+    runtime = (
+        importlib.util.find_spec("torch") is not None
+        and importlib.util.find_spec("maia3") is not None
+    )
+    if runtime:
+        # Configured, and the runtime is installed, so the next skip is the
+        # platform. The reference lives in the repo; a tmp project does not
+        # have it. Darwin is not the measured host, and the case file must
+        # not be required to reach that skip.
+        reference = tmp_path / "evals/references/maia_v1.json"
+        reference.parent.mkdir(parents=True, exist_ok=True)
+        reference.write_bytes((ROOT / "evals/references/maia_v1.json").read_bytes())
+        monkeypatch.setattr("chess_analytics.analyst.maia_trust.platform.system", lambda: "Darwin")
+        monkeypatch.setattr("chess_analytics.analyst.maia_trust.platform.machine", lambda: "arm64")
     unavailable = score_maia_v1(tmp_path)
     assert unavailable["skipped"] is True
-    assert unavailable["reason"] == "maia_unavailable"
+    assert unavailable["failures"] == []
+    if runtime:
+        assert unavailable["reason"] == "platform_unmeasured"
+        assert not (tmp_path / "evals/cases/maia_v1.json").exists()
+    else:
+        assert unavailable["reason"] == "maia_unavailable"
     cases = read_json(ROOT / "evals/cases/maia_v1.json")
     reference = read_json(ROOT / "evals/references/maia_v1.json")
     assert [case["id"] for case in cases] == ["start_1500", "d4_1200", "d4_1500", "d4_1800"]

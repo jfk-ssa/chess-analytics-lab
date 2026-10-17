@@ -19,11 +19,13 @@ from chess_analytics.analyst.core import (
     execute_plan,
     run_killable_tool,
 )
+from chess_analytics.analyst.engine import _command
 from chess_analytics.analyst.maia_pins import CODE_COMMIT, CODE_REPO, PINS, RATING_SCALE
 from chess_analytics.analyst.mcp_server import _envelope, rejection
 from chess_analytics.analyst.plan_recovery import PLAN_SCHEMA
 from chess_analytics.analyst.tool_catalog import MAIA_CAVEATS, TOOLS_BY_NAME, arguments_match
 from chess_analytics.analyst.tools import CheckedTools
+from chess_analytics.analyst.worker_launch import worker_command
 from chess_analytics.common import digest, write_json
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -340,7 +342,36 @@ def test_worker_environment_stays_offline(tmp_path, monkeypatch):
     assert "OPENAI_API_KEY" not in env and "HF_TOKEN" not in env
     assert env["HF_HUB_OFFLINE"] == "1"
     assert env["OMP_NUM_THREADS"] == "1"
-    assert "prctl" in captured["command"][2]
+    command = captured["command"]
+    worker = [sys.executable, "-m", "chess_analytics.analyst.maia_worker"]
+    if sys.platform == "linux":
+        assert command[1] == "-c"
+        assert "prctl" in command[2]
+        assert command[3:] == worker
+    else:
+        assert command == worker
+        assert "prctl" not in " ".join(command)
+
+
+def test_non_linux_launch_skips_the_prctl_wrapper(monkeypatch, tmp_path):
+    guard = (
+        "import ctypes, os, sys\n"
+        "ctypes.CDLL('libc.so.6').prctl(1, 9)\n"
+        "os.execv(sys.argv[1], sys.argv[1:])\n"
+    )
+    argv = [sys.executable, "-m", "chess_analytics.analyst.maia_worker"]
+    script = tmp_path / "fake_uci.py"
+    script.write_text("print('uci')\n")
+    binary = tmp_path / "stockfish"
+    binary.write_bytes(b"")
+    monkeypatch.setattr(sys, "platform", "linux")
+    assert worker_command(argv) == [sys.executable, "-c", guard, *argv]
+    assert _command(binary) == [sys.executable, "-c", guard, str(binary)]
+    assert _command(script) == [sys.executable, "-c", guard, sys.executable, str(script)]
+    monkeypatch.setattr(sys, "platform", "darwin")
+    assert worker_command(argv) == argv
+    assert _command(script) == [sys.executable, str(script)]
+    assert _command(binary) == [str(binary)]
 
 
 @pytest.fixture(scope="module")
