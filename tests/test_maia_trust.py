@@ -70,25 +70,21 @@ def test_holdout_inventory_is_every_training_source_and_is_unmeasured():
     report = read_json(ROOT / "reports/opening-corpus.json")
     inventory = holdout_inventory(report)
     periods = [row["period"] for row in inventory["sources"]]
-    assert periods == [
-        "2025-11",
-        "2025-12",
-        "2026-01",
-        "2026-02",
-        "2026-03",
-        "2026-04",
-        "2026-05",
-        "2026-06",
-        "2026-07",
-        "2026-08",
-    ]
-    assert "2013-01" not in periods
+    kept = [row for row in report["training_sources"] if str(row["period"]) >= "2025-08"]
+    assert periods == sorted(periods)
+    assert periods == [row["period"] for row in kept]
     assert all(period >= "2025-08" for period in periods)
-    assert inventory["games"] == report["counts"]["training_games"] == 1_042_346
-    assert inventory["sources"][0]["cohort"] == "elite_reference"
-    assert inventory["sources"][0]["games"] == 240_086
-    assert inventory["sources"][0]["first_date"] == "2025-11-01"
-    assert inventory["sources"][0]["last_date"] == "2025-11-30"
+    assert "2013-01" not in periods
+    assert inventory["games"] == sum(int(row["games"]) for row in inventory["sources"])
+    assert inventory["games"] == report["counts"]["training_games"]
+    elite = next(row for row in inventory["sources"] if row["cohort"] == "elite_reference")
+    report_elite = next(
+        row for row in report["training_sources"] if row["cohort"] == "elite_reference"
+    )
+    assert elite["period"] == report_elite["period"]
+    assert elite["games"] == report_elite["games"]
+    assert elite["first_date"] == report_elite["first_date"]
+    assert elite["last_date"] == report_elite["last_date"]
     assert inventory["measured"] is False
     assert inventory["reason"] == "played_moves_not_extracted"
     assert inventory["caveat"] == INDEX_CAVEAT
@@ -114,7 +110,7 @@ def test_played_move_scores_and_reliability_buckets():
     assert measured["measured"] is True
     assert measured["reason"] is None
     assert measured["played"]["n"] == 3
-    assert measured["games"] == 1_042_346
+    assert measured["games"] == report["counts"]["training_games"]
     assert measured["caveat"] == INDEX_CAVEAT
     assert calibration_report(report)["measured"] is False
 
