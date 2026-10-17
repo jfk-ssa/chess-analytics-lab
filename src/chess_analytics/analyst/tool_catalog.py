@@ -16,6 +16,30 @@ CONTRACTS = {
     "evaluation_coverage": "evaluation_coverage.json",
 }
 ALLOWED_GROUP_BY = {"opening_family", "clock_bucket"}
+ENGINE_MIN_DEPTH = 1
+ENGINE_MAX_DEPTH = 16
+ENGINE_DEFAULT_DEPTH = 12
+MAX_MOVE_PREFIX = 40
+MAX_CANDIDATES = 6
+CONTINUATION_RETURN_LIMIT = 8
+OPENING_COHORTS = ("elite_reference", "rated_public")
+ENGINE_CAVEATS = ("engine_eval_depth_limited", "engine_not_ground_truth")
+_DEPTH = {"type": "integer", "minimum": ENGINE_MIN_DEPTH, "maximum": ENGINE_MAX_DEPTH}
+_FEN = {"type": "string", "minLength": 1, "maxLength": 128}
+_UCI_MOVE = {"type": "string", "minLength": 4, "maxLength": 5}
+_MOVE_PREFIX = {
+    "type": "array",
+    "minItems": 1,
+    "maxItems": MAX_MOVE_PREFIX,
+    "items": _UCI_MOVE,
+}
+_CANDIDATES = {
+    "type": "array",
+    "minItems": 1,
+    "maxItems": MAX_CANDIDATES,
+    "items": _UCI_MOVE,
+}
+_COHORT_NAME = {"type": "string", "enum": list(OPENING_COHORTS)}
 _METRIC_ID = {"type": "string", "enum": sorted(CONTRACTS)}
 _BUCKET = {"type": "string", "enum": sorted(BUCKETS)}
 _COHORT = {
@@ -194,6 +218,42 @@ TOOLS = (
         _object({"first": _BUCKET, "second": _BUCKET}, ["first", "second"]),
         frozenset({"first", "second"}),
         exact_keys=True,
+    ),
+    _spec(
+        "evaluate_position",
+        "Evaluate one validated position with the configured local engine. "
+        "The score is depth-limited evidence, not ground truth.",
+        _object({"fen": _FEN, "moves": _MOVE_PREFIX, "depth": _DEPTH}),
+        frozenset({"fen", "moves", "depth"}),
+        exact_keys=False,
+    ),
+    _spec(
+        "position_continuations",
+        "Observed White continuations for one position from local opening data. "
+        "Frequency is not move quality. Unavailable when that data is not configured.",
+        _object(
+            {"fen": _FEN, "moves": _MOVE_PREFIX, "cohort": _COHORT_NAME},
+            ["cohort"],
+        ),
+        frozenset({"fen", "moves", "cohort"}),
+        exact_keys=False,
+    ),
+    _spec(
+        "compare_candidate_moves",
+        "Pair each candidate's centipawn loss versus the engine best move with "
+        "its observed frequency. At most six candidates.",
+        _object(
+            {
+                "fen": _FEN,
+                "moves": _MOVE_PREFIX,
+                "depth": _DEPTH,
+                "cohort": _COHORT_NAME,
+                "candidates": _CANDIDATES,
+            },
+            ["cohort", "candidates"],
+        ),
+        frozenset({"fen", "moves", "depth", "cohort", "candidates"}),
+        exact_keys=False,
     ),
 )
 TOOLS_BY_NAME = {spec.name: spec for spec in TOOLS}

@@ -13,8 +13,9 @@ SESSION_CALL_LIMIT = 64
 CONTRACT_PREFIX = "chesslab://contracts/"
 _CONTRACT_NAME = re.compile(r"[a-z0-9_]+\.json")
 INSTRUCTIONS = (
-    "Read-only checked chess metric tools for one local analytical snapshot. "
+    "Read-only checked chess tools for one local analytical snapshot. "
     "Each call returns that snapshot's dataset id and an evidence id. "
+    "Engine scores are depth-limited local evidence, not ground truth. "
     "Checks are per call. This server does not apply the repository planner's "
     "four-step limit, and that planner's evaluation scores do not transfer here."
 )

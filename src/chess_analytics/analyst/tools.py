@@ -5,6 +5,8 @@ from pathlib import Path
 
 import duckdb
 
+from chess_analytics.analyst import engine as engine_tools
+from chess_analytics.analyst.openings import position_continuations as read_continuations
 from chess_analytics.analyst.tool_catalog import ALLOWED_GROUP_BY, CONTRACTS, TOOLS_BY_NAME
 from chess_analytics.common import digest
 from chess_analytics.corpus.metrics import (
@@ -253,6 +255,36 @@ class CheckedTools:
             ),
             "caveats": ["source_evaluation_selection", "exploratory_proxy"],
         }
+
+    def evaluate_position(
+        self, fen: str | None = None, moves: list[str] | None = None, depth: int | None = None
+    ) -> dict:
+        return engine_tools.evaluate_position(
+            self.project, self.dataset_id, fen=fen, moves=moves, depth=depth
+        )
+
+    def position_continuations(
+        self, cohort: str | None = None, fen: str | None = None, moves: list[str] | None = None
+    ) -> dict:
+        return read_continuations(self.project, self.dataset_id, cohort, fen=fen, moves=moves)
+
+    def compare_candidate_moves(
+        self,
+        candidates: list[str] | None = None,
+        cohort: str | None = None,
+        fen: str | None = None,
+        moves: list[str] | None = None,
+        depth: int | None = None,
+    ) -> dict:
+        return engine_tools.compare_candidate_moves(
+            self.project,
+            self.dataset_id,
+            candidates=candidates,
+            cohort=cohort,
+            fen=fen,
+            moves=moves,
+            depth=depth,
+        )
 
     def execute(self, name: str, args: dict) -> dict:
         """Dispatch through the shared registry. The key gate matches the historical planner."""

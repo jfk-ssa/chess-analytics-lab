@@ -83,3 +83,4 @@ short summary of the current checkout, not a log of new decisions.
 | 0075 | 2026-10-10 | [Group site navigation and collapse it on mobile](adr/0075-grouped-site-navigation.md) |
 | 0076 | 2026-10-10 | [Show primary guides and a Lab strip](adr/0076-visible-site-navigation.md) |
 | 0077 | 2026-10-17 | [Stdio MCP for checked tools](adr/0077-stdio-mcp-checked-tools.md) |
+| 0078 | 2026-10-17 | [Engine-grounded checked tools](adr/0078-engine-grounded-checked-tools.md) |

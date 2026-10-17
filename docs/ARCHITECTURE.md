@@ -45,6 +45,10 @@ The same allowlisted tools are available outside that planner through
 `chesslab mcp`, a stdio-only MCP server described in [MCP](MCP.md). Each call
 is checked on its own. The planner's four-step limit and the M6/M7 scores
 belong to this repository's planner; they do not transfer to an outside client.
+Typed plans and that server can also score one position with a configured local
+engine and read observed White continuations from local opening data. Those
+scores are depth-limited evidence. The live provider prompt is unchanged.
+See [ENGINE](ENGINE.md).
 
 The full demo copies only required code/contracts into an ignored project under
 `work/portfolio-demo/project`, publishes a synthetic snapshot there and passes

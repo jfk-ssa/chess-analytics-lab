@@ -13,6 +13,9 @@ __pycache__/
 /artifacts/
 /work/
 .DS_Store
+# Local engine and opening-visit pointers. Examples live beside these names.
+/config/engine.json
+/config/opening-visits.json
 # Generated opening rankings. Restore with scripts/materialize_opening_positions.py
 # or regenerate with scripts/summarize_opening_positions.py. The publication
 # hash remains in reports/opening-positions-checkpoint.json.
