@@ -89,9 +89,8 @@ def test_holdout_inventory_is_every_training_source_and_is_unmeasured():
     assert inventory["sources"][0]["first_date"] == "2025-11-01"
     assert inventory["sources"][0]["last_date"] == "2025-11-30"
     assert inventory["measured"] is False
-    assert inventory["reason"] == "opening_index_absent"
+    assert inventory["reason"] == "played_moves_not_extracted"
     assert inventory["caveat"] == INDEX_CAVEAT
-    assert not (ROOT / "data/openings").exists()
 
 
 def test_played_move_scores_and_reliability_buckets():

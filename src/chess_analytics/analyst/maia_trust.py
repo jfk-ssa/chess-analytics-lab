@@ -34,11 +34,10 @@ def lichess_blitz(base_seconds, increment_seconds) -> bool:
 
 
 def holdout_inventory(report: dict) -> dict:
-    """Months at or after August 2025 in the checked opening-corpus report.
+    """Opening-corpus training-index rows from August 2025 onward.
 
-    The report is the committed inventory. It is not a Maia score. Every
-    training source in the current report falls in this window. The 2013-01
-    foundation source is not a training source.
+    "Training" here is that index, not Maia-3's own training set. The report
+    is not a Maia score, and this function does not look for the index on disk.
     """
     sources = []
     for row in report.get("training_sources") or []:
@@ -60,7 +59,7 @@ def holdout_inventory(report: dict) -> dict:
         "sources": sources,
         "games": games,
         "measured": False,
-        "reason": "opening_index_absent",
+        "reason": "played_moves_not_extracted",
         "caveat": INDEX_CAVEAT,
     }
 
@@ -130,8 +129,8 @@ def calibration_report(
 ) -> dict:
     """Inventory plus scores when played-move rows were actually extracted.
 
-    Passing no rows leaves `measured` false. That is the result when the game
-    index and the PGNs it points at are not in the checkout.
+    Passing no rows leaves `measured` false with `played_moves_not_extracted`.
+    Nothing here reads the game index or the PGNs, whether or not they are on disk.
     """
     summary = holdout_inventory(report)
     if not played:
