@@ -9,3 +9,4 @@ and `uv run --locked --no-editable ruff check .`. Reinstall the project wheel af
 source edits with `--reinstall-package chess-analytics-lab`; see README for details.
 Tests and demo must work offline after installation. No downloads on imports or test collection.
 Keep bulk data out of Git, record provenance, and update status and decisions with measured evidence.
+When you open a pull request on this repository, assign it to jfk-ssa.

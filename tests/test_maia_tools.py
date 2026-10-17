@@ -5,6 +5,7 @@ import importlib.util
 import json
 import os
 import platform
+import signal
 import subprocess
 import sys
 import time
@@ -19,11 +20,13 @@ from chess_analytics.analyst.core import (
     execute_plan,
     run_killable_tool,
 )
+from chess_analytics.analyst.engine import _command
 from chess_analytics.analyst.maia_pins import CODE_COMMIT, CODE_REPO, PINS, RATING_SCALE
 from chess_analytics.analyst.mcp_server import _envelope, rejection
 from chess_analytics.analyst.plan_recovery import PLAN_SCHEMA
 from chess_analytics.analyst.tool_catalog import MAIA_CAVEATS, TOOLS_BY_NAME, arguments_match
 from chess_analytics.analyst.tools import CheckedTools
+from chess_analytics.analyst.worker_launch import worker_command
 from chess_analytics.common import digest, write_json
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -340,7 +343,125 @@ def test_worker_environment_stays_offline(tmp_path, monkeypatch):
     assert "OPENAI_API_KEY" not in env and "HF_TOKEN" not in env
     assert env["HF_HUB_OFFLINE"] == "1"
     assert env["OMP_NUM_THREADS"] == "1"
-    assert "prctl" in captured["command"][2]
+    command = captured["command"]
+    worker = [sys.executable, "-m", "chess_analytics.analyst.maia_worker"]
+    assert command[0] == sys.executable and command[1] == "-c"
+    assert command[3:] == worker
+    if sys.platform == "linux":
+        assert "prctl" in command[2]
+    else:
+        assert "prctl" not in command[2]
+        assert "os.getppid()" in command[2] and "os.killpg(" in command[2]
+
+
+def test_non_linux_launch_uses_the_parent_watch(monkeypatch, tmp_path):
+    guard = (
+        "import ctypes, os, sys\n"
+        "ctypes.CDLL('libc.so.6').prctl(1, 9)\n"
+        "os.execv(sys.argv[1], sys.argv[1:])\n"
+    )
+    argv = [sys.executable, "-m", "chess_analytics.analyst.maia_worker"]
+    script = tmp_path / "fake_uci.py"
+    script.write_text("print('uci')\n")
+    binary = tmp_path / "stockfish"
+    binary.write_bytes(b"")
+    monkeypatch.setattr(sys, "platform", "linux")
+    assert worker_command(argv) == [sys.executable, "-c", guard, *argv]
+    assert _command(binary) == [sys.executable, "-c", guard, str(binary)]
+    assert _command(script) == [sys.executable, "-c", guard, sys.executable, str(script)]
+    monkeypatch.setattr(sys, "platform", "darwin")
+    watched = worker_command(argv)
+    assert watched[0] == sys.executable and watched[1] == "-c"
+    assert "prctl" not in watched[2]
+    assert "os.getppid()" in watched[2] and "start_new_session=True" in watched[2]
+    assert "os.killpg(" in watched[2]
+    assert watched[3:] == argv
+    assert _command(script)[3:] == [sys.executable, str(script)]
+    assert _command(binary)[3:] == [str(binary)]
+
+
+def test_portable_wrapper_forwards_stdio_and_the_exit_code(monkeypatch, tmp_path):
+    monkeypatch.setattr(sys, "platform", "darwin")
+    script = tmp_path / "echo.py"
+    script.write_text(
+        "import sys\n"
+        "line = sys.stdin.readline()\n"
+        "sys.stdout.write('ok ' + line)\n"
+        "sys.stdout.flush()\n"
+        "line = sys.stdin.readline()\n"
+        "sys.stdout.write(line.upper())\n"
+        "sys.stdout.flush()\n"
+        "raise SystemExit(3)\n"
+    )
+    proc = subprocess.Popen(
+        worker_command([sys.executable, str(script)]),
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+    )
+    assert proc.stdin is not None and proc.stdout is not None
+    proc.stdin.write(b"uci\n")
+    proc.stdin.flush()
+    assert proc.stdout.readline() == b"ok uci\n"
+    proc.stdin.write(b"quit\n")
+    proc.stdin.flush()
+    assert proc.stdout.readline() == b"QUIT\n"
+    proc.stdin.close()
+    assert proc.wait(timeout=5) == 3
+
+
+def test_portable_wrapper_kills_the_session_when_its_parent_is_killed(monkeypatch, tmp_path):
+    monkeypatch.setattr(sys, "platform", "darwin")
+    child_pid_path = tmp_path / "child.pid"
+    grandchild_pid_path = tmp_path / "grandchild.pid"
+    worker = tmp_path / "worker.py"
+    worker.write_text(
+        "import os, time\n"
+        "from pathlib import Path\n"
+        f"Path({str(child_pid_path)!r}).write_text(str(os.getpid()))\n"
+        "if os.fork() == 0:\n"
+        f"    Path({str(grandchild_pid_path)!r}).write_text(str(os.getpid()))\n"
+        "    time.sleep(60)\n"
+        "time.sleep(60)\n"
+    )
+    command = worker_command([sys.executable, str(worker)])
+    parent_pid_path = tmp_path / "parent.pid"
+    launcher = (
+        "import os, subprocess, sys, time\n"
+        "from pathlib import Path\n"
+        "Path(sys.argv[1]).write_text(str(os.getpid()))\n"
+        "subprocess.Popen(sys.argv[2:])\n"
+        "time.sleep(60)\n"
+    )
+    parent = subprocess.Popen(
+        [sys.executable, "-c", launcher, str(parent_pid_path), *command],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    try:
+        deadline = time.monotonic() + 5
+        while not (child_pid_path.exists() and grandchild_pid_path.exists()):
+            if parent.poll() is not None:
+                pytest.fail("parent exited before the worker started")
+            if time.monotonic() > deadline:
+                pytest.fail("worker did not start")
+            time.sleep(0.05)
+        os.kill(int(parent_pid_path.read_text()), signal.SIGKILL)
+        parent.wait(timeout=5)
+        for path in (child_pid_path, grandchild_pid_path):
+            pid = int(path.read_text())
+            end = time.monotonic() + 2
+            while time.monotonic() < end:
+                try:
+                    os.kill(pid, 0)
+                except ProcessLookupError:
+                    break
+                time.sleep(0.05)
+            else:
+                pytest.fail("worker session survived the parent kill")
+    finally:
+        if parent.poll() is None:
+            parent.kill()
+            parent.wait(timeout=5)
 
 
 @pytest.fixture(scope="module")
