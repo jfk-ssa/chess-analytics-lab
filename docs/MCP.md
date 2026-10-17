@@ -147,3 +147,10 @@ Use this command in a project or user MCP file (`.cursor/mcp.json`). `--project`
 Restart the client after saving so it spawns the process. If the extra is not
 installed, the protocol tests skip; install it before expecting the server to
 start.
+
+## Worked example on the real August prefix
+
+The synthetic demo above is six records, with a draw rate of 0.25 on four
+games. Recorded calls against the real August analytical snapshot, the
+evidence IDs, and the setup that produced them are in
+[the worked example](MCP_EXAMPLE.md).

@@ -85,3 +85,4 @@ short summary of the current checkout, not a log of new decisions.
 | 0077 | 2026-10-17 | [Stdio MCP for checked tools](adr/0077-stdio-mcp-checked-tools.md) |
 | 0078 | 2026-10-17 | [Engine-grounded checked tools](adr/0078-engine-grounded-checked-tools.md) |
 | 0079 | 2026-10-17 | [Engine tool evaluation](adr/0079-engine-tool-evaluation.md) |
+| 0080 | 2026-10-17 | [MCP worked example on the real August prefix](adr/0080-mcp-worked-example.md) |
