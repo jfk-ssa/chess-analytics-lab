@@ -29,6 +29,7 @@ ALLOWLIST = [
     "evaluate_position",
     "position_continuations",
     "compare_candidate_moves",
+    "predict_human_moves",
 ]
 
 

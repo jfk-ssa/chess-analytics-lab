@@ -8,7 +8,7 @@ import sys
 import time
 from pathlib import Path
 
-from chess_analytics.analyst.tool_catalog import ENGINE_CAVEATS
+from chess_analytics.analyst.tool_catalog import ENGINE_CAVEATS, MAIA_CAVEATS
 from chess_analytics.analyst.tools import CheckedTools
 
 STATUSES = {"answered", "needs_clarification", "unsupported"}
@@ -48,7 +48,13 @@ def run_killable_tool(project: Path, name: str, args: dict, timeout_seconds=MAX_
 
 
 def _evidence_id(dataset_id: str, tool: str, args: dict, result: dict) -> str:
-    encoded = json.dumps([dataset_id, tool, args, result], sort_keys=True, default=str).encode()
+    if tool == "predict_human_moves":
+        from chess_analytics.analyst.maia import evidence_material
+
+        payload = evidence_material(dataset_id, args, result)
+    else:
+        payload = [dataset_id, tool, args, result]
+    encoded = json.dumps(payload, sort_keys=True, default=str).encode()
     return "ev_" + hashlib.sha256(encoded).hexdigest()[:20]
 
 
@@ -147,6 +153,8 @@ def answer_caveats(actions: list) -> list[str]:
         ]
     if any(step["tool"] in {"evaluate_position", "compare_candidate_moves"} for step in actions):
         caveats += list(ENGINE_CAVEATS)
+    if any(step["tool"] == "predict_human_moves" for step in actions):
+        caveats += list(MAIA_CAVEATS)
     return sorted(set(caveats))
 
 

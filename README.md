@@ -89,6 +89,7 @@ reliable ingestion, not contemporary chess behavior. See [data sources](docs/DAT
 | Explore measured transpositions | [Interactive HTML](https://jfk-ssa.github.io/chess-analytics-lab/transpositions.html); public position rankings, route balance, coverage, fianchetto lenses and [definitions](docs/TRANSPOSITIONS.md) |
 | Evaluate the AI claims | [Evaluation guide](docs/EVALUATION.md), [evidence index](docs/EVIDENCE_INDEX.md) |
 | Call checked tools from another client | [MCP guide](docs/MCP.md): optional stdio server; per-call evidence; planner scores do not transfer |
+| Estimate what a rating would play | [Maia guide](docs/MAIA.md): local Maia-3 probabilities; not an engine score |
 | Compare rules, Jev and Decisions | [GitHub-readable results](docs/CLASSIFIER_COMPARISON.md) |
 | Run optional components or acquire data | [Runbook](docs/RUNBOOK.md), [orchestration](docs/ORCHESTRATION.md), [sources](docs/DATA_SOURCES.md) |
 

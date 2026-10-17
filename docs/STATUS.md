@@ -32,6 +32,10 @@ engine_v1 measures those tools on fixed cases ([ADR 0079](adr/0079-engine-tool-e
 as harness and tool behavior, not model accuracy, and corpus-wide Stockfish
 enrichment remains a follow-up. A recorded session on the real August prefix
 is in [the worked example](MCP_EXAMPLE.md) ([ADR 0080](adr/0080-mcp-worked-example.md)).
+`predict_human_moves` estimates a rating-conditioned legal-move distribution
+from a local Maia-3 checkpoint
+([ADR 0081](adr/0081-human-move-prediction-maia3.md)). The weights are not in
+the repository. There is no frozen calibration yet.
 
 This file stays a short summary: checkout structure, phase tracker, dataset
 versions, and limits. New decisions go only into [docs/adr](adr/). Do not append

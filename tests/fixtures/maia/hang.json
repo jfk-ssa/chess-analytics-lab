@@ -1,0 +1,7 @@
+{
+  "kind": "fake_maia_distribution",
+  "moves": {"e2e4": 1.0},
+  "wdl": {"win": 0.2, "draw": 0.3, "loss": 0.5},
+  "hang_seconds": 30,
+  "pid_file": "maia-hang.pid"
+}

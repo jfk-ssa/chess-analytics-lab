@@ -5,6 +5,7 @@ the historical argument-key gate. The MCP server validates `input_schema`
 before it calls the same handler through the killable worker.
 """
 
+from chess_analytics.analyst.maia_pins import ALIASES
 from chess_analytics.corpus.metrics import BUCKETS
 
 CONTRACTS = {
@@ -24,6 +25,12 @@ MAX_CANDIDATES = 6
 CONTINUATION_RETURN_LIMIT = 8
 OPENING_COHORTS = ("elite_reference", "rated_public")
 ENGINE_CAVEATS = ("engine_eval_depth_limited", "engine_not_ground_truth")
+MAIA_MIN_RATING = 0
+MAIA_MAX_RATING = 5000
+MAIA_DEFAULT_TOP_K = 10
+MAIA_MAX_TOP_K = 20
+MAIA_PROBABILITY_DECIMALS = 4
+MAIA_CAVEATS = ("model_estimate_not_observation", "blitz_trained_rating_scale")
 _DEPTH = {"type": "integer", "minimum": ENGINE_MIN_DEPTH, "maximum": ENGINE_MAX_DEPTH}
 _FEN = {"type": "string", "minLength": 1, "maxLength": 128}
 _UCI_MOVE = {"type": "string", "minLength": 4, "maxLength": 5}
@@ -40,6 +47,10 @@ _CANDIDATES = {
     "items": _UCI_MOVE,
 }
 _COHORT_NAME = {"type": "string", "enum": list(OPENING_COHORTS)}
+_RATING = {"type": "integer", "minimum": MAIA_MIN_RATING, "maximum": MAIA_MAX_RATING}
+_TOP_K = {"type": "integer", "minimum": 1, "maximum": MAIA_MAX_TOP_K}
+_MIN_PROB = {"type": "number", "minimum": 0, "maximum": 1}
+_MAIA_MODEL = {"type": "string", "enum": list(ALIASES)}
 _METRIC_ID = {"type": "string", "enum": sorted(CONTRACTS)}
 _BUCKET = {"type": "string", "enum": sorted(BUCKETS)}
 _COHORT = {
@@ -97,6 +108,14 @@ def _integer_match(schema: dict, value) -> bool:
     return "maximum" not in schema or value <= schema["maximum"]
 
 
+def _number_match(schema: dict, value) -> bool:
+    if isinstance(value, bool) or not isinstance(value, int | float):
+        return False
+    if "minimum" in schema and value < schema["minimum"]:
+        return False
+    return "maximum" not in schema or value <= schema["maximum"]
+
+
 def _array_match(schema: dict, value) -> bool:
     if not isinstance(value, list):
         return False
@@ -117,6 +136,8 @@ def arguments_match(schema: dict, value) -> bool:
         return _string_match(schema, value)
     if kind == "integer":
         return _integer_match(schema, value)
+    if kind == "number":
+        return _number_match(schema, value)
     if kind == "array":
         return _array_match(schema, value)
     return False
@@ -253,6 +274,26 @@ TOOLS = (
             ["cohort", "candidates"],
         ),
         frozenset({"fen", "moves", "depth", "cohort", "candidates"}),
+        exact_keys=False,
+    ),
+    _spec(
+        "predict_human_moves",
+        "Estimate a legal-move distribution for a player and opponent rating. "
+        "The probabilities are a Maia-3 model estimate on the Lichess blitz scale, "
+        "not observed frequencies and not an engine evaluation.",
+        _object(
+            {
+                "fen": _FEN,
+                "moves": _MOVE_PREFIX,
+                "rating_self": _RATING,
+                "rating_opp": _RATING,
+                "model": _MAIA_MODEL,
+                "top_k": _TOP_K,
+                "min_prob": _MIN_PROB,
+            },
+            ["rating_self", "rating_opp"],
+        ),
+        frozenset({"fen", "moves", "rating_self", "rating_opp", "model", "top_k", "min_prob"}),
         exact_keys=False,
     ),
 )
