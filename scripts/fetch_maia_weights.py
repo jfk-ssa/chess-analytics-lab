@@ -116,6 +116,12 @@ def main(argv: list[str] | None = None, opener=None) -> int:
     args = parser.parse_args(argv)
     project = (args.project or Path.cwd()).resolve()
     config_path = project / "config" / "maia.json"
+    if args.write_config and not path_is_gitignored(project, config_path):
+        print(
+            f"maia download refused: refusing to write {config_path}: path is not gitignored",
+            file=sys.stderr,
+        )
+        return 1
     if args.write_config and config_path.exists() and not args.force:
         print(
             f"maia download refused: {config_path} exists; pass --force to overwrite",

@@ -1,11 +1,13 @@
 """Offline corpus extractor. The fake distribution stands in for Maia weights."""
 
 import contextlib
+import json
 import math
 import random
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 import pytest
@@ -162,6 +164,11 @@ def test_fake_distribution_scores_one_population(tmp_path, monkeypatch, capsys):
     assert e4_bin["mean_predicted"] == pytest.approx(0.625)
     assert e4_bin["mean_observed"] == pytest.approx(0.75)
     text = render_markdown(report)
+    loss_row = next(line for line in text.splitlines() if line.startswith("| log-loss"))
+    top_row = next(line for line in text.splitlines() if line.startswith("| top-1"))
+    assert loss_row.endswith("| 7 positive |")
+    assert top_row.endswith("| 17 played |")
+    assert "| Played | Positive | Log-loss |" in text
     assert "not pooled" in text
     assert "95% interval" in text
     assert "2026-08-01" in text
@@ -242,11 +249,98 @@ def test_hung_worker_times_out_and_is_killed():
         assert proc.poll() is not None
 
 
-def test_close_kills_a_worker_that_ignores_done():
-    with _spawn("import time\ntime.sleep(30)\n") as (proc, errors):
-        with pytest.raises(subprocess.TimeoutExpired, match="timed out"):
+def test_close_kills_a_worker_that_hangs_after_done():
+    code = "\n".join(
+        [
+            "import sys, time",
+            "print('hung after done', file=sys.stderr, flush=True)",
+            "time.sleep(30)",
+        ]
+    )
+    with _spawn(code) as (proc, errors):
+        with pytest.raises(ValueError, match="hung after done") as caught:
             _close(proc, errors, timeout=0.2)
+        assert str(caught.value).startswith("maia worker timed out")
         assert proc.poll() is not None
+
+
+def test_partial_line_hang_hits_the_read_deadline():
+    code = (
+        "import sys, time\n"
+        "sys.stdout.write('{')\n"
+        "sys.stdout.flush()\n"
+        "print('partial line', file=sys.stderr, flush=True)\n"
+        "sys.stdin.readline()\n"
+        "time.sleep(30)\n"
+    )
+    position = {"boards": ["fen"], "rating_self": 1500, "rating_opp": 1500}
+    started = time.monotonic()
+    with _spawn(code) as (proc, errors):
+        with pytest.raises(ValueError, match="partial line") as caught:
+            _send(proc, [position], errors, 0.2)
+        assert str(caught.value).startswith("maia worker timed out")
+        assert proc.poll() is not None
+    assert time.monotonic() - started < 2
+
+
+def test_bytes_after_a_newline_stay_for_the_next_read():
+    line = json.dumps({"ok": True, "results": [{"moves": {"a2a3": 1.0}}]})
+    code = (
+        "import sys\n"
+        f"sys.stdout.write({line!r} + '\\n' + {line!r} + '\\n')\n"
+        "sys.stdout.flush()\n"
+        "sys.stdin.readline()\n"
+        "sys.stdin.readline()\n"
+    )
+    position = {"boards": ["fen"], "rating_self": 1500, "rating_opp": 1500}
+    with _spawn(code) as (proc, errors):
+        first = _send(proc, [position], errors, 2)
+        second = _send(proc, [position], errors, 0.2)
+    assert first == second
+    assert first[0]["moves"]["a2a3"] == 1.0
+
+
+def test_structured_failure_puts_the_error_before_stderr():
+    code = (
+        "import json, sys\n"
+        "sys.stdin.readline()\n"
+        "print('torch warning', file=sys.stderr, flush=True)\n"
+        "print(json.dumps({'ok': False, 'reason': 'maia_failed', 'error': 'checkpoint mismatch'}),"
+        " flush=True)\n"
+    )
+    position = {"boards": ["fen"], "rating_self": 1500, "rating_opp": 1500}
+    with _spawn(code) as (proc, errors):
+        with pytest.raises(ValueError, match="checkpoint mismatch") as caught:
+            _send(proc, [position], errors, 2)
+        text = str(caught.value)
+        assert text.startswith("checkpoint mismatch")
+        assert text.index("checkpoint mismatch") < text.index("torch warning")
+        assert proc.poll() is not None
+
+
+def test_progress_every_zero_is_a_corpus_error(tmp_path, capsys):
+    status = main(
+        [
+            "--project",
+            str(tmp_path),
+            "--pgn",
+            str(CORPUS),
+            "--population",
+            "public",
+            "--json",
+            str(tmp_path / "out.json"),
+            "--markdown",
+            str(tmp_path / "out.md"),
+            "--progress-every",
+            "0",
+        ]
+    )
+    err = capsys.readouterr().err
+    assert status == 1
+    assert err.startswith("maia corpus:")
+    assert "progress-every" in err
+    assert "Traceback" not in err
+    assert not (tmp_path / "out.json").exists()
 
 
 def test_main_reports_a_timeout_and_writes_nothing(tmp_path, monkeypatch, capsys):
@@ -262,6 +356,7 @@ def test_main_reports_a_timeout_and_writes_nothing(tmp_path, monkeypatch, capsys
         "count = len(message.get('positions') or [])\n"
         "blank = {'moves': {}}\n"
         "print(json.dumps({'ok': True, 'results': [blank] * count}), flush=True)\n"
+        "print('hung after done', file=sys.stderr, flush=True)\n"
         "time.sleep(30)\n"
     )
 
@@ -273,6 +368,8 @@ def test_main_reports_a_timeout_and_writes_nothing(tmp_path, monkeypatch, capsys
         return proc
 
     monkeypatch.setattr(subprocess, "Popen", popen)
+    monkeypatch.setattr("chess_analytics.analyst.maia_corpus.CLOSE_TIMEOUT", 0.2)
+    started = time.monotonic()
     status = main(
         [
             "--project",
@@ -292,10 +389,13 @@ def test_main_reports_a_timeout_and_writes_nothing(tmp_path, monkeypatch, capsys
             "--batch-size",
             "64",
             "--read-timeout",
-            "0.2",
+            "5",
         ]
     )
     assert status == 1
-    assert "timed out" in capsys.readouterr().err
+    assert time.monotonic() - started < 3
+    err = capsys.readouterr().err
+    assert "timed out" in err
+    assert "hung after done" in err
     assert procs[0].poll() is not None
     assert not (tmp_path / "out.json").exists()

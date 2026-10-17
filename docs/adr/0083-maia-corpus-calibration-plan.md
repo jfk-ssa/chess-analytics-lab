@@ -239,8 +239,9 @@ uv run --locked --no-editable python scripts/fetch_maia_weights.py \
   --alias 23M --dest data/models --write-config
 ```
 
-`--write-config` writes `config/maia.json`. It refuses to overwrite that file
-unless `--force` is set, and it checks that before downloading. The JSON
+`--write-config` writes `config/maia.json`. It refuses when that path is
+not gitignored, and it refuses to overwrite the file unless `--force` is
+set. Both checks happen before the download. The JSON
 document is on stdout. The install hint and the do-not-commit line are on
 stderr. The hint is `uv sync --locked --extra maia --extra dbt`.
 
@@ -277,7 +278,9 @@ caffeinate -i uv run --locked --no-editable python -m chess_analytics.analyst.ma
 ```
 
 Smoke the public scorer before the full sample. Multiply that elapsed time
-by about 200 for the 20,000-game run:
+by about 200 for the 20,000-game run. The batch read timeout defaults to
+600s because Apple Silicon per-position speed is unmeasured; set
+`--read-timeout` from this smoke run. Shutdown uses a separate 30s timeout.
 
 ```sh
 uv run --locked --no-editable python -m chess_analytics.analyst.maia_corpus \

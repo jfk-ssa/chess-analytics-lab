@@ -146,8 +146,8 @@ One worker process loads the checkpoint and scores batches. It does not start
 a process per position.
 
 Install, then fetch the pinned 23M weights (91,799,307 bytes).
-`--write-config` writes `config/maia.json` and refuses to overwrite it
-without `--force`. The JSON document is on stdout. The install hint and the
+`--write-config` writes `config/maia.json`. It refuses when that path is
+not gitignored, and it refuses to overwrite the file without `--force`. The JSON document is on stdout. The install hint and the
 do-not-commit line are on stderr. Do not commit the config. The August
 prefix download was approved with ADR 0083. On a Mac, sync both extras so a
 later `uv sync` does not drop torch or dbt. Prefix a long scorer with
@@ -174,7 +174,9 @@ caffeinate -i uv run --locked --no-editable python -m chess_analytics.analyst.ma
 ```
 
 Smoke the public scorer first. Multiply its elapsed time by about 200 for
-the 20,000-game run:
+the 20,000-game run. The batch read timeout defaults to 600s because
+Apple Silicon per-position speed is unmeasured; set `--read-timeout` from
+this smoke run. Shutdown uses a separate 30s timeout.
 
 ```sh
 uv run --locked --no-editable python -m chess_analytics.analyst.maia_corpus \

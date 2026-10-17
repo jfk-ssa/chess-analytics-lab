@@ -127,6 +127,25 @@ def test_destination_must_be_gitignored_and_alias_can_come_from_config(tmp_path)
     assert module.path_is_gitignored(ROOT, ROOT / "reports/maia-corpus-calibration-elite.md")
 
 
+def test_write_config_refuses_a_path_git_does_not_ignore(tmp_path, capsys):
+    module = _load()
+    project = tmp_path / "proj"
+    project.mkdir()
+
+    def opener(_url):
+        raise AssertionError("download started")
+
+    code = module.main(
+        ["--alias", "23M", "--dest", "data/models", "--project", str(project), "--write-config"],
+        opener=opener,
+    )
+    err = capsys.readouterr().err
+    assert code == 1
+    assert "maia.json" in err
+    assert "not gitignored" in err
+    assert not (project / "config" / "maia.json").exists()
+
+
 def test_write_config_refuses_to_clobber_and_keeps_stdout_json(tmp_path, monkeypatch, capsys):
     module = _load()
     document = {"default_alias": "23M", "models": {}, "version": "1"}
