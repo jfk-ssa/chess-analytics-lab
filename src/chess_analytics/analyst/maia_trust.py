@@ -203,6 +203,10 @@ def _runtime_present() -> bool:
     )
 
 
+def _skipped(reason: str, host: str) -> dict:
+    return {"skipped": True, "reason": reason, "platform": host, "failures": []}
+
+
 def _case_kwargs(case: dict) -> dict:
     kwargs = {
         "rating_self": case["rating_self"],
@@ -223,16 +227,14 @@ def score_maia_v1(project: Path) -> dict:
     when the host platform is not the one that wrote the reference.
     """
     host = f"{platform.system().lower()}-{platform.machine()}"
-    config_exists = (project / "config" / "maia.json").is_file()
-    runtime_present = _runtime_present()
-    if not config_exists or not runtime_present:
-        reason = skip_reason(config_exists, runtime_present, host, host)
-        return {"skipped": True, "reason": reason, "platform": host, "failures": []}
+    if not (project / "config" / "maia.json").is_file():
+        return _skipped("maia_not_configured", host)
+    if not _runtime_present():
+        return _skipped("maia_unavailable", host)
     cases = read_json(project / "evals/cases/maia_v1.json")
     reference = read_json(project / "evals/references/maia_v1.json")
-    reason = skip_reason(True, True, host, reference["platform"])
-    if reason:
-        return {"skipped": True, "reason": reason, "platform": host, "failures": []}
+    if host != reference["platform"]:
+        return _skipped("platform_unmeasured", host)
     tolerance = float(reference["probability_tolerance"])
     failures = []
     for case in cases:
