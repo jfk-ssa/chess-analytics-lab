@@ -64,6 +64,17 @@ Those scores do not transfer to it.
 | `compare_openings` | `filters` with two families and the exact cohort |
 | `analyze_clock_pressure` | `bucket` |
 | `compare_clock_buckets` | `first`, `second` |
+| `evaluate_position` | `fen` or `moves`, optional `depth` |
+| `position_continuations` | `cohort`, and `fen` or `moves` |
+| `compare_candidate_moves` | `cohort`, `candidates` (1–6), and `fen` or `moves`; optional `depth` |
+
+`evaluate_position` and `compare_candidate_moves` need a local engine config.
+`position_continuations` needs local opening data. Neither is downloaded.
+Depth is at most 16. Engine results include `engine_eval_depth_limited` and
+`engine_not_ground_truth`. Those scores are not a model-accuracy claim, and
+the frozen M5–M7 results do not transfer to them. The historical live planner
+prompt does not offer these three tools. Setup, the opening-data gap in CI,
+and what was actually repeated on one machine are in [ENGINE](ENGINE.md).
 
 A grouped `query_metric` sends `"filters": {}`. Clock buckets are `under_10`,
 `10_to_29`, `30_to_59`, and `60_plus`. Colors are `white` or `black`.

@@ -8,6 +8,7 @@ import sys
 import time
 from pathlib import Path
 
+from chess_analytics.analyst.tool_catalog import ENGINE_CAVEATS
 from chess_analytics.analyst.tools import CheckedTools
 
 STATUSES = {"answered", "needs_clarification", "unsupported"}
@@ -95,27 +96,7 @@ def execute_plan(project: Path, question: str, plan: dict, *, source: str = "typ
             }
         )
     interpretation = plan.get("interpretation") or "descriptive_observed_prefix"
-    caveats = ["observed_prefix_only"]
-    if any(
-        step["tool"] == "compare_openings"
-        or step["args"].get("metric_id") in {"opening_player_score", "opening_adjusted_score"}
-        for step in actions
-    ):
-        caveats += ["association_not_causation", "score_not_win_rate"]
-    if any(step["args"].get("metric_id") == "opening_usage" for step in actions):
-        caveats.append("source_tags_only")
-    if any(step["args"].get("filters", {}).get("color") == "white" for step in actions):
-        caveats.append("white_perspective")
-    if any(
-        step["tool"] in {"analyze_clock_pressure", "compare_clock_buckets"}
-        or step["args"].get("metric_id") in {"clock_pressure_error_proxy", "evaluation_coverage"}
-        for step in actions
-    ):
-        caveats += [
-            "source_evaluation_selection",
-            "exploratory_proxy",
-            "missing_evaluation_not_zero",
-        ]
+    caveats = answer_caveats(actions)
     if status == "needs_clarification":
         explanation = "Specify the population, outcome, color, rating range, and time control."
     elif status == "unsupported":
@@ -139,6 +120,34 @@ def execute_plan(project: Path, question: str, plan: dict, *, source: str = "typ
         "tool_steps": len(trace),
         "elapsed_seconds": time.monotonic() - started,
     }
+
+
+def answer_caveats(actions: list) -> list[str]:
+    """Caveats for a validated plan. Historical tool plans keep their previous set."""
+    caveats = ["observed_prefix_only"]
+    if any(
+        step["tool"] == "compare_openings"
+        or step["args"].get("metric_id") in {"opening_player_score", "opening_adjusted_score"}
+        for step in actions
+    ):
+        caveats += ["association_not_causation", "score_not_win_rate"]
+    if any(step["args"].get("metric_id") == "opening_usage" for step in actions):
+        caveats.append("source_tags_only")
+    if any(step["args"].get("filters", {}).get("color") == "white" for step in actions):
+        caveats.append("white_perspective")
+    if any(
+        step["tool"] in {"analyze_clock_pressure", "compare_clock_buckets"}
+        or step["args"].get("metric_id") in {"clock_pressure_error_proxy", "evaluation_coverage"}
+        for step in actions
+    ):
+        caveats += [
+            "source_evaluation_selection",
+            "exploratory_proxy",
+            "missing_evaluation_not_zero",
+        ]
+    if any(step["tool"] in {"evaluate_position", "compare_candidate_moves"} for step in actions):
+        caveats += list(ENGINE_CAVEATS)
+    return sorted(set(caveats))
 
 
 def replay(project: Path, question: str, fixture: Path) -> dict:

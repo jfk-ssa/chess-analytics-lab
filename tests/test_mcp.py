@@ -26,6 +26,9 @@ ALLOWLIST = [
     "compare_openings",
     "analyze_clock_pressure",
     "compare_clock_buckets",
+    "evaluate_position",
+    "position_continuations",
+    "compare_candidate_moves",
 ]
 
 

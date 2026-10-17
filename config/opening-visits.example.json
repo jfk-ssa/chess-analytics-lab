@@ -1,0 +1,6 @@
+{
+  "version": "1",
+  "kind": "visit_shards",
+  "snapshot_dir": "/absolute/path/to/visit-snapshot",
+  "manifest_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+}
