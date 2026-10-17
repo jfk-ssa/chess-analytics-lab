@@ -118,7 +118,7 @@ key in this configuration. The server never reads one.
 
 ## Cursor
 
-Use the same command in a project or user MCP file (`.cursor/mcp.json`):
+Use this command in a project or user MCP file (`.cursor/mcp.json`). `--project` is the repository root:
 
 ```json
 {
@@ -133,10 +133,10 @@ Use the same command in a project or user MCP file (`.cursor/mcp.json`):
         "--extra",
         "mcp",
         "--directory",
-        "/absolute/path/to/chess-analytics-lab",
+        "/Users/jfk/Documents/ChatGPT/chess/chess-analytics-lab",
         "chesslab",
         "--project",
-        "/absolute/path/to/work/portfolio-demo/project",
+        "/Users/jfk/Documents/ChatGPT/chess/chess-analytics-lab",
         "mcp"
       ]
     }
