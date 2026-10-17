@@ -29,6 +29,8 @@ jobs:
       - run: uv run --locked --offline --no-editable ruff format --check .
       - run: uv run --locked --offline --no-editable basedpyright
       - run: uv run --locked --offline --no-editable pytest -q
+      - run: uv sync --locked --no-editable --extra mcp
+      - run: uv run --locked --offline --no-editable --extra mcp pytest -q tests/test_mcp_protocol.py
       - run: uv run --locked --offline --no-editable chesslab demo
       - run: uv sync --locked --no-editable --extra dbt
       - run: uv run --locked --offline --no-editable --extra dbt pytest -q

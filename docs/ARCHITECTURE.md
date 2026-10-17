@@ -41,6 +41,11 @@ its requests/results are logged separately. Evidence IDs bind tool name,
 arguments, result and dataset ID. Scoring is external to the agent; historical
 M5–M7 rubrics remain frozen and new fixture checks use `portfolio-1.0`.
 
+The same allowlisted tools are available outside that planner through
+`chesslab mcp`, a stdio-only MCP server described in [MCP](MCP.md). Each call
+is checked on its own. The planner's four-step limit and the M6/M7 scores
+belong to this repository's planner; they do not transfer to an outside client.
+
 The full demo copies only required code/contracts into an ignored project under
 `work/portfolio-demo/project`, publishes a synthetic snapshot there and passes
 that path to Streamlit with `CHESSLAB_PROJECT`. It never replaces the real
