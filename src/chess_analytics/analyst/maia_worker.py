@@ -142,7 +142,7 @@ def _infer(model, cfg, request: dict, torch) -> dict:
     }
 
 
-def _real(request: dict, path: Path) -> dict:
+def _prepare(request: dict, path: Path):
     if request.get("device") != "cpu" or request.get("dtype") != "float32":
         raise RuntimeError("maia worker refuses a non-cpu or non-float32 request")
     try:
@@ -171,7 +171,12 @@ def _real(request: dict, path: Path) -> dict:
     cfg.device = "cpu"
     cfg.use_amp = False
     cfg.trust_checkpoint = False
-    return _infer(_load(cfg, torch), cfg, request, torch)
+    return _load(cfg, torch), cfg, torch
+
+
+def _real(request: dict, path: Path) -> dict:
+    model, cfg, torch = _prepare(request, path)
+    return _infer(model, cfg, request, torch)
 
 
 def predict(request: dict) -> dict:
@@ -181,7 +186,76 @@ def predict(request: dict) -> dict:
     return _real(request, path)
 
 
-def main() -> int:
+def _note_pid(payload: dict) -> None:
+    target = payload.get("pid_file")
+    if isinstance(target, str):
+        with Path(target).open("a", encoding="utf-8") as handle:
+            handle.write(f"{os.getpid()}\n")
+
+
+def _trace(payload: dict, request: dict) -> None:
+    target = payload.get("echo_request")
+    if not isinstance(target, str):
+        return
+    row = {
+        "boards": len(request["boards"]),
+        "rating_opp": request["rating_opp"],
+        "rating_self": request["rating_self"],
+    }
+    with Path(target).open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(row) + "\n")
+
+
+def _serve_batch() -> None:
+    """Load the checkpoint once and score newline-delimited batches."""
+    header = json.loads(sys.stdin.readline())
+    path = Path(header["weights_path"])
+    fake = _fake_payload(path)
+    prepared = None if fake is not None else _prepare(header, path)
+    for line in sys.stdin:
+        message = json.loads(line)
+        if message.get("done"):
+            return
+        positions = message["positions"]
+        if fake is not None:
+            _note_pid(fake)
+            results = []
+            for position in positions:
+                request = {**header, **position}
+                _trace(fake, request)
+                results.append(
+                    {
+                        "moves": fake["moves"],
+                        "wdl": fake["wdl"],
+                        "torch_version": None,
+                        "platform": _platform(),
+                    }
+                )
+        else:
+            if prepared is None:
+                raise RuntimeError("maia checkpoint was not loaded")
+            model, cfg, torch = prepared
+            results = [_infer(model, cfg, {**header, **position}, torch) for position in positions]
+        print(json.dumps({"ok": True, "results": results}), flush=True)
+
+
+def _batch_main() -> int:
+    os.environ["HF_HUB_OFFLINE"] = "1"
+    os.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
+    try:
+        _serve_batch()
+    except _UnavailableError:
+        print(json.dumps({"ok": False, "reason": "maia_unavailable"}), flush=True)
+    except Exception as exc:
+        print(json.dumps({"ok": False, "reason": "maia_failed", "error": str(exc)}), flush=True)
+        return 1
+    return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = sys.argv[1:] if argv is None else argv
+    if "--batch" in args:
+        return _batch_main()
     os.environ["HF_HUB_OFFLINE"] = "1"
     os.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
     try:

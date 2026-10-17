@@ -95,6 +95,7 @@ def test_torch_is_not_imported_by_the_default_modules():
     for relative in (
         "src/chess_analytics/analyst/maia.py",
         "src/chess_analytics/analyst/maia_worker.py",
+        "src/chess_analytics/analyst/maia_corpus.py",
         "src/chess_analytics/analyst/maia_pins.py",
         "src/chess_analytics/analyst/maia_trust.py",
         "src/chess_analytics/analyst/tools.py",

@@ -133,9 +133,44 @@ does not download the weights and does not install the `maia` extra.
 
 It does not merge centipawn loss into the distribution. It does not sample
 moves. It does not accept a time-control argument other than the fixed
-Lichess blitz scale. It does not yet extract played moves from the opening-game index, so it does
-not score the model on those games. Opening accuracy for Maia-3 is
-not in the paper.
+Lichess blitz scale. Opening accuracy for Maia-3 is not in the paper.
+
+## Corpus calibration
+
+`python -m chess_analytics.analyst.maia_corpus` reads one local PGN and writes
+one population. Elite and public stay in separate files. The public run keeps
+Lichess blitz only (`lichess_blitz`). The elite run scores the curated month
+and records how many of those games would pass the same window. The sample is
+a fixed-seed draw of up to 20,000 games, seed `20251017`, first 12 plies.
+One worker process loads the checkpoint and scores batches. It does not start
+a process per position.
+
+Install, then fetch the pinned 23M weights (91,799,307 bytes). The script
+prints `config/maia.json`; save that file and do not commit it. Download the
+August prefix only after the approval already recorded in ADR 0083. On a Mac,
+sync both extras so the later `uv sync` does not drop torch:
+
+```sh
+uv sync --locked --extra maia --extra dbt
+uv run --locked --no-editable python scripts/fetch_maia_weights.py \
+  --alias 23M --dest data/models
+.venv/bin/python -m chess_analytics.corpus acquire
+.venv/bin/python -m chess_analytics.corpus extract
+.venv/bin/python -m chess_analytics.analyst.maia_corpus \
+  --pgn data/opening-sources/elite/lichess_elite_2025-11.pgn \
+  --population elite \
+  --json reports/maia-corpus-calibration-elite.json \
+  --markdown reports/maia-corpus-calibration-elite.md
+.venv/bin/python -m chess_analytics.analyst.maia_corpus \
+  --pgn data/analytical/complete-2026-08-first-100000.pgn \
+  --population public \
+  --json reports/maia-corpus-calibration-public.json \
+  --markdown reports/maia-corpus-calibration-public.md
+```
+
+`acquire` reuses a cached prefix when the pinned SHA-256 matches. The paper's
+55–57% top-1 range is printed as context and is not a pass/fail bar. A run on
+Apple Silicon is same-machine only. `maia_v1` still skips there.
 
 ## Replies to 1.d4
 
