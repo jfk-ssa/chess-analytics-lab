@@ -18,9 +18,7 @@ INSTALL_LINE = "uv sync --locked --extra maia"
 
 
 def weights_url(pin: dict) -> str:
-    return (
-        f"https://huggingface.co/{pin['hf_repo']}/resolve/{pin['hf_revision']}/{pin['filename']}"
-    )
+    return f"https://huggingface.co/{pin['hf_repo']}/resolve/{pin['hf_revision']}/{pin['filename']}"
 
 
 def config_document(alias: str, weights: Path, pin: dict) -> dict:
@@ -106,7 +104,9 @@ def alias_from_config(path: Path) -> str:
 
 
 def main(argv: list[str] | None = None, opener=None) -> int:
-    parser = argparse.ArgumentParser(description="Download pinned Maia-3 weights into an ignored directory.")
+    parser = argparse.ArgumentParser(
+        description="Download pinned Maia-3 weights into an ignored directory."
+    )
     parser.add_argument("--alias", choices=tuple(PINS))
     parser.add_argument("--config", type=Path)
     parser.add_argument("--dest", type=Path)

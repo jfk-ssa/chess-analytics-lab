@@ -1,5 +1,6 @@
 """Maia-3 subprocess. Torch is imported here, and only when the weights are a real checkpoint."""
 
+import contextlib
 import json
 import os
 import platform
@@ -12,7 +13,7 @@ _FAKE_KIND = "fake_maia_distribution"
 _FAKE_LIMIT = 1_000_000
 
 
-class _Unavailable(Exception):
+class _UnavailableError(Exception):
     """Torch or the pinned maia3 package is not installed in this interpreter."""
 
 
@@ -74,7 +75,7 @@ def _installed_commit() -> str:
     try:
         dist = distribution("maia3")
     except PackageNotFoundError as exc:
-        raise _Unavailable from exc
+        raise _UnavailableError from exc
     raw = dist.read_text("direct_url.json")
     if not raw:
         raise RuntimeError("maia install has no pinned commit")
@@ -107,7 +108,10 @@ def _infer(model, cfg, request: dict, torch) -> dict:
         get_legal_moves_mask,
         tokenize_board,
     )
-    from maia3.utils import get_all_possible_moves, mirror_move  # pyright: ignore[reportMissingImports]
+    from maia3.utils import (  # pyright: ignore[reportMissingImports]
+        get_all_possible_moves,
+        mirror_move,
+    )
 
     boards = [chess.Board(fen) for fen in request["boards"]]
     current = boards[-1]
@@ -145,13 +149,11 @@ def _real(request: dict, path: Path) -> dict:
         import torch  # pyright: ignore[reportMissingImports]
         from maia3.uci import parse_args  # pyright: ignore[reportMissingImports]
     except ImportError as exc:
-        raise _Unavailable from exc
+        raise _UnavailableError from exc
     threads = int(request["threads"])
     torch.set_num_threads(threads)
-    try:
+    with contextlib.suppress(RuntimeError):
         torch.set_num_interop_threads(1)
-    except RuntimeError:
-        pass
     if _installed_commit() != request["code_commit"]:
         raise RuntimeError("maia code commit mismatch")
     cfg = parse_args(
@@ -187,7 +189,7 @@ def main() -> int:
         if not isinstance(request, dict):
             raise ValueError("invalid maia worker request")
         print(json.dumps({"ok": True, **predict(request)}))
-    except _Unavailable:
+    except _UnavailableError:
         print(json.dumps({"ok": False, "reason": "maia_unavailable"}))
     except Exception as exc:
         print(json.dumps({"ok": False, "reason": "maia_failed", "error": str(exc)}))

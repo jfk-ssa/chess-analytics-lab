@@ -116,13 +116,21 @@ def predict_human_moves(
     base = _base(dataset_id, board, series, self_rating, opp_rating, selected_k, floor)
     config = _load_config(project)
     if config is None:
-        return {**base, "reason": "maia_not_configured", "moves": [], "wdl": None, "provenance": None}
+        return {
+            **base,
+            "reason": "maia_not_configured",
+            "moves": [],
+            "wdl": None,
+            "provenance": None,
+        }
     alias = config["default_alias"] if model is None else model
     if alias not in config["models"]:
         raise ValueError("maia model is not configured")
     spec = config["models"][alias]
     _verify(spec)
-    message = _run_worker(project, _request(spec, alias, series, self_rating, opp_rating), spec["threads"])
+    message = _run_worker(
+        project, _request(spec, alias, series, self_rating, opp_rating), spec["threads"]
+    )
     if message.get("reason") == "maia_unavailable":
         return {
             **base,
@@ -197,7 +205,9 @@ def _base(dataset_id, board, series, self_rating, opp_rating, top_k, floor) -> d
     }
 
 
-def _request(spec: dict, alias: str, series: list[chess.Board], self_rating: int, opp_rating: int) -> dict:
+def _request(
+    spec: dict, alias: str, series: list[chess.Board], self_rating: int, opp_rating: int
+) -> dict:
     return {
         "weights_path": str(spec["weights_path"]),
         "model_name": PINS[alias]["model_name"],
@@ -239,7 +249,10 @@ def _wdl(raw) -> dict:
     if not isinstance(raw, dict):
         raise ValueError("maia worker returned no outcome")
     try:
-        values = {key: round(float(raw[key]), MAIA_PROBABILITY_DECIMALS) for key in ("win", "draw", "loss")}
+        values = {
+            key: round(float(raw[key]), MAIA_PROBABILITY_DECIMALS)
+            for key in ("win", "draw", "loss")
+        }
     except (KeyError, TypeError, ValueError) as exc:
         raise ValueError("maia worker returned no outcome") from exc
     return {"label": _WDL_LABEL, **values}

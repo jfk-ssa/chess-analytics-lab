@@ -13,7 +13,12 @@ from pathlib import Path
 import chess
 import pytest
 
-from chess_analytics.analyst.core import _evidence_id, answer_caveats, execute_plan, run_killable_tool
+from chess_analytics.analyst.core import (
+    _evidence_id,
+    answer_caveats,
+    execute_plan,
+    run_killable_tool,
+)
 from chess_analytics.analyst.maia_pins import CODE_COMMIT, CODE_REPO, PINS, RATING_SCALE
 from chess_analytics.analyst.mcp_server import _envelope, rejection
 from chess_analytics.analyst.plan_recovery import PLAN_SCHEMA
@@ -256,7 +261,7 @@ def test_black_reply_history_rating_clamp_and_filters(tmp_path):
         "d2d3",
         "d7d6",
         "c2c3",
-        "c7c6",
+        "a7a6",
     ]
     with pytest.raises(ValueError, match="no legal moves"):
         tools.execute(
@@ -276,12 +281,16 @@ def test_black_reply_history_rating_clamp_and_filters(tmp_path):
         )
     with pytest.raises(ValueError, match="top_k"):
         tools.execute(
-            "predict_human_moves", {"fen": START, "rating_self": 1500, "rating_opp": 1500, "top_k": 21}
+            "predict_human_moves",
+            {"fen": START, "rating_self": 1500, "rating_opp": 1500, "top_k": 21},
         )
 
 
 def test_missing_runtime_reports_maia_unavailable(tmp_path):
-    if importlib.util.find_spec("torch") is not None and importlib.util.find_spec("maia3") is not None:
+    if (
+        importlib.util.find_spec("torch") is not None
+        and importlib.util.find_spec("maia3") is not None
+    ):
         pytest.skip("torch and maia3 are installed")
     weights = tmp_path / "not-a-checkpoint.bin"
     weights.write_bytes(b"not json")
@@ -361,8 +370,13 @@ def test_plan_and_mcp_evidence_agree_and_a_hung_worker_is_killed(analytical_proj
     )
     assert dataset_id == answer["dataset_id"]
     assert result == answer["evidence"][0]["result"]
-    assert answer["evidence_ids"][0] == _evidence_id(dataset_id, "predict_human_moves", args, result)
-    assert _envelope(dataset_id, "predict_human_moves", args, result)["evidence_id"] == answer["evidence_ids"][0]
+    assert answer["evidence_ids"][0] == _evidence_id(
+        dataset_id, "predict_human_moves", args, result
+    )
+    assert (
+        _envelope(dataset_id, "predict_human_moves", args, result)["evidence_id"]
+        == answer["evidence_ids"][0]
+    )
     assert "model_estimate_not_observation" in answer["caveats"]
     assert "blitz_trained_rating_scale" in answer["caveats"]
     write_maia(analytical_project, HANG)
