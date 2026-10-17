@@ -245,6 +245,9 @@ def _open_worker(project: Path, spec: dict, alias: str, errors):
     )
     if proc.stdin is None or proc.stdout is None:
         raise ValueError("maia worker pipes are missing")
+    # One reader. Detach the text wrapper so its buffer cannot hide bytes.
+    stdout = proc.stdout
+    proc.stdout = stdout.detach()  # pyright: ignore[reportAttributeAccessIssue]
     try:
         proc.stdin.write(json.dumps(header) + "\n")
         proc.stdin.flush()
@@ -274,29 +277,32 @@ def _fail(proc, errors, primary: str) -> NoReturn:
 
 
 def _read_line(stream, timeout: float) -> str:
-    """One stdout line. A partial line still has to arrive before the deadline."""
+    """One stdout line. Bytes after the newline stay on the stream for the next read."""
     deadline = time.monotonic() + timeout
     fd = stream.fileno()
+    pending = getattr(stream, "maia_rest", b"")
     blocking = os.get_blocking(fd)
     os.set_blocking(fd, False)
-    parts: list[bytes] = []
     try:
-        while True:
+        while b"\n" not in pending:
             remaining = deadline - time.monotonic()
             ready = remaining > 0 and select.select([fd], [], [], remaining)[0]
             if not ready:
+                stream.maia_rest = pending
                 raise TimeoutError
             try:
                 piece = os.read(fd, 65536)
             except BlockingIOError:
                 continue
             if not piece:
+                stream.maia_rest = b""
                 return ""
-            parts.append(piece)
-            if b"\n" in piece:
-                return b"".join(parts).split(b"\n", 1)[0].decode()
+            pending += piece
     finally:
         os.set_blocking(fd, blocking)
+    line, _, pending = pending.partition(b"\n")
+    stream.maia_rest = pending
+    return line.decode()
 
 
 def _send(proc, positions: list[dict], errors, timeout: float) -> list[dict]:

@@ -1,6 +1,7 @@
 """Offline corpus extractor. The fake distribution stands in for Maia weights."""
 
 import contextlib
+import json
 import math
 import random
 import subprocess
@@ -165,8 +166,9 @@ def test_fake_distribution_scores_one_population(tmp_path, monkeypatch, capsys):
     text = render_markdown(report)
     loss_row = next(line for line in text.splitlines() if line.startswith("| log-loss"))
     top_row = next(line for line in text.splitlines() if line.startswith("| top-1"))
-    assert loss_row.endswith("| 7 |")
-    assert top_row.endswith("| 17 |")
+    assert loss_row.endswith("| 7 positive |")
+    assert top_row.endswith("| 17 played |")
+    assert "| Played | Positive | Log-loss |" in text
     assert "not pooled" in text
     assert "95% interval" in text
     assert "2026-08-01" in text
@@ -279,6 +281,23 @@ def test_partial_line_hang_hits_the_read_deadline():
         assert str(caught.value).startswith("maia worker timed out")
         assert proc.poll() is not None
     assert time.monotonic() - started < 2
+
+
+def test_bytes_after_a_newline_stay_for_the_next_read():
+    line = json.dumps({"ok": True, "results": [{"moves": {"a2a3": 1.0}}]})
+    code = (
+        "import sys\n"
+        f"sys.stdout.write({line!r} + '\\n' + {line!r} + '\\n')\n"
+        "sys.stdout.flush()\n"
+        "sys.stdin.readline()\n"
+        "sys.stdin.readline()\n"
+    )
+    position = {"boards": ["fen"], "rating_self": 1500, "rating_opp": 1500}
+    with _spawn(code) as (proc, errors):
+        first = _send(proc, [position], errors, 2)
+        second = _send(proc, [position], errors, 0.2)
+    assert first == second
+    assert first[0]["moves"]["a2a3"] == 1.0
 
 
 def test_structured_failure_puts_the_error_before_stderr():

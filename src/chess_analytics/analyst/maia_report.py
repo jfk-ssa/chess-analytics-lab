@@ -135,10 +135,12 @@ def _table(headers: list[str], rows: list[list[str]]) -> str:
 
 
 def _cells(row: dict, label) -> list[str]:
+    positive = row["n_positions"] - row["zero_probability_count"]
     return [
         str(label),
         str(row["n_games"]),
         str(row["n_positions"]),
+        str(positive),
         _fmt(row["log_loss"]),
         _fmt(row["log_loss_interval"]),
         _fmt(row["top1"]),
@@ -161,17 +163,23 @@ def render_markdown(report: dict) -> str:
     share = pop["zero_probability_share"]
     share_text = "" if share is None else f" ({share:.1%})"
     scores = _table(
-        ["Score", "Estimate", "95% interval", "Positions"],
+        ["Score", "Estimate", "95% interval", "Counted"],
         [
-            ["log-loss", _fmt(pop["log_loss"]), _fmt(pop["log_loss_interval"]), scored],
-            ["top-1", _fmt(pop["top1"]), _fmt(pop["top1_interval"]), positions],
-            ["top-3", _fmt(pop["top3"]), _fmt(pop["top3_interval"]), positions],
+            [
+                "log-loss",
+                _fmt(pop["log_loss"]),
+                _fmt(pop["log_loss_interval"]),
+                f"{scored} positive",
+            ],
+            ["top-1", _fmt(pop["top1"]), _fmt(pop["top1_interval"]), f"{positions} played"],
+            ["top-3", _fmt(pop["top3"]), _fmt(pop["top3_interval"]), f"{positions} played"],
         ],
     )
     header = [
         "Label",
         "Games",
-        "Positions",
+        "Played",
+        "Positive",
         "Log-loss",
         "95% interval",
         "Top-1",
