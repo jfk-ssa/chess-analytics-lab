@@ -57,3 +57,8 @@ classifications, a fresh 24-case owner-reviewed language set, and a separately
 labeled replay using saved Luna answers. Neither gate is promoted. Follow the
 [Jev](JEV_ROUTING_RUNBOOK.md) and [Decisions](DECISIONS_ROUTING_RUNBOOK.md) runbooks
 for offline harness/replay paths; a new live experiment requires its own cap.
+
+Local engine and opening-continuation tools are not part of the frozen M5–M7
+scores. This checkout does not add cases, independent references, or a scorer
+rubric for them, and an engine call is not a model-accuracy result. Scoring
+those tools is a separate follow-up: a new freeze, references, and rubric.

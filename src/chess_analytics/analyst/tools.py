@@ -5,6 +5,9 @@ from pathlib import Path
 
 import duckdb
 
+from chess_analytics.analyst import engine as engine_tools
+from chess_analytics.analyst.openings import position_continuations as read_continuations
+from chess_analytics.analyst.tool_catalog import ALLOWED_GROUP_BY, CONTRACTS, TOOLS_BY_NAME
 from chess_analytics.common import digest
 from chess_analytics.corpus.metrics import (
     BUCKETS,
@@ -13,16 +16,6 @@ from chess_analytics.corpus.metrics import (
     opening_usage,
 )
 from chess_analytics.dashboard.analysis import coverage, current_snapshot, opening_comparison
-
-CONTRACTS = {
-    "game_draw_rate": "game_draw_rate.json",
-    "opening_adjusted_score": "opening_adjusted_score.json",
-    "opening_usage": "opening_usage.json",
-    "opening_player_score": "opening_player_score.json",
-    "clock_pressure_error_proxy": "clock_pressure_error_proxy.json",
-    "evaluation_coverage": "evaluation_coverage.json",
-}
-ALLOWED_GROUP_BY = {"opening_family", "clock_bucket"}
 
 
 def _exact_keys(value: dict, allowed: set[str]):
@@ -263,21 +256,41 @@ class CheckedTools:
             "caveats": ["source_evaluation_selection", "exploratory_proxy"],
         }
 
+    def evaluate_position(
+        self, fen: str | None = None, moves: list[str] | None = None, depth: int | None = None
+    ) -> dict:
+        return engine_tools.evaluate_position(
+            self.project, self.dataset_id, fen=fen, moves=moves, depth=depth
+        )
+
+    def position_continuations(
+        self, cohort: str | None = None, fen: str | None = None, moves: list[str] | None = None
+    ) -> dict:
+        return read_continuations(self.project, self.dataset_id, cohort, fen=fen, moves=moves)
+
+    def compare_candidate_moves(
+        self,
+        candidates: list[str] | None = None,
+        cohort: str | None = None,
+        fen: str | None = None,
+        moves: list[str] | None = None,
+        depth: int | None = None,
+    ) -> dict:
+        return engine_tools.compare_candidate_moves(
+            self.project,
+            self.dataset_id,
+            candidates=candidates,
+            cohort=cohort,
+            fen=fen,
+            moves=moves,
+            depth=depth,
+        )
+
     def execute(self, name: str, args: dict) -> dict:
+        """Dispatch through the shared registry. The key gate matches the historical planner."""
         if not isinstance(args, dict):
             raise ValueError("tool arguments must be an object")
-        if name == "list_metrics" and not args:
-            return self.list_metrics()
-        if name == "get_metric_definition" and set(args) == {"metric_id"}:
-            return self.get_metric_definition(args["metric_id"])
-        if name == "get_dataset_coverage" and not args:
-            return self.get_dataset_coverage()
-        if name == "query_metric" and set(args) <= {"metric_id", "filters", "group_by"}:
-            return self.query_metric(**args)
-        if name == "compare_openings" and set(args) == {"filters"}:
-            return self.compare_openings(args["filters"])
-        if name == "analyze_clock_pressure" and set(args) == {"bucket"}:
-            return self.analyze_clock_pressure(args["bucket"])
-        if name == "compare_clock_buckets" and set(args) == {"first", "second"}:
-            return self.compare_clock_buckets(args["first"], args["second"])
-        raise ValueError("unsupported tool or arguments")
+        spec = TOOLS_BY_NAME.get(name)
+        if spec is None or not spec.accepts(args):
+            raise ValueError("unsupported tool or arguments")
+        return spec.handler(self, args)

@@ -47,11 +47,26 @@ def main(argv=None):
     check.add_argument("--audits", type=Path, nargs=3, required=True)
     check.add_argument("--sandbox-attempt", type=Path)
     check.add_argument("--out", type=Path, required=True)
+    mcp = sub.add_parser(
+        "mcp",
+        help="serve checked read-only tools to an MCP client over stdio",
+        description=(
+            "Serve checked read-only tools to one MCP client over stdio. No network listener."
+        ),
+    )
+    mcp.add_argument(
+        "--call-limit", type=int, default=64, help="tool calls allowed in this process"
+    )
     args = parser.parse_args(argv)
     project = args.project.resolve()
     root = (args.data_dir or project / "data").resolve()
     dataset = getattr(args, "dataset", "tiny")
     try:
+        if args.command == "mcp":
+            from chess_analytics.analyst.mcp_server import serve
+
+            serve(project, call_limit=args.call_limit)
+            return 0
         if args.command == "m7":
             from chess_analytics.m7_campaign import execute
 
