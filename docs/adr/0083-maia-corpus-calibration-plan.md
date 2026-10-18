@@ -1,6 +1,6 @@
 # 0083. Maia corpus calibration plan
 
-- Status: proposed, accepted on merge
+- Status: proposed, accepted on merge. The line "No measured corpus score is committed" is superseded by [0084](0084-maia-corpus-calibration-results.md).
 - Date: 2026-10-17
 
 ## Motivation
@@ -155,7 +155,7 @@ gitignored (`/reports/maia-corpus-calibration-*`):
 - `reports/maia-corpus-calibration-elite.json` and `.md`
 - `reports/maia-corpus-calibration-public.json` and `.md`
 
-No measured corpus score is committed. `null` below means no positions were
+No measured corpus score is committed. Superseded by [0084](0084-maia-corpus-calibration-results.md). `null` below means no positions were
 scored. The public file is the example. The elite file uses the same keys,
 with `id` `elite_2025_11`, `blitz_filter` false, and without the one-day
 caveat.

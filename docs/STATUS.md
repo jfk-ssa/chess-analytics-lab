@@ -40,6 +40,8 @@ the repository. `maia_v1` checks four displayed probabilities with tolerance
 ([ADR 0082](adr/0082-maia-calibration-and-d4-repertoire.md)).
 The measurement plan for the local November 2025 elite file and one pinned
 public prefix is [ADR 0083](adr/0083-maia-corpus-calibration-plan.md).
+Measured scores from the two runs are in
+[ADR 0084](adr/0084-maia-corpus-calibration-results.md).
 `python -m chess_analytics.analyst.maia_corpus` scores one of those
 populations at a time and writes one gitignored JSON file and one gitignored
 Markdown file.
