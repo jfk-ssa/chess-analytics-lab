@@ -264,10 +264,30 @@ Mutation evidence, from `tests/test_eval_gate.py`:
 The path and poison tests skip unless the dbt extra is installed. With
 `CHESSLAB_REQUIRE_DBT=1` they fail instead of skipping.
 
-A throwaway commit that fails this gate is pushed on the pull-request
-branch after this record, then reverted. The red Actions URL is added
-to this section after that run is recorded. The first revision of this
-record does not claim a URL.
+Two throwaway commits were pushed and then reverted.
+
+The first set the fixture draw-rate numerator to 0. Plain pytest failed
+before the gate step, at `tests/test_eval_gate.py:147` with `assert 0 == 1`.
+That run is
+https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39166570679.
+The step `Offline analyst eval regression gate` did not start.
+
+The run that reached the gate is
+https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39166880322
+on commit `8779f73`. Every earlier step in the offline job passed,
+including `248 passed, 30 skipped` without dbt and
+`259 passed, 19 skipped` under `CHESSLAB_REQUIRE_DBT=1`. The failing
+step is `Offline analyst eval regression gate`. Its log line is:
+
+```text
+REGRESSION gate_v1/game_draw_rate pass->fail [result_values] expected {"failures": [], "passed": true, "path": "governed"} got {"failures": ["result_values"], "passed": false, "path": "governed"}
+```
+
+That commit did not change the fixture. After a correct replay,
+`run_scorecard` marked `game_draw_rate` failed so the command would exit
+1 while pytest, which calls `collect` rather than `run_scorecard`, stayed
+green. The commit is reverted. The case numerator is 1, matching
+`portfolio_expected.json`.
 
 ## Consequences
 
