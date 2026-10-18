@@ -92,3 +92,4 @@ short summary of the current checkout, not a log of new decisions.
 | 0084 | 2026-10-17 | [Maia corpus calibration results](adr/0084-maia-corpus-calibration-results.md) |
 | 0085 | 2026-10-18 | [Governed MetricFlow semantic layer](adr/0085-governed-semantic-layer-metricflow.md) |
 | 0086 | 2026-10-18 | [dbt tests, contracts, exposures, lineage, and slim CI](adr/0086-dbt-engineering-depth.md) |
+| 0087 | 2026-10-18 | [Incremental player_games measured, not adopted](adr/0087-incremental-player-games.md) |
