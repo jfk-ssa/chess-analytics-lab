@@ -4,6 +4,12 @@
 stdio. The server is read-only. It does not open a port, and it does not read
 API keys, dotenv files, or other process secrets.
 
+Keep the clone outside iCloud- or Dropbox-synced folders such as
+`~/Documents` or `~/Desktop` (for example `~/Developer`). Sync tools create
+conflict copies inside `.venv` and `.git`. Optionally keep the uv environment
+outside the repository: export `UV_PROJECT_ENVIRONMENT` (for example
+`$HOME/.venvs/chess-analytics-lab`) before the `uv` commands below.
+
 Install the optional extra once. The pin is `mcp==2.3.0`.
 
 ```sh
@@ -145,10 +151,10 @@ Use this command in a project or user MCP file (`.cursor/mcp.json`). `--project`
         "--extra",
         "mcp",
         "--directory",
-        "/Users/jfk/Documents/ChatGPT/chess/chess-analytics-lab",
+        "/path/to/chess-analytics-lab",
         "chesslab",
         "--project",
-        "/Users/jfk/Documents/ChatGPT/chess/chess-analytics-lab",
+        "/path/to/chess-analytics-lab",
         "mcp"
       ]
     }
