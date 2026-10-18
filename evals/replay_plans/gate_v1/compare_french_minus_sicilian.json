@@ -1,0 +1,26 @@
+{
+  "kind": "fixture_plan_no_model_response",
+  "plan": {
+    "actions": [
+      {
+        "args": {
+          "filters": {
+            "base_seconds": 60,
+            "color": "white",
+            "families": [
+              "French Defense",
+              "Sicilian Defense"
+            ],
+            "increment_seconds": 0,
+            "rating_max_exclusive": 1600,
+            "rating_min": 1400
+          }
+        },
+        "tool": "compare_openings"
+      }
+    ],
+    "interpretation": "descriptive_observed_prefix",
+    "status": "answered"
+  },
+  "question": "How does the white French score compare with the white Sicilian score in the 1400 to 1600 band at 60+0?"
+}

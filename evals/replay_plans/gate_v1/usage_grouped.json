@@ -1,0 +1,20 @@
+{
+  "kind": "fixture_plan_no_model_response",
+  "plan": {
+    "actions": [
+      {
+        "args": {
+          "filters": {},
+          "group_by": [
+            "opening_family"
+          ],
+          "metric_id": "opening_usage"
+        },
+        "tool": "query_metric"
+      }
+    ],
+    "interpretation": "descriptive_observed_prefix",
+    "status": "answered"
+  },
+  "question": "Which known opening families appear in this fixture, and how many eligible games use each?"
+}

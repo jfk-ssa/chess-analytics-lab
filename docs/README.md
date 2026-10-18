@@ -39,6 +39,7 @@ live evaluations are recorded separately.
 | `docs/ENGINE.md` | Local engine checks and opening continuations; what was verified |
 | `src/chess_analytics/orchestration/` | Optional local Dagster/Prefect wrappers over the same pipeline |
 | `contracts/`, `config/`, `evals/` | Definitions, bounded source plans, frozen questions and reference manifests |
+| `evals/baselines/analyst_gate_v1.json` | Committed offline analyst scorecard. CI fails when replay differs. Not an LLM-quality score |
 | `tests/fixtures/`, `tests/` | Tracked synthetic inputs, independent expected values and offline regressions |
 | `docs/adr/`, `docs/DECISIONS.md` | Numbered decision records and their index. New decisions go here; [status](STATUS.md) stays a short summary |
 | `reports/` | Compact historical evidence and the original comparison report |

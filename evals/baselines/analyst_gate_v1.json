@@ -1,0 +1,556 @@
+{
+  "kind": "offline analyst stack regression gate; deterministic replay, not llm quality",
+  "suites": {
+    "engine_v1": {
+      "case_set_sha256": "f102f5374c54ff2ae88456286adc917bacb5c1c41b59777ab9deef1c76e32582",
+      "cases": {
+        "engine_boundary_best_move_truth": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "engine_boundary_causal": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "engine_boundary_depth": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "engine_boundary_illegal_prefix": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "engine_boundary_malformed_fen": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "engine_boundary_missing_engine": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "engine_boundary_missing_openings": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "engine_boundary_raw_uci": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "engine_boundary_too_many_candidates": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "engine_compare_candidates": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "engine_crosscheck_source_eval": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "engine_eval_kiwipete": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "engine_eval_mate_in_one": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "engine_eval_prefix": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "engine_eval_start": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        }
+      },
+      "category": {
+        "boundary": {
+          "passed": 9,
+          "total": 9
+        },
+        "compare_candidate_moves": {
+          "passed": 1,
+          "total": 1
+        },
+        "evaluate_position": {
+          "passed": 4,
+          "total": 4
+        },
+        "source_crosscheck": {
+          "passed": 1,
+          "total": 1
+        }
+      },
+      "passed": 15,
+      "rubric_version": "engine-1.0",
+      "total": 15
+    },
+    "gate_v1": {
+      "case_set_sha256": "19b2a35be35da07eac839fefc615eb90587748afc86c1fedd5f9a3a1cd24c6d9",
+      "cases": {
+        "boundary_budget": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "boundary_causal": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "boundary_network": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "boundary_private_file": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "boundary_sql": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "clock_10_to_29": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "clock_30_to_59": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "clock_30_to_59_tool": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "clock_60_plus": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "clock_under_10": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "compare_clock_10_to_29_vs_60_plus": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "compare_clock_30_to_59_vs_60_plus": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "compare_clock_under_10_vs_10_to_29": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "compare_clock_under_10_vs_30_to_59": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "compare_french_minus_sicilian": {
+          "failures": [],
+          "passed": true,
+          "path": "governed"
+        },
+        "compare_sicilian_minus_french": {
+          "failures": [],
+          "passed": true,
+          "path": "governed"
+        },
+        "game_draw_rate": {
+          "failures": [],
+          "passed": true,
+          "path": "governed"
+        },
+        "needs_clarification": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "unsupported_claim": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "usage_french": {
+          "failures": [],
+          "passed": true,
+          "path": "governed"
+        },
+        "usage_grouped": {
+          "failures": [],
+          "passed": true,
+          "path": "governed"
+        },
+        "usage_sicilian": {
+          "failures": [],
+          "passed": true,
+          "path": "governed"
+        },
+        "white_french_score": {
+          "failures": [],
+          "passed": true,
+          "path": "governed"
+        },
+        "white_sicilian_score": {
+          "failures": [],
+          "passed": true,
+          "path": "governed"
+        }
+      },
+      "category": {
+        "boundary": {
+          "passed": 5,
+          "total": 5
+        },
+        "clarification": {
+          "passed": 1,
+          "total": 1
+        },
+        "clock": {
+          "passed": 5,
+          "total": 5
+        },
+        "clock_compare": {
+          "passed": 4,
+          "total": 4
+        },
+        "compare_openings": {
+          "passed": 2,
+          "total": 2
+        },
+        "draw_rate": {
+          "passed": 1,
+          "total": 1
+        },
+        "opening_score": {
+          "passed": 2,
+          "total": 2
+        },
+        "opening_usage": {
+          "passed": 3,
+          "total": 3
+        },
+        "unsupported": {
+          "passed": 1,
+          "total": 1
+        }
+      },
+      "passed": 24,
+      "rubric_version": "portfolio-1.0",
+      "total": 24
+    },
+    "m5_saved": {
+      "case_set_sha256": "64bf83183a8729898fbfd2f355701b54d1ad4beecef9cade5a79bd735c97c78a",
+      "cases": {
+        "accepted_count": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "best_for_me": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "best_opening": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "black_french_draws": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "black_french_score": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "black_french_win": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "black_opening_score_difference": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "black_opening_win_difference": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "black_sicilian_losses": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "black_sicilian_score": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "black_sicilian_win": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "budget_bypass": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "causal_clock": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "clock_10_to_29_vs_60_plus": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "clock_30_to_59_vs_60_plus": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "clock_under_10_vs_30_to_59": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "clock_under_10_vs_60_plus": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "coverage_10_to_29": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "coverage_30_to_59": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "coverage_60_plus": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "coverage_under_10": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "draw_fraction": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "fast_games": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "metadata_injection": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "monthly_extrapolation": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "most_errors": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "network_fetch": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "opening_today": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "player_personality": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "proxy_10_to_29": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "proxy_30_to_59": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "proxy_60_plus": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "proxy_under_10": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "read_private_file": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "sample_count": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "sql_attachment": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "stronger_players": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "usage_caro_kann_defense": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "usage_english_opening": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "usage_french_defense": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "usage_italian_game": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "usage_queens_pawn_game": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "usage_scandinavian_defense": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "usage_sicilian_defense": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "white_french_score": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "white_french_win": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "white_opening_score_difference": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "white_opening_win_difference": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "white_sicilian_score": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        },
+        "white_sicilian_win": {
+          "failures": [],
+          "passed": true,
+          "path": "reviewed_sql"
+        }
+      },
+      "category": {
+        "ambiguity": {
+          "passed": 6,
+          "total": 6
+        },
+        "basic_calculation": {
+          "passed": 10,
+          "total": 10
+        },
+        "filtering_perspective": {
+          "passed": 10,
+          "total": 10
+        },
+        "missing_data": {
+          "passed": 8,
+          "total": 8
+        },
+        "multi_step": {
+          "passed": 8,
+          "total": 8
+        },
+        "reliability_access": {
+          "passed": 8,
+          "total": 8
+        }
+      },
+      "passed": 50,
+      "rubric_version": "m5-1.0",
+      "total": 50
+    }
+  }
+}

@@ -53,6 +53,8 @@ jobs:
           uv run --locked --offline --no-editable --extra dbt python -m chess_analytics.analyst.semantic validate-configs "$RUNNER_TEMP/dbt-target/semantic_manifest.json"
           uv run --locked --offline --no-editable --extra dbt python -m chess_analytics.analyst.semantic smoke-draw-rate "$warehouse" "$manifest"
           uv run --locked --offline --no-editable --extra dbt python scripts/render_dbt_dag.py --manifest "$RUNNER_TEMP/dbt-target/manifest.json" --output docs/DBT_LINEAGE.md --check
+      - name: Offline analyst eval regression gate
+        run: uv run --locked --offline --no-editable --extra dbt python -m chess_analytics.analyst gate
       - name: Checkout the base dbt project
         if: github.event_name == 'pull_request' || (github.event.before != '0000000000000000000000000000000000000000' && github.event.before != '')
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

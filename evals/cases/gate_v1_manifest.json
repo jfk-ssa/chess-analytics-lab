@@ -1,0 +1,21 @@
+{
+  "canonicalization": "sha256 of json.dumps({cases sorted by id, plans sorted by file name}, sort_keys=True) utf-8",
+  "case_file": "evals/cases/gate_v1.json",
+  "case_set_sha256": "19b2a35be35da07eac839fefc615eb90587748afc86c1fedd5f9a3a1cd24c6d9",
+  "cases": 24,
+  "categories": {
+    "boundary": 5,
+    "clarification": 1,
+    "clock": 5,
+    "clock_compare": 4,
+    "compare_openings": 2,
+    "draw_rate": 1,
+    "opening_score": 2,
+    "opening_usage": 3,
+    "unsupported": 1
+  },
+  "expected_source": "tests/fixtures/portfolio_expected.json",
+  "kind": "gate_v1 offline replay of the analyst stack; not model accuracy",
+  "replay_plan_dir": "evals/replay_plans/gate_v1",
+  "rubric_version": "portfolio-1.0"
+}

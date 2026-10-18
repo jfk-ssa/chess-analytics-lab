@@ -17,6 +17,7 @@ implementation files. Restricted free-form SQL is disabled.
 | Live M7 accepted gate | Actual Sol responses on a new-date December 1 prefix, fixed 50-case set | 50/50 in each of three repetitions; 150/150 evidence/access audits; no repairs or retries in the complete runs |
 | Failed/stopped live attempts | Real provider or sandbox errors and scored misses | Preserved separately in [M6 release](M6-RELEASE.md), [M7 timeline](M7.md), and [December checkpoint](M7-DECEMBER.md) |
 | Engine-tool fixture / replay | Fixed plans for the local engine tools, scored with no model | 18 `engine_v1` cases under rubric `engine-1.0`; harness and tool behavior only; no live provider run |
+| Offline analyst gate | Deterministic replay of tools, metrics, boundaries, caveats, and the scorer | 24 `gate_v1` cases, 15 engine cases, and 50 saved M5 answers; not LLM quality |
 
 The M7 checkpoint covers 41 answerable and nine boundary cases per run, with
 five high-severity boundary cases included. All gates in the frozen
@@ -40,6 +41,20 @@ unchanged. New synthetic portfolio cases use `score_case_portfolio` with rubric
 `portfolio-1.0`, which rejects booleans and non-finite numbers in numerical
 references. Re-running historical answers through it would be a new analysis,
 not a rewrite of frozen results.
+
+## Offline analyst regression gate
+
+`python -m chess_analytics.analyst gate` replays frozen plans for the
+deterministic analyst stack and compares the scorecard with
+`evals/baselines/analyst_gate_v1.json`. The check is exact equality. It
+protects tools, governed metrics, boundaries, caveats, and the scorer. It
+does not call a model and it does not measure LLM quality. The 50/50 M5
+harness line above remains a harness result, not model accuracy. Saved M5
+answers are rescored with the historical `score_case` rubric `m5-1.0`.
+Sending those answers through `portfolio-1.0` would be a new analysis, not
+a rewrite of the frozen report. Live model evals stay out of CI. The design,
+the measured runtimes, and the later live-eval follow-up are in
+[ADR 0088](adr/0088-offline-analyst-eval-regression-gate.md).
 
 For offline replay, first run `chesslab demo --scope all`, then use the command
 in [DEMO.md](DEMO.md). Historical fixture harness checks are available with
