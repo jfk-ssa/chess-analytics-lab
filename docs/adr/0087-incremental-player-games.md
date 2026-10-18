@@ -138,10 +138,19 @@ was dropped. The median is the middle sample. Spread is max minus min.
 Every sample is in
 [reports/incremental-player-games.json](../../reports/incremental-player-games.json).
 
-Equivalence is the SHA-256 of the ordered `player_games` content, hashed
-in chunks of 8,000 rows ordered by `player_game_key`. It compares two
-builds on this machine in one run. It is not a hash to pin across DuckDB
-versions.
+Equivalence is the SHA-256 of the ordered `player_games` content. DuckDB
+casts each column to varchar, and the script hashes those strings in
+chunks of 8,000 rows ordered by `player_game_key`. The cast stays inside
+the engine, so the comparison does not import `pytz`. `pytz` is absent
+from the base install and appears only as a transitive dependency of the
+dbt extra. The comparison is two builds on this machine in one run. It is
+not a hash to pin across DuckDB versions.
+
+The `sha256` strings in the committed receipt were produced by an earlier
+form of this function that hashed Python's `repr` of the fetched values.
+That run had the dbt extra, so `pytz` was importable. A rerun with the
+current function will not reproduce those hex strings. The match flags,
+row counts, byte sizes, and timings in the receipt are from that run.
 
 Machine, from this run's receipt and `lscpu` on the same VM: Linux
 6.12.94+, x86_64, 4 CPUs, Intel Xeon (family 6, model 207),

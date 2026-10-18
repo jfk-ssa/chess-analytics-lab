@@ -189,11 +189,14 @@ def append_games(path: Path, start: int, count: int) -> None:
 
 
 def content_sha256(path: Path, relation: str, order_by: str) -> tuple[str, int]:
+    """Hash ordered rows as varchar so timestamptz does not need pytz."""
     digest = hashlib.sha256()
     seen = 0
     with duckdb.connect(str(path), read_only=True) as connection:
-        cursor = connection.execute(f'select * from "{relation}" order by "{order_by}"')
-        columns = [item[0] for item in cursor.description]
+        described = connection.execute(f'describe "{relation}"').fetchall()
+        columns = [row[0] for row in described]
+        projection = ", ".join(f'cast("{name}" as varchar)' for name in columns)
+        cursor = connection.execute(f'select {projection} from "{relation}" order by "{order_by}"')
         digest.update(repr(columns).encode())
         while True:
             rows = cursor.fetchmany(8000)
