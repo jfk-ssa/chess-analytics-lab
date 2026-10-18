@@ -334,6 +334,31 @@ def test_zero_denominator_and_supported_score(monkeypatch):
     assert score["win_rate"] == 0.6
 
 
+def test_missing_metricflow_import_falls_back(monkeypatch):
+    import builtins
+
+    real_import = builtins.__import__
+
+    def blocked(name, *args, **kwargs):
+        if name == "metricflow" or name.startswith(("metricflow.", "metricflow_")):
+            raise ImportError(name)
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", blocked)
+    semantic._ENGINES.clear()
+
+    def located(_project, _snapshot):
+        return Path("warehouse.duckdb"), Path("semantic_manifest.json")
+
+    monkeypatch.setattr(semantic, "published_mart", located)
+    tools = type(
+        "T",
+        (),
+        {"project": Path(), "snapshot": Path("s"), "dataset_id": "c" * 24},
+    )()
+    assert semantic.resolve_governed(tools, "game_draw_rate", {}, []) is None
+
+
 def test_semantic_failures_fall_back(tmp_path, monkeypatch):
     tools = type(
         "T",

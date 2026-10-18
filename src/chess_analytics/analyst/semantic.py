@@ -330,12 +330,12 @@ def _compile_sql(
     group_by: list[str] | None = None,
     limit: int | None = None,
 ) -> str:
-    from metricflow.engine.metricflow_engine import MetricFlowQueryRequest
+    from chess_analytics.analyst.metricflow_imports import query_request
 
     order = None
     if group_by:
         order = [f"-{metrics[0]}", *group_by]
-    request = MetricFlowQueryRequest.create(
+    request = query_request().create(
         metric_names=metrics,
         group_by_names=group_by,
         where_constraints=where,
@@ -351,15 +351,15 @@ def _engine(semantic_manifest: Path):
     cached = _ENGINES.get(key)
     if cached is not None:
         return cached
-    from metricflow.engine.metricflow_engine import MetricFlowEngine
-    from metricflow_semantics.model.dbt_manifest_parser import (
-        parse_manifest_from_dbt_generated_manifest,
+    from chess_analytics.analyst.metricflow_imports import (
+        manifest_lookup,
+        metricflow_engine,
+        parse_dbt_manifest,
     )
-    from metricflow_semantics.model.semantic_manifest_lookup import SemanticManifestLookup
 
-    parsed = parse_manifest_from_dbt_generated_manifest(semantic_manifest.read_text())
-    engine = MetricFlowEngine(
-        semantic_manifest_lookup=SemanticManifestLookup(parsed),
+    parsed = parse_dbt_manifest()(semantic_manifest.read_text())
+    engine = metricflow_engine()(
+        semantic_manifest_lookup=manifest_lookup()(parsed),
         sql_client=cast(Any, _DuckDbExplainClient()),
     )
     _ENGINES[key] = engine
@@ -370,11 +370,10 @@ class _DuckDbExplainClient:
     """Renderer-only client. explain() must not open the mart."""
 
     def __init__(self) -> None:
-        from metricflow.protocols.sql_client import SqlEngine
-        from metricflow.sql.render.duckdb_renderer import DuckDbSqlPlanRenderer
+        from chess_analytics.analyst.metricflow_imports import duckdb_renderer, sql_engine
 
-        self.sql_engine_type = SqlEngine.DUCKDB
-        self.sql_plan_renderer = DuckDbSqlPlanRenderer()
+        self.sql_engine_type = sql_engine().DUCKDB
+        self.sql_plan_renderer = duckdb_renderer()()
 
     def query(self, stmt: str, sql_bind_parameter_set: object = None) -> object:
         raise RuntimeError("semantic explain must not query")
@@ -394,15 +393,10 @@ class _DuckDbExplainClient:
 
 def validate_configs(path: Path) -> list[str]:
     """Return blocking semantic-manifest errors. This is the in-process validate-configs check."""
-    from metricflow_semantic_interfaces.validations.semantic_manifest_validator import (
-        SemanticManifestValidator,
-    )
-    from metricflow_semantics.model.dbt_manifest_parser import (
-        parse_manifest_from_dbt_generated_manifest,
-    )
+    from chess_analytics.analyst.metricflow_imports import manifest_validator, parse_dbt_manifest
 
-    parsed = parse_manifest_from_dbt_generated_manifest(path.read_text())
-    result = SemanticManifestValidator().validate_semantic_manifest(
+    parsed = parse_dbt_manifest()(path.read_text())
+    result = manifest_validator()().validate_semantic_manifest(
         cast(Any, parsed), multi_process=False
     )
     return [issue.message for issue in (*result.errors, *result.future_errors)]

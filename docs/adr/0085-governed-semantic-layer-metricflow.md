@@ -230,12 +230,14 @@ update-check timings in the earlier draft are one-off measurements of a
 removed path. They are not reproduced here.
 
 `tests/test_semantic_layer.py` passed 9 tests in 12.14 seconds, including
-both product builds. With the `dbt` extra installed, `pytest -q` passed 228
-tests and skipped 19 in 55.22 seconds. The skips are the existing optional
-snapshots, not the semantic tests.
+both product builds. With the `dbt` extra installed, `pytest -q` passed 229
+tests and skipped 19 in 55.74 seconds. The skips are the existing optional
+snapshots, not the semantic tests. Without the extra, the same command
+passed 225 and skipped 23 in 27.21 seconds. `basedpyright` reported 0
+errors in both environments.
 
 `chesslab demo` on the tiny fixture reported accepted 22, eligible 20, drawn
 4, value 0.2. `python -m chess_analytics.marts transform --dataset tiny` then
-published mart `1f7c588c334e67bf54222a5a` with dbt `created` 8 and `passed`
+published mart `bde6e21244b156f65ef86a53` with dbt `created` 8 and `passed`
 39. `games` and `player_games` are views in that warehouse.
 `validate-configs` printed `ERRORS: 0`. `smoke-draw-rate` printed `4,20,0.2`.
