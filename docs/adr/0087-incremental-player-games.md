@@ -86,7 +86,11 @@ do the same logical work.
 
 `microbatch` deletes and inserts by `event_time` window. The adapter
 raises if `unique_key` is set. The probe's error line was:
-`microbatch incremental strategy does not support 'unique_key'.`
+
+> microbatch incremental strategy does not support 'unique_key'.
+> Microbatch runs delete+insert per batch based on 'event_time' and does
+> not do key-based upserts. Remove 'unique_key' or use
+> incremental_strategy='merge'.
 
 `delete+insert` is the strategy that satisfies `unique_key` without the
 merge configuration. The 1% timings below show it is close to append and
@@ -138,19 +142,21 @@ was dropped. The median is the middle sample. Spread is max minus min.
 Every sample is in
 [reports/incremental-player-games.json](../../reports/incremental-player-games.json).
 
-Equivalence is the SHA-256 of the ordered `player_games` content. DuckDB
-casts each column to varchar, and the script hashes those strings in
-chunks of 8,000 rows ordered by `player_game_key`. The cast stays inside
-the engine, so the comparison does not import `pytz`. `pytz` is absent
-from the base install and appears only as a transitive dependency of the
-dbt extra. The comparison is two builds on this machine in one run. It is
-not a hash to pin across DuckDB versions.
+Equivalence is the SHA-256 of the ordered `player_games` content. The
+script hashes column names and 8,000-row chunks ordered by
+`player_game_key`. The current function casts each column to varchar
+inside DuckDB before the fetch, so the comparison does not import `pytz`.
+`pytz` is absent from the base install and appears only as a transitive
+dependency of the dbt extra. The comparison is two builds on this machine
+in one run. It is not a hash to pin across DuckDB versions.
 
-The `sha256` strings in the committed receipt were produced by an earlier
-form of this function that hashed Python's `repr` of the fetched values.
-That run had the dbt extra, so `pytz` was importable. A rerun with the
-current function will not reproduce those hex strings. The match flags,
-row counts, byte sizes, and timings in the receipt are from that run.
+The receipt field `content_sha256_method` names the hasher that produced
+that file's hex strings. The committed receipt's value is the earlier
+`select *` plus Python `repr` hasher, which needed `pytz`. A new run
+writes the current method under the same key. A rerun will not reproduce
+the committed hex strings, and its method field will name the varchar
+cast. Match flags, row counts, byte sizes, and timings in the committed
+receipt are from that run.
 
 Machine, from this run's receipt and `lscpu` on the same VM: Linux
 6.12.94+, x86_64, 4 CPUs, Intel Xeon (family 6, model 207),
@@ -182,10 +188,14 @@ The published view, 5 repeats:
 - file size stayed 45,887,488 bytes, the same as the facts file
 
 Opening-score aggregate (`sum(eligible_score)`, `sum(score_eligible)`,
-`sum(eligible_win)`), 5 queries:
+`sum(eligible_win)`), 5 queries on one read-only connection. The repeats
+share that connection, so these medians are warm buffer-pool times. They
+are not cold opens, and they are not the adoption metric. The receipt
+field `query_connection` says the same thing.
 
 - on the view: median 0.110 s, spread 0.058 s
-- on the table: median 0.002 s, spread 0.004 s
+- on the table: median 0.002 s, spread 0.004 s. The first sample was
+  0.006 s and the later samples sit near 0.002 s.
 
 `delete+insert`, anti-join filter. The initial build is the full create
 of the base, which is what a fresh snapshot copy would do.
@@ -216,11 +226,12 @@ and the full-refresh table file (90,976,256 − 45,887,488).
 Ordinal `loaded_through` filter, 1% only, 5 repeats:
 
 - delta execution median 0.212 s, min 0.205 s, max 0.239 s, spread 0.034 s
+- delta process wall median 3.401 s, min 3.347 s, max 3.579 s, spread 0.232 s
 - rerun execution median 0.207 s
 - hash matched the full refresh
 
-That filter is the fast case. It still sits inside a multi-second process
-wall, and the publisher never reaches it.
+That filter is the fast case on model time. Its process wall median is
+3.401 s. The publisher never reaches it.
 
 Strategy comparison on the 1% anti-join delta, execution median of a
 separate 5-repeat set. Its `delete+insert` median is not the 1.081 s
@@ -278,9 +289,9 @@ The 1,000,000-game anti-join, which is the filter that can see "keys not
 already stored" without a caller-supplied cutoff, took longer than the
 full table rebuild (1.081 s versus 0.921 s). A rerun that inserted nothing
 took 0.975 s. The optimistic ordinal filter did save model time (0.212 s
-versus 0.921 s). That saving is smaller than the process wall, the
-publisher does not run the incremental branch, and `source_ordinal` does
-not identify new games across replacement snapshots.
+versus 0.921 s). That saving is smaller than its process wall median of
+3.401 s. The publisher does not run the incremental branch, and
+`source_ordinal` does not identify new games across replacement snapshots.
 
 At 100,000 games the anti-join saves 0.154 s of model time. A full
 published build at 1,000,000 games has process wall 6.258 s, of which the
@@ -294,8 +305,9 @@ is not sufficient. The publisher would still be paying a full create, and
 a carried-forward table would tie the mart bytes to a previous mart the
 id does not name.
 
-An opt-in model file under `dbt/` would change `model_sha256` even if the
-model were disabled, and the mart id would change with it. The incremental
+An opt-in SQL or YAML file under `dbt/` (`*.sql` or `*.yml`) would change
+`model_sha256` even if the model were disabled, and the mart id would
+change with it. `model_hash` covers those two suffixes. The incremental
 SQL stays in the measurement script. The CI test builds it in a scratch
 project.
 
@@ -313,11 +325,17 @@ does not contain `is_incremental`.
 
 At 40 games the scratch `delete+insert` model matches a from-scratch table
 on ordered content after the initial load, after a 4-game append, after a
-rerun, and after a replay that selects the appended keys again. Dropping
-`unique_key` and replaying those keys grows the table from 80 rows to 88.
-Replacing `not in` with `in` leaves the table at the 72 base rows. One run
-of this file on the measurement machine took 29.53 s. The 100,000-game and
-1,000,000-game timings are not part of CI.
+rerun, and after a replay that selects the appended keys again. Before
+the append build, the test compiles the model and counts the rendered
+select: 8 player rows, the appended games. Before the rerun, that count
+is 0. `where true` still matches the ordered hash, because `delete+insert`
+rewrites every key, but the rendered select then has 80 rows and the test
+rejects it. The happy-path SQL must also still contain the `not in`
+anti-join. Dropping `unique_key` and replaying those keys grows the table
+from 80 rows to 88. Replacing `not in` with `in` leaves the table at the
+72 base rows. One run of this file on the measurement machine took
+36.07 s, including the two compiles that count the rendered select. The
+100,000-game and 1,000,000-game timings are not part of CI.
 
 Contracts, the semantic manifest check, `model_hash`, and the MCP allowlist
 are unchanged because `dbt/` and the tool list are unchanged.

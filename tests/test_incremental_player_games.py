@@ -81,14 +81,43 @@ def test_published_player_games_stays_a_view() -> None:
     assert "incremental_strategy" not in sql
 
 
+def test_happy_path_filter_is_the_anti_join() -> None:
+    sql = _MODULE.player_games_sql("anti_join")
+    assert 'where p."player_game_key" not in (' in sql
+    assert 'select "player_game_key" from {{ this }}' in sql
+
+
+def test_committed_receipt_names_the_hasher_that_produced_it() -> None:
+    receipt = json.loads((ROOT / "reports/incremental-player-games.json").read_text())
+    method = receipt["content_sha256_method"]
+    assert "select *" in method
+    assert "pytz" in method
+    assert method != _MODULE.CONTENT_SHA256_METHOD
+    assert "varchar" in _MODULE.CONTENT_SHA256_METHOD
+    for scale in receipt["scales"]:
+        assert "warm buffer-pool" in scale["query_connection"]
+
+
+def test_a_recorded_build_error_fails_the_measurement() -> None:
+    clean = [{"published_dbt_build": {"wall_seconds": {"median": 1}}}]
+    failed = [{"published_dbt_build": {"error": "dbt failed"}}]
+    assert _MODULE.measurement_status([], clean) == 0
+    assert _MODULE.measurement_status([], failed) == 1
+    assert _MODULE.measurement_status(["1000000 0.01"], clean) == 1
+
+
 def test_incremental_matches_full_refresh_until_the_key_or_filter_breaks(tmp_path: Path) -> None:
     _require_dbt()
+    sql = _MODULE.player_games_sql("anti_join")
+    assert 'where p."player_game_key" not in (' in sql
     report = _MODULE.equivalence_report(tmp_path, games=40)
     assert report["rows"] == 80
     assert report["base_rows"] == 72
     assert report["incremental_match"] is True
     assert report["rerun_match"] is True
     assert report["replay_match"] is True
+    assert report["delta_batch_rows"] == 8
+    assert report["rerun_batch_rows"] == 0
     assert report["broken_key_rows"] == 88
     assert report["broken_key_changed"] is True
     assert report["broken_filter_rows"] == 72

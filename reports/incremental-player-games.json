@@ -1,5 +1,6 @@
 {
   "generated_at": "2026-10-18T19:27:27.182377+00:00",
+  "content_sha256_method": "sha256 of repr(column names) plus repr of 8000-row chunks fetched with select * ordered by the key. Timestamptz values were Python objects and required pytz.",
   "synthetic": {
     "description": "Deterministic fact_game and fact_player_game rows from a range index. Same columns as the published snapshot. Not the Lichess distribution.",
     "games": [
@@ -167,7 +168,7 @@
         ]
       },
       "query_sql": "select sum(\"eligible_score\"), sum(\"score_eligible\"), sum(\"eligible_win\") from player_games",
-      "query_connection": "read_only, DuckDB default memory_limit, same as the analyst",
+      "query_connection": "read_only, DuckDB default memory_limit, one connection reused for every repeat, so the samples are warm buffer-pool times. Same default memory as the analyst. Not an adoption metric.",
       "deltas": {
         "0.01": {
           "new_games": 1000,
@@ -1590,7 +1591,7 @@
         ]
       },
       "query_sql": "select sum(\"eligible_score\"), sum(\"score_eligible\"), sum(\"eligible_win\") from player_games",
-      "query_connection": "read_only, DuckDB default memory_limit, same as the analyst",
+      "query_connection": "read_only, DuckDB default memory_limit, one connection reused for every repeat, so the samples are warm buffer-pool times. Same default memory as the analyst. Not an adoption metric.",
       "deltas": {
         "0.01": {
           "new_games": 10000,

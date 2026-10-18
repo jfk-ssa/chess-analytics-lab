@@ -33,6 +33,15 @@ OPENING_SCORE_SQL = (
     'select sum("eligible_score"), sum("score_eligible"), sum("eligible_win") from player_games'
 )
 PLAYER_GAMES = "model.chess_analytics.player_games"
+CONTENT_SHA256_METHOD = (
+    "sha256 of repr(column names) plus repr of 8000-row chunks. "
+    "Each column is cast to varchar in DuckDB before fetch."
+)
+QUERY_CONNECTION = (
+    "read_only, DuckDB default memory_limit, one connection reused for every "
+    "repeat, so the samples are warm buffer-pool times. Same default memory "
+    "as the analyst. Not an adoption metric."
+)
 
 
 def log(message: str) -> None:
@@ -319,6 +328,7 @@ def dbt_build(
     exclude_tests: bool = True,
     variables: dict[str, int] | None = None,
     expect_failure: bool = False,
+    verb: str = "build",
 ) -> dict[str, object]:
     env = os.environ.copy()
     env.update(
@@ -329,7 +339,7 @@ def dbt_build(
     )
     command = [
         str(dbt_executable()),
-        "build",
+        verb,
         "--project-dir",
         str(project),
         "--profiles-dir",
@@ -400,6 +410,7 @@ def copy_warehouse(source: Path, dest: Path) -> float:
 
 
 def time_select(path: Path, sql: str, repeats: int) -> list[float]:
+    """Repeat a query on one connection. Later samples are warm-cache times."""
     samples: list[float] = []
     with duckdb.connect(str(path), read_only=True) as connection:
         for _ in range(repeats):
@@ -407,6 +418,37 @@ def time_select(path: Path, sql: str, repeats: int) -> list[float]:
             connection.execute(sql).fetchall()
             samples.append(time.perf_counter() - started)
     return samples
+
+
+def compiled_batch_rows(warehouse: Path, target: Path) -> int:
+    """Count rows the rendered incremental select would insert."""
+    path = target / "compiled/chess_analytics/models/marts/player_games.sql"
+    statement = path.read_text().strip().rstrip(";")
+    with duckdb.connect(str(warehouse), read_only=True) as connection:
+        row = connection.execute(f"select count(*) from ({statement})").fetchone()
+    if row is None:
+        raise RuntimeError("compiled player_games returned no count")
+    return int(row[0])
+
+
+def recorded_errors(node: object, path: str = "") -> list[str]:
+    found: list[str] = []
+    if isinstance(node, dict):
+        if "error" in node:
+            found.append(path or "root")
+        for key, value in node.items():
+            if key == "error":
+                continue
+            child = f"{path}.{key}" if path else str(key)
+            found.extend(recorded_errors(value, child))
+    elif isinstance(node, list):
+        for index, value in enumerate(node):
+            found.extend(recorded_errors(value, f"{path}[{index}]"))
+    return found
+
+
+def measurement_status(mismatches: list[str], scales: object) -> int:
+    return 1 if mismatches or recorded_errors(scales) else 0
 
 
 def node_map(payload: dict) -> dict[str, float]:
@@ -868,7 +910,7 @@ def measure_scale(
         "view_bytes": view_bytes,
         "view_query_seconds": summarize(view_query),
         "query_sql": OPENING_SCORE_SQL,
-        "query_connection": "read_only, DuckDB default memory_limit, same as the analyst",
+        "query_connection": QUERY_CONNECTION,
         "deltas": deltas,
         "ordinal_predicate_1pct": ordinal_result,
         "strategy_1pct_delta": strategies,
@@ -904,9 +946,29 @@ def equivalence_report(root: Path, games: int = 40) -> dict[str, object]:
     )
     append_games(incremental, base, new_count)
     dbt_build(
+        project,
+        incremental,
+        "player_games",
+        root / "t-inc",
+        root / "l-inc",
+        exclude_tests=True,
+        verb="compile",
+    )
+    delta_batch_rows = compiled_batch_rows(incremental, root / "t-inc")
+    dbt_build(
         project, incremental, "+player_games", root / "t-inc", root / "l-inc", exclude_tests=True
     )
     delta_hash, delta_rows = content_sha256(incremental, "player_games", "player_game_key")
+    dbt_build(
+        project,
+        incremental,
+        "player_games",
+        root / "t-inc",
+        root / "l-inc",
+        exclude_tests=True,
+        verb="compile",
+    )
+    rerun_batch_rows = compiled_batch_rows(incremental, root / "t-inc")
     dbt_build(
         project, incremental, "+player_games", root / "t-inc", root / "l-inc", exclude_tests=True
     )
@@ -954,7 +1016,9 @@ def equivalence_report(root: Path, games: int = 40) -> dict[str, object]:
         "rows": full_rows,
         "base_rows": base * 2,
         "incremental_match": delta_hash == full_hash and delta_rows == full_rows,
+        "delta_batch_rows": delta_batch_rows,
         "rerun_match": rerun_hash == full_hash and rerun_rows == full_rows,
+        "rerun_batch_rows": rerun_batch_rows,
         "replay_match": replay_hash == full_hash and replay_rows == full_rows,
         "broken_key_rows": broken_key_rows,
         "broken_key_changed": before_key != full_hash or broken_key_rows != full_rows,
@@ -1006,6 +1070,8 @@ def main(argv: list[str] | None = None) -> int:
             assert isinstance(ordinal_equivalence, dict)
             if not ordinal_equivalence["match"]:
                 mismatches.append(f"{scale['games']} ordinal")
+            for item in recorded_errors(scale):
+                mismatches.append(f"{scale['games']} {item}")
         report = {
             "generated_at": datetime.now(UTC).isoformat(),
             "synthetic": {
@@ -1016,6 +1082,7 @@ def main(argv: list[str] | None = None) -> int:
                 "games": games,
                 "player_games_per_game": 2,
             },
+            "content_sha256_method": CONTENT_SHA256_METHOD,
             "profile": settings,
             "machine": machine_facts(),
             "strategy": {
@@ -1037,7 +1104,9 @@ def main(argv: list[str] | None = None) -> int:
         log(f"wrote {args.output}")
     else:
         sys.stdout.write(text)
-    return 1 if mismatches else 0
+    for item in mismatches:
+        log(f"measurement failed: {item}")
+    return measurement_status(mismatches, report["scales"])
 
 
 if __name__ == "__main__":
