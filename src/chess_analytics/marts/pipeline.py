@@ -39,7 +39,7 @@ def model_hash(project: Path) -> str:
     for pattern in ("*.sql", "*.yml"):
         for path in sorted(root.rglob(pattern)):
             relative = path.relative_to(root)
-            if not path.is_file() or _GENERATED_DBT.intersection(relative.parts):
+            if not path.is_file() or (relative.parts and relative.parts[0] in _GENERATED_DBT):
                 continue
             paths.append(path)
     return hash_json({str(path.relative_to(project)): digest(path) for path in paths})
@@ -65,6 +65,12 @@ def validate_mart(directory: Path, *, require_name: bool = True) -> dict:
         raise ValueError("invalid mart manifest")
     if digest(directory / "warehouse.duckdb") != manifest["warehouse_sha256"]:
         raise ValueError("mart warehouse checksum mismatch")
+    semantic = directory / "semantic_manifest.json"
+    if digest(semantic) != manifest["semantic_manifest_sha256"]:
+        raise ValueError("semantic manifest checksum mismatch")
+    sidecar = (directory / "model_hash.txt").read_text().strip()
+    if sidecar != manifest["model_sha256"]:
+        raise ValueError("mart model hash sidecar mismatch")
     with duckdb.connect(str(directory / "warehouse.duckdb"), read_only=True) as con:
         row = con.execute(
             """select sum(accepted_games), sum(eligible_games), sum(drawn_games),
@@ -207,15 +213,22 @@ def build_mart(
         shutil.copy2(attempt / "warehouse.duckdb", candidate / "warehouse.duckdb")
         for name in ("manifest.json", "run_results.json"):
             shutil.copy2(attempt / "target" / name, candidate / f"dbt-{name}")
+        semantic_source = attempt / "target" / "semantic_manifest.json"
+        if not semantic_source.is_file():
+            raise ValueError("dbt build did not write semantic_manifest.json")
+        shutil.copy2(semantic_source, candidate / "semantic_manifest.json")
+        model_sha = model_hash(project)
+        (candidate / "model_hash.txt").write_text(model_sha + "\n")
         manifest = {
             "status": "published",
             "dataset": dataset,
             "snapshot_id": selected,
             "mart_id": identity,
             "source_sha256": source_report["source_sha256"],
-            "model_sha256": model_hash(project),
+            "model_sha256": model_sha,
             "lock_sha256": digest(project / "uv.lock"),
             "warehouse_sha256": digest(candidate / "warehouse.duckdb"),
+            "semantic_manifest_sha256": digest(candidate / "semantic_manifest.json"),
             "observed": observed,
             "dbt_results": results,
             "published_at": now(),

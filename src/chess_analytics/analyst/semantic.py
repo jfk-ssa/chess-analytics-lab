@@ -1,23 +1,24 @@
-"""Governed metrics from the dbt semantic manifest, with the SQL path as fallback.
+"""Governed metrics from the published mart's semantic manifest.
 
-MetricFlow has no switch for its PyPI update check. Callers point HTTP proxies at a
-closed local port so that check fails closed and the query still runs.
+The analyst snapshot is the analytical warehouse. Semantic tables live on the
+mart built from that snapshot's source. Any mismatch or query failure returns
+None so the caller keeps the reviewed SQL. MetricFlow compiles in-process and
+the compiled statement runs on a read-only connection.
 """
 
-import csv
-import os
-import subprocess
+import logging
 import sys
-import tempfile
 from pathlib import Path
-from typing import Protocol
+from typing import Any, Protocol, cast
 
-import duckdb
+from chess_analytics.common import digest, read_json
+from chess_analytics.corpus.metrics import opening_family_expr
+from chess_analytics.corpus.publish import validate_analytical
+from chess_analytics.marts.pipeline import checked_id, model_hash, validate_mart
 
-from chess_analytics.common import digest
+logger = logging.getLogger(__name__)
 
 GOVERNED_METRICS = frozenset({"game_draw_rate", "opening_usage", "opening_player_score"})
-_SEMANTIC_TABLES = frozenset({"games", "player_games", "metricflow_time_spine"})
 _TEXT = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '-.")
 _SCORE_FILTERS = (
     "family",
@@ -27,6 +28,7 @@ _SCORE_FILTERS = (
     "base_seconds",
     "increment_seconds",
 )
+_ENGINES: dict[str, Any] = {}
 
 
 class _SnapshotTools(Protocol):
@@ -35,32 +37,13 @@ class _SnapshotTools(Protocol):
     dataset_id: str
 
 
-def manifest_path(project: Path) -> Path:
-    return project / "dbt" / "target" / "semantic_manifest.json"
-
-
-def semantic_ready(project: Path, warehouse: Path) -> bool:
-    """True when parse artifacts, the mf binary, and the built tables are all present."""
-    if not manifest_path(project).is_file() or not warehouse.is_file():
-        return False
-    if not Path(sys.executable).with_name("mf").is_file():
-        return False
-    try:
-        with duckdb.connect(str(warehouse), read_only=True) as connection:
-            found = {
-                name
-                for (name,) in connection.execute(
-                    """select table_name from information_schema.tables
-                    where table_schema = 'main'"""
-                ).fetchall()
-            }
-    except duckdb.Error:
-        return False
-    return found >= _SEMANTIC_TABLES
+def opening_family_sql(column: str = "source_opening") -> str:
+    """The family expression shared with the reviewed SQL."""
+    return opening_family_expr(column)
 
 
 def _governed_call(metric_id: str, filters: dict, group_by: list[str]) -> bool:
-    """True only for a filter shape MetricFlow can answer. Other shapes stay on SQL."""
+    """True only for a filter shape this module can answer. Other shapes stay on SQL."""
     if metric_id not in GOVERNED_METRICS or not isinstance(filters, dict):
         return False
     if group_by and filters:
@@ -81,28 +64,61 @@ def _governed_call(metric_id: str, filters: dict, group_by: list[str]) -> bool:
     return not group_by and set(filters) == set(_SCORE_FILTERS) and _score_filters_valid(filters)
 
 
+def published_mart(project: Path, snapshot: Path) -> tuple[Path, Path] | None:
+    """Warehouse and semantic manifest when the current mart matches this analytical source."""
+    try:
+        analytical = validate_analytical(snapshot)
+        source_id = analytical["source_snapshot_id"]
+        checked_id(source_id)
+        source = read_json(project / "data" / "published" / source_id / "manifest.json")
+        dataset = source["dataset"]
+        if not isinstance(dataset, str) or dataset not in {"tiny", "foundation", "analytical"}:
+            return None
+        pointer = read_json(project / "data" / f"{dataset}-mart-current.json")
+        directory = project / "data" / "marts" / "published" / checked_id(pointer["mart_id"])
+        manifest = validate_mart(directory)
+    except (OSError, ValueError, RuntimeError, KeyError):
+        return None
+    if manifest.get("snapshot_id") != source_id or manifest.get("model_sha256") != model_hash(
+        project
+    ):
+        return None
+    semantic = directory / "semantic_manifest.json"
+    if not semantic.is_file():
+        return None
+    return directory / "warehouse.duckdb", semantic
+
+
 def resolve_governed(
     tools: _SnapshotTools, metric_id: str, filters: dict, group_by: list[str]
 ) -> dict | None:
     """Return the current tool shape, or None so the caller keeps its SQL path."""
     if not _governed_call(metric_id, filters, group_by):
         return None
-    warehouse = tools.snapshot / "warehouse.duckdb"
-    if not semantic_ready(tools.project, warehouse):
+    located = published_mart(tools.project, tools.snapshot)
+    if located is None:
         return None
-    if metric_id == "game_draw_rate":
-        if filters or group_by:
-            return None
-        return _draw_rate(tools, warehouse)
-    if metric_id == "opening_usage":
-        return _opening_usage(tools, warehouse, filters, group_by)
-    return _opening_player_score(tools, warehouse, filters, group_by)
+    warehouse, semantic = located
+    try:
+        if metric_id == "game_draw_rate":
+            return _draw_rate(tools, warehouse, semantic)
+        if metric_id == "opening_usage":
+            return _opening_usage(tools, warehouse, semantic, filters, group_by)
+        return _opening_player_score(tools, warehouse, semantic, filters)
+    except (OSError, RuntimeError, ValueError, KeyError, ImportError):
+        logger.warning("semantic query failed; using reviewed SQL")
+        return None
 
 
-def _draw_rate(tools: _SnapshotTools, warehouse: Path) -> dict:
-    row = _one(tools.project, warehouse, ["drawn_games", "eligible_games", "game_draw_rate"])
+def _draw_rate(tools: _SnapshotTools, warehouse: Path, semantic: Path) -> dict:
+    row = _one(warehouse, semantic, ["drawn_games", "eligible_games", "game_draw_rate"])
     numerator = _as_int(row["drawn_games"])
     denominator = _as_int(row["eligible_games"])
+    ratio = _optional_float(row["game_draw_rate"])
+    if denominator == 0:
+        ratio = None
+    elif ratio is None:
+        raise RuntimeError("draw rate ratio missing")
     return {
         "metric_id": "game_draw_rate",
         "version": "1.0.0",
@@ -110,29 +126,29 @@ def _draw_rate(tools: _SnapshotTools, warehouse: Path) -> dict:
         "analytical_id": tools.dataset_id,
         "numerator": numerator,
         "denominator": denominator,
-        "value": numerator / denominator if denominator else None,
+        "value": ratio,
     }
 
 
 def _opening_usage(
-    tools: _SnapshotTools, warehouse: Path, filters: dict, group_by: list[str]
-) -> dict | None:
-    if group_by == ["opening_family"] and not filters:
-        return _opening_usage_grouped(tools, warehouse)
-    if group_by or set(filters) != {"family"}:
-        return None
-    family = filters.get("family")
-    if not isinstance(family, str) or not 1 <= len(family) <= 80 or not _plain_text(family):
-        return None
+    tools: _SnapshotTools,
+    warehouse: Path,
+    semantic: Path,
+    filters: dict,
+    group_by: list[str],
+) -> dict:
+    if group_by == ["opening_family"]:
+        return _opening_usage_grouped(tools, warehouse, semantic)
+    family = filters["family"]
     numerator = _as_int(
         _one(
-            tools.project,
             warehouse,
+            semantic,
             ["known_opening_games"],
-            [_equals("game__opening_family", family)],
+            where=[_equals("game__opening_family", family)],
         )["known_opening_games"]
     )
-    totals = _one(tools.project, warehouse, ["known_opening_games", "unknown_opening_games"])
+    totals = _one(warehouse, semantic, ["known_opening_games", "unknown_opening_games"])
     denominator = _as_int(totals["known_opening_games"])
     return {
         "metric_id": "opening_usage",
@@ -148,21 +164,20 @@ def _opening_usage(
     }
 
 
-def _opening_usage_grouped(tools: _SnapshotTools, warehouse: Path) -> dict:
-    grouped = _rows(
-        tools.project,
+def _opening_usage_grouped(tools: _SnapshotTools, warehouse: Path, semantic: Path) -> dict:
+    grouped = query_rows(
         warehouse,
+        semantic,
         ["known_opening_games"],
         group_by=["game__opening_family"],
+        limit=501,
     )
-    denominator = _as_int(
-        _one(tools.project, warehouse, ["known_opening_games"])["known_opening_games"]
-    )
+    denominator = _as_int(_one(warehouse, semantic, ["known_opening_games"])["known_opening_games"])
     counted = sorted(
         (
-            (row["game__opening_family"], _as_int(row["known_opening_games"]))
+            (str(row["game__opening_family"]), _as_int(row["known_opening_games"]))
             for row in grouped
-            if row.get("game__opening_family") not in {None, "", "None"}
+            if row.get("game__opening_family") not in {None, ""}
             and _as_int(row["known_opening_games"])
         ),
         key=lambda item: (-item[1], item[0]),
@@ -180,21 +195,17 @@ def _opening_usage_grouped(tools: _SnapshotTools, warehouse: Path) -> dict:
             }
             for family, count in counted[:500]
         ],
-        "truncated": len(counted) > 500,
+        "truncated": len(grouped) > 500,
     }
 
 
 def _opening_player_score(
-    tools: _SnapshotTools, warehouse: Path, filters: dict, group_by: list[str]
-) -> dict | None:
-    if group_by or set(filters) != set(_SCORE_FILTERS):
-        return None
-    if not _score_filters_valid(filters):
-        return None
+    tools: _SnapshotTools, warehouse: Path, semantic: Path, filters: dict
+) -> dict:
     family = filters["family"]
     row = _one(
-        tools.project,
         warehouse,
+        semantic,
         [
             "opening_wins",
             "opening_draws",
@@ -204,7 +215,7 @@ def _opening_player_score(
             "opening_player_score",
             "win_rate",
         ],
-        [
+        where=[
             _equals("player_game__color", filters["color"]),
             _equals("player_game__opening_family", family),
             _compare("player_game__base_seconds", "=", filters["base_seconds"]),
@@ -213,11 +224,14 @@ def _opening_player_score(
             _compare("player_game__rating", "<", filters["rating_max_exclusive"]),
         ],
     )
-    wins = _as_int(row["opening_wins"])
-    draws = _as_int(row["opening_draws"])
-    losses = _as_int(row["opening_losses"])
     total = _as_int(row["opening_score_games"])
-    score = _as_float(row["opening_score_total"])
+    score_rate = _optional_float(row["opening_player_score"])
+    win_rate = _optional_float(row["win_rate"])
+    if total == 0:
+        score_rate = None
+        win_rate = None
+    elif score_rate is None or win_rate is None:
+        raise RuntimeError("score ratio missing")
     return {
         "metric_id": "opening_player_score",
         "version": "1.0.0",
@@ -231,12 +245,12 @@ def _opening_player_score(
             "base_seconds": filters["base_seconds"],
             "increment_seconds": filters["increment_seconds"],
         },
-        "wins": wins,
-        "draws": draws,
-        "losses": losses,
+        "wins": _as_int(row["opening_wins"]),
+        "draws": _as_int(row["opening_draws"]),
+        "losses": _as_int(row["opening_losses"]),
         "eligible_player_games": total,
-        "win_rate": wins / total if total else None,
-        "score_rate": score / total if total else None,
+        "win_rate": win_rate,
+        "score_rate": score_rate,
         "low_support": total < 100,
         "scope": "descriptive observed prefix; no causal claim",
     }
@@ -275,88 +289,182 @@ def _compare(dimension: str, operator: str, value: int) -> str:
 
 
 def _one(
-    project: Path, warehouse: Path, metrics: list[str], where: list[str] | None = None
-) -> dict:
-    rows = _rows(project, warehouse, metrics, where=where)
+    warehouse: Path,
+    semantic: Path,
+    metrics: list[str],
+    where: list[str] | None = None,
+) -> dict[str, object]:
+    rows = query_rows(warehouse, semantic, metrics, where=where)
     if len(rows) != 1:
-        raise RuntimeError("metricflow query returned an unexpected row count")
+        raise RuntimeError("semantic query returned an unexpected row count")
     return rows[0]
 
 
-def _rows(
-    project: Path,
+def query_rows(
     warehouse: Path,
+    semantic_manifest: Path,
     metrics: list[str],
+    *,
     where: list[str] | None = None,
     group_by: list[str] | None = None,
-) -> list[dict]:
-    executable = Path(sys.executable).with_name("mf")
-    with tempfile.TemporaryDirectory() as temporary:
-        root = Path(temporary)
-        output = root / "result.csv"
-        command = [
-            str(executable),
-            "query",
-            "--quiet",
-            "--metrics",
-            ",".join(metrics),
-            "--csv",
-            str(output),
+    limit: int | None = None,
+) -> list[dict[str, object]]:
+    """Compile one MetricFlow query and run it against a read-only warehouse."""
+    sql = _compile_sql(semantic_manifest, metrics, where=where, group_by=group_by, limit=limit)
+    import duckdb
+
+    with duckdb.connect(str(warehouse), read_only=True) as connection:
+        cursor = connection.execute(sql)
+        names = [str(item[0]) for item in cursor.description]
+        return [
+            {name: value for name, value in zip(names, row, strict=True)}
+            for row in cursor.fetchall()
         ]
-        if group_by:
-            command.extend(["--group-by", ",".join(group_by)])
-        for clause in where or []:
-            command.extend(["--where", clause])
-        completed = subprocess.run(
-            command,
-            cwd=root,
-            env=_mf_env(project, warehouse, root / "logs"),
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        if completed.returncode or not output.is_file():
-            detail = (completed.stderr or completed.stdout).strip()
-            raise RuntimeError(f"metricflow query failed ({completed.returncode}): {detail[-500:]}")
-        with output.open(newline="") as handle:
-            return list(csv.DictReader(handle))
 
 
-def _mf_env(project: Path, warehouse: Path, log_path: Path) -> dict[str, str]:
-    log_path.mkdir(parents=True, exist_ok=True)
-    env = os.environ.copy()
-    env.update(
-        {
-            "CHESSLAB_DBT_PATH": str(warehouse),
-            "DBT_PROFILES_DIR": str(project / "dbt"),
-            "DBT_PROJECT_DIR": str(project / "dbt"),
-            "DBT_TARGET": "local",
-            "DBT_SEND_ANONYMOUS_USAGE_STATS": "false",
-            "DO_NOT_TRACK": "1",
-            "DBT_LOG_PATH": str(log_path),
-            # update-checker has no disable flag. A closed proxy makes the PyPI
-            # request fail immediately; MetricFlow then continues.
-            "https_proxy": "http://127.0.0.1:9",
-            "http_proxy": "http://127.0.0.1:9",
-            "HTTPS_PROXY": "http://127.0.0.1:9",
-            "HTTP_PROXY": "http://127.0.0.1:9",
-            "no_proxy": "",
-            "NO_PROXY": "",
-        }
+def _compile_sql(
+    semantic_manifest: Path,
+    metrics: list[str],
+    *,
+    where: list[str] | None = None,
+    group_by: list[str] | None = None,
+    limit: int | None = None,
+) -> str:
+    from metricflow.engine.metricflow_engine import MetricFlowQueryRequest
+
+    order = None
+    if group_by:
+        order = [f"-{metrics[0]}", *group_by]
+    request = MetricFlowQueryRequest.create(
+        metric_names=metrics,
+        group_by_names=group_by,
+        where_constraints=where,
+        limit=limit,
+        order_by_names=order,
     )
-    return env
+    explained = _engine(semantic_manifest).explain(mf_request=request)
+    return explained.sql_statement.without_descriptions.sql
 
 
-def _as_int(value: str) -> int:
-    if value in {"", "None", "null", "nan", "NaN"}:
+def _engine(semantic_manifest: Path):
+    key = digest(semantic_manifest)
+    cached = _ENGINES.get(key)
+    if cached is not None:
+        return cached
+    from metricflow.engine.metricflow_engine import MetricFlowEngine
+    from metricflow_semantics.model.dbt_manifest_parser import (
+        parse_manifest_from_dbt_generated_manifest,
+    )
+    from metricflow_semantics.model.semantic_manifest_lookup import SemanticManifestLookup
+
+    parsed = parse_manifest_from_dbt_generated_manifest(semantic_manifest.read_text())
+    engine = MetricFlowEngine(
+        semantic_manifest_lookup=SemanticManifestLookup(parsed),
+        sql_client=cast(Any, _DuckDbExplainClient()),
+    )
+    _ENGINES[key] = engine
+    return engine
+
+
+class _DuckDbExplainClient:
+    """Renderer-only client. explain() must not open the mart."""
+
+    def __init__(self) -> None:
+        from metricflow.protocols.sql_client import SqlEngine
+        from metricflow.sql.render.duckdb_renderer import DuckDbSqlPlanRenderer
+
+        self.sql_engine_type = SqlEngine.DUCKDB
+        self.sql_plan_renderer = DuckDbSqlPlanRenderer()
+
+    def query(self, stmt: str, sql_bind_parameter_set: object = None) -> object:
+        raise RuntimeError("semantic explain must not query")
+
+    def execute(self, stmt: str, sql_bind_parameter_set: object = None) -> None:
+        raise RuntimeError("semantic explain must not execute")
+
+    def dry_run(self, stmt: str, sql_bind_parameter_set: object = None) -> None:
+        return None
+
+    def close(self) -> None:
+        return None
+
+    def render_bind_parameter_key(self, bind_parameter_key: str) -> str:
+        return "?"
+
+
+def validate_configs(path: Path) -> list[str]:
+    """Return blocking semantic-manifest errors. This is the in-process validate-configs check."""
+    from metricflow_semantic_interfaces.validations.semantic_manifest_validator import (
+        SemanticManifestValidator,
+    )
+    from metricflow_semantics.model.dbt_manifest_parser import (
+        parse_manifest_from_dbt_generated_manifest,
+    )
+
+    parsed = parse_manifest_from_dbt_generated_manifest(path.read_text())
+    result = SemanticManifestValidator().validate_semantic_manifest(
+        cast(Any, parsed), multi_process=False
+    )
+    return [issue.message for issue in (*result.errors, *result.future_errors)]
+
+
+def smoke_draw_rate(warehouse: Path, semantic_manifest: Path) -> None:
+    """Read-only tiny-mart check. Exits nonzero when the rate or the digest changes."""
+    before = digest(warehouse)
+    rows = query_rows(
+        warehouse, semantic_manifest, ["drawn_games", "eligible_games", "game_draw_rate"]
+    )
+    if digest(warehouse) != before or len(rows) != 1:
+        raise RuntimeError("semantic smoke check failed")
+    row = rows[0]
+    observed = (
+        _as_int(row["drawn_games"]),
+        _as_int(row["eligible_games"]),
+        _optional_float(row["game_draw_rate"]),
+    )
+    if observed != (4, 20, 0.2):
+        raise RuntimeError("semantic smoke check failed")
+
+
+def _as_int(value: object) -> int:
+    if value is None or value in {"", "None", "null", "nan", "NaN"}:
         return 0
-    number = float(value)
+    number = float(value)  # type: ignore[arg-type]
     if not number.is_integer():
-        raise RuntimeError(f"expected an integer metric value, got {value}")
+        raise RuntimeError("expected an integer metric value")
     return int(number)
 
 
-def _as_float(value: str) -> float:
-    if value in {"", "None", "null", "nan", "NaN"}:
-        return 0.0
-    return float(value)
+def _optional_float(value: object) -> float | None:
+    if value is None or value in {"", "None", "null", "nan", "NaN"}:
+        return None
+    number = float(value)  # type: ignore[arg-type]
+    if number != number:
+        return None
+    return number
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = list(sys.argv[1:] if argv is None else argv)
+    try:
+        if args and args[0] == "validate-configs" and len(args) in {1, 2}:
+            manifest = Path(args[1] if len(args) == 2 else "dbt/target/semantic_manifest.json")
+            messages = validate_configs(manifest)
+            if messages:
+                print(f"semantic validation failed ({len(messages)})", file=sys.stderr)
+                return 1
+            print("ERRORS: 0")
+            return 0
+        if len(args) == 3 and args[0] == "smoke-draw-rate":
+            smoke_draw_rate(Path(args[1]), Path(args[2]))
+            print("4,20,0.2")
+            return 0
+    except (OSError, RuntimeError, ValueError, ImportError):
+        print("semantic command failed", file=sys.stderr)
+        return 1
+    print("usage: validate-configs | smoke-draw-rate WAREHOUSE MANIFEST", file=sys.stderr)
+    return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

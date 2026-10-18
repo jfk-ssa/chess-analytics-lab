@@ -1,3 +1,5 @@
+{{ config(materialized='view') }}
+
 with players as (
     select
         p."player_game_key",
@@ -5,7 +7,6 @@ with players as (
         p."color",
         p."player_key",
         p."rating",
-        p."rating_band",
         p."score",
         g."utc_date",
         g."base_seconds",
@@ -31,7 +32,6 @@ select
     "color",
     "player_key",
     "rating",
-    "rating_band",
     "score",
     "utc_date",
     "base_seconds",

@@ -44,8 +44,6 @@ models:
       - name: player_game_key
         description: Surrogate of game_key and color.
         data_tests: [not_null, unique]
-      - name: rating_band
-        description: Closed 200-point band containing the rating, or null when the rating is missing.
       - name: color
         data_tests:
           - accepted_values:

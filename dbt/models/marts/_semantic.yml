@@ -1,12 +1,12 @@
 version: 2
 models:
   - name: metricflow_time_spine
-    description: One row per day from 2012-01-01 through 2030-12-31 for MetricFlow time joins.
+    description: Required by dbt parse for any semantic project. Analyst queries do not group by it.
     time_spine:
       standard_granularity_column: date_day
     columns:
       - name: date_day
-        description: Calendar day. Queries that do not group by time do not use this spine.
+        description: Calendar day from 2012-01-01 through 2030-12-31.
         granularity: day
         data_tests: [not_null, unique]
   - name: games
@@ -22,12 +22,12 @@ models:
           type: primary
           name: game
       - name: utc_date
-        description: Provider UTC date. Null dates stay null and are not filled from the time spine.
+        description: Provider UTC date. Null dates stay null. Queries that do not group by time do not filter them.
         granularity: day
         dimension:
           type: time
       - name: opening_family
-        description: Trimmed source opening text before the first colon.
+        description: Trimmed source opening text before the first colon. Blank text is null.
         dimension:
           type: categorical
       - name: base_seconds
@@ -70,28 +70,19 @@ models:
         agg: sum
         expr: known_opening_game
       - name: unknown_opening_games
-        description: Eligible games with no source opening family. Supports the opening-usage result shape.
+        description: Eligible games with no source opening family.
         label: Unknown-opening games
         type: simple
         agg: sum
         expr: unknown_opening_game
-      - name: opening_usage
-        description: >
-          Known-opening games in the queried family divided by all known-opening games.
-          MetricFlow applies a where filter to both inputs of a ratio, so the analyst
-          queries known_opening_games twice: once with the family filter and once without.
-        label: Opening usage
-        type: ratio
-        numerator: known_opening_games
-        denominator: known_opening_games
       - name: game_draw_rate
-        description: Drawn eligible games divided by eligible games. Empty denominator stays null in the analyst.
+        description: Drawn eligible games divided by eligible games. A zero denominator is null.
         label: Game draw rate
         type: ratio
         numerator: drawn_games
         denominator: eligible_games
   - name: player_games
-    description: One player in one game, with the opening family and rating band needed for score rate.
+    description: One player in one game. Opening family and time control are copied from the game.
     semantic_model:
       enabled: true
     agg_time_dimension: utc_date
@@ -120,10 +111,6 @@ models:
           type: time
       - name: color
         description: white or black.
-        dimension:
-          type: categorical
-      - name: rating_band
-        description: Closed 200-point band, such as 1400-1599. Null when the rating is missing.
         dimension:
           type: categorical
       - name: rating

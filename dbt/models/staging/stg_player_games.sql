@@ -7,11 +7,5 @@ select
     "player_key",
     "rating",
     "opponent_rating",
-    "score",
-    case
-        when "rating" is null then null
-        else cast(("rating" // 200) * 200 as varchar)
-            || '-'
-            || cast(("rating" // 200) * 200 + 199 as varchar)
-    end as "rating_band"
+    "score"
 from {{ source('published', 'fact_player_game') }}

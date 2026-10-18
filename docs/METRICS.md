@@ -41,64 +41,63 @@ These definitions are versioned, and [M3's independent raw-PGN check](../reports
 confirms selected arithmetic. Source annotations are not independently
 engine-verified. No monthly, population, or causal interpretation is warranted.
 
-## Governed semantic layer
-
-[ADR 0085](adr/0085-governed-semantic-layer-metricflow.md) gives each core
-metric one dbt 1.12 semantic definition. `dbt parse` and `mf validate-configs`
-check the YAML. `query_metric` reads that manifest when the built tables are
-in the warehouse and otherwise keeps the reviewed SQL. The result keys stay
-the ones the evidence IDs already hash.
-
-**eligible_games**
-
-- Semantic model: `games`
-- Definition: sum of rated Standard games with a completed result, excluding source-marked bots
-
-**game_draw_rate**
-
-- Semantic model: `games`
-- Definition: `drawn_games / eligible_games`
-- Analyst: same numerator, denominator, and value keys as the SQL tool
-
-**opening_usage**
-
-- Semantic model: `games`
-- Definition: games in one opening family / games with a known family
-- Family: `trim(split_part(source_opening, ':', 1))`
-- Query: MetricFlow applies a where filter to both ratio inputs, so the analyst asks `known_opening_games` twice
-
-**opening_player_score**
-
-- Semantic model: `player_games`. The build copies opening family and time control from the game onto each player row. `game_key` is the foreign entity.
-- Definition: `sum(score) / count`, plus `win_rate`
-- Analyst: half-open rating filter, exact time control, and the `low_support` flag stay in Python
-
-**Outside this layer**
-
-- `clock_pressure_error_proxy` and `evaluation_coverage` read `fact_move`, which dbt does not build
-- `opening_adjusted_score` is a seeded cluster bootstrap
-- A null denominator stays null in the analyst; MetricFlow's compiled SQL uses `NULLIF` and the tool applies the same rule
-
-Worked compile, on a mart built from the tiny fixture:
-
-```sh
-export DBT_PROFILES_DIR=dbt DBT_PROJECT_DIR=dbt DBT_TARGET=local
-export CHESSLAB_DBT_PATH=path/to/mart/warehouse.duckdb
-dbt parse --project-dir dbt --profiles-dir dbt
-mf query --explain --metrics game_draw_rate
-```
-
-The measured statement selects
-`cast(sum(drawn_game) as double) / cast(nullif(sum(eligible_game), 0) as double)`
-from `games` and does not constrain `utc_date`. The replay plan
-`evals/replay_plans/governed_draw_rate.json` asks the analyst the same question.
-
 M4 adds [opening adjusted score](../contracts/opening_adjusted_score.json):
 common pooled weights across three focal-minus-opponent rating-difference
 strata, with a seeded focal-player cluster bootstrap. The M4 dashboard and
 analyst tool use the same implementation. Its interval describes dependence
 within the observed prefix, not uncertainty for all August games.
 
+## Governed semantic layer
+
+[ADR 0085](adr/0085-governed-semantic-layer-metricflow.md) gives each core
+metric one dbt 1.12 semantic definition. `query_metric` uses it only when
+the current mart matches the analytical snapshot's source and the mart's
+model hash matches the project. Any other case, including a failed semantic
+query, keeps the reviewed SQL. The result keys stay the ones the evidence
+IDs already hash. `compare_openings` calls `query_metric`, so it uses the
+same path.
+
+**eligible_games**
+
+- Semantic model: `games` (a view)
+- Definition: sum of rated Standard games with a completed result, excluding source-marked bots
+
+**game_draw_rate**
+
+- Semantic model: `games`
+- Definition: `drawn_games / eligible_games`
+- Analyst: the ratio metric is the returned value
+
+**opening_usage**
+
+- Semantic model: `games`
+- Definition: games in one opening family / games with a known family
+- Family: `nullif(trim(split_part(source_opening, ':', 1)), '')`
+- Query: a where filter would apply to both inputs of a ratio, so there is no ratio metric; the analyst asks `known_opening_games` twice and divides
+
+**opening_player_score**
+
+- Semantic model: `player_games` (a view). The build copies opening family and time control from the game onto each player row. `game_key` is the foreign entity.
+- Definition: `opening_player_score` and `win_rate` are the returned rates
+- Analyst: the half-open rating filter, exact time control, and the `low_support` flag stay in Python
+
+**Outside this layer**
+
+- `clock_pressure_error_proxy` and `evaluation_coverage` read `fact_move`, which dbt does not build
+- `opening_adjusted_score` is a seeded cluster bootstrap
+- A zero denominator stays null in the analyst
+
+Offline check, after `python -m chess_analytics.marts transform`:
+
+```sh
+export DBT_PROFILES_DIR=dbt DBT_PROJECT_DIR=dbt DBT_TARGET=local
+export CHESSLAB_DBT_PATH=/tmp/warehouse.duckdb
+dbt parse --project-dir dbt --profiles-dir dbt --target-path /tmp/dbt-target
+python -m chess_analytics.analyst.semantic validate-configs /tmp/dbt-target/semantic_manifest.json
+python -m chess_analytics.analyst.semantic smoke-draw-rate path/to/mart/warehouse.duckdb path/to/mart/semantic_manifest.json
+```
+
+The compiled draw-rate statement divides `sum(drawn_game)` by `nullif(sum(eligible_game), 0)` on `games` and does not constrain `utc_date`. The replay plan `evals/replay_plans/governed_draw_rate.json` asks the analyst the same question.
 
 ## Opening-position metrics
 

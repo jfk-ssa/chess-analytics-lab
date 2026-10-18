@@ -55,7 +55,7 @@ def summarize(connection) -> dict:
         select trim(split_part(source_opening, ':', 1)) as family, count(*) as games
         from fact_game
         where result in ('1-0','0-1','1/2-1/2') and not marked_bot
-          and nullif(trim(source_opening), '') is not null
+          and nullif(trim(split_part(source_opening, ':', 1)), '') is not null
         group by 1 order by games desc, family limit 12
     """).fetchall()
     clock_rows = connection.execute("""
