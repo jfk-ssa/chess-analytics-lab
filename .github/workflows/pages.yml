@@ -33,11 +33,13 @@ jobs:
           export DBT_PROFILES_DIR="$PWD/dbt"
           export DBT_SEND_ANONYMOUS_USAGE_STATS=false
           export DO_NOT_TRACK=1
-          uv run --locked --offline --no-editable --extra docs --extra dbt dbt docs generate --project-dir dbt --profiles-dir dbt --target-path "$RUNNER_TEMP/dbt-docs" --log-path "$RUNNER_TEMP/dbt-docs-logs" --no-use-colors
+          # A relative target path is stored as target/compiled/... An absolute path is stored as that absolute path.
+          uv run --locked --offline --no-editable --extra docs --extra dbt dbt docs generate --project-dir dbt --profiles-dir dbt --target-path target --log-path dbt/target/logs --no-use-colors
           rm -rf work/docs-site/dbt-docs
           mkdir -p work/docs-site/dbt-docs
-          cp "$RUNNER_TEMP/dbt-docs/index.html" "$RUNNER_TEMP/dbt-docs/manifest.json" "$RUNNER_TEMP/dbt-docs/catalog.json" work/docs-site/dbt-docs/
+          cp dbt/target/index.html dbt/target/manifest.json dbt/target/catalog.json work/docs-site/dbt-docs/
           test -s work/docs-site/dbt-docs/catalog.json
+          uv run --locked --offline --no-editable --extra docs --extra dbt python -c 'import json; path=json.load(open("work/docs-site/dbt-docs/manifest.json"))["nodes"]["model.chess_analytics.games"]["compiled_path"]; assert path.startswith("target/"), path'
           if grep -q "has not generated the dbt catalog" work/docs-site/dbt-docs/index.html; then
             echo "dbt docs output is still the local placeholder" >&2
             exit 1

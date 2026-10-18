@@ -80,15 +80,20 @@ uv run --locked --offline --no-editable --extra dbt \
 uses only the Python standard library.
 
 Generate the catalog locally from that same copy so the command does not
-rewrite the published mart:
+rewrite the published mart. `--target-path target` is relative to the dbt
+project. dbt stores that relative path in the manifest. An absolute
+`--target-path` is stored as that absolute path, which is how a runner
+directory would be published. `--log-path` is relative to the current
+directory, so `dbt/target/logs` keeps the log inside the gitignored
+`dbt/target/` directory.
 
 ```sh
 uv run --locked --offline --no-editable --extra dbt \
   dbt docs generate --project-dir dbt --profiles-dir dbt \
-  --target-path /tmp/dbt-docs --log-path /tmp/dbt-docs-logs --no-use-colors
+  --target-path target --log-path dbt/target/logs --no-use-colors
 ```
 
-Open `/tmp/dbt-docs/index.html`. On the tiny fixture the catalog has column
+Open `dbt/target/index.html`. On the tiny fixture the catalog has column
 names and types. DuckDB reported `has_stats` false, so that catalog has no
 row counts. It is not the 2013 corpus. The Pages workflow publishes the same
 command's `index.html`, `manifest.json`, and `catalog.json` at `/dbt-docs/`
@@ -109,7 +114,20 @@ uv run --locked --offline --no-editable --extra dbt \
   dbt ls --select state:modified+ --state /tmp/dbt-state \
   --project-dir dbt --profiles-dir dbt \
   --target-path /tmp/dbt-current --log-path /tmp/dbt-current-logs --no-use-colors
+uv run --locked --offline --no-editable --extra dbt \
+  dbt build --select state:modified+ --state /tmp/dbt-state \
+  --project-dir dbt --profiles-dir dbt \
+  --target-path /tmp/dbt-current --log-path /tmp/dbt-current-logs --no-use-colors
+uv run --locked --offline --no-editable --extra dbt \
+  dbt test --select test_type:unit,state:modified --state /tmp/dbt-state \
+  --project-dir dbt --profiles-dir dbt \
+  --target-path /tmp/dbt-current --log-path /tmp/dbt-current-logs --no-use-colors
 ```
+
+`dbt build` on dbt 1.12 counts modified unit tests but does not run them
+when their parent model is unmodified. The `dbt test` selector runs those
+unit tests. CI runs both. Point `CHESSLAB_DBT_PATH` at a copy named
+`warehouse.duckdb` before the build and the test.
 
 ## Recovery
 

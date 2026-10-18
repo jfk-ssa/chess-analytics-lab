@@ -7,11 +7,11 @@ exposures:
     maturity: medium
     url: https://github.com/jfk-ssa/chess-analytics-lab/blob/main/docs/MCP.md
     description: >
-      query_metric and compare_openings read the governed draw-rate, opening-usage,
-      and opening-score metrics from the published mart when that mart matches the
-      analytical snapshot. chesslab mcp serves those same tools over stdio.
-      Clock, engine, and Maia tools do not read these models. A mismatch or a
-      failed semantic query keeps the reviewed SQL on the analytical snapshot.
+      Medium maturity: query_metric and compare_openings read these metrics from
+      the published mart only when that mart matches the analytical snapshot.
+      A mismatch or a failed semantic query keeps the reviewed SQL, so this is
+      not the unconditional reader of the mart. chesslab mcp serves the same
+      tools over stdio. Clock, engine, and Maia tools do not read these models.
     depends_on:
       - ref('games')
       - ref('player_games')
@@ -34,14 +34,15 @@ exposures:
   - name: portfolio_site
     label: Portfolio documentation site
     type: analysis
-    maturity: high
+    maturity: low
     url: https://jfk-ssa.github.io/chess-analytics-lab/dbt-docs/
     description: >
-      The public site publishes the metric and architecture guides and, from the
-      Pages workflow, a dbt catalog generated on the tiny fixture. The site does
-      not query the warehouse. The Streamlit dashboard is not an exposure of
-      these models: it reads fact_game, fact_player_game, and fact_move on the
-      analytical snapshot.
+      Low maturity: the static site does not query these models. depends_on
+      lists the seven models the generated catalog documents. The catalog has
+      eight nodes; metricflow_time_spine is omitted here because it exists so
+      dbt can parse. The catalog is the tiny fixture. The Streamlit dashboard
+      is not an exposure: it reads fact_game, fact_player_game, and fact_move
+      on the analytical snapshot.
     depends_on:
       - ref('stg_games')
       - ref('stg_player_games')

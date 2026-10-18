@@ -56,20 +56,22 @@ failure.
 `dbt/models/exposures.yml` names two consumers that exist in this repository.
 The owner is the git author, John Kennedy, `jfk-ssa`.
 
-`governed_metric_analyst` is an application of medium maturity. It depends
-on `games`, `player_games`, and the twelve governed metrics. `query_metric`
-and `compare_openings` read those metrics when the published mart matches
-the analytical snapshot. `chesslab mcp` serves the same tools. The URL is
-the MCP guide. Clock, engine, and Maia tools do not read these models.
+`governed_metric_analyst` is an application of medium maturity. Medium is
+the honest level: `query_metric` and `compare_openings` read these metrics
+when the published mart matches the analytical snapshot, and a mismatch
+keeps the reviewed SQL. High would claim an unconditional production
+reader. It depends on `games`, `player_games`, and the twelve governed
+metrics. `chesslab mcp` serves the same tools. The URL is the MCP guide.
+Clock, engine, and Maia tools do not read these models.
 
-`portfolio_site` is an analysis of high maturity. It depends on the seven
-models the generated catalog documents: both staging models, the eligibility
-model, both aggregate marts, and both semantic views. The public site does
-not query the warehouse. The URL is the Pages path `/dbt-docs/`. The
+`portfolio_site` is an analysis of low maturity. The static site does not
+query the warehouse, so high was inflated. `depends_on` lists the seven
+models the generated catalog documents: both staging models, the
+eligibility model, both aggregate marts, and both semantic views. The
+catalog has eight nodes. The exposure omits `metricflow_time_spine`, which
+exists so dbt can parse. The URL is the Pages path `/dbt-docs/`. The
 Streamlit dashboard is not an exposure. It reads `fact_game`,
 `fact_player_game`, and `fact_move` on the analytical snapshot.
-
-`metricflow_time_spine` is not a dependency of either exposure.
 
 ### Lineage
 
@@ -83,11 +85,16 @@ regenerates the file and fails if the committed copy differs.
 [ARCHITECTURE.md](../ARCHITECTURE.md) links the diagram.
 
 `dbt docs generate` runs in the Pages workflow after the site build, against
-a copy of the tiny mart named `warehouse.duckdb`. The workflow publishes
-`index.html`, `manifest.json`, and `catalog.json` at `/dbt-docs/` and does
-not commit them. A local site build writes a placeholder page. The
-architecture guide links the published catalog. Header navigation is
-unchanged.
+a copy of the tiny mart named `warehouse.duckdb`. `--target-path target` is
+relative to the dbt project. dbt then stores compiled paths as
+`target/compiled/...`. An absolute target path is stored as that absolute
+path. `--log-path dbt/target/logs` is relative to the workflow directory, so
+the log stays in gitignored `dbt/target/` and is not published. The workflow
+publishes `index.html`, `manifest.json`, and
+`catalog.json` at `/dbt-docs/` and does not commit them. It fails if
+`games.compiled_path` does not start with `target/`. A local site build
+writes a placeholder page. The architecture guide links the published
+catalog. Header navigation is unchanged.
 
 ### Slim CI
 
@@ -139,9 +146,11 @@ record does not add the model.
 
 ## Results
 
-Measured on 2026-10-18 on this checkout, Linux, dbt 1.12.5, dbt-duckdb
-1.11.0. Process wall times include uv and dbt startup. The `Finished
-running` lines are dbt's own timers.
+The timings and file sizes below are one local run on 2026-10-18, on this
+checkout, Linux, dbt 1.12.5, dbt-duckdb 1.11.0. They are not a performance
+budget. Process wall times include uv and dbt startup. The `Finished
+running` lines are dbt's own timers. The manifest's byte size changes with
+the target path, so this record does not pin it.
 
 Unit tests, copy of the published tiny warehouse named `warehouse.duckdb`:
 
@@ -164,13 +173,14 @@ The error was `This model has an enforced contract that failed.` The row
 was `drawn_games`, definition type empty, contract type `BIGINT`,
 mismatch `missing in definition`.
 
-Tiny publication already on disk from `chesslab demo` and
-`transform --dataset tiny`, after the exposure `no-op` count:
+Tiny publication after the exposure maturity edit, `chesslab demo` then
+`transform --dataset tiny`. Transform process wall 4.423s. That rebuild
+is the exposure YAML change. The semantic manifest digest did not change.
 
 - Snapshot `9ac0cb862154fac93d2a87e5`, source SHA-256 unchanged
   (`130df65e85d18e78bbafd89daf6696c2596e03abf939adf47f2dcbdc4d33e75b`)
-- Mart `537686a15cef8a6ae93a008f`
-- `model_sha256` `536ff2bc658d3dfda2398c024c5fe10968d59cf7acceb0379743ae045bcb701f`
+- Mart `bf2de24d91a4dc8e201634a5`
+- `model_sha256` `707aa83395a023e4b49756ef355271232871f9c413a82bd98168cd13d830f4b3`
 - dbt results: passed 42, created 8, no-op 2
 - Observed: accepted 22, eligible 20, drawn 4, unknown 1, bots 1,
   player rows 44
@@ -178,14 +188,19 @@ Tiny publication already on disk from `chesslab demo` and
 Passed 42 is 39 data tests plus 3 unit tests. Created 8 is the model count
 `dbt build` reports. No-op 2 is the two exposures.
 
-`dbt docs generate` on a copy named `warehouse.duckdb`: process wall
-3.481s. `index.html` 1,818,461 bytes, `manifest.json` 792,320 bytes,
-`catalog.json` 15,869 bytes. Catalog nodes: 8. Database name `warehouse`.
-`games` is a view with 18 columns: `game_key` VARCHAR, `eligible_game`
-INTEGER, `utc_date` DATE, `opening_family` VARCHAR. Every catalogued
-node had `has_stats` false. `index.html` references `manifest.json` by a
-relative name and does not contain `/workspace` or `/home`. The manifest
-does contain `/tmp` because the target directory was `/tmp/dbt-docs`.
+`dbt docs generate --target-path target` on a copy named `warehouse.duckdb`,
+after the exposure edit: `index.html` 1,818,461 bytes, `catalog.json`
+15,869 bytes. The manifest byte size is omitted because it changes with
+the target path. Catalog nodes: 8, and the eighth is
+`metricflow_time_spine`. The `portfolio_site` exposure lists the other
+seven. Database name `warehouse`. `games` is a view with 18 columns:
+`game_key` VARCHAR, `eligible_game` INTEGER, `utc_date` DATE,
+`opening_family` VARCHAR. Every catalogued node had `has_stats` false.
+`compiled_path` for `games` was
+`target/compiled/chess_analytics/models/marts/games.sql`. The manifest,
+`index.html`, and `catalog.json` contained no `/tmp`, `/workspace`, or
+`/home`. An earlier absolute target, `/tmp/dbt-docs`, had process wall
+3.481s and did embed `/tmp`.
 
 `dbt ls --select state:modified+` against a parse of `origin/main`:
 process wall 3.152s. The base parse wall was 2.959s. The selector listed
@@ -238,9 +253,9 @@ The offline quality bar on the same machine, in workflow order:
   denominator 20, numerator 4, value 0.2.
 - pytest with the dbt extra and `CHESSLAB_REQUIRE_DBT=1`: 236 passed, 19
   skipped, in 62.08s.
-- `transform --dataset tiny` reused mart `537686a15cef8a6ae93a008f`
-  (process wall 0.213s) because that snapshot and model hash were already
-  published. That wall is not a dbt build.
+- Before the exposure maturity edit, `transform --dataset tiny` reused
+  the then-current mart (process wall 0.213s). That wall is not a dbt
+  build. The edit republished mart `bf2de24d91a4dc8e201634a5` in 4.423s.
 - `validate-configs` printed `ERRORS: 0`. `smoke-draw-rate` printed
   `4,20,0.2`. The lineage `--check` exited 0.
 - Docs site tests, after `materialize_opening_positions.py`: 17 passed in
@@ -264,24 +279,29 @@ tests whose parent model is unmodified and does not run them. The separate
 would hide a unit-test failure on an unmodified model whose YAML test
 changed.
 
-Renaming the DuckDB file breaks the published views. A copy named
-`chesslab-measure.duckdb` still lists `stg_games`, and selecting from it
-fails with `Catalog "warehouse" does not exist`. Unit tests then report
-that the relation does not exist. CI and the runbook keep the name
+A copy named `chesslab-measure.duckdb` still lists `stg_games`. Selecting
+from that view fails with `Catalog "warehouse" does not exist`. On that
+copy, only the eligibility unit test errors, because it introspects
+`stg_games`. The two source unit tests still pass, because `fact_game` and
+`fact_player_game` are tables in that file. An empty `warehouse.duckdb`
+errors all three: dbt-duckdb introspects the live relation first, and this
+run reported `relation doesn't exist` for `stg_games`, `fact_game`, and
+`fact_player_game` (PASS=0, ERROR=3). CI and the runbook keep the filename
 `warehouse.duckdb`.
 
 The Pages catalog describes the tiny fixture's column names and types.
-It has no row counts. It is not the 2013 corpus. The generated manifest
-embeds the Actions target path of compiled SQL. That path is not a
-secret. It is still an environment detail in a public file.
+It has no row counts. It is not the 2013 corpus. With `--target-path
+target`, compiled paths in the published manifest stay relative. An
+absolute target path would publish that directory name.
 
 dbt's unit-test diff renders the opening family `None` as `NULL`. The
 unmutated test passed against the SQL, which returns the string `None`
 for `None: Example`. The expectation stays the string.
 
-`portfolio_site` depends on models the static site does not query. The
-arrow means the published catalog documents those models. The exposure
-description says the site does not query the warehouse.
+`portfolio_site` is low maturity and depends on models the static site
+does not query. The arrow means the published catalog documents those
+seven models. The catalog's eighth node, `metricflow_time_spine`, is not
+an exposure dependency.
 
 `tests/test_m2.py` pins `dbt_results` to passed 42, created 8, no-op 2.
 Adding a data test, a model, or an exposure fails that assertion until

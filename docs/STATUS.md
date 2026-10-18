@@ -83,7 +83,7 @@ email addresses, customer identifiers, and internal ticket links.
 
 ## Current dataset versions
 
-- Current tiny demo on this checkout: snapshot `d1d8cff7ff712770a1cd06fb`, source SHA-256 `130df65e85d18e78bbafd89daf6696c2596e03abf939adf47f2dcbdc4d33e75b`, draw rate 0.2. Snapshot ids include the implementation hash and the lock, so this source and lock change produces a new id.
+- Current tiny demo on this checkout: snapshot `9ac0cb862154fac93d2a87e5`, source SHA-256 `130df65e85d18e78bbafd89daf6696c2596e03abf939adf47f2dcbdc4d33e75b`, draw rate 0.2. `chesslab demo` on 2026-10-18 printed this id. The source checksum is unchanged. Snapshot ids include the implementation hash, and `pipeline.py` is part of that hash.
 - Foundation source: complete `lichess_db_standard_rated_2013-01.pgn.zst`, 17,761,302 compressed bytes; 92,811,021 decompressed bytes scanned.
 - Source SHA256: `aa40b3671fa3cf1072eb182892cd90b0e1e003a4a5943492f64b77e7f3fd1635`.
 - Foundation snapshot: `b57f51ff70cc3c1637e641c7` in ignored `data/published/`.
