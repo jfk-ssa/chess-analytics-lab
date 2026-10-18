@@ -142,7 +142,8 @@ An incremental `player_games` is a separate follow-up. The candidate is
 `unique_key` `player_game_key`, a test that a full refresh matches the
 incremental result, and a timing on the large corpus. Keep it only if the
 saving justifies giving up the checksummed from-scratch rebuild. This
-record does not add the model.
+record does not add the model. The measurement and the decision are in
+[ADR 0087](0087-incremental-player-games.md).
 
 ## Results
 

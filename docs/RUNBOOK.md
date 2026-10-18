@@ -129,6 +129,30 @@ when their parent model is unmodified. The `dbt test` selector runs those
 unit tests. CI runs both. Point `CHESSLAB_DBT_PATH` at a copy named
 `warehouse.duckdb` before the build and the test.
 
+### Incremental player_games measurement
+
+[ADR 0087](adr/0087-incremental-player-games.md) measured a scratch
+incremental `player_games` and left the published model as a view. The
+script writes synthetic `fact_game` and `fact_player_game` rows, copies
+`dbt/` to a temp directory, and does not modify the published project or
+download the corpus. The same command works on macOS and Linux. Scratch
+files go to `tempfile.mkdtemp`.
+
+```sh
+uv run --locked --offline --no-editable --extra dbt \
+  python scripts/measure_incremental_player_games.py \
+  --games 100000,1000000 \
+  --repeats 5 \
+  --deltas 0.01,0.10 \
+  --output reports/incremental-player-games.json
+```
+
+The receipt from the measurement VM is
+[reports/incremental-player-games.json](../reports/incremental-player-games.json).
+That run's script wall clock was 771.8 s. CI does not run this command.
+`tests/test_incremental_player_games.py` checks the seeder and a 40-game
+equivalence proof, including a broken `unique_key` and a broken filter.
+
 ## Recovery
 
 1. **Download failure:** inspect `data/raw/acquisition-failures.json` and
