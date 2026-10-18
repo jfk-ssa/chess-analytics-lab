@@ -146,25 +146,7 @@ def run_scorecard(project: Path, *, case_id: str | None = None) -> dict:
     """Stage a temp warehouse, replay the requested cases, and return a scorecard."""
     with tempfile.TemporaryDirectory(prefix="chesslab-gate-") as temporary:
         staged = stage(project, Path(temporary))
-        card = collect(project, staged, case_id=case_id)
-    # Temporary probe so the gate command fails in CI. Revert this commit.
-    _force_draw_rate_failure(card)
-    return card
-
-
-def _force_draw_rate_failure(card: dict) -> None:
-    """Mark game_draw_rate failed. Used only by the throwaway CI probe."""
-    suite = card.get("suites", {}).get("gate_v1")
-    if suite is None or "game_draw_rate" not in suite["cases"]:
-        return
-    row = suite["cases"]["game_draw_rate"]
-    if row["passed"]:
-        suite["passed"] -= 1
-        bucket = suite["category"].get("draw_rate")
-        if isinstance(bucket, dict) and bucket.get("passed"):
-            bucket["passed"] -= 1
-    row["failures"] = ["result_values"]
-    row["passed"] = False
+        return collect(project, staged, case_id=case_id)
 
 
 def collect(project: Path, staged: Path, *, case_id: str | None = None) -> dict:
