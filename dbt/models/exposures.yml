@@ -1,0 +1,56 @@
+version: 2
+
+exposures:
+  - name: governed_metric_analyst
+    label: Governed metric analyst
+    type: application
+    maturity: medium
+    url: https://github.com/jfk-ssa/chess-analytics-lab/blob/main/docs/MCP.md
+    description: >
+      Medium maturity: query_metric and compare_openings read these metrics from
+      the published mart only when that mart matches the analytical snapshot.
+      A mismatch or a failed semantic query keeps the reviewed SQL, so this is
+      not the unconditional reader of the mart. chesslab mcp serves the same
+      tools over stdio. Clock, engine, and Maia tools do not read these models.
+    depends_on:
+      - ref('games')
+      - ref('player_games')
+      - metric('eligible_games')
+      - metric('drawn_games')
+      - metric('game_draw_rate')
+      - metric('known_opening_games')
+      - metric('unknown_opening_games')
+      - metric('opening_score_games')
+      - metric('opening_score_total')
+      - metric('opening_wins')
+      - metric('opening_draws')
+      - metric('opening_losses')
+      - metric('opening_player_score')
+      - metric('win_rate')
+    owner:
+      name: John Kennedy
+      email: 38555153+jfk-ssa@users.noreply.github.com
+
+  - name: portfolio_site
+    label: Portfolio documentation site
+    type: analysis
+    maturity: low
+    url: https://jfk-ssa.github.io/chess-analytics-lab/dbt-docs/
+    description: >
+      Low maturity: the static site does not query these models. depends_on
+      lists the seven models the generated catalog documents. The catalog has
+      eight nodes; metricflow_time_spine is omitted here because it exists so
+      dbt can parse. The catalog is the tiny fixture. The Streamlit dashboard
+      is not an exposure: it reads fact_game, fact_player_game, and fact_move
+      on the analytical snapshot.
+    depends_on:
+      - ref('stg_games')
+      - ref('stg_player_games')
+      - ref('int_game_eligibility')
+      - ref('mart_game_outcomes')
+      - ref('mart_player_outcomes')
+      - ref('games')
+      - ref('player_games')
+    owner:
+      name: John Kennedy
+      email: 38555153+jfk-ssa@users.noreply.github.com

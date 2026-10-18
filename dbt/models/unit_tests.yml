@@ -1,0 +1,222 @@
+version: 2
+
+unit_tests:
+  - name: int_game_eligibility_metric_eligible_and_drawn
+    description: >
+      metric_eligible is a decisive result (1-0, 0-1, or 1/2-1/2) and not a
+      marked bot. A star result is excluded. A marked bot is excluded.
+      drawn is only the draw result, including a marked-bot draw. The mart
+      numerator still requires both flags.
+    model: int_game_eligibility
+    given:
+      - input: ref('stg_games')
+        rows:
+          - {result: "1-0", marked_bot: false}
+          - {result: "0-1", marked_bot: false}
+          - {result: "1/2-1/2", marked_bot: false}
+          - {result: "*", marked_bot: false}
+          - {result: "1-0", marked_bot: true}
+          - {result: "1/2-1/2", marked_bot: true}
+    expect:
+      rows:
+        - {result: "1-0", marked_bot: false, metric_eligible: true, drawn: false}
+        - {result: "0-1", marked_bot: false, metric_eligible: true, drawn: false}
+        - {result: "1/2-1/2", marked_bot: false, metric_eligible: true, drawn: true}
+        - {result: "*", marked_bot: false, metric_eligible: false, drawn: false}
+        - {result: "1-0", marked_bot: true, metric_eligible: false, drawn: false}
+        - {result: "1/2-1/2", marked_bot: true, metric_eligible: false, drawn: true}
+
+  - name: stg_games_opening_family_and_game_key
+    description: >
+      opening_family is the trimmed text before the first colon. Blank,
+      missing, and colon-only tags are null. A tag with no colon is trimmed
+      and kept. game_key is provider, a colon, and game_id.
+    model: stg_games
+    given:
+      - input: source('published', 'fact_game')
+        rows:
+          - {
+              provider: lichess,
+              game_id: nullopen,
+              source_ordinal: 1,
+              result: "1-0",
+              rated: true,
+              variant: Standard,
+              utc_date: null,
+              played_at: null,
+              time_control: null,
+              base_seconds: null,
+              increment_seconds: null,
+              source_opening: null,
+              source_eco: null,
+              marked_bot: false,
+              ply_count: 1,
+              record_fingerprint: fp,
+            }
+          - {
+              provider: lichess,
+              game_id: blank,
+              source_ordinal: 2,
+              result: "1-0",
+              rated: true,
+              variant: Standard,
+              utc_date: null,
+              played_at: null,
+              time_control: null,
+              base_seconds: null,
+              increment_seconds: null,
+              source_opening: "",
+              source_eco: null,
+              marked_bot: false,
+              ply_count: 1,
+              record_fingerprint: fp,
+            }
+          - {
+              provider: lichess,
+              game_id: spaces,
+              source_ordinal: 3,
+              result: "0-1",
+              rated: true,
+              variant: Standard,
+              utc_date: null,
+              played_at: null,
+              time_control: null,
+              base_seconds: null,
+              increment_seconds: null,
+              source_opening: "   ",
+              source_eco: null,
+              marked_bot: false,
+              ply_count: 1,
+              record_fingerprint: fp,
+            }
+          - {
+              provider: lichess,
+              game_id: colonfoo,
+              source_ordinal: 4,
+              result: "*",
+              rated: true,
+              variant: Standard,
+              utc_date: null,
+              played_at: null,
+              time_control: null,
+              base_seconds: null,
+              increment_seconds: null,
+              source_opening: ": Foo",
+              source_eco: null,
+              marked_bot: false,
+              ply_count: 1,
+              record_fingerprint: fp,
+            }
+          - {
+              provider: lichess,
+              game_id: wcolon,
+              source_ordinal: 5,
+              result: "1-0",
+              rated: true,
+              variant: Standard,
+              utc_date: null,
+              played_at: null,
+              time_control: null,
+              base_seconds: null,
+              increment_seconds: null,
+              source_opening: "  : Foo",
+              source_eco: null,
+              marked_bot: false,
+              ply_count: 1,
+              record_fingerprint: fp,
+            }
+          - {
+              provider: lichess,
+              game_id: padded,
+              source_ordinal: 6,
+              result: "1-0",
+              rated: true,
+              variant: Standard,
+              utc_date: null,
+              played_at: null,
+              time_control: null,
+              base_seconds: null,
+              increment_seconds: null,
+              source_opening: "  Sicilian Defense  : Najdorf",
+              source_eco: B90,
+              marked_bot: false,
+              ply_count: 20,
+              record_fingerprint: fp,
+            }
+          - {
+              provider: lichess,
+              game_id: nocolon,
+              source_ordinal: 7,
+              result: "0-1",
+              rated: true,
+              variant: Standard,
+              utc_date: null,
+              played_at: null,
+              time_control: null,
+              base_seconds: null,
+              increment_seconds: null,
+              source_opening: "  King's Pawn Game  ",
+              source_eco: null,
+              marked_bot: false,
+              ply_count: 8,
+              record_fingerprint: fp,
+            }
+          - {
+              provider: lichess,
+              game_id: nonefam,
+              source_ordinal: 8,
+              result: "1/2-1/2",
+              rated: true,
+              variant: Standard,
+              utc_date: null,
+              played_at: null,
+              time_control: null,
+              base_seconds: null,
+              increment_seconds: null,
+              source_opening: "None: Example",
+              source_eco: null,
+              marked_bot: false,
+              ply_count: 12,
+              record_fingerprint: fp,
+            }
+    expect:
+      rows:
+        - {game_key: "lichess:nullopen", opening_family: null}
+        - {game_key: "lichess:blank", opening_family: null}
+        - {game_key: "lichess:spaces", opening_family: null}
+        - {game_key: "lichess:colonfoo", opening_family: null}
+        - {game_key: "lichess:wcolon", opening_family: null}
+        - {game_key: "lichess:padded", opening_family: "Sicilian Defense"}
+        - {game_key: "lichess:nocolon", opening_family: "King's Pawn Game"}
+        - {game_key: "lichess:nonefam", opening_family: "None"}
+
+  - name: stg_player_games_surrogate_keys
+    description: >
+      game_key matches the game surrogate. player_game_key appends the color,
+      so the two participants in one game do not share a key.
+    model: stg_player_games
+    given:
+      - input: source('published', 'fact_player_game')
+        rows:
+          - {
+              provider: lichess,
+              game_id: aaaaaaaa,
+              color: white,
+              player_key: white-player,
+              rating: 1500,
+              opponent_rating: 1600,
+              score: 1.0,
+            }
+          - {
+              provider: lichess,
+              game_id: aaaaaaaa,
+              color: black,
+              player_key: black-player,
+              rating: 1600,
+              opponent_rating: 1500,
+              score: 0.0,
+            }
+    expect:
+      rows:
+        - {game_key: "lichess:aaaaaaaa", player_game_key: "lichess:aaaaaaaa:white", color: white}
+        - {game_key: "lichess:aaaaaaaa", player_game_key: "lichess:aaaaaaaa:black", color: black}

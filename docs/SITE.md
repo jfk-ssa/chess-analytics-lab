@@ -54,6 +54,11 @@ are installed, rebuilding requires no network. Keep any other installed extras
 in your commands if you also need them; uv synchronizes the selected extras.
 For example add `--extra dashboard --extra dbt` to preserve those environments.
 
+A local site build writes a placeholder at `dbt-docs/index.html`. The Pages
+workflow replaces that directory with `dbt docs generate` output from the tiny
+fixture before upload. The catalog is not committed. The header links are
+unchanged; the architecture guide links to the published catalog.
+
 ```sh
 uv run --locked --offline --no-editable --extra docs pytest -q tests/test_docs_site.py
 uv run --locked --offline --no-editable --extra docs ruff check scripts/build_docs_site.py tests/test_docs_site.py

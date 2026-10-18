@@ -52,6 +52,38 @@ jobs:
           uv run --locked --offline --no-editable --extra dbt dbt parse --project-dir dbt --profiles-dir dbt --target-path "$RUNNER_TEMP/dbt-target" --no-use-colors
           uv run --locked --offline --no-editable --extra dbt python -m chess_analytics.analyst.semantic validate-configs "$RUNNER_TEMP/dbt-target/semantic_manifest.json"
           uv run --locked --offline --no-editable --extra dbt python -m chess_analytics.analyst.semantic smoke-draw-rate "$warehouse" "$manifest"
+          uv run --locked --offline --no-editable --extra dbt python scripts/render_dbt_dag.py --manifest "$RUNNER_TEMP/dbt-target/manifest.json" --output docs/DBT_LINEAGE.md --check
+      - name: Checkout the base dbt project
+        if: github.event_name == 'pull_request' || (github.event.before != '0000000000000000000000000000000000000000' && github.event.before != '')
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          path: base-checkout
+          fetch-depth: 1
+          sparse-checkout: dbt
+          persist-credentials: false
+      - name: Slim dbt selection against the base manifest
+        run: |
+          set -euo pipefail
+          if [ ! -f base-checkout/dbt/dbt_project.yml ]; then
+            echo "slim CI: no base dbt project; skipping state selection"
+            exit 0
+          fi
+          mart="$(uv run --locked --offline --no-editable --extra dbt python -c 'import json; print(json.load(open("data/tiny-mart-current.json"))["mart_id"])')"
+          # The file stem is the DuckDB catalog. Published views qualify "warehouse".
+          mkdir -p "$RUNNER_TEMP/slim"
+          cp "$PWD/data/marts/published/${mart}/warehouse.duckdb" "$RUNNER_TEMP/slim/warehouse.duckdb"
+          export CHESSLAB_DBT_PATH="$RUNNER_TEMP/slim/warehouse.duckdb"
+          export DBT_PROFILES_DIR="$PWD/dbt"
+          export DBT_SEND_ANONYMOUS_USAGE_STATS=false
+          export DO_NOT_TRACK=1
+          state="${RUNNER_TEMP}/dbt-state"
+          uv run --locked --offline --no-editable --extra dbt dbt parse --project-dir base-checkout/dbt --profiles-dir base-checkout/dbt --target-path "${state}" --log-path "$RUNNER_TEMP/dbt-state-logs" --no-use-colors
+          echo "slim CI: state:modified+"
+          uv run --locked --offline --no-editable --extra dbt dbt ls --select "state:modified+" --state "${state}" --project-dir dbt --profiles-dir dbt --target-path "$RUNNER_TEMP/dbt-slim" --log-path "$RUNNER_TEMP/dbt-slim-logs" --no-use-colors
+          uv run --locked --offline --no-editable --extra dbt dbt build --select "state:modified+" --state "${state}" --project-dir dbt --profiles-dir dbt --target-path "$RUNNER_TEMP/dbt-slim" --log-path "$RUNNER_TEMP/dbt-slim-logs" --no-use-colors
+          # dbt 1.12 build counts modified unit tests but does not run them when their model is unmodified.
+          uv run --locked --offline --no-editable --extra dbt dbt test --select "test_type:unit,state:modified" --state "${state}" --project-dir dbt --profiles-dir dbt --target-path "$RUNNER_TEMP/dbt-slim" --log-path "$RUNNER_TEMP/dbt-slim-logs" --no-use-colors
   portfolio:
     runs-on: ubuntu-latest
     steps:

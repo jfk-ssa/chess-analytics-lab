@@ -44,6 +44,91 @@ rollback. [M2.md](M2.md) contains exact examples. [ORCHESTRATION.md](ORCHESTRATI
 shows the thin Dagster and Prefect alternatives, neither of which schedules
 unattended runs here.
 
+### dbt unit tests, lineage, and docs
+
+Unit tests run inside `dbt build`, including the tiny `transform` above. To run
+only those tests, copy the published tiny warehouse first. The copy must be
+named `warehouse.duckdb`: dbt-duckdb uses the file stem as the catalog, and
+the published views qualify `warehouse`.
+
+```sh
+mart=$(uv run --locked --offline --no-editable --extra dbt python -c 'import json; print(json.load(open("data/tiny-mart-current.json"))["mart_id"])')
+mkdir -p /tmp/chesslab-dbt
+cp "data/marts/published/${mart}/warehouse.duckdb" /tmp/chesslab-dbt/warehouse.duckdb
+export CHESSLAB_DBT_PATH=/tmp/chesslab-dbt/warehouse.duckdb
+export DBT_PROFILES_DIR=dbt DBT_SEND_ANONYMOUS_USAGE_STATS=false DO_NOT_TRACK=1
+uv run --locked --offline --no-editable --extra dbt \
+  dbt test --select test_type:unit \
+  --project-dir dbt --profiles-dir dbt \
+  --target-path /tmp/dbt-target --log-path /tmp/dbt-logs --no-use-colors
+```
+
+The copy already has `fact_game` and `fact_player_game`, which the unit-test
+fixtures introspect. The same commands work on macOS and Linux. `/tmp` is the
+temporary directory on both.
+
+Regenerate the committed diagram after `dbt parse` writes a manifest:
+
+```sh
+uv run --locked --offline --no-editable --extra dbt \
+  python scripts/render_dbt_dag.py \
+  --manifest /tmp/dbt-target/manifest.json \
+  --output docs/DBT_LINEAGE.md
+```
+
+`--check` exits 1 when the committed file is stale. CI does that. The script
+uses only the Python standard library.
+
+Generate the catalog locally from that same copy so the command does not
+rewrite the published mart. `--target-path target` is relative to the dbt
+project. dbt stores that relative path in the manifest. An absolute
+`--target-path` is stored as that absolute path, which is how a runner
+directory would be published. `--log-path` is relative to the current
+directory, so `dbt/target/logs` keeps the log inside the gitignored
+`dbt/target/` directory.
+
+```sh
+uv run --locked --offline --no-editable --extra dbt \
+  dbt docs generate --project-dir dbt --profiles-dir dbt \
+  --target-path target --log-path dbt/target/logs --no-use-colors
+```
+
+Open `dbt/target/index.html`. On the tiny fixture the catalog has column
+names and types. DuckDB reported `has_stats` false, so that catalog has no
+row counts. It is not the 2013 corpus. The Pages workflow publishes the same
+command's `index.html`, `manifest.json`, and `catalog.json` at `/dbt-docs/`
+and does not commit them.
+
+To see what a branch would rebuild, check out or archive the base revision's
+`dbt/` directory, parse it, and select downstream of the difference. CI checks
+out the pull request's base SHA (or the previous commit on a main push) for
+that parse. Locally, when the base commit is already available:
+
+```sh
+mkdir -p /tmp/dbt-base
+git archive BASE_SHA dbt | tar -x -C /tmp/dbt-base
+uv run --locked --offline --no-editable --extra dbt \
+  dbt parse --project-dir /tmp/dbt-base/dbt --profiles-dir /tmp/dbt-base/dbt \
+  --target-path /tmp/dbt-state --log-path /tmp/dbt-state-logs --no-use-colors
+uv run --locked --offline --no-editable --extra dbt \
+  dbt ls --select state:modified+ --state /tmp/dbt-state \
+  --project-dir dbt --profiles-dir dbt \
+  --target-path /tmp/dbt-current --log-path /tmp/dbt-current-logs --no-use-colors
+uv run --locked --offline --no-editable --extra dbt \
+  dbt build --select state:modified+ --state /tmp/dbt-state \
+  --project-dir dbt --profiles-dir dbt \
+  --target-path /tmp/dbt-current --log-path /tmp/dbt-current-logs --no-use-colors
+uv run --locked --offline --no-editable --extra dbt \
+  dbt test --select test_type:unit,state:modified --state /tmp/dbt-state \
+  --project-dir dbt --profiles-dir dbt \
+  --target-path /tmp/dbt-current --log-path /tmp/dbt-current-logs --no-use-colors
+```
+
+`dbt build` on dbt 1.12 counts modified unit tests but does not run them
+when their parent model is unmodified. The `dbt test` selector runs those
+unit tests. CI runs both. Point `CHESSLAB_DBT_PATH` at a copy named
+`warehouse.duckdb` before the build and the test.
+
 ## Recovery
 
 1. **Download failure:** inspect `data/raw/acquisition-failures.json` and

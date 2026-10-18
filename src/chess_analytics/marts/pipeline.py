@@ -203,8 +203,12 @@ def build_mart(
         results = {
             "passed": sum(r["status"] == "pass" for r in dbt_results["results"]),
             "created": sum(r["status"] == "success" for r in dbt_results["results"]),
+            # Exposures are selected by dbt build and finish as no-op. Any other
+            # status, including skip, warn, or error, still blocks publication.
+            "no_op": sum(r["status"] == "no-op" for r in dbt_results["results"]),
         }
-        if results["passed"] + results["created"] != len(dbt_results["results"]):
+        accounted = results["passed"] + results["created"] + results["no_op"]
+        if accounted != len(dbt_results["results"]):
             raise ValueError(f"unexpected dbt result counts: {results}")
         published = root / "marts/published"
         published.mkdir(parents=True, exist_ok=True)

@@ -91,3 +91,4 @@ short summary of the current checkout, not a log of new decisions.
 | 0083 | 2026-10-17 | [Maia corpus calibration plan](adr/0083-maia-corpus-calibration-plan.md) |
 | 0084 | 2026-10-17 | [Maia corpus calibration results](adr/0084-maia-corpus-calibration-results.md) |
 | 0085 | 2026-10-18 | [Governed MetricFlow semantic layer](adr/0085-governed-semantic-layer-metricflow.md) |
+| 0086 | 2026-10-18 | [dbt tests, contracts, exposures, lineage, and slim CI](adr/0086-dbt-engineering-depth.md) |

@@ -908,6 +908,21 @@ def homepage_results(repo):
     )
 
 
+DBT_DOCS_PLACEHOLDER = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>dbt docs</title>
+</head>
+<body>
+<p>This local build has not generated the dbt catalog.
+The documentation workflow replaces this page with
+<code>dbt docs generate</code> output from the tiny fixture.</p>
+</body>
+</html>
+"""
+
+
 def build(repo, output):
     repo, output = repo.resolve(), output.resolve()
     if output == repo or (output.is_relative_to(repo) and not output.is_relative_to(repo / "work")):
@@ -919,6 +934,8 @@ def build(repo, output):
     output.mkdir(parents=True, exist_ok=True)
     (output / ".site-output").write_text("Generated static site; safe to rebuild.\n")
     (output / ".nojekyll").touch()
+    (output / "dbt-docs").mkdir()
+    (output / "dbt-docs" / "index.html").write_text(DBT_DOCS_PLACEHOLDER)
     (output / "assets").mkdir()
     shutil.copy2(repo / "site/assets/favicon.ico", output / "favicon.ico")
     for name, source in ASSETS.items():
