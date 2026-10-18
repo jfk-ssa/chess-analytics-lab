@@ -7,9 +7,14 @@ the compiled statement runs on a read-only connection.
 """
 
 import logging
+import os
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 from typing import Any, Protocol, cast
+
+import duckdb
 
 from chess_analytics.common import digest, read_json
 from chess_analytics.corpus.metrics import opening_family_expr
@@ -29,6 +34,10 @@ _SCORE_FILTERS = (
     "increment_seconds",
 )
 _ENGINES: dict[str, Any] = {}
+_EXPECTED_SEMANTIC: dict[str, str] = {}
+_GROUPED_FAMILY_WHERE = (
+    "{{ Dimension('game__opening_family') }} IS NOT NULL AND known_opening_games > 0"
+)
 
 
 class _SnapshotTools(Protocol):
@@ -77,16 +86,15 @@ def published_mart(project: Path, snapshot: Path) -> tuple[Path, Path] | None:
         pointer = read_json(project / "data" / f"{dataset}-mart-current.json")
         directory = project / "data" / "marts" / "published" / checked_id(pointer["mart_id"])
         manifest = validate_mart(directory)
-    except (OSError, ValueError, RuntimeError, KeyError):
+        project_hash = model_hash(project)
+        if manifest.get("snapshot_id") != source_id or manifest.get("model_sha256") != project_hash:
+            return None
+        semantic_manifest = directory / "semantic_manifest.json"
+        if digest(semantic_manifest) != _expected_semantic_digest(project):
+            return None
+    except (OSError, ValueError, RuntimeError, KeyError, duckdb.Error):
         return None
-    if manifest.get("snapshot_id") != source_id or manifest.get("model_sha256") != model_hash(
-        project
-    ):
-        return None
-    semantic = directory / "semantic_manifest.json"
-    if not semantic.is_file():
-        return None
-    return directory / "warehouse.duckdb", semantic
+    return directory / "warehouse.duckdb", semantic_manifest
 
 
 def resolve_governed(
@@ -105,9 +113,62 @@ def resolve_governed(
         if metric_id == "opening_usage":
             return _opening_usage(tools, warehouse, semantic, filters, group_by)
         return _opening_player_score(tools, warehouse, semantic, filters)
-    except (OSError, RuntimeError, ValueError, KeyError, ImportError):
+    except (OSError, RuntimeError, ValueError, KeyError, ImportError, duckdb.Error):
         logger.warning("semantic query failed; using reviewed SQL")
         return None
+
+
+def _expected_semantic_digest(project: Path) -> str:
+    """Digest of the semantic manifest parsed from the current project models."""
+    key = model_hash(project)
+    cached = _EXPECTED_SEMANTIC.get(key)
+    if cached is not None:
+        return cached
+    found = _parse_semantic_digest(project)
+    _EXPECTED_SEMANTIC[key] = found
+    return found
+
+
+def _parse_semantic_digest(project: Path) -> str:
+    dbt = Path(sys.executable).with_name("dbt")
+    if not dbt.is_file():
+        raise RuntimeError("semantic manifest check failed")
+    try:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            warehouse = root / "warehouse.duckdb"
+            duckdb.connect(str(warehouse)).close()
+            env = os.environ.copy()
+            env["CHESSLAB_DBT_PATH"] = str(warehouse)
+            env["DBT_PROFILES_DIR"] = str(project / "dbt")
+            env["DBT_SEND_ANONYMOUS_USAGE_STATS"] = "false"
+            completed = subprocess.run(
+                [
+                    str(dbt),
+                    "parse",
+                    "--project-dir",
+                    str(project / "dbt"),
+                    "--profiles-dir",
+                    str(project / "dbt"),
+                    "--target-path",
+                    str(root / "target"),
+                    "--log-path",
+                    str(root / "log"),
+                    "--no-use-colors",
+                ],
+                cwd=project,
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=120,
+                check=False,
+            )
+            parsed = root / "target" / "semantic_manifest.json"
+            if completed.returncode or not parsed.is_file():
+                raise RuntimeError("semantic manifest check failed")
+            return digest(parsed)
+    except (OSError, subprocess.SubprocessError, duckdb.Error) as error:
+        raise RuntimeError("semantic manifest check failed") from error
 
 
 def _draw_rate(tools: _SnapshotTools, warehouse: Path, semantic: Path) -> dict:
@@ -169,6 +230,7 @@ def _opening_usage_grouped(tools: _SnapshotTools, warehouse: Path, semantic: Pat
         warehouse,
         semantic,
         ["known_opening_games"],
+        where=[_GROUPED_FAMILY_WHERE],
         group_by=["game__opening_family"],
         limit=501,
     )
@@ -195,7 +257,7 @@ def _opening_usage_grouped(tools: _SnapshotTools, warehouse: Path, semantic: Pat
             }
             for family, count in counted[:500]
         ],
-        "truncated": len(grouped) > 500,
+        "truncated": len(counted) > 500,
     }
 
 
@@ -311,8 +373,6 @@ def query_rows(
 ) -> list[dict[str, object]]:
     """Compile one MetricFlow query and run it against a read-only warehouse."""
     sql = _compile_sql(semantic_manifest, metrics, where=where, group_by=group_by, limit=limit)
-    import duckdb
-
     with duckdb.connect(str(warehouse), read_only=True) as connection:
         cursor = connection.execute(sql)
         names = [str(item[0]) for item in cursor.description]

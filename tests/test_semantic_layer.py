@@ -1,6 +1,7 @@
 """Governed semantic metrics. Unit tests run without dbt; parity tests build a real mart."""
 
 import json
+import logging
 import os
 import shutil
 import subprocess
@@ -288,6 +289,39 @@ def test_governed_call_accepts_only_the_reviewed_shapes():
     )
 
 
+def test_grouped_truncation_drops_null_and_zero_before_the_limit(monkeypatch):
+    """500 real families plus a null group and a zero group are not truncated."""
+
+    def rows(_warehouse, _semantic, metrics, where=None, group_by=None, limit=None):
+        if not group_by:
+            assert metrics == ["known_opening_games"]
+            return [{"known_opening_games": 500}]
+        assert where is not None
+        assert any("IS NOT NULL" in clause for clause in where)
+        assert any("known_opening_games > 0" in clause for clause in where)
+        raw = [
+            {"game__opening_family": f"Family {index:03d}", "known_opening_games": 1}
+            for index in range(500)
+        ]
+        raw.append({"game__opening_family": None, "known_opening_games": 4})
+        raw.append({"game__opening_family": "Zero", "known_opening_games": 0})
+        chosen = raw
+        if any("IS NOT NULL" in clause for clause in where):
+            chosen = [row for row in chosen if row["game__opening_family"] not in {None, ""}]
+        if any("known_opening_games > 0" in clause for clause in where):
+            chosen = [row for row in chosen if row["known_opening_games"]]
+        if limit is not None:
+            chosen = chosen[:limit]
+        return chosen
+
+    monkeypatch.setattr(semantic, "query_rows", rows)
+    grouped_tools = type("T", (), {"dataset_id": "a" * 24})()
+    grouped = semantic._opening_usage_grouped(grouped_tools, Path("w"), Path("m"))
+    assert len(grouped["rows"]) == 500
+    assert grouped["truncated"] is False
+    assert all(row["numerator"] for row in grouped["rows"])
+
+
 def test_grouped_usage_keeps_a_family_named_none(monkeypatch):
     def rows(_warehouse, _semantic, metrics, where=None, group_by=None, limit=None):
         assert limit in {None, 501}
@@ -483,6 +517,59 @@ def test_tiny_product_draw_rate_uses_the_mart_and_a_poisoned_copy_diverges(
     assert fallback == sql_result
 
     write_json(Path("/tmp/semantic-timings.json"), {"tiny_draw_rate_seconds": round(elapsed, 3)})
+
+
+def test_missing_games_view_falls_back_without_leaking_sql(tiny_product, caplog):
+    tools = CheckedTools(tiny_product)
+    sql_result = _sql_draw(tools)
+    pointer = tiny_product / "data/analytical-mart-current.json"
+    saved = pointer.read_text()
+    broken = _copy_mart(tiny_product, "12" * 12)
+    with duckdb.connect(str(broken / "warehouse.duckdb")) as connection:
+        connection.execute("drop view games")
+    _publish_copy(tiny_product, broken)
+    caplog.set_level(logging.WARNING)
+    try:
+        result = tools.query_metric("game_draw_rate", {})
+    finally:
+        pointer.write_text(saved)
+    assert result == sql_result
+    messages = [
+        record.message
+        for record in caplog.records
+        if record.name == "chess_analytics.analyst.semantic"
+    ]
+    assert messages == ["semantic query failed; using reviewed SQL"]
+
+
+def test_rewritten_semantic_manifest_falls_back_to_sql(tiny_product, monkeypatch):
+    tools = CheckedTools(tiny_product)
+    sql_result = _sql_draw(tools)
+    calls = _spy(monkeypatch)
+    rewritten = _copy_mart(tiny_product, "ef" * 12)
+    semantic_path = rewritten / "semantic_manifest.json"
+    original = semantic_path.read_text()
+    assert original.count('"drawn_game"') == 1
+    semantic_path.write_text(original.replace('"drawn_game"', '"eligible_game"', 1))
+    manifest = read_json(rewritten / "manifest.json")
+    manifest["mart_id"] = rewritten.name
+    manifest["warehouse_sha256"] = digest(rewritten / "warehouse.duckdb")
+    manifest["semantic_manifest_sha256"] = digest(semantic_path)
+    write_json(rewritten / "manifest.json", manifest)
+    pointer = tiny_product / "data/analytical-mart-current.json"
+    saved = pointer.read_text()
+    write_json(pointer, {"mart_id": rewritten.name})
+    before_calls = len(calls)
+    try:
+        result = tools.query_metric("game_draw_rate", {})
+    finally:
+        pointer.write_text(saved)
+    assert len(calls) == before_calls
+    assert (result["numerator"], result["denominator"], result["value"]) == (
+        sql_result["numerator"],
+        sql_result["denominator"],
+        sql_result["value"],
+    )
 
 
 def test_portfolio_product_metric_parity(portfolio_product, monkeypatch):

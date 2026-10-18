@@ -57,35 +57,22 @@ query, keeps the reviewed SQL. The result keys stay the ones the evidence
 IDs already hash. `compare_openings` calls `query_metric`, so it uses the
 same path.
 
-**eligible_games**
+| Metric | Model | Rule |
+|---|---|---|
+| eligible_games | games view | Sum of rated Standard completed games, excluding source-marked bots |
+| game_draw_rate | games | `drawn_games / eligible_games`. That ratio is the returned value |
+| opening_usage | games | Games in one family / games with a known family. No ratio metric; the analyst divides two `known_opening_games` queries |
+| opening_player_score | player_games view | `opening_player_score` and `win_rate` are the returned rates. The rating filter, time control, and `low_support` stay in Python |
 
-- Semantic model: `games` (a view)
-- Definition: sum of rated Standard games with a completed result, excluding source-marked bots
+The family expression is `nullif(trim(split_part(source_opening, ':', 1)), '')`.
+`player_games` copies opening family and time control from the game onto each
+player row. `game_key` is the foreign entity.
 
-**game_draw_rate**
-
-- Semantic model: `games`
-- Definition: `drawn_games / eligible_games`
-- Analyst: the ratio metric is the returned value
-
-**opening_usage**
-
-- Semantic model: `games`
-- Definition: games in one opening family / games with a known family
-- Family: `nullif(trim(split_part(source_opening, ':', 1)), '')`
-- Query: a where filter would apply to both inputs of a ratio, so there is no ratio metric; the analyst asks `known_opening_games` twice and divides
-
-**opening_player_score**
-
-- Semantic model: `player_games` (a view). The build copies opening family and time control from the game onto each player row. `game_key` is the foreign entity.
-- Definition: `opening_player_score` and `win_rate` are the returned rates
-- Analyst: the half-open rating filter, exact time control, and the `low_support` flag stay in Python
-
-**Outside this layer**
-
-- `clock_pressure_error_proxy` and `evaluation_coverage` read `fact_move`, which dbt does not build
-- `opening_adjusted_score` is a seeded cluster bootstrap
-- A zero denominator stays null in the analyst
+| Outside this layer | Why it stays out |
+|---|---|
+| `clock_pressure_error_proxy`, `evaluation_coverage` | They read `fact_move`, which dbt does not build |
+| `opening_adjusted_score` | Seeded cluster bootstrap |
+| Zero denominator | Stays null in the analyst |
 
 Offline check, after `python -m chess_analytics.marts transform`:
 

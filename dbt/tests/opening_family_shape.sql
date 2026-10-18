@@ -10,3 +10,7 @@ where "opening_family" like '%:%'
         )
         and "opening_family" is not null
     )
+    or (
+        nullif(trim(split_part("source_opening", ':', 1)), '') is not null
+        and "opening_family" is null
+    )

@@ -44,7 +44,9 @@ Measured scores from the two runs are in
 [ADR 0084](adr/0084-maia-corpus-calibration-results.md).
 `python -m chess_analytics.analyst.maia_corpus` scores one of those
 populations at a time and writes one gitignored JSON file and one gitignored
-Markdown file. Holdout periods and game counts are the opening-corpus training index in
+Markdown file.
+
+Holdout periods and game counts are the opening-corpus training index in
 [opening-corpus.json](../reports/opening-corpus.json). No played-move log-loss
 has been computed from those games.
 

@@ -48,17 +48,29 @@ snapshot, calls `validate_mart`, and requires both of the following:
 - the mart `model_sha256` equals `model_hash(project)`
 
 The mart also stores `semantic_manifest.json` and `model_hash.txt`.
-`validate_mart` checks those digests. The transform command accepts
-`--dataset analytical`, which is the dataset on a normal analytical source
-snapshot. A tiny or foundation mart is used only when that source snapshot's
-dataset is tiny or foundation.
+`validate_mart` checks those digests against fields in the same mart
+manifest. That sibling check is not enough: rewriting the semantic manifest
+and `semantic_manifest_sha256` together still leaves `model_sha256` equal
+to `model_hash(project)`. `published_mart` therefore parses the current
+project and requires `digest(semantic_manifest.json)` to equal the digest
+of that parse. The expected bytes come from the project models, which
+`model_hash` already covers, not from a field stored beside the file.
+The parsed digest is cached in process by `model_hash`. Embedding
+`model_hash` inside the manifest and recomputing the outer checksum would
+not stop an expression edit, so this record does not do that.
 
-If no pointer exists, validation fails, the hashes differ, MetricFlow cannot
-be imported, or the query fails, `resolve_governed` returns none and the
-caller keeps the reviewed SQL. The log line is `semantic query failed; using
-reviewed SQL`. It does not include a path or the compiled statement. Tests
-that claim parity spy on `query_rows` and poison a copy of the mart, so a
-silent fallback cannot pass.
+The transform command accepts `--dataset analytical`, which is the dataset
+on a normal analytical source snapshot. A tiny or foundation mart is used
+only when that source snapshot's dataset is tiny or foundation.
+
+If no pointer exists, validation fails, the hashes differ, the stored
+semantic manifest differs from the parse, MetricFlow cannot be imported, or
+the query fails, `resolve_governed` returns none and the caller keeps the
+reviewed SQL. A failed query includes `duckdb.Error` (`CatalogException`
+inherits it, not `ValueError`). The log line is `semantic query failed;
+using reviewed SQL`. It does not include the exception text, a path, or the
+compiled statement. Tests that claim parity spy on `query_rows` and poison
+a copy of the mart, so a silent fallback cannot pass.
 
 ### Models
 
@@ -98,8 +110,9 @@ because MetricFlow rejects a semantic model that has none.
 - There is no `opening_usage` ratio. A where filter applies to both inputs,
   so a filtered ratio is 1 whenever the family has any games. The analyst
   queries `known_opening_games` twice, once with the family filter and once
-  without, and divides in Python. A grouped query asks for at most 501
-  families and keeps a family literally named `None`.
+  without, and divides in Python. A grouped query drops null families and
+  zero `known_opening_games` rows before `LIMIT 501`, keeps a family
+  literally named `None`, and sets `truncated` from the rows that remain.
 - `opening_player_score` is `opening_score_total / opening_score_games` on
   `player_games`. `win_rate` uses the same denominator. Both ratios are the
   values the tool returns. Wins, draws, and losses are supporting sums.
@@ -125,6 +138,16 @@ from SQL.
 `model_hash` skips `target`, `logs`, and `dbt_packages` only when that name
 is the first path component under `dbt/`. A model directory named `target`
 is part of the hash.
+
+### What the manifest check stops
+
+A same-directory edit of `semantic_manifest.json` plus
+`semantic_manifest_sha256` cannot change a governed metric. The analyst
+compares the stored file with a manifest parsed from the current project.
+A local attacker who can rewrite the whole data directory and the project
+models is out of scope: that person can change the reviewed SQL as well.
+The check is not a signature over `data/`. It only refuses a rewrite that
+leaves the project models, and therefore `model_hash`, unchanged.
 
 ### Out of scope
 
@@ -156,9 +179,11 @@ not query such a warehouse. The reconcile test fails the mart build if the
 two eligible counts diverge.
 
 The semantic path runs only for a published mart whose source snapshot and
-model hash match. A missing mart, a stale manifest, or a failed query falls
-back to SQL. That fallback is the product behavior. Parity tests are not
-allowed to treat it as success.
+model hash match, and whose semantic manifest matches a parse of those
+models. A missing mart, a stale manifest, a rewritten semantic manifest, or
+a failed query falls back to SQL. That fallback is the product behavior.
+Parity tests are not allowed to treat it as success. `metricflow_time_spine`
+stays. Deleting it breaks dbt parse.
 
 The filtered opening-usage value is the two-query division, not a semantic
 ratio. Time-grouped queries are not part of the tool. `fact_move` metrics
@@ -195,6 +220,15 @@ and with openings `: Foo` and `None: Example` added:
 - A mart manifest whose `model_sha256` does not match the sidecar falls
   back to the SQL result, and the spy sees no `query_rows` call for that
   fallback.
+- Dropping the `games` view on a mart copy, then updating
+  `warehouse_sha256` so `validate_mart` still passes, falls back to the
+  SQL draw rate. The semantic log line is only `semantic query failed;
+  using reviewed SQL`.
+- Replacing the stored manifest expression `"drawn_game"` with
+  `"eligible_game"` and rewriting `semantic_manifest_sha256` to match
+  falls back to the SQL draw rate `4, 20, 0.2`. The spy sees no
+  `query_rows` call. Before that parse check, the same test called
+  `query_rows` on the rewritten manifest.
 
 Portfolio fixture, same product path (`portfolio_demo` plus
 `transform --dataset analytical`):
@@ -212,32 +246,33 @@ Wall time around `query_metric` in that test process:
 
 | Call | Seconds |
 |---|---|
-| First tiny draw rate | 0.466 |
-| Portfolio draw rate | 0.051 |
-| Sicilian usage | 0.064 |
-| French usage | 0.070 |
-| Sicilian score | 0.091 |
-| French score | 0.106 |
-| `compare_openings` | 0.163 |
+| First tiny draw rate | 3.441 |
+| Portfolio draw rate | 0.046 |
+| Sicilian usage | 0.058 |
+| French usage | 0.059 |
+| Sicilian score | 0.080 |
+| French score | 0.070 |
+| `compare_openings` | 0.150 |
 
-The first call builds the semantic lookup. Later calls in the same process
-are the smaller times. These are single-process measurements, not a
-benchmark suite.
+The first call in the process parses the project models and checks that
+digest against the stored semantic manifest, then builds the semantic
+lookup. Later calls with the same `model_hash` reuse that digest. These
+are single-process measurements, not a benchmark suite.
 
 The previous revision's `mf` CLI took about 2.4 seconds per query and opened
 the warehouse read-write. That CLI is gone, so those timings and the PyPI
 update-check timings in the earlier draft are one-off measurements of a
 removed path. They are not reproduced here.
 
-`tests/test_semantic_layer.py` passed 9 tests in 12.14 seconds, including
-both product builds. With the `dbt` extra installed, `pytest -q` passed 229
-tests and skipped 19 in 55.74 seconds. The skips are the existing optional
+`tests/test_semantic_layer.py` passed 13 tests in 14.17 seconds, including
+both product builds. With the `dbt` extra installed, `pytest -q` passed 232
+tests and skipped 19 in 57.40 seconds. The skips are the existing optional
 snapshots, not the semantic tests. Without the extra, the same command
-passed 225 and skipped 23 in 27.21 seconds. `basedpyright` reported 0
+passed 226 and skipped 25 in 26.76 seconds. `basedpyright` reported 0
 errors in both environments.
 
 `chesslab demo` on the tiny fixture reported accepted 22, eligible 20, drawn
 4, value 0.2. `python -m chess_analytics.marts transform --dataset tiny` then
-published mart `bde6e21244b156f65ef86a53` with dbt `created` 8 and `passed`
+published mart `b7a77b24a77ae29ca5d7aef8` with dbt `created` 8 and `passed`
 39. `games` and `player_games` are views in that warehouse.
 `validate-configs` printed `ERRORS: 0`. `smoke-draw-rate` printed `4,20,0.2`.
