@@ -145,6 +145,13 @@ a fixed-seed draw of up to 20,000 games, seed `20251017`, first 12 plies.
 One worker process loads the checkpoint and scores batches. It does not start
 a process per position.
 
+### Measured results
+
+Both runs are recorded in
+[ADR 0084](adr/0084-maia-corpus-calibration-results.md). The public blitz
+result is the headline. The elite month is a labeled secondary result.
+Reports matching `reports/maia-corpus-calibration-*` stay gitignored.
+
 Install, then fetch the pinned 23M weights (91,799,307 bytes).
 `--write-config` writes `config/maia.json`. It refuses when that path is
 not gitignored, and it refuses to overwrite the file without `--force`. The JSON document is on stdout. The install hint and the
