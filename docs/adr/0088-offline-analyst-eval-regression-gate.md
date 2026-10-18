@@ -32,7 +32,11 @@ Three suites are in that file.
 | `m5_saved` | `m5-1.0` | 50 saved answers in `reports/M5-both-harness.json` |
 
 `gate_v1` reads `tests/fixtures/portfolio_annotated.pgn`. Expected values
-come from `tests/fixtures/portfolio_expected.json`. The cases cover
+come from `tests/fixtures/portfolio_expected.json`. Pytest in
+`tests/test_eval_gate.py` checks that file. The gate command does not read
+it. The caveat check is protected because pytest calls the real scorer; the
+baseline alone would not notice a scorer that stops checking caveats. The
+cases cover
 opening usage and the white score, the governed draw rate,
 `compare_openings`, clock buckets including empty buckets whose rates
 must be null, clarification, an unsupported claim, and five boundaries:
@@ -88,10 +92,15 @@ warehouse build, and analytical build run under one writer lock.
 next to the current Python. The lock is not taken twice.
 
 Each `gate_v1` case records `path` as `governed` only when every governed
-metric call in that case returned a MetricFlow result. Otherwise the path
-is `reviewed_sql`, including cases that call no governed metric. Clock
-metrics are not in `GOVERNED_METRICS`, so clock cases stay `reviewed_sql`
-when dbt is installed. The eight governed cases in the committed baseline
+metric call returned a result and `semantic.query_rows` ran during that
+call. `query_rows` compiles the MetricFlow query and executes it.
+`resolve_governed` returning a dict is not enough: a resolver that returns
+the reviewed-SQL payload, or returns `None` after a MetricFlow error, is
+`reviewed_sql`. The baseline comparison then reports `PATH-CHANGED` for a
+case whose committed path is `governed`. Cases that call no governed metric
+are `reviewed_sql`. Clock metrics are not in `GOVERNED_METRICS`, so clock
+cases stay `reviewed_sql` when dbt is installed. The eight governed cases
+in the committed baseline
 are `game_draw_rate`, `usage_sicilian`, `usage_french`, `usage_grouped`,
 `white_sicilian_score`, `white_french_score`,
 `compare_sicilian_minus_french`, and `compare_french_minus_sicilian`.
@@ -101,11 +110,15 @@ fails the equality check. That is the silent-fallback detection.
 
 The case-set digest for `gate_v1` hashes the cases and every replay plan.
 `load_gate_cases` raises `case set hash changed` when that digest does
-not match `evals/cases/gate_v1_manifest.json`. The engine and M5 loaders
-raise the same words when their existing manifests no longer match.
-A baseline hash that differs from the run is reported as
-`case set hash changed: <suite>` and is a failure even when every case
-still passes.
+not match `evals/cases/gate_v1_manifest.json`. `_load_m5` raises the same
+`case set hash changed` when the M5 case digest or the saved-report hash
+does not match. `load_engine_cases` raises `engine case set hash changed`
+when the engine case digest does not match, and `engine case file hash
+changed` when the case-file bytes do not match. A changed engine replay
+plan raises `engine replay plan hash changed` from the gate loader. Each
+of those raises before any case is scored, so the run aborts. A baseline
+hash that differs from the hash on a completed scorecard is a separate
+line, `case set hash changed: <suite>`, and does not abort the loader.
 
 The scorecard is canonical JSON: sorted keys, two-space indent, a trailing
 newline, and no timestamps. Per suite it stores the case-set hash, the
@@ -154,10 +167,15 @@ table with headers `category`, `baseline`, and `now`. A run of 60 seconds
 or more prints a warning to stderr and to that summary. The warning does
 not fail the check.
 
-`--update` rewrites only the baseline. It refuses when `CI` is set, and
-it refuses to combine with `--case`. `--case` narrows both the baseline
-and the fresh scorecard to that id, so the other cases are not reported
-as removed.
+`--update` rewrites only the baseline. It refuses when `CI` is present in
+the environment, including an empty value, and it refuses to combine with
+`--case`. `--case` narrows both the baseline and the fresh scorecard to
+that id, so the other cases are not reported as removed. A full check
+fails when `gate_v1`, `engine_v1`, or `m5_saved` is missing or has zero
+cases, or when the scorecard total is zero. The floor reads the fresh
+scorecard only, so an empty scorecard does not pass by equaling an empty
+baseline, and `--update` does not write that file. `--case` skips the
+floor because that scorecard is one case.
 
 The offline job runs the gate after the semantic-manifest step:
 
@@ -173,8 +191,12 @@ without that extra, still passes: the tests that need a mart skip unless
 The hash, diff, render, and baseline-file tests run either way.
 
 Exception text replaces absolute paths with `<path>` so a temp directory
-cannot change the scorecard. A test runs `collect` twice on one staged
-project and requires byte-identical scorecards.
+cannot change the scorecard. One case that raises `Exception` (not
+`BaseException`) is recorded as `exception:<Type>: <message>` and the
+other cases still score. The engine loop, the saved-M5 loop, and
+`execute_cli` use that same recording, so a traceback does not leak a
+temp path. A test runs `collect` twice on one staged project and requires
+byte-identical scorecards.
 
 ## Alternatives considered
 
@@ -229,6 +251,10 @@ snapshot `b36f8a04cfd51ba30f454ed6`, source SHA-256
 `130df65e85d18e78bbafd89daf6696c2596e03abf939adf47f2dcbdc4d33e75b`, and
 draw rate 0.2. The semantic check printed `ERRORS: 0` and draw rate
 `4,20,0.2`. The saved-answer rescore was 50/50 in 0.001294 seconds.
+A rerun after the review fixes in `gate.py` printed snapshot
+`f2541bd7776d980764465e4b` with the same source checksum and draw rate,
+`250 passed, 31 skipped` without dbt, `262 passed, 19 skipped` under
+`CHESSLAB_REQUIRE_DBT=1`, and `ok 89/89` from the gate in 13.505 seconds.
 
 Mutation evidence, from `tests/test_eval_gate.py`:
 
@@ -250,15 +276,21 @@ Mutation evidence, from `tests/test_eval_gate.py`:
   scorecard is `REMOVED`.
 - Forcing `resolve_governed` to return `None` on a dbt-staged project is
   `PATH-CHANGED` for `gate_v1/game_draw_rate`, from `governed` to
-  `reviewed_sql`.
+  `reviewed_sql`. Returning the reviewed-SQL payload without calling
+  `query_rows` is the same `PATH-CHANGED` label.
+- A `duckdb.Error` whose message contains a temp path, raised from replay
+  for one question, is stored as `exception:Error` with `<path>` in place
+  of that path. `collect` still returns all 24 `gate_v1` cases.
+- An empty scorecard compared with an empty baseline exits non-zero and
+  does not print `ok 0/0`.
 - A mart copy with every `1/2-1/2` result in `fact_game` changed to `1-0`,
   as in [ADR 0085](0085-governed-semantic-layer-metricflow.md), fails
   `gate_v1/game_draw_rate` while the path stays `governed`. `games` is a
   view, so the governed query sees the edited source rows. The copy's
   warehouse checksum is updated so mart validation still accepts it.
 - `--update` writes canonical bytes, a second check passes, a second
-  update does not change those bytes, and `--update` under `CI=1` exits 1
-  without rewriting the file.
+  update does not change those bytes, and `--update` exits 1 without
+  rewriting the file when `CI` is present, including `CI=1` and `CI=`.
 - Two `collect` calls on one staged project return the same bytes.
 
 The path and poison tests skip unless the dbt extra is installed. With
@@ -266,18 +298,18 @@ The path and poison tests skip unless the dbt extra is installed. With
 
 Two throwaway commits were pushed and then reverted.
 
-The first set the fixture draw-rate numerator to 0. Plain pytest failed
-before the gate step, at `tests/test_eval_gate.py:147` with `assert 0 == 1`.
-That run is
+The first throwaway commit is `d3f098e`. Its Actions run is
 https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39166570679.
-The step `Offline analyst eval regression gate` did not start.
+Plain pytest failed at `tests/test_eval_gate.py:147` (`assert 0 == 1`) and
+at `tests/test_eval_gate.py:394` before the gate step ran. The step
+`Offline analyst eval regression gate` did not start.
 
-The run that reached the gate is
-https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39166880322
-on commit `8779f73`. Every earlier step in the offline job passed,
-including `248 passed, 30 skipped` without dbt and
-`259 passed, 19 skipped` under `CHESSLAB_REQUIRE_DBT=1`. The failing
-step is `Offline analyst eval regression gate`. Its log line is:
+The second throwaway commit is `8779f73`. Its Actions run is
+https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39166880322.
+That is the run whose failing step is `Offline analyst eval regression
+gate`. Every earlier step in that offline job passed, including
+`248 passed, 30 skipped` without dbt and `259 passed, 19 skipped` under
+`CHESSLAB_REQUIRE_DBT=1`. The log line is:
 
 ```text
 REGRESSION gate_v1/game_draw_rate pass->fail [result_values] expected {"failures": [], "passed": true, "path": "governed"} got {"failures": ["result_values"], "passed": false, "path": "governed"}
@@ -293,9 +325,10 @@ green. The commit is reverted. The case numerator is 1, matching
 
 CI fails when the deterministic stack, a replay plan, or the baseline
 disagrees with the committed scorecard. An intentional change updates the
-baseline with `--update` and explains the diff. `--update` cannot run in
-CI. The plain pytest job stays green without dbt. The gate job is the
-one that requires the mart.
+baseline with `--update` and explains the diff. `--update` cannot run
+when `CI` is present in the environment, including an empty value. The
+plain pytest job stays green without dbt. The gate job is the one that
+requires the mart.
 
 `evaluation.py` stays free of this module. Engine scoring stays in
 `engine_eval.py`.

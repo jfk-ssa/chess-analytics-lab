@@ -70,7 +70,8 @@ uv run --locked --offline --no-editable --extra dbt python -m chess_analytics.an
 Run that command with the `dbt` extra installed. The committed baseline
 records `governed` for the MetricFlow cases, and a run without a mart
 records `reviewed_sql` for those cases. `--update` rewrites only that JSON
-file. It refuses when the environment variable `CI` is set. The file is
+file. It refuses when `CI` is present in the environment, including an
+empty value. The file is
 canonical JSON: sorted keys, two-space indent, a trailing newline, and no
 timestamps. Leave out dataset ids, evidence ids, elapsed time, and node
 counts. Numeric result values keep the scorer's existing 1e-6 tolerance.

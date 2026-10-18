@@ -52,7 +52,11 @@ does not call a model and it does not measure LLM quality. The 50/50 M5
 harness line above remains a harness result, not model accuracy. Saved M5
 answers are rescored with the historical `score_case` rubric `m5-1.0`.
 Sending those answers through `portfolio-1.0` would be a new analysis, not
-a rewrite of the frozen report. Live model evals stay out of CI. The design,
+a rewrite of the frozen report. `tests/fixtures/portfolio_expected.json` is
+checked by pytest in `tests/test_eval_gate.py`; the gate command does not
+read that file. The caveat check is protected because pytest calls the real
+scorer; the baseline alone would not notice a scorer that stops checking
+caveats. Live model evals stay out of CI. The design,
 the measured runtimes, and the later live-eval follow-up are in
 [ADR 0088](adr/0088-offline-analyst-eval-regression-gate.md).
 

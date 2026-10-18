@@ -15,6 +15,7 @@ import tempfile
 import time
 from pathlib import Path
 
+from chess_analytics.analyst import semantic as analyst_semantic
 from chess_analytics.analyst import tools as analyst_tools
 from chess_analytics.analyst.core import replay
 from chess_analytics.analyst.engine_eval import (
@@ -24,7 +25,6 @@ from chess_analytics.analyst.engine_eval import (
     score_case_engine,
 )
 from chess_analytics.analyst.evaluation import score_case, score_case_portfolio
-from chess_analytics.analyst.semantic import GOVERNED_METRICS
 from chess_analytics.cli import fixture_plan
 from chess_analytics.common import digest, write_json, writer_lock
 from chess_analytics.corpus.publish import build_analytical
@@ -38,6 +38,7 @@ SLOW_SECONDS = 60.0
 _PATH_RE = re.compile(r"(?:/[^\s'\"]+)+")
 _CASE_KEYS = ("failures", "passed", "path")
 _SUITE_KEYS = ("case_set_sha256", "cases", "category", "passed", "rubric_version", "total")
+_REQUIRED_SUITES = ("engine_v1", "gate_v1", "m5_saved")
 
 
 def baseline_path(project: Path) -> Path:
@@ -250,8 +251,8 @@ def execute_cli(project: Path, *, update: bool = False, case: str | None = None)
     if update and case:
         print("gate: pass only one of --update and --case", file=sys.stderr)
         return 2
-    if update and os.environ.get("CI"):
-        print("gate: --update refused because CI is set", file=sys.stderr)
+    if update and "CI" in os.environ:
+        print("gate: --update refused because CI is present", file=sys.stderr)
         return 1
     started = time.perf_counter()
     try:
@@ -260,31 +261,43 @@ def execute_cli(project: Path, *, update: bool = False, case: str | None = None)
         if case:
             baseline = _narrow(baseline, project, case)
             current = _narrow(current, project, case)
-    except (OSError, ValueError, TimeoutError) as exc:
-        print(f"analyst: {exc}", file=sys.stderr)
+    except Exception as exc:
+        print(f"analyst: {_exception_failure(exc)}", file=sys.stderr)
         return 1
     elapsed = time.perf_counter() - started
     _note_timing(elapsed)
-    if update:
+    gap = None if case else _coverage_gap(current)
+    if update and gap is None:
         write_json(baseline_path(project), current)
         print(f"updated {baseline_path(project)}")
         return 0
     messages = hash_messages(baseline, current)
     diffs = diff_scorecards(baseline, current)
     _write_summary(baseline, current, elapsed)
-    if messages or diffs or canonical(baseline) != canonical(current):
-        if not messages and not diffs:
-            diffs = [
-                {
-                    "case_id": "scorecard",
-                    "detail": "bytes",
-                    "expected": baseline,
-                    "got": current,
-                    "label": "REGRESSION",
-                    "suite": "gate",
-                }
-            ]
-        print(render(diffs, baseline, current, messages), end="")
+    if gap or messages or diffs or canonical(baseline) != canonical(current):
+        if gap:
+            print(gap)
+        if messages or diffs:
+            print(render(diffs, baseline, current, messages), end="")
+        elif not gap:
+            print(
+                render(
+                    [
+                        {
+                            "case_id": "scorecard",
+                            "detail": "bytes",
+                            "expected": baseline,
+                            "got": current,
+                            "label": "REGRESSION",
+                            "suite": "gate",
+                        }
+                    ],
+                    baseline,
+                    current,
+                    messages,
+                ),
+                end="",
+            )
         return 1
     passed, total = _counts(current)
     print(f"ok {passed}/{total}")
@@ -308,15 +321,27 @@ def _dataset_id(staged: Path) -> str:
 def _gate_rows(project: Path, staged: Path, cases: list) -> list[tuple[str, str, dict]]:
     dataset_id = _dataset_id(staged)
     bucket: list[str] = []
-    original = analyst_tools.resolve_governed
+    metricflow_calls = 0
+    original_resolve = analyst_tools.resolve_governed
+    original_rows = analyst_semantic.query_rows
+
+    def counting_rows(*args, **kwargs):
+        nonlocal metricflow_calls
+        rows = original_rows(*args, **kwargs)
+        metricflow_calls += 1
+        return rows
 
     def wrapped(tools, metric_id, filters, group_by):
-        result = original(tools, metric_id, filters, group_by)
-        if metric_id in GOVERNED_METRICS:
-            bucket.append("governed" if result is not None else "reviewed_sql")
+        nonlocal metricflow_calls
+        before = metricflow_calls
+        result = original_resolve(tools, metric_id, filters, group_by)
+        if metric_id in analyst_semantic.GOVERNED_METRICS:
+            ran = result is not None and metricflow_calls > before
+            bucket.append("governed" if ran else "reviewed_sql")
         return result
 
     analyst_tools.resolve_governed = wrapped
+    analyst_semantic.query_rows = counting_rows
     rows = []
     try:
         for case in cases:
@@ -325,15 +350,12 @@ def _gate_rows(project: Path, staged: Path, cases: list) -> list[tuple[str, str,
             try:
                 answer = replay(staged, case["question"], path)
                 outcome = portfolio_outcome(case, answer, dataset_id, _path_name(bucket))
-            except (OSError, ValueError, TimeoutError, RuntimeError) as exc:
-                outcome = {
-                    "failures": [_exception_failure(exc)],
-                    "passed": False,
-                    "path": _path_name(bucket),
-                }
+            except Exception as exc:
+                outcome = _failed_case(exc, _path_name(bucket))
             rows.append((case["id"], case["category"], outcome))
     finally:
-        analyst_tools.resolve_governed = original
+        analyst_tools.resolve_governed = original_resolve
+        analyst_semantic.query_rows = original_rows
     return rows
 
 
@@ -355,8 +377,8 @@ def _one_engine(project: Path, staged: Path, case: dict) -> tuple[str, str, dict
         answer = replay_engine_case(staged, case, plans=project)
         scored = score_case_engine(case, answer)
         outcome = _outcome(scored, "reviewed_sql")
-    except (OSError, ValueError, TimeoutError, RuntimeError) as exc:
-        outcome = {"failures": [_exception_failure(exc)], "passed": False, "path": "reviewed_sql"}
+    except Exception as exc:
+        outcome = _failed_case(exc, "reviewed_sql")
     return case["id"], case["category"], outcome
 
 
@@ -367,15 +389,18 @@ def _m5_rows(project: Path, cases: list) -> list[tuple[str, str, dict]]:
     rows = []
     for case in cases:
         item = saved.get(case["id"])
-        answer = item.get("answer") if isinstance(item, dict) else None
-        if not isinstance(answer, dict):
-            outcome = {
-                "failures": ["missing_saved_answer"],
-                "passed": False,
-                "path": "reviewed_sql",
-            }
-        else:
-            outcome = _outcome(score_case(case, answer), "reviewed_sql")
+        try:
+            answer = item.get("answer") if isinstance(item, dict) else None
+            if not isinstance(answer, dict):
+                outcome = {
+                    "failures": ["missing_saved_answer"],
+                    "passed": False,
+                    "path": "reviewed_sql",
+                }
+            else:
+                outcome = _outcome(score_case(case, answer), "reviewed_sql")
+        except Exception as exc:
+            outcome = _failed_case(exc, "reviewed_sql")
         rows.append((case["id"], case["category"], outcome))
     return rows
 
@@ -448,6 +473,26 @@ def _path_name(bucket: list[str]) -> str:
 def _exception_failure(exc: BaseException) -> str:
     text = _PATH_RE.sub("<path>", f"{type(exc).__name__}: {exc}")
     return "exception:" + text
+
+
+def _failed_case(exc: BaseException, path: str) -> dict:
+    return {"failures": [_exception_failure(exc)], "passed": False, "path": path}
+
+
+def _coverage_gap(card: dict) -> str | None:
+    """Full checks need every suite. An empty card must not print ``ok 0/0``."""
+    suites = card.get("suites") or {}
+    missing = []
+    for name in _REQUIRED_SUITES:
+        suite = suites.get(name)
+        cases = suite.get("cases") if isinstance(suite, dict) else None
+        total = suite.get("total") if isinstance(suite, dict) else 0
+        if not cases or not total:
+            missing.append(name)
+    if not missing and _counts(card)[1] != 0:
+        return None
+    listed = ", ".join(missing) if missing else "no cases"
+    return f"coverage: missing or empty {listed}"
 
 
 def _clear_engine(project: Path) -> None:

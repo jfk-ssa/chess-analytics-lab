@@ -25,7 +25,9 @@ def main(argv=None):
         "gate", help="check the offline analyst scorecard against the baseline"
     )
     gate_cmd.add_argument(
-        "--update", action="store_true", help="rewrite the baseline; refused when CI is set"
+        "--update",
+        action="store_true",
+        help="rewrite the baseline; refused when CI is present",
     )
     gate_cmd.add_argument("--case", help="rerun one case id")
     live = sub.add_parser("live")

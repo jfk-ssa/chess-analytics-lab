@@ -10,6 +10,7 @@ from pathlib import Path
 import duckdb
 import pytest
 
+import chess_analytics.analyst.gate as gate_mod
 from chess_analytics.analyst import core
 from chess_analytics.analyst import tools as analyst_tools
 from chess_analytics.analyst.core import answer_caveats
@@ -333,6 +334,10 @@ def test_update_round_trip_is_stable_and_refuses_in_ci(tmp_path, monkeypatch, ca
     assert execute_cli(project, update=True) == 1
     assert baseline_path(project).read_bytes() == written
     assert "refused" in capsys.readouterr().err
+    monkeypatch.setenv("CI", "")
+    assert execute_cli(project, update=True) == 1
+    assert baseline_path(project).read_bytes() == written
+    assert "refused" in capsys.readouterr().err
     assert execute_cli(project, update=True, case="game_draw_rate") == 2
 
 
@@ -393,6 +398,56 @@ def test_query_metric_off_by_one_fails_and_names_the_case(staged, monkeypatch):
     text = render(diff_scorecards(clean, broken), clean, broken, [])
     assert "REGRESSION gate_v1/game_draw_rate" in text
     assert "result_values" in text
+
+
+def test_duckdb_error_is_recorded_and_later_cases_still_score(staged, monkeypatch):
+    original = gate_mod.replay
+
+    def boom(project, question, plan):
+        if question == "What is the game draw rate in this fixture?":
+            raise duckdb.Error("boom /tmp/chesslab-gate-secret/warehouse.duckdb")
+        return original(project, question, plan)
+
+    monkeypatch.setattr(gate_mod, "replay", boom)
+    card = collect(ROOT, staged)
+    cases = card["suites"]["gate_v1"]["cases"]
+    assert len(cases) == 24
+    failed = cases["game_draw_rate"]
+    assert failed["passed"] is False
+    assert failed["failures"][0].startswith("exception:Error")
+    assert "/tmp/" not in failed["failures"][0]
+    assert "<path>" in failed["failures"][0]
+    assert cases["usage_sicilian"]["passed"] is True
+
+
+def test_empty_scorecard_is_not_a_pass(tmp_path, monkeypatch, capsys):
+    empty = {"kind": KIND, "suites": {}}
+    monkeypatch.setattr(gate_mod, "run_scorecard", lambda *_args, **_kwargs: empty)
+    monkeypatch.delenv("CI", raising=False)
+    project = _project_with_baseline(tmp_path, empty)
+    assert execute_cli(project) == 1
+    output = capsys.readouterr().out
+    assert "ok 0/0" not in output
+    assert "coverage:" in output
+
+
+def test_sql_payload_from_the_resolver_is_path_changed(staged, monkeypatch):
+    _require_dbt()
+    clean = collect(ROOT, staged)
+    assert clean["suites"]["gate_v1"]["cases"]["game_draw_rate"]["path"] == "governed"
+
+    def sql_payload(tools, metric_id, filters, group_by):
+        return tools._query_metric_sql(metric_id, filters, group_by or [])
+
+    monkeypatch.setattr(analyst_tools, "resolve_governed", sql_payload)
+    fallen = collect(ROOT, staged)
+    case = fallen["suites"]["gate_v1"]["cases"]["game_draw_rate"]
+    assert case["passed"] is True
+    assert case["path"] == "reviewed_sql"
+    diffs = diff_scorecards(clean, fallen)
+    assert any(
+        item["label"] == "PATH-CHANGED" and item["case_id"] == "game_draw_rate" for item in diffs
+    )
 
 
 def test_replacing_the_governed_path_with_sql_is_path_changed(staged, monkeypatch):
