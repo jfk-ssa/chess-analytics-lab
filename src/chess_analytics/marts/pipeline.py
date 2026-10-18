@@ -29,8 +29,19 @@ def checked_id(value: str) -> str:
     return value
 
 
+_GENERATED_DBT = frozenset({"target", "logs", "dbt_packages"})
+
+
 def model_hash(project: Path) -> str:
-    paths = sorted((project / "dbt").rglob("*.sql")) + sorted((project / "dbt").rglob("*.yml"))
+    """Hash project SQL and YAML. Skip generated target, logs, and packages."""
+    root = project / "dbt"
+    paths = []
+    for pattern in ("*.sql", "*.yml"):
+        for path in sorted(root.rglob(pattern)):
+            relative = path.relative_to(root)
+            if not path.is_file() or _GENERATED_DBT.intersection(relative.parts):
+                continue
+            paths.append(path)
     return hash_json({str(path.relative_to(project)): digest(path) for path in paths})
 
 

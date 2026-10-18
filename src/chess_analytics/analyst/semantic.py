@@ -59,13 +59,33 @@ def semantic_ready(project: Path, warehouse: Path) -> bool:
     return found >= _SEMANTIC_TABLES
 
 
+def _governed_call(metric_id: str, filters: dict, group_by: list[str]) -> bool:
+    """True only for a filter shape MetricFlow can answer. Other shapes stay on SQL."""
+    if metric_id not in GOVERNED_METRICS or not isinstance(filters, dict):
+        return False
+    if group_by and filters:
+        return False
+    if metric_id == "game_draw_rate":
+        return not filters and not group_by
+    if metric_id == "opening_usage":
+        if group_by == ["opening_family"] and not filters:
+            return True
+        family = filters.get("family")
+        return (
+            not group_by
+            and set(filters) == {"family"}
+            and isinstance(family, str)
+            and 1 <= len(family) <= 80
+            and _plain_text(family)
+        )
+    return not group_by and set(filters) == set(_SCORE_FILTERS) and _score_filters_valid(filters)
+
+
 def resolve_governed(
     tools: _SnapshotTools, metric_id: str, filters: dict, group_by: list[str]
 ) -> dict | None:
     """Return the current tool shape, or None so the caller keeps its SQL path."""
-    if metric_id not in GOVERNED_METRICS or not isinstance(filters, dict):
-        return None
-    if group_by and filters:
+    if not _governed_call(metric_id, filters, group_by):
         return None
     warehouse = tools.snapshot / "warehouse.duckdb"
     if not semantic_ready(tools.project, warehouse):

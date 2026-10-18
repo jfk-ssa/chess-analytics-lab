@@ -102,8 +102,11 @@ the request. The subprocess sets `https_proxy` and `http_proxy` to
 In this install, MetricFlow telemetry is a Python log handler. The
 `metricflow` and `dbt_metricflow` trees contain no Snowplow client.
 
-Mart identity already hashes every `dbt/**/*.sql` and `*.yml` file. Semantic
-YAML changes the mart id. That is the existing rule.
+Mart identity hashes dbt SQL and YAML files. Semantic YAML changes the mart
+id. That is the existing rule. The hash skips generated `target`, `logs`, and
+`dbt_packages`. dbt writes a directory named `_semantic.yml` under
+`target/compiled`; that directory is not a model file. A clean tree hashes
+the same project files as before this exclusion.
 
 ## Impact
 
@@ -146,7 +149,7 @@ Measured on 2026-10-18 against the current models. `dbt parse` succeeded.
 
 Tiny fixture, `mf query --metrics drawn_games,eligible_games,game_draw_rate`:
 
-- `4,20,0.2`
+- `4,20,0.2`. The CSV uses CRLF. The workflow strips the carriage return before the exact-line check.
 
 `mf query --explain --metrics game_draw_rate` compiled:
 
