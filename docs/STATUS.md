@@ -53,6 +53,7 @@ has been computed from those games.
 Core draw-rate, opening-usage, and opening-score metrics read a matching published mart and otherwise keep the reviewed SQL ([ADR 0085](adr/0085-governed-semantic-layer-metricflow.md)).
 Unit tests, enforced mart contracts, exposures, a committed lineage diagram, and slim state selection are in [ADR 0086](adr/0086-dbt-engineering-depth.md).
 An incremental `player_games` was measured on synthetic scale and not adopted; publication stays a from-scratch rebuild ([ADR 0087](adr/0087-incremental-player-games.md)).
+An offline gate replays the deterministic analyst stack and fails when the scorecard differs from the committed baseline; it does not measure LLM quality ([ADR 0088](adr/0088-offline-analyst-eval-regression-gate.md)).
 
 This file stays a short summary: checkout structure, phase tracker, dataset
 versions, and limits. New decisions go only into [docs/adr](adr/). Do not append
@@ -84,7 +85,7 @@ email addresses, customer identifiers, and internal ticket links.
 
 ## Current dataset versions
 
-- Current tiny demo on this checkout: snapshot `9ac0cb862154fac93d2a87e5`, source SHA-256 `130df65e85d18e78bbafd89daf6696c2596e03abf939adf47f2dcbdc4d33e75b`, draw rate 0.2. `chesslab demo` on 2026-10-18 printed this id. The source checksum is unchanged. Snapshot ids include the implementation hash, and `pipeline.py` is part of that hash.
+- Current tiny demo on this checkout: snapshot `f2541bd7776d980764465e4b`, source SHA-256 `130df65e85d18e78bbafd89daf6696c2596e03abf939adf47f2dcbdc4d33e75b`, draw rate 0.2. `chesslab demo` on 2026-10-18 printed this id. The source checksum is unchanged. Snapshot ids include the implementation hash, and `gate.py` is part of that hash.
 - Foundation source: complete `lichess_db_standard_rated_2013-01.pgn.zst`, 17,761,302 compressed bytes; 92,811,021 decompressed bytes scanned.
 - Source SHA256: `aa40b3671fa3cf1072eb182892cd90b0e1e003a4a5943492f64b77e7f3fd1635`.
 - Foundation snapshot: `b57f51ff70cc3c1637e641c7` in ignored `data/published/`.

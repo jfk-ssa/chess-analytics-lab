@@ -15,6 +15,7 @@
 - [ ] `uv run --locked --offline --no-editable basedpyright`
 - [ ] `uv run --locked --offline --no-editable pytest -q`
 - [ ] No live provider calls, credential reads, or new downloads
+- [ ] If `evals/baselines/analyst_gate_v1.json` changed, the description explains every REGRESSION, IMPROVEMENT, ADDED, REMOVED, and PATH-CHANGED diff
 
 ## Risk or rollback
 

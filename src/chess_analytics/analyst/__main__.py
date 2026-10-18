@@ -21,6 +21,15 @@ def main(argv=None):
     fixture.add_argument("--fixture", type=Path, required=True)
     evaluation = sub.add_parser("eval")
     evaluation.add_argument("--split", choices=["dev", "test", "both"], default="both")
+    gate_cmd = sub.add_parser(
+        "gate", help="check the offline analyst scorecard against the baseline"
+    )
+    gate_cmd.add_argument(
+        "--update",
+        action="store_true",
+        help="rewrite the baseline; refused when CI is present",
+    )
+    gate_cmd.add_argument("--case", help="rerun one case id")
     live = sub.add_parser("live")
     live.add_argument("question")
     live.add_argument("--config", type=Path, required=True)
@@ -33,6 +42,10 @@ def main(argv=None):
             answer = replay(project, args.question, args.fixture)
         elif args.mode == "eval":
             answer = save(project, args.split)
+        elif args.mode == "gate":
+            from chess_analytics.analyst.gate import execute_cli
+
+            parser.exit(execute_cli(project, update=args.update, case=args.case))
         else:
             answer = recorded_live_answer(project, args.question, args.config)
         print(json.dumps(answer, indent=2, sort_keys=True))

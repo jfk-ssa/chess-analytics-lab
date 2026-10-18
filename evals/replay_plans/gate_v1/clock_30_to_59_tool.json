@@ -1,0 +1,16 @@
+{
+  "kind": "fixture_plan_no_model_response",
+  "plan": {
+    "actions": [
+      {
+        "args": {
+          "bucket": "30_to_59"
+        },
+        "tool": "analyze_clock_pressure"
+      }
+    ],
+    "interpretation": "descriptive_observed_prefix",
+    "status": "answered"
+  },
+  "question": "Use the clock-pressure tool for the 30 to 59 second bucket."
+}

@@ -1,0 +1,17 @@
+{
+  "kind": "fixture_plan_no_model_response",
+  "plan": {
+    "actions": [
+      {
+        "args": {
+          "first": "10_to_29",
+          "second": "60_plus"
+        },
+        "tool": "compare_clock_buckets"
+      }
+    ],
+    "interpretation": "descriptive_observed_prefix",
+    "status": "answered"
+  },
+  "question": "Compare the two empty clock buckets, 10 to 29 seconds and 60 or more seconds."
+}

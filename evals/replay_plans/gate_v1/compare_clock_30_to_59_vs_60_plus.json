@@ -1,0 +1,17 @@
+{
+  "kind": "fixture_plan_no_model_response",
+  "plan": {
+    "actions": [
+      {
+        "args": {
+          "first": "30_to_59",
+          "second": "60_plus"
+        },
+        "tool": "compare_clock_buckets"
+      }
+    ],
+    "interpretation": "descriptive_observed_prefix",
+    "status": "answered"
+  },
+  "question": "Compare the clock-pressure proxy for 30 to 59 seconds with the empty 60 or more second bucket."
+}
