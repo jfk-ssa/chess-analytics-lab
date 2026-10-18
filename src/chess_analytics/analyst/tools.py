@@ -8,6 +8,7 @@ import duckdb
 from chess_analytics.analyst import engine as engine_tools
 from chess_analytics.analyst import maia as maia_tools
 from chess_analytics.analyst.openings import position_continuations as read_continuations
+from chess_analytics.analyst.semantic import resolve_governed
 from chess_analytics.analyst.tool_catalog import ALLOWED_GROUP_BY, CONTRACTS, TOOLS_BY_NAME
 from chess_analytics.common import digest
 from chess_analytics.corpus.metrics import (
@@ -63,6 +64,12 @@ class CheckedTools:
             or any(item not in ALLOWED_GROUP_BY for item in group_by)
         ):
             raise ValueError("unsupported grouping")
+        governed = resolve_governed(self, metric_id, filters, group_by)
+        if governed is not None:
+            return governed
+        return self._query_metric_sql(metric_id, filters, group_by)
+
+    def _query_metric_sql(self, metric_id: str, filters: dict, group_by: list[str]) -> dict:
         if group_by:
             if filters:
                 raise ValueError("grouped metrics do not accept additional filters")

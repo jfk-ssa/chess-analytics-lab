@@ -35,6 +35,28 @@ jobs:
       - run: uv sync --locked --no-editable --extra dbt
       - run: uv run --locked --offline --no-editable --extra dbt pytest -q
       - run: uv run --locked --offline --no-editable --extra dbt python -m chess_analytics.marts transform --dataset tiny
+      - name: Validate MetricFlow offline
+        run: |
+          set -euo pipefail
+          mart="$(uv run --locked --offline --no-editable --extra dbt python -c 'import json; print(json.load(open("data/tiny-mart-current.json"))["mart_id"])')"
+          export CHESSLAB_DBT_PATH="$PWD/data/marts/published/${mart}/warehouse.duckdb"
+          export DBT_PROFILES_DIR="$PWD/dbt"
+          export DBT_PROJECT_DIR="$PWD/dbt"
+          export DBT_TARGET=local
+          export DBT_SEND_ANONYMOUS_USAGE_STATS=false
+          export DO_NOT_TRACK=1
+          export DBT_LOG_PATH="$PWD/dbt/logs"
+          uv run --locked --offline --no-editable --extra dbt dbt parse --project-dir dbt --profiles-dir dbt --no-use-colors
+          # mf has no switch for its PyPI update check. A closed proxy makes that request fail closed.
+          export https_proxy=http://127.0.0.1:9
+          export http_proxy=http://127.0.0.1:9
+          export HTTPS_PROXY=http://127.0.0.1:9
+          export HTTP_PROXY=http://127.0.0.1:9
+          export no_proxy=
+          export NO_PROXY=
+          uv run --locked --offline --no-editable --extra dbt mf validate-configs --skip-dw
+          uv run --locked --offline --no-editable --extra dbt mf query --quiet --metrics drawn_games,eligible_games,game_draw_rate --csv "$RUNNER_TEMP/game-draw-rate.csv"
+          grep -qx '4,20,0.2' "$RUNNER_TEMP/game-draw-rate.csv"
   portfolio:
     runs-on: ubuntu-latest
     steps:

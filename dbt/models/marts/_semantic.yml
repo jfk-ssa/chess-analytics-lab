@@ -1,0 +1,193 @@
+version: 2
+models:
+  - name: metricflow_time_spine
+    description: One row per day from 2012-01-01 through 2030-12-31 for MetricFlow time joins.
+    time_spine:
+      standard_granularity_column: date_day
+    columns:
+      - name: date_day
+        description: Calendar day. Queries that do not group by time do not use this spine.
+        granularity: day
+        data_tests: [not_null, unique]
+  - name: games
+    description: One accepted game, with the contract draw-rate flags and the source opening family.
+    semantic_model:
+      enabled: true
+    agg_time_dimension: utc_date
+    columns:
+      - name: game_key
+        description: Primary game entity. Composite provider and game_id cannot be the entity.
+        data_tests: [not_null, unique]
+        entity:
+          type: primary
+          name: game
+      - name: utc_date
+        description: Provider UTC date. Null dates stay null and are not filled from the time spine.
+        granularity: day
+        dimension:
+          type: time
+      - name: opening_family
+        description: Trimmed source opening text before the first colon.
+        dimension:
+          type: categorical
+      - name: base_seconds
+        description: Exact base time in seconds. Null when the source control is missing.
+        dimension:
+          type: categorical
+      - name: increment_seconds
+        description: Exact increment in seconds. Null when the source control is missing.
+        dimension:
+          type: categorical
+      - name: eligible_game
+        description: 1 when the game is rated Standard, completed, and not a source-marked bot.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+      - name: drawn_game
+        description: 1 when an eligible game result is 1/2-1/2.
+      - name: known_opening_game
+        description: 1 when an eligible game has a nonempty opening family.
+      - name: unknown_opening_game
+        description: 1 when an eligible game has no opening family.
+    metrics:
+      - name: eligible_games
+        description: Completed rated Standard games, excluding source-marked bots.
+        label: Eligible games
+        type: simple
+        agg: sum
+        expr: eligible_game
+      - name: drawn_games
+        description: Eligible games whose result is 1/2-1/2.
+        label: Drawn games
+        type: simple
+        agg: sum
+        expr: drawn_game
+      - name: known_opening_games
+        description: Eligible games with a nonempty source opening family.
+        label: Known-opening games
+        type: simple
+        agg: sum
+        expr: known_opening_game
+      - name: unknown_opening_games
+        description: Eligible games with no source opening family. Supports the opening-usage result shape.
+        label: Unknown-opening games
+        type: simple
+        agg: sum
+        expr: unknown_opening_game
+      - name: opening_usage
+        description: >
+          Known-opening games in the queried family divided by all known-opening games.
+          MetricFlow applies a where filter to both inputs of a ratio, so the analyst
+          queries known_opening_games twice: once with the family filter and once without.
+        label: Opening usage
+        type: ratio
+        numerator: known_opening_games
+        denominator: known_opening_games
+      - name: game_draw_rate
+        description: Drawn eligible games divided by eligible games. Empty denominator stays null in the analyst.
+        label: Game draw rate
+        type: ratio
+        numerator: drawn_games
+        denominator: eligible_games
+  - name: player_games
+    description: One player in one game, with the opening family and rating band needed for score rate.
+    semantic_model:
+      enabled: true
+    agg_time_dimension: utc_date
+    columns:
+      - name: player_game_key
+        description: Primary entity for one player in one game.
+        data_tests: [not_null, unique]
+        entity:
+          type: primary
+          name: player_game
+      - name: game_key
+        description: Game this player-game belongs to.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('games')
+                field: game_key
+        entity:
+          type: foreign
+          name: game
+      - name: utc_date
+        description: Game UTC date. Null stays null.
+        granularity: day
+        dimension:
+          type: time
+      - name: color
+        description: white or black.
+        dimension:
+          type: categorical
+      - name: rating_band
+        description: Closed 200-point band, such as 1400-1599. Null when the rating is missing.
+        dimension:
+          type: categorical
+      - name: rating
+        description: Rating at that game. The analyst filters a half-open range on this column.
+        dimension:
+          type: categorical
+      - name: opening_family
+        description: Opening family copied from the game so a player-score filter does not depend on a join.
+        dimension:
+          type: categorical
+      - name: base_seconds
+        description: Exact base seconds copied from the game.
+        dimension:
+          type: categorical
+      - name: increment_seconds
+        description: Exact increment seconds copied from the game.
+        dimension:
+          type: categorical
+      - name: score_eligible
+        description: 1 for a rated Standard completed game with a known family and a known focal rating.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+    metrics:
+      - name: opening_score_games
+        description: Player-games in the score-rate denominator.
+        label: Opening score games
+        type: simple
+        agg: sum
+        expr: score_eligible
+      - name: opening_score_total
+        description: Sum of scores. A loss contributes 0; an ineligible row contributes 0.
+        label: Opening score total
+        type: simple
+        agg: sum
+        expr: eligible_score
+      - name: opening_wins
+        description: Wins in the score-rate cohort.
+        label: Opening wins
+        type: simple
+        agg: sum
+        expr: eligible_win
+      - name: opening_draws
+        description: Draws in the score-rate cohort.
+        label: Opening draws
+        type: simple
+        agg: sum
+        expr: eligible_draw
+      - name: opening_losses
+        description: Losses in the score-rate cohort.
+        label: Opening losses
+        type: simple
+        agg: sum
+        expr: eligible_loss
+      - name: opening_player_score
+        description: Sum of scores divided by player-games. The analyst applies the low-support flag.
+        label: Opening player score
+        type: ratio
+        numerator: opening_score_total
+        denominator: opening_score_games
+      - name: win_rate
+        description: Wins divided by the same player-games as the score rate.
+        label: Win rate
+        type: ratio
+        numerator: opening_wins
+        denominator: opening_score_games

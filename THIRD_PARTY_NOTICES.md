@@ -25,6 +25,20 @@ Lichess open database, released under CC0: https://database.lichess.org/.
 The exact source URL/checksum/listing date are in config/datasets.json. No broadcast
 data or engine binary is included. Tiny fixture games were authored for tests.
 
+Inspected distribution metadata again on 2026-10-18 for the MetricFlow CLI
+added to the optional `dbt` extra. `metricflow` 0.213.0 was already in the lock
+through `dbt-core`.
+
+| Component | Version | License reported by distribution |
+|---|---|---|
+| dbt-metricflow (optional) | 0.15.0 | Apache-2.0 |
+| metricflow (transitive) | 0.213.0 | Apache-2.0 |
+| halo (transitive) | 0.0.31 | MIT |
+| log-symbols (transitive) | 0.0.14 | MIT |
+| spinners (transitive) | 0.0.24 | MIT |
+| termcolor (transitive) | 3.3.0 | MIT |
+| update-checker (transitive) | 0.18.0 | Simplified BSD License (BSD-2-Clause) |
+
 Original project code is licensed under [GPL-3.0-or-later](LICENSE). The
 python-chess dependency is GPL-3.0-or-later; other dependencies retain the
 licenses listed above. CC0 source data does not set the software license.

@@ -33,6 +33,7 @@ prefect = [
 ]
 dbt = [
     "dbt-duckdb==1.11.0",
+    "dbt-metricflow==0.15.0",
 ]
 dashboard = [
     "streamlit==1.65.0",
