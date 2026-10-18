@@ -7,6 +7,17 @@ models:
         data_tests: [not_null]
       - name: game_id
         data_tests: [not_null]
+      - name: game_key
+        description: Surrogate of provider and game_id. MetricFlow needs one primary column.
+        data_tests: [not_null, unique]
+      - name: rated
+        description: Source rated flag. Published snapshots keep only rated games.
+        data_tests: [not_null]
+      - name: variant
+        description: Source variant. Published snapshots keep only Standard.
+        data_tests: [not_null]
+      - name: opening_family
+        description: Trimmed source opening text before the first colon. Null when the tag is missing.
       - name: result
         data_tests:
           - accepted_values:
@@ -22,6 +33,17 @@ models:
               arguments:
                 to: ref('stg_games')
                 field: game_id
+      - name: game_key
+        description: Same surrogate as the game, for the player-game join.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_games')
+                field: game_key
+      - name: player_game_key
+        description: Surrogate of game_key and color.
+        data_tests: [not_null, unique]
       - name: color
         data_tests:
           - accepted_values:

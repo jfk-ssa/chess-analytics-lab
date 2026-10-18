@@ -10,14 +10,20 @@ from chess_analytics.corpus.publish import validate_analytical
 BUCKETS = {"under_10", "10_to_29", "30_to_59", "60_plus"}
 
 
+def opening_family_expr(column: str = "source_opening") -> str:
+    """Family is the trimmed text before the first colon. A blank family is null."""
+    return f"nullif(trim(split_part({column}, ':', 1)), '')"
+
+
 def opening_usage(project: Path, snapshot: Path, family: str) -> dict:
     manifest = validate_analytical(snapshot)
     with duckdb.connect(str(snapshot / "warehouse.duckdb"), read_only=True) as con:
+        family_expr = opening_family_expr()
         row = con.execute(
-            """
-            select count(*) filter (where trim(split_part(source_opening, ':', 1)) = ?),
-                   count(*) filter (where nullif(trim(source_opening), '') is not null),
-                   count(*) filter (where nullif(trim(source_opening), '') is null)
+            f"""
+            select count(*) filter (where {family_expr} = ?),
+                   count(*) filter (where {family_expr} is not null),
+                   count(*) filter (where {family_expr} is null)
             from fact_game
             where result in ('1-0','0-1','1/2-1/2') and not marked_bot
         """,
@@ -55,8 +61,9 @@ def opening_player_score(
         raise ValueError("invalid color or half-open rating band")
     manifest = validate_analytical(snapshot)
     with duckdb.connect(str(snapshot / "warehouse.duckdb"), read_only=True) as con:
+        family_expr = opening_family_expr("g.source_opening")
         row = con.execute(
-            """
+            f"""
             select count(*) filter (where p.score = 1),
                    count(*) filter (where p.score = 0.5),
                    count(*) filter (where p.score = 0),
@@ -64,7 +71,7 @@ def opening_player_score(
             from fact_player_game p join fact_game g using (provider, game_id)
             where p.color = ? and p.rating >= ? and p.rating < ?
               and g.base_seconds = ? and g.increment_seconds = ?
-              and trim(split_part(g.source_opening, ':', 1)) = ?
+              and {family_expr} = ?
               and g.result in ('1-0','0-1','1/2-1/2') and not g.marked_bot
         """,
             [color, rating_min, rating_max_exclusive, base_seconds, increment_seconds, family],

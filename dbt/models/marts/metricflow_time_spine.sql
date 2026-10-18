@@ -1,0 +1,9 @@
+select cast(
+    unnest(
+        generate_series(
+            date '2012-01-01',
+            date '2030-12-31',
+            interval 1 day
+        )
+    ) as date
+) as "date_day"

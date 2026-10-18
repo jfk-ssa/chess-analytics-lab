@@ -1,5 +1,20 @@
 select
-    provider, game_id, source_ordinal, result, utc_date, played_at,
-    time_control, base_seconds, increment_seconds, source_opening, source_eco,
-    marked_bot, ply_count, record_fingerprint
+    "provider",
+    "game_id",
+    "provider" || ':' || "game_id" as "game_key",
+    "source_ordinal",
+    "result",
+    "rated",
+    "variant",
+    "utc_date",
+    "played_at",
+    "time_control",
+    "base_seconds",
+    "increment_seconds",
+    "source_opening",
+    "source_eco",
+    nullif(trim(split_part("source_opening", ':', 1)), '') as "opening_family",
+    "marked_bot",
+    "ply_count",
+    "record_fingerprint"
 from {{ source('published', 'fact_game') }}

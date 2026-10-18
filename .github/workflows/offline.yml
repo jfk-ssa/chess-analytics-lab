@@ -33,8 +33,25 @@ jobs:
       - run: uv run --locked --offline --no-editable --extra mcp pytest -q tests/test_mcp_protocol.py
       - run: uv run --locked --offline --no-editable chesslab demo
       - run: uv sync --locked --no-editable --extra dbt
-      - run: uv run --locked --offline --no-editable --extra dbt pytest -q
+      - run: CHESSLAB_REQUIRE_DBT=1 uv run --locked --offline --no-editable --extra dbt pytest -q
       - run: uv run --locked --offline --no-editable --extra dbt python -m chess_analytics.marts transform --dataset tiny
+      - name: Validate the semantic manifest offline
+        run: |
+          set -euo pipefail
+          mart="$(uv run --locked --offline --no-editable --extra dbt python -c 'import json; print(json.load(open("data/tiny-mart-current.json"))["mart_id"])')"
+          warehouse="$PWD/data/marts/published/${mart}/warehouse.duckdb"
+          manifest="$PWD/data/marts/published/${mart}/semantic_manifest.json"
+          cp "$warehouse" "$RUNNER_TEMP/warehouse.duckdb"
+          export CHESSLAB_DBT_PATH="$RUNNER_TEMP/warehouse.duckdb"
+          export DBT_PROFILES_DIR="$PWD/dbt"
+          export DBT_PROJECT_DIR="$PWD/dbt"
+          export DBT_TARGET=local
+          export DBT_SEND_ANONYMOUS_USAGE_STATS=false
+          export DO_NOT_TRACK=1
+          export DBT_LOG_PATH="$RUNNER_TEMP/dbt-logs"
+          uv run --locked --offline --no-editable --extra dbt dbt parse --project-dir dbt --profiles-dir dbt --target-path "$RUNNER_TEMP/dbt-target" --no-use-colors
+          uv run --locked --offline --no-editable --extra dbt python -m chess_analytics.analyst.semantic validate-configs "$RUNNER_TEMP/dbt-target/semantic_manifest.json"
+          uv run --locked --offline --no-editable --extra dbt python -m chess_analytics.analyst.semantic smoke-draw-rate "$warehouse" "$manifest"
   portfolio:
     runs-on: ubuntu-latest
     steps:

@@ -47,6 +47,44 @@ strata, with a seeded focal-player cluster bootstrap. The M4 dashboard and
 analyst tool use the same implementation. Its interval describes dependence
 within the observed prefix, not uncertainty for all August games.
 
+## Governed semantic layer
+
+[ADR 0085](adr/0085-governed-semantic-layer-metricflow.md) gives each core
+metric one dbt 1.12 semantic definition. `query_metric` uses it only when
+the current mart matches the analytical snapshot's source and the mart's
+model hash matches the project. Any other case, including a failed semantic
+query, keeps the reviewed SQL. The result keys stay the ones the evidence
+IDs already hash. `compare_openings` calls `query_metric`, so it uses the
+same path.
+
+| Metric | Model | Rule |
+|---|---|---|
+| eligible_games | games view | Sum of rated Standard completed games, excluding source-marked bots |
+| game_draw_rate | games | `drawn_games / eligible_games`. That ratio is the returned value |
+| opening_usage | games | Games in one family / games with a known family. No ratio metric; the analyst divides two `known_opening_games` queries |
+| opening_player_score | player_games view | `opening_player_score` and `win_rate` are the returned rates. The rating filter, time control, and `low_support` stay in Python |
+
+The family expression is `nullif(trim(split_part(source_opening, ':', 1)), '')`.
+`player_games` copies opening family and time control from the game onto each
+player row. `game_key` is the foreign entity.
+
+| Outside this layer | Why it stays out |
+|---|---|
+| `clock_pressure_error_proxy`, `evaluation_coverage` | They read `fact_move`, which dbt does not build |
+| `opening_adjusted_score` | Seeded cluster bootstrap |
+| Zero denominator | Stays null in the analyst |
+
+Offline check, after `python -m chess_analytics.marts transform`:
+
+```sh
+export DBT_PROFILES_DIR=dbt DBT_PROJECT_DIR=dbt DBT_TARGET=local
+export CHESSLAB_DBT_PATH=/tmp/warehouse.duckdb
+dbt parse --project-dir dbt --profiles-dir dbt --target-path /tmp/dbt-target
+python -m chess_analytics.analyst.semantic validate-configs /tmp/dbt-target/semantic_manifest.json
+python -m chess_analytics.analyst.semantic smoke-draw-rate path/to/mart/warehouse.duckdb path/to/mart/semantic_manifest.json
+```
+
+The compiled draw-rate statement divides `sum(drawn_game)` by `nullif(sum(eligible_game), 0)` on `games` and does not constrain `utc_date`. The replay plan `evals/replay_plans/governed_draw_rate.json` asks the analyst the same question.
 
 ## Opening-position metrics
 

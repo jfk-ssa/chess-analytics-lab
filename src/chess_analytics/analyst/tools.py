@@ -8,11 +8,13 @@ import duckdb
 from chess_analytics.analyst import engine as engine_tools
 from chess_analytics.analyst import maia as maia_tools
 from chess_analytics.analyst.openings import position_continuations as read_continuations
+from chess_analytics.analyst.semantic import resolve_governed
 from chess_analytics.analyst.tool_catalog import ALLOWED_GROUP_BY, CONTRACTS, TOOLS_BY_NAME
 from chess_analytics.common import digest
 from chess_analytics.corpus.metrics import (
     BUCKETS,
     clock_pressure,
+    opening_family_expr,
     opening_player_score,
     opening_usage,
 )
@@ -63,23 +65,29 @@ class CheckedTools:
             or any(item not in ALLOWED_GROUP_BY for item in group_by)
         ):
             raise ValueError("unsupported grouping")
+        governed = resolve_governed(self, metric_id, filters, group_by)
+        if governed is not None:
+            return governed
+        return self._query_metric_sql(metric_id, filters, group_by)
+
+    def _query_metric_sql(self, metric_id: str, filters: dict, group_by: list[str]) -> dict:
         if group_by:
             if filters:
                 raise ValueError("grouped metrics do not accept additional filters")
             if metric_id == "opening_usage" and group_by == ["opening_family"]:
                 with duckdb.connect(str(self.snapshot / "warehouse.duckdb"), read_only=True) as con:
+                    family = opening_family_expr()
                     rows = con.execute(
-                        """select trim(split_part(source_opening, ':', 1)) opening_family,
-                                  count(*) games
+                        f"""select {family} opening_family, count(*) games
                         from fact_game where result in ('1-0','0-1','1/2-1/2')
-                          and not marked_bot and nullif(trim(source_opening), '') is not null
+                          and not marked_bot and {family} is not null
                         group by 1 order by games desc, opening_family limit 501"""
                     ).fetchall()
                     denominator = _row(
                         con,
-                        """select count(*) from fact_game
+                        f"""select count(*) from fact_game
                         where result in ('1-0','0-1','1/2-1/2') and not marked_bot
-                          and nullif(trim(source_opening), '') is not null""",
+                          and {family} is not null""",
                         "grouped opening query returned no row",
                     )[0]
                 return {

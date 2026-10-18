@@ -12,6 +12,9 @@ __pycache__/
 !/data/README.md
 /artifacts/
 /work/
+/dbt/target/
+/dbt/logs/
+/dbt/dbt_packages/
 .DS_Store
 # Local engine, Maia, and opening-visit pointers. Examples live beside these names.
 # Maia weights downloaded by scripts/fetch_maia_weights.py land under data/models/,

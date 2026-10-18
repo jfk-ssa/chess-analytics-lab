@@ -45,9 +45,12 @@ Measured scores from the two runs are in
 `python -m chess_analytics.analyst.maia_corpus` scores one of those
 populations at a time and writes one gitignored JSON file and one gitignored
 Markdown file.
+
 Holdout periods and game counts are the opening-corpus training index in
 [opening-corpus.json](../reports/opening-corpus.json). No played-move log-loss
 has been computed from those games.
+
+Core draw-rate, opening-usage, and opening-score metrics read a matching published mart and otherwise keep the reviewed SQL ([ADR 0085](adr/0085-governed-semantic-layer-metricflow.md)).
 
 This file stays a short summary: checkout structure, phase tracker, dataset
 versions, and limits. New decisions go only into [docs/adr](adr/). Do not append

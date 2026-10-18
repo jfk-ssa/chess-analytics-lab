@@ -90,3 +90,4 @@ short summary of the current checkout, not a log of new decisions.
 | 0082 | 2026-10-17 | [Maia calibration limit and the 1.d4 reply view](adr/0082-maia-calibration-and-d4-repertoire.md) |
 | 0083 | 2026-10-17 | [Maia corpus calibration plan](adr/0083-maia-corpus-calibration-plan.md) |
 | 0084 | 2026-10-17 | [Maia corpus calibration results](adr/0084-maia-corpus-calibration-results.md) |
+| 0085 | 2026-10-18 | [Governed MetricFlow semantic layer](adr/0085-governed-semantic-layer-metricflow.md) |

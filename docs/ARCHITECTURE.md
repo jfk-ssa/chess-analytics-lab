@@ -33,7 +33,12 @@ cloud dependency; [the orchestration guide](ORCHESTRATION.md) gives the exact
 local commands and comparison evidence. Airflow remains a later option.
 
 The analyst can list definitions, read coverage, query named metrics, compare
-openings and inspect clock buckets. It cannot execute free-form SQL, files,
+openings and inspect clock buckets. `query_metric` reads the governed
+draw-rate, opening-usage, and opening-score metrics from the published mart
+when that mart's source snapshot and model hash match the analytical
+snapshot; any mismatch or semantic failure keeps the reviewed SQL.
+`compare_openings` calls `query_metric`, so it uses the same path. The
+analytical snapshot is not modified. It cannot execute free-form SQL, files,
 network access or extensions through its tool surface. Offline typed plans and
 recorded fixture plans run without a key. A live provider path exists but
 requires personal configuration, an explicit finite gross cap and named key;

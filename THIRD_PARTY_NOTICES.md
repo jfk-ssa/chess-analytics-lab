@@ -7,14 +7,14 @@ This is an inventory, not a grant to relicense third-party code.
 | Component | Version | License reported by distribution |
 |---|---|---|
 | chess (python-chess) | 1.11.2 | GPL-3.0-or-later |
-| DuckDB | 1.4.1 | MIT |
+| DuckDB | 1.5.6 | MIT |
 | zstandard | 0.25.0 | BSD-3-Clause (also inspect bundled native-library notices) |
 | pytest (development) | 8.4.2 | MIT |
 | Ruff (development) | 0.14.0 | MIT |
 | Dagster (optional) | 1.13.25 | Apache-2.0 |
 | dagster-webserver (optional) | 1.13.25 | Apache-2.0 |
 | Prefect (optional) | 3.8.7 | Apache-2.0 |
-| dbt-duckdb (optional) | 1.10.1 | Apache-2 (distribution metadata) |
+| dbt-duckdb (optional) | 1.11.0 | Apache-2 (distribution metadata) |
 | dbt-core (transitive optional) | 1.12.5 | Apache-2.0 |
 | Streamlit (optional dashboard) | 1.50.0 | Apache License 2.0 (distribution metadata) |
 | PyArrow (transitive dashboard) | 25.0.1 | Apache-2.0 (license expression) |
@@ -24,6 +24,16 @@ development and optional-orchestrator resolution with hashes. Source PGN data co
 Lichess open database, released under CC0: https://database.lichess.org/.
 The exact source URL/checksum/listing date are in config/datasets.json. No broadcast
 data or engine binary is included. Tiny fixture games were authored for tests.
+
+Inspected distribution metadata again on 2026-10-18. The semantic path
+imports `metricflow`, which `dbt-core` already depends on. The optional
+`dbt` extra depends on `dbt-duckdb` and does not depend on
+`dbt-metricflow`. The lock does not include `halo`, `log-symbols`,
+`spinners`, `termcolor`, or `update-checker`.
+
+| Component | Version | License reported by distribution |
+|---|---|---|
+| metricflow (transitive, dbt extra) | 0.213.0 | Apache-2.0 |
 
 Original project code is licensed under [GPL-3.0-or-later](LICENSE). The
 python-chess dependency is GPL-3.0-or-later; other dependencies retain the
