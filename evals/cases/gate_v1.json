@@ -504,8 +504,8 @@
     },
     "expected_result": {
       "denominator": 4,
-      "numerator": 0,
-      "value": 0.0
+      "numerator": 1,
+      "value": 0.25
     },
     "expected_status": "answered",
     "expected_tool": "query_metric",
