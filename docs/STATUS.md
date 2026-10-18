@@ -51,6 +51,7 @@ Holdout periods and game counts are the opening-corpus training index in
 has been computed from those games.
 
 Core draw-rate, opening-usage, and opening-score metrics read a matching published mart and otherwise keep the reviewed SQL ([ADR 0085](adr/0085-governed-semantic-layer-metricflow.md)).
+Unit tests, enforced mart contracts, exposures, a committed lineage diagram, and slim state selection are in [ADR 0086](adr/0086-dbt-engineering-depth.md).
 
 This file stays a short summary: checkout structure, phase tracker, dataset
 versions, and limits. New decisions go only into [docs/adr](adr/). Do not append

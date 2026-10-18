@@ -24,7 +24,9 @@ def test_dbt_recovery_backfill_and_drift(project, tmp_path):
     ingest(project, root, "tiny", fixture, fixture_plan(project))
     first_snapshot = build(project, root, "tiny")
     first_mart = build_mart(project, root, "tiny", DBT)
-    assert validate_mart(first_mart)["observed"]["drawn"] == 4
+    published = validate_mart(first_mart)
+    assert published["observed"]["drawn"] == 4
+    assert published["dbt_results"] == {"passed": 42, "created": 8, "no_op": 2}
 
     # A changed but valid local source creates a new version. A failed candidate
     # must not replace the previous usable mart, and its attempt stays inspectable.

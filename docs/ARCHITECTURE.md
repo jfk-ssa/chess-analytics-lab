@@ -47,6 +47,11 @@ arguments, result and dataset ID. Scoring is external to the agent; historical
 M5–M7 rubrics remain frozen, portfolio fixture checks use `portfolio-1.0`,
 and engine-tool fixture checks use `engine-1.0`.
 
+The dbt graph is drawn in [dbt lineage](DBT_LINEAGE.md). GitHub renders that
+Mermaid diagram from the committed manifest projection. The published catalog
+is the [dbt docs for the tiny fixture](https://jfk-ssa.github.io/chess-analytics-lab/dbt-docs/).
+The Pages workflow generates it at deploy time. It is not the 2013 corpus.
+
 The same allowlisted tools are available outside that planner through
 `chesslab mcp`, a stdio-only MCP server described in [MCP](MCP.md). Each call
 is checked on its own. The planner's four-step limit and the M6/M7 scores

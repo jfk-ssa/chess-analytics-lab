@@ -103,6 +103,25 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
         "nonempty source opening family" in (output / "metrics.html").read_text()
     )
     assert "uv sync --locked" in (output / "demo.html").read_text()
+    architecture = (output / "architecture.html").read_text()
+    assert 'href="https://jfk-ssa.github.io/chess-analytics-lab/dbt-docs/"' in architecture
+    assert "tiny fixture" in architecture
+    placeholder = (output / "dbt-docs" / "index.html").read_text()
+    assert "dbt docs generate" in placeholder
+    assert site.PRIMARY_NAV == (
+        ("Home", "index.html"),
+        ("Data pipeline", "architecture.html"),
+        ("Transpositions", "transpositions.html"),
+        ("Analyze games", "import-games.html"),
+        ("AI analyst", "comparison.html"),
+    )
+    assert site.LAB_NAV == (
+        ("Metrics & data", "metrics.html"),
+        ("Architecture", "architecture.html"),
+        ("Run the demo", "demo.html"),
+        ("AI comparison", "comparison.html"),
+        ("Opening learning", "opening-learning.html"),
+    )
     descriptions = set()
     for name in result["pages"]:
         parser = site.SiteLinks()
