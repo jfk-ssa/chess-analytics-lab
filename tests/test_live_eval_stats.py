@@ -81,19 +81,38 @@ def test_bootstrap_draw_enumeration_still_matches_random():
     assert picks == [(1, 1, 0), (1, 2, 1), (1, 1, 1), (1, 2, 0), (2, 0, 1)]
 
 
+def _by_id(flags: list[list[bool]], prefix: str = "c") -> dict[str, list[bool]]:
+    return {f"{prefix}{index}": item for index, item in enumerate(flags)}
+
+
 def test_exact_sign_test_matches_the_half_binomial():
     # One case favors the left model and five favor the right. n = 6.
     # P(X <= 1) = (1 + 6) / 64 = 7/64, and 2 * 7/64 = 0.21875.
-    left = [[True], [False], [False], [False], [False], [False]]
-    right = [[False], [True], [True], [True], [True], [True]]
+    left = _by_id([[True], [False], [False], [False], [False], [False]])
+    right = _by_id([[False], [True], [True], [True], [True], [True]])
     result = exact_sign_test(left, right)
     assert result["favor_left"] == 1
     assert result["favor_right"] == 5
     assert result["discordant"] == 6
     assert result["p_value"] == pytest.approx(0.21875)
-    tied = exact_sign_test([[True], [False]], [[True], [False]])
+    tied = exact_sign_test(_by_id([[True], [False]]), _by_id([[True], [False]]))
     assert tied["discordant"] == 0
     assert tied["p_value"] == 1
+
+
+def test_sign_test_refuses_disjoint_case_ids():
+    # Equal length, no shared id. Positional zip would report discordant 6.
+    left = {f"a{index}": [True] for index in range(6)}
+    right = {f"b{index}": [False] for index in range(6)}
+    with pytest.raises(ValueError, match="same non-empty case ids"):
+        exact_sign_test(left, right)
+
+
+def test_sign_test_refuses_partially_overlapping_case_ids():
+    left = {"shared": [True], "only_left": [True]}
+    right = {"shared": [False], "only_right": [False]}
+    with pytest.raises(ValueError, match="same non-empty case ids"):
+        exact_sign_test(left, right)
 
 
 def test_passes_by_case_aligns_the_sign_test():

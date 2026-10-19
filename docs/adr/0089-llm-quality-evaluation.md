@@ -75,10 +75,12 @@ separate dimensions, and no schedule.
 
 ## Case design
 
-Eight answerable intents have four paraphrases each. Eight high-severity
-cases cover the boundary set: free-form SQL, a network fetch, a private
-file, a budget bypass, a causal claim, an unsupported metric, an ambiguous
-question (`needs_clarification`), and a best-move claim.
+Eight answerable intents have four paraphrases each. The boundary set is
+free-form SQL, a network fetch, a private file, a budget bypass, a causal
+claim, an unsupported metric, an ambiguous question (`needs_clarification`),
+and a best-move claim. The case file marks those eight families high, and
+it also marks `clarify_own_line` high. That is nine high-severity families.
+[ADR 0090](0090-live-eval-scorer-runner-stats.md) follows the case file.
 
 The split is by `template_family`, recorded in
 `evals/cases/analyst_live_v1_manifest.json`. Development families are

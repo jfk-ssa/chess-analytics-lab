@@ -152,19 +152,23 @@ def cluster_bootstrap(
     }
 
 
-def exact_sign_test(left: list[list[bool]], right: list[list[bool]]) -> dict:
+def exact_sign_test(left: dict[str, list[bool]], right: dict[str, list[bool]]) -> dict:
     """Exact two-sided sign test on discordant cases (McNemar).
 
-    A case is discordant when the two models' pass counts across paired
-    repeats differ. Ties are discarded. Under the null, the number of cases
-    favoring one model is Binomial(n, 1/2). The p-value is
-    ``min(1, 2 * P(X <= min(b, c)))``.
+    Cases are paired by id. Unequal id sets raise. A case is discordant
+    when the two models' pass counts across paired repeats differ. Ties
+    are discarded. Under the null, the number of cases favoring one model
+    is Binomial(n, 1/2). The p-value is ``min(1, 2 * P(X <= min(b, c)))``.
     """
-    if len(left) != len(right) or not left:
-        raise ValueError("sign test needs the same non-empty case list for both models")
+    if not isinstance(left, dict) or not isinstance(right, dict):
+        raise ValueError("sign test pairs models by case id")
+    if set(left) != set(right) or not left:
+        raise ValueError("sign test needs the same non-empty case ids for both models")
     favor_right = 0
     favor_left = 0
-    for left_repeats, right_repeats in zip(left, right, strict=True):
+    for case_id in sorted(left):
+        left_repeats = left[case_id]
+        right_repeats = right[case_id]
         if len(left_repeats) != len(right_repeats) or not left_repeats:
             raise ValueError("paired cases need the same positive repeat count")
         left_passes = sum(bool(item) for item in left_repeats)
@@ -189,8 +193,8 @@ def exact_sign_test(left: list[list[bool]], right: list[list[bool]]) -> dict:
     }
 
 
-def passes_by_case(rows: list[dict]) -> list[list[bool]]:
-    """Pass bits grouped by case id, sorted by id, repeats in encounter order.
+def passes_by_case(rows: list[dict]) -> dict[str, list[bool]]:
+    """Pass bits grouped by case id. Repeats stay in encounter order.
 
     Rows that were not scored are omitted. Pair two models with
     ``exact_sign_test(passes_by_case(left), passes_by_case(right))``.
@@ -200,7 +204,7 @@ def passes_by_case(rows: list[dict]) -> list[list[bool]]:
         if row.get("passed") is None:
             continue
         grouped.setdefault(str(row["case_id"]), []).append(bool(row["passed"]))
-    return [grouped[case_id] for case_id in sorted(grouped)]
+    return {case_id: grouped[case_id] for case_id in sorted(grouped)}
 
 
 def flaky_case_ids(rows: list[dict]) -> list[str]:

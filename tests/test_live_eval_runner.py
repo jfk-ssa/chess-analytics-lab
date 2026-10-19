@@ -252,7 +252,7 @@ def test_dry_run_prints_the_plan_and_does_not_send(live_eval_stage, monkeypatch,
     assert plan["prices_rechecked"] is False
     assert plan["reasoning_effort"] == "none"
     assert plan["recommended_cap_usd"] == 0.50
-    assert 0 < plan["reserved_usd"] <= RECOMMENDED_CAP_USD["gpt-6-luna"]
+    assert f"{plan['reserved_usd']:.6f}" == "0.443594"
     sol = run(
         ROOT,
         live_eval_stage,
@@ -264,8 +264,9 @@ def test_dry_run_prints_the_plan_and_does_not_send(live_eval_stage, monkeypatch,
         transport=transport,
     )
     assert sol["recommended_cap_usd"] == 10.0
-    assert 0 < sol["reserved_usd"] <= 10
+    assert f"{sol['reserved_usd']:.6f}" == "8.871288"
     text = format_dry_run(plan)
+    assert "reserved_usd: 0.443594" in text
     assert "cases: 48" in text
     assert "planned_requests: 240" in text
     assert "prices_rechecked: false" in text
@@ -398,7 +399,9 @@ def test_oracle_transport_scores_48_and_matches_the_receipt_schema(
     assert set(receipt["rows"][0]) == set(ROW_FIELDS)
     assert all(row["model_plan_before_semantic_repair"] for row in receipt["rows"])
     assert all(row["passed"] is True for row in receipt["rows"])
-    assert receipt["repair_counts"] == {"argument": 0, "semantic": 0}
+    assert receipt["repair_counts"] == {"argument": 0, "extraction": 0, "semantic": 0}
+    assert all(row["recovered_argument_suffixes"] == 0 for row in receipt["rows"])
+    assert all(row["recovered_repeated_plan_objects"] == 0 for row in receipt["rows"])
     assert receipt["known_gross_cost_usd"] == pytest.approx(48 * 0.00002)
     assert receipt["token_usage"]["priced_requests"] == 48
     assert receipt["stats"]["wilson"]["successes"] == 48
@@ -468,6 +471,257 @@ def test_a_flaky_repeat_is_flagged(live_eval_stage, monkeypatch):
     receipt = _run(live_eval_stage, transport, monkeypatch, repeats=2)
     assert receipt["flaky_cases"] == ["draw_rate_1"]
     assert receipt["complete"] is True
+
+
+def test_bad_controls_send_nothing_and_do_not_read_the_key(live_eval_stage, monkeypatch):
+    monkeypatch.delenv(KEY_ENV, raising=False)
+    calls = []
+
+    def transport(body, _key):
+        calls.append(body)
+        return _wire(_UNSUPPORTED)
+
+    cases = (
+        ({"seed": -1}, "seed must be a non-negative integer"),
+        ({"resamples": 0}, "resamples must be a positive integer"),
+        ({"baseline_rate": float("nan")}, "baseline rate must be finite"),
+        ({"baseline_rate": 2}, "baseline rate must lie in 0..1"),
+    )
+    for kwargs, match in cases:
+        calls.clear()
+        with pytest.raises(ValueError, match=match):
+            run(
+                ROOT,
+                live_eval_stage,
+                acknowledged=True,
+                max_run_usd=10,
+                model="gpt-6-luna",
+                repeats=1,
+                transport=transport,
+                **kwargs,
+            )
+        assert calls == []
+
+
+def test_cap_just_under_the_reservation_sends_nothing(live_eval_stage, monkeypatch):
+    monkeypatch.setenv(KEY_ENV, "test-personal-key")
+    calls = []
+
+    def transport(body, _key):
+        calls.append(body)
+        return _wire(_UNSUPPORTED)
+
+    quoted = run(
+        ROOT,
+        live_eval_stage,
+        acknowledged=True,
+        dry_run=True,
+        max_run_usd=10,
+        model="gpt-6-luna",
+        repeats=1,
+        transport=transport,
+    )
+    cap = quoted["reserved_usd"] - 1e-15
+    assert cap < quoted["reserved_usd"]
+    with pytest.raises(ReservationError):
+        run(
+            ROOT,
+            live_eval_stage,
+            acknowledged=True,
+            max_run_usd=cap,
+            model="gpt-6-luna",
+            repeats=1,
+            transport=transport,
+        )
+    assert calls == []
+
+
+def test_recovered_suffix_is_a_pass_with_a_repair_count(live_eval_stage, monkeypatch):
+    cases = _cases()
+    by_question = _by_question(cases)
+    target = next(item for item in cases if item["id"] == "draw_rate_1")
+    payload = {
+        "actions": [
+            {
+                "args_json": json.dumps(step["args"], sort_keys=True) + " thanks",
+                "tool": step["tool"],
+            }
+            for step in _DRAW["actions"]
+        ],
+        "interpretation": _DRAW["interpretation"],
+        "status": _DRAW["status"],
+    }
+    recovered = {
+        "id": "resp_test",
+        "model": "gpt-6-luna",
+        "output": [{"content": [{"type": "output_text", "text": json.dumps(payload)}]}],
+        "usage": dict(_USAGE),
+    }
+
+    def transport(body, _key):
+        question = json.loads(body)["input"]
+        if question == target["question"]:
+            return recovered
+        return _wire(oracle_plan(by_question[question]))
+
+    receipt = _run(live_eval_stage, transport, monkeypatch)
+    row = next(item for item in receipt["rows"] if item["case_id"] == "draw_rate_1")
+    assert row["passed"] is True
+    assert row["recovered_argument_suffixes"] == 1
+    assert row["repair_count"] == 1
+    assert receipt["headline_passed"] == 48
+    assert receipt["repair_counts"]["extraction"] == 1
+
+
+def test_recovered_repeated_plan_is_counted_beside_the_pass(live_eval_stage, monkeypatch):
+    cases = _cases()
+    by_question = _by_question(cases)
+    target = next(item for item in cases if item["id"] == "draw_rate_1")
+    raw = {
+        "actions": [
+            {
+                "args_json": json.dumps(step["args"], sort_keys=True),
+                "tool": step["tool"],
+            }
+            for step in _DRAW["actions"]
+        ],
+        "interpretation": _DRAW["interpretation"],
+        "status": _DRAW["status"],
+    }
+    text = json.dumps(raw) + "\n" + json.dumps(raw)
+    repeated = {
+        "id": "resp_test",
+        "model": "gpt-6-luna",
+        "output": [{"content": [{"type": "output_text", "text": text}]}],
+        "usage": dict(_USAGE),
+    }
+
+    def transport(body, _key):
+        question = json.loads(body)["input"]
+        if question == target["question"]:
+            return repeated
+        return _wire(oracle_plan(by_question[question]))
+
+    receipt = _run(live_eval_stage, transport, monkeypatch)
+    row = next(item for item in receipt["rows"] if item["case_id"] == "draw_rate_1")
+    assert row["passed"] is True
+    assert row["recovered_repeated_plan_objects"] == 2
+    assert row["repair_count"] == 1
+    assert receipt["repair_counts"]["extraction"] == 1
+
+
+def test_transport_error_redacts_key_fragments_and_paths(live_eval_stage, monkeypatch):
+    key = "sk-personal-TESTKEY99"
+    monkeypatch.setenv(KEY_ENV, key)
+    calls = []
+
+    def transport(_body, _key):
+        calls.append(_key)
+        raise RuntimeError(f"bad {key[:15]} and path /home/ubuntu/secret")
+
+    receipt = run(
+        ROOT,
+        live_eval_stage,
+        acknowledged=True,
+        max_run_usd=10,
+        model="gpt-6-luna",
+        repeats=1,
+        resamples=20,
+        run_id="run-redact",
+        seed=20261018,
+        transport=transport,
+    )
+    error = receipt["rows"][0]["error"]
+    assert calls == [key]
+    assert error.startswith("transport_failure: RuntimeError:")
+    assert "sk-personal" not in error
+    assert "/home/ubuntu" not in error
+    assert "[redacted]" in error
+    assert "[path]" in error
+
+
+def test_spend_under_the_cap_still_stops_before_the_next_reservation(live_eval_stage, monkeypatch):
+    calls = {"n": 0}
+
+    def transport(_body, _key):
+        calls["n"] += 1
+        response = _wire(_UNSUPPORTED)
+        response["usage"] = {
+            "input_tokens": 0,
+            "input_tokens_details": {"cache_write_tokens": 0, "cached_tokens": 0},
+            "output_tokens": 175591,
+        }
+        return response
+
+    quoted = run(
+        ROOT,
+        live_eval_stage,
+        acknowledged=True,
+        dry_run=True,
+        max_run_usd=1,
+        model="gpt-6-luna",
+        repeats=1,
+        transport=transport,
+    )
+    assert f"{quoted['reserved_usd']:.9f}" == "0.088718875"
+    receipt = _run(
+        live_eval_stage,
+        transport,
+        monkeypatch,
+        max_run_usd=quoted["reserved_usd"],
+    )
+    assert calls["n"] == 1
+    assert receipt["incomplete_reason"] == "budget_exceeded"
+    assert receipt["known_gross_cost_usd"] == pytest.approx(0.0877955)
+    assert receipt["known_gross_cost_usd"] < quoted["reserved_usd"]
+
+
+def test_high_severity_swap_and_invented_filter_are_not_refusal_labels(
+    live_eval_stage, monkeypatch
+):
+    cases = _cases()
+    by_question = _by_question(cases)
+    invented = {
+        "actions": [
+            {
+                "args": {"filters": {"not_a_filter": 1}, "metric_id": "game_draw_rate"},
+                "tool": "query_metric",
+            }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered",
+    }
+
+    def transport(body, _key):
+        question = json.loads(body)["input"]
+        case = by_question[question]
+        if case["id"] == "needs_clarification":
+            return _wire(_UNSUPPORTED)
+        if case["id"] == "boundary_budget":
+            return _wire(invented)
+        return _wire(oracle_plan(case))
+
+    receipt = _run(live_eval_stage, transport, monkeypatch)
+    swapped = next(item for item in receipt["rows"] if item["case_id"] == "needs_clarification")
+    filtered = next(item for item in receipt["rows"] if item["case_id"] == "boundary_budget")
+    assert swapped["passed"] is False
+    assert swapped["high_severity_miss"] is True
+    assert swapped["unsafe_answer"] is False
+    assert swapped["over_abstention"] is False
+    assert filtered["passed"] is False
+    assert filtered["high_severity_miss"] is True
+    assert filtered["unsafe_answer"] is False
+    assert filtered["over_abstention"] is False
+    assert "plan_hallucination" in filtered["failures"]
+    assert receipt["hard_fail"] is True
+
+
+def test_manifest_high_severity_families_match_the_nine_cases():
+    manifest, cases = load_live_cases(ROOT)
+    families = sorted({item["template_family"] for item in cases if item["severity"] == "high"})
+    assert families == sorted(manifest["high_severity_families"])
+    assert len(families) == 9
+    assert "clarify_own_line" in families
 
 
 def test_cost_over_the_cap_stops_before_the_next_send(live_eval_stage, monkeypatch):

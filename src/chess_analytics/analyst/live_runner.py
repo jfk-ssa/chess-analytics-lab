@@ -12,12 +12,14 @@ not read an API key. A real run reads only ``CHESSLAB_OPENAI_API_KEY``.
 import hashlib
 import json
 import os
+import re
 import uuid
 from pathlib import Path
 
 from chess_analytics.analyst.live_eval import load_live_cases
 from chess_analytics.analyst.live_score import RUBRIC_VERSION, score_live_plan
 from chess_analytics.analyst.live_stats import (
+    _check_rate,
     binomial_alert,
     cluster_bootstrap,
     flaky_case_ids,
@@ -127,6 +129,9 @@ ROW_FIELDS = (
     "model_plan_before_semantic_repair",
     "over_abstention",
     "passed",
+    "recovered_argument_suffixes",
+    "recovered_inert_suffix_characters",
+    "recovered_repeated_plan_objects",
     "repair_count",
     "repeat",
     "reserved_cost_usd",
@@ -213,6 +218,7 @@ def run(
     real run uses the frozen Responses transport. A dry run never calls it
     and never reads the key.
     """
+    _check_controls(seed, resamples, baseline_rate)
     if type(repeats) is not int or not 1 <= repeats <= 20:
         raise ValueError("repeats must be an integer from 1 to 20")
     if dry_run and output is not None:
@@ -228,7 +234,7 @@ def run(
     quotes = [_quote(staged, case, config) for case in cases]
     instructions = _one_instructions_hash(quotes)
     reserved = sum(item["reserved_cost_usd"] for item in quotes) * repeats
-    if reserved > config["max_run_usd"] + 1e-12:
+    if reserved > config["max_run_usd"]:
         raise ReservationError(reserved, config["max_run_usd"])
     plan = _dry_plan(config, manifest, cases, repeats, instructions, reserved)
     if dry_run:
@@ -402,7 +408,7 @@ def _execute(repo, staged, cases, quotes, config, key, send, plan, **options) ->
     incomplete = None
     for repeat in range(plan["repeats"]):
         for case, quote in zip(cases, quotes, strict=True):
-            if spent + quote["reserved_cost_usd"] > config["max_run_usd"] + 1e-12:
+            if spent + quote["reserved_cost_usd"] > config["max_run_usd"]:
                 incomplete = "budget_exceeded"
                 break
             row, stop, spent = _one_request(staged, case, quote, config, key, send, repeat, spent)
@@ -419,18 +425,18 @@ def _one_request(staged, case, quote, config, key, send, repeat, spent):
     try:
         response = send(quote["body"], key)
     except Exception as exc:
-        message = _redact(str(exc), key)
+        message = _redact_exception(exc, key)
         failed = _failed_row(case, repeat, quote, "transport_failure", message)
         return failed, "transport_failure", spent
     try:
         row, cost = _completed_row(staged, case, quote, config, response, repeat)
     except Exception as exc:
-        message = _redact(str(exc), key)
+        message = _redact_exception(exc, key)
         return _failed_row(case, repeat, quote, "runner_error", message), "runner_error", spent
     if cost is None:
         return row, "unknown_usage", spent + quote["reserved_cost_usd"]
     spent += cost
-    if spent > config["max_run_usd"] + 1e-12:
+    if spent > config["max_run_usd"]:
         return row, "budget_exceeded", spent
     return row, None, spent
 
@@ -442,7 +448,9 @@ def _completed_row(staged, case, quote, config, response, repeat) -> tuple[dict,
         cost, basis = price_usage(config, usage)
     except ValueError:
         cost, basis = None, None
-    plan, argument_repairs, semantic_repairs, repaired = _parsed_plan(staged, case, response)
+    plan, argument_repairs, semantic_repairs, repaired, extraction = _parsed_plan(
+        staged, case, response
+    )
     if plan is None:
         scored = _hallucination(case)
         would_pass = None
@@ -460,6 +468,7 @@ def _completed_row(staged, case, quote, config, response, repeat) -> tuple[dict,
         scored=scored,
         argument_repairs=argument_repairs,
         semantic_repairs=semantic_repairs,
+        extraction=extraction,
         would_pass=would_pass,
         usage=usage if isinstance(usage, dict) else None,
         cost=cost,
@@ -471,17 +480,18 @@ def _completed_row(staged, case, quote, config, response, repeat) -> tuple[dict,
 
 
 def _parsed_plan(staged, case, response):
+    empty = _empty_extraction()
     if not isinstance(response, dict):
-        return None, [], [], None
+        return None, [], [], None, empty
     try:
-        extracted, _selection = _extract_plan(response)
+        extracted, selection = _extract_plan(response)
         plan, argument_repairs = _normalize_plan(extracted)
         repaired, semantic_repairs = _repair_opening_usage(
             case["question"], plan, CheckedTools(staged)
         )
     except (TypeError, ValueError):
-        return None, [], [], None
-    return plan, argument_repairs, semantic_repairs, repaired
+        return None, [], [], None, empty
+    return plan, argument_repairs, semantic_repairs, repaired, _extraction_counts(selection)
 
 
 def _hallucination(case: dict) -> dict:
@@ -506,6 +516,7 @@ def _failed_row(case, repeat, quote, reason, message) -> dict:
         scored=None,
         argument_repairs=[],
         semantic_repairs=[],
+        extraction=_empty_extraction(),
         would_pass=None,
         usage=None,
         cost=None,
@@ -519,6 +530,7 @@ def _row(case, repeat, quote, **fields) -> dict:
     scored = fields["scored"] or {}
     argument_repairs = list(fields["argument_repairs"])
     semantic_repairs = list(fields["semantic_repairs"])
+    extraction = fields["extraction"]
     passed = None if fields["scored"] is None else scored["passed"]
     return {
         "argument_repairs": argument_repairs,
@@ -532,7 +544,12 @@ def _row(case, repeat, quote, **fields) -> dict:
         "model_plan_before_semantic_repair": fields["plan"],
         "over_abstention": bool(scored.get("over_abstention")),
         "passed": passed,
-        "repair_count": len(argument_repairs) + len(semantic_repairs),
+        "recovered_argument_suffixes": extraction["recovered_argument_suffixes"],
+        "recovered_inert_suffix_characters": extraction["recovered_inert_suffix_characters"],
+        "recovered_repeated_plan_objects": extraction["recovered_repeated_plan_objects"],
+        "repair_count": (
+            len(argument_repairs) + len(semantic_repairs) + _extraction_events(extraction)
+        ),
         "repeat": repeat,
         "reserved_cost_usd": quote["reserved_cost_usd"],
         "resolved_model": fields["resolved"],
@@ -588,6 +605,7 @@ def _receipt(repo, rows, plan, config, incomplete, **options) -> dict:
         "receipt_version": RECEIPT_VERSION,
         "repair_counts": {
             "argument": sum(len(row["argument_repairs"]) for row in rows),
+            "extraction": sum(_extraction_events(_extraction_from_row(row)) for row in rows),
             "semantic": sum(len(row["semantic_repairs"]) for row in rows),
         },
         "repeats": plan["repeats"],
@@ -668,8 +686,81 @@ def _rates_from_args(args) -> dict | None:
     return {key: getattr(args, key) for key in keys}
 
 
+def _check_controls(seed: int, resamples: int, baseline_rate: float | None) -> None:
+    """Reject controls that would only fail after the requests were sent."""
+    if type(seed) is not int or seed < 0:
+        raise ValueError("seed must be a non-negative integer")
+    if type(resamples) is not int or resamples < 1:
+        raise ValueError("resamples must be a positive integer")
+    if baseline_rate is not None:
+        _check_rate(baseline_rate)
+
+
+def _empty_extraction() -> dict:
+    return {
+        "recovered_argument_suffixes": 0,
+        "recovered_inert_suffix_characters": 0,
+        "recovered_repeated_plan_objects": 0,
+    }
+
+
+def _extraction_counts(selection: dict) -> dict:
+    suffixes = selection.get("recovered_argument_suffixes") or []
+    repeated = selection.get("recovered_repeated_plan_objects")
+    inert = selection.get("recovered_inert_suffix_characters") or 0
+    objects = 0
+    if isinstance(repeated, dict):
+        objects = int(repeated.get("identical_complete_objects") or 0)
+    return {
+        "recovered_argument_suffixes": len(suffixes),
+        "recovered_inert_suffix_characters": int(inert),
+        "recovered_repeated_plan_objects": objects,
+    }
+
+
+def _extraction_from_row(row: dict) -> dict:
+    return {
+        "recovered_argument_suffixes": row["recovered_argument_suffixes"],
+        "recovered_inert_suffix_characters": row["recovered_inert_suffix_characters"],
+        "recovered_repeated_plan_objects": row["recovered_repeated_plan_objects"],
+    }
+
+
+def _extraction_events(counts: dict) -> int:
+    """Events beside the headline: suffixes, extra repeated objects, inert suffix."""
+    repeated = counts["recovered_repeated_plan_objects"]
+    extras = repeated - 1 if repeated else 0
+    inert = 1 if counts["recovered_inert_suffix_characters"] else 0
+    return counts["recovered_argument_suffixes"] + extras + inert
+
+
+_ABSOLUTE_PATH = re.compile(
+    r"(?:[A-Za-z]:\\(?:[^\\/:*?\"<>|\r\n]+\\)*[^\\/:*?\"<>|\r\n]+)"
+    r"|"
+    r"(?:(?<=^)|(?<=[\s'\"=]))/(?:[^/\s'\"]+/)+[^/\s'\"]*"
+)
+
+
+def _redact_exception(exc: BaseException, key: str) -> str:
+    return f"{type(exc).__name__}: {_redact(str(exc), key)}"
+
+
 def _redact(message: str, key: str) -> str:
-    return message.replace(key, "[redacted]") if key else message
+    """Drop key fragments of length 6 or more, then absolute paths."""
+    return _ABSOLUTE_PATH.sub("[path]", _redact_key_runs(message, key))
+
+
+def _redact_key_runs(message: str, key: str) -> str:
+    if not key:
+        return message
+    if len(key) < 6:
+        return message.replace(key, "[redacted]")
+    fragments = {
+        key[start:end] for start in range(len(key)) for end in range(start + 6, len(key) + 1)
+    }
+    for fragment in sorted(fragments, key=len, reverse=True):
+        message = message.replace(fragment, "[redacted]")
+    return message
 
 
 def _summary(receipt: dict) -> str:
