@@ -1,0 +1,162 @@
+{
+  "clock": {
+    "10_to_29": {
+      "bucket": "10_to_29",
+      "eligible_moves": 0,
+      "error_proxy_rate": null,
+      "evaluable_moves": 0,
+      "evaluation_coverage": null,
+      "proxy_errors": 0
+    },
+    "30_to_59": {
+      "bucket": "30_to_59",
+      "eligible_moves": 160,
+      "error_proxy_rate": 0.11538461538461539,
+      "evaluable_moves": 130,
+      "evaluation_coverage": 0.8125,
+      "proxy_errors": 15
+    },
+    "60_plus": {
+      "bucket": "60_plus",
+      "eligible_moves": 0,
+      "error_proxy_rate": null,
+      "evaluable_moves": 0,
+      "evaluation_coverage": null,
+      "proxy_errors": 0
+    },
+    "under_10": {
+      "bucket": "under_10",
+      "eligible_moves": 160,
+      "error_proxy_rate": 0.19230769230769232,
+      "evaluable_moves": 130,
+      "evaluation_coverage": 0.8125,
+      "proxy_errors": 25
+    }
+  },
+  "clock_compare_under_10_minus_30_to_59": {
+    "error_proxy_rate_difference_first_minus_second": 0.07692307692307693,
+    "evaluation_coverage_difference_first_minus_second": 0.0
+  },
+  "compare_openings": {
+    "families": [
+      "Sicilian Defense",
+      "French Defense"
+    ],
+    "filters": {
+      "base_seconds": 60,
+      "color": "white",
+      "increment_seconds": 0,
+      "rating_max_exclusive": 1600,
+      "rating_min": 1400
+    },
+    "score_rate_difference_first_minus_second": 0.17142857142857137,
+    "win_rate_difference_first_minus_second": 0.22857142857142854
+  },
+  "coverage": {
+    "accepted": 100,
+    "conflict": 0,
+    "duplicate": 0,
+    "eligible_games": 100,
+    "excluded": 0,
+    "known_opening_games": 100,
+    "missing_source_opening": 0,
+    "move_rows": 600,
+    "partial_archive": true,
+    "quarantine": 0,
+    "seen": 100,
+    "selected_games": 100,
+    "selected_zero_ply_games": 0,
+    "source_kind": "synthetic_test_fixture"
+  },
+  "french_white_score": {
+    "draws": 2,
+    "eligible_player_games": 5,
+    "losses": 2,
+    "score_rate": 0.4,
+    "win_rate": 0.2,
+    "wins": 1
+  },
+  "game_draw_rate": {
+    "denominator": 100,
+    "numerator": 33,
+    "value": 0.33
+  },
+  "hand_counts": {
+    "black_wins": 33,
+    "bucket_30_to_59_errors": 15,
+    "draws": 33,
+    "empty_eligible_moves": 0,
+    "family_count": 12,
+    "french_games": 14,
+    "french_white_draws": 2,
+    "french_white_games": 5,
+    "french_white_losses": 2,
+    "french_white_wins": 1,
+    "games": 100,
+    "increment_zero_games": 80,
+    "move_rows_if_all_sampled": 600,
+    "opening_known_games": 100,
+    "populated_eligible_moves": 160,
+    "populated_evaluable_moves": 130,
+    "sicilian_games": 18,
+    "sicilian_white_draws": 2,
+    "sicilian_white_games": 7,
+    "sicilian_white_losses": 2,
+    "sicilian_white_wins": 3,
+    "time_60_0": 70,
+    "under_10_errors": 25,
+    "white_wins": 34
+  },
+  "kind": "independent raw-pgn reference for the live-eval fixture; not a model result",
+  "opening_usage": {
+    "French Defense": {
+      "denominator": 100,
+      "numerator": 14,
+      "value": 0.14
+    },
+    "Sicilian Defense": {
+      "denominator": 100,
+      "numerator": 18,
+      "value": 0.18
+    }
+  },
+  "population": {
+    "black_wins": 33,
+    "draws": 33,
+    "families": {
+      "Alekhine Defense": 3,
+      "Caro-Kann Defense": 8,
+      "English Opening": 8,
+      "French Defense": 14,
+      "Italian Game": 10,
+      "King's Indian Defense": 6,
+      "Nimzo-Indian Defense": 6,
+      "Pirc Defense": 4,
+      "Queen's Gambit": 8,
+      "Ruy Lopez": 10,
+      "Scandinavian Defense": 5,
+      "Sicilian Defense": 18
+    },
+    "family_count": 12,
+    "games": 100,
+    "increment_zero_games": 80,
+    "opening_known_games": 100,
+    "time_controls": {
+      "180+2": 10,
+      "300+0": 10,
+      "60+0": 70,
+      "600+5": 10
+    },
+    "white_wins": 34
+  },
+  "seed": 20261018,
+  "sicilian_white_score": {
+    "draws": 2,
+    "eligible_player_games": 7,
+    "losses": 2,
+    "score_rate": 0.5714285714285714,
+    "win_rate": 0.42857142857142855,
+    "wins": 3
+  },
+  "source": "tests/fixtures/live_eval_100.pgn"
+}

@@ -1,0 +1,1499 @@
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/0000000a"]
+[UTCDate "2020.01.01"]
+[White "FixtureLiveW000"]
+[Black "FixtureLiveB000"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "1-0"]
+[TimeControl "180+2"]
+[ECO "B20"]
+[Opening "Sicilian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45]} c5 {[%clk 0:00:50]} 2. Nf3 {[%clk 0:00:08]} d6 {[%clk 0:00:06]} 3. d4 {[%clk 0:00:04]} cxd4 {[%clk 0:00:03]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000013"]
+[UTCDate "2020.01.02"]
+[White "FixtureLiveW001"]
+[Black "FixtureLiveB001"]
+[WhiteElo "1550"]
+[BlackElo "1570"]
+[Result "1/2-1/2"]
+[TimeControl "300+0"]
+[ECO "B20"]
+[Opening "Sicilian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} d6 {[%clk 0:00:06] [%eval 0.00]} 3. d4 {[%clk 0:00:04] [%eval 0.00]} cxd4 {[%clk 0:00:03] [%eval 0.00]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/0000002d"]
+[UTCDate "2020.01.03"]
+[White "FixtureLiveW002"]
+[Black "FixtureLiveB002"]
+[WhiteElo "1700"]
+[BlackElo "1720"]
+[Result "0-1"]
+[TimeControl "600+5"]
+[ECO "B20"]
+[Opening "Sicilian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval -2.50]} d6 {[%clk 0:00:06] [%eval -2.50]} 3. d4 {[%clk 0:00:04] [%eval -2.50]} cxd4 {[%clk 0:00:03] [%eval -2.50]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000042"]
+[UTCDate "2020.01.04"]
+[White "FixtureLiveW003"]
+[Black "FixtureLiveB003"]
+[WhiteElo "1450"]
+[BlackElo "1470"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "B20"]
+[Opening "Sicilian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} d6 {[%clk 0:00:06] [%eval 0.00]} 3. d4 {[%clk 0:00:04] [%eval 0.00]} cxd4 {[%clk 0:00:03] [%eval 2.50]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/0000006f"]
+[UTCDate "2020.01.05"]
+[White "FixtureLiveW004"]
+[Black "FixtureLiveB004"]
+[WhiteElo "1200"]
+[BlackElo "1220"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "B20"]
+[Opening "Sicilian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45]} c5 {[%clk 0:00:50]} 2. Nf3 {[%clk 0:00:08]} d6 {[%clk 0:00:06]} 3. d4 {[%clk 0:00:04]} cxd4 {[%clk 0:00:03]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000071"]
+[UTCDate "2020.01.06"]
+[White "FixtureLiveW005"]
+[Black "FixtureLiveB005"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "B20"]
+[Opening "Sicilian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} d6 {[%clk 0:00:06] [%eval 0.00]} 3. d4 {[%clk 0:00:04] [%eval 0.00]} cxd4 {[%clk 0:00:03] [%eval 0.00]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000082"]
+[UTCDate "2020.01.07"]
+[White "FixtureLiveW006"]
+[Black "FixtureLiveB006"]
+[WhiteElo "1550"]
+[BlackElo "1570"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "B20"]
+[Opening "Sicilian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval -2.50]} d6 {[%clk 0:00:06] [%eval -2.50]} 3. d4 {[%clk 0:00:04] [%eval -2.50]} cxd4 {[%clk 0:00:03] [%eval -2.50]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000090"]
+[UTCDate "2020.01.08"]
+[White "FixtureLiveW007"]
+[Black "FixtureLiveB007"]
+[WhiteElo "1700"]
+[BlackElo "1720"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "B20"]
+[Opening "Sicilian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} d6 {[%clk 0:00:06] [%eval 0.00]} 3. d4 {[%clk 0:00:04] [%eval 0.00]} cxd4 {[%clk 0:00:03] [%eval 2.50]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000000b8"]
+[UTCDate "2020.01.09"]
+[White "FixtureLiveW008"]
+[Black "FixtureLiveB008"]
+[WhiteElo "1450"]
+[BlackElo "1470"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "B20"]
+[Opening "Sicilian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45]} c5 {[%clk 0:00:50]} 2. Nf3 {[%clk 0:00:08]} d6 {[%clk 0:00:06]} 3. d4 {[%clk 0:00:04]} cxd4 {[%clk 0:00:03]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000000c7"]
+[UTCDate "2020.01.10"]
+[White "FixtureLiveW009"]
+[Black "FixtureLiveB009"]
+[WhiteElo "1200"]
+[BlackElo "1220"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "B20"]
+[Opening "Sicilian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} d6 {[%clk 0:00:06] [%eval 0.00]} 3. d4 {[%clk 0:00:04] [%eval 0.00]} cxd4 {[%clk 0:00:03] [%eval 0.00]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000000da"]
+[UTCDate "2020.01.11"]
+[White "FixtureLiveW010"]
+[Black "FixtureLiveB010"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "1/2-1/2"]
+[TimeControl "180+2"]
+[ECO "B20"]
+[Opening "Sicilian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval -2.50]} d6 {[%clk 0:00:06] [%eval -2.50]} 3. d4 {[%clk 0:00:04] [%eval -2.50]} cxd4 {[%clk 0:00:03] [%eval -2.50]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000000e4"]
+[UTCDate "2020.01.12"]
+[White "FixtureLiveW011"]
+[Black "FixtureLiveB011"]
+[WhiteElo "1550"]
+[BlackElo "1570"]
+[Result "0-1"]
+[TimeControl "300+0"]
+[ECO "B20"]
+[Opening "Sicilian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} d6 {[%clk 0:00:06] [%eval 0.00]} 3. d4 {[%clk 0:00:04] [%eval 0.00]} cxd4 {[%clk 0:00:03] [%eval 2.50]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000000ee"]
+[UTCDate "2020.01.13"]
+[White "FixtureLiveW012"]
+[Black "FixtureLiveB012"]
+[WhiteElo "1700"]
+[BlackElo "1720"]
+[Result "1-0"]
+[TimeControl "600+5"]
+[ECO "B20"]
+[Opening "Sicilian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45]} c5 {[%clk 0:00:50]} 2. Nf3 {[%clk 0:00:08]} d6 {[%clk 0:00:06]} 3. d4 {[%clk 0:00:04]} cxd4 {[%clk 0:00:03]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000000f7"]
+[UTCDate "2020.01.14"]
+[White "FixtureLiveW013"]
+[Black "FixtureLiveB013"]
+[WhiteElo "1450"]
+[BlackElo "1470"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "B20"]
+[Opening "Sicilian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} d6 {[%clk 0:00:06] [%eval 0.00]} 3. d4 {[%clk 0:00:04] [%eval 0.00]} cxd4 {[%clk 0:00:03] [%eval 0.00]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000121"]
+[UTCDate "2020.01.15"]
+[White "FixtureLiveW014"]
+[Black "FixtureLiveB014"]
+[WhiteElo "1200"]
+[BlackElo "1220"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "B20"]
+[Opening "Sicilian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval -2.50]} d6 {[%clk 0:00:06] [%eval -2.50]} 3. d4 {[%clk 0:00:04] [%eval -2.50]} cxd4 {[%clk 0:00:03] [%eval -2.50]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000123"]
+[UTCDate "2020.01.16"]
+[White "FixtureLiveW015"]
+[Black "FixtureLiveB015"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "B20"]
+[Opening "Sicilian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} d6 {[%clk 0:00:06] [%eval 0.00]} 3. d4 {[%clk 0:00:04] [%eval 0.00]} cxd4 {[%clk 0:00:03] [%eval 2.50]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000141"]
+[UTCDate "2020.01.17"]
+[White "FixtureLiveW016"]
+[Black "FixtureLiveB016"]
+[WhiteElo "1550"]
+[BlackElo "1570"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "B20"]
+[Opening "Sicilian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45]} c5 {[%clk 0:00:50]} 2. Nf3 {[%clk 0:00:08]} d6 {[%clk 0:00:06]} 3. d4 {[%clk 0:00:04]} cxd4 {[%clk 0:00:03]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000161"]
+[UTCDate "2020.01.18"]
+[White "FixtureLiveW017"]
+[Black "FixtureLiveB017"]
+[WhiteElo "1700"]
+[BlackElo "1720"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "B20"]
+[Opening "Sicilian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} d6 {[%clk 0:00:06] [%eval 0.00]} 3. d4 {[%clk 0:00:04] [%eval 0.00]} cxd4 {[%clk 0:00:03] [%eval 0.00]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000164"]
+[UTCDate "2020.01.19"]
+[White "FixtureLiveW018"]
+[Black "FixtureLiveB018"]
+[WhiteElo "1450"]
+[BlackElo "1470"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "C00"]
+[Opening "French Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval -2.50]} d5 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} Nf6 {[%clk 0:00:03] [%eval -2.50]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/0000016d"]
+[UTCDate "2020.01.20"]
+[White "FixtureLiveW019"]
+[Black "FixtureLiveB019"]
+[WhiteElo "1200"]
+[BlackElo "1220"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "C00"]
+[Opening "French Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} d5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Nf6 {[%clk 0:00:03] [%eval 2.50]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000194"]
+[UTCDate "2020.01.21"]
+[White "FixtureLiveW020"]
+[Black "FixtureLiveB020"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "0-1"]
+[TimeControl "180+2"]
+[ECO "C00"]
+[Opening "French Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45]} e6 {[%clk 0:00:50]} 2. d4 {[%clk 0:00:08]} d5 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} Nf6 {[%clk 0:00:03]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000001a8"]
+[UTCDate "2020.01.22"]
+[White "FixtureLiveW021"]
+[Black "FixtureLiveB021"]
+[WhiteElo "1550"]
+[BlackElo "1570"]
+[Result "1-0"]
+[TimeControl "300+0"]
+[ECO "C00"]
+[Opening "French Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} d5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Nf6 {[%clk 0:00:03] [%eval 0.00]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000001ac"]
+[UTCDate "2020.01.23"]
+[White "FixtureLiveW022"]
+[Black "FixtureLiveB022"]
+[WhiteElo "1700"]
+[BlackElo "1720"]
+[Result "1/2-1/2"]
+[TimeControl "600+5"]
+[ECO "C00"]
+[Opening "French Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval -2.50]} d5 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} Nf6 {[%clk 0:00:03] [%eval -2.50]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000001c0"]
+[UTCDate "2020.01.24"]
+[White "FixtureLiveW023"]
+[Black "FixtureLiveB023"]
+[WhiteElo "1450"]
+[BlackElo "1470"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "C00"]
+[Opening "French Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} d5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Nf6 {[%clk 0:00:03] [%eval 2.50]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000001da"]
+[UTCDate "2020.01.25"]
+[White "FixtureLiveW024"]
+[Black "FixtureLiveB024"]
+[WhiteElo "1200"]
+[BlackElo "1220"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "C00"]
+[Opening "French Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45]} e6 {[%clk 0:00:50]} 2. d4 {[%clk 0:00:08]} d5 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} Nf6 {[%clk 0:00:03]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000001eb"]
+[UTCDate "2020.01.26"]
+[White "FixtureLiveW025"]
+[Black "FixtureLiveB025"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "C00"]
+[Opening "French Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} d5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Nf6 {[%clk 0:00:03] [%eval 0.00]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000001f6"]
+[UTCDate "2020.01.27"]
+[White "FixtureLiveW026"]
+[Black "FixtureLiveB026"]
+[WhiteElo "1550"]
+[BlackElo "1570"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "C00"]
+[Opening "French Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval -2.50]} d5 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} Nf6 {[%clk 0:00:03] [%eval -2.50]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000202"]
+[UTCDate "2020.01.28"]
+[White "FixtureLiveW027"]
+[Black "FixtureLiveB027"]
+[WhiteElo "1700"]
+[BlackElo "1720"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "C00"]
+[Opening "French Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} d5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Nf6 {[%clk 0:00:03] [%eval 2.50]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000209"]
+[UTCDate "2020.01.29"]
+[White "FixtureLiveW028"]
+[Black "FixtureLiveB028"]
+[WhiteElo "1450"]
+[BlackElo "1470"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "C00"]
+[Opening "French Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45]} e6 {[%clk 0:00:50]} 2. d4 {[%clk 0:00:08]} d5 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} Nf6 {[%clk 0:00:03]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000214"]
+[UTCDate "2020.01.30"]
+[White "FixtureLiveW029"]
+[Black "FixtureLiveB029"]
+[WhiteElo "1200"]
+[BlackElo "1220"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "C00"]
+[Opening "French Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} d5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Nf6 {[%clk 0:00:03] [%eval 0.00]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/0000021f"]
+[UTCDate "2020.01.31"]
+[White "FixtureLiveW030"]
+[Black "FixtureLiveB030"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "1-0"]
+[TimeControl "180+2"]
+[ECO "C00"]
+[Opening "French Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval -2.50]} d5 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} Nf6 {[%clk 0:00:03] [%eval -2.50]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000239"]
+[UTCDate "2020.02.01"]
+[White "FixtureLiveW031"]
+[Black "FixtureLiveB031"]
+[WhiteElo "1550"]
+[BlackElo "1570"]
+[Result "1/2-1/2"]
+[TimeControl "300+0"]
+[ECO "C00"]
+[Opening "French Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} d5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Nf6 {[%clk 0:00:03] [%eval 2.50]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000240"]
+[UTCDate "2020.02.02"]
+[White "FixtureLiveW032"]
+[Black "FixtureLiveB032"]
+[WhiteElo "1700"]
+[BlackElo "1720"]
+[Result "0-1"]
+[TimeControl "600+5"]
+[ECO "C50"]
+[Opening "Italian Game: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45]} e5 {[%clk 0:00:50]} 2. Nf3 {[%clk 0:00:08]} Nc6 {[%clk 0:00:06]} 3. Bc4 {[%clk 0:00:04]} Bc5 {[%clk 0:00:03]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/0000025f"]
+[UTCDate "2020.02.03"]
+[White "FixtureLiveW033"]
+[Black "FixtureLiveB033"]
+[WhiteElo "1450"]
+[BlackElo "1470"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "C50"]
+[Opening "Italian Game: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} Nc6 {[%clk 0:00:06] [%eval 0.00]} 3. Bc4 {[%clk 0:00:04] [%eval 0.00]} Bc5 {[%clk 0:00:03] [%eval 0.00]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/0000026f"]
+[UTCDate "2020.02.04"]
+[White "FixtureLiveW034"]
+[Black "FixtureLiveB034"]
+[WhiteElo "1200"]
+[BlackElo "1220"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "C50"]
+[Opening "Italian Game: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval -2.50]} Nc6 {[%clk 0:00:06] [%eval -2.50]} 3. Bc4 {[%clk 0:00:04] [%eval -2.50]} Bc5 {[%clk 0:00:03] [%eval -2.50]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000274"]
+[UTCDate "2020.02.05"]
+[White "FixtureLiveW035"]
+[Black "FixtureLiveB035"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "C50"]
+[Opening "Italian Game: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} Nc6 {[%clk 0:00:06] [%eval 0.00]} 3. Bc4 {[%clk 0:00:04] [%eval 0.00]} Bc5 {[%clk 0:00:03] [%eval 2.50]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000278"]
+[UTCDate "2020.02.06"]
+[White "FixtureLiveW036"]
+[Black "FixtureLiveB036"]
+[WhiteElo "1550"]
+[BlackElo "1570"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "C50"]
+[Opening "Italian Game: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45]} e5 {[%clk 0:00:50]} 2. Nf3 {[%clk 0:00:08]} Nc6 {[%clk 0:00:06]} 3. Bc4 {[%clk 0:00:04]} Bc5 {[%clk 0:00:03]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000002a7"]
+[UTCDate "2020.02.07"]
+[White "FixtureLiveW037"]
+[Black "FixtureLiveB037"]
+[WhiteElo "1700"]
+[BlackElo "1720"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "C50"]
+[Opening "Italian Game: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} Nc6 {[%clk 0:00:06] [%eval 0.00]} 3. Bc4 {[%clk 0:00:04] [%eval 0.00]} Bc5 {[%clk 0:00:03] [%eval 0.00]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000002b8"]
+[UTCDate "2020.02.08"]
+[White "FixtureLiveW038"]
+[Black "FixtureLiveB038"]
+[WhiteElo "1450"]
+[BlackElo "1470"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "C50"]
+[Opening "Italian Game: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval -2.50]} Nc6 {[%clk 0:00:06] [%eval -2.50]} 3. Bc4 {[%clk 0:00:04] [%eval -2.50]} Bc5 {[%clk 0:00:03] [%eval -2.50]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000002d3"]
+[UTCDate "2020.02.09"]
+[White "FixtureLiveW039"]
+[Black "FixtureLiveB039"]
+[WhiteElo "1200"]
+[BlackElo "1220"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "C50"]
+[Opening "Italian Game: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} Nc6 {[%clk 0:00:06] [%eval 0.00]} 3. Bc4 {[%clk 0:00:04] [%eval 0.00]} Bc5 {[%clk 0:00:03] [%eval 2.50]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000002f2"]
+[UTCDate "2020.02.10"]
+[White "FixtureLiveW040"]
+[Black "FixtureLiveB040"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "1/2-1/2"]
+[TimeControl "180+2"]
+[ECO "C50"]
+[Opening "Italian Game: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45]} e5 {[%clk 0:00:50]} 2. Nf3 {[%clk 0:00:08]} Nc6 {[%clk 0:00:06]} 3. Bc4 {[%clk 0:00:04]} Bc5 {[%clk 0:00:03]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000304"]
+[UTCDate "2020.02.11"]
+[White "FixtureLiveW041"]
+[Black "FixtureLiveB041"]
+[WhiteElo "1550"]
+[BlackElo "1570"]
+[Result "0-1"]
+[TimeControl "300+0"]
+[ECO "C50"]
+[Opening "Italian Game: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} Nc6 {[%clk 0:00:06] [%eval 0.00]} 3. Bc4 {[%clk 0:00:04] [%eval 0.00]} Bc5 {[%clk 0:00:03] [%eval 0.00]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000310"]
+[UTCDate "2020.02.12"]
+[White "FixtureLiveW042"]
+[Black "FixtureLiveB042"]
+[WhiteElo "1700"]
+[BlackElo "1720"]
+[Result "1-0"]
+[TimeControl "600+5"]
+[ECO "C60"]
+[Opening "Ruy Lopez: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval -2.50]} Nc6 {[%clk 0:00:06] [%eval -2.50]} 3. Bb5 {[%clk 0:00:04] [%eval -2.50]} a6 {[%clk 0:00:03] [%eval -2.50]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000329"]
+[UTCDate "2020.02.13"]
+[White "FixtureLiveW043"]
+[Black "FixtureLiveB043"]
+[WhiteElo "1450"]
+[BlackElo "1470"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "C60"]
+[Opening "Ruy Lopez: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} Nc6 {[%clk 0:00:06] [%eval 0.00]} 3. Bb5 {[%clk 0:00:04] [%eval 0.00]} a6 {[%clk 0:00:03] [%eval 2.50]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000331"]
+[UTCDate "2020.02.14"]
+[White "FixtureLiveW044"]
+[Black "FixtureLiveB044"]
+[WhiteElo "1200"]
+[BlackElo "1220"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "C60"]
+[Opening "Ruy Lopez: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45]} e5 {[%clk 0:00:50]} 2. Nf3 {[%clk 0:00:08]} Nc6 {[%clk 0:00:06]} 3. Bb5 {[%clk 0:00:04]} a6 {[%clk 0:00:03]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000335"]
+[UTCDate "2020.02.15"]
+[White "FixtureLiveW045"]
+[Black "FixtureLiveB045"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "C60"]
+[Opening "Ruy Lopez: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} Nc6 {[%clk 0:00:06] [%eval 0.00]} 3. Bb5 {[%clk 0:00:04] [%eval 0.00]} a6 {[%clk 0:00:03] [%eval 0.00]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/0000033d"]
+[UTCDate "2020.02.16"]
+[White "FixtureLiveW046"]
+[Black "FixtureLiveB046"]
+[WhiteElo "1550"]
+[BlackElo "1570"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "C60"]
+[Opening "Ruy Lopez: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval -2.50]} Nc6 {[%clk 0:00:06] [%eval -2.50]} 3. Bb5 {[%clk 0:00:04] [%eval -2.50]} a6 {[%clk 0:00:03] [%eval -2.50]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/0000035e"]
+[UTCDate "2020.02.17"]
+[White "FixtureLiveW047"]
+[Black "FixtureLiveB047"]
+[WhiteElo "1700"]
+[BlackElo "1720"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "C60"]
+[Opening "Ruy Lopez: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} Nc6 {[%clk 0:00:06] [%eval 0.00]} 3. Bb5 {[%clk 0:00:04] [%eval 0.00]} a6 {[%clk 0:00:03] [%eval 2.50]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000361"]
+[UTCDate "2020.02.18"]
+[White "FixtureLiveW048"]
+[Black "FixtureLiveB048"]
+[WhiteElo "1450"]
+[BlackElo "1470"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "C60"]
+[Opening "Ruy Lopez: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45]} e5 {[%clk 0:00:50]} 2. Nf3 {[%clk 0:00:08]} Nc6 {[%clk 0:00:06]} 3. Bb5 {[%clk 0:00:04]} a6 {[%clk 0:00:03]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000372"]
+[UTCDate "2020.02.19"]
+[White "FixtureLiveW049"]
+[Black "FixtureLiveB049"]
+[WhiteElo "1200"]
+[BlackElo "1220"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "C60"]
+[Opening "Ruy Lopez: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} Nc6 {[%clk 0:00:06] [%eval 0.00]} 3. Bb5 {[%clk 0:00:04] [%eval 0.00]} a6 {[%clk 0:00:03] [%eval 0.00]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000380"]
+[UTCDate "2020.02.20"]
+[White "FixtureLiveW050"]
+[Black "FixtureLiveB050"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "0-1"]
+[TimeControl "180+2"]
+[ECO "C60"]
+[Opening "Ruy Lopez: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval -2.50]} Nc6 {[%clk 0:00:06] [%eval -2.50]} 3. Bb5 {[%clk 0:00:04] [%eval -2.50]} a6 {[%clk 0:00:03] [%eval -2.50]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000003bd"]
+[UTCDate "2020.02.21"]
+[White "FixtureLiveW051"]
+[Black "FixtureLiveB051"]
+[WhiteElo "1550"]
+[BlackElo "1570"]
+[Result "1-0"]
+[TimeControl "300+0"]
+[ECO "C60"]
+[Opening "Ruy Lopez: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} Nc6 {[%clk 0:00:06] [%eval 0.00]} 3. Bb5 {[%clk 0:00:04] [%eval 0.00]} a6 {[%clk 0:00:03] [%eval 2.50]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000003d2"]
+[UTCDate "2020.02.22"]
+[White "FixtureLiveW052"]
+[Black "FixtureLiveB052"]
+[WhiteElo "1700"]
+[BlackElo "1720"]
+[Result "1/2-1/2"]
+[TimeControl "600+5"]
+[ECO "D06"]
+[Opening "Queen's Gambit: Test Line"]
+[Seed "20261018"]
+
+1. d4 {[%clk 0:00:45]} d5 {[%clk 0:00:50]} 2. c4 {[%clk 0:00:08]} e6 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} Nf6 {[%clk 0:00:03]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000003d3"]
+[UTCDate "2020.02.23"]
+[White "FixtureLiveW053"]
+[Black "FixtureLiveB053"]
+[WhiteElo "1450"]
+[BlackElo "1470"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "D06"]
+[Opening "Queen's Gambit: Test Line"]
+[Seed "20261018"]
+
+1. d4 {[%clk 0:00:45] [%eval 0.00]} d5 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval 0.00]} e6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Nf6 {[%clk 0:00:03] [%eval 0.00]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000003f6"]
+[UTCDate "2020.02.24"]
+[White "FixtureLiveW054"]
+[Black "FixtureLiveB054"]
+[WhiteElo "1200"]
+[BlackElo "1220"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "D06"]
+[Opening "Queen's Gambit: Test Line"]
+[Seed "20261018"]
+
+1. d4 {[%clk 0:00:45] [%eval 0.00]} d5 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval -2.50]} e6 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} Nf6 {[%clk 0:00:03] [%eval -2.50]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000401"]
+[UTCDate "2020.02.25"]
+[White "FixtureLiveW055"]
+[Black "FixtureLiveB055"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "D06"]
+[Opening "Queen's Gambit: Test Line"]
+[Seed "20261018"]
+
+1. d4 {[%clk 0:00:45] [%eval 0.00]} d5 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval 0.00]} e6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Nf6 {[%clk 0:00:03] [%eval 2.50]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/0000041b"]
+[UTCDate "2020.02.26"]
+[White "FixtureLiveW056"]
+[Black "FixtureLiveB056"]
+[WhiteElo "1550"]
+[BlackElo "1570"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "D06"]
+[Opening "Queen's Gambit: Test Line"]
+[Seed "20261018"]
+
+1. d4 {[%clk 0:00:45]} d5 {[%clk 0:00:50]} 2. c4 {[%clk 0:00:08]} e6 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} Nf6 {[%clk 0:00:03]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000444"]
+[UTCDate "2020.02.27"]
+[White "FixtureLiveW057"]
+[Black "FixtureLiveB057"]
+[WhiteElo "1700"]
+[BlackElo "1720"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "D06"]
+[Opening "Queen's Gambit: Test Line"]
+[Seed "20261018"]
+
+1. d4 {[%clk 0:00:45] [%eval 0.00]} d5 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval 0.00]} e6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Nf6 {[%clk 0:00:03] [%eval 0.00]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000466"]
+[UTCDate "2020.02.28"]
+[White "FixtureLiveW058"]
+[Black "FixtureLiveB058"]
+[WhiteElo "1450"]
+[BlackElo "1470"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "D06"]
+[Opening "Queen's Gambit: Test Line"]
+[Seed "20261018"]
+
+1. d4 {[%clk 0:00:45] [%eval 0.00]} d5 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval -2.50]} e6 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} Nf6 {[%clk 0:00:03] [%eval -2.50]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000479"]
+[UTCDate "2020.02.29"]
+[White "FixtureLiveW059"]
+[Black "FixtureLiveB059"]
+[WhiteElo "1200"]
+[BlackElo "1220"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "D06"]
+[Opening "Queen's Gambit: Test Line"]
+[Seed "20261018"]
+
+1. d4 {[%clk 0:00:45] [%eval 0.00]} d5 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval 0.00]} e6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Nf6 {[%clk 0:00:03] [%eval 2.50]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/0000048a"]
+[UTCDate "2020.03.01"]
+[White "FixtureLiveW060"]
+[Black "FixtureLiveB060"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "1-0"]
+[TimeControl "180+2"]
+[ECO "B10"]
+[Opening "Caro-Kann Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45]} c6 {[%clk 0:00:50]} 2. d4 {[%clk 0:00:08]} d5 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} dxe4 {[%clk 0:00:03]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000491"]
+[UTCDate "2020.03.02"]
+[White "FixtureLiveW061"]
+[Black "FixtureLiveB061"]
+[WhiteElo "1550"]
+[BlackElo "1570"]
+[Result "1/2-1/2"]
+[TimeControl "300+0"]
+[ECO "B10"]
+[Opening "Caro-Kann Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} c6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} d5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} dxe4 {[%clk 0:00:03] [%eval 0.00]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000004b8"]
+[UTCDate "2020.03.03"]
+[White "FixtureLiveW062"]
+[Black "FixtureLiveB062"]
+[WhiteElo "1700"]
+[BlackElo "1720"]
+[Result "0-1"]
+[TimeControl "600+5"]
+[ECO "B10"]
+[Opening "Caro-Kann Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} c6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval -2.50]} d5 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} dxe4 {[%clk 0:00:03] [%eval -2.50]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000004c0"]
+[UTCDate "2020.03.04"]
+[White "FixtureLiveW063"]
+[Black "FixtureLiveB063"]
+[WhiteElo "1450"]
+[BlackElo "1470"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "B10"]
+[Opening "Caro-Kann Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} c6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} d5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} dxe4 {[%clk 0:00:03] [%eval 2.50]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000004cc"]
+[UTCDate "2020.03.05"]
+[White "FixtureLiveW064"]
+[Black "FixtureLiveB064"]
+[WhiteElo "1200"]
+[BlackElo "1220"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "B10"]
+[Opening "Caro-Kann Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45]} c6 {[%clk 0:00:50]} 2. d4 {[%clk 0:00:08]} d5 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} dxe4 {[%clk 0:00:03]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000004da"]
+[UTCDate "2020.03.06"]
+[White "FixtureLiveW065"]
+[Black "FixtureLiveB065"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "B10"]
+[Opening "Caro-Kann Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} c6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} d5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} dxe4 {[%clk 0:00:03] [%eval 0.00]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000004dd"]
+[UTCDate "2020.03.07"]
+[White "FixtureLiveW066"]
+[Black "FixtureLiveB066"]
+[WhiteElo "1550"]
+[BlackElo "1570"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "B10"]
+[Opening "Caro-Kann Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} c6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval -2.50]} d5 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} dxe4 {[%clk 0:00:03] [%eval -2.50]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000004f6"]
+[UTCDate "2020.03.08"]
+[White "FixtureLiveW067"]
+[Black "FixtureLiveB067"]
+[WhiteElo "1700"]
+[BlackElo "1720"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "B10"]
+[Opening "Caro-Kann Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} c6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} d5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} dxe4 {[%clk 0:00:03] [%eval 2.50]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000522"]
+[UTCDate "2020.03.09"]
+[White "FixtureLiveW068"]
+[Black "FixtureLiveB068"]
+[WhiteElo "1450"]
+[BlackElo "1470"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "A20"]
+[Opening "English Opening: Test Line"]
+[Seed "20261018"]
+
+1. c4 {[%clk 0:00:45]} e5 {[%clk 0:00:50]} 2. Nc3 {[%clk 0:00:08]} Nf6 {[%clk 0:00:06]} 3. Nf3 {[%clk 0:00:04]} Nc6 {[%clk 0:00:03]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/0000052d"]
+[UTCDate "2020.03.10"]
+[White "FixtureLiveW069"]
+[Black "FixtureLiveB069"]
+[WhiteElo "1200"]
+[BlackElo "1220"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "A20"]
+[Opening "English Opening: Test Line"]
+[Seed "20261018"]
+
+1. c4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nc3 {[%clk 0:00:08] [%eval 0.00]} Nf6 {[%clk 0:00:06] [%eval 0.00]} 3. Nf3 {[%clk 0:00:04] [%eval 0.00]} Nc6 {[%clk 0:00:03] [%eval 0.00]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/0000053c"]
+[UTCDate "2020.03.11"]
+[White "FixtureLiveW070"]
+[Black "FixtureLiveB070"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "1/2-1/2"]
+[TimeControl "180+2"]
+[ECO "A20"]
+[Opening "English Opening: Test Line"]
+[Seed "20261018"]
+
+1. c4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nc3 {[%clk 0:00:08] [%eval -2.50]} Nf6 {[%clk 0:00:06] [%eval -2.50]} 3. Nf3 {[%clk 0:00:04] [%eval -2.50]} Nc6 {[%clk 0:00:03] [%eval -2.50]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/0000056d"]
+[UTCDate "2020.03.12"]
+[White "FixtureLiveW071"]
+[Black "FixtureLiveB071"]
+[WhiteElo "1550"]
+[BlackElo "1570"]
+[Result "0-1"]
+[TimeControl "300+0"]
+[ECO "A20"]
+[Opening "English Opening: Test Line"]
+[Seed "20261018"]
+
+1. c4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nc3 {[%clk 0:00:08] [%eval 0.00]} Nf6 {[%clk 0:00:06] [%eval 0.00]} 3. Nf3 {[%clk 0:00:04] [%eval 0.00]} Nc6 {[%clk 0:00:03] [%eval 2.50]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000005a0"]
+[UTCDate "2020.03.13"]
+[White "FixtureLiveW072"]
+[Black "FixtureLiveB072"]
+[WhiteElo "1700"]
+[BlackElo "1720"]
+[Result "1-0"]
+[TimeControl "600+5"]
+[ECO "A20"]
+[Opening "English Opening: Test Line"]
+[Seed "20261018"]
+
+1. c4 {[%clk 0:00:45]} e5 {[%clk 0:00:50]} 2. Nc3 {[%clk 0:00:08]} Nf6 {[%clk 0:00:06]} 3. Nf3 {[%clk 0:00:04]} Nc6 {[%clk 0:00:03]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000005d7"]
+[UTCDate "2020.03.14"]
+[White "FixtureLiveW073"]
+[Black "FixtureLiveB073"]
+[WhiteElo "1450"]
+[BlackElo "1470"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "A20"]
+[Opening "English Opening: Test Line"]
+[Seed "20261018"]
+
+1. c4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nc3 {[%clk 0:00:08] [%eval 0.00]} Nf6 {[%clk 0:00:06] [%eval 0.00]} 3. Nf3 {[%clk 0:00:04] [%eval 0.00]} Nc6 {[%clk 0:00:03] [%eval 0.00]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000005e5"]
+[UTCDate "2020.03.15"]
+[White "FixtureLiveW074"]
+[Black "FixtureLiveB074"]
+[WhiteElo "1200"]
+[BlackElo "1220"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "A20"]
+[Opening "English Opening: Test Line"]
+[Seed "20261018"]
+
+1. c4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nc3 {[%clk 0:00:08] [%eval -2.50]} Nf6 {[%clk 0:00:06] [%eval -2.50]} 3. Nf3 {[%clk 0:00:04] [%eval -2.50]} Nc6 {[%clk 0:00:03] [%eval -2.50]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000005ee"]
+[UTCDate "2020.03.16"]
+[White "FixtureLiveW075"]
+[Black "FixtureLiveB075"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "A20"]
+[Opening "English Opening: Test Line"]
+[Seed "20261018"]
+
+1. c4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nc3 {[%clk 0:00:08] [%eval 0.00]} Nf6 {[%clk 0:00:06] [%eval 0.00]} 3. Nf3 {[%clk 0:00:04] [%eval 0.00]} Nc6 {[%clk 0:00:03] [%eval 2.50]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000005f9"]
+[UTCDate "2020.03.17"]
+[White "FixtureLiveW076"]
+[Black "FixtureLiveB076"]
+[WhiteElo "1550"]
+[BlackElo "1570"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "E60"]
+[Opening "King's Indian Defense: Test Line"]
+[Seed "20261018"]
+
+1. d4 {[%clk 0:00:45]} Nf6 {[%clk 0:00:50]} 2. c4 {[%clk 0:00:08]} g6 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} Bg7 {[%clk 0:00:03]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000634"]
+[UTCDate "2020.03.18"]
+[White "FixtureLiveW077"]
+[Black "FixtureLiveB077"]
+[WhiteElo "1700"]
+[BlackElo "1720"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "E60"]
+[Opening "King's Indian Defense: Test Line"]
+[Seed "20261018"]
+
+1. d4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval 0.00]} g6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Bg7 {[%clk 0:00:03] [%eval 0.00]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/0000063d"]
+[UTCDate "2020.03.19"]
+[White "FixtureLiveW078"]
+[Black "FixtureLiveB078"]
+[WhiteElo "1450"]
+[BlackElo "1470"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "E60"]
+[Opening "King's Indian Defense: Test Line"]
+[Seed "20261018"]
+
+1. d4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval -2.50]} g6 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} Bg7 {[%clk 0:00:03] [%eval -2.50]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000640"]
+[UTCDate "2020.03.20"]
+[White "FixtureLiveW079"]
+[Black "FixtureLiveB079"]
+[WhiteElo "1200"]
+[BlackElo "1220"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "E60"]
+[Opening "King's Indian Defense: Test Line"]
+[Seed "20261018"]
+
+1. d4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval 0.00]} g6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Bg7 {[%clk 0:00:03] [%eval 2.50]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/0000064c"]
+[UTCDate "2020.03.21"]
+[White "FixtureLiveW080"]
+[Black "FixtureLiveB080"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "0-1"]
+[TimeControl "180+2"]
+[ECO "E60"]
+[Opening "King's Indian Defense: Test Line"]
+[Seed "20261018"]
+
+1. d4 {[%clk 0:00:45]} Nf6 {[%clk 0:00:50]} 2. c4 {[%clk 0:00:08]} g6 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} Bg7 {[%clk 0:00:03]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/0000065c"]
+[UTCDate "2020.03.22"]
+[White "FixtureLiveW081"]
+[Black "FixtureLiveB081"]
+[WhiteElo "1550"]
+[BlackElo "1570"]
+[Result "1-0"]
+[TimeControl "300+0"]
+[ECO "E60"]
+[Opening "King's Indian Defense: Test Line"]
+[Seed "20261018"]
+
+1. d4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval 0.00]} g6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Bg7 {[%clk 0:00:03] [%eval 0.00]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000662"]
+[UTCDate "2020.03.23"]
+[White "FixtureLiveW082"]
+[Black "FixtureLiveB082"]
+[WhiteElo "1700"]
+[BlackElo "1720"]
+[Result "1/2-1/2"]
+[TimeControl "600+5"]
+[ECO "E20"]
+[Opening "Nimzo-Indian Defense: Test Line"]
+[Seed "20261018"]
+
+1. d4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval -2.50]} e6 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} Bb4 {[%clk 0:00:03] [%eval -2.50]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000686"]
+[UTCDate "2020.03.24"]
+[White "FixtureLiveW083"]
+[Black "FixtureLiveB083"]
+[WhiteElo "1450"]
+[BlackElo "1470"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "E20"]
+[Opening "Nimzo-Indian Defense: Test Line"]
+[Seed "20261018"]
+
+1. d4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval 0.00]} e6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Bb4 {[%clk 0:00:03] [%eval 2.50]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000689"]
+[UTCDate "2020.03.25"]
+[White "FixtureLiveW084"]
+[Black "FixtureLiveB084"]
+[WhiteElo "1200"]
+[BlackElo "1220"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "E20"]
+[Opening "Nimzo-Indian Defense: Test Line"]
+[Seed "20261018"]
+
+1. d4 {[%clk 0:00:45]} Nf6 {[%clk 0:00:50]} 2. c4 {[%clk 0:00:08]} e6 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} Bb4 {[%clk 0:00:03]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000006a7"]
+[UTCDate "2020.03.26"]
+[White "FixtureLiveW085"]
+[Black "FixtureLiveB085"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "E20"]
+[Opening "Nimzo-Indian Defense: Test Line"]
+[Seed "20261018"]
+
+1. d4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval 0.00]} e6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Bb4 {[%clk 0:00:03] [%eval 0.00]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000006be"]
+[UTCDate "2020.03.27"]
+[White "FixtureLiveW086"]
+[Black "FixtureLiveB086"]
+[WhiteElo "1550"]
+[BlackElo "1570"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "E20"]
+[Opening "Nimzo-Indian Defense: Test Line"]
+[Seed "20261018"]
+
+1. d4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval -2.50]} e6 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} Bb4 {[%clk 0:00:03] [%eval -2.50]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000006d1"]
+[UTCDate "2020.03.28"]
+[White "FixtureLiveW087"]
+[Black "FixtureLiveB087"]
+[WhiteElo "1700"]
+[BlackElo "1720"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "E20"]
+[Opening "Nimzo-Indian Defense: Test Line"]
+[Seed "20261018"]
+
+1. d4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval 0.00]} e6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Bb4 {[%clk 0:00:03] [%eval 2.50]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000006d9"]
+[UTCDate "2020.03.29"]
+[White "FixtureLiveW088"]
+[Black "FixtureLiveB088"]
+[WhiteElo "1450"]
+[BlackElo "1470"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "B01"]
+[Opening "Scandinavian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45]} d5 {[%clk 0:00:50]} 2. exd5 {[%clk 0:00:08]} Qxd5 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} Qa5 {[%clk 0:00:03]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000006e0"]
+[UTCDate "2020.03.30"]
+[White "FixtureLiveW089"]
+[Black "FixtureLiveB089"]
+[WhiteElo "1200"]
+[BlackElo "1220"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "B01"]
+[Opening "Scandinavian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} d5 {[%clk 0:00:50] [%eval 0.00]} 2. exd5 {[%clk 0:00:08] [%eval 0.00]} Qxd5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Qa5 {[%clk 0:00:03] [%eval 0.00]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000006f0"]
+[UTCDate "2020.03.31"]
+[White "FixtureLiveW090"]
+[Black "FixtureLiveB090"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "1-0"]
+[TimeControl "180+2"]
+[ECO "B01"]
+[Opening "Scandinavian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} d5 {[%clk 0:00:50] [%eval 0.00]} 2. exd5 {[%clk 0:00:08] [%eval -2.50]} Qxd5 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} Qa5 {[%clk 0:00:03] [%eval -2.50]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/0000070c"]
+[UTCDate "2020.04.01"]
+[White "FixtureLiveW091"]
+[Black "FixtureLiveB091"]
+[WhiteElo "1550"]
+[BlackElo "1570"]
+[Result "1/2-1/2"]
+[TimeControl "300+0"]
+[ECO "B01"]
+[Opening "Scandinavian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} d5 {[%clk 0:00:50] [%eval 0.00]} 2. exd5 {[%clk 0:00:08] [%eval 0.00]} Qxd5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Qa5 {[%clk 0:00:03] [%eval 2.50]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000727"]
+[UTCDate "2020.04.02"]
+[White "FixtureLiveW092"]
+[Black "FixtureLiveB092"]
+[WhiteElo "1700"]
+[BlackElo "1720"]
+[Result "0-1"]
+[TimeControl "600+5"]
+[ECO "B01"]
+[Opening "Scandinavian Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45]} d5 {[%clk 0:00:50]} 2. exd5 {[%clk 0:00:08]} Qxd5 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} Qa5 {[%clk 0:00:03]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/0000072f"]
+[UTCDate "2020.04.03"]
+[White "FixtureLiveW093"]
+[Black "FixtureLiveB093"]
+[WhiteElo "1450"]
+[BlackElo "1470"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "B07"]
+[Opening "Pirc Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} d6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} Nf6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} g6 {[%clk 0:00:03] [%eval 0.00]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/00000785"]
+[UTCDate "2020.04.04"]
+[White "FixtureLiveW094"]
+[Black "FixtureLiveB094"]
+[WhiteElo "1200"]
+[BlackElo "1220"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "B07"]
+[Opening "Pirc Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} d6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval -2.50]} Nf6 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} g6 {[%clk 0:00:03] [%eval -2.50]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000007ad"]
+[UTCDate "2020.04.05"]
+[White "FixtureLiveW095"]
+[Black "FixtureLiveB095"]
+[WhiteElo "1500"]
+[BlackElo "1520"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "B07"]
+[Opening "Pirc Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} d6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} Nf6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} g6 {[%clk 0:00:03] [%eval 2.50]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000007c0"]
+[UTCDate "2020.04.06"]
+[White "FixtureLiveW096"]
+[Black "FixtureLiveB096"]
+[WhiteElo "1550"]
+[BlackElo "1570"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "B07"]
+[Opening "Pirc Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45]} d6 {[%clk 0:00:50]} 2. d4 {[%clk 0:00:08]} Nf6 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} g6 {[%clk 0:00:03]} 1-0
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000007cf"]
+[UTCDate "2020.04.07"]
+[White "FixtureLiveW097"]
+[Black "FixtureLiveB097"]
+[WhiteElo "1700"]
+[BlackElo "1720"]
+[Result "1/2-1/2"]
+[TimeControl "60+0"]
+[ECO "B02"]
+[Opening "Alekhine Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. e5 {[%clk 0:00:08] [%eval 0.00]} Nd5 {[%clk 0:00:06] [%eval 0.00]} 3. d4 {[%clk 0:00:04] [%eval 0.00]} d6 {[%clk 0:00:03] [%eval 0.00]} 1/2-1/2
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000007d5"]
+[UTCDate "2020.04.08"]
+[White "FixtureLiveW098"]
+[Black "FixtureLiveB098"]
+[WhiteElo "1450"]
+[BlackElo "1470"]
+[Result "0-1"]
+[TimeControl "60+0"]
+[ECO "B02"]
+[Opening "Alekhine Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. e5 {[%clk 0:00:08] [%eval -2.50]} Nd5 {[%clk 0:00:06] [%eval -2.50]} 3. d4 {[%clk 0:00:04] [%eval -2.50]} d6 {[%clk 0:00:03] [%eval -2.50]} 0-1
+
+[Event "Rated Blitz synthetic live eval"]
+[Site "https://lichess.org/000007d9"]
+[UTCDate "2020.04.09"]
+[White "FixtureLiveW099"]
+[Black "FixtureLiveB099"]
+[WhiteElo "1200"]
+[BlackElo "1220"]
+[Result "1-0"]
+[TimeControl "60+0"]
+[ECO "B02"]
+[Opening "Alekhine Defense: Test Line"]
+[Seed "20261018"]
+
+1. e4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. e5 {[%clk 0:00:08] [%eval 0.00]} Nd5 {[%clk 0:00:06] [%eval 0.00]} 3. d4 {[%clk 0:00:04] [%eval 0.00]} d6 {[%clk 0:00:03] [%eval 2.50]} 1-0

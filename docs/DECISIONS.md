@@ -94,3 +94,4 @@ short summary of the current checkout, not a log of new decisions.
 | 0086 | 2026-10-18 | [dbt tests, contracts, exposures, lineage, and slim CI](adr/0086-dbt-engineering-depth.md) |
 | 0087 | 2026-10-18 | [Incremental player_games measured, not adopted](adr/0087-incremental-player-games.md) |
 | 0088 | 2026-10-18 | [Offline analyst eval regression gate](adr/0088-offline-analyst-eval-regression-gate.md) |
+| 0089 | 2026-10-18 | [LLM quality evaluation plan and 100-game fixture](adr/0089-llm-quality-evaluation.md) |

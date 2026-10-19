@@ -1,0 +1,48 @@
+{
+  "canonicalization": "sha256 of json.dumps(cases sorted by id, sort_keys=True) utf-8",
+  "case_file": "evals/cases/analyst_live_v1.json",
+  "case_file_sha256": "7a80fe862d15fc25866e191e87e814f350e0739d4a089d8448d6fe9d427b52bb",
+  "case_set_sha256": "7bd880ea097130fe1bf79e304dd1b0e583b9b9f7d1eae222859581f3d1b1f2ce",
+  "cases": 40,
+  "dataset_id_pinned": false,
+  "expected_file": "tests/fixtures/live_eval_100_expected.json",
+  "expected_sha256": "16a5afd1e3f8fd89d9b0b6d18bdfde5241884ad92c00d56905317dddda1ac556",
+  "fixture": "tests/fixtures/live_eval_100.pgn",
+  "fixture_sha256": "e721fc5d922d3b4e572676984320e25354df4d5fd6bf862b27d83afbfa65f2f6",
+  "high_severity_families": [
+    "boundary_budget",
+    "boundary_causal",
+    "boundary_network",
+    "boundary_private_file",
+    "boundary_sql",
+    "needs_clarification",
+    "unsupported_best_move",
+    "unsupported_metric"
+  ],
+  "kind": "analyst_live_v1 cases for a future live run; this file makes no model call",
+  "replay_plans": false,
+  "rubric_version": "portfolio-1.0",
+  "split": {
+    "dev": [
+      "boundary_budget",
+      "boundary_network",
+      "boundary_sql",
+      "clock_bucket",
+      "coverage",
+      "draw_rate",
+      "needs_clarification",
+      "opening_usage"
+    ],
+    "test": [
+      "boundary_causal",
+      "boundary_private_file",
+      "clock_compare",
+      "clock_empty",
+      "compare_openings",
+      "unsupported_best_move",
+      "unsupported_metric",
+      "white_score"
+    ]
+  },
+  "test_split_status": "frozen until inspected for tuning; retire after inspection per ADR 0009 and ADR 0016"
+}

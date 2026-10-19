@@ -213,3 +213,12 @@ compact report and evidence audit before interpreting a score. `--config`
 accepts a separate disabled-by-default JSON example when exact model/rates
 are supplied; the key stays out of JSON. No live call is part of CI or the
 portfolio demo.
+
+## Future live analyst eval
+
+There is no live-eval command and no schedule. A later change may add a
+manual run only. When it does, the job is `workflow_dispatch` with the
+inputs, GitHub Environment, spending cap, and reviewer in
+[ADR 0089](adr/0089-llm-quality-evaluation.md). Do not add a monthly
+schedule. This checkout does not call a model. Receipts from a future
+artifact are committed in a separate pull request.
