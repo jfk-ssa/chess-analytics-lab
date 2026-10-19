@@ -4,6 +4,8 @@ Read docs/STATUS.md, the decision records under docs/adr/ (indexed by docs/DECIS
 Work in milestone order. Preserve failures and distinguish fixture tests, replay and live results.
 Never read workplace credentials. Live calls stay disabled until personal configuration and an
 explicit run spending cap exist. Do not infer permission or budgets from API credits.
+A provider key in CI for a future live eval also needs that explicit cap and a recorded
+personal-account acknowledgement. No live-eval key is configured. See docs/adr/0089-llm-quality-evaluation.md.
 Use `uv sync --locked --no-editable`, `uv run --locked --no-editable pytest`,
 and `uv run --locked --no-editable ruff check .`. Reinstall the project wheel after
 source edits with `--reinstall-package chess-analytics-lab`; see README for details.
