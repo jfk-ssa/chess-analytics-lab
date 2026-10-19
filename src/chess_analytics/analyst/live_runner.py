@@ -1,0 +1,686 @@
+"""Run the frozen live-eval case set through an injectable transport.
+
+This module quotes requests with ``quote_request`` and parses plans with the
+same extract and normalize helpers ``provider.py`` uses. It does not edit
+those files. It scores ``model_plan_before_semantic_repair`` and does not
+execute the semantically repaired plan as the headline.
+
+No call is scheduled. A dry run quotes and prints the reservation and does
+not read an API key. A real run reads only ``CHESSLAB_OPENAI_API_KEY``.
+"""
+
+import hashlib
+import json
+import os
+import uuid
+from pathlib import Path
+
+from chess_analytics.analyst.live_eval import load_live_cases
+from chess_analytics.analyst.live_score import RUBRIC_VERSION, score_live_plan
+from chess_analytics.analyst.live_stats import (
+    binomial_alert,
+    cluster_bootstrap,
+    flaky_case_ids,
+    hard_fail,
+    wilson_interval,
+)
+from chess_analytics.analyst.plan_recovery import (
+    _extract_plan,
+    _normalize_plan,
+    _repair_opening_usage,
+)
+from chess_analytics.analyst.preflight import (
+    DEFAULT_CACHE_WRITE_USD_PER_MILLION,
+    DEFAULT_CACHED_INPUT_USD_PER_MILLION,
+    DEFAULT_INPUT_USD_PER_MILLION,
+    DEFAULT_MAX_OUTPUT_TOKENS,
+    DEFAULT_OUTPUT_USD_PER_MILLION,
+    DEFAULT_PRICE_CHECKED_UTC_DATE,
+    _load_named_key,
+)
+from chess_analytics.analyst.pricing import KEY_ENV, price_usage, validate_personal_config
+from chess_analytics.analyst.provider import quote_request
+from chess_analytics.analyst.tools import CheckedTools
+from chess_analytics.common import write_json
+
+PRICE_CHECKED_UTC_DATE = DEFAULT_PRICE_CHECKED_UTC_DATE
+RECEIPT_VERSION = "1"
+DEFAULT_REPEATS = 5
+DEFAULT_SEED = 20261018
+DEFAULT_RESAMPLES = 2000
+RECOMMENDED_CAP_USD = {"gpt-6-luna": 0.50, "gpt-6-sol": 10.0}
+LUNA_RATES = {
+    "cache_write_usd_per_million": DEFAULT_CACHE_WRITE_USD_PER_MILLION,
+    "cached_input_usd_per_million": DEFAULT_CACHED_INPUT_USD_PER_MILLION,
+    "input_usd_per_million": DEFAULT_INPUT_USD_PER_MILLION,
+    "output_usd_per_million": DEFAULT_OUTPUT_USD_PER_MILLION,
+}
+# Recorded with the Sol diagnostic on 2026-10-04. Not a fresh price check.
+SOL_RATES = {
+    "cache_write_usd_per_million": 2.5,
+    "cached_input_usd_per_million": 0.2,
+    "input_usd_per_million": 2.0,
+    "output_usd_per_million": 10.0,
+}
+FROZEN_FILES = (
+    "src/chess_analytics/analyst/provider.py",
+    "src/chess_analytics/analyst/pricing.py",
+    "src/chess_analytics/analyst/plan_recovery.py",
+    "src/chess_analytics/analyst/preflight.py",
+    "src/chess_analytics/analyst/core.py",
+    "src/chess_analytics/analyst/tools.py",
+    "src/chess_analytics/analyst/tool_worker.py",
+    "src/chess_analytics/analyst/evaluation.py",
+    "src/chess_analytics/analyst/experiment.py",
+    "src/chess_analytics/analyst/live_eval.py",
+    "src/chess_analytics/analyst/live_score.py",
+    "src/chess_analytics/analyst/live_stats.py",
+    "src/chess_analytics/analyst/live_runner.py",
+)
+RECEIPT_FIELDS = (
+    "base_rubric_version",
+    "baseline_alert",
+    "case_set_sha256",
+    "cases",
+    "complete",
+    "fixture_sha256",
+    "flaky_cases",
+    "frozen_file_sha256",
+    "hard_fail",
+    "headline_pass_rate",
+    "headline_passed",
+    "high_severity_misses",
+    "incomplete_reason",
+    "instructions_sha256",
+    "kind",
+    "known_gross_cost_usd",
+    "unknown_cost_reservation_usd",
+    "max_run_usd",
+    "model",
+    "over_abstention",
+    "planned_requests",
+    "price_checked_utc_date",
+    "prices_rechecked",
+    "reasoning_effort",
+    "receipt_version",
+    "repair_counts",
+    "repeats",
+    "reserved_usd",
+    "resolved_model",
+    "rows",
+    "rubric_version",
+    "run_id",
+    "scheduled",
+    "stats",
+    "token_usage",
+    "unsafe_answer",
+)
+ROW_FIELDS = (
+    "argument_repairs",
+    "case_id",
+    "caveats",
+    "cost_basis",
+    "error",
+    "failures",
+    "gross_cost_usd",
+    "high_severity_miss",
+    "model_plan_before_semantic_repair",
+    "over_abstention",
+    "passed",
+    "repair_count",
+    "repeat",
+    "reserved_cost_usd",
+    "resolved_model",
+    "semantic_repair_would_pass",
+    "semantic_repairs",
+    "severity",
+    "status",
+    "template_family",
+    "unsafe_answer",
+    "usage",
+)
+
+
+class ReservationError(ValueError):
+    """The conservative whole-run reservation does not fit the explicit cap."""
+
+    def __init__(self, reserved: float, cap: float):
+        self.reserved = reserved
+        self.cap = cap
+        message = f"whole-run reservation {reserved:.6f} exceeds explicit cap {cap:.6f}"
+        super().__init__(message)
+
+
+def recorded_rates(model: str, override: dict | None = None) -> dict:
+    """Prices last recorded on 2026-10-04, or an explicit override."""
+    if override is not None:
+        return override
+    if model == "gpt-6-luna":
+        return dict(LUNA_RATES)
+    if model == "gpt-6-sol":
+        return dict(SOL_RATES)
+    raise ValueError(
+        "explicit prices required for this model; recorded 2026-10-04 rates "
+        "cover only gpt-6-luna and gpt-6-sol"
+    )
+
+
+def build_config(
+    *,
+    model: str,
+    max_run_usd: float,
+    acknowledged: bool,
+    rates: dict | None = None,
+    max_output_tokens: int = DEFAULT_MAX_OUTPUT_TOKENS,
+) -> dict:
+    """Personal config. Acknowledgement is the caller's flag, not a credit balance."""
+    chosen = recorded_rates(model, rates)
+    return validate_personal_config(
+        {
+            "api_key_env": KEY_ENV,
+            "enabled": True,
+            "max_output_tokens": max_output_tokens,
+            "max_run_usd": max_run_usd,
+            "model": model,
+            "personal_account_acknowledged": acknowledged is True,
+            **chosen,
+        }
+    )
+
+
+def run(
+    repo: Path,
+    staged: Path,
+    *,
+    model: str,
+    max_run_usd: float,
+    acknowledged: bool,
+    repeats: int = DEFAULT_REPEATS,
+    transport=None,
+    dry_run: bool = False,
+    env_file: Path | None = None,
+    output: Path | None = None,
+    seed: int = DEFAULT_SEED,
+    resamples: int = DEFAULT_RESAMPLES,
+    baseline_rate: float | None = None,
+    rates: dict | None = None,
+    max_output_tokens: int = DEFAULT_MAX_OUTPUT_TOKENS,
+    run_id: str | None = None,
+) -> dict:
+    """Quote every request, refuse an over-cap reservation, then score or dry-run.
+
+    ``transport`` is ``(body: bytes, key: str) -> dict``. When it is omitted a
+    real run uses the frozen Responses transport. A dry run never calls it
+    and never reads the key.
+    """
+    if type(repeats) is not int or not 1 <= repeats <= 20:
+        raise ValueError("repeats must be an integer from 1 to 20")
+    if dry_run and output is not None:
+        raise ValueError("dry run does not write a receipt")
+    config = build_config(
+        model=model,
+        max_run_usd=max_run_usd,
+        acknowledged=acknowledged,
+        rates=rates,
+        max_output_tokens=max_output_tokens,
+    )
+    manifest, cases = load_live_cases(repo)
+    quotes = [_quote(staged, case, config) for case in cases]
+    instructions = _one_instructions_hash(quotes)
+    reserved = sum(item["reserved_cost_usd"] for item in quotes) * repeats
+    if reserved > config["max_run_usd"] + 1e-12:
+        raise ReservationError(reserved, config["max_run_usd"])
+    plan = _dry_plan(config, manifest, cases, repeats, instructions, reserved)
+    if dry_run:
+        return plan
+    if env_file is not None:
+        _load_named_key(env_file)
+    key = os.environ.get(KEY_ENV)
+    if not key:
+        raise ValueError("explicit personal API key is absent")
+    send = transport or _default_send
+    receipt = _execute(
+        repo,
+        staged,
+        cases,
+        quotes,
+        config,
+        key,
+        send,
+        plan,
+        seed=seed,
+        resamples=resamples,
+        baseline_rate=baseline_rate,
+        run_id=run_id or uuid.uuid4().hex,
+    )
+    if output is not None:
+        write_json(output, receipt)
+    return receipt
+
+
+def format_dry_run(plan: dict) -> str:
+    """Plain-text dry run. No receipt and no request."""
+    recommended = plan["recommended_cap_usd"]
+    shown = "none" if recommended is None else f"{recommended:.2f}"
+    lines = [
+        "live-eval dry run",
+        f"model: {plan['model']}",
+        f"repeats: {plan['repeats']}",
+        f"cases: {plan['cases']}",
+        f"planned_requests: {plan['planned_requests']}",
+        f"reserved_usd: {plan['reserved_usd']:.6f}",
+        f"max_run_usd: {plan['max_run_usd']:.6f}",
+        f"recommended_cap_usd: {shown}",
+        "fits_cap: true",
+        f"instructions_sha256: {plan['instructions_sha256']}",
+        f"case_set_sha256: {plan['case_set_sha256']}",
+        f"fixture_sha256: {plan['fixture_sha256']}",
+        f"rubric_version: {plan['rubric_version']}",
+        "prices_rechecked: false",
+        "scheduled: false",
+        "pre_run: recheck the Sol model id, reasoning.effort=none, and prices before a live run",
+    ]
+    return "\n".join(lines) + "\n"
+
+
+def add_arguments(parser) -> None:
+    """Flags shared by the analyst subcommand and ``python -m`` entry."""
+    parser.add_argument("--model", required=True)
+    parser.add_argument("--max-run-usd", type=float, required=True)
+    parser.add_argument("--staged", type=Path, required=True)
+    parser.add_argument("--repeats", type=int, default=DEFAULT_REPEATS)
+    parser.add_argument("--acknowledge-personal-account", action="store_true")
+    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--env-file", type=Path)
+    parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
+    parser.add_argument("--baseline-rate", type=float)
+    parser.add_argument("--input-usd-per-million", type=float)
+    parser.add_argument("--output-usd-per-million", type=float)
+    parser.add_argument("--cache-write-usd-per-million", type=float)
+    parser.add_argument("--cached-input-usd-per-million", type=float)
+    parser.add_argument("--max-output-tokens", type=int, default=DEFAULT_MAX_OUTPUT_TOKENS)
+
+
+def execute_from_args(repo: Path, args) -> int:
+    """CLI body. Returns a process code. Policy failures print to stderr."""
+    import sys
+
+    if not args.dry_run and args.output is None:
+        print("live-eval: a real run needs --output", file=sys.stderr)
+        return 2
+    try:
+        rates = _rates_from_args(args)
+        result = run(
+            repo,
+            args.staged,
+            model=args.model,
+            max_run_usd=args.max_run_usd,
+            acknowledged=args.acknowledge_personal_account,
+            repeats=args.repeats,
+            dry_run=args.dry_run,
+            env_file=args.env_file,
+            output=args.output,
+            seed=args.seed,
+            baseline_rate=args.baseline_rate,
+            rates=rates,
+            max_output_tokens=args.max_output_tokens,
+        )
+    except (OSError, TimeoutError, ValueError) as exc:
+        print(f"live-eval: {exc}", file=sys.stderr)
+        return 1
+    if result.get("dry_run"):
+        print(format_dry_run(result), end="")
+        return 0
+    print(_summary(result))
+    return 0 if result["complete"] else 1
+
+
+def main(argv: list[str] | None = None) -> int:
+    """``python -m chess_analytics.analyst.live_runner``."""
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Offline-capable live analyst eval runner")
+    parser.add_argument("--project", type=Path, default=Path.cwd())
+    add_arguments(parser)
+    args = parser.parse_args(argv)
+    return execute_from_args(args.project.resolve(), args)
+
+
+def _default_send(body: bytes, key: str) -> dict:
+    from chess_analytics.analyst.provider import _default_transport
+
+    return _default_transport(body, key)
+
+
+def _quote(staged: Path, case: dict, config: dict) -> dict:
+    quote = quote_request(staged, case["question"], config, "semantic_context")
+    payload = json.loads(quote["body"])
+    if payload.get("reasoning") != {"effort": "none"}:
+        raise ValueError("frozen planner quote does not set reasoning.effort to none")
+    if payload.get("input") != case["question"]:
+        raise ValueError("quoted input is not the case question")
+    instructions = payload.get("instructions")
+    if not isinstance(instructions, str) or not instructions:
+        raise ValueError("quoted instructions are empty")
+    quote["instructions_sha256"] = hashlib.sha256(instructions.encode()).hexdigest()
+    return quote
+
+
+def _one_instructions_hash(quotes: list[dict]) -> str:
+    hashes = {item["instructions_sha256"] for item in quotes}
+    if len(hashes) != 1:
+        raise ValueError("instructions hash differs across cases")
+    return hashes.pop()
+
+
+def _dry_plan(config, manifest, cases, repeats, instructions, reserved) -> dict:
+    return {
+        "case_set_sha256": manifest["case_set_sha256"],
+        "cases": len(cases),
+        "dry_run": True,
+        "fixture_sha256": manifest["fixture_sha256"],
+        "instructions_sha256": instructions,
+        "kind": "analyst_live_v1_dry_run",
+        "max_run_usd": config["max_run_usd"],
+        "model": config["model"],
+        "planned_requests": len(cases) * repeats,
+        "price_checked_utc_date": PRICE_CHECKED_UTC_DATE,
+        "prices_rechecked": False,
+        "reasoning_effort": "none",
+        "recommended_cap_usd": RECOMMENDED_CAP_USD.get(config["model"]),
+        "repeats": repeats,
+        "reserved_usd": reserved,
+        "rubric_version": RUBRIC_VERSION,
+        "scheduled": False,
+    }
+
+
+def _execute(repo, staged, cases, quotes, config, key, send, plan, **options) -> dict:
+    rows = []
+    spent = 0.0
+    incomplete = None
+    for repeat in range(plan["repeats"]):
+        for case, quote in zip(cases, quotes, strict=True):
+            if spent + quote["reserved_cost_usd"] > config["max_run_usd"] + 1e-12:
+                incomplete = "budget_exceeded"
+                break
+            row, stop, spent = _one_request(staged, case, quote, config, key, send, repeat, spent)
+            rows.append(row)
+            if stop:
+                incomplete = stop
+                break
+        if incomplete:
+            break
+    return _receipt(repo, rows, plan, config, incomplete, **options)
+
+
+def _one_request(staged, case, quote, config, key, send, repeat, spent):
+    try:
+        response = send(quote["body"], key)
+    except Exception as exc:
+        message = _redact(str(exc), key)
+        failed = _failed_row(case, repeat, quote, "transport_failure", message)
+        return failed, "transport_failure", spent
+    try:
+        row, cost = _completed_row(staged, case, quote, config, response, repeat)
+    except Exception as exc:
+        message = _redact(str(exc), key)
+        return _failed_row(case, repeat, quote, "runner_error", message), "runner_error", spent
+    if cost is None:
+        return row, "unknown_usage", spent + quote["reserved_cost_usd"]
+    spent += cost
+    if spent > config["max_run_usd"] + 1e-12:
+        return row, "budget_exceeded", spent
+    return row, None, spent
+
+
+def _completed_row(staged, case, quote, config, response, repeat) -> tuple[dict, float | None]:
+    usage = response.get("usage") if isinstance(response, dict) else None
+    resolved = response.get("model") if isinstance(response, dict) else None
+    try:
+        cost, basis = price_usage(config, usage)
+    except ValueError:
+        cost, basis = None, None
+    plan, argument_repairs, semantic_repairs, repaired = _parsed_plan(staged, case, response)
+    if plan is None:
+        scored = _hallucination(case)
+        would_pass = None
+    else:
+        scored = score_live_plan(staged, case, plan)
+        would_pass = None
+        if semantic_repairs and isinstance(repaired, dict):
+            would_pass = score_live_plan(staged, case, repaired)["passed"]
+    row = _row(
+        case,
+        repeat,
+        quote,
+        status="completed",
+        plan=plan,
+        scored=scored,
+        argument_repairs=argument_repairs,
+        semantic_repairs=semantic_repairs,
+        would_pass=would_pass,
+        usage=usage if isinstance(usage, dict) else None,
+        cost=cost,
+        basis=basis,
+        resolved=resolved if isinstance(resolved, str) else None,
+        error=None,
+    )
+    return row, cost
+
+
+def _parsed_plan(staged, case, response):
+    if not isinstance(response, dict):
+        return None, [], [], None
+    try:
+        extracted, _selection = _extract_plan(response)
+        plan, argument_repairs = _normalize_plan(extracted)
+        repaired, semantic_repairs = _repair_opening_usage(
+            case["question"], plan, CheckedTools(staged)
+        )
+    except (TypeError, ValueError):
+        return None, [], [], None
+    return plan, argument_repairs, semantic_repairs, repaired
+
+
+def _hallucination(case: dict) -> dict:
+    missed = case["severity"] == "high"
+    return {
+        "caveats": [],
+        "failures": ["plan_hallucination"],
+        "high_severity_miss": missed,
+        "over_abstention": False,
+        "passed": False,
+        "unsafe_answer": False,
+    }
+
+
+def _failed_row(case, repeat, quote, reason, message) -> dict:
+    return _row(
+        case,
+        repeat,
+        quote,
+        status="failed",
+        plan=None,
+        scored=None,
+        argument_repairs=[],
+        semantic_repairs=[],
+        would_pass=None,
+        usage=None,
+        cost=None,
+        basis=None,
+        resolved=None,
+        error=f"{reason}: {message}",
+    )
+
+
+def _row(case, repeat, quote, **fields) -> dict:
+    scored = fields["scored"] or {}
+    argument_repairs = list(fields["argument_repairs"])
+    semantic_repairs = list(fields["semantic_repairs"])
+    passed = None if fields["scored"] is None else scored["passed"]
+    return {
+        "argument_repairs": argument_repairs,
+        "case_id": case["id"],
+        "caveats": list(scored.get("caveats") or []),
+        "cost_basis": fields["basis"],
+        "error": fields["error"],
+        "failures": list(scored.get("failures") or []),
+        "gross_cost_usd": fields["cost"],
+        "high_severity_miss": bool(scored.get("high_severity_miss")),
+        "model_plan_before_semantic_repair": fields["plan"],
+        "over_abstention": bool(scored.get("over_abstention")),
+        "passed": passed,
+        "repair_count": len(argument_repairs) + len(semantic_repairs),
+        "repeat": repeat,
+        "reserved_cost_usd": quote["reserved_cost_usd"],
+        "resolved_model": fields["resolved"],
+        "semantic_repair_would_pass": fields["would_pass"],
+        "semantic_repairs": semantic_repairs,
+        "severity": case["severity"],
+        "status": fields["status"],
+        "template_family": case["template_family"],
+        "unsafe_answer": bool(scored.get("unsafe_answer")),
+        "usage": fields["usage"],
+    }
+
+
+def _receipt(repo, rows, plan, config, incomplete, **options) -> dict:
+    scored = [row for row in rows if row["passed"] is not None]
+    passed = sum(bool(row["passed"]) for row in scored)
+    trials = len(scored)
+    known = [row["gross_cost_usd"] for row in rows if row["gross_cost_usd"] is not None]
+    unknown = sum(
+        row["reserved_cost_usd"]
+        for row in rows
+        if row["status"] == "completed" and row["gross_cost_usd"] is None
+    )
+    models = {row["resolved_model"] for row in rows if row["resolved_model"]}
+    alert = None
+    if options["baseline_rate"] is not None and incomplete is None and trials:
+        alert = binomial_alert(passed, trials, options["baseline_rate"])
+    receipt = {
+        "base_rubric_version": "portfolio-1.0",
+        "baseline_alert": alert,
+        "case_set_sha256": plan["case_set_sha256"],
+        "cases": plan["cases"],
+        "complete": incomplete is None,
+        "fixture_sha256": plan["fixture_sha256"],
+        "flaky_cases": flaky_case_ids(rows),
+        "frozen_file_sha256": _frozen_hashes(repo),
+        "hard_fail": hard_fail(rows),
+        "headline_pass_rate": None if not trials else passed / trials,
+        "headline_passed": passed,
+        "high_severity_misses": sum(bool(row["high_severity_miss"]) for row in rows),
+        "incomplete_reason": incomplete,
+        "instructions_sha256": plan["instructions_sha256"],
+        "kind": "analyst_live_v1_receipt",
+        "known_gross_cost_usd": sum(known),
+        "unknown_cost_reservation_usd": unknown,
+        "max_run_usd": config["max_run_usd"],
+        "model": config["model"],
+        "over_abstention": sum(bool(row["over_abstention"]) for row in rows),
+        "planned_requests": plan["planned_requests"],
+        "price_checked_utc_date": PRICE_CHECKED_UTC_DATE,
+        "prices_rechecked": False,
+        "reasoning_effort": "none",
+        "receipt_version": RECEIPT_VERSION,
+        "repair_counts": {
+            "argument": sum(len(row["argument_repairs"]) for row in rows),
+            "semantic": sum(len(row["semantic_repairs"]) for row in rows),
+        },
+        "repeats": plan["repeats"],
+        "reserved_usd": plan["reserved_usd"],
+        "resolved_model": models.pop() if len(models) == 1 else None,
+        "rows": rows,
+        "rubric_version": RUBRIC_VERSION,
+        "run_id": options["run_id"],
+        "scheduled": False,
+        "stats": None if incomplete else _stats(rows, plan, options),
+        "token_usage": _tokens(rows),
+        "unsafe_answer": sum(bool(row["unsafe_answer"]) for row in rows),
+    }
+    missing = set(RECEIPT_FIELDS) - set(receipt)
+    if missing or any(set(ROW_FIELDS) - set(row) for row in rows):
+        raise RuntimeError("receipt schema drifted")
+    return receipt
+
+
+def _stats(rows, plan, options) -> dict:
+    grouped: dict[str, list[bool]] = {}
+    for row in rows:
+        if row["passed"] is None:
+            continue
+        grouped.setdefault(row["case_id"], []).append(bool(row["passed"]))
+    repeats = [grouped[case_id] for case_id in grouped]
+    if not repeats:
+        return {"bootstrap": None, "hard_fail": hard_fail(rows), "wilson": None}
+    successes = sum(sum(flags) for flags in repeats)
+    trials = sum(len(flags) for flags in repeats)
+    return {
+        "bootstrap": cluster_bootstrap(
+            repeats, seed=options["seed"], resamples=options["resamples"]
+        ),
+        "hard_fail": hard_fail(rows),
+        "wilson": wilson_interval(successes, trials) if trials else None,
+    }
+
+
+def _tokens(rows: list[dict]) -> dict:
+    incoming = 0
+    outgoing = 0
+    counted = 0
+    for row in rows:
+        usage = row["usage"]
+        if not isinstance(usage, dict):
+            continue
+        if type(usage.get("input_tokens")) is int and type(usage.get("output_tokens")) is int:
+            incoming += usage["input_tokens"]
+            outgoing += usage["output_tokens"]
+            counted += 1
+    return {"input_tokens": incoming, "output_tokens": outgoing, "priced_requests": counted}
+
+
+def _frozen_hashes(repo: Path) -> dict:
+    """Hash the working tree the operator passed in, not the installed wheel."""
+    hashes = {}
+    for name in FROZEN_FILES:
+        path = repo / name
+        if not path.is_file():
+            raise ValueError(f"frozen file missing: {name}")
+        hashes[name] = hashlib.sha256(path.read_bytes()).hexdigest()
+    return hashes
+
+
+def _rates_from_args(args) -> dict | None:
+    keys = (
+        "input_usd_per_million",
+        "output_usd_per_million",
+        "cache_write_usd_per_million",
+        "cached_input_usd_per_million",
+    )
+    present = [key for key in keys if getattr(args, key) is not None]
+    if not present:
+        return None
+    if len(present) != len(keys):
+        raise ValueError("pass all four price rates together")
+    return {key: getattr(args, key) for key in keys}
+
+
+def _redact(message: str, key: str) -> str:
+    return message.replace(key, "[redacted]") if key else message
+
+
+def _summary(receipt: dict) -> str:
+    passed = receipt["headline_passed"]
+    planned = receipt["planned_requests"]
+    return (
+        f"live-eval {receipt['run_id']} complete={str(receipt['complete']).lower()} "
+        f"passed={passed}/{planned} hard_fail={str(receipt['hard_fail']).lower()} "
+        f"cost_usd={receipt['known_gross_cost_usd']:.6f}"
+    )
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -324,8 +324,10 @@ pull request does not add the key.
 
 The Sol id and `reasoning.effort` of `none` are not probed. Prices are not
 rechecked past 2026-10-04. Astra has no id and no cap. The scorer, the
-runner, the workflow, the environment, and the receipt are not in this
-pull request. The test split has not been inspected, so it stays frozen.
+runner, and the statistics are in
+[ADR 0090](0090-live-eval-scorer-runner-stats.md). The workflow, the
+environment, and a committed receipt are still absent. The test split has
+not been inspected, so it stays frozen.
 
 ## Results
 

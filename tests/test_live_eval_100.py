@@ -47,10 +47,8 @@ def _first_record(text: str) -> str:
 
 
 @pytest.fixture(scope="module")
-def staged(tmp_path_factory):
-    from chess_analytics.analyst.live_eval import stage_live_fixture
-
-    return stage_live_fixture(ROOT, tmp_path_factory.mktemp("live-eval-100"))
+def staged(live_eval_stage):
+    return live_eval_stage
 
 
 @pytest.fixture(scope="module")

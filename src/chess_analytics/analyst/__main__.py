@@ -6,6 +6,7 @@ from pathlib import Path
 
 from chess_analytics.analyst.core import execute_plan, replay
 from chess_analytics.analyst.evaluation import save
+from chess_analytics.analyst.live_runner import add_arguments
 from chess_analytics.analyst.provider import recorded_live_answer
 
 
@@ -30,6 +31,11 @@ def main(argv=None):
         help="rewrite the baseline; refused when CI is present",
     )
     gate_cmd.add_argument("--case", help="rerun one case id")
+    live_eval = sub.add_parser(
+        "live-eval",
+        help="quote or run the live analyst eval; dry-run makes no request",
+    )
+    add_arguments(live_eval)
     live = sub.add_parser("live")
     live.add_argument("question")
     live.add_argument("--config", type=Path, required=True)
@@ -46,6 +52,10 @@ def main(argv=None):
             from chess_analytics.analyst.gate import execute_cli
 
             parser.exit(execute_cli(project, update=args.update, case=args.case))
+        elif args.mode == "live-eval":
+            from chess_analytics.analyst.live_runner import execute_from_args
+
+            parser.exit(execute_from_args(project, args))
         else:
             answer = recorded_live_answer(project, args.question, args.config)
         print(json.dumps(answer, indent=2, sort_keys=True))

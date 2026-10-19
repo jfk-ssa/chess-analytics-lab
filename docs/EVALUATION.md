@@ -74,9 +74,14 @@ tools. Pytest checks that the governed or reviewed tools match those
 references, and that a plan built from each case's expected tool scores 48/48
 under `score_case_live`. That 48/48 is harness consistency on the 100-game
 fixture. It is not LLM accuracy. The four-game gate and its baseline are
-unchanged. There is no live-eval command and no schedule. The dimensions,
-caps, statistics, and the future `workflow_dispatch` job are in
-[ADR 0089](adr/0089-llm-quality-evaluation.md).
+unchanged. The offline scorer, runner, and statistics score a raw model
+plan with a fake transport in tests.
+`python -m chess_analytics.analyst live-eval --dry-run` prints the case
+count and the reservation and does not call a model. There is no schedule
+and no `workflow_dispatch` workflow. A live receipt is not committed here.
+The dimensions, caps, and the future manual job are in
+[ADR 0089](adr/0089-llm-quality-evaluation.md). The runner choices are in
+[ADR 0090](adr/0090-live-eval-scorer-runner-stats.md).
 
 For offline replay, first run `chesslab demo --scope all`, then use the command
 in [DEMO.md](DEMO.md). Historical fixture harness checks are available with

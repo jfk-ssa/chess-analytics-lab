@@ -214,11 +214,87 @@ accepts a separate disabled-by-default JSON example when exact model/rates
 are supplied; the key stays out of JSON. No live call is part of CI or the
 portfolio demo.
 
-## Future live analyst eval
+## Live analyst eval
 
-There is no live-eval command and no schedule. A later change may add a
-manual run only. When it does, the job is `workflow_dispatch` with the
-inputs, GitHub Environment, spending cap, and reviewer in
-[ADR 0089](adr/0089-llm-quality-evaluation.md). Do not add a monthly
-schedule. This checkout does not call a model. Receipts from a future
-artifact are committed in a separate pull request.
+The offline runner scores the frozen 48-case set. Tests and CI use a fake
+transport. They do not call a model. There is no `workflow_dispatch`
+workflow and no `schedule`. Do not add a monthly schedule. A schedule
+later would need a new ADR and explicit owner approval, and it would be
+added only to a workflow that already has the `live-eval` environment,
+the spending cap, and a required reviewer. That workflow is not in this
+repository. [ADR 0089](adr/0089-llm-quality-evaluation.md) describes it.
+[ADR 0090](adr/0090-live-eval-scorer-runner-stats.md) describes the runner.
+
+The same commands work on macOS and Linux. They use the repository Python
+and do not depend on a Linux-only flag.
+
+### Pre-run checklist
+
+Do this before any live call. The dry run does not do it for you, and it
+does not probe the API.
+
+1. Recheck the provider model page. Past Sol runs in this repository use
+   `gpt-6-sol`. The approved plan records that OpenAI's page has listed
+   `gpt-6.1-sol`. Do not freeze an id from memory.
+2. Confirm `reasoning.effort` set to `none` is accepted on the chosen id.
+   The frozen quote sends that value. This command does not probe it.
+3. Recheck prices. The runner's Luna and Sol rates were recorded on
+   2026-10-04. A receipt sets `prices_rechecked` to false until a later
+   change records a new check. Credits are not a budget.
+4. Choose `max_run_usd` yourself. The recommended gross caps for a
+   5-repeat, 50-case envelope are Luna $0.50 and Sol $10. They are not an
+   approval to spend. On 2026-10-19 the conservative reservation for these
+   48 cases, five repeats, 240 requests, was $0.443594 for Luna and
+   $8.871288 for Sol at those recorded rates. A reservation over the cap
+   refuses before any request is sent.
+5. Acknowledge the personal account on the command line. The only key
+   variable is `CHESSLAB_OPENAI_API_KEY`. An ignored `work/.env` may hold
+   that one variable. Do not commit the key or the receipt.
+
+### Dry run
+
+Publish the 100-game fixture into ignored `work/`, then quote. Neither
+step downloads or calls a model.
+
+```sh
+uv run --locked --offline --no-editable python -c '
+from pathlib import Path
+from chess_analytics.analyst.live_eval import stage_live_fixture
+stage_live_fixture(Path("."), Path("work/live-eval"))
+'
+uv run --locked --offline --no-editable python -m chess_analytics.analyst live-eval \
+  --staged work/live-eval/project \
+  --model gpt-6-luna \
+  --max-run-usd 0.50 \
+  --repeats 5 \
+  --acknowledge-personal-account \
+  --dry-run
+```
+
+The dry run prints the model, the repeat count, the case count, the
+reserved dollars, and the cap. It does not read the API key.
+
+### Real run
+
+Drop `--offline` on the real command. The frozen transport calls the
+Responses API. CI does not run this command. Write the receipt under
+`work/` and leave it uncommitted. John commits a receipt from a later
+artifact in a separate pull request.
+
+```sh
+uv run --locked --no-editable python -m chess_analytics.analyst live-eval \
+  --staged work/live-eval/project \
+  --model gpt-6-luna \
+  --max-run-usd 0.50 \
+  --repeats 5 \
+  --acknowledge-personal-account \
+  --env-file work/.env \
+  --output work/live-eval-receipt.json
+```
+
+Swap the model and the cap together. A Sol run uses `--model gpt-6-sol`
+and a cap you have actually approved. The recommendation for the
+5-repeat envelope is $10. Pass `--baseline-rate` only when you already
+have a baseline pass rate to compare. The alert it prints is advisory.
+`hard_fail` on the receipt means some high-severity case missed. That
+flag does not by itself fail CI, because this command is not in CI.
