@@ -129,5 +129,31 @@ keyword router at 40/48, the constant plans at 7, 2, 0, and 7, a
 transport failure that stops with an incomplete receipt, an over-cap
 reservation that sends nothing, a missing key, a missing acknowledgement,
 hand-checked Wilson, binomial, bootstrap, and sign-test values, the
-receipt fields, and a repeated bootstrap seed. The full offline bar is
-recorded on the pull request after it is run.
+receipt fields, and a repeated bootstrap seed. Each of those guards
+failed when its behaviour was removed, and the source was restored.
+
+The offline bar on the same machine, after
+`uv sync --locked --offline --no-editable --reinstall-package chess-analytics-lab`:
+
+- Biome 2.5.15 checked 10 files and applied no fixes.
+- Node v22.14.0: `node --test tests/js/game_import.test.mjs` passed 10.
+  `scripts/check_game_import.mjs` and `tests/js/import_parity.mjs` exited 0.
+  The CI workflow uses Node 24. This agent did not rerun the JavaScript
+  tests on Node 24.
+- `ruff check .` passed. `ruff format --check .` reported 311 files
+  already formatted.
+- basedpyright reported 0 errors, 0 warnings, and 0 notes.
+- `pytest -q` without the dbt extra: 292 passed, 31 skipped, 91.26s.
+- After `uv sync --locked --no-editable --extra dbt`,
+  `CHESSLAB_REQUIRE_DBT=1 pytest -q`: 304 passed, 19 skipped, 192.81s.
+- `data/` is gitignored and had no pointer, so `chesslab demo` published
+  tiny snapshot `c462cb48963d2ef94f1ce68e` first. CI does the same demo
+  before transform. `transform --dataset tiny` published mart
+  `cfd5f1a11f2602dd3538119b`: dbt created 8, no-op 2, passed 42;
+  observed 22 accepted games, 44 player rows, 20 eligible games, and
+  4 draws.
+- Semantic validation: `dbt parse` with dbt 1.12.5, `validate-configs`
+  reported `ERRORS: 0`, `smoke-draw-rate` printed `4,20,0.2`, and
+  `scripts/render_dbt_dag.py --check` exited 0.
+- `python -m chess_analytics.analyst gate` printed `ok 89/89` in 10.188s.
+  `evals/baselines/analyst_gate_v1.json` is unchanged.
