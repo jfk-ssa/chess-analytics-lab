@@ -95,3 +95,4 @@ short summary of the current checkout, not a log of new decisions.
 | 0087 | 2026-10-18 | [Incremental player_games measured, not adopted](adr/0087-incremental-player-games.md) |
 | 0088 | 2026-10-18 | [Offline analyst eval regression gate](adr/0088-offline-analyst-eval-regression-gate.md) |
 | 0089 | 2026-10-18 | [LLM quality evaluation plan and 100-game fixture](adr/0089-llm-quality-evaluation.md) |
+| 0090 | 2026-10-19 | [Live eval scorer, runner, and statistics](adr/0090-live-eval-scorer-runner-stats.md) |

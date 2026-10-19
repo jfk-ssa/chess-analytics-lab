@@ -40,7 +40,7 @@ live evaluations are recorded separately.
 | `src/chess_analytics/orchestration/` | Optional local Dagster/Prefect wrappers over the same pipeline |
 | `contracts/`, `config/`, `evals/` | Definitions, bounded source plans, frozen questions and reference manifests |
 | `evals/baselines/analyst_gate_v1.json` | Committed offline analyst scorecard. CI fails when replay differs. Not an LLM-quality score |
-| `evals/cases/analyst_live_v1.json` | Frozen questions for a future live analyst eval. This checkout does not call a model |
+| `evals/cases/analyst_live_v1.json` | Frozen 48 questions for a manual live analyst eval. The offline runner does not call a model |
 | `tests/fixtures/`, `tests/` | Tracked synthetic inputs, independent expected values and offline regressions |
 | `docs/adr/`, `docs/DECISIONS.md` | Numbered decision records and their index. New decisions go here; [status](STATUS.md) stays a short summary |
 | `reports/` | Compact historical evidence and the original comparison report |
