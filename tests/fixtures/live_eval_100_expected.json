@@ -33,6 +33,10 @@
       "proxy_errors": 25
     }
   },
+  "clock_compare_under_10_minus_10_to_29": {
+    "error_proxy_rate_difference_first_minus_second": null,
+    "evaluation_coverage_difference_first_minus_second": null
+  },
   "clock_compare_under_10_minus_30_to_59": {
     "error_proxy_rate_difference_first_minus_second": 0.07692307692307693,
     "evaluation_coverage_difference_first_minus_second": 0.0

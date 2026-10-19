@@ -93,6 +93,24 @@ def _movetext(index: int, sans: tuple[str, ...], result: str) -> str:
     return " ".join(chunks) + f" {result}"
 
 
+def event_name(index: int) -> str:
+    """Rated speed from the Lichess estimate, base plus 40 times the increment.
+
+    Under 180 seconds is Bullet, under 480 is Blitz, and the rest here is Rapid.
+    60+0 is Bullet, 180+2 and 300+0 are Blitz, and 600+5 is Rapid.
+    """
+    control = TIME_CONTROL.get(index % 10, "60+0")
+    base, increment = (int(part) for part in control.split("+"))
+    estimated = base + 40 * increment
+    if estimated < 180:
+        speed = "Bullet"
+    elif estimated < 480:
+        speed = "Blitz"
+    else:
+        speed = "Rapid"
+    return f"Rated {speed} synthetic live eval"
+
+
 def render_game(index: int, game_id: str) -> str:
     """One rated standard game. Clocks stay in under_10 and 30_to_59 only."""
     name, eco, sans = family_row(index)
@@ -100,7 +118,7 @@ def render_game(index: int, game_id: str) -> str:
     result = RESULT[index % 3]
     played = date(2020, 1, 1) + timedelta(days=index)
     headers = (
-        ("Event", "Rated Blitz synthetic live eval"),
+        ("Event", event_name(index)),
         ("Site", f"https://lichess.org/{game_id}"),
         ("UTCDate", played.strftime("%Y.%m.%d")),
         ("White", f"FixtureLiveW{index:03d}"),

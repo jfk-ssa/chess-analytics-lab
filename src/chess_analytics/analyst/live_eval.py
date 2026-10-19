@@ -30,7 +30,7 @@ CASE_RELATIVE = Path("evals/cases/analyst_live_v1.json")
 MANIFEST_RELATIVE = Path("evals/cases/analyst_live_v1_manifest.json")
 FIXTURE_RELATIVE = Path("tests/fixtures/live_eval_100.pgn")
 EXPECTED_RELATIVE = Path("tests/fixtures/live_eval_100_expected.json")
-CASE_COUNT = 40
+CASE_COUNT = 48
 RUBRIC_VERSION = "portfolio-1.0"
 PLAN_TOOLS = set(PLAN_SCHEMA["properties"]["actions"]["items"]["properties"]["tool"]["enum"])
 PINNED = {"analytical_id", "dataset_id", "evidence_id", "evidence_ids"}
@@ -89,7 +89,7 @@ def verify_live_set(
     ):
         raise ValueError("live case manifest schema mismatch")
     if len(cases) != CASE_COUNT or manifest.get("cases") != CASE_COUNT:
-        raise ValueError("expected 40 cases")
+        raise ValueError(f"expected {CASE_COUNT} cases")
     if case_set_digest(cases) != manifest["case_set_sha256"]:
         raise ValueError("case set hash changed")
     if hashlib.sha256(case_file).hexdigest() != manifest["case_file_sha256"]:
@@ -186,15 +186,31 @@ def stage_live_fixture(source: Path, workspace: Path) -> Path:
     return project
 
 
+def score_case_live(case: dict, answer: dict) -> dict:
+    """``portfolio-1.0`` plus single-bucket clock equivalence.
+
+    The last action may be ``analyze_clock_pressure`` with ``{bucket}`` or one
+    ``query_metric`` of ``clock_pressure_error_proxy`` for that bucket. A second
+    action, including a coverage call after the clock call, is not equivalent.
+    This composes the frozen scorer and does not change it.
+    """
+    scored = score_case_portfolio(case, answer)
+    if _equivalent_single_clock(case, answer) and "tool_or_filters" in scored["failures"]:
+        scored["failures"] = [item for item in scored["failures"] if item != "tool_or_filters"]
+        scored["passed"] = not scored["failures"]
+    scored["rubric_version"] = "live-eval-1.0"
+    return scored
+
+
 def score_oracle_plans(project: Path, staged: Path) -> list[dict]:
-    """Execute one oracle plan per case and score it with ``portfolio-1.0``."""
+    """Execute one oracle plan per case and score it with the live-eval rule."""
     _manifest, cases = load_live_cases(project)
     pointer = json.loads((staged / "data/analytical-moves-current.json").read_text())
     dataset_id = pointer["analytical_id"]
     rows = []
     for case in cases:
         answer = execute_plan(staged, case["question"], oracle_plan(case), source="fixture_replay")
-        scored = score_case_portfolio({**case, "dataset_id": dataset_id}, answer)
+        scored = score_case_live({**case, "dataset_id": dataset_id}, answer)
         scored["answer"] = answer
         rows.append(scored)
     return rows
@@ -263,15 +279,19 @@ def reference_mismatches(values: dict, expected: dict) -> list[str]:
         found += _fields(
             f"clock.{bucket}", expected["clock"][bucket], values["clock"][bucket], CLOCK_KEYS
         )
-    found += _fields(
-        "clock_compare",
-        expected["clock_compare_under_10_minus_30_to_59"],
-        values["clock_compare_under_10_minus_30_to_59"],
-        (
-            "error_proxy_rate_difference_first_minus_second",
-            "evaluation_coverage_difference_first_minus_second",
-        ),
-    )
+    for name in (
+        "clock_compare_under_10_minus_30_to_59",
+        "clock_compare_under_10_minus_10_to_29",
+    ):
+        found += _fields(
+            name,
+            expected[name],
+            values[name],
+            (
+                "error_proxy_rate_difference_first_minus_second",
+                "evaluation_coverage_difference_first_minus_second",
+            ),
+        )
     found += _fields(
         "coverage", expected["coverage"], values["coverage"], tuple(expected["coverage"])
     )
@@ -315,6 +335,9 @@ def _read_tools(tools: CheckedTools, bucket: list[str]) -> dict:
     bucket.clear()
     clock_compare = tools.compare_clock_buckets("under_10", "30_to_59")
     paths["clock_compare"] = "reviewed_sql"
+    bucket.clear()
+    empty_compare = tools.compare_clock_buckets("under_10", "10_to_29")
+    paths["clock_compare_empty"] = "reviewed_sql"
     grouped, paths["opening_usage_grouped"] = _metric(
         tools, bucket, "opening_usage", {}, ["opening_family"]
     )
@@ -323,6 +346,13 @@ def _read_tools(tools: CheckedTools, bucket: list[str]) -> dict:
         "paths": paths,
         "values": {
             "clock": {name: _pick(clock[name], CLOCK_KEYS) for name in clock},
+            "clock_compare_under_10_minus_10_to_29": _pick(
+                empty_compare,
+                (
+                    "error_proxy_rate_difference_first_minus_second",
+                    "evaluation_coverage_difference_first_minus_second",
+                ),
+            ),
             "clock_compare_under_10_minus_30_to_59": _pick(
                 clock_compare,
                 (
@@ -404,6 +434,21 @@ def _fields(path: str, expected: dict, observed: dict, keys: tuple[str, ...]) ->
         if not _close(expected[key], observed[key]):
             found.append(f"{path}.{key} expected {expected[key]} got {observed[key]}")
     return found
+
+
+def _equivalent_single_clock(case: dict, answer: dict) -> bool:
+    expected = case.get("expected_tool_args") or {}
+    filters = expected.get("filters")
+    trace = answer.get("evidence") or []
+    return (
+        case.get("expected_tool") == "query_metric"
+        and expected.get("metric_id") == "clock_pressure_error_proxy"
+        and isinstance(filters, dict)
+        and set(filters) == {"bucket"}
+        and len(trace) == 1
+        and trace[0].get("tool") == "analyze_clock_pressure"
+        and trace[0].get("args") == filters
+    )
 
 
 def _close(left, right) -> bool:

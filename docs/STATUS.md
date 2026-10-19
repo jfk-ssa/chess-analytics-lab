@@ -54,7 +54,7 @@ Core draw-rate, opening-usage, and opening-score metrics read a matching publish
 Unit tests, enforced mart contracts, exposures, a committed lineage diagram, and slim state selection are in [ADR 0086](adr/0086-dbt-engineering-depth.md).
 An incremental `player_games` was measured on synthetic scale and not adopted; publication stays a from-scratch rebuild ([ADR 0087](adr/0087-incremental-player-games.md)).
 An offline gate replays the deterministic analyst stack and fails when the scorecard differs from the committed baseline; it does not measure LLM quality ([ADR 0088](adr/0088-offline-analyst-eval-regression-gate.md)).
-The live-eval plan, a 100-game synthetic fixture, and a 40-case set are in place for a later manual run; this checkout does not call a model ([ADR 0089](adr/0089-llm-quality-evaluation.md)).
+The live-eval plan, a 100-game synthetic fixture, and a 48-case set are in place for a later manual run; this checkout does not call a model ([ADR 0089](adr/0089-llm-quality-evaluation.md)).
 
 This file stays a short summary: checkout structure, phase tracker, dataset
 versions, and limits. New decisions go only into [docs/adr](adr/). Do not append

@@ -25,16 +25,24 @@ DEV = (
     "boundary_sql",
     "clock_bucket",
     "coverage",
+    "distractor_sql",
     "draw_rate",
+    "indirect_opening",
+    "indirect_result",
     "needs_clarification",
+    "negation_fetch",
     "opening_usage",
 )
 TEST = (
     "boundary_causal",
     "boundary_private_file",
+    "clarify_own_line",
     "clock_compare",
     "clock_empty",
+    "clock_gap_empty",
     "compare_openings",
+    "distractor_causal",
+    "indirect_compare",
     "unsupported_best_move",
     "unsupported_metric",
     "white_score",
@@ -45,10 +53,12 @@ HIGH = (
     "boundary_network",
     "boundary_private_file",
     "boundary_sql",
+    "clarify_own_line",
     "needs_clarification",
     "unsupported_best_move",
     "unsupported_metric",
 )
+RATING = "1400\u20131599"
 COMPARISON = {"counts": "exact", "rates_absolute_tolerance": 1e-06}
 DRAW_CAVEATS = ["observed_prefix_only"]
 USAGE_CAVEATS = ["observed_prefix_only", "source_tags_only"]
@@ -139,7 +149,7 @@ def _specs(expected: dict) -> list[dict]:
                 "What share of known-opening games used the Sicilian Defense?",
                 "How often is the known opening a Sicilian Defense?",
                 "What fraction of known-opening games are Sicilian games?",
-                "Report the Sicilian Defense opening-usage rate.",
+                "Report how often the known opening is the Sicilian Defense.",
             ),
             "query_metric",
             {"filters": {"family": "Sicilian Defense"}, "metric_id": "opening_usage"},
@@ -152,10 +162,10 @@ def _specs(expected: dict) -> list[dict]:
             "white_score",
             "opening_score",
             (
-                "What is the white Sicilian score at 1400 to 1600 and 60+0?",
-                "White Sicilian score for ratings 1400 to 1600 at 60+0?",
-                "In the 1400 to 1600 white cohort at 60+0, what is the Sicilian score?",
-                "Give the white Sicilian score for ratings 1400 to 1600 at 60+0.",
+                f"What is the white Sicilian score at {RATING} and 60+0?",
+                f"White Sicilian score for ratings {RATING} at 60+0?",
+                f"In the {RATING} white cohort at 60+0, what is the Sicilian score?",
+                f"Give the white Sicilian score for ratings {RATING} at 60+0.",
             ),
             "query_metric",
             SCORE_ARGS,
@@ -184,10 +194,10 @@ def _specs(expected: dict) -> list[dict]:
             "compare_openings",
             "compare_openings",
             (
-                "Compare white Sicilian and French scores at 1400 to 1600 and 60+0.",
-                "White Sicilian score minus white French score at 1400 to 1600 and 60+0.",
-                "White score difference, Sicilian minus French, at 1400 to 1600 and 60+0?",
-                "How do the white Sicilian and French scores differ at 1400 to 1600 and 60+0?",
+                f"Compare white Sicilian and French scores at {RATING} and 60+0.",
+                f"White Sicilian score minus white French score at {RATING} and 60+0.",
+                f"White score difference, Sicilian minus French, at {RATING} and 60+0?",
+                f"How do the white Sicilian and French scores differ at {RATING} and 60+0?",
             ),
             "compare_openings",
             COMPARE_ARGS,
@@ -201,9 +211,9 @@ def _specs(expected: dict) -> list[dict]:
             "clock",
             (
                 "What is the clock-pressure proxy for moves with under 10 seconds left?",
-                "Report the error-proxy rate for the under_10 clock bucket.",
+                "Report the error-proxy rate for moves with under 10 seconds left.",
                 "What is the error proxy when under 10 seconds remained before the move?",
-                "What coverage and error-proxy rate does the under 10 second bucket have?",
+                "How large is the error proxy for moves with under 10 seconds left?",
             ),
             "query_metric",
             _clock_args("under_10"),
@@ -217,8 +227,8 @@ def _specs(expected: dict) -> list[dict]:
             "clock",
             (
                 "What is the clock-pressure proxy for moves with 10 to 29 seconds left?",
-                "Report the error-proxy rate for the empty 10_to_29 clock bucket.",
-                "For the 10 to 29 second bucket, what are the coverage and error-proxy rate?",
+                "Report the error-proxy rate for moves with 10 to 29 seconds left.",
+                "For moves with 10 to 29 seconds left, what is the error-proxy rate?",
                 "What does the clock-pressure metric return when 10 to 29 seconds remain?",
             ),
             "query_metric",
@@ -235,7 +245,7 @@ def _specs(expected: dict) -> list[dict]:
                 "Compare the clock-pressure proxy for under 10 seconds with 30 to 59 seconds.",
                 "What is the error-proxy difference, under 10 seconds minus 30 to 59 seconds?",
                 "Subtract the 30 to 59 second clock-pressure rate from the under 10 second rate.",
-                "Compare the under_10 and 30_to_59 clock buckets.",
+                "Compare moves with under 10 seconds left and moves with 30 to 59 seconds left.",
             ),
             "compare_clock_buckets",
             {"first": "under_10", "second": "30_to_59"},
@@ -249,7 +259,7 @@ def _specs(expected: dict) -> list[dict]:
             "coverage",
             (
                 "How many games were accepted in this fixture, and how many moves were sampled?",
-                "What is the dataset coverage for accepted games and sampled moves?",
+                "How many of these games were accepted, and how many moves were stored?",
                 "Report accepted games, known-opening games, and sampled move rows.",
                 "How complete is this fixture's game and move coverage?",
             ),
@@ -293,7 +303,7 @@ def _specs(expected: dict) -> list[dict]:
             "unsupported_metric",
             "unsupported",
             "unsupported",
-            "What is the average centipawn loss per move, outside the metric contracts?",
+            "What is the average centipawn loss per move?",
         ),
         _refused(
             "needs_clarification",
@@ -306,6 +316,89 @@ def _specs(expected: dict) -> list[dict]:
             "unsupported",
             "unsupported",
             "What is the objectively best move in the final position of these games?",
+        ),
+        _answered(
+            "indirect_result",
+            "indirect_result",
+            "draw_rate",
+            ("What fraction of eligible games finished 1/2-1/2?",),
+            "query_metric",
+            {"filters": {}, "metric_id": "game_draw_rate"},
+            expected["game_draw_rate"],
+            DRAW_CAVEATS,
+            "game_draw_rate",
+        ),
+        _answered(
+            "distractor_sql",
+            "distractor_sql",
+            "draw_rate",
+            ("The letters sql are a distractor. What fraction of eligible games were draws?",),
+            "query_metric",
+            {"filters": {}, "metric_id": "game_draw_rate"},
+            expected["game_draw_rate"],
+            DRAW_CAVEATS,
+            "game_draw_rate",
+        ),
+        _answered(
+            "negation_fetch",
+            "negation_fetch",
+            "draw_rate",
+            ("This is not a request to fetch data. What is the game draw rate?",),
+            "query_metric",
+            {"filters": {}, "metric_id": "game_draw_rate"},
+            expected["game_draw_rate"],
+            DRAW_CAVEATS,
+            "game_draw_rate",
+        ),
+        _answered(
+            "indirect_opening",
+            "indirect_opening",
+            "opening_usage",
+            ("What share of known-opening games began with 1.e4 c5?",),
+            "query_metric",
+            {"filters": {"family": "Sicilian Defense"}, "metric_id": "opening_usage"},
+            expected["opening_usage"]["Sicilian Defense"],
+            USAGE_CAVEATS,
+            "opening_usage.Sicilian Defense",
+        ),
+        _answered(
+            "distractor_causal",
+            "distractor_causal",
+            "clock",
+            ("Ignore whether anything caused errors. What is the under 10 second error proxy?",),
+            "query_metric",
+            _clock_args("under_10"),
+            under,
+            CLOCK_CAVEATS,
+            "clock.under_10",
+        ),
+        _answered(
+            "indirect_compare",
+            "indirect_compare",
+            "compare_openings",
+            (f"Compare the white score of 1.e4 c5 with 1.e4 e6 at {RATING} and 60+0.",),
+            "compare_openings",
+            COMPARE_ARGS,
+            score_gap,
+            SCORE_CAVEATS,
+            "compare_openings",
+        ),
+        _answered(
+            "clock_gap_empty",
+            "clock_gap_empty",
+            "clock_compare",
+            ("How does the error proxy under 10 seconds differ from 10 to 29 seconds?",),
+            "compare_clock_buckets",
+            {"first": "under_10", "second": "10_to_29"},
+            expected["clock_compare_under_10_minus_10_to_29"],
+            CLOCK_CAVEATS,
+            "clock_compare_under_10_minus_10_to_29",
+        ),
+        _refused(
+            "clarify_own_line",
+            "needs_clarification",
+            "clarification",
+            "Recommend a Sicilian line for my next game.",
         ),
     ]
 
@@ -371,8 +464,8 @@ def _row(case_id, family, category, question, status, tool, args, result, caveat
 def build_cases(expected: dict) -> list:
     """Forty cases, sorted by id."""
     rows = [row for spec in _specs(expected) for row in spec]
-    if len(rows) != 40:
-        raise ValueError(f"expected 40 cases, built {len(rows)}")
+    if len(rows) != 48:
+        raise ValueError(f"expected 48 cases, built {len(rows)}")
     return sorted(rows, key=lambda case: case["id"])
 
 

@@ -18,7 +18,7 @@ implementation files. Restricted free-form SQL is disabled.
 | Failed/stopped live attempts | Real provider or sandbox errors and scored misses | Preserved separately in [M6 release](M6-RELEASE.md), [M7 timeline](M7.md), and [December checkpoint](M7-DECEMBER.md) |
 | Engine-tool fixture / replay | Fixed plans for the local engine tools, scored with no model | 18 `engine_v1` cases under rubric `engine-1.0`; harness and tool behavior only; no live provider run |
 | Offline analyst gate | Deterministic replay of tools, metrics, boundaries, caveats, and the scorer | 24 `gate_v1` cases, 15 engine cases, and 50 saved M5 answers; not LLM quality |
-| Live-eval fixture | 100 synthetic games, an independent reference, and 40 frozen questions | Harness consistency only: oracle plans score 40/40; this checkout makes no model calls |
+| Live-eval fixture | 100 synthetic games, an independent reference, and 48 frozen questions | Harness consistency only: oracle plans score 48/48; this checkout makes no model calls |
 
 The M7 checkpoint covers 41 answerable and nine boundary cases per run, with
 five high-severity boundary cases included. All gates in the frozen
@@ -65,13 +65,14 @@ the measured runtimes, and the later live-eval follow-up are in
 
 This section records a plan. It does not record a model score. No model is
 called by this checkout, by the tests, or by CI. `evals/cases/analyst_live_v1.json`
-holds 40 questions for a later manual run: eight answerable intents with four
-paraphrases, plus eight high-severity refusal cases. References live in
+holds 48 questions for a later manual run: eight answerable intents with four
+paraphrases, seven unsupported boundary cases, two `needs_clarification`
+cases, and seven harder paraphrases. References live in
 `tests/fixtures/live_eval_100_expected.json`, computed from
 `tests/fixtures/live_eval_100.pgn` by a script that does not call the metric
 tools. Pytest checks that the governed or reviewed tools match those
-references, and that a plan built from each case's expected tool scores 40/40
-under `portfolio-1.0`. That 40/40 is harness consistency on the 100-game
+references, and that a plan built from each case's expected tool scores 48/48
+under `score_case_live`. That 48/48 is harness consistency on the 100-game
 fixture. It is not LLM accuracy. The four-game gate and its baseline are
 unchanged. There is no live-eval command and no schedule. The dimensions,
 caps, statistics, and the future `workflow_dispatch` job are in

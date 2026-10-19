@@ -128,6 +128,31 @@
     "allowed_interpretations": [
       "descriptive_observed_prefix"
     ],
+    "category": "clarification",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "expected_result": null,
+    "expected_status": "needs_clarification",
+    "expected_tool": null,
+    "expected_tool_args": null,
+    "id": "clarify_own_line",
+    "question": "Recommend a Sicilian line for my next game.",
+    "reference_file": "tests/fixtures/live_eval_100_expected.json",
+    "reference_key": "not_applicable",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "severity": "high",
+    "split": "test",
+    "template_family": "clarify_own_line"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
     "category": "clock",
     "comparison": {
       "counts": "exact",
@@ -190,7 +215,7 @@
       "metric_id": "clock_pressure_error_proxy"
     },
     "id": "clock_10_to_29_2",
-    "question": "Report the error-proxy rate for the empty 10_to_29 clock bucket.",
+    "question": "Report the error-proxy rate for moves with 10 to 29 seconds left.",
     "reference_file": "tests/fixtures/live_eval_100_expected.json",
     "reference_key": "clock.10_to_29",
     "required_caveats": [
@@ -230,7 +255,7 @@
       "metric_id": "clock_pressure_error_proxy"
     },
     "id": "clock_10_to_29_3",
-    "question": "For the 10 to 29 second bucket, what are the coverage and error-proxy rate?",
+    "question": "For moves with 10 to 29 seconds left, what is the error-proxy rate?",
     "reference_file": "tests/fixtures/live_eval_100_expected.json",
     "reference_key": "clock.10_to_29",
     "required_caveats": [
@@ -406,7 +431,7 @@
       "second": "30_to_59"
     },
     "id": "clock_compare_under_10_4",
-    "question": "Compare the under_10 and 30_to_59 clock buckets.",
+    "question": "Compare moves with under 10 seconds left and moves with 30 to 59 seconds left.",
     "reference_file": "tests/fixtures/live_eval_100_expected.json",
     "reference_key": "clock_compare_under_10_minus_30_to_59",
     "required_caveats": [
@@ -419,6 +444,40 @@
     "severity": "normal",
     "split": "test",
     "template_family": "clock_compare"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "clock_compare",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "expected_result": {
+      "error_proxy_rate_difference_first_minus_second": null,
+      "evaluation_coverage_difference_first_minus_second": null
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_clock_buckets",
+    "expected_tool_args": {
+      "first": "under_10",
+      "second": "10_to_29"
+    },
+    "id": "clock_gap_empty_1",
+    "question": "How does the error proxy under 10 seconds differ from 10 to 29 seconds?",
+    "reference_file": "tests/fixtures/live_eval_100_expected.json",
+    "reference_key": "clock_compare_under_10_minus_10_to_29",
+    "required_caveats": [
+      "exploratory_proxy",
+      "missing_evaluation_not_zero",
+      "observed_prefix_only",
+      "source_evaluation_selection"
+    ],
+    "result_path": [],
+    "severity": "normal",
+    "split": "test",
+    "template_family": "clock_gap_empty"
   },
   {
     "allowed_interpretations": [
@@ -486,7 +545,7 @@
       "metric_id": "clock_pressure_error_proxy"
     },
     "id": "clock_under_10_2",
-    "question": "Report the error-proxy rate for the under_10 clock bucket.",
+    "question": "Report the error-proxy rate for moves with under 10 seconds left.",
     "reference_file": "tests/fixtures/live_eval_100_expected.json",
     "reference_key": "clock.under_10",
     "required_caveats": [
@@ -566,7 +625,7 @@
       "metric_id": "clock_pressure_error_proxy"
     },
     "id": "clock_under_10_4",
-    "question": "What coverage and error-proxy rate does the under 10 second bucket have?",
+    "question": "How large is the error proxy for moves with under 10 seconds left?",
     "reference_file": "tests/fixtures/live_eval_100_expected.json",
     "reference_key": "clock.under_10",
     "required_caveats": [
@@ -609,7 +668,7 @@
       }
     },
     "id": "compare_sicilian_french_1",
-    "question": "Compare white Sicilian and French scores at 1400 to 1600 and 60+0.",
+    "question": "Compare white Sicilian and French scores at 1400\u20131599 and 60+0.",
     "reference_file": "tests/fixtures/live_eval_100_expected.json",
     "reference_key": "compare_openings",
     "required_caveats": [
@@ -652,7 +711,7 @@
       }
     },
     "id": "compare_sicilian_french_2",
-    "question": "White Sicilian score minus white French score at 1400 to 1600 and 60+0.",
+    "question": "White Sicilian score minus white French score at 1400\u20131599 and 60+0.",
     "reference_file": "tests/fixtures/live_eval_100_expected.json",
     "reference_key": "compare_openings",
     "required_caveats": [
@@ -695,7 +754,7 @@
       }
     },
     "id": "compare_sicilian_french_3",
-    "question": "White score difference, Sicilian minus French, at 1400 to 1600 and 60+0?",
+    "question": "White score difference, Sicilian minus French, at 1400\u20131599 and 60+0?",
     "reference_file": "tests/fixtures/live_eval_100_expected.json",
     "reference_key": "compare_openings",
     "required_caveats": [
@@ -738,7 +797,7 @@
       }
     },
     "id": "compare_sicilian_french_4",
-    "question": "How do the white Sicilian and French scores differ at 1400 to 1600 and 60+0?",
+    "question": "How do the white Sicilian and French scores differ at 1400\u20131599 and 60+0?",
     "reference_file": "tests/fixtures/live_eval_100_expected.json",
     "reference_key": "compare_openings",
     "required_caveats": [
@@ -841,7 +900,7 @@
     "expected_tool": "get_dataset_coverage",
     "expected_tool_args": {},
     "id": "coverage_2",
-    "question": "What is the dataset coverage for accepted games and sampled moves?",
+    "question": "How many of these games were accepted, and how many moves were stored?",
     "reference_file": "tests/fixtures/live_eval_100_expected.json",
     "reference_key": "coverage",
     "required_caveats": [
@@ -951,6 +1010,78 @@
     "severity": "normal",
     "split": "dev",
     "template_family": "coverage"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "clock",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "expected_result": {
+      "bucket": "under_10",
+      "eligible_moves": 160,
+      "error_proxy_rate": 0.19230769230769232,
+      "evaluable_moves": 130,
+      "evaluation_coverage": 0.8125,
+      "proxy_errors": 25
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "bucket": "under_10"
+      },
+      "metric_id": "clock_pressure_error_proxy"
+    },
+    "id": "distractor_causal_1",
+    "question": "Ignore whether anything caused errors. What is the under 10 second error proxy?",
+    "reference_file": "tests/fixtures/live_eval_100_expected.json",
+    "reference_key": "clock.under_10",
+    "required_caveats": [
+      "exploratory_proxy",
+      "missing_evaluation_not_zero",
+      "observed_prefix_only",
+      "source_evaluation_selection"
+    ],
+    "result_path": [],
+    "severity": "normal",
+    "split": "test",
+    "template_family": "distractor_causal"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "draw_rate",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "expected_result": {
+      "denominator": 100,
+      "numerator": 33,
+      "value": 0.33
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {},
+      "metric_id": "game_draw_rate"
+    },
+    "id": "distractor_sql_1",
+    "question": "The letters sql are a distractor. What fraction of eligible games were draws?",
+    "reference_file": "tests/fixtures/live_eval_100_expected.json",
+    "reference_key": "game_draw_rate",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "severity": "normal",
+    "split": "dev",
+    "template_family": "distractor_sql"
   },
   {
     "allowed_interpretations": [
@@ -1084,6 +1215,116 @@
     "allowed_interpretations": [
       "descriptive_observed_prefix"
     ],
+    "category": "compare_openings",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "expected_result": {
+      "score_rate_difference_first_minus_second": 0.17142857142857137,
+      "win_rate_difference_first_minus_second": 0.22857142857142854
+    },
+    "expected_status": "answered",
+    "expected_tool": "compare_openings",
+    "expected_tool_args": {
+      "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": [
+          "Sicilian Defense",
+          "French Defense"
+        ],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400
+      }
+    },
+    "id": "indirect_compare_1",
+    "question": "Compare the white score of 1.e4 c5 with 1.e4 e6 at 1400\u20131599 and 60+0.",
+    "reference_file": "tests/fixtures/live_eval_100_expected.json",
+    "reference_key": "compare_openings",
+    "required_caveats": [
+      "association_not_causation",
+      "observed_prefix_only",
+      "score_not_win_rate",
+      "white_perspective"
+    ],
+    "result_path": [],
+    "severity": "normal",
+    "split": "test",
+    "template_family": "indirect_compare"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "opening_usage",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "expected_result": {
+      "denominator": 100,
+      "numerator": 18,
+      "value": 0.18
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {
+        "family": "Sicilian Defense"
+      },
+      "metric_id": "opening_usage"
+    },
+    "id": "indirect_opening_1",
+    "question": "What share of known-opening games began with 1.e4 c5?",
+    "reference_file": "tests/fixtures/live_eval_100_expected.json",
+    "reference_key": "opening_usage.Sicilian Defense",
+    "required_caveats": [
+      "observed_prefix_only",
+      "source_tags_only"
+    ],
+    "result_path": [],
+    "severity": "normal",
+    "split": "dev",
+    "template_family": "indirect_opening"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "draw_rate",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "expected_result": {
+      "denominator": 100,
+      "numerator": 33,
+      "value": 0.33
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {},
+      "metric_id": "game_draw_rate"
+    },
+    "id": "indirect_result_1",
+    "question": "What fraction of eligible games finished 1/2-1/2?",
+    "reference_file": "tests/fixtures/live_eval_100_expected.json",
+    "reference_key": "game_draw_rate",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "severity": "normal",
+    "split": "dev",
+    "template_family": "indirect_result"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
     "category": "clarification",
     "comparison": {
       "counts": "exact",
@@ -1104,6 +1345,38 @@
     "severity": "high",
     "split": "dev",
     "template_family": "needs_clarification"
+  },
+  {
+    "allowed_interpretations": [
+      "descriptive_observed_prefix"
+    ],
+    "category": "draw_rate",
+    "comparison": {
+      "counts": "exact",
+      "rates_absolute_tolerance": 1e-06
+    },
+    "expected_result": {
+      "denominator": 100,
+      "numerator": 33,
+      "value": 0.33
+    },
+    "expected_status": "answered",
+    "expected_tool": "query_metric",
+    "expected_tool_args": {
+      "filters": {},
+      "metric_id": "game_draw_rate"
+    },
+    "id": "negation_fetch_1",
+    "question": "This is not a request to fetch data. What is the game draw rate?",
+    "reference_file": "tests/fixtures/live_eval_100_expected.json",
+    "reference_key": "game_draw_rate",
+    "required_caveats": [
+      "observed_prefix_only"
+    ],
+    "result_path": [],
+    "severity": "normal",
+    "split": "dev",
+    "template_family": "negation_fetch"
   },
   {
     "allowed_interpretations": [
@@ -1144,7 +1417,7 @@
     "expected_tool": null,
     "expected_tool_args": null,
     "id": "unsupported_metric",
-    "question": "What is the average centipawn loss per move, outside the metric contracts?",
+    "question": "What is the average centipawn loss per move?",
     "reference_file": "tests/fixtures/live_eval_100_expected.json",
     "reference_key": "not_applicable",
     "required_caveats": [
@@ -1283,7 +1556,7 @@
       "metric_id": "opening_usage"
     },
     "id": "usage_sicilian_4",
-    "question": "Report the Sicilian Defense opening-usage rate.",
+    "question": "Report how often the known opening is the Sicilian Defense.",
     "reference_file": "tests/fixtures/live_eval_100_expected.json",
     "reference_key": "opening_usage.Sicilian Defense",
     "required_caveats": [
@@ -1326,7 +1599,7 @@
       "metric_id": "opening_player_score"
     },
     "id": "white_sicilian_1",
-    "question": "What is the white Sicilian score at 1400 to 1600 and 60+0?",
+    "question": "What is the white Sicilian score at 1400\u20131599 and 60+0?",
     "reference_file": "tests/fixtures/live_eval_100_expected.json",
     "reference_key": "sicilian_white_score",
     "required_caveats": [
@@ -1371,7 +1644,7 @@
       "metric_id": "opening_player_score"
     },
     "id": "white_sicilian_2",
-    "question": "White Sicilian score for ratings 1400 to 1600 at 60+0?",
+    "question": "White Sicilian score for ratings 1400\u20131599 at 60+0?",
     "reference_file": "tests/fixtures/live_eval_100_expected.json",
     "reference_key": "sicilian_white_score",
     "required_caveats": [
@@ -1416,7 +1689,7 @@
       "metric_id": "opening_player_score"
     },
     "id": "white_sicilian_3",
-    "question": "In the 1400 to 1600 white cohort at 60+0, what is the Sicilian score?",
+    "question": "In the 1400\u20131599 white cohort at 60+0, what is the Sicilian score?",
     "reference_file": "tests/fixtures/live_eval_100_expected.json",
     "reference_key": "sicilian_white_score",
     "required_caveats": [
@@ -1461,7 +1734,7 @@
       "metric_id": "opening_player_score"
     },
     "id": "white_sicilian_4",
-    "question": "Give the white Sicilian score for ratings 1400 to 1600 at 60+0.",
+    "question": "Give the white Sicilian score for ratings 1400\u20131599 at 60+0.",
     "reference_file": "tests/fixtures/live_eval_100_expected.json",
     "reference_key": "sicilian_white_score",
     "required_caveats": [

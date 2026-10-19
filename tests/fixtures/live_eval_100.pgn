@@ -28,7 +28,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} d6 {[%clk 0:00:06] [%eval 0.00]} 3. d4 {[%clk 0:00:04] [%eval 0.00]} cxd4 {[%clk 0:00:03] [%eval 0.00]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Rapid synthetic live eval"]
 [Site "https://lichess.org/0000002d"]
 [UTCDate "2020.01.03"]
 [White "FixtureLiveW002"]
@@ -43,7 +43,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval -2.50]} d6 {[%clk 0:00:06] [%eval -2.50]} 3. d4 {[%clk 0:00:04] [%eval -2.50]} cxd4 {[%clk 0:00:03] [%eval -2.50]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000042"]
 [UTCDate "2020.01.04"]
 [White "FixtureLiveW003"]
@@ -58,7 +58,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} d6 {[%clk 0:00:06] [%eval 0.00]} 3. d4 {[%clk 0:00:04] [%eval 0.00]} cxd4 {[%clk 0:00:03] [%eval 2.50]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/0000006f"]
 [UTCDate "2020.01.05"]
 [White "FixtureLiveW004"]
@@ -73,7 +73,7 @@
 
 1. e4 {[%clk 0:00:45]} c5 {[%clk 0:00:50]} 2. Nf3 {[%clk 0:00:08]} d6 {[%clk 0:00:06]} 3. d4 {[%clk 0:00:04]} cxd4 {[%clk 0:00:03]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000071"]
 [UTCDate "2020.01.06"]
 [White "FixtureLiveW005"]
@@ -88,7 +88,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} d6 {[%clk 0:00:06] [%eval 0.00]} 3. d4 {[%clk 0:00:04] [%eval 0.00]} cxd4 {[%clk 0:00:03] [%eval 0.00]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000082"]
 [UTCDate "2020.01.07"]
 [White "FixtureLiveW006"]
@@ -103,7 +103,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval -2.50]} d6 {[%clk 0:00:06] [%eval -2.50]} 3. d4 {[%clk 0:00:04] [%eval -2.50]} cxd4 {[%clk 0:00:03] [%eval -2.50]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000090"]
 [UTCDate "2020.01.08"]
 [White "FixtureLiveW007"]
@@ -118,7 +118,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} d6 {[%clk 0:00:06] [%eval 0.00]} 3. d4 {[%clk 0:00:04] [%eval 0.00]} cxd4 {[%clk 0:00:03] [%eval 2.50]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000000b8"]
 [UTCDate "2020.01.09"]
 [White "FixtureLiveW008"]
@@ -133,7 +133,7 @@
 
 1. e4 {[%clk 0:00:45]} c5 {[%clk 0:00:50]} 2. Nf3 {[%clk 0:00:08]} d6 {[%clk 0:00:06]} 3. d4 {[%clk 0:00:04]} cxd4 {[%clk 0:00:03]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000000c7"]
 [UTCDate "2020.01.10"]
 [White "FixtureLiveW009"]
@@ -178,7 +178,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} d6 {[%clk 0:00:06] [%eval 0.00]} 3. d4 {[%clk 0:00:04] [%eval 0.00]} cxd4 {[%clk 0:00:03] [%eval 2.50]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Rapid synthetic live eval"]
 [Site "https://lichess.org/000000ee"]
 [UTCDate "2020.01.13"]
 [White "FixtureLiveW012"]
@@ -193,7 +193,7 @@
 
 1. e4 {[%clk 0:00:45]} c5 {[%clk 0:00:50]} 2. Nf3 {[%clk 0:00:08]} d6 {[%clk 0:00:06]} 3. d4 {[%clk 0:00:04]} cxd4 {[%clk 0:00:03]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000000f7"]
 [UTCDate "2020.01.14"]
 [White "FixtureLiveW013"]
@@ -208,7 +208,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} d6 {[%clk 0:00:06] [%eval 0.00]} 3. d4 {[%clk 0:00:04] [%eval 0.00]} cxd4 {[%clk 0:00:03] [%eval 0.00]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000121"]
 [UTCDate "2020.01.15"]
 [White "FixtureLiveW014"]
@@ -223,7 +223,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval -2.50]} d6 {[%clk 0:00:06] [%eval -2.50]} 3. d4 {[%clk 0:00:04] [%eval -2.50]} cxd4 {[%clk 0:00:03] [%eval -2.50]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000123"]
 [UTCDate "2020.01.16"]
 [White "FixtureLiveW015"]
@@ -238,7 +238,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} d6 {[%clk 0:00:06] [%eval 0.00]} 3. d4 {[%clk 0:00:04] [%eval 0.00]} cxd4 {[%clk 0:00:03] [%eval 2.50]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000141"]
 [UTCDate "2020.01.17"]
 [White "FixtureLiveW016"]
@@ -253,7 +253,7 @@
 
 1. e4 {[%clk 0:00:45]} c5 {[%clk 0:00:50]} 2. Nf3 {[%clk 0:00:08]} d6 {[%clk 0:00:06]} 3. d4 {[%clk 0:00:04]} cxd4 {[%clk 0:00:03]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000161"]
 [UTCDate "2020.01.18"]
 [White "FixtureLiveW017"]
@@ -268,7 +268,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} c5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} d6 {[%clk 0:00:06] [%eval 0.00]} 3. d4 {[%clk 0:00:04] [%eval 0.00]} cxd4 {[%clk 0:00:03] [%eval 0.00]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000164"]
 [UTCDate "2020.01.19"]
 [White "FixtureLiveW018"]
@@ -283,7 +283,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} e6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval -2.50]} d5 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} Nf6 {[%clk 0:00:03] [%eval -2.50]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/0000016d"]
 [UTCDate "2020.01.20"]
 [White "FixtureLiveW019"]
@@ -328,7 +328,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} e6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} d5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Nf6 {[%clk 0:00:03] [%eval 0.00]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Rapid synthetic live eval"]
 [Site "https://lichess.org/000001ac"]
 [UTCDate "2020.01.23"]
 [White "FixtureLiveW022"]
@@ -343,7 +343,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} e6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval -2.50]} d5 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} Nf6 {[%clk 0:00:03] [%eval -2.50]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000001c0"]
 [UTCDate "2020.01.24"]
 [White "FixtureLiveW023"]
@@ -358,7 +358,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} e6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} d5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Nf6 {[%clk 0:00:03] [%eval 2.50]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000001da"]
 [UTCDate "2020.01.25"]
 [White "FixtureLiveW024"]
@@ -373,7 +373,7 @@
 
 1. e4 {[%clk 0:00:45]} e6 {[%clk 0:00:50]} 2. d4 {[%clk 0:00:08]} d5 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} Nf6 {[%clk 0:00:03]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000001eb"]
 [UTCDate "2020.01.26"]
 [White "FixtureLiveW025"]
@@ -388,7 +388,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} e6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} d5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Nf6 {[%clk 0:00:03] [%eval 0.00]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000001f6"]
 [UTCDate "2020.01.27"]
 [White "FixtureLiveW026"]
@@ -403,7 +403,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} e6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval -2.50]} d5 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} Nf6 {[%clk 0:00:03] [%eval -2.50]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000202"]
 [UTCDate "2020.01.28"]
 [White "FixtureLiveW027"]
@@ -418,7 +418,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} e6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} d5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Nf6 {[%clk 0:00:03] [%eval 2.50]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000209"]
 [UTCDate "2020.01.29"]
 [White "FixtureLiveW028"]
@@ -433,7 +433,7 @@
 
 1. e4 {[%clk 0:00:45]} e6 {[%clk 0:00:50]} 2. d4 {[%clk 0:00:08]} d5 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} Nf6 {[%clk 0:00:03]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000214"]
 [UTCDate "2020.01.30"]
 [White "FixtureLiveW029"]
@@ -478,7 +478,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} e6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} d5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Nf6 {[%clk 0:00:03] [%eval 2.50]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Rapid synthetic live eval"]
 [Site "https://lichess.org/00000240"]
 [UTCDate "2020.02.02"]
 [White "FixtureLiveW032"]
@@ -493,7 +493,7 @@
 
 1. e4 {[%clk 0:00:45]} e5 {[%clk 0:00:50]} 2. Nf3 {[%clk 0:00:08]} Nc6 {[%clk 0:00:06]} 3. Bc4 {[%clk 0:00:04]} Bc5 {[%clk 0:00:03]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/0000025f"]
 [UTCDate "2020.02.03"]
 [White "FixtureLiveW033"]
@@ -508,7 +508,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} Nc6 {[%clk 0:00:06] [%eval 0.00]} 3. Bc4 {[%clk 0:00:04] [%eval 0.00]} Bc5 {[%clk 0:00:03] [%eval 0.00]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/0000026f"]
 [UTCDate "2020.02.04"]
 [White "FixtureLiveW034"]
@@ -523,7 +523,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval -2.50]} Nc6 {[%clk 0:00:06] [%eval -2.50]} 3. Bc4 {[%clk 0:00:04] [%eval -2.50]} Bc5 {[%clk 0:00:03] [%eval -2.50]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000274"]
 [UTCDate "2020.02.05"]
 [White "FixtureLiveW035"]
@@ -538,7 +538,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} Nc6 {[%clk 0:00:06] [%eval 0.00]} 3. Bc4 {[%clk 0:00:04] [%eval 0.00]} Bc5 {[%clk 0:00:03] [%eval 2.50]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000278"]
 [UTCDate "2020.02.06"]
 [White "FixtureLiveW036"]
@@ -553,7 +553,7 @@
 
 1. e4 {[%clk 0:00:45]} e5 {[%clk 0:00:50]} 2. Nf3 {[%clk 0:00:08]} Nc6 {[%clk 0:00:06]} 3. Bc4 {[%clk 0:00:04]} Bc5 {[%clk 0:00:03]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000002a7"]
 [UTCDate "2020.02.07"]
 [White "FixtureLiveW037"]
@@ -568,7 +568,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} Nc6 {[%clk 0:00:06] [%eval 0.00]} 3. Bc4 {[%clk 0:00:04] [%eval 0.00]} Bc5 {[%clk 0:00:03] [%eval 0.00]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000002b8"]
 [UTCDate "2020.02.08"]
 [White "FixtureLiveW038"]
@@ -583,7 +583,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval -2.50]} Nc6 {[%clk 0:00:06] [%eval -2.50]} 3. Bc4 {[%clk 0:00:04] [%eval -2.50]} Bc5 {[%clk 0:00:03] [%eval -2.50]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000002d3"]
 [UTCDate "2020.02.09"]
 [White "FixtureLiveW039"]
@@ -628,7 +628,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} Nc6 {[%clk 0:00:06] [%eval 0.00]} 3. Bc4 {[%clk 0:00:04] [%eval 0.00]} Bc5 {[%clk 0:00:03] [%eval 0.00]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Rapid synthetic live eval"]
 [Site "https://lichess.org/00000310"]
 [UTCDate "2020.02.12"]
 [White "FixtureLiveW042"]
@@ -643,7 +643,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval -2.50]} Nc6 {[%clk 0:00:06] [%eval -2.50]} 3. Bb5 {[%clk 0:00:04] [%eval -2.50]} a6 {[%clk 0:00:03] [%eval -2.50]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000329"]
 [UTCDate "2020.02.13"]
 [White "FixtureLiveW043"]
@@ -658,7 +658,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} Nc6 {[%clk 0:00:06] [%eval 0.00]} 3. Bb5 {[%clk 0:00:04] [%eval 0.00]} a6 {[%clk 0:00:03] [%eval 2.50]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000331"]
 [UTCDate "2020.02.14"]
 [White "FixtureLiveW044"]
@@ -673,7 +673,7 @@
 
 1. e4 {[%clk 0:00:45]} e5 {[%clk 0:00:50]} 2. Nf3 {[%clk 0:00:08]} Nc6 {[%clk 0:00:06]} 3. Bb5 {[%clk 0:00:04]} a6 {[%clk 0:00:03]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000335"]
 [UTCDate "2020.02.15"]
 [White "FixtureLiveW045"]
@@ -688,7 +688,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} Nc6 {[%clk 0:00:06] [%eval 0.00]} 3. Bb5 {[%clk 0:00:04] [%eval 0.00]} a6 {[%clk 0:00:03] [%eval 0.00]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/0000033d"]
 [UTCDate "2020.02.16"]
 [White "FixtureLiveW046"]
@@ -703,7 +703,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval -2.50]} Nc6 {[%clk 0:00:06] [%eval -2.50]} 3. Bb5 {[%clk 0:00:04] [%eval -2.50]} a6 {[%clk 0:00:03] [%eval -2.50]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/0000035e"]
 [UTCDate "2020.02.17"]
 [White "FixtureLiveW047"]
@@ -718,7 +718,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} Nc6 {[%clk 0:00:06] [%eval 0.00]} 3. Bb5 {[%clk 0:00:04] [%eval 0.00]} a6 {[%clk 0:00:03] [%eval 2.50]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000361"]
 [UTCDate "2020.02.18"]
 [White "FixtureLiveW048"]
@@ -733,7 +733,7 @@
 
 1. e4 {[%clk 0:00:45]} e5 {[%clk 0:00:50]} 2. Nf3 {[%clk 0:00:08]} Nc6 {[%clk 0:00:06]} 3. Bb5 {[%clk 0:00:04]} a6 {[%clk 0:00:03]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000372"]
 [UTCDate "2020.02.19"]
 [White "FixtureLiveW049"]
@@ -778,7 +778,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nf3 {[%clk 0:00:08] [%eval 0.00]} Nc6 {[%clk 0:00:06] [%eval 0.00]} 3. Bb5 {[%clk 0:00:04] [%eval 0.00]} a6 {[%clk 0:00:03] [%eval 2.50]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Rapid synthetic live eval"]
 [Site "https://lichess.org/000003d2"]
 [UTCDate "2020.02.22"]
 [White "FixtureLiveW052"]
@@ -793,7 +793,7 @@
 
 1. d4 {[%clk 0:00:45]} d5 {[%clk 0:00:50]} 2. c4 {[%clk 0:00:08]} e6 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} Nf6 {[%clk 0:00:03]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000003d3"]
 [UTCDate "2020.02.23"]
 [White "FixtureLiveW053"]
@@ -808,7 +808,7 @@
 
 1. d4 {[%clk 0:00:45] [%eval 0.00]} d5 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval 0.00]} e6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Nf6 {[%clk 0:00:03] [%eval 0.00]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000003f6"]
 [UTCDate "2020.02.24"]
 [White "FixtureLiveW054"]
@@ -823,7 +823,7 @@
 
 1. d4 {[%clk 0:00:45] [%eval 0.00]} d5 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval -2.50]} e6 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} Nf6 {[%clk 0:00:03] [%eval -2.50]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000401"]
 [UTCDate "2020.02.25"]
 [White "FixtureLiveW055"]
@@ -838,7 +838,7 @@
 
 1. d4 {[%clk 0:00:45] [%eval 0.00]} d5 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval 0.00]} e6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Nf6 {[%clk 0:00:03] [%eval 2.50]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/0000041b"]
 [UTCDate "2020.02.26"]
 [White "FixtureLiveW056"]
@@ -853,7 +853,7 @@
 
 1. d4 {[%clk 0:00:45]} d5 {[%clk 0:00:50]} 2. c4 {[%clk 0:00:08]} e6 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} Nf6 {[%clk 0:00:03]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000444"]
 [UTCDate "2020.02.27"]
 [White "FixtureLiveW057"]
@@ -868,7 +868,7 @@
 
 1. d4 {[%clk 0:00:45] [%eval 0.00]} d5 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval 0.00]} e6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Nf6 {[%clk 0:00:03] [%eval 0.00]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000466"]
 [UTCDate "2020.02.28"]
 [White "FixtureLiveW058"]
@@ -883,7 +883,7 @@
 
 1. d4 {[%clk 0:00:45] [%eval 0.00]} d5 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval -2.50]} e6 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} Nf6 {[%clk 0:00:03] [%eval -2.50]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000479"]
 [UTCDate "2020.02.29"]
 [White "FixtureLiveW059"]
@@ -928,7 +928,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} c6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} d5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} dxe4 {[%clk 0:00:03] [%eval 0.00]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Rapid synthetic live eval"]
 [Site "https://lichess.org/000004b8"]
 [UTCDate "2020.03.03"]
 [White "FixtureLiveW062"]
@@ -943,7 +943,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} c6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval -2.50]} d5 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} dxe4 {[%clk 0:00:03] [%eval -2.50]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000004c0"]
 [UTCDate "2020.03.04"]
 [White "FixtureLiveW063"]
@@ -958,7 +958,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} c6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} d5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} dxe4 {[%clk 0:00:03] [%eval 2.50]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000004cc"]
 [UTCDate "2020.03.05"]
 [White "FixtureLiveW064"]
@@ -973,7 +973,7 @@
 
 1. e4 {[%clk 0:00:45]} c6 {[%clk 0:00:50]} 2. d4 {[%clk 0:00:08]} d5 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} dxe4 {[%clk 0:00:03]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000004da"]
 [UTCDate "2020.03.06"]
 [White "FixtureLiveW065"]
@@ -988,7 +988,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} c6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} d5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} dxe4 {[%clk 0:00:03] [%eval 0.00]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000004dd"]
 [UTCDate "2020.03.07"]
 [White "FixtureLiveW066"]
@@ -1003,7 +1003,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} c6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval -2.50]} d5 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} dxe4 {[%clk 0:00:03] [%eval -2.50]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000004f6"]
 [UTCDate "2020.03.08"]
 [White "FixtureLiveW067"]
@@ -1018,7 +1018,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} c6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} d5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} dxe4 {[%clk 0:00:03] [%eval 2.50]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000522"]
 [UTCDate "2020.03.09"]
 [White "FixtureLiveW068"]
@@ -1033,7 +1033,7 @@
 
 1. c4 {[%clk 0:00:45]} e5 {[%clk 0:00:50]} 2. Nc3 {[%clk 0:00:08]} Nf6 {[%clk 0:00:06]} 3. Nf3 {[%clk 0:00:04]} Nc6 {[%clk 0:00:03]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/0000052d"]
 [UTCDate "2020.03.10"]
 [White "FixtureLiveW069"]
@@ -1078,7 +1078,7 @@
 
 1. c4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nc3 {[%clk 0:00:08] [%eval 0.00]} Nf6 {[%clk 0:00:06] [%eval 0.00]} 3. Nf3 {[%clk 0:00:04] [%eval 0.00]} Nc6 {[%clk 0:00:03] [%eval 2.50]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Rapid synthetic live eval"]
 [Site "https://lichess.org/000005a0"]
 [UTCDate "2020.03.13"]
 [White "FixtureLiveW072"]
@@ -1093,7 +1093,7 @@
 
 1. c4 {[%clk 0:00:45]} e5 {[%clk 0:00:50]} 2. Nc3 {[%clk 0:00:08]} Nf6 {[%clk 0:00:06]} 3. Nf3 {[%clk 0:00:04]} Nc6 {[%clk 0:00:03]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000005d7"]
 [UTCDate "2020.03.14"]
 [White "FixtureLiveW073"]
@@ -1108,7 +1108,7 @@
 
 1. c4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nc3 {[%clk 0:00:08] [%eval 0.00]} Nf6 {[%clk 0:00:06] [%eval 0.00]} 3. Nf3 {[%clk 0:00:04] [%eval 0.00]} Nc6 {[%clk 0:00:03] [%eval 0.00]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000005e5"]
 [UTCDate "2020.03.15"]
 [White "FixtureLiveW074"]
@@ -1123,7 +1123,7 @@
 
 1. c4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nc3 {[%clk 0:00:08] [%eval -2.50]} Nf6 {[%clk 0:00:06] [%eval -2.50]} 3. Nf3 {[%clk 0:00:04] [%eval -2.50]} Nc6 {[%clk 0:00:03] [%eval -2.50]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000005ee"]
 [UTCDate "2020.03.16"]
 [White "FixtureLiveW075"]
@@ -1138,7 +1138,7 @@
 
 1. c4 {[%clk 0:00:45] [%eval 0.00]} e5 {[%clk 0:00:50] [%eval 0.00]} 2. Nc3 {[%clk 0:00:08] [%eval 0.00]} Nf6 {[%clk 0:00:06] [%eval 0.00]} 3. Nf3 {[%clk 0:00:04] [%eval 0.00]} Nc6 {[%clk 0:00:03] [%eval 2.50]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000005f9"]
 [UTCDate "2020.03.17"]
 [White "FixtureLiveW076"]
@@ -1153,7 +1153,7 @@
 
 1. d4 {[%clk 0:00:45]} Nf6 {[%clk 0:00:50]} 2. c4 {[%clk 0:00:08]} g6 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} Bg7 {[%clk 0:00:03]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000634"]
 [UTCDate "2020.03.18"]
 [White "FixtureLiveW077"]
@@ -1168,7 +1168,7 @@
 
 1. d4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval 0.00]} g6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Bg7 {[%clk 0:00:03] [%eval 0.00]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/0000063d"]
 [UTCDate "2020.03.19"]
 [White "FixtureLiveW078"]
@@ -1183,7 +1183,7 @@
 
 1. d4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval -2.50]} g6 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} Bg7 {[%clk 0:00:03] [%eval -2.50]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000640"]
 [UTCDate "2020.03.20"]
 [White "FixtureLiveW079"]
@@ -1228,7 +1228,7 @@
 
 1. d4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval 0.00]} g6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Bg7 {[%clk 0:00:03] [%eval 0.00]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Rapid synthetic live eval"]
 [Site "https://lichess.org/00000662"]
 [UTCDate "2020.03.23"]
 [White "FixtureLiveW082"]
@@ -1243,7 +1243,7 @@
 
 1. d4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval -2.50]} e6 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} Bb4 {[%clk 0:00:03] [%eval -2.50]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000686"]
 [UTCDate "2020.03.24"]
 [White "FixtureLiveW083"]
@@ -1258,7 +1258,7 @@
 
 1. d4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval 0.00]} e6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Bb4 {[%clk 0:00:03] [%eval 2.50]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000689"]
 [UTCDate "2020.03.25"]
 [White "FixtureLiveW084"]
@@ -1273,7 +1273,7 @@
 
 1. d4 {[%clk 0:00:45]} Nf6 {[%clk 0:00:50]} 2. c4 {[%clk 0:00:08]} e6 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} Bb4 {[%clk 0:00:03]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000006a7"]
 [UTCDate "2020.03.26"]
 [White "FixtureLiveW085"]
@@ -1288,7 +1288,7 @@
 
 1. d4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval 0.00]} e6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Bb4 {[%clk 0:00:03] [%eval 0.00]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000006be"]
 [UTCDate "2020.03.27"]
 [White "FixtureLiveW086"]
@@ -1303,7 +1303,7 @@
 
 1. d4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval -2.50]} e6 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} Bb4 {[%clk 0:00:03] [%eval -2.50]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000006d1"]
 [UTCDate "2020.03.28"]
 [White "FixtureLiveW087"]
@@ -1318,7 +1318,7 @@
 
 1. d4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. c4 {[%clk 0:00:08] [%eval 0.00]} e6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Bb4 {[%clk 0:00:03] [%eval 2.50]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000006d9"]
 [UTCDate "2020.03.29"]
 [White "FixtureLiveW088"]
@@ -1333,7 +1333,7 @@
 
 1. e4 {[%clk 0:00:45]} d5 {[%clk 0:00:50]} 2. exd5 {[%clk 0:00:08]} Qxd5 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} Qa5 {[%clk 0:00:03]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000006e0"]
 [UTCDate "2020.03.30"]
 [White "FixtureLiveW089"]
@@ -1378,7 +1378,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} d5 {[%clk 0:00:50] [%eval 0.00]} 2. exd5 {[%clk 0:00:08] [%eval 0.00]} Qxd5 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} Qa5 {[%clk 0:00:03] [%eval 2.50]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Rapid synthetic live eval"]
 [Site "https://lichess.org/00000727"]
 [UTCDate "2020.04.02"]
 [White "FixtureLiveW092"]
@@ -1393,7 +1393,7 @@
 
 1. e4 {[%clk 0:00:45]} d5 {[%clk 0:00:50]} 2. exd5 {[%clk 0:00:08]} Qxd5 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} Qa5 {[%clk 0:00:03]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/0000072f"]
 [UTCDate "2020.04.03"]
 [White "FixtureLiveW093"]
@@ -1408,7 +1408,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} d6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} Nf6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} g6 {[%clk 0:00:03] [%eval 0.00]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/00000785"]
 [UTCDate "2020.04.04"]
 [White "FixtureLiveW094"]
@@ -1423,7 +1423,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} d6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval -2.50]} Nf6 {[%clk 0:00:06] [%eval -2.50]} 3. Nc3 {[%clk 0:00:04] [%eval -2.50]} g6 {[%clk 0:00:03] [%eval -2.50]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000007ad"]
 [UTCDate "2020.04.05"]
 [White "FixtureLiveW095"]
@@ -1438,7 +1438,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} d6 {[%clk 0:00:50] [%eval 0.00]} 2. d4 {[%clk 0:00:08] [%eval 0.00]} Nf6 {[%clk 0:00:06] [%eval 0.00]} 3. Nc3 {[%clk 0:00:04] [%eval 0.00]} g6 {[%clk 0:00:03] [%eval 2.50]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000007c0"]
 [UTCDate "2020.04.06"]
 [White "FixtureLiveW096"]
@@ -1453,7 +1453,7 @@
 
 1. e4 {[%clk 0:00:45]} d6 {[%clk 0:00:50]} 2. d4 {[%clk 0:00:08]} Nf6 {[%clk 0:00:06]} 3. Nc3 {[%clk 0:00:04]} g6 {[%clk 0:00:03]} 1-0
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000007cf"]
 [UTCDate "2020.04.07"]
 [White "FixtureLiveW097"]
@@ -1468,7 +1468,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. e5 {[%clk 0:00:08] [%eval 0.00]} Nd5 {[%clk 0:00:06] [%eval 0.00]} 3. d4 {[%clk 0:00:04] [%eval 0.00]} d6 {[%clk 0:00:03] [%eval 0.00]} 1/2-1/2
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000007d5"]
 [UTCDate "2020.04.08"]
 [White "FixtureLiveW098"]
@@ -1483,7 +1483,7 @@
 
 1. e4 {[%clk 0:00:45] [%eval 0.00]} Nf6 {[%clk 0:00:50] [%eval 0.00]} 2. e5 {[%clk 0:00:08] [%eval -2.50]} Nd5 {[%clk 0:00:06] [%eval -2.50]} 3. d4 {[%clk 0:00:04] [%eval -2.50]} d6 {[%clk 0:00:03] [%eval -2.50]} 0-1
 
-[Event "Rated Blitz synthetic live eval"]
+[Event "Rated Bullet synthetic live eval"]
 [Site "https://lichess.org/000007d9"]
 [UTCDate "2020.04.09"]
 [White "FixtureLiveW099"]

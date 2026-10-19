@@ -12,10 +12,12 @@ from pathlib import Path
 
 import pytest
 
+from chess_analytics.analyst.core import execute_plan
 from chess_analytics.analyst.evaluation import score_case_portfolio
 from chess_analytics.analyst.live_eval import (
     load_live_cases,
     reference_mismatches,
+    score_case_live,
     score_oracle_plans,
     verify_live_set,
 )
@@ -94,19 +96,53 @@ def test_case_set_matches_builder_and_manifest():
     manifest_bytes = json.dumps(manifest, indent=2, sort_keys=True).encode() + b"\n"
     assert manifest_bytes == MANIFEST.read_bytes()
     loaded_manifest, loaded = load_live_cases(ROOT)
-    assert len(loaded) == 40
+    assert len(loaded) == 48
     assert loaded_manifest["dataset_id_pinned"] is False
     assert loaded_manifest["replay_plans"] is False
-    assert len({case["question"] for case in loaded}) == 40
+    assert len({case["question"] for case in loaded}) == 48
     answered = [case for case in loaded if case["expected_status"] == "answered"]
-    assert len(answered) == 32
-    families = {case["template_family"] for case in answered}
-    assert len(families) == 8
-    for family in families:
+    assert len(answered) == 39
+    quads = {
+        "clock_bucket",
+        "clock_compare",
+        "clock_empty",
+        "compare_openings",
+        "coverage",
+        "draw_rate",
+        "opening_usage",
+        "white_score",
+    }
+    singles = {
+        "clock_gap_empty",
+        "distractor_causal",
+        "distractor_sql",
+        "indirect_compare",
+        "indirect_opening",
+        "indirect_result",
+        "negation_fetch",
+    }
+    for family in quads:
         rows = [case for case in loaded if case["template_family"] == family]
         assert len(rows) == 4
-    assert sum(case["severity"] == "high" for case in loaded) == 8
+    for family in singles:
+        rows = [case for case in loaded if case["template_family"] == family]
+        assert len(rows) == 1
+    assert sum(case["severity"] == "high" for case in loaded) == 9
     assert "dataset_id" not in CASES.read_text()
+    questions = "\n".join(case["question"] for case in loaded)
+    leaked = (
+        "10_to_29",
+        "under_10",
+        "30_to_59",
+        "outside the metric contracts",
+        "opening-usage",
+        "dataset coverage",
+        "1400 to 1600",
+        "empty 10",
+    )
+    for phrase in leaked:
+        assert phrase not in questions
+    assert "1400\u20131599" in questions
 
 
 def test_manifest_hash_rejects_a_changed_digest():
@@ -161,10 +197,10 @@ def test_mutated_oracle_value_disagrees(references):
     assert any(item.startswith("game_draw_rate.numerator") for item in mismatches)
 
 
-def test_oracle_plans_score_forty(oracle_scores):
+def test_oracle_plans_score_every_case(oracle_scores):
     failed = [row["case_id"] for row in oracle_scores if not row["passed"]]
     assert failed == []
-    assert len(oracle_scores) == 40
+    assert len(oracle_scores) == 48
 
 
 def test_mutated_case_expectation_fails(oracle_scores):
@@ -184,3 +220,185 @@ def test_mutated_case_expectation_fails(oracle_scores):
     )
     assert again["passed"] is False
     assert "result_values" in again["failures"]
+
+
+_REFUSAL = ("sql", "fetch", "private", "spending cap", "caused", "centipawn", "best move")
+_DRAW_ARGS = {"filters": {}, "metric_id": "game_draw_rate"}
+_USAGE_ARGS = {"filters": {"family": "Sicilian Defense"}, "metric_id": "opening_usage"}
+_SCORE_ARGS = {
+    "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "family": "Sicilian Defense",
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400,
+    },
+    "metric_id": "opening_player_score",
+}
+_COMPARE_ARGS = {
+    "filters": {
+        "base_seconds": 60,
+        "color": "white",
+        "families": ["Sicilian Defense", "French Defense"],
+        "increment_seconds": 0,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400,
+    }
+}
+_UNDER_ARGS = {"filters": {"bucket": "under_10"}, "metric_id": "clock_pressure_error_proxy"}
+_EMPTY_ARGS = {"filters": {"bucket": "10_to_29"}, "metric_id": "clock_pressure_error_proxy"}
+_CLOCK_COMPARE_ARGS = {"first": "under_10", "second": "30_to_59"}
+_HARD_MISSES = {
+    "clarify_own_line",
+    "clock_gap_empty_1",
+    "distractor_causal_1",
+    "distractor_sql_1",
+    "indirect_compare_1",
+    "indirect_opening_1",
+    "indirect_result_1",
+    "negation_fetch_1",
+}
+
+
+def _answered(tool: str, args: dict) -> dict:
+    return {
+        "actions": [{"args": args, "tool": tool}],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered",
+    }
+
+
+def _keyword_plan(question: str) -> dict:
+    """Phrase router from the cold review. It reads the question and nothing else."""
+    text = question.lower()
+    if any(token in text for token in _REFUSAL):
+        status = "unsupported"
+        actions: list = []
+    elif "which opening should i" in text:
+        status = "needs_clarification"
+        actions = []
+    elif "sicilian" in text and "french" in text:
+        status, actions = "answered", _answered("compare_openings", _COMPARE_ARGS)["actions"]
+    elif "sicilian" in text and "score" in text:
+        status, actions = "answered", _answered("query_metric", _SCORE_ARGS)["actions"]
+    elif "sicilian" in text:
+        status, actions = "answered", _answered("query_metric", _USAGE_ARGS)["actions"]
+    elif "draw" in text:
+        status, actions = "answered", _answered("query_metric", _DRAW_ARGS)["actions"]
+    elif ("under 10" in text or "under_10" in text) and ("30 to 59" in text or "30_to_59" in text):
+        status, actions = (
+            "answered",
+            _answered("compare_clock_buckets", _CLOCK_COMPARE_ARGS)["actions"],
+        )
+    elif "10 to 29" in text or "10_to_29" in text:
+        status, actions = "answered", _answered("query_metric", _EMPTY_ARGS)["actions"]
+    elif "under 10" in text or "under_10" in text:
+        status, actions = "answered", _answered("query_metric", _UNDER_ARGS)["actions"]
+    elif any(word in text for word in ("coverage", "accepted", "sampled", "how complete")):
+        status, actions = "answered", _answered("get_dataset_coverage", {})["actions"]
+    else:
+        status, actions = "unsupported", []
+    return {
+        "actions": actions,
+        "interpretation": "descriptive_observed_prefix",
+        "status": status,
+    }
+
+
+def _score_plan(staged, case: dict, plan: dict, cache: dict) -> bool:
+    key = json.dumps(plan, sort_keys=True)
+    if key not in cache:
+        cache[key] = execute_plan(staged, case["question"], plan, source="fixture_replay")
+    answer = cache[key]
+    dataset_id = answer["dataset_id"]
+    return score_case_live({**case, "dataset_id": dataset_id}, answer)["passed"]
+
+
+def test_event_label_matches_time_control():
+    import io
+
+    import chess.pgn
+
+    text = FIXTURE.read_text(encoding="utf-8")
+    counts = {"Blitz": 0, "Bullet": 0, "Rapid": 0}
+    handle = io.StringIO(text)
+    seen = 0
+    while game := chess.pgn.read_game(handle):
+        base, increment = (int(part) for part in game.headers["TimeControl"].split("+"))
+        estimated = base + 40 * increment
+        if estimated < 180:
+            speed = "Bullet"
+        elif estimated < 480:
+            speed = "Blitz"
+        else:
+            speed = "Rapid"
+        assert game.headers["Event"] == f"Rated {speed} synthetic live eval"
+        counts[speed] += 1
+        seen += 1
+    assert seen == 100
+    assert counts == {"Blitz": 20, "Bullet": 70, "Rapid": 10}
+
+
+def test_keyword_router_and_constant_plans(staged):
+    _manifest, cases = load_live_cases(ROOT)
+    cache: dict = {}
+    router_hits = []
+    for case in cases:
+        if _score_plan(staged, case, _keyword_plan(case["question"]), cache):
+            router_hits.append(case["id"])
+    missed = {case["id"] for case in cases} - set(router_hits)
+    assert len(cases) == 48
+    assert len(router_hits) == 40
+    assert missed == _HARD_MISSES
+    constants = {
+        "unsupported": {
+            "actions": [],
+            "interpretation": "descriptive_observed_prefix",
+            "status": "unsupported",
+        },
+        "needs_clarification": {
+            "actions": [],
+            "interpretation": "descriptive_observed_prefix",
+            "status": "needs_clarification",
+        },
+        "answered_list_metrics": _answered("list_metrics", {}),
+        "answered_draw_rate": _answered("query_metric", _DRAW_ARGS),
+    }
+    counts = {}
+    for name, plan in constants.items():
+        counts[name] = sum(_score_plan(staged, case, plan, cache) for case in cases)
+    assert counts == {
+        "answered_draw_rate": 7,
+        "answered_list_metrics": 0,
+        "needs_clarification": 2,
+        "unsupported": 7,
+    }
+
+
+def test_single_bucket_clock_equivalence(staged):
+    _manifest, cases = load_live_cases(ROOT)
+    case = next(item for item in cases if item["id"] == "clock_under_10_1")
+    pointer = json.loads((staged / "data/analytical-moves-current.json").read_text())
+    bound = {**case, "dataset_id": pointer["analytical_id"]}
+    specialized = {
+        "actions": [{"args": {"bucket": "under_10"}, "tool": "analyze_clock_pressure"}],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered",
+    }
+    answer = execute_plan(staged, case["question"], specialized, source="fixture_replay")
+    portfolio = score_case_portfolio(bound, answer)
+    live = score_case_live(bound, answer)
+    assert portfolio["passed"] is False
+    assert "tool_or_filters" in portfolio["failures"]
+    assert live["passed"] is True
+    followed = {
+        "actions": [
+            {"args": {"bucket": "under_10"}, "tool": "analyze_clock_pressure"},
+            {"args": {}, "tool": "get_dataset_coverage"},
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered",
+    }
+    second = execute_plan(staged, case["question"], followed, source="fixture_replay")
+    assert score_case_live(bound, second)["passed"] is False

@@ -291,6 +291,11 @@ def _check_hand(population: dict, sicilian: dict, french: dict, clock: dict) -> 
         raise ValueError("hand tally mismatch: 30_to_59 eligible")
     if clock["30_to_59"]["evaluable_moves"] != HAND["populated_evaluable_moves"]:
         raise ValueError("hand tally mismatch: 30_to_59 evaluable")
+    if (
+        clock["10_to_29"]["error_proxy_rate"] is not None
+        or clock["60_plus"]["error_proxy_rate"] is not None
+    ):
+        raise ValueError("hand tally mismatch: empty bucket rate")
 
 
 def references_for(text: str) -> dict:
@@ -306,6 +311,14 @@ def references_for(text: str) -> dict:
     known = population["opening_known_games"]
     return {
         "clock": clock,
+        "clock_compare_under_10_minus_10_to_29": {
+            "error_proxy_rate_difference_first_minus_second": _difference(
+                under, clock["10_to_29"], "error_proxy_rate"
+            ),
+            "evaluation_coverage_difference_first_minus_second": _difference(
+                under, clock["10_to_29"], "evaluation_coverage"
+            ),
+        },
         "clock_compare_under_10_minus_30_to_59": {
             "error_proxy_rate_difference_first_minus_second": _difference(
                 under, mid, "error_proxy_rate"

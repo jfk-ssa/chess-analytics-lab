@@ -17,7 +17,7 @@ A later live run asks whether the model plans a legal, on-scope call whose
 checked result matches that layer. The number is the tool's number.
 
 This pull request does not call a model. It records the plan, commits a
-100-game synthetic fixture, an independent reference, and a 40-case set.
+100-game synthetic fixture, an independent reference, and a 48-case set.
 Later pull requests add the scorer, the runner, the manual workflow, and
 the first receipt.
 
@@ -36,10 +36,15 @@ A live run would show, separately:
 
 Tool choice follows [ADR 0045](0045-m8-paired-final-answer-study.md): the
 expected tool may sit anywhere in the evidence, not only in the last call.
-The offline self-check in this pull request still uses `score_case_portfolio`,
-which requires the expected tool on the last call. Oracle plans make one
-call, so both rules agree on those plans. The live scorer is a later pull
-request.
+The offline self-check uses `score_case_live` in `analyst/live_eval.py`.
+That function composes `score_case_portfolio` and does not edit it.
+`portfolio-1.0` still requires the expected tool on the last call. For a
+single-bucket clock question, `score_case_live` also accepts one
+`analyze_clock_pressure` call whose `bucket` is the metric filter. A second
+action, including a coverage call after the clock call, is not equivalent.
+Questions that asked for both coverage and the error proxy now ask for the
+error proxy only. Coverage stays its own intent. The later live runner
+reuses this rule. It is not a second copy inside the frozen scorer.
 
 Status confusion is two counts, not one. `unsafe_answer` means the model
 answered when the case says refuse. `over_abstention` means the model
@@ -91,9 +96,28 @@ for the cases, the case file, the PGN, and the reference file. There are
 no replay plans. A perfect model's plan is built at check time from
 `expected_tool` and `expected_tool_args`.
 
+The first 40 questions are phrase-matchable. A keyword router that reads
+only the question scores 40/40 on that set. Constant plans score 7, 1, 0,
+and 4 of those 40: always `unsupported`, always `needs_clarification`,
+always `list_metrics`, and always the draw-rate query. A live 40/40 on
+that set would be phrase-to-tool mapping. Eight added cases, four
+development families and four frozen-test families, defeat that router:
+indirect phrasing without the keyword nouns, distractors that mention
+`sql` or `caused` inside an answerable question, a negation that mentions
+`fetch`, a clarification that does not use "which opening should I", and
+a comparison of the populated under-10-second bucket with the empty 10-to-29
+second bucket. On the 48-case set the same router scores 40/48. The same
+constant plans score 7, 2, 0, and 7. The draw-rate constant rises from 4
+to 7 because three of the new questions are still draw-rate questions.
+
+White-score and compare questions say `1400–1599`. The frozen prompt maps
+that band to `rating_min` 1400 and `rating_max_exclusive` 1600. The test
+wording was edited before any live run, so the test split stays
+uninspected and is not retired.
+
 Empty clock buckets `10_to_29` and `60_plus` must return null coverage and
-a null error-proxy rate. A comparison that touches an empty bucket has a
-null difference.
+a null error-proxy rate. `clock_gap_empty_1` compares under 10 seconds
+with 10 to 29 seconds and expects both differences to be null.
 
 ## Fixture
 
@@ -105,7 +129,11 @@ every accepted game has move rows. Twelve opening families include the
 Sicilian Defense and the French Defense. Results are 34 white wins, 33
 draws, and 33 black wins. Time controls are `60+0`, `180+2`, `300+0`, and
 `600+5`. Clocks before bucketed moves land only in `under_10` and
-`30_to_59`, so the other two buckets stay empty on purpose.
+`30_to_59`, so the other two buckets stay empty on purpose. The Event
+header follows the Lichess speed estimate, base plus 40 times the
+increment: `60+0` is Bullet, `180+2` and `300+0` are Blitz, and `600+5`
+is Rapid. Metrics read `TimeControl`, so that label does not change the
+reference numbers.
 
 Every game is legal under python-chess and imports through the same path
 as `tests/fixtures/portfolio_annotated.pgn`. The four-game fixture and the
@@ -116,6 +144,11 @@ recomputes the references in pure Python. It does not call the metric
 tools. `source_kind` and `partial_archive` are import-plan labels, checked
 against the tool because the case set expects them. The hand integers
 below were counted from the index rules and are locked in that script.
+The oracle restates the clock-bucket cuts, the increment-zero filter, and
+the 200-centipawn error rule instead of importing them. The tool
+cross-check catches drift between the two copies. It does not catch a
+shared mistake in that formula. Those integers were recounted by hand
+from the generator tables.
 
 | Quantity | Hand count |
 |---|---|
@@ -133,8 +166,8 @@ Derived rates, from those integers: draw rate 33/100, Sicilian usage
 18/100, white Sicilian score 4/7, white French score 2/5, `under_10`
 error-proxy rate 25/130, `30_to_59` error-proxy rate 15/130. Empty buckets
 have null rates. Pytest checks that the governed or reviewed tools match
-every reference value, and that oracle plans score 40/40 under
-`portfolio-1.0`. That 40/40 is harness consistency. It is not model accuracy.
+every reference value, and that oracle plans score 48/48 under
+`score_case_live`. That 48/48 is harness consistency. It is not model accuracy.
 
 Regenerate with the three scripts `scripts/generate_live_eval_100.py`,
 `scripts/live_eval_100_expected.py`, and `scripts/build_analyst_live_cases.py`.
@@ -171,7 +204,7 @@ The reservation is about 27 times the per-request gross of the dearest
 December repetition ($0.0680969 / 50).
 
 Recommended gross caps for a 5-repeat, 50-case planning envelope (250
-requests). This case file has 40 cases, so five repeats are 200 requests
+requests). This case file has 48 cases, so five repeats are 240 requests
 and sit inside that envelope.
 
 | Run | Recommended gross cap |
@@ -205,8 +238,10 @@ run was considered and rejected: do not add one in the workflow that
 implements this plan.
 
 The process stays repeatable without a schedule because the case-set hash,
-the fixture hash, the rubric version, the instructions hash, and the
-receipt are committed. A schedule could be added later only by a new ADR
+the fixture hash, and the rubric version are committed in the manifest.
+The instructions hash and the receipt are specified for the later receipt
+pull request. They are not committed here. A schedule could be added later
+only by a new ADR
 and an explicit owner approval. That later change would add `schedule` to
 a workflow that already has the environment, the cap, and the reviewer.
 This record does not add it.
@@ -276,7 +311,11 @@ reservation is much larger than a completed request, so a cap that looks
 generous can still stop a run early if usage is missing. Five repeats
 leave case-level variance; the bootstrap and the flaky flag are how that
 variance is shown. The repository is public, so a later model may have
-seen the questions. The test split is retired after it is inspected, which
+seen the questions. Four boundary questions are the public `gate_v1`
+sentences: the spending-cap bypass, the causal time-pressure claim, the
+network fetch, and the private-file read. Contamination risk is higher
+for those four than for the questions written for this fixture. The test
+split is retired after it is inspected, which
 limits that use as an untouched holdout. Putting a key in CI changes the
 standing rule; the acknowledgement and the cap are the control, and this
 pull request does not add the key.
@@ -296,13 +335,13 @@ The offline bar, in CI order, all exited 0. Local Node was v22.14.0; CI
 uses Node 24. Biome 2.5.15 checked 10 files. The JavaScript game-import
 tests passed 10. Ruff check passed, and ruff format reported 305 files
 already formatted. basedpyright reported 0 errors, 0 warnings, and 0
-notes. Pytest without the dbt extra passed 260 and skipped 31 in 42.20
-seconds; that run includes these 10 tests on the reviewed SQL path.
-The MCP protocol file passed 8 tests in 3.01 seconds. `chesslab demo`
+notes. Pytest without the dbt extra passed 263 and skipped 31 in 45.36
+seconds; that run includes these tests on the reviewed SQL path.
+The MCP protocol file passed 8 tests in 3.22 seconds. `chesslab demo`
 reported the tiny-fixture draw rate 4/20 = 0.2. With `CHESSLAB_REQUIRE_DBT=1`,
-pytest passed 272 and skipped 19 in 139.40 seconds, including these tests
-on the governed path and 40/40 oracle plans. The tiny mart published with
+pytest passed 275 and skipped 19 in 144.36 seconds, including these tests
+on the governed path and 48/48 oracle plans. The tiny mart published with
 42 dbt tests passed. Semantic config validation reported 0 errors, the
 draw-rate smoke check returned 4, 20, 0.2, and the lineage check passed.
-The unchanged 0088 gate reported `ok 89/89` in 10.312 seconds. Slim
+The unchanged 0088 gate reported `ok 89/89` in 9.919 seconds. Slim
 selection against `main` matched no nodes. No model was called.
