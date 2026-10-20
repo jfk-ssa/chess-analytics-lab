@@ -24,6 +24,11 @@ and writes a receipt. The analyst CLI gains a `live-eval` subcommand.
 `live_eval.py` is unchanged. The clock rule stays the one copy in
 `score_case_live`.
 
+Later, on 2026-10-20, `DEFAULT_PRICE_CHECKED_UTC_DATE` in `preflight.py`
+was set to `2026-10-20` after a manual price check. The rates did not
+change. [ADR 0091](0091-manual-live-eval-workflow.md) records that edit.
+The sentences in this decision stay as they were written on 2026-10-19.
+
 ### Headline
 
 The scored plan is the object `provider.live_answer` stores as
