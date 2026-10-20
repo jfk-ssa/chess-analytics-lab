@@ -25,6 +25,49 @@ IDENTITY = {
     "model_sha256": "b" * 64,
     "semantic_manifest_sha256": "c" * 64,
 }
+PUBLISHED_MART = {
+    "mart_id": "9d3ca923a6f1cd06d82a8645",
+    "model_sha256": "707aa83395a023e4b49756ef355271232871f9c413a82bd98168cd13d830f4b3",
+    "semantic_manifest_sha256": "07df0b2f38fb275764541f292b810185e16e3f23fb507ee1fef426dec27bfd86",
+}
+METRICFLOW_RECEIPTS = frozenset(
+    {
+        "game_draw_rate",
+        "opening_usage",
+        "opening_player_score:French Defense",
+        "opening_player_score:Sicilian Defense",
+    }
+)
+REVIEWED_SQL_RECEIPTS = frozenset(
+    f"clock_pressure_error_proxy:{bucket}"
+    for bucket in ("under_10", "10_to_29", "30_to_59", "60_plus")
+)
+_LABEL_FIELDS = ("mart_id", "model_sha256", "query_origin", "semantic_manifest_sha256")
+_REPORTS = (
+    "M3-analytical-manifest.json",
+    "M3-independent-reference.json",
+    "M3-source-manifest.json",
+    "M4-figures.json",
+    "opening-corpus.json",
+)
+
+
+def _reports_project(tmp_path: Path, project: Path) -> Path:
+    """Project with the committed reports and no analytical warehouse."""
+    root = tmp_path / "reports-only"
+    destination = root / "reports"
+    destination.mkdir(parents=True)
+    for name in _REPORTS:
+        shutil.copy(project / "reports" / name, destination / name)
+    return root
+
+
+def _without_receipt_labels(payload: dict) -> dict:
+    cloned = json.loads(json.dumps(payload))
+    for row in cloned["tables"]["metric_receipt"]:
+        for key in _LABEL_FIELDS:
+            del row[key]
+    return cloned
 
 
 def load_script():
@@ -177,28 +220,45 @@ def test_extract_has_no_identifier_columns_or_leaky_values(project):
 def test_query_origins_keep_clock_and_bootstrap_off_metricflow(project):
     extract = load_extract(extract_path(project))
     receipts = table_rows(extract, "metric_receipt")
-    assert receipts
+    assert {row["receipt_id"] for row in receipts if row["query_origin"] == "metricflow"} == set(
+        METRICFLOW_RECEIPTS
+    )
+    assert {row["receipt_id"] for row in receipts if row["query_origin"] == "reviewed_sql"} == set(
+        REVIEWED_SQL_RECEIPTS
+    )
     for row in receipts:
         assert row["query_origin"] in QUERY_ORIGINS
-        assert row["query_origin"] == "committed_report"
-        assert row["mart_id"] is None
-        assert row["model_sha256"] is None
-        assert row["semantic_manifest_sha256"] is None
         if row["metric"] in NEVER_METRICFLOW:
             assert row["query_origin"] != "metricflow"
+        if row["receipt_id"] in METRICFLOW_RECEIPTS:
+            assert row["query_origin"] == "metricflow"
+            assert row["mart_id"] == PUBLISHED_MART["mart_id"]
+            assert row["model_sha256"] == PUBLISHED_MART["model_sha256"]
+            assert row["semantic_manifest_sha256"] == PUBLISHED_MART["semantic_manifest_sha256"]
+        else:
+            assert row["mart_id"] is None
+            assert row["model_sha256"] is None
+            assert row["semantic_manifest_sha256"] is None
+            if row["receipt_id"] in REVIEWED_SQL_RECEIPTS:
+                assert row["query_origin"] == "reviewed_sql"
+            else:
+                assert row["query_origin"] == "committed_report"
     assert _receipt(extract, "game_draw_rate")["numerator"] == 3669
     assert _receipt(extract, "game_draw_rate")["denominator"] == 99_117
     french = _receipt(extract, "opening_player_score:French Defense")
     assert french["numerator"] == 118
     assert french["denominator"] == 239
     assert (
-        _receipt(extract, "opening_adjusted_score:Sicilian Defense")["query_origin"] != "metricflow"
+        _receipt(extract, "opening_adjusted_score:Sicilian Defense")["query_origin"]
+        == "committed_report"
     )
     assert (
         _receipt(extract, "opening_adjusted_score_bootstrap:French Defense")["query_origin"]
-        != "metricflow"
+        == "committed_report"
     )
-    assert _receipt(extract, "clock_pressure_error_proxy:under_10")["query_origin"] != "metricflow"
+    assert (
+        _receipt(extract, "clock_pressure_error_proxy:under_10")["query_origin"] == "reviewed_sql"
+    )
 
 
 def test_extract_stays_under_the_size_budget(project):
@@ -225,13 +285,23 @@ def test_reader_answers_lineage_counts_from_duckdb(project):
 
 def test_builder_is_deterministic_and_prints_skipped_warehouse_steps(project, tmp_path, capsys):
     builder = load_script()
+    bare = _reports_project(tmp_path, project)
     first = tmp_path / "first.json"
     second = tmp_path / "second.json"
-    assert builder.main(["--project", str(project), "--output", str(first)]) == 0
+    assert builder.main(["--project", str(bare), "--output", str(first)]) == 0
     first_logs = capsys.readouterr().out.splitlines()
-    assert builder.main(["--project", str(project), "--output", str(second)]) == 0
+    assert builder.main(["--project", str(bare), "--output", str(second)]) == 0
     assert first.read_bytes() == second.read_bytes()
-    assert first.read_bytes() == extract_path(project).read_bytes()
+    # No warehouse can raise query_origin or mart identity. Those fields are the
+    # only difference from the committed MetricFlow rebuild.
+    rebuilt = json.loads(first.read_text())
+    committed = json.loads(extract_path(project).read_text())
+    assert _without_receipt_labels(rebuilt) == _without_receipt_labels(committed)
+    for row in rebuilt["tables"]["metric_receipt"]:
+        assert row["query_origin"] == "committed_report"
+        assert row["mart_id"] is None
+        assert row["model_sha256"] is None
+        assert row["semantic_manifest_sha256"] is None
     metricflow_skip = (
         "skipped: metricflow refresh for game_draw_rate, opening_usage, "
         "opening_player_score (analytical warehouse not found)"
@@ -258,9 +328,12 @@ def test_builder_is_deterministic_and_prints_skipped_warehouse_steps(project, tm
     assert not any(line.startswith("/") for line in first_logs)
 
 
-def test_live_refresh_labels_matching_governed_metrics_and_refuses_clock(project):
+def test_live_refresh_labels_matching_governed_metrics_and_refuses_clock(project, tmp_path):
     builder = load_script()
-    extract, _logs = builder.build_extract(project)
+    extract, _logs = builder.build_extract(_reports_project(tmp_path, project))
+    assert {row["query_origin"] for row in table_rows(extract, "metric_receipt")} == {
+        "committed_report"
+    }
     families = {
         row["family"]: row["numerator"] for row in table_rows(extract, "opening_family_share")
     }
@@ -340,9 +413,10 @@ def test_live_refresh_labels_matching_governed_metrics_and_refuses_clock(project
         builder.upgrade_receipts(json.loads(json.dumps(extract)), clock_probe)
 
 
-def test_live_refresh_keeps_committed_report_when_counts_differ(project):
+def test_live_refresh_keeps_committed_report_when_counts_differ(project, tmp_path):
     builder = load_script()
-    extract, _logs = builder.build_extract(project)
+    extract, _logs = builder.build_extract(_reports_project(tmp_path, project))
+    assert _receipt(extract, "game_draw_rate")["query_origin"] == "committed_report"
     probe = {
         "unusable": False,
         "game_draw_rate": {

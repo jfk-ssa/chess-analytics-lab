@@ -47,16 +47,25 @@ Two lineages are stored and are not added together.
 
 ### Where each number comes from
 
-The committed file is copied from reviewed reports:
+The committed aggregates are copied from reviewed reports:
 `opening-corpus.json`, `M3-source-manifest.json`,
 `M3-analytical-manifest.json`, `M3-independent-reference.json`, and
-`M4-figures.json`. Every receipt in that file has
-`query_origin` `committed_report`. `mart_id`, `model_sha256`, and
-`semantic_manifest_sha256` are null.
+`M4-figures.json`.
 
-On a machine that has the August warehouse, the builder may relabel a
-receipt. It does that only when the live count matches the committed
-reference. It does not replace aggregate rows.
+On 2026-10-20 the extract was rebuilt with MetricFlow from mart
+`9d3ca923a6f1cd06d82a8645`. Live counts matched the committed reference.
+`game_draw_rate`, `opening_usage`, and both `opening_player_score`
+receipts (French Defense and Sicilian Defense) are `metricflow` and
+carry that mart's `mart_id`, `model_sha256`, and
+`semantic_manifest_sha256`. The four `clock_pressure_error_proxy`
+buckets are `reviewed_sql`. Adjusted score, its bootstrap, and the
+lineage counts stay `committed_report` with null identity fields.
+
+A checkout without the warehouse reprints the skipped steps. It writes
+the same aggregate rows with `committed_report` and null identity. It
+does not reproduce the raised labels. The builder relabels a receipt
+only when the live count matches the committed reference, and it does
+not replace aggregate rows.
 
 - `game_draw_rate`, `opening_usage`, and `opening_player_score` may
   become `metricflow` when `resolve_governed` returns a matching mart,
@@ -88,6 +97,7 @@ The extract does not copy the publisher URL or a local path.
 
 The hosted app can depend on Streamlit and DuckDB and read this file.
 It does not need the `dbt` extra. Rebuilding without `data/` reprints
-the skipped warehouse steps and writes the same report-backed file.
-A rebuild that finds a matching mart changes receipt labels only.
-The local six-view dashboard still reads the warehouse.
+the skipped warehouse steps and writes the same aggregate rows.
+Receipt labels and mart identity match the committed file only when
+that rebuild finds the same matching mart. The local six-view
+dashboard still reads the warehouse.

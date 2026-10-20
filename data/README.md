@@ -11,6 +11,8 @@ No automatic cleanup removes evidence. Choose `--data-dir` to relocate this tree
 
 `public/` is the committed aggregate extract. It is not a warehouse. See ADR 0092.
 
+The committed extract was rebuilt with MetricFlow on 2026-10-20 from mart `9d3ca923a6f1cd06d82a8645`. `game_draw_rate`, `opening_usage`, and `opening_player_score` are `metricflow`. The four clock buckets are `reviewed_sql`. Adjusted score, bootstrap, and lineage counts stay `committed_report`.
+
 Mac rebuild from `~/Developer/chess-analytics-lab`, using the venv override below. The `dbt` extra is required for MetricFlow. The dashboard extra is not. The builder prints which receipts were relabeled and why the others were not.
 
 ```
