@@ -40,6 +40,12 @@ MAC_OPTIONAL = (
     "opening_usage, and opening_player_score when the August warehouse and "
     "matching mart are present"
 )
+MAC_REBUILD = (
+    "UV_PROJECT_ENVIRONMENT=$HOME/.venvs/chess-analytics-lab "
+    "uv run --directory $HOME/Developer/chess-analytics-lab "
+    "--locked --no-editable --extra dbt "
+    "python scripts/build_public_extract.py"
+)
 
 
 def build_extract(project: Path) -> tuple[dict, list[str]]:
@@ -432,12 +438,15 @@ def collect_live_probe(project: Path, extract: dict) -> dict:
 
 def upgrade_receipts(extract: dict, probe: dict) -> list[str]:
     """Relabel receipts when a live query matches. Never invent aggregate rows."""
+    before = {row["receipt_id"]: row["query_origin"] for row in extract["tables"]["metric_receipt"]}
+    lines = _refresh_lines(extract, probe)
+    lines.extend(_relabel_summary(extract, before, probe))
+    return lines
+
+
+def _refresh_lines(extract: dict, probe: dict) -> list[str]:
     if not probe or probe.get("unusable"):
-        reason = (
-            "analytical warehouse present but not usable"
-            if probe.get("unusable")
-            else "analytical warehouse not found"
-        )
+        reason = _warehouse_reason(probe)
         return [
             f"skipped: metricflow refresh for {', '.join(GOVERNED_METRICS)} ({reason})",
             f"skipped: reviewed_sql refresh for {', '.join(GOVERNED_METRICS)} ({reason})",
@@ -472,6 +481,50 @@ def upgrade_receipts(extract: dict, probe: dict) -> list[str]:
     return lines
 
 
+def _relabel_summary(extract: dict, before: dict, probe: dict) -> list[str]:
+    rows = extract["tables"]["metric_receipt"]
+    changed = [
+        (
+            f"relabeled: {row['receipt_id']} {before[row['receipt_id']]} -> "
+            f"{row['query_origin']} (live counts matched the committed reference)"
+        )
+        for row in rows
+        if before[row["receipt_id"]] != row["query_origin"]
+    ]
+    lines = changed or ["relabeled: none"]
+    for row in rows:
+        if before[row["receipt_id"]] != row["query_origin"]:
+            continue
+        reason = _not_relabeled_reason(row, probe)
+        lines.append(f"not relabeled: {row['receipt_id']} stays {row['query_origin']} ({reason})")
+    return lines
+
+
+def _not_relabeled_reason(row: dict, probe: dict) -> str:
+    metric = row["metric"]
+    if metric in {"opening_adjusted_score", "opening_adjusted_score_bootstrap"}:
+        return "outside MetricFlow"
+    if metric not in {*GOVERNED_METRICS, "clock_pressure_error_proxy"}:
+        return "committed report count, not a warehouse query"
+    detail = _warehouse_reason(probe)
+    if detail is None:
+        live = probe.get(metric)
+        detail = (
+            "no live result" if not live else "live counts did not match the committed reference"
+        )
+    if metric == "clock_pressure_error_proxy":
+        return f"{detail}; metricflow has no governed source"
+    return detail
+
+
+def _warehouse_reason(probe: dict) -> str | None:
+    if not probe:
+        return "analytical warehouse not found"
+    if probe.get("unusable"):
+        return "analytical warehouse present but not usable"
+    return None
+
+
 def check_extract(extract: dict, sources: dict) -> None:
     if set(extract["tables"]) != set(TABLES):
         raise ValueError("extract tables do not match the reader")
@@ -491,7 +544,15 @@ def check_extract(extract: dict, sources: dict) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Build the public aggregate extract")
+    parser = argparse.ArgumentParser(
+        description="Build the public aggregate extract",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Mac rebuild from ~/Developer/chess-analytics-lab. "
+            "The dbt extra is required for MetricFlow. The dashboard extra is not.\n\n"
+            + MAC_REBUILD
+        ),
+    )
     parser.add_argument("--project", type=Path, default=PROJECT)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args(argv)
@@ -541,7 +602,10 @@ def _stage(
 
 def _corpus_note(cohort: str) -> str:
     if cohort == "elite_reference":
-        return "Curated elite month inside the opening corpus. Not the August prefix."
+        return (
+            "Curated elite month published by nikonoel. "
+            "Inside the opening corpus, not the August prefix."
+        )
     return "Opening-corpus training slice for this period. Not the August prefix accepted count."
 
 

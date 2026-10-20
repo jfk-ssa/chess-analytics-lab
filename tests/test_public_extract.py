@@ -2,6 +2,8 @@
 
 import importlib.util
 import json
+import shutil
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -245,6 +247,14 @@ def test_builder_is_deterministic_and_prints_skipped_warehouse_steps(project, tm
         for line in first_logs
     )
     assert "mac rebuild needed: none; every table was filled from committed reports" in first_logs
+    assert "relabeled: none" in first_logs
+    assert (
+        "not relabeled: opening_adjusted_score:French Defense stays committed_report "
+        "(outside MetricFlow)"
+    ) in first_logs
+    assert (
+        "not relabeled: game_draw_rate stays committed_report (analytical warehouse not found)"
+    ) in first_logs
     assert not any(line.startswith("/") for line in first_logs)
 
 
@@ -310,6 +320,18 @@ def test_live_refresh_labels_matching_governed_metrics_and_refuses_clock(project
     bootstrap = _receipt(extract, "opening_adjusted_score_bootstrap:Sicilian Defense")
     assert bootstrap["query_origin"] == "committed_report"
     assert any("no governed source" in line for line in logs)
+    assert (
+        "relabeled: game_draw_rate committed_report -> metricflow "
+        "(live counts matched the committed reference)"
+    ) in logs
+    assert (
+        "relabeled: clock_pressure_error_proxy:under_10 committed_report -> reviewed_sql "
+        "(live counts matched the committed reference)"
+    ) in logs
+    assert (
+        "not relabeled: opening_adjusted_score:French Defense stays committed_report "
+        "(outside MetricFlow)"
+    ) in logs
     clock_probe = {
         **probe,
         "clock_pressure_error_proxy": {"origin": "metricflow", "buckets": buckets},
@@ -337,3 +359,117 @@ def test_live_refresh_keeps_committed_report_when_counts_differ(project):
     assert _receipt(extract, "game_draw_rate")["query_origin"] == "committed_report"
     assert _receipt(extract, "game_draw_rate")["mart_id"] is None
     assert any("counts differ" in line for line in logs)
+    assert (
+        "not relabeled: game_draw_rate stays committed_report "
+        "(live counts did not match the committed reference)"
+    ) in logs
+
+
+def test_public_data_ignore_rules_track_only_the_extract(project):
+    git = shutil.which("git")
+    if git is None:
+        pytest.skip("git is not installed")
+    ignored = (
+        "data/public/.env",
+        "data/public/secrets.json",
+        "data/public/warehouse.duckdb",
+        "data/public/nested/games.csv",
+    )
+    tracked = ("data/public/dashboard_extract.json", "data/README.md")
+    for relative in ignored:
+        result = subprocess.run(
+            [git, "check-ignore", "-q", "--no-index", relative],
+            cwd=project,
+            check=False,
+        )
+        assert result.returncode == 0, relative
+    for relative in tracked:
+        result = subprocess.run(
+            [git, "check-ignore", "-q", "--no-index", relative],
+            cwd=project,
+            check=False,
+        )
+        assert result.returncode == 1, relative
+
+
+def test_extract_path_away_from_the_repo_names_the_environment_variable(monkeypatch):
+    away = Path("/tmp/chesslab-extract-away")
+    away.mkdir(exist_ok=True)
+    monkeypatch.chdir(away)
+    monkeypatch.delenv("CHESSLAB_PUBLIC_EXTRACT", raising=False)
+    with pytest.raises(FileNotFoundError, match="CHESSLAB_PUBLIC_EXTRACT"):
+        extract_path()
+
+
+def test_extract_path_uses_cwd_repo_root_and_environment(project, monkeypatch, tmp_path):
+    monkeypatch.delenv("CHESSLAB_PUBLIC_EXTRACT", raising=False)
+    monkeypatch.chdir(project)
+    assert extract_path() == project / "data" / "public" / "dashboard_extract.json"
+    monkeypatch.chdir(project / "src")
+    assert extract_path() == project / "data" / "public" / "dashboard_extract.json"
+    explicit = tmp_path / "elsewhere"
+    assert extract_path(explicit) == explicit / "data" / "public" / "dashboard_extract.json"
+    target = tmp_path / "dashboard_extract.json"
+    target.write_text("{}\n")
+    monkeypatch.setenv("CHESSLAB_PUBLIC_EXTRACT", str(target))
+    away = Path("/tmp/chesslab-extract-away")
+    away.mkdir(exist_ok=True)
+    monkeypatch.chdir(away)
+    assert extract_path() == target
+
+
+def test_load_extract_rejects_metricflow_on_clock_receipts(project, tmp_path):
+    extract = json.loads(extract_path(project).read_text())
+    for row in extract["tables"]["metric_receipt"]:
+        if row["metric"] != "clock_pressure_error_proxy":
+            continue
+        row["query_origin"] = "metricflow"
+        row["mart_id"] = "a" * 24
+        row["model_sha256"] = "b" * 64
+        row["semantic_manifest_sha256"] = "c" * 64
+        break
+    path = tmp_path / "extract.json"
+    path.write_text(json.dumps(extract))
+    with pytest.raises(ValueError, match="cannot be metricflow"):
+        load_extract(path)
+
+
+def test_time_control_rejects_a_bare_username(project, tmp_path):
+    extract = json.loads(extract_path(project).read_text())
+    extract["tables"]["clock_stratum"][0]["time_control"] = "DrNykterstein"
+    assert any(
+        issue.startswith("value ") and issue.endswith(".time_control")
+        for issue in identifier_issues(extract)
+    )
+    path = tmp_path / "extract.json"
+    path.write_text(json.dumps(extract))
+    with pytest.raises(ValueError, match="identifier check"):
+        load_extract(path)
+
+
+def test_elite_lineage_names_the_curator(project):
+    extract = load_extract(extract_path(project))
+    elite = [
+        row for row in table_rows(extract, "lineage_stage") if row["cohort"] == "elite_reference"
+    ]
+    assert len(elite) == 1
+    assert elite[0]["note"] == (
+        "Curated elite month published by nikonoel. "
+        "Inside the opening corpus, not the August prefix."
+    )
+    assert "://" not in elite[0]["note"]
+
+
+def test_builder_help_matches_the_readme_mac_command(project, capsys):
+    builder = load_script()
+    with pytest.raises(SystemExit) as caught:
+        builder.main(["--help"])
+    assert caught.value.code == 0
+    command = (
+        "UV_PROJECT_ENVIRONMENT=$HOME/.venvs/chess-analytics-lab "
+        "uv run --directory $HOME/Developer/chess-analytics-lab "
+        "--locked --no-editable --extra dbt "
+        "python scripts/build_public_extract.py"
+    )
+    assert command in capsys.readouterr().out
+    assert command in (project / "data/README.md").read_text()

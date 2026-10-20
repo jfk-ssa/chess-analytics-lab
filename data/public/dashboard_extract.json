@@ -3367,7 +3367,7 @@
         "cohort": "elite_reference",
         "count": 240086,
         "lineage": "opening_corpus",
-        "note": "Curated elite month inside the opening corpus. Not the August prefix.",
+        "note": "Curated elite month published by nikonoel. Inside the opening corpus, not the August prefix.",
         "period": "2025-11",
         "population": "training_source_games",
         "rolls_up_to": "opening_corpus:training_games",

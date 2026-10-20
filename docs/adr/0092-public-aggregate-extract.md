@@ -1,4 +1,4 @@
-# 0091. Public aggregate extract for a hosted read-only dashboard
+# 0092. Public aggregate extract for a hosted read-only dashboard
 
 - Status: accepted on merge
 - Date: 2026-10-20
@@ -29,7 +29,7 @@ was byte-stable on a one-row table, so Parquet was not rejected for
 timestamps. JSON is the committed form because a reviewer can see the
 aggregates in the diff and the hosted app does not depend on a Parquet
 writer. The size budget is 256 KiB. `data/` stays gitignored except
-`data/README.md` and `data/public/`.
+`data/README.md` and `data/public/dashboard_extract.json`.
 
 ### Lineage
 
@@ -80,8 +80,9 @@ absolute paths, or PGN paths. Opening names, rating bands, and time
 controls stay because they are the published categories.
 
 Lichess game data is CC0. The elite month inside the opening corpus is
-the curated subset published by nikonoel. The extract records that month
-as a count. It does not copy the publisher URL or a local path.
+the curated subset published by nikonoel. The elite lineage note names
+nikonoel so a hosted app can credit that curator from the extract alone.
+The extract does not copy the publisher URL or a local path.
 
 ## Consequences
 

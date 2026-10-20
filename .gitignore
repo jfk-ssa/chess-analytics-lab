@@ -12,7 +12,8 @@ __pycache__/
 !/data/README.md
 # Committed aggregate extract for the hosted read-only dashboard. Warehouses stay ignored.
 !/data/public/
-!/data/public/**
+/data/public/**
+!/data/public/dashboard_extract.json
 /artifacts/
 /work/
 /dbt/target/
