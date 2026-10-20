@@ -115,7 +115,46 @@ check refuses that cap before the runner.
 actionlint 1.7.12 reported no findings on `live-eval.yml`. `bash -n` on
 the seven `run` scripts passed. The pinned `actions/upload-artifact`
 commit `cf430e030ddbb5b0abf93d22962f4752f3646cd9` is tag v7.0.2 and its
-`action.yml` is the upload action. Ruff check and ruff format check
-passed on the new Python files. The new workflow tests and the runner
-source check passed 10. The whole-repository offline bar is recorded
-with the pull request once that run finishes.
+`action.yml` is the upload action. The new workflow tests and the
+runner source check passed 10 when those two files were run alone.
+Each listed assertion failed when the workflow text was mutated:
+trigger, schedule, environment, permissions (`contents: write` and an
+added `actions: write`), concurrency (`cancel-in-progress: true` and a
+missing flag), secret (a renamed key and a second secret), pin, receipt
+upload (including retention 30), and a `git commit` of the receipt.
+Astra as a model choice, a default on `max_run_usd`, and `--today` on
+the price check failed the same way. The source was left unchanged.
+
+The whole-repository offline bar on the same machine:
+
+- `ruff check .` passed. `ruff format --check .` reported 314 files
+  already formatted.
+- basedpyright reported 0 errors, 0 warnings, and 0 notes.
+- `pytest -q` without the dbt extra: 311 passed, 31 skipped, 102.57s.
+  That is 9 more passes than the ADR 0090 review count of 302. The
+  added tests are the workflow file.
+- Node v22.23.3: `node --test tests/js/game_import.test.mjs` passed 10.
+  `scripts/check_game_import.mjs` and both `import_parity.mjs` fixtures
+  exited 0. Biome 2.5.15 checked 10 files and applied no fixes. The CI
+  workflow uses Node 24. This agent did not rerun the JavaScript tests
+  on Node 24.
+- MCP extra: `pytest -q tests/test_mcp_protocol.py` passed 8 in 2.98s.
+- `chesslab demo` published tiny snapshot `3efeca2acc08a0764414edbc`.
+- After `uv sync --locked --no-editable --extra dbt`,
+  `CHESSLAB_REQUIRE_DBT=1 pytest -q`: 323 passed, 19 skipped, 207.46s.
+- `transform --dataset tiny` published mart `686508be9bd2a1967f7ee140`:
+  dbt created 8, no-op 2, passed 42.
+- Semantic validation: dbt 1.12.5 and duckdb adapter 1.11.0,
+  `validate-configs` reported `ERRORS: 0`, `smoke-draw-rate` printed
+  `4,20,0.2`, and `scripts/render_dbt_dag.py --check` exited 0.
+- `python -m chess_analytics.analyst gate` printed `ok 89/89` in 9.403s.
+  `evals/baselines/analyst_gate_v1.json` is unchanged.
+- The docs-site step in that bar failed while the gitignored
+  `reports/opening-positions.json` was absent. After
+  `scripts/materialize_opening_positions.py` wrote 2,308,456 bytes, the
+  same pytest command passed 17 in 6.60s.
+
+The workflow was not dispatched. There is no `live-eval` environment
+and no key on this agent, so the upload under `contents: read` was not
+executed. Slim `state:modified+` was not run locally. `dbt/` is
+unchanged.
