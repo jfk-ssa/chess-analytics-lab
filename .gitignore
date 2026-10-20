@@ -10,6 +10,9 @@ __pycache__/
 !.env.example
 /data/*
 !/data/README.md
+# Committed aggregate extract for the hosted read-only dashboard. Warehouses stay ignored.
+!/data/public/
+!/data/public/**
 /artifacts/
 /work/
 /dbt/target/

@@ -8,3 +8,5 @@ DATASET-staged.json: pointer to the latest successfully parsed candidate.
 
 Default data-directory allowance is 5 GB including retained failures and snapshots.
 No automatic cleanup removes evidence. Choose `--data-dir` to relocate this tree.
+
+`public/` is the committed aggregate extract. It is not a warehouse. See ADR 0091.
