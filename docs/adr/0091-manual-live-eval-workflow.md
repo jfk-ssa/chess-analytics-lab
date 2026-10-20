@@ -184,3 +184,28 @@ The workflow was not dispatched. There is no `live-eval` environment
 and no key on this agent, so the upload under `contents: read` was not
 executed. Slim `state:modified+` was not run locally. `dbt/` is
 unchanged.
+
+The review fix was checked on this machine later on 2026-10-20. No
+model was called. `CHESSLAB_OPENAI_API_KEY` was unset. The only change
+in `preflight.py` is `DEFAULT_PRICE_CHECKED_UTC_DATE`, now
+`2026-10-20`. No committed file contained the previous SHA-256 of that
+file. `check-price --today 2026-10-20` exited 0 with age 0 and
+`allow_stale_price_check` false. After
+`uv sync --locked --no-editable --reinstall-package chess-analytics-lab`:
+
+- `ruff check .` passed. `ruff format --check .` reported 314 files
+  already formatted.
+- basedpyright reported 0 errors, 0 warnings, and 0 notes.
+- `pytest -q` without the dbt extra: 311 passed, 31 skipped, 108.29s.
+- After `uv sync --locked --no-editable --extra dbt`,
+  `CHESSLAB_REQUIRE_DBT=1 pytest -q`: 323 passed, 19 skipped, 217.84s.
+- `python -m chess_analytics.analyst gate` printed `ok 89/89` in 9.983s.
+  `evals/baselines/analyst_gate_v1.json` is unchanged.
+- actionlint 1.7.12 reported no findings on `live-eval.yml`.
+
+The workflow test's mutations failed their assertions, and the source
+was left unchanged. Removing `persist-credentials: false`, adding
+`set -x`, echoing `CHESSLAB_OPENAI_API_KEY`, placing `${{` inside a
+`run` string, changing the summary or upload `if` off `always()`, and
+pointing the ref guard at another branch each produced its failure
+code. The ref guard was not executed on GitHub.
