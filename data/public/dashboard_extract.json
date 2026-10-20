@@ -1,4 +1,10 @@
 {
+  "build": {
+    "lock_sha256": "895bcfb181a6abc76ff2c466f222b8ebccf6b451a1c32e56f8080bde1194670f",
+    "model_sha256": "707aa83395a023e4b49756ef355271232871f9c413a82bd98168cd13d830f4b3",
+    "semantic_manifest_sha256": "07df0b2f38fb275764541f292b810185e16e3f23fb507ee1fef426dec27bfd86",
+    "source_snapshot_id": "7764247e6bdb0b6e73420253"
+  },
   "extract_version": "1",
   "tables": {
     "clock_bucket": [

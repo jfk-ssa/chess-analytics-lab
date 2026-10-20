@@ -11,7 +11,7 @@ No automatic cleanup removes evidence. Choose `--data-dir` to relocate this tree
 
 `public/` is the committed aggregate extract. It is not a warehouse. See ADR 0092.
 
-The committed extract was rebuilt with MetricFlow on 2026-10-20 from mart `9d3ca923a6f1cd06d82a8645`. `game_draw_rate`, `opening_usage`, and `opening_player_score` are `metricflow`. The four clock buckets are `reviewed_sql`. Adjusted score, bootstrap, and lineage counts stay `committed_report`.
+The committed extract was rebuilt with MetricFlow on 2026-10-20 from mart `9d3ca923a6f1cd06d82a8645`. `game_draw_rate`, `opening_usage`, and `opening_player_score` are `metricflow`. The four clock buckets are `reviewed_sql`. Adjusted score, bootstrap, and lineage counts stay `committed_report`. The old M3 snapshot `6cf51473f8da6ae6b12ea5c2` failed the implementation-hash check, so the pinned August prefix was re-ingested as snapshot `7764247e6bdb0b6e73420253`. Its source hash matches `reports/M3-source-manifest.json`, and the live counts matched that committed reference exactly. `build` in the extract records that snapshot and the lock hash.
 
 Mac rebuild from `~/Developer/chess-analytics-lab`, using the venv override below. The `dbt` extra is required for MetricFlow. The dashboard extra is not. The builder prints which receipts were relabeled and why the others were not.
 

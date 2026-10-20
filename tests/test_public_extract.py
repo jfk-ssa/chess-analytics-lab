@@ -13,6 +13,7 @@ from chess_analytics.public_extract import (
     QUERY_ORIGINS,
     SIZE_BUDGET_BYTES,
     connect,
+    derived_mart_id,
     extract_path,
     identifier_issues,
     load_extract,
@@ -64,10 +65,24 @@ def _reports_project(tmp_path: Path, project: Path) -> Path:
 
 def _without_receipt_labels(payload: dict) -> dict:
     cloned = json.loads(json.dumps(payload))
+    cloned.pop("build", None)
     for row in cloned["tables"]["metric_receipt"]:
         for key in _LABEL_FIELDS:
             del row[key]
     return cloned
+
+
+def _committed_origins(extract: dict) -> None:
+    receipts = table_rows(extract, "metric_receipt")
+    by_origin = {
+        origin: {row["receipt_id"] for row in receipts if row["query_origin"] == origin}
+        for origin in QUERY_ORIGINS
+    }
+    assert by_origin["metricflow"] == set(METRICFLOW_RECEIPTS)
+    assert by_origin["reviewed_sql"] == set(REVIEWED_SQL_RECEIPTS)
+    assert by_origin["committed_report"] == {row["receipt_id"] for row in receipts} - set(
+        METRICFLOW_RECEIPTS
+    ) - set(REVIEWED_SQL_RECEIPTS)
 
 
 def load_script():
@@ -292,10 +307,12 @@ def test_builder_is_deterministic_and_prints_skipped_warehouse_steps(project, tm
     first_logs = capsys.readouterr().out.splitlines()
     assert builder.main(["--project", str(bare), "--output", str(second)]) == 0
     assert first.read_bytes() == second.read_bytes()
-    # No warehouse can raise query_origin or mart identity. Those fields are the
-    # only difference from the committed MetricFlow rebuild.
+    # No warehouse can raise query_origin, mart identity, or the build record.
+    # Those are the only differences from the committed MetricFlow rebuild.
     rebuilt = json.loads(first.read_text())
-    committed = json.loads(extract_path(project).read_text())
+    committed = load_extract(extract_path(project))
+    _committed_origins(committed)
+    assert "build" not in rebuilt
     assert _without_receipt_labels(rebuilt) == _without_receipt_labels(committed)
     for row in rebuilt["tables"]["metric_receipt"]:
         assert row["query_origin"] == "committed_report"
@@ -326,6 +343,36 @@ def test_builder_is_deterministic_and_prints_skipped_warehouse_steps(project, tm
         "not relabeled: game_draw_rate stays committed_report (analytical warehouse not found)"
     ) in first_logs
     assert not any(line.startswith("/") for line in first_logs)
+
+
+def test_committed_origins_reject_metricflow_on_a_clock_receipt(project):
+    committed = json.loads(extract_path(project).read_text())
+    for row in committed["tables"]["metric_receipt"]:
+        if row["receipt_id"] == "clock_pressure_error_proxy:under_10":
+            row["query_origin"] = "metricflow"
+            break
+    with pytest.raises(AssertionError):
+        _committed_origins(committed)
+
+
+def test_mart_id_matches_the_recorded_snapshot_model_and_lock(project):
+    extract = load_extract(extract_path(project))
+    build = extract["build"]
+    derived = derived_mart_id(
+        build["source_snapshot_id"],
+        build["model_sha256"],
+        build["lock_sha256"],
+    )
+    assert build["source_snapshot_id"] == "7764247e6bdb0b6e73420253"
+    assert build["lock_sha256"] == (
+        "895bcfb181a6abc76ff2c466f222b8ebccf6b451a1c32e56f8080bde1194670f"
+    )
+    assert derived == "9d3ca923a6f1cd06d82a8645"
+    for receipt_id in METRICFLOW_RECEIPTS:
+        row = _receipt(extract, receipt_id)
+        assert row["mart_id"] == derived
+        assert row["model_sha256"] == build["model_sha256"]
+        assert row["semantic_manifest_sha256"] == build["semantic_manifest_sha256"]
 
 
 def test_live_refresh_labels_matching_governed_metrics_and_refuses_clock(project, tmp_path):

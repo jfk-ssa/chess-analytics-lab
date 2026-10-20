@@ -13,6 +13,8 @@ import os
 import re
 from pathlib import Path
 
+from chess_analytics.common import hash_json
+
 EXTRACT_VERSION = "1"
 EXTRACT_FILENAME = "dashboard_extract.json"
 TABLES = (
@@ -139,6 +141,7 @@ def load_extract(path: Path | None = None) -> dict:
             if not column or any(character not in _COLUMN_NAME for character in column):
                 raise ValueError(f"public extract column name is not lowercase: {name}.{column}")
     _reject_metricflow_on_closed_metrics(tables["metric_receipt"])
+    _check_build_record(payload)
     if identifier_issues(payload):
         raise ValueError("public extract failed the identifier check")
     return payload
@@ -200,6 +203,50 @@ def _reject_metricflow_on_closed_metrics(rows: list[dict]) -> None:
     for row in rows:
         if row.get("query_origin") == "metricflow" and row.get("metric") in NEVER_METRICFLOW:
             raise ValueError("clock and adjusted-score receipts cannot be metricflow")
+
+
+def derived_mart_id(snapshot_id: str, model_sha256: str, lock_sha256: str) -> str:
+    """First 24 hex characters of the same hash ``mart_id`` uses."""
+    return hash_json(
+        {
+            "snapshot_id": snapshot_id,
+            "model_sha256": model_sha256,
+            "lock_sha256": lock_sha256,
+        }
+    )[:24]
+
+
+def _check_build_record(payload: dict) -> None:
+    build = payload.get("build")
+    if build is None:
+        return
+    expected = {
+        "lock_sha256",
+        "model_sha256",
+        "semantic_manifest_sha256",
+        "source_snapshot_id",
+    }
+    if not isinstance(build, dict) or set(build) != expected:
+        raise ValueError("public extract build record keys do not match")
+    snapshot = build["source_snapshot_id"]
+    model = build["model_sha256"]
+    lock = build["lock_sha256"]
+    semantic = build["semantic_manifest_sha256"]
+    if not isinstance(snapshot, str) or _HEX_24.fullmatch(snapshot) is None:
+        raise ValueError("public extract build snapshot is not 24 hex characters")
+    for value in (model, lock, semantic):
+        if not isinstance(value, str) or _HEX_64.fullmatch(value) is None:
+            raise ValueError("public extract build hash is not 64 hex characters")
+    derived = derived_mart_id(snapshot, model, lock)
+    for row in payload["tables"]["metric_receipt"]:
+        if row.get("query_origin") != "metricflow":
+            continue
+        if (
+            row.get("mart_id") != derived
+            or row.get("model_sha256") != model
+            or row.get("semantic_manifest_sha256") != semantic
+        ):
+            raise ValueError("public extract mart_id does not match the build record")
 
 
 def _allowed_value(table: str, column: str, row: dict, value: object) -> bool:

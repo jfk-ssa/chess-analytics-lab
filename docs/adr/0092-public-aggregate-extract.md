@@ -101,3 +101,28 @@ the skipped warehouse steps and writes the same aggregate rows.
 Receipt labels and mart identity match the committed file only when
 that rebuild finds the same matching mart. The local six-view
 dashboard still reads the warehouse.
+
+## Note
+
+The 2026-10-20 rebuild did not use M3 source snapshot
+`6cf51473f8da6ae6b12ea5c2`. That snapshot fails the current
+implementation-hash check, so the pinned August prefix was
+re-ingested. The new source snapshot is `7764247e6bdb0b6e73420253`.
+Its `source_sha256` is
+`26b999b2a346d5b42d309fa434d27f9e74ccd036e5ab5d41c7927548ff00fb7a`,
+the same value in `reports/M3-source-manifest.json`, so the pinned
+input bytes are unchanged. `mart_id` is the first 24 hex characters
+of the hash of that snapshot id, model
+`707aa83395a023e4b49756ef355271232871f9c413a82bd98168cd13d830f4b3`,
+and lock
+`895bcfb181a6abc76ff2c466f222b8ebccf6b451a1c32e56f8080bde1194670f`.
+That value is `9d3ca923a6f1cd06d82a8645`. The same inputs for the old
+snapshot produce `7e9b7d2c2575eb0adcd474a4`. Live counts matched the
+committed M3 reference exactly: accepted 99,467, eligible 99,117,
+drawn 3,669, bots 342, and unknown 8. The extract records the new
+snapshot, the model hash, the lock hash, and the semantic manifest
+hash in top-level `build`. A checkout without the warehouse does not
+write `build`. The mart was published at 2026-10-20T21:28:31Z.
+Warehouse sha256
+`556c8fcf002f5be32095958263d67ffdf5ce520ea99f7772bf354501910d2a92`
+stays with that local publication. It is not in the extract.
