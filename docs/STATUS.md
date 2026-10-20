@@ -99,7 +99,7 @@ email addresses, customer identifiers, and internal ticket links.
 
 ## Limits
 
-Live model calls stay disabled until personal configuration and an explicit spending cap exist for that run. The manual live-eval workflow reads `CHESSLAB_OPENAI_API_KEY` from the `live-eval` environment when John dispatches it. This repository does not contain that key. The M7 December Sol gate closed at **$0.35392836** cumulative accounted gross under the approved $6 cap. Earlier failed gates stay in the reports. The M6 caps are closed. Model and pricing defaults were last checked against the official model page on 2026-10-04.
+Live model calls stay disabled until personal configuration and an explicit spending cap exist for that run. The manual live-eval workflow reads `CHESSLAB_OPENAI_API_KEY` from the `live-eval` environment when John dispatches it. This repository does not contain that key. The M7 December Sol gate closed at **$0.35392836** cumulative accounted gross under the approved $6 cap. Earlier failed gates stay in the reports. The M6 caps are closed. Model and pricing defaults were last checked against the official model page on 2026-10-20. The recorded Luna and Sol rates matched that page. `gpt-6.1-sol` does not accept `reasoning.effort` of `none`, so the live-eval id stays `gpt-6-sol`.
 
 Install with a non-editable wheel. The environment pin and the macOS editable-path failure are in [ADR 0002](adr/0002-environment.md). Offline reproduction uses installed or cached dependencies.
 

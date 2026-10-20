@@ -47,6 +47,11 @@ jobs:
       LIVE_EVAL_ACKNOWLEDGE: "${{ inputs.acknowledge_personal_account }}"
       LIVE_EVAL_ALLOW_STALE: "${{ inputs.allow_stale_price_check }}"
     steps:
+      - name: Refuse a ref other than main
+        if: github.ref != 'refs/heads/main'
+        run: |
+          echo "live-eval runs only from refs/heads/main." >&2
+          exit 1
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

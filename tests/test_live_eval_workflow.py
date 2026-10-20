@@ -23,7 +23,13 @@ _SPEC.loader.exec_module(dispatch)
 _SHA = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+@[0-9a-f]{40}$")
 _SECRET = re.compile(r"secrets\.([A-Za-z0-9_]+)")
 _GIT_WRITE = re.compile(r"\bgit\s+(?:commit|add|push)\b")
+_SET_X = re.compile(r"\bset\s+-[A-Za-z]*x[A-Za-z]*\b")
+_ECHO_KEY = re.compile(
+    r"(?m)^\s*(?:echo|printf)\b.*\$(?:\{CHESSLAB_OPENAI_API_KEY\}|CHESSLAB_OPENAI_API_KEY)\b"
+)
+_EXPR_IN_RUN = re.compile(r"\$\{\{")
 _STEP_ORDER = (
+    "Refuse a ref other than main",
     "Show the pre-run checklist",
     "Refuse a stale recorded price check",
     "Refuse inputs outside the live-eval caps",
@@ -68,6 +74,10 @@ def workflow_problems(text: str) -> list[str]:
     _check_receipt(job, problems)
     _check_runner(text, job, problems)
     _check_order(job, problems)
+    _check_credentials(job, problems)
+    _check_run_scripts(job, problems)
+    _check_always(job, problems)
+    _check_ref_guard(job, problems)
     return _unique(problems)
 
 
@@ -143,6 +153,34 @@ def test_each_workflow_assertion_fails_when_mutated():
             "python scripts/live_eval_dispatch.py check-price --today 2026-10-04\n",
             1,
         ),
+        "credentials": text.replace("          persist-credentials: false\n", "", 1),
+        "trace": text.replace(
+            "          set -euo pipefail\n",
+            "          set -euo pipefail\n          set -x\n",
+            1,
+        ),
+        "key-echo": text.replace(
+            '          if [ -z "${CHESSLAB_OPENAI_API_KEY}" ]; then\n',
+            '          echo "$CHESSLAB_OPENAI_API_KEY"\n'
+            '          if [ -z "${CHESSLAB_OPENAI_API_KEY}" ]; then\n',
+            1,
+        ),
+        "expression": text.replace(
+            "          set -euo pipefail\n",
+            "          echo ${{ github.sha }}\n          set -euo pipefail\n",
+            1,
+        ),
+        "always-summary": text.replace("        if: always()\n", "        if: success()\n", 1),
+        "always-upload": text.replace(
+            "if: \"always() && hashFiles('work/live-eval-receipt.json') != ''\"\n",
+            "if: \"success() && hashFiles('work/live-eval-receipt.json') != ''\"\n",
+            1,
+        ),
+        "ref-guard": text.replace(
+            "github.ref != 'refs/heads/main'",
+            "github.ref != 'refs/heads/other'",
+            1,
+        ),
     }
     expected = {
         "trigger": "trigger",
@@ -161,6 +199,13 @@ def test_each_workflow_assertion_fails_when_mutated():
         "model-choice": "model-choice",
         "cap-input": "cap-input",
         "price-step": "price-step",
+        "credentials": "credentials",
+        "trace": "trace",
+        "key-echo": "key-echo",
+        "expression": "expression",
+        "always-summary": "always",
+        "always-upload": "always",
+        "ref-guard": "ref-guard",
     }
     seen = []
     for name, mutated in cases.items():
@@ -179,6 +224,12 @@ def test_each_workflow_assertion_fails_when_mutated():
         "pin",
         "receipt-upload",
         "receipt-commit",
+        "credentials",
+        "trace",
+        "key-echo",
+        "expression",
+        "always",
+        "ref-guard",
     } <= set(seen)
 
 
@@ -189,11 +240,11 @@ def test_existing_workflows_do_not_call_the_live_eval():
         assert "live_eval_dispatch" not in text
 
 
-def test_price_window_is_fourteen_days_and_the_recorded_date_is_unchanged():
+def test_price_window_is_fourteen_days_and_the_recorded_date_is_2026_10_20():
     assert dispatch.PRICE_CHECK_MAX_AGE_DAYS == 14
     assert "14 days" in WORKFLOW.read_text(encoding="utf-8")
     text = (ROOT / "src/chess_analytics/analyst/preflight.py").read_text(encoding="utf-8")
-    assert dispatch.price_check_date(text) == date(2026, 10, 4)
+    assert dispatch.price_check_date(text) == date(2026, 10, 20)
     assert "2026-10-04" not in (ROOT / "src/chess_analytics/analyst/pricing.py").read_text(
         encoding="utf-8"
     )
@@ -435,6 +486,57 @@ def _check_runner(text: str, job: dict, problems: list[str]) -> None:
     summary_if = None if summary is None else summary.get("if")
     if "summarize" not in summary_run or summary_if != "always()":
         problems.append("dispatch-step")
+
+
+def _check_credentials(job: dict, problems: list[str]) -> None:
+    checkout = _step(job, "Checkout")
+    payload = {} if checkout is None else checkout.get("with") or {}
+    if payload.get("persist-credentials") is not False:
+        problems.append("credentials")
+
+
+def _check_run_scripts(job: dict, problems: list[str]) -> None:
+    for step in job.get("steps") or []:
+        run = step.get("run")
+        if not isinstance(run, str):
+            continue
+        if _SET_X.search(run):
+            problems.append("trace")
+        if _ECHO_KEY.search(run):
+            problems.append("key-echo")
+        if _EXPR_IN_RUN.search(run):
+            problems.append("expression")
+
+
+def _check_always(job: dict, problems: list[str]) -> None:
+    summary = _step(job, "Write the job summary")
+    summary_if = None if summary is None else summary.get("if")
+    if summary_if != "always()":
+        problems.append("always")
+    uploads = [
+        step
+        for step in job.get("steps") or []
+        if str(step.get("uses", "")).startswith("actions/upload-artifact@")
+    ]
+    upload_if = None if len(uploads) != 1 else uploads[0].get("if")
+    if not isinstance(upload_if, str) or not upload_if.startswith("always()"):
+        problems.append("always")
+
+
+def _check_ref_guard(job: dict, problems: list[str]) -> None:
+    guard = _step(job, "Refuse a ref other than main")
+    live = _step(job, "Run the live eval")
+    names = [step.get("name") for step in job.get("steps") or []]
+    if guard is None or live is None:
+        problems.append("ref-guard")
+        return
+    if names.index("Refuse a ref other than main") > names.index("Run the live eval"):
+        problems.append("ref-guard")
+    if guard.get("if") != "github.ref != 'refs/heads/main'":
+        problems.append("ref-guard")
+    run = guard.get("run") or ""
+    if "exit 1" not in run or _EXPR_IN_RUN.search(run):
+        problems.append("ref-guard")
 
 
 def _check_order(job: dict, problems: list[str]) -> None:
