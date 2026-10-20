@@ -355,8 +355,7 @@ def test_committed_origins_reject_metricflow_on_a_clock_receipt(project):
         _committed_origins(committed)
 
 
-def test_mart_id_matches_the_recorded_snapshot_model_and_lock(project):
-    extract = load_extract(extract_path(project))
+def _published_build_pins(extract: dict) -> None:
     build = extract["build"]
     derived = derived_mart_id(
         build["source_snapshot_id"],
@@ -373,6 +372,76 @@ def test_mart_id_matches_the_recorded_snapshot_model_and_lock(project):
         assert row["mart_id"] == derived
         assert row["model_sha256"] == build["model_sha256"]
         assert row["semantic_manifest_sha256"] == build["semantic_manifest_sha256"]
+
+
+def test_mart_id_matches_the_recorded_snapshot_model_and_lock(project):
+    _published_build_pins(load_extract(extract_path(project)))
+
+
+def test_loader_rejects_metricflow_receipts_without_a_build_record(project, tmp_path):
+    payload = json.loads(extract_path(project).read_text())
+    del payload["build"]
+    path = tmp_path / "extract.json"
+    path.write_text(json.dumps(payload))
+    with pytest.raises(ValueError, match="require a build record"):
+        load_extract(path)
+
+
+def test_loader_rejects_a_null_build_when_receipts_are_metricflow(project, tmp_path):
+    payload = json.loads(extract_path(project).read_text())
+    payload["build"] = None
+    path = tmp_path / "extract.json"
+    path.write_text(json.dumps(payload))
+    with pytest.raises(ValueError, match="require a build record"):
+        load_extract(path)
+
+
+def test_loader_rejects_metricflow_on_an_unapproved_metric(project, tmp_path):
+    payload = json.loads(extract_path(project).read_text())
+    del payload["build"]
+    for row in payload["tables"]["metric_receipt"]:
+        if row["receipt_id"] == "opening_corpus_training_games":
+            row["query_origin"] = "metricflow"
+            break
+    path = tmp_path / "extract.json"
+    path.write_text(json.dumps(payload))
+    with pytest.raises(ValueError, match="governed metrics"):
+        load_extract(path)
+
+
+def test_loader_rejects_a_build_record_without_metricflow(project, tmp_path):
+    payload = json.loads(extract_path(project).read_text())
+    for row in payload["tables"]["metric_receipt"]:
+        if row["query_origin"] != "metricflow":
+            continue
+        row["query_origin"] = "committed_report"
+        row["mart_id"] = None
+        row["model_sha256"] = None
+        row["semantic_manifest_sha256"] = None
+    path = tmp_path / "extract.json"
+    path.write_text(json.dumps(payload))
+    with pytest.raises(ValueError, match="requires a metricflow receipt"):
+        load_extract(path)
+    payload["build"] = None
+    path.write_text(json.dumps(payload))
+    assert load_extract(path)["build"] is None
+
+
+def test_committed_pins_reject_a_substituted_snapshot(project):
+    # A self-consistent forged build cannot be caught by a loader with no warehouse.
+    # The committed-file pins reject a substituted snapshot.
+    payload = json.loads(extract_path(project).read_text())
+    payload["build"]["source_snapshot_id"] = "ab" * 12
+    derived = derived_mart_id(
+        payload["build"]["source_snapshot_id"],
+        payload["build"]["model_sha256"],
+        payload["build"]["lock_sha256"],
+    )
+    for row in payload["tables"]["metric_receipt"]:
+        if row["query_origin"] == "metricflow":
+            row["mart_id"] = derived
+    with pytest.raises(AssertionError):
+        _published_build_pins(payload)
 
 
 def test_live_refresh_labels_matching_governed_metrics_and_refuses_clock(project, tmp_path):

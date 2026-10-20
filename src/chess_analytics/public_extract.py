@@ -35,6 +35,7 @@ NEVER_METRICFLOW = frozenset(
         "opening_adjusted_score_bootstrap",
     }
 )
+METRICFLOW_METRICS = frozenset({"game_draw_rate", "opening_usage", "opening_player_score"})
 # GitHub rejects files over 100 MiB. The analytical warehouse is larger than
 # that. This budget keeps the committed aggregate file small.
 SIZE_BUDGET_BYTES = 262_144
@@ -201,8 +202,13 @@ def _repository_root(start: Path) -> Path | None:
 
 def _reject_metricflow_on_closed_metrics(rows: list[dict]) -> None:
     for row in rows:
-        if row.get("query_origin") == "metricflow" and row.get("metric") in NEVER_METRICFLOW:
+        if row.get("query_origin") != "metricflow":
+            continue
+        metric = row.get("metric")
+        if metric in NEVER_METRICFLOW:
             raise ValueError("clock and adjusted-score receipts cannot be metricflow")
+        if metric not in METRICFLOW_METRICS:
+            raise ValueError("metricflow is only allowed for governed metrics")
 
 
 def derived_mart_id(snapshot_id: str, model_sha256: str, lock_sha256: str) -> str:
@@ -217,16 +223,22 @@ def derived_mart_id(snapshot_id: str, model_sha256: str, lock_sha256: str) -> st
 
 
 def _check_build_record(payload: dict) -> None:
+    rows = payload["tables"]["metric_receipt"]
+    metricflow = [row for row in rows if row.get("query_origin") == "metricflow"]
     build = payload.get("build")
-    if build is None:
+    if not metricflow:
+        if build is not None:
+            raise ValueError("public extract build record requires a metricflow receipt")
         return
+    if not isinstance(build, dict):
+        raise ValueError("metricflow receipts require a build record")
     expected = {
         "lock_sha256",
         "model_sha256",
         "semantic_manifest_sha256",
         "source_snapshot_id",
     }
-    if not isinstance(build, dict) or set(build) != expected:
+    if set(build) != expected:
         raise ValueError("public extract build record keys do not match")
     snapshot = build["source_snapshot_id"]
     model = build["model_sha256"]

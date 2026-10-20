@@ -126,3 +126,8 @@ write `build`. The mart was published at 2026-10-20T21:28:31Z.
 Warehouse sha256
 `556c8fcf002f5be32095958263d67ffdf5ce520ea99f7772bf354501910d2a92`
 stays with that local publication. It is not in the extract.
+Snapshot `7764247e6bdb0b6e73420253` comes from the implementation
+hash of `src/**/*.py` at a1c7690,
+`0a3bdb34c4c2e9b7388bcdba483154d7cfa4c60eabe758ecda4a5a4f8d11c694`.
+A later re-ingest after source changes gets a new snapshot id, which
+is expected.
