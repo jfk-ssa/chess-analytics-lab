@@ -77,11 +77,14 @@ fixture. It is not LLM accuracy. The four-game gate and its baseline are
 unchanged. The offline scorer, runner, and statistics score a raw model
 plan with a fake transport in tests.
 `python -m chess_analytics.analyst live-eval --dry-run` prints the case
-count and the reservation and does not call a model. There is no schedule
-and no `workflow_dispatch` workflow. A live receipt is not committed here.
-The dimensions, caps, and the future manual job are in
+count and the reservation and does not call a model. The manual job is
+`.github/workflows/live-eval.yml`. Its only trigger is `workflow_dispatch`.
+Push and pull-request CI do not run it. There is no schedule. A live
+receipt is uploaded as an artifact and is not committed by that job.
+The dimensions and caps are in
 [ADR 0089](adr/0089-llm-quality-evaluation.md). The runner choices are in
-[ADR 0090](adr/0090-live-eval-scorer-runner-stats.md).
+[ADR 0090](adr/0090-live-eval-scorer-runner-stats.md). The workflow
+choices are in [ADR 0091](adr/0091-manual-live-eval-workflow.md).
 
 For offline replay, first run `chesslab demo --scope all`, then use the command
 in [DEMO.md](DEMO.md). Historical fixture harness checks are available with

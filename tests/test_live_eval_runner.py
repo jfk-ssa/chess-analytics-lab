@@ -807,9 +807,9 @@ def test_cli_dry_run_and_missing_output(live_eval_stage, monkeypatch, capsys):
     assert "needs --output" in capsys.readouterr().err
 
 
-def test_no_live_eval_workflow_was_added():
+def test_live_runner_source_has_no_schedule():
     names = sorted(path.name for path in (ROOT / ".github/workflows").glob("*.yml"))
-    assert names == ["offline.yml", "pages.yml", "pr-title.yml"]
+    assert "live-eval.yml" in names
     text = (ROOT / "src/chess_analytics/analyst/live_runner.py").read_text()
     assert "workflow_dispatch" not in text
     assert "cron" not in text

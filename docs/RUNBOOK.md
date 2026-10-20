@@ -216,14 +216,15 @@ portfolio demo.
 
 ## Live analyst eval
 
-The offline runner scores the frozen 48-case set. Tests and CI use a fake
-transport. They do not call a model. There is no `workflow_dispatch`
-workflow and no `schedule`. Do not add a monthly schedule. A schedule
-later would need a new ADR and explicit owner approval, and it would be
-added only to a workflow that already has the `live-eval` environment,
-the spending cap, and a required reviewer. That workflow is not in this
-repository. [ADR 0089](adr/0089-llm-quality-evaluation.md) describes it.
-[ADR 0090](adr/0090-live-eval-scorer-runner-stats.md) describes the runner.
+The offline runner scores the frozen 48-case set. Tests and the push and
+pull-request workflows use a fake transport. They do not call a model.
+`.github/workflows/live-eval.yml` is `workflow_dispatch` only. It has no
+`schedule`. A schedule later needs a new ADR and explicit owner approval,
+added to this same workflow after the `live-eval` environment, the cap,
+and the required reviewer are already in place.
+[ADR 0089](adr/0089-llm-quality-evaluation.md) is the plan.
+[ADR 0090](adr/0090-live-eval-scorer-runner-stats.md) is the runner.
+[ADR 0091](adr/0091-manual-live-eval-workflow.md) is the manual job.
 
 The same commands work on macOS and Linux. They use the repository Python
 and do not depend on a Linux-only flag.
@@ -235,12 +236,21 @@ does not probe the API.
 
 1. Recheck the provider model page. Past Sol runs in this repository use
    `gpt-6-sol`. The approved plan records that OpenAI's page has listed
-   `gpt-6.1-sol`. Do not freeze an id from memory.
+   `gpt-6.1-sol`. On 2026-10-20 both `gpt-6-luna` and `gpt-6-sol` were
+   valid ids. `gpt-6.1-sol` does not accept `reasoning.effort` of `none`,
+   so the frozen id stays `gpt-6-sol`.
 2. Confirm `reasoning.effort` set to `none` is accepted on the chosen id.
-   The frozen quote sends that value. This command does not probe it.
-3. Recheck prices. The runner's Luna and Sol rates were recorded on
-   2026-10-04. A receipt sets `prices_rechecked` to false until a later
-   change records a new check. Credits are not a budget.
+   On 2026-10-20 both frozen ids accepted `none`. The frozen quote sends
+   that value. This command does not probe it.
+3. Recheck prices. On 2026-10-20 the official pages matched the recorded
+   rates exactly: Luna $0.10 input, $0.01 cached, $0.125 cache write, and
+   $0.50 output; Sol $2, $0.20, $2.50, and $10. The date is
+   `DEFAULT_PRICE_CHECKED_UTC_DATE` in `preflight.py`, set to `2026-10-20`.
+   `pricing.py` does not store that date. A receipt sets `prices_rechecked`
+   to false. The manual workflow stops when the date is older than 14
+   days unless `allow_stale_price_check` is set after this recheck. A
+   dispatch on 2026-10-20 does not need that override. Credits are not a
+   budget.
 4. Choose `max_run_usd` yourself. The recommended gross caps for a
    5-repeat, 50-case envelope are Luna $0.50 and Sol $10. They are not an
    approval to spend. On 2026-10-19 the conservative reservation for these
@@ -297,4 +307,57 @@ and a cap you have actually approved. The recommendation for the
 5-repeat envelope is $10. Pass `--baseline-rate` only when you already
 have a baseline pass rate to compare. The alert it prints is advisory.
 `hard_fail` on the receipt means some high-severity case missed. That
-flag does not by itself fail CI, because this command is not in CI.
+flag does not by itself fail the process. An incomplete receipt does.
+The push and pull-request workflows do not run this command.
+
+### GitHub Actions dispatch
+
+John runs the paid job from the Actions tab. Create the environment
+before the first dispatch. The job does not probe the provider.
+
+1. In the repository settings, create the environment `live-eval` and
+   add John as a required reviewer. Do that before the first dispatch.
+   A dispatch against a missing environment can create an empty one, and
+   a run then starts without a review. Set Deployment branches to
+   Selected branches and allow only `main`. `workflow_dispatch` runs the
+   workflow file from the chosen ref, so a same-repo branch could print
+   the key after approval. Before approving, compare the run SHA with
+   `main`. The job exits 1 before the secret step unless `github.ref` is
+   `refs/heads/main`, when the file on that ref still contains the guard.
+   The branch rule is what stops a file that removed the guard.
+2. Create a dedicated OpenAI key for this eval and set a provider-side
+   spend limit on that key. Add the key as the environment secret
+   `CHESSLAB_OPENAI_API_KEY`. Keep it off the repository secrets. The
+   workflow reads that one environment secret.
+3. Open Actions, choose **Live analyst eval**, and run the workflow.
+   `model` is `gpt-6-luna` or `gpt-6-sol`. Astra is not a choice: ADR 0089
+   leaves its id and its cap unset. `repeats` defaults to 5 and accepts
+   an integer from 1 to 20. `max_run_usd` has no default. Type a cap at
+   or under the 5-repeat ceiling, Luna $0.50 or Sol $10. The ceiling is
+   not scaled when the repeat count changes. Check
+   `acknowledge_personal_account`. The recorded price-check date is
+   `2026-10-20` in `preflight.py`. When that date is older than 14 days,
+   check `allow_stale_price_check` only after the three rechecks above.
+   A dispatch on 2026-10-20 does not need the override. The override does
+   not call the API and does not mark `prices_rechecked` on the receipt.
+4. Approve the `live-eval` environment review when GitHub asks. Compare
+   the run SHA with `main` before you approve. The job prints the
+   checklist, refuses a ref other than `refs/heads/main`, refuses a stale
+   price date and an over-cap input, prints the dry-run reservation, then
+   runs the live command. A second dispatch waits. A third dispatch
+   replaces the one that is waiting. The run already in progress is not
+   cancelled. This workflow does not set `queue`.
+5. Download the artifact named `live-eval-receipt-<run_id>`. `<run_id>`
+   is the Actions run id. Retention is 90 days. The job summary shows
+   the model, the repeats, the headline raw pass rate with its Wilson
+   interval, the repair counts beside that rate, hard fail, the known
+   gross cost, and complete true or false.
+6. Read the receipt and commit it in a separate pull request, under
+   `reports/`. The workflow does not commit it. `work/` is ignored.
+
+### Adding a schedule later
+
+Do not add `schedule` to `live-eval.yml` in place. A later change needs
+a new ADR and explicit owner approval. It belongs on this workflow,
+which already names the `live-eval` environment, checks the cap, and
+waits for the required reviewer. That change is not in this file.

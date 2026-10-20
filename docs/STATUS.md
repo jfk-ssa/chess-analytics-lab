@@ -54,7 +54,7 @@ Core draw-rate, opening-usage, and opening-score metrics read a matching publish
 Unit tests, enforced mart contracts, exposures, a committed lineage diagram, and slim state selection are in [ADR 0086](adr/0086-dbt-engineering-depth.md).
 An incremental `player_games` was measured on synthetic scale and not adopted; publication stays a from-scratch rebuild ([ADR 0087](adr/0087-incremental-player-games.md)).
 An offline gate replays the deterministic analyst stack and fails when the scorecard differs from the committed baseline; it does not measure LLM quality ([ADR 0088](adr/0088-offline-analyst-eval-regression-gate.md)).
-The live-eval plan, fixture, and 48-case set have an offline scorer, runner, and statistics ([ADR 0089](adr/0089-llm-quality-evaluation.md), [ADR 0090](adr/0090-live-eval-scorer-runner-stats.md)). This checkout does not call a model, and there is no schedule.
+The live-eval plan, fixture, and 48-case set have an offline scorer, runner, and statistics, and a manual `workflow_dispatch` job ([ADR 0089](adr/0089-llm-quality-evaluation.md), [ADR 0090](adr/0090-live-eval-scorer-runner-stats.md), [ADR 0091](adr/0091-manual-live-eval-workflow.md)). This checkout does not call a model. Push and pull-request CI do not run the live job, and there is no schedule.
 A later hosted read-only dashboard will read the committed aggregate extract in `data/public/dashboard_extract.json` ([ADR 0092](adr/0092-public-aggregate-extract.md)). The opening-corpus training count and the August prefix counts stay separate lineage stages.
 
 This file stays a short summary: checkout structure, phase tracker, dataset
@@ -100,7 +100,7 @@ email addresses, customer identifiers, and internal ticket links.
 
 ## Limits
 
-Live model calls stay disabled until personal configuration and an explicit spending cap exist for that run. The M7 December Sol gate closed at **$0.35392836** cumulative accounted gross under the approved $6 cap. Earlier failed gates stay in the reports. The M6 caps are closed. Model and pricing defaults were last checked against the official model page on 2026-10-04.
+Live model calls stay disabled until personal configuration and an explicit spending cap exist for that run. The manual live-eval workflow reads `CHESSLAB_OPENAI_API_KEY` from the `live-eval` environment when John dispatches it. This repository does not contain that key. The M7 December Sol gate closed at **$0.35392836** cumulative accounted gross under the approved $6 cap. Earlier failed gates stay in the reports. The M6 caps are closed. Model and pricing defaults were last checked against the official model page on 2026-10-20. The recorded Luna and Sol rates matched that page. `gpt-6.1-sol` does not accept `reasoning.effort` of `none`, so the live-eval id stays `gpt-6-sol`.
 
 Install with a non-editable wheel. The environment pin and the macOS editable-path failure are in [ADR 0002](adr/0002-environment.md). Offline reproduction uses installed or cached dependencies.
 
