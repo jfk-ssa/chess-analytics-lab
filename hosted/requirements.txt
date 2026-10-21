@@ -1,0 +1,4 @@
+# Community Cloud installs this file. The pin matches the dashboard extra
+# in pyproject.toml and uv.lock. The app imports the extract reader from src/
+# and does not install chess-analytics-lab, whose dependencies include DuckDB.
+streamlit==1.65.0
