@@ -99,6 +99,7 @@ short summary of the current checkout, not a log of new decisions.
 | 0091 | 2026-10-20 | [Manual live-eval workflow](adr/0091-manual-live-eval-workflow.md) |
 | 0092 | 2026-10-20 | [Public aggregate extract for a hosted read-only dashboard](adr/0092-public-aggregate-extract.md) |
 | 0093 | 2026-10-21 | [First live-eval receipts](adr/0093-first-live-eval-receipts.md) |
+| 0094 | 2026-10-21 | [Hosted read-only dashboard](adr/0094-hosted-read-only-dashboard.md) |
 | 0095 | 2026-10-21 | [grok-4.7 live eval and reasoning-effort sensitivity](adr/0095-grok-4-7-live-eval.md) |
 | 0096 | 2026-10-21 | [Published live-eval report](adr/0096-published-live-eval-report.md) |
 | 0097 | 2026-10-21 | [Keep the grok HTTP error body](adr/0097-grok-http-error-detail.md) |

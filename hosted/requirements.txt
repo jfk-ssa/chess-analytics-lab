@@ -1,0 +1,8 @@
+# Community Cloud installs this file with pip and does not install
+# chess-analytics-lab. The app imports the extract reader from src/.
+# Streamlit matches the dashboard extra. Pandas and protobuf are pinned to
+# uv.lock: an unpinned transitive install can resolve different versions.
+# Streamlit 1.65.0 accepts pandas<4,>=1.4.0 and protobuf<8,>=5.26.1.
+streamlit==1.65.0
+pandas==2.3.3
+protobuf==6.33.6
