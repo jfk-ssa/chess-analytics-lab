@@ -144,11 +144,13 @@ not added.
 `opening_line`, `opening_continuation`, `opening_family`,
 `august_family`, and `clock_slice` rows under 10 games are omitted by
 the published builders, the same floor `transposition_route` already
-uses. A card headline is the games on the routes that card shows.
-Kept routes past the top three are an other-orders row when they add
-up to at least 10 games, and the share bars use that same total. A
-smaller remainder stays off the card. The position total can include
-routes under the floor, so it is not the headline.
+uses. A card headline is the position total on the transposition
+grain, and the share bars use that total. Games the card does not
+list are an other-orders row when they add up to at least 10. A
+remainder of 1–9 stays off the rows, and the card says rarer orders
+are not shown, with no count. The cube stores the kept-route count,
+not every distinct order, so a card with a remainder says top 3
+move orders.
 The committed parquet is the rebuild at 569,634 bytes and 34,084 rows.
 The 10-game floor and the period-bounds filter are in that file.
 `game_cell` still covers 1,009,445 games. Run the published builder

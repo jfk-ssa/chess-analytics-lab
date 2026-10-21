@@ -149,7 +149,7 @@ def _route_row(san: str, games: int, total: int, track: str) -> str:
 
 
 def _other_row(games: int, total: int, track: str) -> str:
-    """Muted remainder of kept routes that the card does not list as SAN."""
+    """Muted remainder of position games the card does not list as SAN."""
     share = _share_percent(games, total)
     return (
         f'<div class="cal-route cal-other" style="display:grid;grid-template-columns:{track} '
@@ -166,23 +166,48 @@ def _other_row(games: int, total: int, track: str) -> str:
     )
 
 
-def _visible_routes(item: dict) -> tuple[int, list[tuple[str, int]], int]:
-    """Headline, rows, and the move-order count those rows account for.
+def _order_label(item: dict, shown_count: int, remainder: int) -> str:
+    """Distinct orders when the cube has that count, otherwise the rows shown.
 
-    The headline is the sum of the rows, and every share bar uses that sum.
-    ``kept_games`` is the routes the cube kept. A remainder at or above 10
-    games is one ``other orders`` row, and the order count is the cube's kept
-    count. A smaller remainder stays off the card, so the order count is only
-    the routes still shown. Without ``kept_games``, the listed routes are the
-    whole set.
+    ``move_orders`` is the routes that cleared the floor. That is the
+    position's distinct orders when those routes hold every game. A remainder
+    includes orders the cube did not store, so the card says how many it lists.
+    """
+    stored = int(item["move_orders"]) if "move_orders" in item else None
+    kept = int(item["kept_games"]) if "kept_games" in item else None
+    total = int(item["games"])
+    if remainder <= 0:
+        count = shown_count
+    elif kept is not None and kept == total and stored is not None:
+        count = stored
+    elif shown_count == 1:
+        return "top 1 move order"
+    else:
+        return f"top {shown_count} move orders"
+    if count == 1:
+        return "1 move order"
+    return f"{count} move orders"
+
+
+def _visible_routes(item: dict) -> tuple[int, list[tuple[str, int]], str, str]:
+    """Headline, rows, order label, and the note for a remainder under 10.
+
+    The headline is the position total. Every share bar uses that total.
+    The unlisted games are one ``other orders`` row when they add up to at
+    least 10. A remainder of 1–9 stays off the rows. The note then says
+    rarer orders are not shown, with no count.
     """
     shown = [(str(san), int(games)) for san, games in item["routes"]]
     shown_games = sum(games for _san, games in shown)
-    hidden = int(item["kept_games"]) - shown_games if "kept_games" in item else 0
-    if hidden >= _OTHER_FLOOR:
-        rows = [*shown, (_OTHER_LABEL, hidden)]
-        return shown_games + hidden, rows, int(item["move_orders"])
-    return shown_games, shown, len(shown)
+    total = int(item["games"])
+    remainder = total - shown_games
+    if remainder >= _OTHER_FLOOR:
+        rows = [*shown, (_OTHER_LABEL, remainder)]
+        note = ""
+    else:
+        rows = shown
+        note = "rarer orders not shown" if remainder > 0 else ""
+    return total, rows, _order_label(item, len(shown), remainder), note
 
 
 def _route_rows(pairs: list[tuple[str, int]], total: int, track: str) -> str:
@@ -199,23 +224,30 @@ def transposition_cards(items: list[dict]) -> str:
     """Equal-width cards for transposing positions.
 
     Each item has ``title``, ``games``, ``move_orders``, and ``routes``.
-    ``kept_games`` is the sum of the routes the cube kept for that position.
-    ``title`` is ``After Black's move N · <SAN>``. The depth, the line, and
-    the game count are separate rows. The line reserves two lines so sibling
-    cards keep the count on the same row. A route is a ``(san, games)`` pair:
-    the count column is the widest count, about six tabular characters, and the
-    SAN wraps inside the second column. The headline and the share bars are
-    the routes on the card. Kept routes past the listed SAN are an other-orders
-    row when they add up to at least 10 games.
+    ``games`` is the position total. ``kept_games``, when present, is the
+    routes the cube kept. ``title`` is ``After Black's move N · <SAN>``.
+    The depth, the line, and the game count are separate rows. The line
+    reserves two lines so sibling cards keep the count on the same row. A
+    route is a ``(san, games)`` pair: the count column is the widest count,
+    about six tabular characters, and the SAN wraps inside the second column.
+    Share bars use the position total. Games the card does not list are an
+    other-orders row when they add up to at least 10. A remainder of 1–9 is
+    a caption, with no count.
     """
     columns = equal_width_columns(len(items))
     cells: list[str] = []
     for item in items:
-        total, route_pairs, orders = _visible_routes(item)
+        total, route_pairs, order_label, gap = _visible_routes(item)
         track = _count_track([games for _san, games in route_pairs])
         routes = _route_rows(route_pairs, total, track)
         depth, line = _split_title(str(item["title"]))
-        order_label = "1 move order" if orders == 1 else f"{orders} move orders"
+        gap_html = ""
+        if gap:
+            gap_html = (
+                '<div class="cal-gap" style="margin-top:10px;font-size:0.78rem;'
+                'line-height:1.3;color:#5c726b;white-space:nowrap">'
+                f"{escape(gap)}</div>"
+            )
         cells.append(
             '<div class="cal-card" style="min-width:0;width:100%;height:100%;'
             "box-sizing:border-box;display:flex;flex-direction:column;align-self:stretch;"
@@ -241,7 +273,7 @@ def transposition_cards(items: list[dict]) -> str:
             '<div class="cal-d" style="font-size:0.78rem;line-height:1.3;color:#3d524c;'
             f'white-space:nowrap">{escape(order_label)}</div></div></div>'
             '<div class="cal-routes" style="display:flex;flex-direction:column;gap:12px;'
-            f'margin-top:14px">{routes}</div></div>'
+            f'margin-top:14px">{routes}</div>{gap_html}</div>'
         )
     style = (
         "display:grid;"
