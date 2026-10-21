@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import re
 
 import pytest
 
@@ -97,6 +98,7 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
     assert not app.chat_input
     assert not app.button
     text = _visible(app)
+    assert "1 over-abstentions" not in text
     extract = load_extract(extract_path(project))
     receipts = {row["receipt_id"]: row for row in table_rows(extract, "metric_receipt")}
     draw = receipts["game_draw_rate"]
@@ -130,9 +132,28 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
         "7.8%",
         "86.3%",
         "97.5%",
-        "Luna clear, Sol fail",
+        "97.1%",
+        "Luna, grok-4.7 low clear; Sol fail",
         "boundary_budget 0/5",
         "25 over-abstentions",
+        "6 over-abstentions",
+        "1 over-abstention",
+        "not strictly comparable",
+        "45/48",
+        "47/48",
+        "06bc03a3eabab5bbf3b958ec",
+        "bea194558220eb669940d8f3",
+        "coverage_1",
+        "coverage_2",
+        "indirect_opening_1",
+        "share frozen inputs",
+        "not compared",
+        "all three 1-repeat runs",
+        "repeat count both differ",
+        "14,768",
+        "\\$0.22253",
+        "\\$0.322454",
+        "\\$0.408746",
         draw["mart_id"],
         extract["build"]["source_snapshot_id"],
         extract["build"]["model_sha256"],
@@ -147,6 +168,8 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
     )
     missing = [item for item in expected if item not in text]
     assert not missing, missing
+    assert "Receipt not in yet." not in text
+    assert "The 1-repeat low run is not in this test." not in text
     _assert_section_origins(app)
     _assert_live_eval_link(app)
     _assert_build_table_omits_the_figure_id(app, extract)
@@ -167,13 +190,20 @@ def test_cost_captions_keep_a_literal_dollar(project, monkeypatch):
     app = _run(project, monkeypatch)
     caption = _caption(app, "Known cost")
     visible = caption.replace(r"\$", "$")
-    assert "gpt-6-luna $0.0150, gpt-6-sol $0.2550" in visible
+    assert "gpt-6-luna $0.0150, grok-4.7 · low $1.0033, gpt-6-sol $0.2550" in visible
+    assert "gpt-6-luna and gpt-6-sol do not overlap" in visible
+    assert "gpt-6-luna and gpt-6-sol share frozen inputs" in visible
+    assert "grok-4.7 · low does not" in visible
+    assert "its interval is not compared with theirs" in visible
+    assert "grok-4.7 · low overlap" not in visible
+    assert "grok-4.7 · low do not overlap" not in visible
     for item in app.caption:
         assert "$" not in item.value.replace(r"\$", "")
     cards = "\n".join(item.value for item in app.markdown if "cal-card" in item.value)
-    for amount in (r"\$0.0150", r"\$0.2550", r"\$0.5000", r"\$10.0000"):
+    for amount in ("&#36;0.0150", "&#36;0.2550", "&#36;1.0033", "&#36;0.5000", "&#36;10.0000"):
         assert amount in cards
-    assert "$" not in cards.replace(r"\$", "")
+    assert "$" not in cards
+    assert r"\$" not in cards
 
 
 def _assert_live_eval_link(app) -> None:
@@ -276,6 +306,10 @@ def _assert_alt_text(app) -> None:
         "Headline pass rate for each model with its Wilson 95 percent interval.",
         "Dumbbell of pass rate by category. Each point is one model.",
         "Grid of cases by model, colored by how many repeats passed.",
+        (
+            "Grok reasoning-effort pass rates with Wilson 95 percent intervals. "
+            "Low, medium, and high are 1-repeat runs on the same instructions."
+        ),
     )
     assert alts == list(expected)
 
@@ -285,7 +319,7 @@ _TRACKS = "repeat(auto-fit,minmax(min(100%,256px),1fr))"
 
 def _assert_equal_width_markup(app) -> None:
     markup = "\n".join(item.value for item in app.markdown)
-    for count in (3, 4):
+    for count in (3, 6):
         assert f'data-cards="{count}"' in markup
     assert _TRACKS in markup
     assert "white-space:nowrap" in markup
@@ -332,13 +366,79 @@ def test_equal_width_rows_share_one_track_definition(project):
         assert f"grid-template-columns:{_TRACKS}" in html
         assert html.count('class="cal-card"') == count
         assert html.count('class="cal-v"') == count
-        assert html.count("white-space:nowrap") == count
+        assert html.count("white-space:nowrap") == 2 * count
         assert "overflow-wrap:anywhere" not in html
         assert "minmax(min(100%,256px),1fr)" in html
     with pytest.raises(ValueError, match="at least one card"):
         module.equal_width_columns(0)
     with pytest.raises(ValueError, match="at least one card"):
         module.equal_width_columns(True)
+
+
+def _chart_spec(node) -> dict:
+    spec = getattr(node, "spec", None)
+    if isinstance(spec, dict):
+        return spec
+    raw = node.proto.spec
+    if isinstance(raw, str):
+        return json.loads(raw)
+    if isinstance(raw, bytes):
+        return json.loads(raw.decode())
+    return dict(raw)
+
+
+def _y_sorts(spec: dict) -> list:
+    found: list = []
+
+    def walk(node) -> None:
+        if isinstance(node, dict):
+            encoding = node.get("encoding")
+            if isinstance(encoding, dict):
+                channel = encoding.get("y")
+                if isinstance(channel, dict) and "sort" in channel:
+                    found.append(channel["sort"])
+            for value in node.values():
+                walk(value)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item)
+
+    walk(spec)
+    return found
+
+
+def test_sweep_cards_and_chart_name_the_effort(project, monkeypatch):
+    """Sweep titles are model and effort. The chart rows run low, medium, high."""
+    app = _run(project, monkeypatch)
+    cards = [
+        item.value
+        for item in app.markdown
+        if "cal-card" in item.value and "45/48" in item.value and "47/48" in item.value
+    ]
+    assert len(cards) == 1
+    labels = re.findall(r'class="cal-k"[^>]*>([^<]+)', cards[0])
+    assert labels == ["grok-4.7 · low", "grok-4.7 · medium", "grok-4.7 · high"]
+    assert "(" not in "".join(labels)
+    assert "1f45f2" not in cards[0]
+    charts = [node for node in app if getattr(node, "type", None) == "vega_lite_chart"]
+    sweep = [node for node in charts if "Low, medium, and high" in node.proto.alt]
+    assert len(sweep) == 1
+    sorts = _y_sorts(_chart_spec(sweep[0]))
+    assert sorts
+    assert all(item == ["low", "medium", "high"] for item in sorts)
+    caption = _caption(app, "outside this comparison")
+    assert "different instruction hash, stays the headline" in caption
+    assert "low $0.22253, medium $0.322454, high $0.408746" in caption.replace(r"\$", "$")
+    assert "(1f45f2)" not in caption
+    assert "(aded2b)" not in caption
+    visible = _visible(app)
+    assert "Of 48 cases" in visible
+    assert "low ×5 versus low ×1" in visible
+    tables = [
+        table for table in app.table if list(table.value.columns) == ["Case", "Effort", "Result"]
+    ]
+    assert len(tables) == 1
+    assert set(tables[0].value["Effort"]) == {"low", "medium", "high"}
 
 
 def test_category_dumbbell_is_unstacked_on_a_unit_axis(project):

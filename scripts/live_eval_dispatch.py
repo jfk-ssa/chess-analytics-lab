@@ -45,8 +45,9 @@ CHECKLIST_LINES = (
     "2. Confirm the reasoning effort. OpenAI ids in this harness accept "
     "reasoning.effort none, and the quote sends none. grok-4.7 cannot disable "
     "reasoning. Allowed efforts are low, medium, high, and xhigh. The headline "
-    "comparison is low at 5 repeats. medium and high are a 1-repeat sensitivity "
-    "check and are not a second 5-repeat headline. This job does not probe the API.",
+    "run is low at 5 repeats. The effort comparison is one repeat each of low, "
+    "medium, and high on the same instructions. medium and high are not a second "
+    "5-repeat headline. This job does not probe the API.",
     "3. Recheck prices. The recorded date is DEFAULT_PRICE_CHECKED_UTC_DATE in "
     "src/chess_analytics/analyst/preflight.py. pricing.py does not store that date. "
     f"This job stops when the date is older than {PRICE_CHECK_MAX_AGE_DAYS} days "
@@ -122,6 +123,20 @@ def validate_dispatch(
         "reasoning_effort": effort,
         "repeats": count,
     }
+
+
+def run_title_effort(model: str, effort: str) -> str:
+    """Effort shown in the Actions run title.
+
+    GitHub evaluates ``run-name`` before any step, so the title cannot read
+    ``LIVE_EVAL_RESOLVED_EFFORT``. ``model-default`` uses ``DEFAULT_EFFORT``.
+    Any other input is shown as typed, including an effort ``check-inputs``
+    later rejects. The expression in ``.github/workflows/live-eval.yml``
+    matches this function for the three dispatch models.
+    """
+    if effort not in ("", "model-default"):
+        return effort
+    return DEFAULT_EFFORT.get(model, "none")
 
 
 def resolve_effort(model: str, effort: str) -> str:

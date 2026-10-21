@@ -25,6 +25,7 @@ from chess_analytics.public_extract import (
     TABLES,
     extract_path,
     identifier_issues,
+    live_eval_rate_id,
 )
 
 PROJECT = Path(__file__).resolve().parents[1]
@@ -39,7 +40,8 @@ BUILT_LINE = (
     "opening_color_score, clock_bucket, clock_stratum, clock_pressure_band, "
     "transposition_view, transposition_compression, transposition_coverage, "
     "transposition_scope, transposition_limitation, live_eval_run, "
-    "live_eval_category, live_eval_case, metric_receipt from committed reports"
+    "live_eval_category, live_eval_case, live_eval_effort_case, "
+    "metric_receipt from committed reports"
 )
 LOW_SUPPORT_PLAYER_GAMES = 100
 _BAND_ORDER = ("under_1200", "1200_1599", "1600_1999", "2000_plus")
@@ -64,7 +66,7 @@ MAC_REBUILD = (
 def build_extract(project: Path) -> tuple[dict, list[str]]:
     sources = load_sources(project)
     check_sources(sources)
-    live_runs, live_categories, live_cases = live_eval_tables(project)
+    live_runs, live_categories, live_cases, live_effort = live_eval_tables(project)
     tables = {
         "lineage_stage": lineage_rows(sources),
         "opening_family_share": family_rows(sources),
@@ -81,6 +83,7 @@ def build_extract(project: Path) -> tuple[dict, list[str]]:
         "live_eval_run": live_runs,
         "live_eval_category": live_categories,
         "live_eval_case": live_cases,
+        "live_eval_effort_case": live_effort,
     }
     tables["metric_receipt"] = receipt_rows(sources, tables)
     extract = {"extract_version": EXTRACT_VERSION, "tables": tables}
@@ -618,11 +621,27 @@ def receipt_rows(sources: dict, tables: dict) -> list[dict]:
             None,
         )
     )
+    shared = {
+        (run["model"], run["effort"])
+        for run in tables["live_eval_run"]
+        if sum(
+            1
+            for other in tables["live_eval_run"]
+            if other["model"] == run["model"] and other["effort"] == run["effort"]
+        )
+        > 1
+    }
     for run in tables["live_eval_run"]:
-        subject = f"{run['model']} {run['effort']}"
+        receipt_id = live_eval_rate_id(
+            run["model"],
+            run["effort"],
+            int(run["repeats"]),
+            shared=(run["model"], run["effort"]) in shared,
+        )
+        subject = receipt_id.split(":", 1)[1]
         rows.append(
             _receipt(
-                f"live_eval_pass_rate:{subject}",
+                receipt_id,
                 "live_eval_pass_rate",
                 subject,
                 run["passed"],
@@ -878,8 +897,24 @@ def reduce_opening_positions(report: dict) -> dict:
     }
 
 
-def live_eval_tables(project: Path) -> tuple[list[dict], list[dict], list[dict]]:
-    from chess_analytics.eval_report import discover_receipts, load_cases, load_receipts, verify
+def _effort_failure_modes(receipt, case_id: str, cases: dict) -> str:
+    from chess_analytics.eval_report import failure_mode
+
+    failed = [row for row in receipt.rows_by_case()[case_id] if not row.passed]
+    if not failed:
+        return "none"
+    modes = sorted({failure_mode(row, cases[case_id]) or "other" for row in failed})
+    return ",".join(modes)
+
+
+def live_eval_tables(project: Path) -> tuple[list[dict], list[dict], list[dict], list[dict]]:
+    from chess_analytics.eval_report import (
+        discover_receipts,
+        frozen_input_group,
+        load_cases,
+        load_receipts,
+        verify,
+    )
 
     case_path = project / "evals" / "cases" / "analyst_live_v1.json"
     cases = load_cases(case_path)
@@ -895,9 +930,23 @@ def live_eval_tables(project: Path) -> tuple[list[dict], list[dict], list[dict]]
     failed = [f"{label} {detail}".strip() for label, ok, detail in integrity.checks if not ok]
     if failed:
         raise ValueError("live eval receipt failed integrity: " + "; ".join(failed[:4]))
+    by_pair: dict[tuple[str, str], list] = defaultdict(list)
+    for receipt in receipts:
+        by_pair[(receipt.model, receipt.effort)].append(receipt)
+    for (model, effort), items in by_pair.items():
+        if len(items) == 1:
+            continue
+        repeats = [item.repeats for item in items]
+        headlines = [item for item in items if item.repeats == 5]
+        if len(repeats) != len(set(repeats)) or len(headlines) != 1:
+            raise ValueError(
+                "live eval (model, effort) is not unique, so case and category rows cannot "
+                f"join a run ({model} {effort})"
+            )
     runs = []
     categories = []
     case_rows = []
+    effort_cases = []
     for receipt in receipts:
         if receipt.raw.get("complete") is not True:
             raise ValueError(f"{receipt.path.name} is not a complete live-eval receipt")
@@ -913,9 +962,14 @@ def live_eval_tables(project: Path) -> tuple[list[dict], list[dict], list[dict]]
                 "bootstrap_low": bootstrap_low,
                 "cases": int(receipt.raw["cases"]),
                 "effort": receipt.effort,
+                "frozen_group": frozen_input_group(receipt),
                 "github_run_id": run_id,
                 "hard_fail": receipt.hard_fail,
                 "headline": receipt.repeats == 5,
+                "instructions_sha256": str(receipt.raw["instructions_sha256"]),
+                "reasoning_tokens": int(
+                    (receipt.raw.get("token_usage") or {}).get("reasoning_tokens") or 0
+                ),
                 "high_severity_misses": int(receipt.raw["high_severity_misses"]),
                 "known_gross_cost_usd": receipt.cost,
                 "max_run_usd": float(receipt.raw["max_run_usd"]),
@@ -931,6 +985,8 @@ def live_eval_tables(project: Path) -> tuple[list[dict], list[dict], list[dict]]
                 "wilson_low": wilson_low,
             }
         )
+        if receipt.repeats != 5:
+            continue
         passes = receipt.passes_by_case()
         totals: dict[str, list[int]] = defaultdict(lambda: [0, 0])
         for case_id, case in cases.items():
@@ -947,7 +1003,6 @@ def live_eval_tables(project: Path) -> tuple[list[dict], list[dict], list[dict]]
                     "passed": passed,
                     "repeats": receipt.repeats,
                     "severity": case.severity,
-                    "source_report": receipt.path.name,
                 }
             )
         for category, (passed, trials) in sorted(totals.items()):
@@ -957,14 +1012,43 @@ def live_eval_tables(project: Path) -> tuple[list[dict], list[dict], list[dict]]
                     "effort": receipt.effort,
                     "model": receipt.model,
                     "passed": passed,
-                    "source_report": receipt.path.name,
                     "trials": trials,
                 }
             )
+    # 1-repeat grok arms only. A later low x1 receipt fills the low rows.
+    # The 5-repeat low run stays in the headline case grid.
+    grok = [
+        receipt
+        for receipt in receipts
+        if receipt.model == "grok-4.7"
+        and receipt.repeats == 1
+        and receipt.effort in {"low", "medium", "high"}
+    ]
+    imperfect = {
+        case_id
+        for receipt in grok
+        for case_id, passed in receipt.passes_by_case().items()
+        if passed != receipt.repeats
+    }
+    for receipt in grok:
+        for case_id in sorted(imperfect):
+            effort_cases.append(
+                {
+                    "case_id": case_id,
+                    "effort": receipt.effort,
+                    "failure_modes": _effort_failure_modes(receipt, case_id, cases),
+                    "model": receipt.model,
+                    "passed": receipt.passes_by_case()[case_id],
+                    "repeats": receipt.repeats,
+                }
+            )
+    if not effort_cases:
+        raise ValueError("live eval effort case table is empty")
     runs.sort(key=lambda row: row["github_run_id"])
     categories.sort(key=lambda row: (row["model"], row["effort"], row["category"]))
     case_rows.sort(key=lambda row: (row["model"], row["effort"], row["case_order"]))
-    return runs, categories, case_rows
+    effort_cases.sort(key=lambda row: (row["case_id"], row["effort"], row["model"]))
+    return runs, categories, case_rows, effort_cases
 
 
 def _check_color_scores(extract: dict, sources: dict) -> None:
@@ -1056,8 +1140,16 @@ def _check_live_eval(extract: dict) -> None:
         if run["passed"] > run["trials"] or run["trials"] != run["cases"] * run["repeats"]:
             raise ValueError(f"{run['model']} live eval trials do not match")
         own = [
-            row for row in cases if row["model"] == run["model"] and row["effort"] == run["effort"]
+            row
+            for row in cases
+            if row["model"] == run["model"]
+            and row["effort"] == run["effort"]
+            and row["repeats"] == run["repeats"]
         ]
+        if not own:
+            if run["headline"]:
+                raise ValueError(f"{run['model']} case passes do not match the run")
+            continue
         if sum(row["passed"] for row in own) != run["passed"]:
             raise ValueError(f"{run['model']} case passes do not match the run")
         grouped: dict[str, int] = defaultdict(int)

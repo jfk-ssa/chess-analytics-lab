@@ -101,7 +101,7 @@ def test_scorecard_rows_use_equal_tracks():
     """Model cards share fr tracks. Caps keep a 56px rate inside the card."""
     css = (ROOT / "site/assets/site.css").read_text()
     template = (ROOT / "scripts/templates/live_eval.html.j2").read_text()
-    assert template.count('class="ev-cards"') == 2
+    assert template.count('class="ev-cards"') == 3
     cards = css[css.index(".ev-cards {") : css.index("}", css.index(".ev-cards {"))]
     assert "--ev-card-columns: 1;" in cards
     assert "grid-template-columns: repeat(var(--ev-card-columns), minmax(0, 1fr));" in cards
@@ -146,6 +146,27 @@ def test_scorecard_rows_use_equal_tracks():
     assert "min-width: 0;" in stat and "overflow-wrap: anywhere;" in stat
     assert "text-wrap: pretty;" in stat
     assert ".ev-big small" not in css
+    sweep_name = css[
+        css.index("#effort-sweep .ev-name,") : css.index("}", css.index("#effort-sweep .ev-name,"))
+    ]
+    assert "white-space: nowrap;" in sweep_name
+    sweep_pad = css[
+        css.index("#effort-sweep .ev-name {") : css.index(
+            "}", css.index("#effort-sweep .ev-name {")
+        )
+    ]
+    assert "padding-right: 0;" in sweep_pad
+
+
+def test_case_id_cells_do_not_break_mid_value():
+    """Case ids in both live-eval case tables stay on one line."""
+    css = (ROOT / "site/assets/site.css").read_text()
+    marker = '.ev-cases th[scope="row"],'
+    rule = css[css.index(marker) : css.index("}", css.index(marker))]
+    assert "white-space: nowrap;" in rule
+    assert "overflow-wrap: normal;" in rule
+    assert "word-break: normal;" in rule
+    assert '.ev-cases th[scope="row"] code' in rule
 
 
 def test_materialized_positions_match_the_publication_checkpoint():
@@ -258,7 +279,12 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     report = (output / "live-eval.html").read_text()
     assert 'class="page-live-eval"' in report
     assert 'href="live-eval.html" aria-current="page"' in report
-    assert "86.25%" in report and "97.50%" in report
+    assert "86.25%" in report and "97.50%" in report and "97.08%" in report
+    assert "same pass-rate" not in report
+    assert "does not separate" not in report
+    assert "3,810.5" in report
+    assert "same frozen inputs" in report
+    assert "left out of the test" in report
     assert "boundary_budget" in report
     assert "needs_clarification" in report
     assert "public_extract.py" in report
@@ -273,7 +299,32 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     assert "GitHub run-id order" in report
     luna_at = report.index("live-eval-receipt-39494372489.json")
     sol_at = report.index("live-eval-receipt-39519293762.json")
-    assert luna_at < sol_at
+    grok_at = report.index("live-eval-receipt-grok-4.7-low-r5-39541049632.json")
+    medium_at = report.index("live-eval-receipt-grok-4.7-medium-r1-39583448999.json")
+    high_at = report.index("live-eval-receipt-grok-4.7-high-r1-39583461520.json")
+    low_at = report.index("live-eval-receipt-grok-4.7-low-r1-39588587088.json")
+    assert luna_at < sol_at < grok_at < medium_at < high_at < low_at
+    assert 'id="effort-sweep"' in report
+    assert "Grok reasoning-effort sweep" in report
+    assert "not strictly comparable" in report
+    assert "06bc03a3eabab5bbf3b958ec" in report
+    assert "bea194558220eb669940d8f3" in report
+    assert "split_cohorts keeps the highest repeat count" in report
+    assert "instruction hash is what keeps that run out of the sign test" in report
+    assert 'data-sweep-slot="low-1"' not in report
+    assert "1-repeat receipt not in this report yet" not in report
+    assert "grok-4.7 · low (1f45f2)" not in report
+    assert "grok-4.7 · low (aded2b)" not in report
+    assert "low ×5" in report and "low ×1" in report
+    sweep = report[report.index('id="effort-sweep"') : report.index('id="methods"')]
+    assert "grok-4.7 · low</div>" in sweep or "grok-4.7 · low<" in sweep
+    for title in ("grok-4.7 · low", "grok-4.7 · medium", "grok-4.7 · high"):
+        assert title in sweep
+    assert "(1f45f2)" not in sweep
+    assert "(aded2b)" not in sweep
+    assert "different instruction hash, stays the headline" in sweep
+    assert "$0.22253" in sweep and "$0.322454" in sweep and "$0.408746" in sweep
+    assert "reasoning effort <code>low</code> · run <code>1f45f2ec</code>" in sweep
     assert 'rel="preload"' in report
     assert "inter-latin-wght-normal.woff2" in report
     assert "live-eval.html" in (output / "sitemap.xml").read_text()

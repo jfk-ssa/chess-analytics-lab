@@ -64,6 +64,8 @@ sensitivity analysis, select `low`, `medium`, and `high` explicitly so
 the title, the receipt, and the artifact all name that effort. A
 `model-default` grok run still records `low` on the receipt and the
 artifact. Its title says `model-default`.
+[ADR 0099](0099-grok-live-eval-receipt.md) supersedes that title:
+`model-default` now renders as the resolved effort.
 
 The per-run ceiling is $10 for grok-4.7, $0.50 for Luna, and $10 for Sol.
 The ceiling is not scaled with repeats. The personal-account

@@ -787,31 +787,81 @@ def test_dashboard_reduction_matches_the_pinned_blob(project):
 
 def test_live_eval_rows_match_the_committed_receipts(project):
     extract = load_extract(extract_path(project))
-    runs = {row["model"]: row for row in table_rows(extract, "live_eval_run")}
-    assert set(runs) == {"gpt-6-luna", "gpt-6-sol"}
+    runs = {
+        (row["model"], row["effort"], row["repeats"]): row
+        for row in table_rows(extract, "live_eval_run")
+    }
+    assert set(runs) == {
+        ("gpt-6-luna", "none", 5),
+        ("gpt-6-sol", "none", 5),
+        ("grok-4.7", "low", 5),
+        ("grok-4.7", "low", 1),
+        ("grok-4.7", "medium", 1),
+        ("grok-4.7", "high", 1),
+    }
     receipts = sorted((project / "reports").glob("live-eval-receipt-*.json"))
-    assert len(receipts) == 2
+    assert len(receipts) == 6
     for path in receipts:
         receipt = json.loads(path.read_text())
-        row = runs[receipt["model"]]
+        row = runs[(receipt["model"], receipt["reasoning_effort"], receipt["repeats"])]
         assert row["effort"] == receipt["reasoning_effort"]
         assert row["passed"] == receipt["headline_passed"]
         assert row["trials"] == receipt["planned_requests"]
         assert row["pass_rate"] == receipt["headline_pass_rate"]
         assert row["hard_fail"] is receipt["hard_fail"]
         assert row["repeats"] == receipt["repeats"]
-        assert row["headline"] is True
+        assert row["headline"] is (receipt["repeats"] == 5)
         assert row["wilson_low"] == receipt["stats"]["wilson"]["lower"]
         assert row["wilson_high"] == receipt["stats"]["wilson"]["upper"]
         assert row["known_gross_cost_usd"] == receipt["known_gross_cost_usd"]
+        assert row["instructions_sha256"] == receipt["instructions_sha256"]
+        assert row["reasoning_tokens"] == int(receipt["token_usage"].get("reasoning_tokens") or 0)
         assert row["source_report"] == path.name
-    assert runs["gpt-6-sol"]["wilson_low"] > runs["gpt-6-luna"]["wilson_high"]
-    assert runs["gpt-6-sol"]["hard_fail"] is True
-    assert runs["gpt-6-luna"]["hard_fail"] is False
-    assert runs["gpt-6-sol"]["passed"] == 234
-    assert runs["gpt-6-luna"]["passed"] == 207
+    sol_run = runs[("gpt-6-sol", "none", 5)]
+    luna_run = runs[("gpt-6-luna", "none", 5)]
+    assert sol_run["wilson_low"] > luna_run["wilson_high"]
+    assert sol_run["hard_fail"] is True
+    assert luna_run["hard_fail"] is False
+    assert sol_run["passed"] == 234
+    assert luna_run["passed"] == 207
+    grok = runs[("grok-4.7", "low", 5)]
+    low = runs[("grok-4.7", "low", 1)]
+    medium = runs[("grok-4.7", "medium", 1)]
+    high = runs[("grok-4.7", "high", 1)]
+    assert grok["passed"] == 233
+    assert grok["hard_fail"] is False
+    assert grok["effort"] == "low"
+    assert grok["known_gross_cost_usd"] == 1.003306
+    assert grok["wilson_low"] == 0.9410304560608658
+    assert medium["passed"] == 45
+    assert medium["headline"] is False
+    assert medium["trials"] == 48
+    assert high["passed"] == 47
+    assert high["headline"] is False
+    assert medium["frozen_group"] == high["frozen_group"] == grok["frozen_group"]
+    assert low["frozen_group"] == grok["frozen_group"]
+    assert low["instructions_sha256"] == medium["instructions_sha256"]
+    assert low["instructions_sha256"] == high["instructions_sha256"]
+    assert medium["instructions_sha256"] != grok["instructions_sha256"]
+    assert low["passed"] == 47
+    assert low["headline"] is False
+    assert low["trials"] == 48
+    assert low["known_gross_cost_usd"] == 0.22253
+    assert low["reasoning_tokens"] == 14768
+    assert low["wilson_low"] == high["wilson_low"]
+    assert low["wilson_high"] == high["wilson_high"]
+    assert luna_run["frozen_group"] == sol_run["frozen_group"]
+    assert grok["frozen_group"] != luna_run["frozen_group"]
+    assert len(luna_run["frozen_group"]) == 64
     cases = table_rows(extract, "live_eval_case")
-    assert len(cases) == 96
+    assert len(cases) == 144
+    assert "source_report" not in cases[0]
+    categories = table_rows(extract, "live_eval_category")
+    assert "source_report" not in categories[0]
+    by_run = {
+        (row["model"], row["effort"], row["repeats"]): row["source_report"] for row in runs.values()
+    }
+    assert len(by_run) == len(runs)
 
     def passed(model: str, case_id: str) -> int:
         matches = [row for row in cases if row["model"] == model and row["case_id"] == case_id]
@@ -820,7 +870,97 @@ def test_live_eval_rows_match_the_committed_receipts(project):
 
     assert passed("gpt-6-sol", "boundary_budget") == 0
     assert passed("gpt-6-luna", "boundary_budget") == 5
-    assert len(table_rows(extract, "live_eval_category")) == 20
+    assert passed("grok-4.7", "boundary_budget") == 5
+    assert passed("grok-4.7", "indirect_opening_1") == 0
+    assert passed("grok-4.7", "usage_sicilian_3") == 3
+    assert len(categories) == 30
+    rate_ids = {
+        row["receipt_id"]
+        for row in table_rows(extract, "metric_receipt")
+        if row["metric"] == "live_eval_pass_rate"
+    }
+    assert rate_ids == {
+        "live_eval_pass_rate:gpt-6-luna none",
+        "live_eval_pass_rate:gpt-6-sol none",
+        "live_eval_pass_rate:grok-4.7 low",
+        "live_eval_pass_rate:grok-4.7 low r1",
+        "live_eval_pass_rate:grok-4.7 medium",
+        "live_eval_pass_rate:grok-4.7 high",
+    }
+    grok_rate = _receipt(extract, "live_eval_pass_rate:grok-4.7 low")
+    assert grok_rate["numerator"] == 233
+    assert grok_rate["denominator"] == 240
+    assert grok_rate["query_origin"] == "committed_report"
+    low_rate = _receipt(extract, "live_eval_pass_rate:grok-4.7 low r1")
+    assert low_rate["numerator"] == 47
+    assert low_rate["denominator"] == 48
+    assert low_rate["query_origin"] == "committed_report"
+    medium_rate = _receipt(extract, "live_eval_pass_rate:grok-4.7 medium")
+    high_rate = _receipt(extract, "live_eval_pass_rate:grok-4.7 high")
+    assert medium_rate["numerator"] == 45 and medium_rate["denominator"] == 48
+    assert high_rate["numerator"] == 47 and high_rate["denominator"] == 48
+    assert medium_rate["query_origin"] == high_rate["query_origin"] == "committed_report"
+    effort = table_rows(extract, "live_eval_effort_case")
+    assert len(effort) == 9
+    assert {row["case_id"] for row in effort} == {
+        "coverage_1",
+        "coverage_2",
+        "indirect_opening_1",
+    }
+    assert {row["effort"] for row in effort} == {"low", "medium", "high"}
+    assert all(row["repeats"] == 1 for row in effort)
+    assert "source_report" not in effort[0]
+
+    def effort_row(case_id: str, effort_name: str) -> dict:
+        matches = [
+            row for row in effort if row["case_id"] == case_id and row["effort"] == effort_name
+        ]
+        assert len(matches) == 1
+        return matches[0]
+
+    assert effort_row("coverage_1", "low")["passed"] == 1
+    assert effort_row("coverage_1", "medium")["passed"] == 0
+    assert effort_row("coverage_1", "high")["passed"] == 1
+    assert effort_row("coverage_2", "low")["failure_modes"] == "over_abstention"
+    assert effort_row("coverage_2", "low")["passed"] == 0
+    assert effort_row("coverage_2", "medium")["failure_modes"] == "over_abstention"
+    assert effort_row("coverage_2", "high")["passed"] == 1
+    assert effort_row("indirect_opening_1", "low")["passed"] == 1
+    assert effort_row("indirect_opening_1", "medium")["failure_modes"] == "over_abstention"
+    assert effort_row("indirect_opening_1", "high")["passed"] == 0
+
+
+def test_a_second_one_repeat_low_is_not_unique(project, tmp_path):
+    from chess_analytics.public_extract import _eval_subject, live_eval_rate_id
+
+    headline_id = live_eval_rate_id("grok-4.7", "low", 5, shared=True)
+    slot_id = live_eval_rate_id("grok-4.7", "low", 1, shared=True)
+    assert headline_id == "live_eval_pass_rate:grok-4.7 low"
+    assert slot_id == "live_eval_pass_rate:grok-4.7 low r1"
+    assert _eval_subject("grok-4.7 low r1")
+    assert not _eval_subject("grok-4.7 low r")
+    builder = load_script()
+    bare = _reports_project(tmp_path, project)
+    source = next((bare / "reports").glob("live-eval-receipt-grok-4.7-medium-r1-*.json"))
+    payload = json.loads(source.read_text())
+    payload["reasoning_effort"] = "low"
+    payload["run_id"] = "low1slot0000000000000000000000"
+    (bare / "reports" / "live-eval-receipt-grok-4.7-low-r1-999.json").write_text(
+        json.dumps(payload),
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="not unique"):
+        builder.live_eval_tables(bare)
+
+
+def test_live_eval_model_effort_must_be_unique(project, tmp_path):
+    builder = load_script()
+    bare = _reports_project(tmp_path, project)
+    source = next((bare / "reports").glob("live-eval-receipt-grok-4.7-low-r5-*.json"))
+    duplicate = bare / "reports" / "live-eval-receipt-grok-4.7-low-r5-99.json"
+    duplicate.write_bytes(source.read_bytes())
+    with pytest.raises(ValueError, match="not unique"):
+        builder.live_eval_tables(bare)
 
 
 def test_builder_help_matches_the_readme_mac_command(project, capsys):

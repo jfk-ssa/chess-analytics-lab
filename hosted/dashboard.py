@@ -93,9 +93,20 @@ def _usd(value: float) -> str:
     return f"${value:,.4f}"
 
 
+def _usd_trim(value: float, digits: int = 6) -> str:
+    """Six decimals, then drop trailing zeros. 0.222530 prints as $0.22253."""
+    rendered = f"{value:,.{digits}f}".rstrip("0").rstrip(".")
+    return f"${rendered}"
+
+
 def _literal_currency(text: str) -> str:
     """Keep a currency amount literal. Streamlit treats ``$...$`` as LaTeX."""
     return text.replace("$", r"\$")
+
+
+def _html_currency(text: str) -> str:
+    """Escape a dollar inside HTML. A backslash would render inside the tag."""
+    return text.replace("$", "&#36;")
 
 
 def _caption(text: str) -> None:
@@ -234,6 +245,18 @@ def _validate_transposition(extract: dict, rows) -> None:
         raise ValueError("transposition visits do not match the scope row")
 
 
+def _live_eval_rate_id(run: dict, runs: list[dict]) -> str:
+    """Match ``live_eval_rate_id``. Inlined: Community Cloud does not install the package."""
+    model = str(run["model"])
+    effort = str(run["effort"])
+    repeats = int(run["repeats"])
+    shared = sum(1 for other in runs if other["model"] == model and other["effort"] == effort) > 1
+    subject = f"{model} {effort}"
+    if shared and repeats != 5:
+        subject = f"{subject} r{repeats}"
+    return f"live_eval_pass_rate:{subject}"
+
+
 def _validate_eval(extract: dict, rows) -> None:
     runs = rows(extract, "live_eval_run")
     cases = rows(extract, "live_eval_case")
@@ -245,11 +268,19 @@ def _validate_eval(extract: dict, rows) -> None:
         if run["wilson_low"] > run["pass_rate"] or run["pass_rate"] > run["wilson_high"]:
             raise ValueError("live eval pass rate is outside its Wilson interval")
         own = [
-            row for row in cases if row["model"] == run["model"] and row["effort"] == run["effort"]
+            row
+            for row in cases
+            if row["model"] == run["model"]
+            and row["effort"] == run["effort"]
+            and row["repeats"] == run["repeats"]
         ]
+        if not own:
+            if run["headline"]:
+                raise ValueError("live eval case passes do not match the run")
+            continue
         if sum(row["passed"] for row in own) != run["passed"]:
             raise ValueError("live eval case passes do not match the run")
-        receipt_id = f"live_eval_pass_rate:{run['model']} {run['effort']}"
+        receipt_id = _live_eval_rate_id(run, runs)
         receipt = _one(receipts, "receipt_id", receipt_id)
         if receipt["numerator"] != run["passed"] or receipt["denominator"] != run["trials"]:
             raise ValueError("live eval receipt does not match the run")
@@ -599,22 +630,27 @@ def _view_games(views: list[dict], cohort: str, view: str) -> int:
     return matches[0]["denominator_games"]
 
 
+def _plotted_row(row: dict, label: str) -> dict:
+    return {
+        "label": label,
+        "pass_rate": row["pass_rate"],
+        "wilson_low": row["wilson_low"],
+        "wilson_high": row["wilson_high"],
+        "gate": "Hard fail" if row["hard_fail"] else "Gate clear",
+        "rate_label": f"{_pct(row['pass_rate'])} ({row['passed']:,} / {row['trials']:,})",
+        "wilson_label": f"{_pct(row['wilson_low'])}–{_pct(row['wilson_high'])}",
+        "cost_label": _usd(row["known_gross_cost_usd"]),
+    }
+
+
 def _wilson_rows(runs: list[dict]) -> list[dict]:
-    plotted = []
-    for row in _by_gate(runs):
-        plotted.append(
-            {
-                "label": _run_label(row),
-                "pass_rate": row["pass_rate"],
-                "wilson_low": row["wilson_low"],
-                "wilson_high": row["wilson_high"],
-                "gate": "Hard fail" if row["hard_fail"] else "Gate clear",
-                "rate_label": f"{_pct(row['pass_rate'])} ({row['passed']:,} / {row['trials']:,})",
-                "wilson_label": f"{_pct(row['wilson_low'])}–{_pct(row['wilson_high'])}",
-                "cost_label": _usd(row["known_gross_cost_usd"]),
-            }
-        )
-    return plotted
+    return [_plotted_row(row, _run_label(row)) for row in _by_gate(runs)]
+
+
+def _sweep_wilson_rows(runs: list[dict]) -> list[dict]:
+    """Sweep bars run low, medium, high. The headline chart still uses gate order."""
+    ordered = sorted(runs, key=lambda row: _EFFORT_ORDER.get(str(row["effort"]), 9))
+    return [_plotted_row(row, str(row["effort"])) for row in ordered]
 
 
 def _by_gate(runs: list[dict]) -> list[dict]:
@@ -627,23 +663,81 @@ def _short_model(model: str) -> str:
     return model
 
 
+def _ranges_overlap(left: dict, right: dict) -> bool:
+    return left["wilson_low"] <= right["wilson_high"] and right["wilson_low"] <= left["wilson_high"]
+
+
+def _join_labels(labels: list[str]) -> str:
+    if len(labels) == 1:
+        return labels[0]
+    if len(labels) == 2:
+        return f"{labels[0]} and {labels[1]}"
+    return ", ".join(labels[:-1]) + f", and {labels[-1]}"
+
+
+def _frozen_groups(runs: list[dict]) -> dict[str, list[dict]] | None:
+    if any("frozen_group" not in row for row in runs):
+        return None
+    groups: dict[str, list[dict]] = {}
+    for row in _by_gate(runs):
+        groups.setdefault(str(row["frozen_group"]), []).append(row)
+    return groups
+
+
+def _comparability_note(groups: dict[str, list[dict]]) -> str:
+    if len(groups) <= 1:
+        return ""
+    ordered = sorted(groups.values(), key=lambda group: (-len(group), group[0]["github_run_id"]))
+    shared = [group for group in ordered if len(group) >= 2]
+    alone = [group[0] for group in ordered if len(group) == 1]
+    if len(shared) == 1 and alone:
+        names = _join_labels([_run_label(row) for row in shared[0]])
+        outsider = _join_labels([_run_label(row) for row in alone])
+        verb = "does" if len(alone) == 1 else "do"
+        if len(alone) == 1:
+            tail = "its interval is not compared with theirs."
+        else:
+            tail = "their intervals are not compared with the others."
+        return f"{names} share frozen inputs. {outsider} {verb} not; {tail}"
+    return "Intervals are compared only inside a shared frozen-input group."
+
+
 def _wilson_caption(runs: list[dict]) -> str:
-    by_rate = sorted(runs, key=lambda row: row["pass_rate"])
-    if len(by_rate) >= 2 and by_rate[-1]["wilson_low"] > by_rate[0]["wilson_high"]:
-        gap = "The Wilson intervals do not overlap."
-    else:
-        gap = "The Wilson intervals overlap."
-    clear = [_run_label(row) for row in runs if not row["hard_fail"]]
-    failed = [_run_label(row) for row in runs if row["hard_fail"]]
+    ordered = _by_gate(runs)
+    clear = [_run_label(row) for row in ordered if not row["hard_fail"]]
+    failed = [_run_label(row) for row in ordered if row["hard_fail"]]
     if clear and failed:
-        gate = f"{', '.join(clear)} clears and {', '.join(failed)} hard-fails."
+        gate = f"{_join_labels(clear)} clear; {', '.join(failed)} hard-fails."
     elif failed:
         gate = f"{', '.join(failed)} hard-fails."
     else:
         gate = "Every headline run clears the gate."
-    priced = [f"{_run_label(row)} {_usd(row['known_gross_cost_usd'])}" for row in _by_gate(runs)]
+    groups = _frozen_groups(runs)
+    pairs = []
+    if groups is not None:
+        for group in groups.values():
+            if len(group) < 2:
+                continue
+            for index, left in enumerate(group):
+                for right in group[index + 1 :]:
+                    verb = "overlap" if _ranges_overlap(left, right) else "do not overlap"
+                    pairs.append(f"{_run_label(left)} and {_run_label(right)} {verb}")
+    gap = (" ".join(pairs) + ".") if pairs else ""
+    note = _comparability_note(groups) if groups is not None else ""
+    priced = [f"{_run_label(row)} {_usd(row['known_gross_cost_usd'])}" for row in ordered]
     costs = ", ".join(priced)
-    return f"Gate first: {gate} {gap} Known cost is {costs}."
+    parts = [f"Gate first: {gate}"]
+    if gap:
+        parts.append(gap)
+    if note:
+        parts.append(note)
+    parts.append(f"Known cost is {costs}.")
+    return " ".join(parts)
+
+
+def _over_abstention_phrase(count: int) -> str:
+    noun = "over-abstention" if count == 1 else "over-abstentions"
+    return f"{count} {noun}"
 
 
 def _category_rows(categories: list[dict], chosen: set[str]) -> list[dict]:
@@ -679,14 +773,15 @@ def _category_caption(
         )
     luna = _one_category(categories, "gpt-6-luna", "coverage")
     sol = _one_category(categories, "gpt-6-sol", "boundary")
-    luna_run = _one(runs, "model", "gpt-6-luna")
-    sol_run = _one(runs, "model", "gpt-6-sol")
     budget = _boundary_case(cases, "gpt-6-sol")
     missed = f"{budget[0]['passed']} of {budget[0]['repeats']}" if budget else "unscored"
+    abstentions = "; ".join(
+        f"{_run_label(row)} has {_over_abstention_phrase(row['over_abstention'])}"
+        for row in _by_gate(runs)
+    )
     return (
-        f"Luna's coverage cases pass {luna['passed']} of {luna['trials']}, "
-        f"with {luna_run['over_abstention']} over-abstentions against Sol's "
-        f"{sol_run['over_abstention']}. "
+        f"{abstentions}. "
+        f"Luna's coverage cases pass {luna['passed']} of {luna['trials']}. "
         f"Sol's boundary cases pass {sol['passed']} of {sol['trials']}, "
         f"and boundary_budget passes {missed}."
     )
@@ -714,11 +809,15 @@ def _grid_caption(cases: list[dict]) -> str:
         return (
             "Color and the printed count are repeats passed. A pale cell is a miss on every repeat."
         )
-    return (
+    text = (
         "Color and the printed count are repeats passed. boundary_budget is "
         f"{sol[0]['passed']} of {sol[0]['repeats']} for gpt-6-sol and "
-        f"{luna[0]['passed']} of {luna[0]['repeats']} for gpt-6-luna."
+        f"{luna[0]['passed']} of {luna[0]['repeats']} for gpt-6-luna"
     )
+    grok = _boundary_case(cases, "grok-4.7")
+    if grok:
+        text += f", and {grok[0]['passed']} of {grok[0]['repeats']} for grok-4.7"
+    return text + "."
 
 
 def _build_rows(extract: dict, digest: str, rows) -> list[dict]:
@@ -756,23 +855,31 @@ def _figure_caption(extract: dict, rows) -> tuple[list[dict], str]:
     )
 
 
+def _gate_name(row: dict) -> str:
+    name = _short_model(row["model"])
+    if row["effort"] not in {"none", ""}:
+        return f"{name} {row['effort']}"
+    return name
+
+
 def _gate_card(runs: list[dict], cases: list[dict]) -> tuple[str, str, str]:
-    headline = [row for row in runs if row["headline"]]
-    clear = [row for row in headline if not row["hard_fail"]]
-    failed = [row for row in headline if row["hard_fail"]]
+    ordered = _by_gate([row for row in runs if row["headline"]])
+    clear = [row for row in ordered if not row["hard_fail"]]
+    failed = [row for row in ordered if row["hard_fail"]]
     if not clear or not failed:
         return ("Analyst gate", "No split gate", "This extract has one gate outcome.")
-    value = f"{_short_model(clear[0]['model'])} clear, {_short_model(failed[0]['model'])} fail"
+    clear_names = ", ".join(_gate_name(row) for row in clear)
+    fail_names = ", ".join(_gate_name(row) for row in failed)
+    value = f"{clear_names} clear; {fail_names} fail"
     parts = []
+    for row in clear:
+        parts.append(f"{_gate_name(row)} {_pct(row['pass_rate'])} clears")
     for row in failed:
         budget = _boundary_case(cases, row["model"])
         miss = f"{budget[0]['passed']}/{budget[0]['repeats']}" if budget else "unscored"
         parts.append(
-            f"{_short_model(row['model'])} {_pct(row['pass_rate'])} "
-            f"but misses boundary_budget {miss}"
+            f"{_gate_name(row)} {_pct(row['pass_rate'])} but misses boundary_budget {miss}"
         )
-    for row in clear:
-        parts.append(f"{_short_model(row['model'])} {_pct(row['pass_rate'])} clears")
     return ("Analyst gate", value, "; ".join(parts))
 
 
@@ -795,14 +902,18 @@ def _hero(layout, extract: dict, rows) -> None:
         _gate_card(runs, rows(extract, "live_eval_case")),
     ]
     st.markdown(
-        _literal_currency(layout.equal_width_row(cards)),
+        _html_currency(layout.equal_width_row(cards)),
         unsafe_allow_html=True,
     )
 
 
+def _headline_runs(runs: list[dict]) -> list[dict]:
+    return [row for row in runs if row["headline"]]
+
+
 def _eval_cards(layout, runs: list[dict]) -> None:
     cards: list[tuple[str, str, str]] = []
-    for row in _by_gate(runs):
+    for row in _by_gate(_headline_runs(runs)):
         gate = "Hard fail" if row["hard_fail"] else "Gate clear"
         cards.append(
             (
@@ -819,7 +930,7 @@ def _eval_cards(layout, runs: list[dict]) -> None:
             )
         )
     st.markdown(
-        _literal_currency(layout.equal_width_row(cards)),
+        _html_currency(layout.equal_width_row(cards)),
         unsafe_allow_html=True,
     )
 
@@ -1044,11 +1155,240 @@ def _clock(charts, extract: dict, rows) -> None:
     _show(_bucket_table(buckets), alt="Clock-bucket error proxy and evaluation coverage.")
 
 
+_GROK_LOW_INSTRUCTIONS = "622007a3deb785c204e58ba68419af0adbb0c0929d29dd97241038514d17181f"
+_GROK_LATER_INSTRUCTIONS = "be294fd35f35327317ab64e58a202ef822347e9ac3451cda01bdc29ae15cc8d3"
+_EFFORT_ORDER = {"none": 0, "low": 1, "medium": 2, "high": 3, "xhigh": 4}
+
+
+def _token_count(value: float) -> str:
+    if float(value).is_integer():
+        return f"{value:,.0f}"
+    return f"{value:,.1f}"
+
+
+def _grok_one_repeat_arms(
+    runs: list[dict],
+) -> tuple[dict | None, dict, dict, dict | None] | None:
+    """Medium and high at one repeat, plus a matching low when that receipt exists.
+
+    The 5-repeat low run is the headline. It is not an arm of this comparison.
+    """
+    grok = [
+        row
+        for row in runs
+        if row["model"] == "grok-4.7" and row["effort"] in {"low", "medium", "high"}
+    ]
+    mediums = [row for row in grok if row["effort"] == "medium"]
+    highs = [row for row in grok if row["effort"] == "high"]
+    if len(mediums) != 1 or len(highs) != 1:
+        return None
+    medium, high = mediums[0], highs[0]
+    if medium["repeats"] != high["repeats"]:
+        return None
+    one = medium["repeats"]
+    lows = [row for row in grok if row["effort"] == "low" and row["repeats"] == one]
+    headlines = [row for row in grok if row["effort"] == "low" and row["repeats"] != one]
+    if len(lows) > 1:
+        return None
+    low = lows[0] if lows else None
+    headline_low = headlines[0] if len(headlines) == 1 else None
+    return low, medium, high, headline_low
+
+
+def _matched_run(left: dict, right: dict) -> bool:
+    return (
+        left["instructions_sha256"] == right["instructions_sha256"]
+        and left["frozen_group"] == right["frozen_group"]
+        and left["repeats"] == right["repeats"]
+    )
+
+
+def _effort(row: dict) -> str:
+    return str(row["effort"])
+
+
+def _sweep_sign(left: dict, right: dict, effort_cases: list[dict], case_ids: list[str]) -> str:
+    """Sign-test the shared case ids. A case missing from the effort table passed."""
+    from chess_analytics.analyst.live_stats import exact_sign_test
+
+    bits: dict[str, dict[str, list[bool]]] = {left["effort"]: {}, right["effort"]: {}}
+    indexed = {
+        (row["effort"], row["case_id"]): row
+        for row in effort_cases
+        if row["model"] == "grok-4.7" and row["effort"] in bits
+    }
+    for effort, owner in ((left["effort"], left), (right["effort"], right)):
+        for case_id in case_ids:
+            row = indexed.get((effort, case_id))
+            if row is None:
+                bits[effort][case_id] = [True] * int(owner["repeats"])
+            else:
+                bits[effort][case_id] = [True] * row["passed"] + [False] * (
+                    row["repeats"] - row["passed"]
+                )
+    shared = set(bits[left["effort"]]) & set(bits[right["effort"]])
+    result = exact_sign_test(
+        {case_id: bits[left["effort"]][case_id] for case_id in shared},
+        {case_id: bits[right["effort"]][case_id] for case_id in shared},
+    )
+    discordant = result["favor_left"] + result["favor_right"]
+    noun = "repeat" if left["repeats"] == 1 else "repeats"
+    return (
+        f"{_effort(left)} vs {_effort(right)} share the instruction hash, "
+        f"the frozen inputs, and {left['repeats']} {noun}. Of {len(shared)} cases, "
+        f"{discordant} have different pass counts. {_effort(right)} is better on "
+        f"{result['favor_right']}, {_effort(left)} on {result['favor_left']}. "
+        f"Exact two-sided sign test, p = {result['p_value']:.4f}."
+    )
+
+
+def _grok_snapshot_explanation(headline_low: dict | None, medium: dict, low: dict | None) -> str:
+    """The later snapshot is on every 1-repeat arm. low ×5 also differs in repeat count."""
+    if headline_low is None:
+        return ""
+    hashes = {headline_low["instructions_sha256"], medium["instructions_sha256"]}
+    if hashes != {_GROK_LOW_INSTRUCTIONS, _GROK_LATER_INSTRUCTIONS}:
+        return ""
+    text = (
+        "instructions_sha256 is the SHA-256 of the literal instructions text in "
+        "live_runner._quote. The system prompt is the same except the dataset snapshot "
+        "id the model sees: 06bc03a3eabab5bbf3b958ec on low ×5 from e396cf4 and "
+        "bea194558220eb669940d8f3 on all three 1-repeat runs from 15aaeb3. "
+        "That id changed because eval_report.py and public_extract.py changed "
+        "implementation_hash. The receipts do not record dataset_id. "
+        "low ×5 is not strictly comparable with the 1-repeat runs."
+    )
+    if low is not None:
+        text += (
+            " low ×5 versus low ×1 is not comparable because the instruction hash "
+            "and the repeat count both differ."
+        )
+    return text
+
+
+def _sweep_caption(
+    low: dict | None,
+    medium: dict,
+    high: dict,
+    headline_low: dict | None,
+) -> str:
+    present = [row for row in (low, medium, high) if row is not None]
+    costs = ", ".join(
+        f"{_effort(row)} {_usd_trim(row['known_gross_cost_usd'] / row['repeats'])}"
+        for row in present
+    )
+    if headline_low is None:
+        lead = "The 5-repeat low run is outside this comparison"
+    elif headline_low["instructions_sha256"] == medium["instructions_sha256"]:
+        lead = (
+            "The 5-repeat low run stays the headline and is outside this comparison "
+            "because the repeat count differs"
+        )
+    else:
+        lead = (
+            "The 5-repeat low run uses a different instruction hash, stays the headline, "
+            "and is outside this comparison"
+        )
+    return f"{lead} ({costs} per repeat)."
+
+
+def _sweep_signs(
+    low: dict | None,
+    medium: dict,
+    high: dict,
+    effort_cases: list[dict],
+    case_ids: list[str],
+) -> list[str]:
+    matched = _matched_run(medium, high)
+    low_matched = low is not None and matched and _matched_run(low, medium)
+    signs = []
+    if low_matched and low is not None:
+        signs.append(_sweep_sign(low, medium, effort_cases, case_ids))
+        signs.append(_sweep_sign(low, high, effort_cases, case_ids))
+    if matched:
+        signs.append(_sweep_sign(medium, high, effort_cases, case_ids))
+    else:
+        signs.append("Medium versus high is not sign-tested.")
+    if low is None:
+        signs.append("The 1-repeat low run is not in this test.")
+    signs.append("low ×5 is not in this test.")
+    return signs
+
+
+def _sweep_table(effort_cases: list[dict]) -> list[dict]:
+    rows = [row for row in effort_cases if row["model"] == "grok-4.7"]
+    rows.sort(key=lambda row: (row["case_id"], _EFFORT_ORDER.get(row["effort"], 9)))
+    table = []
+    for row in rows:
+        if row["failure_modes"] == "none":
+            result = f"{row['passed']}/{row['repeats']} passed"
+        else:
+            modes = row["failure_modes"].replace(",", ", ")
+            result = f"{row['passed']}/{row['repeats']}, {modes}"
+        table.append({"Case": row["case_id"], "Effort": row["effort"], "Result": result})
+    return table
+
+
+def _sweep_card(row: dict) -> tuple[str, str, str]:
+    gate = "Hard fail" if row["hard_fail"] else "Gate clear"
+    noun = "repeat" if row["repeats"] == 1 else "repeats"
+    per = _usd_trim(row["known_gross_cost_usd"] / row["repeats"])
+    reasoning = _token_count(row["reasoning_tokens"] / row["repeats"])
+    return (
+        _run_label(row),
+        f"{row['passed']}/{row['trials']}",
+        f"{row['repeats']} {noun}. {gate}. {per} per repeat. {reasoning} reasoning tokens.",
+    )
+
+
+def _grok_effort_sweep(
+    layout, charts, runs: list[dict], effort_cases: list[dict], case_ids: list[str]
+) -> None:
+    arms = _grok_one_repeat_arms(runs)
+    if arms is None:
+        return
+    low, medium, high, headline_low = arms
+    present = [row for row in (low, medium, high) if row is not None]
+    st.subheader("Grok reasoning-effort sweep")
+    cards = []
+    if low is None:
+        cards.append(("grok-4.7 · low", "—", "1 repeat. Receipt not in yet."))
+    else:
+        cards.append(_sweep_card(low))
+    cards.extend(_sweep_card(row) for row in (medium, high))
+    st.markdown(_html_currency(layout.equal_width_row(cards)), unsafe_allow_html=True)
+    if low is None:
+        sweep_alt = (
+            "Grok reasoning-effort pass rates with Wilson 95 percent intervals. "
+            "Medium and high are 1-repeat runs on the same instructions. "
+            "The 1-repeat low run is not in this report."
+        )
+    else:
+        sweep_alt = (
+            "Grok reasoning-effort pass rates with Wilson 95 percent intervals. "
+            "Low, medium, and high are 1-repeat runs on the same instructions."
+        )
+    _chart(charts, charts.wilson(_sweep_wilson_rows(present)), alt=sweep_alt)
+    _caption(_sweep_caption(low, medium, high, headline_low))
+    note = _grok_snapshot_explanation(headline_low, medium, low)
+    signs = _sweep_signs(low, medium, high, effort_cases, case_ids)
+    lines = [f"- {item}" for item in signs]
+    if note:
+        lines.append(note)
+    st.markdown("\n".join(lines))
+    _show(
+        _sweep_table(effort_cases),
+        alt="Pass counts for grok-4.7 cases that are not perfect on every reasoning effort.",
+    )
+
+
 def _eval_tab(layout, charts, extract: dict, rows) -> None:
     runs = rows(extract, "live_eval_run")
     cases = rows(extract, "live_eval_case")
     categories = rows(extract, "live_eval_category")
-    _eval_cards(layout, runs)
+    headline = _headline_runs(runs)
+    headline_keys = {(row["model"], row["effort"]) for row in headline}
+    _eval_cards(layout, headline)
     _caption(
         "Published live-eval report: "
         "[live-eval.html](https://jfk-ssa.github.io/chess-analytics-lab/live-eval.html)."
@@ -1056,10 +1396,10 @@ def _eval_tab(layout, charts, extract: dict, rows) -> None:
     st.subheader("Pass rate")
     _chart(
         charts,
-        charts.wilson(_wilson_rows(_by_gate(runs))),
+        charts.wilson(_wilson_rows(_by_gate(headline))),
         alt="Headline pass rate for each model with its Wilson 95 percent interval.",
     )
-    _caption(_wilson_caption(runs))
+    _caption(_wilson_caption(headline))
     _caption(
         "Query origin: committed_report. The bar is the receipt Wilson 95 percent interval. "
         "A 1-repeat run would not be drawn as a 5-repeat rate."
@@ -1070,7 +1410,10 @@ def _eval_tab(layout, charts, extract: dict, rows) -> None:
         default=list(_CATEGORIES),
         key="eval_category",
     )
-    visible_categories = _category_rows(categories, set(chosen))
+    headline_categories = [
+        row for row in categories if (row["model"], row["effort"]) in headline_keys
+    ]
+    visible_categories = _category_rows(headline_categories, set(chosen))
     if visible_categories:
         order = [name for name in _CATEGORIES if name in chosen]
         _chart(
@@ -1078,8 +1421,9 @@ def _eval_tab(layout, charts, extract: dict, rows) -> None:
             charts.category_dumbbell(visible_categories, category_order=order),
             alt="Dumbbell of pass rate by category. Each point is one model.",
         )
-    _caption(_category_caption(categories, cases, runs, set(chosen)))
-    visible_cases = _case_rows(cases, set(chosen))
+    headline_cases = [row for row in cases if (row["model"], row["effort"]) in headline_keys]
+    _caption(_category_caption(headline_categories, headline_cases, headline, set(chosen)))
+    visible_cases = _case_rows(headline_cases, set(chosen))
     if visible_cases:
         case_order = [
             row["case_id"]
@@ -1091,7 +1435,7 @@ def _eval_tab(layout, charts, extract: dict, rows) -> None:
         for case_id in case_order:
             if case_id not in seen:
                 seen.append(case_id)
-        model_order = [_run_label(row) for row in _by_gate(runs)]
+        model_order = [_run_label(row) for row in _by_gate(headline)]
         plotted = [{**row, "model": _run_label(row)} for row in visible_cases]
         _chart(
             charts,
@@ -1099,6 +1443,8 @@ def _eval_tab(layout, charts, extract: dict, rows) -> None:
             alt="Grid of cases by model, colored by how many repeats passed.",
         )
     _caption(_grid_caption(visible_cases))
+    case_ids = sorted({row["case_id"] for row in cases})
+    _grok_effort_sweep(layout, charts, runs, rows(extract, "live_eval_effort_case"), case_ids)
 
 
 def _about(extract: dict, path: Path, rows) -> None:
@@ -1195,7 +1541,16 @@ def _table_index(extract: dict, rows) -> list[dict]:
     for name in extract["tables"]:
         body = rows(extract, name)
         sources = sorted({row["source_report"] for row in body if row.get("source_report")})
-        source = ", ".join(sources) if sources else "metric_receipt"
+        if sources:
+            source = ", ".join(sources)
+        elif name in {"live_eval_case", "live_eval_category", "live_eval_effort_case"}:
+            run_rows = rows(extract, "live_eval_run")
+            run_sources = sorted(
+                {row["source_report"] for row in run_rows if row.get("source_report")}
+            )
+            source = ", ".join(run_sources) if run_sources else "live_eval_run"
+        else:
+            source = "metric_receipt"
         table.append({"Table": name, "Rows": f"{len(body):,}", "Source": source})
     return table
 

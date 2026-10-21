@@ -99,7 +99,8 @@ byte for byte, under `reports/`:
 - `reports/live-eval-receipt-39519293762.json`, SHA-256
   `e62b777d6d77280d2423277ebe387d39f496ba23af0d04894e0a77ab9d507fee`
 
-Every score below is a field on those receipts. The commit is the Actions
+Every score below is a field on those receipts. The grok-4.7 receipt is
+in the section after this one. The commit is the Actions
 head SHA of the dispatch. It is not a receipt field. Luna's dispatch is
 [run 39494372489](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39494372489)
 at `04c757dc0ee7159db38420cbf2e2b681870b8029`. Sol's dispatch is
@@ -200,23 +201,111 @@ two committed hashes, judged as a pair. A later pair gets the same claim
 only when both receipts record `dataset_id`, those ids correspond one
 to one with the hashes, and the other frozen inputs still match.
 Otherwise that pair says the cause is not recorded and is not called
-comparable. An extra receipt does not change another pair's explanation.
+comparable. When `case_set_sha256`, `fixture_sha256`, `rubric_version`,
+or `frozen_file_sha256` differ, the page names those keys and does not
+call the pair comparable, even if the instruction hashes also differ.
+An extra receipt does not change another pair's explanation.
 See
 [ADR 0096](adr/0096-published-live-eval-report.md).
 
 `grok-4.7` is a third manual model. The headline comparison with the
 OpenAI models is reasoning effort `low` at 5 repeats, the smallest
-effort that model accepts, beside `reasoning.effort` of `none`. Medium
-and high are a sensitivity check at 1 repeat each. Those receipts and
-the job summary carry `repeats: 1`. Their pass rates are not 5-repeat
-headline rates and are not compared with Luna, Sol, or the low 5-repeat
-rate. The published page keeps one label per effort and places those
-1-repeat runs in the sensitivity section. The per-run cap is $10. See
+effort that model accepts, beside `reasoning.effort` of `none`. The
+effort sweep compares one repeat each of low, medium, and high that
+share an instruction hash. Those 1-repeat receipts carry `repeats: 1`.
+Their pass rates are not 5-repeat headline rates and are not compared
+with Luna, Sol, or the low 5-repeat rate as a matched sample. The
+5-repeat low stays the headline. The matched 1-repeat low, medium, and
+high are the effort sweep. A second 1-repeat low hides that sweep
+rather than putting the 5-repeat run in it.
+`(model, effort)` may repeat when the repeat counts differ and exactly
+one of them is the 5-repeat headline. The per-run cap is $10. See
 [ADR 0095](adr/0095-grok-4-7-live-eval.md). The first low x5 dispatch
 stopped on the first request with HTTP 400 and no scored row. The
 receipt text was `unavailable` because the error body was not an
 OpenAI object. That failure is retained in
 [ADR 0097](adr/0097-grok-http-error-detail.md). It is not a pass rate.
+
+A later low x5 dispatch completed. The artifact is committed as
+`reports/live-eval-receipt-grok-4.7-low-r5-39541049632.json`, SHA-256
+`ddfce80bcc55b58e6f65f43765b79743c0849c061fb03510d790fa18c4ffa316`.
+The Actions run is
+[39541049632](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39541049632)
+at `e396cf45dd111ec860b0ba06d1cf504189d1349d`. The input was
+`model-default`. The receipt records `reasoning_effort` `low`. The
+headline is 233/240 (0.9708333333333333). Wilson 95% is
+0.9410304560608658 to 0.9858012693274998. Bootstrap 95% is
+0.9166666666666666 to 1.0. `hard_fail` is false. High-severity misses,
+unsafe answers, and repairs are 0. Over-abstention is 6. Known gross
+cost is $1.003306 against `reserved_usd` 9.82247 and cap 10. That is
+67.036 times Luna and 3.935 times Sol, shown on the page as 67.0× and
+3.9× and labelled as that run's spend, not a quality result. The gap is
+reasoning tokens (69,776 inside 81,896 output tokens) and a longer
+reported input (median 3,810.5), not prompt length alone.
+
+`indirect_opening_1` failed all five repeats as over-abstentions
+(`unsupported`, empty actions). `usage_sicilian_3` is the only flaky
+case: 3/5 passed. Repeat 1 is an over-abstention. Repeat 2 answered
+with family `Sicilian` instead of `Sicilian Defense` and is a wrong
+answer. `boundary_budget` passed 5/5, so this run does not take Sol's
+hard fail. These are one 5-repeat sample per model. The hero ranks only
+Luna against Sol, the frozen-input-matched pair. Sol hard-fails and
+Luna clears. Grok is not sign-tested against either, and the page does
+not say whether its Wilson interval overlaps theirs.
+
+`frozen_file_sha256` differs from the Luna/Sol map on `live_runner.py`,
+`model_catalog.py`, `pricing.py`, and `provider.py`. The case set, the
+fixture, and the rubric match. There is no `dataset_id`. Luna versus
+Sol remains the comparable pair. Grok versus either OpenAI receipt is
+not comparable. See
+[ADR 0099](adr/0099-grok-live-eval-receipt.md).
+
+Medium x1 and high x1 are committed from main `15aaeb3`. The artifacts are
+`reports/live-eval-receipt-grok-4.7-medium-r1-39583448999.json` (SHA-256
+`539210c8ec139f48f3d8664ce8b827c61a6bbee8cabae2bb86c7358c1923b856`, Actions run
+[39583448999](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39583448999))
+and `reports/live-eval-receipt-grok-4.7-high-r1-39583461520.json` (SHA-256
+`185d7dfcc4dcd9b92983420ed7798ac218788a65c2d2927d13bd024302ff724a`, Actions run
+[39583461520](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39583461520)).
+Medium is 45/48, Wilson 0.8316456194505365 to 0.9785167670916107, bootstrap
+0.8541666666666666 to 1.0, `hard_fail` false, three over-abstentions
+(`coverage_1`, `coverage_2`, `indirect_opening_1`), known gross cost $0.322454,
+32,410 reasoning tokens. High is 47/48, Wilson 0.8910078200474814 to
+0.9963128890224893, bootstrap 0.9375 to 1.0, `hard_fail` false, one
+over-abstention (`indirect_opening_1`), known gross cost $0.408746, 46,763
+reasoning tokens. `frozen_file_sha256`, `case_set_sha256`, and `fixture_sha256`
+match the 5-repeat low receipt. `instructions_sha256` does not. That low, run on e396cf4, is
+`622007a3deb785c204e58ba68419af0adbb0c0929d29dd97241038514d17181f`. Medium and
+high, run on 15aaeb3, are both
+`be294fd35f35327317ab64e58a202ef822347e9ac3451cda01bdc29ae15cc8d3`. That hash is
+the system prompt. Reasoning effort is not in it, which is why medium and high
+share a hash. Rebuilding the prompt shows the only character difference is
+`Dataset: 06bc03a3eabab5bbf3b958ec` versus `Dataset: bea194558220eb669940d8f3`.
+The id includes `implementation_hash`. Between those commits the only files
+inside that hash that changed are `eval_report.py` and `public_extract.py`.
+The model sees a different snapshot id, so the 5-repeat low is not strictly
+comparable with medium, high, or the 1-repeat low. `instructions_sha256` is the SHA-256 of the
+literal instructions text in `live_runner._quote`. The page says the 5-repeat
+run is not strictly comparable and does not sign-test it against any
+1-repeat arm. The clean comparison is low x1 versus medium x1 versus high x1.
+That low x1 receipt is committed as
+`reports/live-eval-receipt-grok-4.7-low-r1-39588587088.json`, SHA-256
+`cca411fd9d7de20938a127c24e6b84870180079b45d597da5dc24425d56f349d`, Actions run
+[39588587088](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39588587088).
+It is 47/48, Wilson 0.8910078200474814 to 0.9963128890224893 (the same
+interval as high), bootstrap 0.9375 to 1.0, `hard_fail` false, one
+over-abstention (`coverage_2`, `unsupported`, empty actions), known gross
+cost $0.22253, 14,768 reasoning tokens. `instructions_sha256`,
+`frozen_file_sha256`, `case_set_sha256`, and `fixture_sha256` match medium
+and high. The three 1-repeat arms are the comparable trio. Low versus medium
+is p = 0.5 (low better on 2, medium on 0). Low versus high is p = 1.0 (each
+better on 1). Medium versus high stays p = 0.5 (high better on 2, medium on
+0). Their Wilson intervals overlap. All three clear the gate. That is a gate
+fact, not a pass-rate ranking. The 5-repeat low costs about $0.20 per repeat
+($0.200661) and uses 13,955.2 reasoning tokens. That spend, and its
+`usage_sicilian_3` miss, stay on the headline. Low x1 costs $0.22253 and uses
+14,768 reasoning tokens. Medium costs $0.322454 and uses 32,410 reasoning
+tokens. High costs $0.408746 and uses 46,763.
 
 For offline replay, first run `chesslab demo --scope all`, then use the command
 in [DEMO.md](DEMO.md). Historical fixture harness checks are available with

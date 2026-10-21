@@ -33,6 +33,7 @@ TABLES = (
     "live_eval_run",
     "live_eval_category",
     "live_eval_case",
+    "live_eval_effort_case",
     "metric_receipt",
 )
 QUERY_ORIGINS = frozenset({"metricflow", "reviewed_sql", "committed_report"})
@@ -157,6 +158,14 @@ def extract_path(project: Path | None = None) -> Path:
     raise FileNotFoundError(
         "public extract not found; set CHESSLAB_PUBLIC_EXTRACT to the extract file"
     )
+
+
+def live_eval_rate_id(model: str, effort: str, repeats: int, *, shared: bool) -> str:
+    """Pass-rate receipt id. A non-headline twin is suffixed so the ids stay unique."""
+    subject = f"{model} {effort}"
+    if shared and repeats != 5:
+        subject = f"{subject} r{repeats}"
+    return f"live_eval_pass_rate:{subject}"
 
 
 def load_extract(path: Path | None = None) -> dict:
@@ -393,6 +402,13 @@ def _color_subject(value: object) -> bool:
 def _eval_subject(value: object) -> bool:
     if not isinstance(value, str) or " " not in value:
         return False
+    # A second receipt of the same model and effort, at a different repeat count,
+    # uses "model effort rN". The 5-repeat id stays "model effort".
+    repeat = ""
+    if " r" in value:
+        value, repeat = value.rsplit(" r", 1)
+        if not repeat.isdigit():
+            return False
     model, effort = value.rsplit(" ", 1)
     return model in _MODELS and effort in _EFFORTS
 
@@ -428,6 +444,25 @@ def _case_id(_row: dict, value: object) -> bool:
     return isinstance(value, str) and _CASE_ID.fullmatch(value) is not None
 
 
+_FAILURE_MODE_NAMES = (
+    "boundary_swap",
+    "other",
+    "over_abstention",
+    "plan_hallucination",
+    "unsafe",
+    "wrong_answer",
+)
+
+
+def _failure_modes(_row: dict, value: object) -> bool:
+    if not isinstance(value, str) or not value:
+        return False
+    if value == "none":
+        return True
+    parts = value.split(",")
+    return parts == sorted(set(parts)) and all(part in _FAILURE_MODE_NAMES for part in parts)
+
+
 _COLUMN_RULES = {
     "analytical_id": _hex(_HEX_24, optional=False),
     "bucket": _one_of(_BUCKETS),
@@ -436,7 +471,10 @@ _COLUMN_RULES = {
     "cohort": _optional_one_of(_COHORTS),
     "color": _one_of(_COLORS),
     "effort": _one_of(_EFFORTS),
+    "failure_modes": _failure_modes,
     "family": _family,
+    "frozen_group": _hex(_HEX_64, optional=False),
+    "instructions_sha256": _hex(_HEX_64, optional=False),
     "interval_source_report": _optional_source,
     "lineage": _one_of(_LINEAGES),
     "mart_id": _hex(_HEX_24, optional=True),

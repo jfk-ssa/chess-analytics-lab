@@ -858,3 +858,39 @@ def _read_block(lines: list[str], index: int, key_indent: int):
     if chunks:
         text += "\n"
     return text, index
+
+
+_RUN_NAME = (
+    "Live eval ${{ inputs.model }} effort "
+    "${{ inputs.reasoning_effort != 'model-default' && inputs.reasoning_effort "
+    "|| (inputs.model == 'grok-4.7' && 'low' || 'none') }} "
+    "x${{ inputs.repeats }} cap ${{ inputs.max_run_usd }}"
+)
+
+
+def _title_effort(model: str, effort: str) -> str:
+    """The run-name expression, evaluated the way GitHub returns the last operand."""
+    if effort != "model-default":
+        return effort
+    return "low" if model == "grok-4.7" else "none"
+
+
+def test_run_name_shows_the_resolved_effort_for_model_default():
+    document = parse_workflow(WORKFLOW.read_text(encoding="utf-8"))
+    assert document["run-name"] == _RUN_NAME
+    assert "inputs.reasoning_effort != 'model-default'" in document["run-name"]
+    options = ["model-default", "none", "low", "medium", "high", "xhigh"]
+    for model in dispatch.CAPS_USD:
+        for effort in options:
+            assert dispatch.run_title_effort(model, effort) == _title_effort(model, effort)
+            try:
+                resolved = dispatch.resolve_effort(model, effort)
+            except dispatch.DispatchError:
+                continue
+            if effort == "model-default":
+                assert dispatch.run_title_effort(model, effort) == resolved
+            else:
+                assert dispatch.run_title_effort(model, effort) == effort == resolved
+    assert dispatch.run_title_effort("grok-4.7", "model-default") == "low"
+    assert dispatch.run_title_effort("grok-4.7", "none") == "none"
+    assert dispatch.run_title_effort("gpt-6-sol", "model-default") == "none"

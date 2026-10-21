@@ -8,6 +8,7 @@ fragments. Run labels use the receipt model and, when present, reasoning effort.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import html
 import json
 import math
@@ -15,6 +16,7 @@ import re
 import statistics
 import sys
 from collections import Counter, defaultdict
+from collections.abc import Callable
 from dataclasses import dataclass
 from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
@@ -101,6 +103,16 @@ _DATASET_ONLY_INSTRUCTION_HASHES = frozenset(
     {
         "085a216a1be3e73e68dce4849d35e56cc5c5c13aff7b91ece5d95c44e42ef89e",
         "e4cd943340ee52138fd9a400aeed408d6a843c4cda0514d364aa2bc8ffbdc423",
+    }
+)
+# grok-4.7 low (e396cf4) versus medium and high (15aaeb3). The prompts match
+# except the dataset snapshot id. These receipts do not record dataset_id.
+# ADR 0096 does not treat that pair as comparable. Do not add the hashes here
+# to _DATASET_ONLY_INSTRUCTION_HASHES.
+_GROK_SNAPSHOT_INSTRUCTION_HASHES = frozenset(
+    {
+        "622007a3deb785c204e58ba68419af0adbb0c0929d29dd97241038514d17181f",
+        "be294fd35f35327317ab64e58a202ef822347e9ac3451cda01bdc29ae15cc8d3",
     }
 )
 
@@ -259,6 +271,9 @@ class ReportView:
     notes_html: str
     sensitivity_intro: str
     sensitivity_html: str
+    sweep_lead_html: str
+    sweep_cards_html: str
+    sweep_detail_html: str
     repeat_word: str
     checks: tuple[tuple[str, bool], ...]
     n_cases: int
@@ -355,14 +370,10 @@ def load_receipts(paths: list[Path] | tuple[Path, ...]) -> list[Receipt]:
             raise ValueError(f"{path.name} has no rows")
         loaded.append((path, raw, tuple(_row(item) for item in rows_raw)))
     labels = [_run_label(raw) for _, raw, _ in loaded]
-    counts = Counter(labels)
     receipts: list[Receipt] = []
     for index, (path, raw, rows) in enumerate(loaded):
-        label = labels[index]
-        if counts[label] > 1:
-            label = f"{label} ({str(raw.get('run_id', ''))[:6]})"
         colour = MODEL_COLOURS[index % len(MODEL_COLOURS)]
-        receipts.append(Receipt(path, raw, rows, label, colour))
+        receipts.append(Receipt(path, raw, rows, labels[index], colour))
     return receipts
 
 
@@ -627,6 +638,12 @@ def usd(value: float, digits: int = 4) -> str:
     return f"${value:,.{digits}f}"
 
 
+def usd_trim(value: float, digits: int = 6) -> str:
+    """Six decimals, then drop trailing zeros. 0.222530 prints as $0.22253."""
+    rendered = f"{value:,.{digits}f}".rstrip("0").rstrip(".")
+    return f"${rendered}"
+
+
 def _ratio(left: float, right: float) -> str:
     return f"{left / right:.1f}×" if right else "n/a"
 
@@ -666,17 +683,20 @@ def _text(
     )
 
 
-def _marker(x: float, y: float, receipt: Receipt, radius: float = 7.0) -> str:
+def _marker(
+    x: float, y: float, receipt: Receipt, radius: float = 7.0, label: str | None = None
+) -> str:
     """Filled dot means the gate is clear. A hollow ring means hard_fail."""
+    shown = receipt.label if label is None else label
     if receipt.hard_fail:
         return (
             f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{radius}" fill="{PAPER}" '
             f'stroke="{receipt.colour}" '
-            f'stroke-width="3"><title>{esc(receipt.label)} (hard fail)</title></circle>'
+            f'stroke-width="3"><title>{esc(shown)} (hard fail)</title></circle>'
         )
     return (
         f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{radius}" fill="{receipt.colour}" stroke="#fff" '
-        f'stroke-width="1.5"><title>{esc(receipt.label)}</title></circle>'
+        f'stroke-width="1.5"><title>{esc(shown)}</title></circle>'
     )
 
 
@@ -695,11 +715,42 @@ def _shared_field(receipts: list[Receipt], key: str) -> bool:
     return len({json.dumps(receipt.raw.get(key), sort_keys=True) for receipt in receipts}) == 1
 
 
+_FROZEN_INPUT_KEYS = (
+    "case_set_sha256",
+    "fixture_sha256",
+    "rubric_version",
+    "frozen_file_sha256",
+)
+
+
 def _frozen_inputs_match(receipts: list[Receipt]) -> bool:
-    return all(
-        _shared_field(receipts, key)
-        for key in ("case_set_sha256", "fixture_sha256", "rubric_version", "frozen_file_sha256")
-    )
+    return all(_shared_field(receipts, key) for key in _FROZEN_INPUT_KEYS)
+
+
+def _frozen_input_keys_that_differ(left: Receipt, right: Receipt) -> list[str]:
+    differed = []
+    for key in _FROZEN_INPUT_KEYS:
+        left_value = json.dumps(left.raw.get(key), sort_keys=True)
+        right_value = json.dumps(right.raw.get(key), sort_keys=True)
+        if left_value != right_value:
+            differed.append(key)
+    return differed
+
+
+def frozen_input_group(receipt: Receipt) -> str:
+    """SHA-256 of the four frozen inputs. Equal digests are one comparable group."""
+    payload = {key: receipt.raw.get(key) for key in _FROZEN_INPUT_KEYS}
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _changed_frozen_files(left: Receipt, right: Receipt) -> list[str]:
+    left_map = left.raw.get("frozen_file_sha256")
+    right_map = right.raw.get("frozen_file_sha256")
+    if not isinstance(left_map, dict) or not isinstance(right_map, dict):
+        return []
+    names = set(left_map) | set(right_map)
+    return sorted(name for name in names if left_map.get(name) != right_map.get(name))
 
 
 def _recorded_dataset_id(receipt: Receipt) -> str | None:
@@ -752,17 +803,82 @@ def _known_hash_explanation() -> str:
     )
 
 
+def _low_repeat_name(receipt: Receipt) -> str | None:
+    """Short name for a grok low run when both repeat counts appear together."""
+    if receipt.model == "grok-4.7" and receipt.effort == "low" and receipt.repeats in {1, 5}:
+        return f"low ×{receipt.repeats}"
+    return None
+
+
+def _in_company(receipt: Receipt, company: list[Receipt]) -> str:
+    name = _low_repeat_name(receipt)
+    if name is None:
+        return receipt.label
+    twins = [
+        item
+        for item in company
+        if item is not receipt and item.model == receipt.model and item.effort == receipt.effort
+    ]
+    return name if twins else receipt.label
+
+
+def _grok_snapshot_explanation() -> str:
+    """Known grok effort hashes. The later snapshot is on every 1-repeat arm."""
+    return (
+        "<code>instructions_sha256</code> is the SHA-256 of the literal instructions text in "
+        "<code>live_runner._quote</code>. The system prompt is the same except the dataset "
+        "snapshot id the model sees, <code>06bc03a3eabab5bbf3b958ec</code> on low ×5 "
+        "from e396cf4 and <code>bea194558220eb669940d8f3</code> on all three 1-repeat runs "
+        "from 15aaeb3. That id includes <code>implementation_hash</code> over "
+        "<code>src/**/*.py</code>, <code>src/**/*.sql</code>, and <code>contracts/*.json</code>. "
+        "Between those commits the files inside that hash that changed are "
+        "<code>eval_report.py</code> and <code>public_extract.py</code>. Reasoning effort is not "
+        "in the prompt. Frozen file hashes, the case set, and the fixture match. These receipts "
+        "do not record <code>dataset_id</code>. low ×5 is not strictly comparable with the "
+        "1-repeat runs."
+    )
+
+
 def _pair_explanation(left: Receipt, right: Receipt) -> str:
-    names = f"<b>{esc(left.label)}</b> vs <b>{esc(right.label)}</b>"
-    if not pair_explained_by_dataset_id(left, right):
+    left_low = _low_repeat_name(left)
+    right_low = _low_repeat_name(right)
+    if left_low and right_low:
+        names = f"<b>{left_low}</b> vs <b>{right_low}</b>"
+    else:
+        names = f"<b>{esc(left.label)}</b> vs <b>{esc(right.label)}</b>"
+    differed = _frozen_input_keys_that_differ(left, right)
+    if differed:
+        listed = ", ".join(f"<code>{esc(key)}</code>" for key in differed)
+        file_note = ""
+        if "frozen_file_sha256" in differed:
+            files = _changed_frozen_files(left, right)
+            if files:
+                shown = ", ".join(f"<code>{esc(name)}</code>" for name in files)
+                file_note = f" Changed files: {shown}."
+        instruction = ""
+        if str(left.raw.get("instructions_sha256")) != str(right.raw.get("instructions_sha256")):
+            instruction = " <code>instructions_sha256</code> also differs."
         return (
-            f"{names}: <code>instructions_sha256</code> differs and the cause is not recorded. "
+            f"{names}: frozen inputs differ on {listed}.{file_note}{instruction} "
             "This report does not treat this pair as comparable."
         )
     hashes = {
         str(left.raw.get("instructions_sha256")),
         str(right.raw.get("instructions_sha256")),
     }
+    if hashes == _GROK_SNAPSHOT_INSTRUCTION_HASHES:
+        extra = ""
+        if left_low and right_low:
+            extra = (
+                " low ×5 versus low ×1 is not comparable because the instruction hash "
+                "and the repeat count both differ."
+            )
+        return f"{names}: {_grok_snapshot_explanation()}{extra}"
+    if not pair_explained_by_dataset_id(left, right):
+        return (
+            f"{names}: <code>instructions_sha256</code> differs and the cause is not recorded. "
+            "This report does not treat this pair as comparable."
+        )
     known = hashes == _DATASET_ONLY_INSTRUCTION_HASHES
     if known and _recorded_dataset_id(left) is None and _recorded_dataset_id(right) is None:
         return f"{names}: {_known_hash_explanation()}"
@@ -789,7 +905,13 @@ def caveat_html(receipts: list[Receipt]) -> str:
     )
 
 
-def chart_intervals(receipts: list[Receipt]) -> str:
+def chart_intervals(
+    receipts: list[Receipt],
+    *,
+    title: str = "Headline pass rate with 95% Wilson and case-bootstrap intervals",
+    chart_id: str = "ev-intervals",
+    name: Callable[[Receipt], str] | None = None,
+) -> str:
     width, row_height, top, left, right = 1040, 62, 50, 200, 62
     height = top + row_height * len(receipts) + 36
     lowest = min(min(receipt.wilson[0], receipt.bootstrap[0]) for receipt in receipts)
@@ -799,8 +921,11 @@ def chart_intervals(receipts: list[Receipt]) -> str:
     def sx(value: float) -> float:
         return left + (value - x0) / (x1 - x0) * (width - left - right)
 
+    def shown(receipt: Receipt) -> str:
+        return receipt.label if name is None else name(receipt)
+
     summary = "; ".join(
-        f"{receipt.label} {pct(receipt.rate, 2)} "
+        f"{shown(receipt)} {pct(receipt.rate, 2)} "
         f"(Wilson {pct(receipt.wilson[0])} to {pct(receipt.wilson[1])}, "
         f"bootstrap {pct(receipt.bootstrap[0])} to {pct(receipt.bootstrap[1])})"
         for receipt in receipts
@@ -809,9 +934,9 @@ def chart_intervals(receipts: list[Receipt]) -> str:
         _svg_open(
             width,
             height,
-            "Headline pass rate with 95% Wilson and case-bootstrap intervals",
+            title,
             "Filled dot means the gate is clear. A hollow ring means hard_fail. " + summary,
-            "ev-intervals",
+            chart_id,
             "wide",
         )
     ]
@@ -845,7 +970,9 @@ def chart_intervals(receipts: list[Receipt]) -> str:
     )
     parts.append(_text(legend_x2 + 36, 18, "Wilson 95% (each request independent)", 11.5, INK_2))
     for index, receipt in enumerate(receipts):
-        parts.extend(_interval_row(receipt, index, row_height, top, left, width, sx))
+        parts.extend(
+            _interval_row(receipt, index, row_height, top, left, width, sx, shown(receipt))
+        )
     parts.append("</svg>")
     return "".join(parts)
 
@@ -858,6 +985,7 @@ def _interval_row(
     left: int,
     width: int,
     sx: Any,
+    label: str,
 ) -> list[str]:
     cy = top + row_height * index + row_height / 2
     boot_low, boot_high = receipt.bootstrap
@@ -867,12 +995,12 @@ def _interval_row(
             f'<line x1="{sx(boot_low):.1f}" x2="{sx(boot_high):.1f}" y1="{cy}" y2="{cy}" '
             f'stroke="{receipt.colour}" stroke-width="16" stroke-opacity=".18" '
             f'stroke-linecap="round"> '
-            f"<title>{esc(receipt.label)} bootstrap {pct(boot_low)}–{pct(boot_high)}</title></line>"
+            f"<title>{esc(label)} bootstrap {pct(boot_low)}–{pct(boot_high)}</title></line>"
         ),
         (
             f'<line x1="{sx(wilson_low):.1f}" x2="{sx(wilson_high):.1f}" y1="{cy}" y2="{cy}" '
             f'stroke="{receipt.colour}" stroke-width="2.5"> '
-            f"<title>{esc(receipt.label)} Wilson "
+            f"<title>{esc(label)} Wilson "
             f"{pct(wilson_low)}–{pct(wilson_high)}</title></line>"
         ),
     ]
@@ -881,8 +1009,8 @@ def _interval_row(
             f'<line x1="{sx(bound):.1f}" x2="{sx(bound):.1f}" y1="{cy - 6}" y2="{cy + 6}" '
             f'stroke="{receipt.colour}" stroke-width="2"/>'
         )
-    parts.append(_marker(sx(receipt.rate), cy, receipt))
-    parts.append(_text(left - 18, cy - 2, receipt.label, 14, INK, "end", 650))
+    parts.append(_marker(sx(receipt.rate), cy, receipt, label=label))
+    parts.append(_text(left - 18, cy - 2, label, 14, INK, "end", 650))
     gate = "hard fail" if receipt.hard_fail else "gate clear"
     parts.append(
         _text(
@@ -1893,7 +2021,7 @@ def chart_request_cost(receipts: list[Receipt]) -> str:
     return "".join(parts)
 
 
-def scorecard(receipt: Receipt) -> str:
+def scorecard(receipt: Receipt, *, title: str | None = None, gross: str | None = None) -> str:
     wilson_low, wilson_high = receipt.wilson
     boot_low, boot_high = receipt.bootstrap
     usage = receipt.raw["token_usage"]
@@ -1918,7 +2046,7 @@ def scorecard(receipt: Receipt) -> str:
         f"{badge}"
         '<div class="ev-name">'
         f'<span class="ev-swatch" style="background:{receipt.colour}"></span>'
-        f"{esc(receipt.label)}</div>"
+        f"{esc(receipt.label if title is None else title)}</div>"
         '<div class="ev-sub">reasoning effort '
         f"<code>{esc(receipt.effort)}</code> · run <code>{run_id}</code></div>"
         '<div class="ev-rate">'
@@ -1934,7 +2062,8 @@ def scorecard(receipt: Receipt) -> str:
         f"<span>Flaky cases</span><span>{receipt.flaky_count()} of {n_cases}</span>"
         "<span>Repairs (raw plan still scored)</span>"
         f"<span>{esc(_repair_phrase(receipt))}</span>"
-        f"<span>Gross cost, whole run</span><span>{usd(receipt.cost)}</span>"
+        "<span>Gross cost, whole run</span>"
+        f"<span>{usd(receipt.cost) if gross is None else gross}</span>"
         "<span>Cost per 1,000 passing answers</span>"
         f"<span>{usd(per_thousand, 3)}</span>"
         "<span>Input / output tokens</span>"
@@ -1965,30 +2094,86 @@ def hard_fail_details(receipt: Receipt, cases: dict[str, Case]) -> list[dict[str
     return details
 
 
+def _frozen_matched_groups(receipts: list[Receipt]) -> list[list[Receipt]]:
+    """Cluster receipts whose frozen inputs match, transitively."""
+    parent = list(range(len(receipts)))
+
+    def find(index: int) -> int:
+        while parent[index] != index:
+            parent[index] = parent[parent[index]]
+            index = parent[index]
+        return index
+
+    for left in range(len(receipts)):
+        for right in range(left + 1, len(receipts)):
+            if _frozen_input_keys_that_differ(receipts[left], receipts[right]):
+                continue
+            left_root, right_root = find(left), find(right)
+            if left_root != right_root:
+                parent[right_root] = left_root
+    buckets: dict[int, list[Receipt]] = {}
+    for index, receipt in enumerate(receipts):
+        buckets.setdefault(find(index), []).append(receipt)
+    return list(buckets.values())
+
+
+def _rank_group(receipts: list[Receipt]) -> list[Receipt]:
+    """Largest frozen-input-matched group. A tie keeps the earliest receipt."""
+    groups = _frozen_matched_groups(receipts)
+
+    def sort_key(group: list[Receipt]) -> tuple[int, int]:
+        first = min(receipts.index(item) for item in group)
+        return (-len(group), first)
+
+    return min(groups, key=sort_key)
+
+
 def headline_title(receipts: list[Receipt]) -> str:
-    best = max(receipts, key=lambda receipt: receipt.rate)
-    if best.hard_fail and any(not receipt.hard_fail for receipt in receipts):
+    ranked = _rank_group(receipts)
+    best = max(ranked, key=lambda receipt: receipt.rate)
+    if best.hard_fail and any(not receipt.hard_fail for receipt in ranked):
         return "The most accurate model failed the gate"
-    if all(receipt.hard_fail for receipt in receipts):
+    if all(receipt.hard_fail for receipt in ranked):
         return "Every run tripped the hard-fail gate"
     return f"{best.label} leads and clears the gate"
 
 
+def _intervals_overlap(left: tuple[float, float], right: tuple[float, float]) -> bool:
+    return left[0] <= right[1] and right[0] <= left[1]
+
+
+def _only_high_severity_case(receipt: Receipt) -> str | None:
+    missed = {row.case_id for row in receipt.rows if row.high_severity_miss}
+    if len(missed) == 1:
+        return next(iter(missed))
+    return None
+
+
 def headline_sentence(receipts: list[Receipt]) -> str:
-    best = max(receipts, key=lambda receipt: receipt.rate)
+    ranked = _rank_group(receipts)
+    best = max(ranked, key=lambda receipt: receipt.rate)
     sentence = (
         f"{best.label} has the highest headline pass rate "
         f"({pct(best.rate, 2)}, {best.passed}/{best.n})"
     )
-    clear = [receipt for receipt in receipts if not receipt.hard_fail]
+    clear = [receipt for receipt in ranked if not receipt.hard_fail]
     if best.hard_fail:
         misses = int(best.raw["high_severity_misses"])
         sentence += f" but records {_misses(misses)}, which sets hard_fail"
         if clear:
-            cheaper = max(clear, key=lambda receipt: receipt.rate)
-            sentence += f"; {cheaper.label} clears the gate at {pct(cheaper.rate, 2)}"
-            if cheaper.cost < best.cost:
-                sentence += f" and costs about 1/{best.cost / cheaper.cost:.0f} as much"
+            clearer = max(clear, key=lambda receipt: receipt.rate)
+            sentence += f"; {clearer.label} clears the gate at {pct(clearer.rate, 2)}"
+            if _intervals_overlap(clearer.wilson, best.wilson):
+                sentence += (
+                    f", the same pass-rate level on this one {best.repeats}-repeat sample "
+                    f"({clearer.passed}/{clearer.n} versus {best.passed}/{best.n}) "
+                    f"at {_ratio(clearer.cost, best.cost)} the leader's cost"
+                )
+                only = _only_high_severity_case(best)
+                if only is not None:
+                    sentence += f", without {best.label}'s hard fail on {only}"
+            elif clearer.cost < best.cost:
+                sentence += f" and costs about 1/{best.cost / clearer.cost:.0f} as much"
     return sentence + "."
 
 
@@ -2001,14 +2186,17 @@ def description_text(receipts: list[Receipt], n_cases: int) -> str:
             f"{_times(headline[0].repeats)}"
         )
     else:
-        listed = ", ".join(f"{receipt.label} {_times(receipt.repeats)}" for receipt in receipts)
+        listed = ", ".join(
+            f"{_in_company(receipt, receipts)} {_times(receipt.repeats)}" for receipt in receipts
+        )
         asked = (
             f"Repeat counts differ ({listed}). The headline comparison keeps the runs "
             f"that asked each question {_times(headline[0].repeats)}"
         )
     return (
         f"{sentence} {asked} against a frozen chess fixture. Every reply is a tool plan, scored "
-        "against a governed reference plan; no LLM grades another LLM."
+        "against a governed reference plan; no LLM grades another LLM. "
+        "Each headline rate is one sample. The intervals describe that sample, not a second run."
     )
 
 
@@ -2137,20 +2325,30 @@ def hard_intro(receipts: list[Receipt], cases: dict[str, Case]) -> str:
 
 
 def _pair_caveat(left: Receipt, right: Receipt) -> str:
+    if _frozen_input_keys_that_differ(left, right):
+        return " (frozen inputs differ, see caveat)"
     if left.raw.get("instructions_sha256") == right.raw.get("instructions_sha256"):
         return ""
+    hashes = {
+        str(left.raw.get("instructions_sha256")),
+        str(right.raw.get("instructions_sha256")),
+    }
+    if hashes == _GROK_SNAPSHOT_INSTRUCTION_HASHES:
+        return " (not strictly comparable, see caveat)"
     if pair_explained_by_dataset_id(left, right):
         return " (prompts differ only by dataset id, see caveat)"
     return " (instruction hashes differ and the cause is not recorded, see caveat)"
 
 
 def pairwise_html(receipts: list[Receipt]) -> str:
-    """Sign-test only pairs with equal repeats and the same case ids."""
+    """Sign-test pairs that share repeats, case ids, and frozen inputs."""
     items = []
     for left_index in range(len(receipts)):
         for right_index in range(left_index + 1, len(receipts)):
             left, right = receipts[left_index], receipts[right_index]
             if left.repeats != right.repeats or set(left.pass_bits()) != set(right.pass_bits()):
+                continue
+            if _frozen_input_keys_that_differ(left, right):
                 continue
             wins_left, wins_right, probability = sign_test(left.pass_bits(), right.pass_bits())
             caveat = _pair_caveat(left, right)
@@ -2446,6 +2644,31 @@ def _repair_note(receipt: Receipt) -> str | None:
     )
 
 
+def _reasoning_tokens(receipt: Receipt) -> int:
+    usage = receipt.raw.get("token_usage")
+    if not isinstance(usage, dict):
+        return 0
+    return int(usage.get("reasoning_tokens") or 0)
+
+
+def _median_input(receipt: Receipt) -> float:
+    return float(statistics.median(row.input_tokens for row in receipt.rows))
+
+
+def _token_count(value: float) -> str:
+    if float(value).is_integer():
+        return f"{value:,.0f}"
+    return f"{value:,.1f}"
+
+
+def _prompt_gap_is_price(receipts: list[Receipt]) -> bool:
+    """True when medians stay within 5% and no run records reasoning tokens."""
+    medians = [_median_input(receipt) for receipt in receipts]
+    if min(medians) <= 0 or max(medians) / min(medians) > 1.05:
+        return False
+    return all(_reasoning_tokens(receipt) == 0 for receipt in receipts)
+
+
 def _cost_take(receipts: list[Receipt]) -> str:
     if len(receipts) < 2:
         return "One run is plotted. Add another receipt under reports/ and the comparison appears."
@@ -2455,28 +2678,42 @@ def _cost_take(receipts: list[Receipt]) -> str:
             "Request counts differ "
             f"({listed}), so this report does not quote a cost ratio for the same work."
         )
-    expensive = max(receipts, key=lambda receipt: receipt.cost)
-    cheapest = min(receipts, key=lambda receipt: receipt.cost)
+    ordered = sorted(receipts, key=lambda receipt: receipt.cost)
+    cheapest = ordered[0]
+    expensive = ordered[-1]
     text = (
         f"<strong>{esc(expensive.label)} cost {_ratio(expensive.cost, cheapest.cost)} as "
         f"much</strong> "
         f"as {esc(cheapest.label)} ({usd(expensive.cost)} vs {usd(cheapest.cost)} for the same "
         f"{cheapest.n} requests)"
     )
-    if expensive.rate > cheapest.rate:
-        gained = pct_num(expensive.rate - cheapest.rate, 2)
-        text += f" and bought {gained} points of headline pass rate."
-    else:
-        text += "."
+    if len(ordered) >= 3:
+        middle = ordered[-2]
+        text += (
+            f", and {_ratio(expensive.cost, middle.cost)} as much as {esc(middle.label)} "
+            f"({usd(middle.cost)})"
+        )
+    text += ". Those ratios are this run's spend, not a quality result."
     medians = ", ".join(
-        f"{esc(receipt.label)} {statistics.median(row.input_tokens for row in receipt.rows):,.0f}"
-        for receipt in receipts
+        f"{esc(receipt.label)} {_token_count(_median_input(receipt))}" for receipt in receipts
+    )
+    sample = (
+        f" Each figure is one {receipts[0].repeats}-repeat sample, not a second run of the "
+        "same model."
+    )
+    if _prompt_gap_is_price(receipts):
+        return (
+            text
+            + f" Prompts are almost the same size (median input tokens: {medians}) and nearly all "
+            "of each is served from cache. So the gap comes from the price per token, not from "
+            "prompt length." + sample
+        )
+    reasoning = ", ".join(
+        f"{esc(receipt.label)} {_reasoning_tokens(receipt):,}" for receipt in receipts
     )
     return (
-        text
-        + f" Prompts are almost the same size (median input tokens: {medians}) and nearly all of "
-        f"each "
-        "is served from cache. So the gap comes from the price per token, not from prompt length."
+        text + f" Median input tokens: {medians}. Reasoning tokens: {reasoning}. "
+        "The gap is that reasoning and the longer reported input, not prompt length alone." + sample
     )
 
 
@@ -2523,7 +2760,10 @@ def _cache_note(receipts: list[Receipt]) -> str:
 def _meta(receipts: list[Receipt], integrity: Integrity) -> tuple[tuple[str, str], ...]:
     passed = sum(ok for _, ok, _ in integrity.checks)
     return (
-        ("Runs", f"{len(receipts)} ({', '.join(receipt.label for receipt in receipts)})"),
+        (
+            "Runs",
+            f"{len(receipts)} ({', '.join(_in_company(item, receipts) for item in receipts)})",
+        ),
         ("Scored requests", f"{sum(receipt.n for receipt in receipts):,}"),
         ("Rubric", str(receipts[0].raw.get("rubric_version"))),
         ("Total spend", usd(sum(receipt.cost for receipt in receipts))),
@@ -2572,6 +2812,232 @@ def _fail_take(receipts: list[Receipt], cases: dict[str, Case]) -> str:
     return " ".join(sentences)
 
 
+def _grok_one_repeat_sweep(
+    receipts: list[Receipt],
+) -> tuple[Receipt | None, Receipt, Receipt, Receipt | None] | None:
+    """Medium and high at one repeat, plus the matching low when that receipt exists.
+
+    The 5-repeat low run is the headline. It is not an arm of this comparison.
+    A missing 1-repeat low is an empty slot, not a reason to hide the section.
+    """
+    grok = [
+        receipt
+        for receipt in receipts
+        if receipt.model == "grok-4.7" and receipt.effort in {"low", "medium", "high"}
+    ]
+    mediums = [receipt for receipt in grok if receipt.effort == "medium"]
+    highs = [receipt for receipt in grok if receipt.effort == "high"]
+    if len(mediums) != 1 or len(highs) != 1:
+        return None
+    medium, high = mediums[0], highs[0]
+    if medium.repeats != high.repeats:
+        return None
+    one = medium.repeats
+    lows = [receipt for receipt in grok if receipt.effort == "low" and receipt.repeats == one]
+    headlines = [receipt for receipt in grok if receipt.effort == "low" and receipt.repeats != one]
+    if len(lows) > 1:
+        return None
+    low = lows[0] if lows else None
+    headline_low = headlines[0] if len(headlines) == 1 else None
+    return low, medium, high, headline_low
+
+
+def _case_cell(receipt: Receipt, case_id: str, cases: dict[str, Case]) -> str:
+    rows = receipt.rows_by_case()[case_id]
+    passed = sum(int(row.passed) for row in rows)
+    failed = [row for row in rows if not row.passed]
+    head = f"{passed}/{len(rows)} passed"
+    if not failed:
+        return head
+    signatures = []
+    for row in failed:
+        mode = failure_mode(row, cases[case_id]) or "other"
+        status = row.emitted_status or "no valid plan"
+        extra = ""
+        if mode == "wrong_answer" and row.failures:
+            extra = " [" + ", ".join(row.failures) + "]"
+        signatures.append((mode, status, extra, row.repeat))
+    unique = {(mode, status, extra) for mode, status, extra, _repeat in signatures}
+    if len(unique) == 1:
+        mode, status, extra = next(iter(unique))
+        return f"{head}; {len(failed)} failed as {MODE_LABEL[mode]} ({esc(status)}){esc(extra)}"
+    bits = [
+        f"repeat {repeat}: {MODE_LABEL[mode]} ({esc(status)}){esc(extra)}"
+        for mode, status, extra, repeat in signatures
+    ]
+    return f"{head}; " + "; ".join(bits)
+
+
+def _matched_pair(left: Receipt, right: Receipt) -> bool:
+    return (
+        left.raw.get("instructions_sha256") == right.raw.get("instructions_sha256")
+        and not _frozen_input_keys_that_differ(left, right)
+        and left.repeats == right.repeats
+        and set(left.pass_bits()) == set(right.pass_bits())
+    )
+
+
+_HEADLINE_LOW = "low ×5"
+
+
+def _effort_name(receipt: Receipt) -> str:
+    return receipt.effort
+
+
+def _arm(receipt: Receipt) -> str:
+    return esc(receipt.effort)
+
+
+def _sweep_title(receipt: Receipt) -> str:
+    return f"{receipt.model} · {receipt.effort}"
+
+
+def _one_sign(left: Receipt, right: Receipt) -> str:
+    if not _matched_pair(left, right):
+        return (
+            f"{_arm(left)} versus {_arm(right)} is not sign-tested. "
+            "The repeat count, the case ids, the frozen inputs, or the instruction hash differs."
+        )
+    wins_left, wins_right, probability = sign_test(left.pass_bits(), right.pass_bits())
+    return (
+        f"<b>{_arm(left)}</b> vs <b>{_arm(right)}</b> share the instruction hash, "
+        f"the frozen inputs, the case ids, and {_times(left.repeats)}. Of "
+        f"{len(left.pass_bits())} cases, {wins_left + wins_right} have different pass counts. "
+        f"{_arm(right)} is better on {wins_right}, {_arm(left)} on {wins_left}. "
+        f"Exact two-sided sign test, p = {probability:.4f}."
+    )
+
+
+def _pending_low_card() -> str:
+    return (
+        '<div class="ev-card" data-sweep-slot="low-1">'
+        '<span class="ev-badge">Waiting</span>'
+        '<div class="ev-name">grok-4.7 · low</div>'
+        '<div class="ev-sub">reasoning effort <code>low</code> · 1 repeat</div>'
+        '<div class="ev-rate"><div class="ev-big">—</div>'
+        '<p class="ev-stat">1-repeat receipt not in this report yet</p></div>'
+        "</div>"
+    )
+
+
+def _grok_effort_sweep(
+    low: Receipt | None,
+    medium: Receipt,
+    high: Receipt,
+    headline_low: Receipt | None,
+    cases: dict[str, Case],
+) -> tuple[str, str, str]:
+    present = [receipt for receipt in (low, medium, high) if receipt is not None]
+    matched_later = _matched_pair(medium, high)
+    low_matched = low is not None and _matched_pair(low, medium) and matched_later
+    changed = sorted(
+        {
+            case_id
+            for receipt in present
+            for case_id, passed in receipt.passes_by_case().items()
+            if passed != receipt.repeats
+        }
+    )
+    rest = len(medium.passes_by_case()) - len(changed)
+    heads = '<th scope="col">low</th><th scope="col">medium</th><th scope="col">high</th>'
+    body = []
+    for case_id in changed:
+        cells = []
+        for receipt in (low, medium, high):
+            if receipt is None:
+                cells.append("<td>not in this report yet</td>")
+            else:
+                cells.append(f"<td>{_case_cell(receipt, case_id, cases)}</td>")
+        body.append(f'<tr><th scope="row"><code>{esc(case_id)}</code></th>{"".join(cells)}</tr>')
+    if low is None:
+        caption = (
+            "Passes for the 1-repeat arms on cases that miss at least once. "
+            "The low column stays empty until that receipt is committed."
+        )
+    else:
+        caption = "Passes for the 1-repeat arms on cases that miss at least once."
+    table = (
+        '<div class="scroll"><table class="ev-cases"><caption>'
+        f'{caption}</caption><thead><tr><th scope="col">Case</th>'
+        f"{heads}</tr></thead><tbody>{''.join(body)}</tbody></table></div>"
+    )
+    failures = []
+    for receipt in present:
+        counts = failure_mode_counts(receipt, cases)
+        total = sum(counts.values())
+        if not total:
+            failures.append(f"{_arm(receipt)} has no failed rows.")
+            continue
+        listed = ", ".join(
+            _mode_phrase(key, counts[key]) for key, _label, _colour in FAILURE_MODES if counts[key]
+        )
+        verb = "row is" if total == 1 else "rows are"
+        failures.append(f"{_arm(receipt)}: {total} failed {verb} {listed}.")
+    chart = chart_intervals(
+        present,
+        title="Grok 1-repeat effort pass rate with 95% Wilson and case-bootstrap intervals",
+        chart_id="ev-sweep-intervals",
+        name=_effort_name,
+    )
+    if low is None:
+        chart_note = (
+            "These intervals describe each 1-repeat run's own sample. Medium and high share "
+            "the instruction hash, so their Wilson intervals are compared with each other. "
+            "The 1-repeat low run is not drawn. "
+            f"{_HEADLINE_LOW} is not on this figure, and this figure does not say whether "
+            "its interval overlaps either arm."
+        )
+    elif low_matched:
+        chart_note = (
+            "These intervals describe each 1-repeat run's own sample. The three arms share "
+            f"the instruction hash. {_HEADLINE_LOW} is not on this figure."
+        )
+    else:
+        chart_note = (
+            "These intervals describe each run's own sample. This figure does not compare "
+            "Wilson intervals across an instruction-hash mismatch."
+        )
+    if headline_low is None:
+        intro = "The 5-repeat low run is outside this comparison."
+    elif str(headline_low.raw.get("instructions_sha256")) == str(
+        medium.raw.get("instructions_sha256")
+    ):
+        intro = (
+            "The 5-repeat low run stays the headline and is outside this comparison "
+            "because the repeat count differs."
+        )
+    else:
+        intro = (
+            "The 5-repeat low run uses a different instruction hash, stays the headline, "
+            "and is outside this comparison."
+        )
+    signs = []
+    if low_matched and low is not None:
+        signs.append(_one_sign(low, medium))
+        signs.append(_one_sign(low, high))
+    signs.append(_one_sign(medium, high))
+    if low is None:
+        signs.append("The 1-repeat low run is not in this test.")
+    signs.append(f"{_HEADLINE_LOW} is not in this test.")
+    sign_html = '<ul class="ev-tests">' + "".join(f"<li>{item}</li>" for item in signs) + "</ul>"
+
+    def _drawn(receipt: Receipt) -> str:
+        return scorecard(receipt, title=_sweep_title(receipt), gross=usd_trim(receipt.cost))
+
+    cards = _pending_low_card() if low is None else _drawn(low)
+    cards += "".join(_drawn(receipt) for receipt in (medium, high))
+    detail = (
+        '<div class="ev-figure"><h3>Pass rate by reasoning effort, 95% intervals</h3>'
+        f"{chart}"
+        f'<p class="ev-note">{chart_note}</p></div>'
+        f"<p>{' '.join(failures)} The other {rest} cases pass on every 1-repeat arm in "
+        "this report.</p>"
+        f"{table}"
+        f"{sign_html}"
+    )
+    return f'<p class="ev-take">{intro}</p>', cards, detail
+
+
 def _sensitivity_copy(extra: list[Receipt], headline: list[Receipt]) -> tuple[str, str]:
     if not extra:
         return "", ""
@@ -2588,11 +3054,25 @@ def _sensitivity_copy(extra: list[Receipt], headline: list[Receipt]) -> tuple[st
     return intro, "".join(scorecard(receipt) for receipt in extra)
 
 
+def _flaky_phrase(receipt: Receipt) -> str:
+    count = receipt.flaky_count()
+    phrase = f"<strong>{count}</strong> for {esc(receipt.label)}"
+    if count == 0 or count > 3:
+        return phrase
+    ids = [
+        case_id
+        for case_id, passed in receipt.passes_by_case().items()
+        if 0 < passed < receipt.repeats
+    ]
+    listed = ", ".join(f"<code>{esc(case_id)}</code>" for case_id in sorted(ids))
+    return f"{phrase} ({listed})"
+
+
 def _request_note(receipts: list[Receipt]) -> str:
     if len({receipt.n for receipt in receipts}) == 1:
         prefix = f"One dot per request, {receipts[0].n} per run."
     else:
-        listed = ", ".join(f"{receipt.label} {receipt.n}" for receipt in receipts)
+        listed = ", ".join(f"{_in_company(receipt, receipts)} {receipt.n}" for receipt in receipts)
         prefix = f"One dot per request ({listed})."
     return f"{prefix} {_cache_note(receipts)}"
 
@@ -2625,10 +3105,19 @@ def build_page(
     headline, extra = split_cohorts(receipts)
     repeats = headline[0].repeats
     n_cases = len(cases)
-    flaky = " vs ".join(
-        f"<strong>{receipt.flaky_count()}</strong> for {esc(receipt.label)}" for receipt in headline
-    )
-    sensitivity_intro, sensitivity_html = _sensitivity_copy(extra, headline)
+    flaky = " vs ".join(_flaky_phrase(receipt) for receipt in headline)
+    record = _grok_one_repeat_sweep(receipts)
+    if record is not None:
+        low_arm, medium_arm, high_arm, headline_low = record
+        sweep_lead_html, sweep_cards_html, sweep_detail_html = _grok_effort_sweep(
+            low_arm, medium_arm, high_arm, headline_low, cases
+        )
+        hidden = {id(item) for item in (low_arm, medium_arm, high_arm) if item is not None}
+    else:
+        sweep_lead_html, sweep_cards_html, sweep_detail_html = "", "", ""
+        hidden = set()
+    shown_extra = [item for item in extra if id(item) not in hidden]
+    sensitivity_intro, sensitivity_html = _sensitivity_copy(shown_extra, headline)
     cost_take = _cost_take(headline)
     if extra:
         listed = ", ".join(
@@ -2669,6 +3158,9 @@ def build_page(
         notes_html="".join(f"<li>{note}</li>" for note in data_notes(receipts, cases)),
         sensitivity_intro=sensitivity_intro,
         sensitivity_html=sensitivity_html,
+        sweep_lead_html=sweep_lead_html,
+        sweep_cards_html=sweep_cards_html,
+        sweep_detail_html=sweep_detail_html,
         repeat_word="time" if repeats == 1 else "times",
         checks=_check_rows(integrity),
         n_cases=n_cases,
