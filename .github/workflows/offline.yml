@@ -3,39 +3,189 @@ on:
   push:
     branches: [main]
   pull_request:
+  merge_group:
+  workflow_dispatch:
 permissions:
   contents: read
 concurrency:
   group: offline-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      run_all: ${{ steps.filter.outputs.run_all }}
+      categories: ${{ steps.filter.outputs.categories }}
+      biome: ${{ steps.filter.outputs.biome }}
+      node_test: ${{ steps.filter.outputs.node_test }}
+      node_check_import: ${{ steps.filter.outputs.node_check_import }}
+      node_parity_authored: ${{ steps.filter.outputs.node_parity_authored }}
+      node_parity_zero: ${{ steps.filter.outputs.node_parity_zero }}
+      ruff: ${{ steps.filter.outputs.ruff }}
+      ruff_format: ${{ steps.filter.outputs.ruff_format }}
+      basedpyright: ${{ steps.filter.outputs.basedpyright }}
+      pytest: ${{ steps.filter.outputs.pytest }}
+      pytest_extract: ${{ steps.filter.outputs.pytest_extract }}
+      pytest_game_import: ${{ steps.filter.outputs.pytest_game_import }}
+      pytest_mcp: ${{ steps.filter.outputs.pytest_mcp }}
+      demo: ${{ steps.filter.outputs.demo }}
+      pytest_dbt: ${{ steps.filter.outputs.pytest_dbt }}
+      transform: ${{ steps.filter.outputs.transform }}
+      semantic: ${{ steps.filter.outputs.semantic }}
+      analyst_gate: ${{ steps.filter.outputs.analyst_gate }}
+      dbt_slim: ${{ steps.filter.outputs.dbt_slim }}
+      pytest_portfolio: ${{ steps.filter.outputs.pytest_portfolio }}
+      demo_all: ${{ steps.filter.outputs.demo_all }}
+      setup_node: ${{ steps.filter.outputs.setup_node }}
+      setup_uv: ${{ steps.filter.outputs.setup_uv }}
+      sync: ${{ steps.filter.outputs.sync }}
+      sync_mcp: ${{ steps.filter.outputs.sync_mcp }}
+      sync_dbt: ${{ steps.filter.outputs.sync_dbt }}
+      dbt_base_checkout: ${{ steps.filter.outputs.dbt_base_checkout }}
+      portfolio_setup_uv: ${{ steps.filter.outputs.portfolio_setup_uv }}
+      portfolio_sync: ${{ steps.filter.outputs.portfolio_sync }}
+    steps:
+      - id: changes_checkout
+        name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: filter
+        name: Classify changed paths
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          if [ "${EVENT_NAME}" != "pull_request" ]; then
+            python3 scripts/ci_offline_changes.py --event "${EVENT_NAME}" --github-output "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+          if ! printf '%s' "${BASE_SHA}" | grep -Eq '^[0-9a-f]{40}$'; then
+            echo "base sha unavailable; running the full suite" >&2
+            python3 scripts/ci_offline_changes.py --event full --github-output "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+          if ! git cat-file -e "${BASE_SHA}^{commit}" 2>/dev/null; then
+            echo "base commit missing; running the full suite" >&2
+            python3 scripts/ci_offline_changes.py --event full --github-output "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+          diff_file="${RUNNER_TEMP}/changed.txt"
+          if ! git diff --name-status --find-renames "${BASE_SHA}" HEAD > "${diff_file}"; then
+            echo "git diff failed; running the full suite" >&2
+            python3 scripts/ci_offline_changes.py --event full --github-output "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+          if [ ! -s "${diff_file}" ]; then
+            echo "empty diff; running the full suite" >&2
+            python3 scripts/ci_offline_changes.py --event full --github-output "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+          python3 scripts/ci_offline_changes.py --event pull_request --name-status "${diff_file}" --github-output "${GITHUB_OUTPUT}"
   offline:
+    needs: changes
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - id: audit_map
+        name: Check the offline step map
+        run: python3 scripts/ci_offline_changes.py --audit
+      - id: record_selection
+        name: Record the offline selection
+        run: |
+          printf '%s\n' "run_all=${{ needs.changes.outputs.run_all }}" "categories=${{ needs.changes.outputs.categories }}"
+      - id: setup_uv
+        name: Set up uv
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.setup_uv == 'true' }}
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
         with:
           version: "0.12.18"
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - id: setup_node
+        name: Set up Node
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.setup_node == 'true' }}
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "24"
-      - run: npx --yes @biomejs/biome@2.5.15 check
-      - run: node --test tests/js/game_import.test.mjs
-      - run: node scripts/check_game_import.mjs
-      - run: node tests/js/import_parity.mjs tests/fixtures/imports/authored-games.pgn
-      - run: node tests/js/import_parity.mjs tests/fixtures/imports/zero-castling.pgn
-      - run: uv sync --locked --no-editable
-      - run: uv run --locked --offline --no-editable ruff check .
-      - run: uv run --locked --offline --no-editable ruff format --check .
-      - run: uv run --locked --offline --no-editable basedpyright
-      - run: uv run --locked --offline --no-editable pytest -q
-      - run: uv sync --locked --no-editable --extra mcp
-      - run: uv run --locked --offline --no-editable --extra mcp pytest -q tests/test_mcp_protocol.py
-      - run: uv run --locked --offline --no-editable chesslab demo
-      - run: uv sync --locked --no-editable --extra dbt
-      - run: CHESSLAB_REQUIRE_DBT=1 uv run --locked --offline --no-editable --extra dbt pytest -q
-      - run: uv run --locked --offline --no-editable --extra dbt python -m chess_analytics.marts transform --dataset tiny
-      - name: Validate the semantic manifest offline
+      - id: biome
+        name: Biome
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.biome == 'true' }}
+        run: npx --yes @biomejs/biome@2.5.15 check
+      - id: node_test
+        name: JavaScript game-import tests
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.node_test == 'true' }}
+        run: node --test tests/js/game_import.test.mjs
+      - id: node_check_import
+        name: Bounded game-import check
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.node_check_import == 'true' }}
+        run: node scripts/check_game_import.mjs
+      - id: node_parity_authored
+        name: Import parity for authored games
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.node_parity_authored == 'true' }}
+        run: node tests/js/import_parity.mjs tests/fixtures/imports/authored-games.pgn
+      - id: node_parity_zero
+        name: Import parity for zero castling
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.node_parity_zero == 'true' }}
+        run: node tests/js/import_parity.mjs tests/fixtures/imports/zero-castling.pgn
+      - id: sync
+        name: Install the locked project
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.sync == 'true' }}
+        run: uv sync --locked --no-editable
+      - id: ruff
+        name: Ruff
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.ruff == 'true' }}
+        run: uv run --locked --offline --no-editable ruff check .
+      - id: ruff_format
+        name: Ruff format
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.ruff_format == 'true' }}
+        run: uv run --locked --offline --no-editable ruff format --check .
+      - id: basedpyright
+        name: basedpyright
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.basedpyright == 'true' }}
+        run: uv run --locked --offline --no-editable basedpyright
+      - id: pytest
+        name: Pytest
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.pytest == 'true' }}
+        run: uv run --locked --offline --no-editable pytest -q
+      - id: pytest_extract
+        name: Public extract tests
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.pytest_extract == 'true' }}
+        run: uv run --locked --offline --no-editable pytest -q tests/test_public_extract.py
+      - id: pytest_game_import
+        name: Game-import tests
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.pytest_game_import == 'true' }}
+        run: uv run --locked --offline --no-editable pytest -q tests/test_game_import.py
+      - id: sync_mcp
+        name: Install the mcp extra
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.sync_mcp == 'true' }}
+        run: uv sync --locked --no-editable --extra mcp
+      - id: pytest_mcp
+        name: MCP protocol tests
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.pytest_mcp == 'true' }}
+        run: uv run --locked --offline --no-editable --extra mcp pytest -q tests/test_mcp_protocol.py
+      - id: demo
+        name: Offline demo
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.demo == 'true' }}
+        run: uv run --locked --offline --no-editable chesslab demo
+      - id: sync_dbt
+        name: Install the dbt extra
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.sync_dbt == 'true' }}
+        run: uv sync --locked --no-editable --extra dbt
+      - id: pytest_dbt
+        name: Pytest with dbt required
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.pytest_dbt == 'true' }}
+        run: CHESSLAB_REQUIRE_DBT=1 uv run --locked --offline --no-editable --extra dbt pytest -q
+      - id: transform
+        name: Tiny mart transform
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.transform == 'true' }}
+        run: uv run --locked --offline --no-editable --extra dbt python -m chess_analytics.marts transform --dataset tiny
+      - id: semantic
+        name: Validate the semantic manifest offline
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.semantic == 'true' }}
         run: |
           set -euo pipefail
           mart="$(uv run --locked --offline --no-editable --extra dbt python -c 'import json; print(json.load(open("data/tiny-mart-current.json"))["mart_id"])')"
@@ -53,10 +203,13 @@ jobs:
           uv run --locked --offline --no-editable --extra dbt python -m chess_analytics.analyst.semantic validate-configs "$RUNNER_TEMP/dbt-target/semantic_manifest.json"
           uv run --locked --offline --no-editable --extra dbt python -m chess_analytics.analyst.semantic smoke-draw-rate "$warehouse" "$manifest"
           uv run --locked --offline --no-editable --extra dbt python scripts/render_dbt_dag.py --manifest "$RUNNER_TEMP/dbt-target/manifest.json" --output docs/DBT_LINEAGE.md --check
-      - name: Offline analyst eval regression gate
+      - id: analyst_gate
+        name: Offline analyst eval regression gate
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.analyst_gate == 'true' }}
         run: uv run --locked --offline --no-editable --extra dbt python -m chess_analytics.analyst gate
-      - name: Checkout the base dbt project
-        if: github.event_name == 'pull_request' || (github.event.before != '0000000000000000000000000000000000000000' && github.event.before != '')
+      - id: dbt_base_checkout
+        name: Checkout the base dbt project
+        if: ${{ (needs.changes.result != 'success' || needs.changes.outputs.dbt_base_checkout == 'true') && (github.event_name == 'pull_request' || (github.event.before != '0000000000000000000000000000000000000000' && github.event.before != '')) }}
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
@@ -64,7 +217,9 @@ jobs:
           fetch-depth: 1
           sparse-checkout: dbt
           persist-credentials: false
-      - name: Slim dbt selection against the base manifest
+      - id: dbt_slim
+        name: Slim dbt selection against the base manifest
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.dbt_slim == 'true' }}
         run: |
           set -euo pipefail
           if [ ! -f base-checkout/dbt/dbt_project.yml ]; then
@@ -87,12 +242,32 @@ jobs:
           # dbt 1.12 build counts modified unit tests but does not run them when their model is unmodified.
           uv run --locked --offline --no-editable --extra dbt dbt test --select "test_type:unit,state:modified" --state "${state}" --project-dir dbt --profiles-dir dbt --target-path "$RUNNER_TEMP/dbt-slim" --log-path "$RUNNER_TEMP/dbt-slim-logs" --no-use-colors
   portfolio:
+    needs: changes
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+      - id: portfolio_checkout
+        name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - id: portfolio_record
+        name: Record the portfolio selection
+        run: |
+          printf '%s\n' "run_all=${{ needs.changes.outputs.run_all }}" "categories=${{ needs.changes.outputs.categories }}"
+      - id: portfolio_setup_uv
+        name: Set up uv
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.portfolio_setup_uv == 'true' }}
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
         with:
           version: "0.12.18"
-      - run: uv sync --locked --no-editable --extra dashboard
-      - run: uv run --locked --offline --no-editable --extra dashboard pytest -q tests/test_portfolio_integrity.py tests/test_portfolio_demo.py tests/test_hosted_dashboard.py
-      - run: uv run --locked --offline --no-editable --extra dashboard chesslab demo --scope all
+      - id: portfolio_sync
+        name: Install the dashboard extra
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.portfolio_sync == 'true' }}
+        run: uv sync --locked --no-editable --extra dashboard
+      - id: pytest_portfolio
+        name: Portfolio and hosted tests
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.pytest_portfolio == 'true' }}
+        run: uv run --locked --offline --no-editable --extra dashboard pytest -q tests/test_portfolio_integrity.py tests/test_portfolio_demo.py tests/test_hosted_dashboard.py
+      - id: demo_all
+        name: Demo all scopes
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.demo_all == 'true' }}
+        run: uv run --locked --offline --no-editable --extra dashboard chesslab demo --scope all
