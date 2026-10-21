@@ -150,12 +150,12 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
         "86.3%",
         "97.5%",
         "97.1%",
-        "gpt-6-luna and grok-4.7 · low ×5 clear; gpt-6-sol hard-fails",
-        ("grok-4.7 · low ×1, grok-4.7 · medium ×1, and grok-4.7 · high ×1 clear"),
+        "gpt-6-luna and grok-4.7 · low clear; gpt-6-sol hard-fails",
+        "grok-4.7 · low, grok-4.7 · medium, and grok-4.7 · high clear",
         "Five repeats",
         "Grok 4.7 effort sweep (one repeat)",
         "0/5 for gpt-6-sol",
-        "1/1 for grok-4.7 · high ×1",
+        "1/1 for grok-4.7 · high",
         "5/5 and 1/1 are both a full pass",
         "25 over-abstentions",
         "6 over-abstentions",
@@ -212,15 +212,16 @@ def test_cost_captions_keep_a_literal_dollar(project, monkeypatch):
     app = _run(project, monkeypatch)
     five = _caption(app, "gpt-6-luna and gpt-6-sol do not overlap").replace(r"\$", "$")
     one = _caption(app, "like-for-like with each other").replace(r"\$", "$")
-    assert "gpt-6-luna $0.0150, grok-4.7 · low ×5 $1.0033, gpt-6-sol $0.2550" in five
+    assert "gpt-6-luna $0.0150, grok-4.7 · low $1.0033, gpt-6-sol $0.2550" in five
     assert "Known cost is" in five
     assert "gpt-6-luna and gpt-6-sol share frozen inputs" in five
-    assert "grok-4.7 · low ×5 does not" in five
+    assert "grok-4.7 · low does not" in five
     assert "frozen runner files changed" in five
     assert "its interval is not compared with theirs" in five
-    assert "grok-4.7 · low ×1 $0.2225" in one
-    assert "grok-4.7 · medium ×1 $0.3225" in one
-    assert "grok-4.7 · high ×1 $0.4087" in one
+    assert "grok-4.7 · low $0.2225" in one
+    assert "grok-4.7 · medium $0.3225" in one
+    assert "grok-4.7 · high $0.4087" in one
+    assert "grok-4.7 · low ×5" in one
     assert "48 trials" in one
     assert "different dataset snapshot" in one
     page = _visible(app)
@@ -744,9 +745,9 @@ def test_sweep_cards_and_chart_name_the_effort(project, monkeypatch):
     assert len(cards) == 1
     labels = re.findall(r'class="cal-k"[^>]*>([^<]+)', cards[0])
     assert labels == [
-        "grok-4.7 · low ×1",
-        "grok-4.7 · medium ×1",
-        "grok-4.7 · high ×1",
+        "grok-4.7 · low",
+        "grok-4.7 · medium",
+        "grok-4.7 · high",
     ]
     assert "(" not in "".join(labels)
     assert "1f45f2" not in cards[0]
@@ -789,6 +790,36 @@ def _unit_domains(spec: dict) -> list:
     ]
 
 
+def _color_range(spec: dict) -> list[str]:
+    found: list[list[str]] = []
+
+    def walk(node) -> None:
+        if isinstance(node, dict):
+            scale = node.get("scale")
+            if isinstance(scale, dict):
+                domain = scale.get("domain")
+                series = scale.get("range")
+                if (
+                    isinstance(domain, list)
+                    and domain
+                    and isinstance(domain[0], str)
+                    and isinstance(series, list)
+                    and any(
+                        name.startswith("grok-4.7") or name.startswith("gpt-6") for name in domain
+                    )
+                ):
+                    found.append(series)
+            for value in node.values():
+                walk(value)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item)
+
+    walk(spec)
+    assert len(found) == 1, found
+    return found[0]
+
+
 def _chart_numbers(spec: dict, field: str) -> list[float]:
     found: list[float] = []
 
@@ -813,8 +844,8 @@ def test_every_grok_run_is_on_the_live_eval_charts(project, monkeypatch):
     """Five-repeat runs and the one-repeat grok sweep stay on separate charts."""
     app = _run(project, monkeypatch)
     charts = [node for node in app if getattr(node, "type", None) == "vega_lite_chart"]
-    five_order = ["gpt-6-luna", "grok-4.7 · low ×5", "gpt-6-sol"]
-    one_order = ["grok-4.7 · low ×1", "grok-4.7 · medium ×1", "grok-4.7 · high ×1"]
+    five_order = ["gpt-6-luna", "grok-4.7 · low", "gpt-6-sol"]
+    one_order = ["grok-4.7 · low", "grok-4.7 · medium", "grok-4.7 · high"]
     rate = [node for node in charts if "five-repeat runs with Wilson" in node.proto.alt]
     assert len(rate) == 1
     rate_spec = _chart_spec(rate[0])
@@ -850,10 +881,12 @@ def test_every_grok_run_is_on_the_live_eval_charts(project, monkeypatch):
     for swatch in ("#7c3aed", "#db2777", "#4d7c0f"):
         assert swatch in one_colors
         assert swatch not in five_colors
+    assert _color_range(five_cat_spec) == ["#116559", "#1d4ed8", "#a84a1f"]
+    assert _color_range(one_cat_spec) == ["#7c3aed", "#db2777", "#4d7c0f"]
     heat = [node for node in charts if "pass fraction" in node.proto.alt]
     assert len(heat) == 2
-    five_x = ["gpt-6-luna", "grok-4.7\nlow ×5", "gpt-6-sol"]
-    one_x = ["grok-4.7\nlow ×1", "grok-4.7\nmedium ×1", "grok-4.7\nhigh ×1"]
+    five_x = ["gpt-6-luna", "grok-4.7\nlow", "gpt-6-sol"]
+    one_x = ["grok-4.7\nlow", "grok-4.7\nmedium", "grok-4.7\nhigh"]
     five_heat = _chart_spec(heat[0])
     one_heat = _chart_spec(heat[1])
     assert all(item == five_x for item in _channel_sorts(five_heat, "x"))

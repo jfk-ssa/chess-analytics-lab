@@ -78,10 +78,12 @@ Those receipts are `committed_report`. Category and case rows omit
 `source_report`; the run row keeps the filename, and model plus effort
 joins a row to that run. Each run row also carries `frozen_group`,
 `instructions_sha256`, and `reasoning_tokens`. Headline cards stay on the 5-repeat runs and name grok as
-`grok-4.7 · low ×5`. Comparisons are two sets. **Five repeats** is
-`gpt-6-luna`, `grok-4.7 · low ×5`, and `gpt-6-sol`. **Grok 4.7 effort sweep
-(one repeat)** is `grok-4.7 · low ×1`, `grok-4.7 · medium ×1`, and
-`grok-4.7 · high ×1`. The pass-rate section draws only the five-repeat
+`grok-4.7 · low`. Comparisons are two sets. **Five repeats** is
+`gpt-6-luna`, `grok-4.7 · low`, and `gpt-6-sol`. **Grok 4.7 effort sweep
+(one repeat)** is `grok-4.7 · low`, `grok-4.7 · medium`, and
+`grok-4.7 · high`. Inside a set the label omits `×5` and `×1`, because the
+heading already says which repeat count that is. A sentence that names both
+low runs keeps the suffix. The pass-rate section draws only the five-repeat
 chart. The one-repeat pass-rate chart is the effort sweep, with its cards,
 so that set is not drawn twice. Category charts, case grids, cost and token
 tables, miss lists, and the gate line are split the same way, each under

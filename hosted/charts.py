@@ -16,7 +16,8 @@ _SERIES = ("White, raw", "Black, raw", "Black, adjusted")
 _SERIES_COLORS = ("#3d6b8c", "#203433", "#116559")
 _ORANGE = "#a84a1f"
 _TEAL = "#116559"
-# Pinned to the run label, so a chart of one set keeps the same swatch.
+# Pinned to the full run label, including the repeat suffix. A set's chart
+# shows the short label and passes these colors in explicitly.
 _NAMED_RUN_COLORS = {
     "gpt-6-luna": _TEAL,
     "gpt-6-sol": _ORANGE,
@@ -342,6 +343,21 @@ def _run_colors(models: list[str]) -> list[str]:
     return colors
 
 
+def pinned_run_color(label: str) -> str:
+    """Swatch for a full run label such as ``grok-4.7 · low ×5``."""
+    named = _NAMED_RUN_COLORS.get(label)
+    if named is not None:
+        return named
+    return _run_colors([label])[0]
+
+
+def _series_colors(models: list[str], colors: dict[str, str] | None) -> list[str]:
+    fallback = _run_colors(models)
+    if colors is None:
+        return fallback
+    return [colors.get(name, fallback[index]) for index, name in enumerate(models)]
+
+
 # One category row. Six 8px dots at 11px centers fit inside it, centered on the label.
 _ROW_PX = 72
 _DOT_PITCH_PX = 11
@@ -349,7 +365,11 @@ _DOT_SIZE = 64
 
 
 def category_dumbbell(
-    rows: list[dict], *, category_order: list[str], model_order: list[str] | None = None
+    rows: list[dict],
+    *,
+    category_order: list[str],
+    model_order: list[str] | None = None,
+    colors: dict[str, str] | None = None,
 ) -> _Drawn:
     """Pass rate by category. Each run is a dot centered on that row's label.
 
@@ -438,7 +458,7 @@ def category_dumbbell(
                 "model:N",
                 title=None,
                 sort=models,
-                scale=alt.Scale(domain=models, range=_run_colors(models)),
+                scale=alt.Scale(domain=models, range=_series_colors(models, colors)),
                 legend=alt.Legend(orient="bottom", columns=1, labelLimit=0, labelFontSize=11),
             ),
             tooltip=[

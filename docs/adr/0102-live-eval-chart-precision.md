@@ -20,9 +20,11 @@ not recompute a Wilson interval.
 
 The five-repeat runs and the one-repeat grok runs are separate comparisons.
 Headings are "Five repeats" and "Grok 4.7 effort sweep (one repeat)".
-Five repeats is `gpt-6-luna`, `grok-4.7 · low ×5`, and `gpt-6-sol`. The
-effort sweep is `grok-4.7 · low ×1`, `grok-4.7 · medium ×1`, and
-`grok-4.7 · high ×1`. The pass-rate section draws the five-repeat chart
+Five repeats is `gpt-6-luna`, `grok-4.7 · low`, and `gpt-6-sol`. The
+effort sweep is `grok-4.7 · low`, `grok-4.7 · medium`, and
+`grok-4.7 · high`. Labels inside a set omit `×5` and `×1`. A sentence that
+names both low runs keeps the suffix so those two stay distinct. The
+pass-rate section draws the five-repeat chart
 only. The one-repeat pass-rate chart is the existing sweep, so that set is
 not drawn a second time. Category charts, case grids, cost and token tables,
 miss lists, and the gate line follow the same split.

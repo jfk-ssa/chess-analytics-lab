@@ -118,10 +118,11 @@ def _close(stored: float | None, numerator: int | float, denominator: int) -> No
         raise ValueError("public extract rate does not match its numerator and denominator")
 
 
-def _run_label(row: dict) -> str:
-    """One title format. Effort runs include the repeat count; Luna and Sol do not.
+def _run_label(row: dict, *, suffix: bool = False) -> str:
+    """Title inside one set. The set heading already states the repeat count.
 
-    ``grok-4.7 · low ×5`` and ``grok-4.7 · medium ×1`` stay distinct. No run hash.
+    ``suffix`` keeps ``×5`` or ``×1`` when one sentence names both low runs.
+    Luna and Sol have no effort suffix. No run hash.
     """
     effort = str(row.get("effort") or "")
     model = str(row["model"])
@@ -129,16 +130,19 @@ def _run_label(row: dict) -> str:
         return model
     if "repeats" not in row:
         raise ValueError(f"live eval label needs a repeat count: {model} {effort}")
-    return f"{model} · {effort} ×{int(row['repeats'])}"
+    label = f"{model} · {effort}"
+    if suffix:
+        return f"{label} ×{int(row['repeats'])}"
+    return label
 
 
 def _axis_run_label(row: dict) -> str:
-    """Two horizontal lines so an effort label stays readable without rotation."""
+    """Two horizontal lines. The repeat count stays in the set heading."""
     effort = str(row.get("effort") or "")
     model = str(row["model"])
     if effort in {"none", ""}:
         return model
-    return f"{model}\n{effort} ×{int(row['repeats'])}"
+    return f"{model}\n{effort}"
 
 
 def _show(rows: list[dict], *, alt: str, height: int | None = None) -> None:
@@ -988,6 +992,10 @@ def _render_category_chart(
                 visible,
                 category_order=order,
                 model_order=[_run_label(row) for row in runs],
+                colors={
+                    _run_label(row): charts.pinned_run_color(_run_label(row, suffix=True))
+                    for row in runs
+                },
             ),
             alt=alt,
         )
