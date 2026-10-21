@@ -28,7 +28,12 @@ common transpositions lists boards reached by at least two acyclic move
 orders, with the route count, total games, the top three orders, and a
 board from the Board control. Each card title is `After Black's move N`
 plus the leading SAN, matching the transpositions page, and sibling
-cards keep that form. Routes under 10 games are omitted. Family
+cards keep that form. The depth, the line, and the game count are
+separate rows. The line reserves two lines so the counts line up across
+a row. Each move order is a fixed count column and a SAN column, and a
+thin bar shows that order's share of the card's games. A move such as
+`4.Nxd4` stays one unit when the line wraps. Routes under 10 games are
+omitted. Family
 and date apply. Color, time control, and rating do not, and the caption
 says so. Clock drills from a band to the largest slices in that band.
 A slice is a rating, a time control, and a phase. Each section has one

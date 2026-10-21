@@ -312,7 +312,7 @@ def _assert_equal_width_markup(app) -> None:
     assert _TRACKS in markup
     assert "white-space:nowrap" in markup
     assert "overflow-wrap:anywhere" not in markup
-    assert "minmax(0,1fr)" not in markup
+    assert "auto-fit,minmax(0,1fr)" not in markup
 
 
 def _load_hosted(project, name: str):
@@ -372,23 +372,34 @@ def test_equal_width_rows_share_one_track_definition(project):
             },
             {
                 "family": "Sicilian Defense",
-                "title": "After Black's move 1 · 1.e4 c5",
-                "games": 900,
+                "title": "After Black's move 5 · 1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 a6",
+                "games": 2530,
                 "move_orders": 3,
-                "routes": [("1.e4 c5", 400)],
+                "routes": [
+                    ("1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 a6", 2253),
+                ],
             },
         ]
     )
     assert 'data-cards="2"' in board
     assert f"grid-template-columns:{_TRACKS}" in board
+    assert "grid-template-columns:8ch minmax(0,1fr)" in board
+    assert "min-height:2.9em" in board
     assert board.count('class="cal-v"') == 2
+    assert board.count('class="cal-share"') == 3
     assert board.count("white-space:nowrap") >= 4
     assert "overflow-wrap:anywhere" not in board
-    assert "1,200" in board and "1.e4 e6 2.d4 d5" in board
-    french = escape("After Black's move 2 · 1.e4 e6 2.d4 d5")
-    sicilian = escape("After Black's move 1 · 1.e4 c5")
-    assert french in board and sicilian in board
-    assert board.index(french) < board.index("1,200")
+    assert "word-break:break-all" not in board
+    assert "1,200" in board
+    for token in ("1.e4", "e6", "2.d4", "d5"):
+        assert f'white-space:nowrap">{token}<' in board
+    assert escape("After Black's move 2") in board
+    assert escape("After Black's move 5") in board
+    assert " games" in board and "2 move orders" in board
+    assert 'white-space:nowrap">4.Nxd4<' in board
+    assert "width:58.3%" in board
+    assert "width:89.1%" in board
+    assert board.index("After Black") < board.index("1,200")
 
 
 def _chart_spec(node) -> dict:
