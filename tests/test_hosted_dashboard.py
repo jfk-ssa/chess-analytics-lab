@@ -101,7 +101,14 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
     assert len(app.date_input) == 1
     assert app.date_input[0].label == "Date range"
     labels = {item.label: list(item.options) for item in app.selectbox}
-    assert set(labels) == {"Time control", "Color", "Rating band", "Opening family"}
+    assert set(labels) == {
+        "Time control",
+        "Color",
+        "Rating band",
+        "Opening family",
+        "Board",
+    }
+    assert "Top positions" in labels["Board"]
     assert labels["Color"] == ["All", "White", "Black"]
     assert "French Defense" in labels["Opening family"]
     assert "Sicilian Defense" in labels["Opening family"]
@@ -119,7 +126,12 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
         "9.3%",
         "2,132 / 22,994",
         "no prior period",
-        "needs a color",
+        "42.7%",
+        "253 / 592 · White",
+        "55.6%",
+        "329 / 592 · White",
+        "Most common transpositions",
+        "Distinct acyclic move orders",
         "rated public",
         "99,467",
         "100,000",
@@ -344,6 +356,28 @@ def test_equal_width_rows_share_one_track_definition(project):
         module.equal_width_columns(0)
     with pytest.raises(ValueError, match="at least one card"):
         module.equal_width_columns(True)
+    board = module.transposition_cards(
+        [
+            {
+                "family": "French Defense",
+                "games": 1200,
+                "move_orders": 2,
+                "routes": [("1.e4 e6 2.d4 d5", 700), ("1.d4 d5 2.e4 e6", 500)],
+            },
+            {
+                "family": "Sicilian Defense",
+                "games": 900,
+                "move_orders": 3,
+                "routes": [("1.e4 c5", 400)],
+            },
+        ]
+    )
+    assert 'data-cards="2"' in board
+    assert f"grid-template-columns:{_TRACKS}" in board
+    assert board.count('class="cal-v"') == 2
+    assert board.count("white-space:nowrap") >= 4
+    assert "overflow-wrap:anywhere" not in board
+    assert "1,200" in board and "1.e4 e6 2.d4 d5" in board
 
 
 def _chart_spec(node) -> dict:
@@ -596,10 +630,17 @@ def test_color_filter_hides_positions_and_shows_the_french_cell(project, monkeyp
     app.run()
     assert not app.exception, [item.message for item in app.exception]
     text = _visible(app)
-    assert "Positions are not published on this color, time control, or rating cut." in text
+    assert "Positions are not split by color." in text
+    assert "Move orders are not split by color." in text
+    assert "Clock pressure is not split by color or opening." in text
+    assert "Period totals are not split by color or opening." in text
     assert "239" in text
     assert "47.7%" in text
     assert "114 / 239" in text
+    assert "Opening lines by games. Select a bar to open the position." in _chart_alts(app)
+    assert "Training games by published period." in _chart_alts(app)
+    clock_alt = "Clock bands by evaluable moves. Select a bar to list the slices in that band."
+    assert clock_alt in _chart_alts(app)
     sidebar = " ".join(item.value for item in app.sidebar.caption)
     assert "Color Black" in sidebar
     assert "Opening French Defense" in sidebar
@@ -616,6 +657,18 @@ def test_opening_drill_lists_lines_and_climbs_back(project, monkeypatch):
     text = _visible(app)
     assert "Openings / Sicilian Defense" in text
     assert "Opening lines by games. Select a bar to open the position." in _chart_alts(app)
+    line = "1.e4 c5 2.Nf3 Nc6 3.d4 cxd4"
+    assert line in text
+    tables = [table for table in app.table if "Line" in list(table.value.columns)]
+    assert tables and line in set(tables[0].value["Line"])
+    line_chart = next(
+        node
+        for node in app
+        if getattr(node, "type", None) == "vega_lite_chart"
+        and "Opening lines by games" in node.proto.alt
+    )
+    encoded = json.dumps(_chart_spec(line_chart))
+    assert '"stack": null' in encoded or '"stack":null' in encoded
     backs = [item for item in app.button if item.label == "Back"]
     assert len(backs) == 1
     backs[0].click().run()

@@ -11,19 +11,21 @@ from chess_analytics.dashboard_cube import (
     RATING_BANDS,
     Drill,
     Filters,
+    _join_or,
     active_filter_text,
-    clock_bands,
+    clock_display,
     clock_slices,
     continuations,
-    explorer_cohort,
     kpis,
-    month_bars,
+    month_display,
     opening_families,
     opening_lines,
+    position_cohort,
     select_clock,
     select_family,
     select_line,
     select_position,
+    transpositions,
 )
 
 _PHASE = {"early_ply": "Early", "middle_ply": "Middle", "late_ply": "Late"}
@@ -49,6 +51,7 @@ def render(layout, charts, connection, date_bounds: tuple[date, date]) -> None:
     cards = [(item.label, item.value, item.detail) for item in kpis(connection, filters)]
     st.markdown(layout.equal_width_row(cards), unsafe_allow_html=True)
     _openings(layout, charts, connection, filters, drill)
+    _transpositions(layout, connection, filters)
     _clock(charts, connection, filters, drill)
     _months(charts, connection, filters)
 
@@ -130,27 +133,51 @@ def _openings(layout, charts, connection, filters: Filters, drill: Drill) -> Non
     del layout
     st.subheader("Openings")
     _crumb(drill)
-    if filters.color or filters.time_control or filters.rating_band:
-        st.caption("Positions are not published on this color, time control, or rating cut.")
-        return
-    cohort = explorer_cohort(connection, filters)
+    cohort, covered = position_cohort(connection, filters)
     if cohort is None:
-        st.caption("The published positions sit outside this date range.")
+        st.caption("No published positions in the cube.")
         return
     if drill.family and drill.line and not drill.fen:
-        _choose_fen(connection, filters, cohort, drill)
+        _choose_fen(connection, filters, cohort, drill, dates=covered)
     elif drill.fen and drill.family and drill.line:
-        _position(charts, connection, filters, cohort, drill)
+        _position(charts, connection, filters, cohort, drill, dates=covered)
     elif drill.family:
-        _lines(charts, connection, filters, cohort, drill)
+        _lines(charts, connection, filters, cohort, drill, dates=covered)
     else:
-        _families(charts, connection, filters, cohort)
-    pool = "Rated public" if cohort == "rated_public" else "Elite month"
-    st.caption(f"{pool}. Published positions only, not every game in the family.")
+        _families(charts, connection, filters, cohort, dates=covered)
+    st.caption(_opening_caption(filters, cohort, covered))
 
 
-def _families(charts, connection, filters: Filters, cohort: str) -> None:
-    rows = opening_families(connection, filters, cohort)[:12]
+def _opening_caption(filters: Filters, cohort: str, covered: bool) -> str:
+    ignored = _ignored_position_filters(filters)
+    if covered:
+        pool = "Rated public" if cohort == "rated_public" else "Elite month"
+        window = f"{pool}. Published positions only, not every game in the family."
+    else:
+        window = (
+            "These positions use the full published window, which is wider than this date range."
+        )
+    if not ignored:
+        return window
+    split = "Positions are not split by " + _join_or(ignored) + "."
+    if covered:
+        return split
+    return f"{window} {split}"
+
+
+def _ignored_position_filters(filters: Filters) -> list[str]:
+    ignored: list[str] = []
+    if filters.color:
+        ignored.append("color")
+    if filters.time_control:
+        ignored.append("time control")
+    if filters.rating_band:
+        ignored.append("rating")
+    return ignored
+
+
+def _families(charts, connection, filters: Filters, cohort: str, *, dates: bool) -> None:
+    rows = opening_families(connection, filters, cohort, dates=dates)[:12]
     if not rows:
         return
     event = _draw(
@@ -161,25 +188,27 @@ def _families(charts, connection, filters: Filters, cohort: str) -> None:
     _take(event, "family_pick", "label", None, _set_family)
 
 
-def _lines(charts, connection, filters: Filters, cohort: str, drill: Drill) -> None:
+def _lines(charts, connection, filters: Filters, cohort: str, drill: Drill, *, dates: bool) -> None:
     assert drill.family is not None
-    rows = opening_lines(connection, filters, cohort, drill.family)
+    rows = opening_lines(connection, filters, cohort, drill.family, dates=dates)
     if not rows:
         return
-    plotted = [
-        {"label": _short(str(row["label"])), "line": row["label"], "games": row["games"]}
-        for row in rows[:12]
-    ]
+    plotted = [{"line": row["label"], "games": row["games"]} for row in rows[:12]]
     event = _draw(
         charts.selectable_bars(
             plotted,
             name="line_pick",
             field="line",
             value_title="Games",
-            label_field="label",
         ),
         alt="Opening lines by games. Select a bar to open the position.",
         key=_key("line_bars"),
+    )
+    st.table(
+        [{"Line": str(row["label"]), "Games": f"{_count(row['games']):,}"} for row in rows[:12]],
+        hide_index=True,
+        height="content",
+        alt="Opening lines and game counts. The full move order is the line.",
     )
     chosen = _selection(event, "line_pick", "line")
     if chosen and chosen != drill.line:
@@ -190,9 +219,11 @@ def _lines(charts, connection, filters: Filters, cohort: str, drill: Drill) -> N
         _back(drill, filters)
 
 
-def _position(charts, connection, filters: Filters, cohort: str, drill: Drill) -> None:
+def _position(
+    charts, connection, filters: Filters, cohort: str, drill: Drill, *, dates: bool
+) -> None:
     assert drill.family is not None and drill.fen is not None
-    moves = continuations(connection, filters, cohort, drill.family, drill.fen)[:8]
+    moves = continuations(connection, filters, cohort, drill.family, drill.fen, dates=dates)[:8]
     _board(drill.fen)
     if moves:
         _draw(
@@ -204,9 +235,9 @@ def _position(charts, connection, filters: Filters, cohort: str, drill: Drill) -
         _back(drill, filters)
 
 
-def _choose_fen(connection, filters: Filters, cohort: str, drill: Drill) -> None:
+def _choose_fen(connection, filters: Filters, cohort: str, drill: Drill, *, dates: bool) -> None:
     assert drill.family is not None and drill.line is not None
-    rows = opening_lines(connection, filters, cohort, drill.family)
+    rows = opening_lines(connection, filters, cohort, drill.family, dates=dates)
     match = next((row for row in rows if row["label"] == drill.line), None)
     fens = _texts(None if match is None else match.get("fens"))
     if len(fens) == 1:
@@ -224,10 +255,7 @@ def _choose_fen(connection, filters: Filters, cohort: str, drill: Drill) -> None
 
 def _clock(charts, connection, filters: Filters, drill: Drill) -> None:
     st.subheader("Clock")
-    if filters.color or filters.opening_family:
-        st.caption("Clock pressure is not published by color or opening.")
-        return
-    bands = clock_bands(connection, filters)
+    bands, note, _tag = clock_display(connection, filters)
     if drill.clock_band:
         _slices(connection, filters, drill)
     elif bands:
@@ -251,10 +279,10 @@ def _clock(charts, connection, filters: Filters, drill: Drill) -> None:
             key=_key("clock_bars"),
         )
         _take(event, "clock_pick", "band", drill.clock_band, lambda value: _set_clock(drill, value))
+    if note:
+        st.caption(note)
     else:
-        st.caption("No clock slices in this date range.")
-        return
-    st.caption("Reviewed SQL. A slice is a rating, time control, and phase, not a game.")
+        st.caption("Reviewed SQL. A slice is a rating, time control, and phase, not a game.")
 
 
 def _slices(connection, filters: Filters, drill: Drill) -> None:
@@ -286,17 +314,46 @@ def _slices(connection, filters: Filters, drill: Drill) -> None:
 
 def _months(charts, connection, filters: Filters) -> None:
     st.subheader("Periods")
-    if any((filters.time_control, filters.color, filters.rating_band, filters.opening_family)):
-        st.caption("Period totals are not split by those filters.")
-        return
-    rows = month_bars(connection, filters)
+    rows, note = month_display(connection, filters)
     if rows:
         _draw(
             charts.period_bars(rows),
             alt="Training games by published period.",
             key=None,
         )
-    st.caption("Each bar is one published period. The games delta uses the previous N periods.")
+    if note:
+        st.caption(note)
+    else:
+        st.caption("Each bar is one published period. The games delta uses the previous N periods.")
+
+
+def _transpositions(layout, connection, filters: Filters) -> None:
+    st.subheader("Most common transpositions")
+    rows, note = transpositions(connection, filters)
+    if rows:
+        st.markdown(layout.transposition_cards(rows), unsafe_allow_html=True)
+        _transposition_board(rows)
+    st.caption(note)
+
+
+def _transposition_board(rows: list[dict]) -> None:
+    options = ["Top positions"] + [
+        f"{index}. {row['family']} · {int(row['games']):,}"
+        for index, row in enumerate(rows, start=1)
+    ]
+    if st.session_state.get("transpose_board") not in options:
+        st.session_state["transpose_board"] = options[0]
+    choice = st.selectbox("Board", options, key="transpose_board")
+    if choice == "Top positions":
+        return
+    row = rows[options.index(str(choice)) - 1]
+    _board(str(row["fen"]))
+    st.table(
+        [{"Move order": san, "Games": f"{games:,}"} for san, games in row["routes"]],
+        hide_index=True,
+        height="content",
+        alt="Top acyclic move orders for the selected position.",
+    )
 
 
 def _board(fen: str) -> None:

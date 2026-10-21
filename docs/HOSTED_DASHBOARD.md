@@ -11,17 +11,26 @@ and still needs the analytical warehouse.
 
 The sidebar filters are date range, time control, color, rating band,
 and opening family, with the active line and a reset. Those filters
-apply to the KPI strip, openings, clock, and periods. They do not
-change the live-eval numbers. The KPI strip is games, win rate, draw
-rate, loss rate, clock error, and published positions. Each card shows
-a delta against the previous equal count of published months when that
-window exists. Win rate and loss rate need a color, because white and
-black cells are not added.
+apply to the KPI strip, openings, transpositions, clock, and periods.
+They do not change the live-eval numbers. The KPI strip is games, win
+rate, draw rate, loss rate, clock error, and published positions. Each
+card shows a value. The games delta uses the previous equal count of
+published months when that window exists. With no color selected, win
+rate and loss rate are the White published cells (French and Sicilian,
+1400–1599, 60+0). The unfiltered draw rate stays 3,669/99,117. A filter
+the published grain cannot split is named on the card instead of
+leaving the value blank.
 
 Openings drill from a family bar to lines, then to one published FEN
-and its continuations. Clock drills from a band to the largest slices
-in that band. A slice is a rating, a time control, and a phase. Each
-section has one short caption. Provenance stays in a collapsed expander.
+and its continuations. The line chart uses the full SAN, does not stack
+bars that share a prefix, and lists the same lines in a table. Most
+common transpositions lists boards reached by at least two acyclic move
+orders, with the route count, total games, the top three orders, and a
+board from the Board control. Routes under 10 games are omitted. Family
+and date apply. Color, time control, and rating do not, and the caption
+says so. Clock drills from a band to the largest slices in that band.
+A slice is a rating, a time control, and a phase. Each section has one
+short caption. Provenance stays in a collapsed expander.
 Charts are Altair, with the `chesslab` theme (Inter and the page palette).
 
 Card rows use an inline grid,
@@ -73,6 +82,21 @@ uv run --locked --offline --no-editable --extra dashboard \
 ```
 
 The positions report is not on the tip. The script does not download it.
+The committed cube is 99,617 bytes and 6,623 rows.
+
+To append warehouse aggregates on a machine that has `warehouse.duckdb`:
+
+```sh
+uv run --locked --offline --no-editable --extra dashboard \
+  python scripts/build_warehouse_cube.py \
+  --warehouse /path/to/warehouse.duckdb
+```
+
+The command exits 2 when the file is missing. It drops cells under 10
+games, writes `game_cell`, `result_cell`, `result_line`, and `clock_cell`
+when `fact_move` is present, and refuses a file over 10 MB. This
+checkout has no warehouse, so that command was not used for the
+committed cube. The page reads those grains when they are present.
 
 Check the page without a browser:
 

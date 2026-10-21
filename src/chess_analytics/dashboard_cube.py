@@ -10,7 +10,7 @@ from __future__ import annotations
 import os
 import re
 from collections.abc import Iterable, Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -29,6 +29,15 @@ _RATING_LABEL = {
     "2000_plus": "2000+",
 }
 EXPLORER_COHORTS = ("rated_public", "elite_reference")
+MIN_CELL = 10
+WAREHOUSE_GRAINS = ("game_cell", "result_cell", "result_line", "clock_cell")
+_WIDE = (date(2000, 1, 1), date(2100, 1, 1))
+_DIM_LABEL = {
+    "time_control": "time",
+    "rating_band": "rating",
+    "opening_family": "opening",
+    "color": "color",
+}
 COLUMNS = (
     "grain",
     "cohort",
@@ -55,6 +64,8 @@ COLUMNS = (
     "proxy_errors",
     "error_proxy_rate",
     "ply",
+    "rating_diff",
+    "mean_ply",
 )
 INTEGER_COLUMNS = (
     "games",
@@ -102,7 +113,9 @@ select
   "evaluable_moves",
   "proxy_errors",
   "error_proxy_rate",
-  "ply"
+  "ply",
+  "rating_diff",
+  "mean_ply"
 from "cube"
 """.strip()
 _CREATE = """
@@ -131,7 +144,9 @@ create table "cube" (
   "evaluable_moves" bigint,
   "proxy_errors" bigint,
   "error_proxy_rate" double,
-  "ply" integer
+  "ply" integer,
+  "rating_diff" double,
+  "mean_ply" double
 )
 """.strip()
 
@@ -481,16 +496,22 @@ def previous_periods(periods: Sequence[str], selected: Sequence[str]) -> list[st
 
 
 def kpis(connection, filters: Filters) -> list[Kpi]:
-    """Six cards. A missing cross is an em dash, not a mixed population."""
+    """Cards for the current filters. A missing cross keeps the coarser figure."""
     months = _inside(connection, "corpus_month", filters, dimensional=False)
-    games = _games_kpi(connection, filters, months)
-    win, loss, draw = _result_kpis(connection, filters)
+    if _grain_present(connection, "game_cell") or _grain_present(connection, "result_cell"):
+        games = _warehouse_games_kpi(connection, filters)
+        win, loss, draw = _warehouse_result_kpis(connection, filters)
+    else:
+        games = _games_kpi(connection, filters, months)
+        win, loss, draw = _result_kpis(connection, filters)
     clock = _clock_kpi(connection, filters)
     positions = _position_kpi(connection, filters)
-    return [games, win, draw, loss, clock, positions]
+    return [games, win, draw, loss, clock, positions, *_mean_kpis(connection, filters)]
 
 
-def opening_families(connection, filters: Filters, cohort: str) -> list[dict[str, object]]:
+def opening_families(
+    connection, filters: Filters, cohort: str, *, dates: bool = True
+) -> list[dict[str, object]]:
     return _labeled(
         _inside(
             connection,
@@ -498,6 +519,8 @@ def opening_families(connection, filters: Filters, cohort: str) -> list[dict[str
             filters,
             dimensional=True,
             cohort=cohort,
+            adaptive=True,
+            dates=dates,
         ),
         "opening_family",
         "games",
@@ -505,7 +528,7 @@ def opening_families(connection, filters: Filters, cohort: str) -> list[dict[str
 
 
 def opening_lines(
-    connection, filters: Filters, cohort: str, family: str
+    connection, filters: Filters, cohort: str, family: str, *, dates: bool = True
 ) -> list[dict[str, object]]:
     rows = _inside(
         connection,
@@ -513,6 +536,8 @@ def opening_lines(
         _with_family(filters, family),
         dimensional=True,
         cohort=cohort,
+        adaptive=True,
+        dates=dates,
     )
     grouped: dict[str, dict[str, object]] = {}
     for row in rows:
@@ -528,7 +553,7 @@ def opening_lines(
 
 
 def opening_position(
-    connection, filters: Filters, cohort: str, family: str, fen: str
+    connection, filters: Filters, cohort: str, family: str, fen: str, *, dates: bool = True
 ) -> dict[str, object] | None:
     rows = [
         row
@@ -538,6 +563,8 @@ def opening_position(
             _with_family(filters, family),
             dimensional=True,
             cohort=cohort,
+            adaptive=True,
+            dates=dates,
         )
         if row["fen"] == fen
     ]
@@ -545,7 +572,7 @@ def opening_position(
 
 
 def continuations(
-    connection, filters: Filters, cohort: str, family: str, fen: str
+    connection, filters: Filters, cohort: str, family: str, fen: str, *, dates: bool = True
 ) -> list[dict[str, object]]:
     rows = [
         row
@@ -555,6 +582,8 @@ def continuations(
             _with_family(filters, family),
             dimensional=True,
             cohort=cohort,
+            adaptive=True,
+            dates=dates,
         )
         if row["fen"] == fen
     ]
@@ -563,45 +592,114 @@ def continuations(
 
 def explorer_cohort(connection, filters: Filters) -> str | None:
     """Rated public when its span is inside the range, else the elite month."""
+    cohort, covered = position_cohort(connection, filters)
+    if covered:
+        return cohort
+    return None
+
+
+def position_cohort(connection, filters: Filters) -> tuple[str | None, bool]:
+    """Explorer cohort, and whether its span sits inside the date range."""
     present = {
         str(row["cohort"])
         for row in _inside(connection, "opening_family", filters, dimensional=False)
     }
     for cohort in EXPLORER_COHORTS:
         if cohort in present:
-            return cohort
-    return None
+            return cohort, True
+    catalog = {
+        str(item[0])
+        for item in connection.execute(
+            'select distinct "cohort" from "cube" where "grain" = ?',
+            ["opening_family"],
+        ).fetchall()
+    }
+    for cohort in EXPLORER_COHORTS:
+        if cohort in catalog:
+            return cohort, False
+    return None, False
 
 
 def clock_bands(connection, filters: Filters) -> list[dict[str, object]]:
-    grouped: dict[str, list[int]] = {}
-    for row in _clock_rows(connection, filters):
-        slot = grouped.setdefault(str(row["clock_band"]), [0, 0, 0])
-        slot[0] += _num(row["moves"] or 0)
-        slot[1] += _num(row["evaluable_moves"] or 0)
-        slot[2] += _num(row["proxy_errors"] or 0)
-    bands = []
-    for band in CLOCK_BANDS:
-        if band not in grouped:
-            continue
-        moves, evaluable, errors = grouped[band]
-        bands.append(
-            {
-                "label": band,
-                "games": evaluable,
-                "moves": moves,
-                "evaluable_moves": evaluable,
-                "proxy_errors": errors,
-                "error_proxy_rate": None if evaluable == 0 else errors / evaluable,
-            }
-        )
-    return bands
+    rows, _ignored = _clock_source_rows(connection, filters)
+    return _band_rows(rows)
+
+
+def clock_display(connection, filters: Filters) -> tuple[list[dict[str, object]], str | None, str]:
+    """Bands, one section caption, and a short tag for the clock KPI."""
+    rows, fell_back = _clock_source_rows(connection, filters)
+    warehouse = _grain_present(connection, "clock_cell")
+    grain = "clock_cell" if warehouse else "clock_slice"
+    ignored = _unapplied(connection, grain, filters)
+    tag_parts = list(ignored)
+    if fell_back and "date" not in tag_parts:
+        tag_parts.append("date")
+    caption = _clock_caption(tag_parts, fell_back, bool(rows), warehouse=warehouse)
+    tag = ""
+    if tag_parts == ["date"]:
+        tag = "warehouse window" if warehouse else "August"
+    elif tag_parts:
+        tag = "not by " + ", ".join(tag_parts)
+    return _band_rows(rows), caption, tag
 
 
 def clock_slices(connection, filters: Filters, band: str) -> list[dict[str, object]]:
-    rows = [row for row in _clock_rows(connection, filters) if row["clock_band"] == band]
-    rows.sort(key=lambda item: _num(item["evaluable_moves"] or 0), reverse=True)
-    return rows
+    rows, _fell_back = _clock_source_rows(connection, filters)
+    chosen = [row for row in rows if row["clock_band"] == band]
+    chosen.sort(key=lambda item: _num(item["evaluable_moves"] or 0), reverse=True)
+    return chosen
+
+
+def month_display(connection, filters: Filters) -> tuple[list[dict[str, object]], str | None]:
+    """Period bars, plus one caption when a filter cannot split them."""
+    rows = month_bars(connection, filters)
+    notes: list[str] = []
+    if not rows:
+        rows = month_bars(connection, Filters(_WIDE[0], _WIDE[1]))
+        if rows:
+            notes.append("No published period sits fully inside this date range.")
+    ignored = [
+        label
+        for value, label in (
+            (filters.color, "color"),
+            (filters.time_control, "time control"),
+            (filters.rating_band, "rating"),
+            (filters.opening_family, "opening"),
+        )
+        if value
+    ]
+    if ignored:
+        notes.append("Period totals are not split by " + _join_or(ignored) + ".")
+    return rows, " ".join(notes) if notes else None
+
+
+def transpositions(
+    connection, filters: Filters, *, limit: int = 6
+) -> tuple[list[dict[str, object]], str]:
+    """Positions reached by at least two acyclic move orders.
+
+    ``routes`` on each row are the top three surviving orders. The caption
+    names every sidebar filter this grain cannot apply.
+    """
+    cohort, date_ok = position_cohort(connection, filters)
+    if cohort is None or not _grain_present(connection, "transposition"):
+        return [], "No published transposing positions."
+    clauses = ['"grain" = ?', '"cohort" = ?']
+    params: list[object] = ["transposition", cohort]
+    if date_ok:
+        clauses.extend(['"period_start" >= ?', '"period_end" <= ?'])
+        params.extend((filters.start, filters.end))
+    if filters.opening_family:
+        clauses.append('"opening_family" = ?')
+        params.append(filters.opening_family)
+    notes: list[str] = []
+    if not date_ok:
+        notes.append("date")
+    _apply_carried(connection, "transposition", filters, clauses, params, notes)
+    sql = _SELECT + " where " + " and ".join(clauses) + ' order by "games" desc'
+    found = _records(connection.execute(sql, params))[:limit]
+    packed = [_pack_transposition(connection, cohort, row) for row in found]
+    return packed, _transposition_caption(notes)
 
 
 def month_bars(connection, filters: Filters) -> list[dict[str, object]]:
@@ -691,91 +789,96 @@ def sql_text() -> list[str]:
         ),
         'select "period" from "cube" where "grain" = ? order by "period"',
         'select coalesce(sum("games"), 0) from "cube" where "grain" = ? and "period" in (?)',
+        _GAME_CELL_SQL,
+        _RESULT_CELL_SQL,
+        _RESULT_LINE_SQL,
+        _CLOCK_CELL_SQL,
     ]
 
 
 def _games_kpi(connection, filters: Filters, months: Sequence[Mapping[str, object]]) -> Kpi:
-    dimensional = any(
-        (filters.time_control, filters.color, filters.rating_band, filters.opening_family)
-    )
-    if not dimensional:
+    if not _dimensional(filters):
         current = sum(_num(row["games"]) for row in months)
         delta = _training_delta(connection, filters, months)
         detail = "no prior period" if delta is None else f"{delta:+,} vs prior"
         return Kpi("Games", f"{current:,}", detail)
-    scored = _color_rows(connection, filters)
-    if filters.color and scored:
-        total = sum(_num(row["games"]) for row in scored)
-        return Kpi("Games", f"{total:,}", "published cells")
-    cohort = explorer_cohort(connection, filters) if filters.opening_family else None
-    if cohort and filters.opening_family and not filters.color and not filters.time_control:
-        if filters.rating_band:
-            return Kpi("Games", "—", "no rating split")
-        matched = opening_families(connection, filters, cohort)
-        if matched:
-            total = sum(_num(row["games"]) for row in matched)
-            detail = "rated public" if cohort == "rated_public" else "elite month"
-            return Kpi("Games", f"{total:,}", detail)
-    return Kpi("Games", "—", "not in this cut")
+    if filters.color:
+        scored = _color_rows(connection, filters)
+        if scored:
+            total = sum(_num(row["games"]) for row in scored)
+            return Kpi("Games", f"{total:,}", "published cells")
+    if filters.opening_family:
+        cohort, covered = position_cohort(connection, filters)
+        if cohort:
+            matched = opening_families(connection, filters, cohort, dates=covered)
+            if matched:
+                total = sum(_num(row["games"]) for row in matched)
+                pool = "rated public" if cohort == "rated_public" else "elite month"
+                ignored = _set_labels(filters, skip_opening=True)
+                if not covered:
+                    ignored.append("date")
+                return Kpi("Games", f"{total:,}", _with_note(pool, ignored))
+    if months:
+        return Kpi("Games", f"{sum(_num(row['games']) for row in months):,}", _period_note(filters))
+    wider = _inside(connection, "corpus_month", Filters(_WIDE[0], _WIDE[1]), dimensional=False)
+    total = sum(_num(row["games"]) for row in wider)
+    return Kpi("Games", f"{total:,}", _with_note("wider window", _set_labels(filters)))
 
 
 def _result_kpis(connection, filters: Filters) -> tuple[Kpi, Kpi, Kpi]:
-    scored = _color_rows(connection, filters) if filters.color else []
-    if scored:
-        wins, draws, losses, games = _tally(scored)
-        return (
-            Kpi("Win rate", _percent(wins / games), f"{wins:,} / {games:,}"),
-            Kpi("Loss rate", _percent(losses / games), f"{losses:,} / {games:,}"),
-            Kpi("Draw rate", _percent(draws / games), f"{draws:,} / {games:,}"),
-        )
-    plain = Filters(filters.start, filters.end)
-    if filters == plain:
-        drawn = _inside(connection, "august_draw", filters, dimensional=False)
+    scores, notes = _collect(
+        connection, "color_score", filters, force_color=filters.color or "white"
+    )
+    win, loss, draw = _score_cards(scores, notes)
+    if _dimensional(filters):
+        return win, loss, draw
+    drawn = _inside(connection, "august_draw", filters, dimensional=False)
+    if not drawn:
+        drawn = _inside(connection, "august_draw", Filters(_WIDE[0], _WIDE[1]), dimensional=False)
         if drawn:
             games = _num(drawn[0]["games"])
             draws = _num(drawn[0]["draws"])
-            return (
-                Kpi("Win rate", "—", "needs a color"),
-                Kpi("Loss rate", "—", "needs a color"),
-                Kpi("Draw rate", _percent(draws / games), f"{draws:,} / {games:,}"),
-            )
-    return (
-        Kpi("Win rate", "—", "needs a color"),
-        Kpi("Loss rate", "—", "needs a color"),
-        Kpi("Draw rate", "—", "not in this cut"),
-    )
+            draw = Kpi("Draw rate", _percent(draws / games), f"{draws:,} / {games:,} · August")
+            return win, loss, draw
+    if drawn:
+        games = _num(drawn[0]["games"])
+        draws = _num(drawn[0]["draws"])
+        draw = Kpi("Draw rate", _percent(draws / games), f"{draws:,} / {games:,}")
+    return win, loss, draw
 
 
 def _clock_kpi(connection, filters: Filters) -> Kpi:
-    if filters.color or filters.opening_family:
-        return Kpi("Clock error", "—", "not by color")
-    rows = _clock_rows(connection, filters)
+    _bands, _caption, tag = clock_display(connection, filters)
+    rows, _fell_back = _clock_source_rows(connection, filters)
     evaluable = sum(_num(row["evaluable_moves"] or 0) for row in rows)
     errors = sum(_num(row["proxy_errors"] or 0) for row in rows)
     if evaluable == 0:
-        return Kpi("Clock error", "—", "no evaluable moves")
-    return Kpi("Clock error", _percent(errors / evaluable), f"{errors:,} / {evaluable:,}")
+        detail = "no evaluable moves" if not tag else f"no evaluable moves · {tag}"
+        return Kpi("Clock error", "0.0%", detail)
+    detail = f"{errors:,} / {evaluable:,}"
+    if tag:
+        detail = f"{detail} · {tag}"
+    return Kpi("Clock error", _percent(errors / evaluable), detail)
 
 
 def _position_kpi(connection, filters: Filters) -> Kpi:
-    if filters.color or filters.time_control or filters.rating_band:
-        return Kpi("Positions", "—", "not in this cut")
-    cohort = explorer_cohort(connection, filters)
+    cohort, covered = position_cohort(connection, filters)
     if cohort is None:
-        return Kpi("Positions", "—", "outside dates")
-    family = filters.opening_family
-    sql = (
-        'select count(distinct "fen") from "cube" '
-        'where "grain" = ? and "cohort" = ? '
-        'and "period_start" >= ? and "period_end" <= ?'
-    )
-    params: list[object] = ["opening_position", cohort, filters.start, filters.end]
-    if family:
+        return Kpi("Positions", "0", "no published positions")
+    sql = 'select count(distinct "fen") from "cube" where "grain" = ? and "cohort" = ?'
+    params: list[object] = ["opening_position", cohort]
+    if covered:
+        sql += ' and "period_start" >= ? and "period_end" <= ?'
+        params.extend((filters.start, filters.end))
+    if filters.opening_family:
         sql += ' and "opening_family" = ?'
-        params.append(family)
+        params.append(filters.opening_family)
     count = _num(connection.execute(sql, params).fetchone()[0])
     detail = "rated public" if cohort == "rated_public" else "elite month"
-    return Kpi("Positions", f"{count:,}", detail)
+    ignored = _set_labels(filters, skip_opening=True)
+    if not covered:
+        ignored.append("date")
+    return Kpi("Positions", f"{count:,}", _with_note(detail, ignored))
 
 
 def _training_delta(
@@ -802,12 +905,6 @@ def _training_delta(
     return current - _num(earlier[0])
 
 
-def _clock_rows(connection, filters: Filters) -> list[dict[str, object]]:
-    if filters.color or filters.opening_family:
-        return []
-    return _inside(connection, "clock_slice", filters, dimensional=True)
-
-
 def _color_rows(connection, filters: Filters) -> list[dict[str, object]]:
     return _inside(connection, "color_score", filters, dimensional=True)
 
@@ -819,19 +916,48 @@ def _inside(
     *,
     dimensional: bool,
     cohort: str | None = None,
+    adaptive: bool = False,
+    dates: bool = True,
 ) -> list[dict[str, object]]:
-    clauses = ['"period_start" >= ?', '"period_end" <= ?']
-    params: list[object] = [grain, filters.start, filters.end]
+    clauses: list[str] = []
+    params: list[object] = [grain]
+    if dates:
+        clauses.extend(['"period_start" >= ?', '"period_end" <= ?'])
+        params.extend((filters.start, filters.end))
     if cohort is not None:
         clauses.append('"cohort" = ?')
         params.append(cohort)
     if dimensional:
-        _append_dimension(clauses, params, '"time_control"', filters.time_control)
-        _append_dimension(clauses, params, '"color"', filters.color)
-        _append_rating(clauses, params, filters.rating_band)
-        _append_dimension(clauses, params, '"opening_family"', filters.opening_family)
-    sql = _SELECT + ' where "grain" = ? and ' + " and ".join(clauses)
+        _apply_dimensions(connection, grain, filters, clauses, params, adaptive=adaptive)
+    sql = _SELECT + ' where "grain" = ?'
+    if clauses:
+        sql += " and " + " and ".join(clauses)
     return _records(connection.execute(sql, params))
+
+
+def _apply_dimensions(
+    connection,
+    grain: str,
+    filters: Filters,
+    clauses: list[str],
+    params: list[object],
+    *,
+    adaptive: bool,
+) -> None:
+    for column, value in (
+        ("time_control", filters.time_control),
+        ("color", filters.color),
+        ("rating_band", filters.rating_band),
+        ("opening_family", filters.opening_family),
+    ):
+        if value is None:
+            continue
+        if adaptive and not _carries(connection, grain, column):
+            continue
+        if column == "rating_band":
+            _append_rating(clauses, params, value)
+            continue
+        _append_dimension(clauses, params, f'"{column}"', value)
 
 
 def _append_dimension(
@@ -917,6 +1043,7 @@ def _view_rows(
         )
         rows.extend(_line_rows(cohort, period, start, end, family, fen, eco, body))
         rows.extend(_continuation_rows(cohort, period, start, end, family, fen, body))
+        rows.extend(_transposition_rows(cohort, period, start, end, family, fen, eco, games, body))
     return rows
 
 
@@ -980,6 +1107,62 @@ def _continuation_rows(
     return rows
 
 
+def _transposition_rows(
+    cohort: str,
+    period: str,
+    start: date,
+    end: date,
+    family: str,
+    fen: str,
+    eco: str | None,
+    games: int,
+    body: Mapping[str, object],
+) -> list[dict[str, object]]:
+    """One summary row plus each acyclic route that clears the cell floor.
+
+    A transposing board has at least two distinct acyclic arrival prefixes.
+    The published ``routes`` list is that set. Repetition prefixes are already
+    excluded from it. Routes under ``MIN_CELL`` games are omitted, and a board
+    that then has fewer than two routes is not transposing in this cube.
+    """
+    kept = [route for route in _as_list(body.get("routes")) if _num(route["games"]) >= MIN_CELL]
+    if games < MIN_CELL or len(kept) < 2:
+        return []
+    rows = [
+        _row(
+            grain="transposition",
+            cohort=cohort,
+            period=period,
+            period_start=start,
+            period_end=end,
+            opening_family=family,
+            fen=fen,
+            eco=eco,
+            games=games,
+            ply=len(kept),
+        )
+    ]
+    for route in kept:
+        san = str(route["san"])
+        rows.append(
+            _row(
+                grain="transposition_route",
+                cohort=cohort,
+                period=period,
+                period_start=start,
+                period_end=end,
+                opening_family=family,
+                opening_line=san,
+                fen=fen,
+                eco=eco,
+                games=_num(route["games"]),
+                share=float(route["share"]),
+                ply=len(san.split()),
+            )
+        )
+    return rows
+
+
 def _dominant_eco(labels: object) -> str | None:
     if not isinstance(labels, list) or not labels:
         return None
@@ -993,6 +1176,345 @@ def _august_day(analytical: Mapping[str, object]) -> date:
     if isinstance(coverage, Mapping) and coverage.get("first_utc_date"):
         return _parse_date(coverage["first_utc_date"])
     return AUGUST_DAY
+
+
+def _dimensional(filters: Filters) -> bool:
+    return any((filters.time_control, filters.color, filters.rating_band, filters.opening_family))
+
+
+def _set_labels(filters: Filters, *, skip_opening: bool = False) -> list[str]:
+    labels: list[str] = []
+    if filters.color:
+        labels.append("color")
+    if filters.time_control:
+        labels.append("time")
+    if filters.rating_band:
+        labels.append("rating")
+    if filters.opening_family and not skip_opening:
+        labels.append("opening")
+    return labels
+
+
+def _period_note(filters: Filters) -> str:
+    return _with_note("published periods", _set_labels(filters))
+
+
+def _join_or(items: Sequence[str]) -> str:
+    if len(items) <= 1:
+        return "".join(items)
+    if len(items) == 2:
+        return f"{items[0]} or {items[1]}"
+    return ", ".join(items[:-1]) + ", or " + items[-1]
+
+
+def _with_note(base: str, ignored: Sequence[str]) -> str:
+    if not ignored:
+        return base
+    return base + " · not by " + ", ".join(ignored)
+
+
+def _score_cards(
+    scores: Sequence[Mapping[str, object]], notes: Sequence[str]
+) -> tuple[Kpi, Kpi, Kpi]:
+    if not scores:
+        empty = "no scored cells"
+        return (
+            Kpi("Win rate", "0.0%", empty),
+            Kpi("Loss rate", "0.0%", empty),
+            Kpi("Draw rate", "0.0%", empty),
+        )
+    wins, draws, losses, games = _tally(scores)
+    return (
+        Kpi("Win rate", _percent(wins / games), _score_detail(wins, games, notes)),
+        Kpi("Loss rate", _percent(losses / games), _score_detail(losses, games, notes)),
+        Kpi("Draw rate", _percent(draws / games), _score_detail(draws, games, notes)),
+    )
+
+
+def _score_detail(count: int, games: int, notes: Sequence[str]) -> str:
+    population = [item for item in notes if item == "White"]
+    ignored = [item for item in notes if item != "White"]
+    detail = f"{count:,} / {games:,}"
+    if population:
+        detail += " · White"
+    if ignored:
+        detail += " · not by " + ", ".join(ignored)
+    return detail
+
+
+def _grain_present(connection, grain: str) -> bool:
+    row = connection.execute(
+        'select count(*) from "cube" where "grain" = ?',
+        [grain],
+    ).fetchone()
+    return row is not None and _num(row[0]) > 0
+
+
+def _carries(connection, grain: str, column: str) -> bool:
+    if column not in _DIM_LABEL:
+        raise ValueError("unknown cube dimension")
+    row = connection.execute(
+        f'select count(*) from "cube" where "grain" = ? and "{column}" is not null',
+        [grain],
+    ).fetchone()
+    return row is not None and _num(row[0]) > 0
+
+
+def _unapplied(connection, grain: str, filters: Filters) -> list[str]:
+    labels: list[str] = []
+    for column, value in (
+        ("color", filters.color),
+        ("opening_family", filters.opening_family),
+        ("time_control", filters.time_control),
+        ("rating_band", filters.rating_band),
+    ):
+        if value and not _carries(connection, grain, column):
+            labels.append(_DIM_LABEL[column])
+    return labels
+
+
+def _collect(
+    connection,
+    grain: str,
+    filters: Filters,
+    *,
+    force_color: str | None = None,
+) -> tuple[list[dict[str, object]], list[str]]:
+    """Finest rows for ``grain``, then the filters that had to be dropped."""
+    notes: list[str] = []
+    color = force_color if force_color is not None else filters.color
+    if force_color is not None and filters.color is None:
+        notes.append("White")
+    active = Filters(
+        filters.start,
+        filters.end,
+        filters.time_control,
+        color,
+        filters.rating_band,
+        filters.opening_family,
+    )
+    notes.extend(_unapplied(connection, grain, active))
+
+    def pull(candidate: Filters, *, dates: bool) -> list[dict[str, object]]:
+        return _inside(connection, grain, candidate, dimensional=True, adaptive=True, dates=dates)
+
+    found = pull(active, dates=True)
+    if found:
+        return found, _unique(notes)
+    undated = pull(active, dates=False)
+    if undated:
+        notes.append("date")
+        return undated, _unique(notes)
+    for column, label in _DIM_LABEL.items():
+        if column == "color" and force_color is not None:
+            continue
+        if getattr(active, column) is None:
+            continue
+        active = replace(active, **{column: None})
+        notes.append(label)
+        found = pull(active, dates=False)
+        if found:
+            return found, _unique(notes)
+    return [], _unique(notes)
+
+
+def _unique(items: Sequence[str]) -> list[str]:
+    seen: list[str] = []
+    for item in items:
+        if item not in seen:
+            seen.append(item)
+    return seen
+
+
+def _clock_source_rows(connection, filters: Filters) -> tuple[list[dict[str, object]], bool]:
+    grain = "clock_cell" if _grain_present(connection, "clock_cell") else "clock_slice"
+    if not _grain_present(connection, grain):
+        return [], False
+    rows = _inside(connection, grain, filters, dimensional=True, adaptive=True)
+    if rows:
+        return rows, False
+    wider = _inside(
+        connection,
+        grain,
+        Filters(_WIDE[0], _WIDE[1], filters.time_control, None, filters.rating_band, None),
+        dimensional=True,
+        adaptive=True,
+        dates=False,
+    )
+    if wider:
+        return wider, True
+    plain = _inside(connection, grain, Filters(_WIDE[0], _WIDE[1]), dimensional=False, dates=False)
+    return plain, bool(plain)
+
+
+def _band_rows(rows: Sequence[Mapping[str, object]]) -> list[dict[str, object]]:
+    grouped: dict[str, list[int]] = {}
+    for row in rows:
+        slot = grouped.setdefault(str(row["clock_band"]), [0, 0, 0])
+        slot[0] += _num(row["moves"] or 0)
+        slot[1] += _num(row["evaluable_moves"] or 0)
+        slot[2] += _num(row["proxy_errors"] or 0)
+    bands = []
+    for band in CLOCK_BANDS:
+        if band not in grouped:
+            continue
+        moves, evaluable, errors = grouped[band]
+        bands.append(
+            {
+                "label": band,
+                "games": evaluable,
+                "moves": moves,
+                "evaluable_moves": evaluable,
+                "proxy_errors": errors,
+                "error_proxy_rate": None if evaluable == 0 else errors / evaluable,
+            }
+        )
+    return bands
+
+
+def _clock_caption(
+    parts: Sequence[str], fell_back: bool, has_rows: bool, *, warehouse: bool = False
+) -> str | None:
+    if not parts and not fell_back:
+        return None
+    if not has_rows:
+        return "No clock slices are published for this cut."
+    ignored = [item for item in parts if item != "date"]
+    window = "the warehouse window" if warehouse else "the August prefix"
+    if fell_back and ignored:
+        return "Clock pressure is " + window + " and is not split by " + _join_or(ignored) + "."
+    if fell_back:
+        return "These slices are " + window + "."
+    if ignored:
+        return "Clock pressure is not split by " + _join_or(ignored) + "."
+    return None
+
+
+def _apply_carried(
+    connection,
+    grain: str,
+    filters: Filters,
+    clauses: list[str],
+    params: list[object],
+    notes: list[str],
+) -> None:
+    for column, value, label in (
+        ("color", filters.color, "color"),
+        ("time_control", filters.time_control, "time control"),
+        ("rating_band", filters.rating_band, "rating"),
+    ):
+        if not value:
+            continue
+        if not _carries(connection, grain, column):
+            notes.append(label)
+            continue
+        if column == "rating_band":
+            _append_rating(clauses, params, value)
+        else:
+            _append_dimension(clauses, params, f'"{column}"', value)
+
+
+def _transposition_caption(notes: Sequence[str]) -> str:
+    if not notes:
+        return "Distinct acyclic move orders. Routes under 10 games are omitted."
+    ignored = [item for item in notes if item != "date"]
+    if "date" in notes and ignored:
+        return (
+            "Move orders use the full published window. They are not split by "
+            + _join_or(ignored)
+            + "."
+        )
+    if "date" in notes:
+        return "Move orders use the full published window, which is wider than this date range."
+    return "Move orders are not split by " + _join_or(ignored) + "."
+
+
+def _pack_transposition(connection, cohort: str, row: Mapping[str, object]) -> dict[str, object]:
+    fen = str(row["fen"])
+    family = str(row["opening_family"])
+    routes = connection.execute(
+        'select "opening_line", "games" from "cube" '
+        'where "grain" = ? and "cohort" = ? and "fen" = ? and "opening_family" = ? '
+        'order by "games" desc',
+        ["transposition_route", cohort, fen, family],
+    ).fetchall()
+    top = [(str(san), _num(games)) for san, games in routes[:3]]
+    return {
+        "fen": fen,
+        "family": family,
+        "games": _num(row["games"]),
+        "move_orders": _num(row["ply"]),
+        "routes": top,
+        "eco": row.get("eco"),
+    }
+
+
+def _warehouse_games_kpi(connection, filters: Filters) -> Kpi:
+    grain = "result_cell" if filters.color or filters.rating_band else "game_cell"
+    if not _grain_present(connection, grain):
+        grain = "game_cell" if _grain_present(connection, "game_cell") else "result_cell"
+    rows, notes = _collect(connection, grain, filters)
+    total = sum(_num(row["games"]) for row in rows)
+    if not notes and not _dimensional(filters):
+        return Kpi("Games", f"{total:,}", "warehouse")
+    ignored = [item for item in notes if item != "White"]
+    detail = "warehouse" if not ignored else _with_note("warehouse", ignored)
+    return Kpi("Games", f"{total:,}", detail)
+
+
+def _warehouse_result_kpis(connection, filters: Filters) -> tuple[Kpi, Kpi, Kpi]:
+    rows, notes = _collect(connection, "result_cell", filters, force_color=filters.color or "white")
+    return _score_cards(rows, notes)
+
+
+def _mean_kpis(connection, filters: Filters) -> list[Kpi]:
+    cards: list[Kpi] = []
+    if _grain_present(connection, "result_cell"):
+        rows, notes = _collect(
+            connection, "result_cell", filters, force_color=filters.color or "white"
+        )
+        diff = _weighted_mean(rows, "rating_diff")
+        if diff is not None:
+            cards.append(Kpi("Rating diff", _signed(diff), _mean_detail(notes)))
+        length = _weighted_mean(rows, "mean_ply")
+        use_player_length = bool(filters.color or filters.rating_band)
+        if not _grain_present(connection, "game_cell"):
+            use_player_length = True
+        if length is not None and use_player_length:
+            cards.append(Kpi("Game length", _tenth(length), _mean_detail(notes, "mean ply")))
+    if _grain_present(connection, "game_cell") and not any(
+        card.label == "Game length" for card in cards
+    ):
+        rows, notes = _collect(connection, "game_cell", filters)
+        length = _weighted_mean(rows, "mean_ply")
+        if length is not None:
+            cards.append(Kpi("Game length", _tenth(length), _mean_detail(notes, "mean ply")))
+    return cards
+
+
+def _mean_detail(notes: Sequence[str], suffix: str = "mean") -> str:
+    ignored = [item for item in notes if item != "White"]
+    population = "White" if "White" in notes else ""
+    parts = [part for part in (population, suffix) if part]
+    detail = " · ".join(parts) if parts else suffix
+    if ignored:
+        detail += " · not by " + ", ".join(ignored)
+    return detail
+
+
+def _weighted_mean(rows: Sequence[Mapping[str, object]], field: str) -> float | None:
+    total = 0
+    acc = 0.0
+    for row in rows:
+        games = _num(row["games"] or 0)
+        value = row.get(field)
+        if isinstance(value, bool) or not isinstance(value, int | float | str) or games == 0:
+            continue
+        acc += float(value) * games
+        total += games
+    if total == 0:
+        return None
+    return acc / total
 
 
 def _num(value: object) -> int:
@@ -1051,6 +1573,20 @@ def _percent(value: float) -> str:
     return f"{shown}%"
 
 
+def _tenth(value: float) -> str:
+    from decimal import ROUND_HALF_UP, Decimal
+
+    shown = Decimal(repr(value)).quantize(Decimal("0.1"), rounding=ROUND_HALF_UP)
+    return f"{shown}"
+
+
+def _signed(value: float) -> str:
+    text = _tenth(value)
+    if text.startswith("-"):
+        return text
+    return f"+{text}"
+
+
 def _cube_candidates() -> Iterable[Path]:
     yield Path.cwd() / "data" / "public" / CUBE_FILENAME
     for directory in (Path.cwd(), *Path.cwd().parents):
@@ -1059,6 +1595,284 @@ def _cube_candidates() -> Iterable[Path]:
         if project.is_file() and package.is_dir():
             yield directory / "data" / "public" / CUBE_FILENAME
             break
+
+
+_GAME_CELL_SQL = """
+select
+  printf(
+    '%04d-%02d',
+    extract(year from date_trunc('month', "utc_date")),
+    extract(month from date_trunc('month', "utc_date"))
+  ) as "period",
+  cast(date_trunc('month', "utc_date") as date) as "period_start",
+  cast(
+    date_trunc('month', "utc_date") + interval '1 month' - interval '1 day' as date
+  ) as "period_end",
+  "time_control",
+  nullif(trim(split_part(coalesce("source_opening", ''), ':', 1)), '') as "opening_family",
+  count(*) as "games",
+  avg("ply_count") as "mean_ply"
+from "fact_game"
+where "result" in ('1-0', '0-1', '1/2-1/2')
+  and "marked_bot" = false
+  and lower("variant") = 'standard'
+group by 1, 2, 3, 4, 5
+having count(*) >= 10
+""".strip()
+_RESULT_CELL_SQL = """
+select
+  printf(
+    '%04d-%02d',
+    extract(year from date_trunc('month', g."utc_date")),
+    extract(month from date_trunc('month', g."utc_date"))
+  ) as "period",
+  cast(date_trunc('month', g."utc_date") as date) as "period_start",
+  cast(
+    date_trunc('month', g."utc_date") + interval '1 month' - interval '1 day' as date
+  ) as "period_end",
+  g."time_control",
+  p."color",
+  case
+    when p."rating" < 1200 then 'under_1200'
+    when p."rating" < 1600 then '1200_1599'
+    when p."rating" < 2000 then '1600_1999'
+    else '2000_plus'
+  end as "rating_band",
+  nullif(trim(split_part(coalesce(g."source_opening", ''), ':', 1)), '') as "opening_family",
+  count(*) as "games",
+  count(*) filter (where p."score" = 1) as "wins",
+  count(*) filter (where p."score" = 0.5) as "draws",
+  count(*) filter (where p."score" = 0) as "losses",
+  avg(p."rating" - p."opponent_rating") as "rating_diff",
+  avg(g."ply_count") as "mean_ply"
+from "fact_player_game" as p
+join "fact_game" as g using ("provider", "game_id")
+where g."result" in ('1-0', '0-1', '1/2-1/2')
+  and g."marked_bot" = false
+  and p."rating" is not null
+  and p."opponent_rating" is not null
+group by 1, 2, 3, 4, 5, 6, 7
+having count(*) >= 10
+""".strip()
+_RESULT_LINE_SQL = """
+select
+  printf(
+    '%04d-%02d',
+    extract(year from date_trunc('month', g."utc_date")),
+    extract(month from date_trunc('month', g."utc_date"))
+  ) as "period",
+  cast(date_trunc('month', g."utc_date") as date) as "period_start",
+  cast(
+    date_trunc('month', g."utc_date") + interval '1 month' - interval '1 day' as date
+  ) as "period_end",
+  g."time_control",
+  p."color",
+  case
+    when p."rating" < 1200 then 'under_1200'
+    when p."rating" < 1600 then '1200_1599'
+    when p."rating" < 2000 then '1600_1999'
+    else '2000_plus'
+  end as "rating_band",
+  nullif(trim(split_part(coalesce(g."source_opening", ''), ':', 1)), '') as "opening_family",
+  nullif(trim(g."source_opening"), '') as "opening_line",
+  count(*) as "games",
+  count(*) filter (where p."score" = 1) as "wins",
+  count(*) filter (where p."score" = 0.5) as "draws",
+  count(*) filter (where p."score" = 0) as "losses",
+  avg(p."rating" - p."opponent_rating") as "rating_diff",
+  avg(g."ply_count") as "mean_ply"
+from "fact_player_game" as p
+join "fact_game" as g using ("provider", "game_id")
+where g."result" in ('1-0', '0-1', '1/2-1/2')
+  and g."marked_bot" = false
+  and p."rating" is not null
+  and p."opponent_rating" is not null
+  and nullif(trim(g."source_opening"), '') is not null
+group by 1, 2, 3, 4, 5, 6, 7, 8
+having count(*) >= 10
+""".strip()
+_CLOCK_CELL_SQL = """
+select
+  m."clock_bucket" as "clock_band",
+  g."time_control",
+  m."phase_proxy" as "phase",
+  case
+    when p."rating" < 1200 then 'under_1200'
+    when p."rating" < 1600 then '1200_1599'
+    when p."rating" < 2000 then '1600_1999'
+    else '2000_plus'
+  end as "rating_band",
+  p."color",
+  nullif(trim(split_part(coalesce(g."source_opening", ''), ':', 1)), '') as "opening_family",
+  min(g."utc_date") as "period_start",
+  max(g."utc_date") as "period_end",
+  count(*) as "moves",
+  count(*) filter (where m."centipawn_deterioration" is not null) as "evaluable_moves",
+  count(*) filter (where m."error_proxy") as "proxy_errors",
+  count(distinct m."game_id") as "games"
+from "fact_move" as m
+join "fact_game" as g using ("provider", "game_id")
+join "fact_player_game" as p
+  on p."provider" = m."provider" and p."game_id" = m."game_id" and p."color" = m."color"
+where m."clock_bucket" is not null
+  and g."increment_seconds" = 0
+  and g."result" in ('1-0', '0-1', '1/2-1/2')
+  and g."marked_bot" = false
+  and p."rating" is not null
+group by 1, 2, 3, 4, 5, 6
+having count(distinct m."game_id") >= 10
+""".strip()
+
+
+def warehouse_rows(connection) -> list[dict[str, object]]:
+    """Aggregate a local warehouse. Cells under 10 games are dropped.
+
+    The connection is a DuckDB database with ``fact_game`` and
+    ``fact_player_game``. ``fact_move`` adds clock cells when it is present.
+    Identifiers stay in the warehouse; this function does not select them.
+    """
+    tables = _table_names(connection)
+    if "fact_game" not in tables or "fact_player_game" not in tables:
+        raise ValueError("warehouse is missing fact_game or fact_player_game")
+    rows: list[dict[str, object]] = []
+    rows.extend(_game_cells(connection))
+    rows.extend(_result_cells(connection, "result_cell", _RESULT_CELL_SQL, line=False))
+    rows.extend(_result_cells(connection, "result_line", _RESULT_LINE_SQL, line=True))
+    if "fact_move" in tables and _clock_columns_ready(connection):
+        rows.extend(_clock_cells(connection))
+    issues = public_issues(rows)
+    if issues:
+        raise ValueError(f"warehouse cube failed the public check: {issues[0]}")
+    return rows
+
+
+def locate_warehouse(explicit: Path | None = None, root: Path | None = None) -> Path | None:
+    """Find ``warehouse.duckdb``. Missing files return None. No download."""
+    if explicit is not None:
+        candidate = Path(explicit)
+        return candidate if candidate.is_file() else None
+    override = os.environ.get("CHESSLAB_WAREHOUSE")
+    if override and Path(override).is_file():
+        return Path(override)
+    base = Path(root) if root is not None else Path.cwd()
+    named = (
+        base / "data" / "warehouse.duckdb",
+        base / "warehouse.duckdb",
+    )
+    for path in named:
+        if path.is_file():
+            return path
+    published = sorted((base / "data" / "published").glob("*/warehouse.duckdb"))
+    if published:
+        return published[-1]
+    return None
+
+
+def _table_names(connection) -> set[str]:
+    found = connection.execute(
+        "select table_name from information_schema.tables where table_schema = 'main'"
+    ).fetchall()
+    return {str(item[0]) for item in found}
+
+
+def _clock_columns_ready(connection) -> bool:
+    found = connection.execute(
+        "select column_name from information_schema.columns where table_name = 'fact_move'"
+    ).fetchall()
+    columns = {str(item[0]) for item in found}
+    required = {
+        "clock_bucket",
+        "phase_proxy",
+        "provider",
+        "game_id",
+        "color",
+        "centipawn_deterioration",
+        "error_proxy",
+    }
+    return required <= columns
+
+
+def _game_cells(connection) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for period, start, end, control, family, games, mean_ply in connection.execute(
+        _GAME_CELL_SQL
+    ).fetchall():
+        rows.append(
+            _row(
+                grain="game_cell",
+                cohort="warehouse",
+                period=str(period),
+                period_start=start,
+                period_end=end,
+                time_control=None if control is None else str(control),
+                opening_family=None if family is None else str(family),
+                games=_num(games),
+                mean_ply=None if mean_ply is None else float(mean_ply),
+            )
+        )
+    return rows
+
+
+def _result_cells(connection, grain: str, sql: str, *, line: bool) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for record in connection.execute(sql).fetchall():
+        period, start, end, control, color, rating, family = record[:7]
+        if line:
+            opening_line = record[7]
+            games, wins, draws, losses, rating_diff, mean_ply = record[8:]
+        else:
+            opening_line = None
+            games, wins, draws, losses, rating_diff, mean_ply = record[7:]
+        rows.append(
+            _row(
+                grain=grain,
+                cohort="warehouse",
+                period=str(period),
+                period_start=start,
+                period_end=end,
+                time_control=None if control is None else str(control),
+                color=None if color is None else str(color),
+                rating_band=None if rating is None else str(rating),
+                opening_family=None if family is None else str(family),
+                opening_line=None if opening_line is None else str(opening_line),
+                games=_num(games),
+                wins=_num(wins),
+                draws=_num(draws),
+                losses=_num(losses),
+                rating_diff=None if rating_diff is None else float(rating_diff),
+                mean_ply=None if mean_ply is None else float(mean_ply),
+            )
+        )
+    return rows
+
+
+def _clock_cells(connection) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for record in connection.execute(_CLOCK_CELL_SQL).fetchall():
+        band, control, phase, rating, color, family, start, end = record[:8]
+        moves, evaluable, errors, games = record[8:]
+        rate = None if _num(evaluable) == 0 else _num(errors) / _num(evaluable)
+        rows.append(
+            _row(
+                grain="clock_cell",
+                cohort="warehouse",
+                period=_span_label(start, end),
+                period_start=start,
+                period_end=end,
+                time_control=None if control is None else str(control),
+                color=None if color is None else str(color),
+                rating_band=None if rating is None else str(rating),
+                opening_family=None if family is None else str(family),
+                clock_band=str(band),
+                phase=None if phase is None else str(phase),
+                moves=_num(moves),
+                evaluable_moves=_num(evaluable),
+                proxy_errors=_num(errors),
+                error_proxy_rate=rate,
+                games=_num(games),
+            )
+        )
+    return rows
 
 
 def shift_back(start: date, end: date) -> tuple[date, date]:

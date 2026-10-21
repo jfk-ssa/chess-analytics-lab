@@ -27,12 +27,14 @@ download. The hosted page queries that file with DuckDB 1.5.6 and does
 not open a warehouse. The JSON extract stays. Live eval still reads it.
 `src/chess_analytics/analyst/` is unchanged.
 
-The measured file is 87,861 bytes and 5,037 rows, under the 10 MB
+The measured file is 99,617 bytes and 6,623 rows, under the 10 MB
 budget. Every row uses one column set. The grain column is one of
 `corpus_month` (10), `opening_family` (275), `opening_line` (1,416),
 `opening_position` (508), `opening_continuation` (2,410),
-`august_family` (138), `color_score` (4), `august_draw` (1), and
-`clock_slice` (275).
+`august_family` (138), `color_score` (4), `august_draw` (1),
+`clock_slice` (275), `transposition` (422), and `transposition_route`
+(1,164). Two doubles, `rating_diff` and `mean_ply`, are null on these
+published rows. They are filled by the warehouse grains below.
 
 The natural grain is coarser than a game, a day, or a full cross of
 opening, clock, rating, and color:
@@ -46,19 +48,44 @@ opening, clock, rating, and color:
 - Opening positions are the published top positions, not every game in
   a family. The explorer uses `rated_public` when that span sits inside
   the date range, and otherwise `elite_reference` when the range is
-  inside November 2025. A color, time-control, or rating filter hides
-  the explorer, because those positions are not split that way.
-- White and black color cells are not added. Win rate and loss rate
-  appear only when a color is selected. The 1,400–1,599 cell is the
-  published subset of the 1,200–1,599 band.
-- August draw rate and clock slices appear only when 2026-08-01 sits
-  inside the date range. They are not split by opening family.
+  inside November 2025. Color, time control, and rating are not on
+  those rows. The section stays visible and says so. The same rule
+  covers clock and periods: a filter that the grain cannot apply does
+  not hide the section.
+- A transposing board has at least two distinct acyclic arrival
+  prefixes, the definition in
+  [TRANSPOSITIONS.md](../TRANSPOSITIONS.md). The published `routes`
+  list is that set. Routes under 10 games are omitted. Each surviving
+  board is one `transposition` row (games, and `ply` as the route
+  count) plus one `transposition_route` row per move order. The page
+  shows the top boards, the route count, total games, the top three
+  orders, and a board from the Board control. Family and date apply.
+  Color, time control, and rating do not, unless a later warehouse
+  build fills those columns.
+- White and black color cells are not added. With no color selected,
+  win rate and loss rate use the White published cells (French and
+  Sicilian, 1,400–1,599, 60+0): 253/592 and 329/592. The unfiltered
+  draw rate stays the August eligible-game figure, 3,669/99,117. The
+  1,400–1,599 cell is the published subset of the 1,200–1,599 band.
+- August draw rate and clock slices are the August prefix. When the
+  date range does not contain that day, the card still shows the
+  figure and says so. They are not split by opening family or color.
+
+`scripts/build_warehouse_cube.py` aggregates a local `warehouse.duckdb`
+into `game_cell`, `result_cell`, `result_line`, and, when `fact_move`
+has the clock columns, `clock_cell`. Cells under 10 games are dropped.
+The script does not download and does not select identifiers. This
+environment has no warehouse, so the committed file was not rebuilt
+from it. The hosted page uses those grains when they are present, so
+month, time control, rating band, color, and opening family then change
+the same cards. Expected size stays under the 10 MB budget; the write
+fails closed above it.
 
 Sidebar filters are the date range, time control, color, rating band,
 and opening family. A row is included when its period is fully inside
 the date range. The same filters apply to the KPI strip, openings,
-clock, and periods. Live-eval numbers are not filtered. A reset
-restores the full published range and clears the drill.
+clock, periods, and transpositions. Live-eval numbers are not
+filtered. A reset restores the full published range and clears the drill.
 
 Drill state is family, line, position, and clock band. A family bar
 sets the opening filter and lists lines. A line with one position opens
@@ -79,3 +106,14 @@ committed source changes. The positions file is an explicit `--positions`
 path because that report is not on the tip. A missing cube fails closed
 with "Dashboard cube unavailable". The JSON extract remains the
 live-eval source and keeps its 256 KiB budget.
+
+On a machine that has the warehouse:
+
+```sh
+uv run --locked --offline --no-editable --extra dashboard \
+  python scripts/build_warehouse_cube.py \
+  --warehouse /path/to/warehouse.duckdb
+```
+
+The population in that file is the snapshot the path points at. It is
+not automatically the 1,042,346 training games.

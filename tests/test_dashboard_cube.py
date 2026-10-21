@@ -7,6 +7,7 @@ import pytest
 
 from chess_analytics.dashboard_cube import (
     CUBE_FILENAME,
+    MIN_CELL,
     SIZE_BUDGET_BYTES,
     Drill,
     Filters,
@@ -18,6 +19,7 @@ from chess_analytics.dashboard_cube import (
     cube_path,
     explorer_cohort,
     kpis,
+    locate_warehouse,
     opening_lines,
     previous_periods,
     public_issues,
@@ -26,6 +28,8 @@ from chess_analytics.dashboard_cube import (
     select_line,
     select_position,
     sql_text,
+    transpositions,
+    warehouse_rows,
     write_cube,
 )
 
@@ -169,7 +173,8 @@ def test_filter_and_query_respect_unpublished_crosses(tmp_path: Path) -> None:
     black = Filters(wide.start, wide.end, None, "black", None, "French Defense")
     assert explorer_cohort(connection, black) == "rated_public"
     assert kpis(connection, black)[0].value == "2"
-    assert kpis(connection, black)[5].value == "—"
+    assert kpis(connection, black)[5].value == "1"
+    assert "not by color" in kpis(connection, black)[5].detail
     rated_only = Filters(date(2025, 12, 1), date(2026, 1, 1))
     bands = clock_slices(connection, wide, "under_10")
     assert len(bands) == 1
@@ -221,6 +226,10 @@ def test_committed_cube_matches_the_published_totals() -> None:
     cards = {item.label: item for item in kpis(connection, wide)}
     assert cards["Games"].value == "1,042,346"
     assert cards["Games"].detail == "no prior period"
+    assert cards["Win rate"].value == "42.7%"
+    assert cards["Win rate"].detail == "253 / 592 · White"
+    assert cards["Loss rate"].value == "55.6%"
+    assert cards["Loss rate"].detail == "329 / 592 · White"
     assert cards["Draw rate"].value == "3.7%"
     assert cards["Draw rate"].detail == "3,669 / 99,117"
     assert cards["Clock error"].detail == "2,132 / 22,994"
@@ -233,8 +242,149 @@ def test_committed_cube_matches_the_published_totals() -> None:
     french_cards = kpis(connection, french)
     assert french_cards[0].value == "239"
     assert french_cards[1].detail == "114 / 239"
+    assert french_cards[4].value == "9.3%"
+    assert "not by" in french_cards[4].detail
+    assert french_cards[5].value == "21"
+    november = Filters(date(2025, 11, 1), date(2025, 11, 30))
+    november_cards = {item.label: item for item in kpis(connection, november)}
+    assert november_cards["Clock error"].value == "9.3%"
+    assert november_cards["Draw rate"].value == "3.7%"
+    assert november_cards["Win rate"].value != "—"
+    routes = connection.execute(
+        'select count(*) from "cube" where "grain" = ? and "games" < ?',
+        ["transposition_route", MIN_CELL],
+    ).fetchone()
+    assert routes is not None and int(routes[0]) == 0
+    short = connection.execute(
+        'select count(*) from "cube" where "grain" = ? and "ply" < 2',
+        ["transposition"],
+    ).fetchone()
+    assert short is not None and int(short[0]) == 0
+    boards, caption = transpositions(connection, wide)
+    assert boards and caption.startswith("Distinct acyclic")
+    assert all(item["move_orders"] >= 2 and len(item["routes"]) <= 3 for item in boards)
+    sicilian = Filters(wide.start, wide.end, None, None, None, "Sicilian Defense")
+    sicilian_boards, sicilian_caption = transpositions(connection, sicilian)
+    assert sicilian_boards
+    assert all(item["family"] == "Sicilian Defense" for item in sicilian_boards)
+    assert "not split" not in sicilian_caption
+    colored = Filters(wide.start, wide.end, None, "black", None, "Sicilian Defense")
+    colored_boards, colored_caption = transpositions(connection, colored)
+    assert colored_boards[0]["fen"] == sicilian_boards[0]["fen"]
+    assert "color" in colored_caption
     line = opening_lines(connection, wide, "rated_public", "Sicilian Defense")[0]
     assert line["label"] == "1.e4 c5 2.Nf3 Nc6 3.d4 cxd4"
     assert "r1bqkbnr/pp1ppppp/2n5/8/3pP3/5N2/PPP2PPP/RNBQKB1R w KQkq -" in line["fens"]
     issues = connection.execute('select count(*) from "cube"').fetchone()
     assert issues is not None and int(issues[0]) > 0
+
+
+def test_transposition_rows_drop_routes_under_ten_games(tmp_path: Path) -> None:
+    corpus, positions, reference, figures, analytical = _sources()
+    fen = "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq -"
+    positions["cohorts"]["rated_public"]["views"]["French Defense"]["positions"]["p2"] = {
+        "position_key": fen,
+        "games": 40,
+        "opening_labels": [{"eco": "C00", "games": 40}],
+        "routes": [
+            {"san": "1.e4 e6 2.d4 d5", "games": 12, "share": 0.3},
+            {"san": "1.e4 e6 2.d4", "games": 11, "share": 0.27},
+            {"san": "1.e4 e6", "games": 4, "share": 0.1},
+        ],
+        "continuations": [],
+    }
+    rows = build_rows(corpus, positions, reference, figures, analytical)
+    summary = [row for row in rows if row["grain"] == "transposition"]
+    routes = [row for row in rows if row["grain"] == "transposition_route"]
+    assert len(summary) == 1
+    assert summary[0]["games"] == 40
+    assert summary[0]["ply"] == 2
+    assert summary[0]["fen"] == fen
+    assert sorted(row["games"] for row in routes) == [11, 12]
+    assert public_issues(rows) == []
+    path = tmp_path / CUBE_FILENAME
+    write_cube(rows, path)
+    connection = connect(path)
+    found, caption = transpositions(
+        connection, Filters(date(2025, 11, 1), date(2026, 8, 1), None, "white")
+    )
+    assert len(found) == 1
+    assert found[0]["move_orders"] == 2
+    assert [item[0] for item in found[0]["routes"]] == ["1.e4 e6 2.d4 d5", "1.e4 e6 2.d4"]
+    assert "color" in caption
+
+
+def test_warehouse_rows_suppress_cells_under_ten_games(tmp_path: Path) -> None:
+    import duckdb
+
+    path = tmp_path / "warehouse.duckdb"
+    connection = duckdb.connect(str(path))
+    connection.execute(
+        """
+        create table fact_game (
+          provider varchar, game_id varchar, result varchar, variant varchar,
+          utc_date date, time_control varchar, source_opening varchar,
+          marked_bot boolean, ply_count bigint, increment_seconds bigint
+        )
+        """
+    )
+    connection.execute(
+        """
+        create table fact_player_game (
+          provider varchar, game_id varchar, color varchar, player_key varchar,
+          rating bigint, opponent_rating bigint, score double
+        )
+        """
+    )
+    for index in range(12):
+        _insert_game(connection, index, "French Defense: Advance", 40, 1.0)
+    for index in range(12, 22):
+        _insert_game(connection, index, "Sicilian Defense", 30, 0.0)
+    for index in range(22, 31):
+        _insert_game(connection, index, "Caro-Kann Defense", 20, 0.5)
+    rows = warehouse_rows(connection)
+    connection.close()
+    assert public_issues(rows) == []
+    blob = " ".join(str(value) for row in rows for value in row.values())
+    assert "player_key" not in blob
+    assert "secret-user" not in blob
+    families = {row["opening_family"] for row in rows if row["grain"] == "game_cell"}
+    assert families == {"French Defense", "Sicilian Defense"}
+    french = next(row for row in rows if row["grain"] == "result_cell" and row["games"] == 12)
+    assert french["wins"] == 12
+    assert french["rating_diff"] == 100
+    assert french["mean_ply"] == 40
+    assert locate_warehouse(path) == path
+    assert locate_warehouse(tmp_path / "missing.duckdb") is None
+    cube = tmp_path / CUBE_FILENAME
+    write_cube(rows, cube)
+    shown = kpis(connect(cube), Filters(date(2026, 8, 1), date(2026, 8, 31)))
+    cards = {item.label: item for item in shown}
+    assert cards["Games"].value == "22"
+    assert cards["Win rate"].detail == "12 / 22 · White"
+    assert cards["Rating diff"].value == "+100.0"
+    assert cards["Game length"].value == "35.5"
+
+
+def _insert_game(connection, index: int, opening: str, ply: int, score: float) -> None:
+    game_id = f"{index:08d}"
+    connection.execute(
+        "insert into fact_game values (?, ?, '1-0', 'Standard', DATE '2026-08-01', "
+        "'60+0', ?, false, ?, 0)",
+        ["lichess", game_id, opening, ply],
+    )
+    connection.execute(
+        "insert into fact_player_game values (?, ?, 'white', 'secret-user', 1500, 1400, ?)",
+        ["lichess", game_id, score],
+    )
+
+
+def test_warehouse_script_exits_when_the_file_is_missing(tmp_path: Path) -> None:
+    import importlib.util
+
+    script = ROOT / "scripts" / "build_warehouse_cube.py"
+    spec = importlib.util.spec_from_file_location("build_warehouse_cube", script)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    assert module.main(["--warehouse", str(tmp_path / "missing.duckdb")]) == 2

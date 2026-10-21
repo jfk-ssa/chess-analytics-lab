@@ -415,12 +415,17 @@ def selectable_bars(
                 f"{shown}:N",
                 sort="-x",
                 title=None,
-                axis=alt.Axis(labelLimit=160, labelFont="Inter"),
+                axis=alt.Axis(labelLimit=480, labelFont="Inter", labelOverlap=False),
             ),
-            x=alt.X("games:Q", title=value_title, axis=alt.Axis(labelFont="Inter")),
+            x=alt.X(
+                "games:Q",
+                title=value_title,
+                stack=None,
+                axis=alt.Axis(labelFont="Inter"),
+            ),
             opacity=alt.condition(pick, alt.value(1), alt.value(0.4)),
             tooltip=[
-                alt.Tooltip(f"{field}:N", title=""),
+                alt.Tooltip(f"{field}:N", title="Line" if field == "line" else shown),
                 alt.Tooltip("games:Q", title=value_title, format=","),
             ],
         )
