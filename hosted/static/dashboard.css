@@ -1,4 +1,11 @@
-/* Hosted dashboard. Inter is the theme font; these rules only tune the cards. */
+/* Hosted dashboard. Inter is the theme font. Cards keep their own widths.
+   A content-width chart, such as the case grid, scrolls inside its block
+   instead of widening the page. */
+
+[data-testid="stElementContainer"]:has([data-testid="stVegaLiteChart"]) {
+  max-width: 100%;
+  overflow-x: auto;
+}
 
 .cal-equal {
   font-family: Inter, sans-serif;

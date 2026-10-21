@@ -114,9 +114,26 @@ def _close(stored: float | None, numerator: int | float, denominator: int) -> No
 
 
 def _run_label(row: dict) -> str:
-    if row["effort"] in {"none", ""}:
-        return row["model"]
-    return f"{row['model']} · {row['effort']}"
+    """One title format. Effort runs include the repeat count; Luna and Sol do not.
+
+    ``grok-4.7 · low ×5`` and ``grok-4.7 · medium ×1`` stay distinct. No run hash.
+    """
+    effort = str(row.get("effort") or "")
+    model = str(row["model"])
+    if effort in {"none", ""}:
+        return model
+    if "repeats" not in row:
+        raise ValueError(f"live eval label needs a repeat count: {model} {effort}")
+    return f"{model} · {effort} ×{int(row['repeats'])}"
+
+
+def _axis_run_label(row: dict) -> str:
+    """Two horizontal lines so six heatmap columns fit without rotation."""
+    effort = str(row.get("effort") or "")
+    model = str(row["model"])
+    if effort in {"none", ""}:
+        return model
+    return f"{model}\n{effort} ×{int(row['repeats'])}"
 
 
 def _show(rows: list[dict], *, alt: str, height: int | None = None) -> None:
@@ -127,15 +144,17 @@ def _show(rows: list[dict], *, alt: str, height: int | None = None) -> None:
     st.table(rows, hide_index=True, height="content" if height is None else height, alt=alt)
 
 
-def _chart(charts, chart, *, alt: str, key: str | None = None):
+def _chart(charts, chart, *, alt: str, key: str | None = None, content_width: bool = False):
     if not alt.strip():
         raise ValueError("dashboard chart needs alt text")
     del charts
+    # ``content`` keeps a step width, so heatmap labels are not squeezed.
+    width = "content" if content_width else "stretch"
     if key is None:
-        return st.altair_chart(chart, width="stretch", theme=None, alt=alt)
+        return st.altair_chart(chart, width=width, theme=None, alt=alt)
     return st.altair_chart(
         chart,
-        width="stretch",
+        width=width,
         theme=None,
         alt=alt,
         on_select="rerun",
@@ -283,7 +302,8 @@ def _plotted_row(row: dict, label: str) -> dict:
 
 
 def _wilson_rows(runs: list[dict]) -> list[dict]:
-    return [_plotted_row(row, _run_label(row)) for row in _by_gate(runs)]
+    """Keep the caller's order. The pass-rate chart is headline, then low, medium, high."""
+    return [_plotted_row(row, _run_label(row)) for row in runs]
 
 
 def _sweep_wilson_rows(runs: list[dict]) -> list[dict]:
@@ -308,35 +328,64 @@ def _join_labels(labels: list[str]) -> str:
     return ", ".join(labels[:-1]) + f", and {labels[-1]}"
 
 
-def _frozen_groups(runs: list[dict]) -> dict[str, list[dict]] | None:
+def _interval_comparable(left: dict, right: dict) -> bool:
+    """Wilson bars are compared only inside a like-for-like pair.
+
+    Luna and Sol share frozen inputs. Their instruction hashes differ by the
+    known dataset-id pair, so that pair stays comparable. Grok low ×5 does not
+    share those frozen runner files. The 1-repeat grok runs share an instruction
+    hash with each other. Low ×5 differs from them in the dataset snapshot id
+    embedded in the instructions, and the repeat count differs too.
+    """
+    if "frozen_group" not in left or "frozen_group" not in right:
+        return False
+    if left["frozen_group"] != right["frozen_group"]:
+        return False
+    if int(left["repeats"]) != int(right["repeats"]):
+        return False
+    if left["instructions_sha256"] == right["instructions_sha256"]:
+        return True
+    return str(left["effort"]) == "none" and str(right["effort"]) == "none"
+
+
+def _comparability_note(runs: list[dict]) -> str:
+    """State the two caveats that stay in force when every grok run is on the chart."""
     if any("frozen_group" not in row for row in runs):
-        return None
-    groups: dict[str, list[dict]] = {}
-    for row in _by_gate(runs):
-        groups.setdefault(str(row["frozen_group"]), []).append(row)
-    return groups
-
-
-def _comparability_note(groups: dict[str, list[dict]]) -> str:
-    if len(groups) <= 1:
         return ""
-    ordered = sorted(groups.values(), key=lambda group: (-len(group), group[0]["github_run_id"]))
-    shared = [group for group in ordered if len(group) >= 2]
-    alone = [group[0] for group in ordered if len(group) == 1]
-    if len(shared) == 1 and alone:
-        names = _join_labels([_run_label(row) for row in shared[0]])
-        outsider = _join_labels([_run_label(row) for row in alone])
-        verb = "does" if len(alone) == 1 else "do"
-        if len(alone) == 1:
-            tail = "its interval is not compared with theirs."
-        else:
-            tail = "their intervals are not compared with the others."
-        return f"{names} share frozen inputs. {outsider} {verb} not; {tail}"
-    return "Intervals are compared only inside a shared frozen-input group."
+    parts: list[str] = []
+    openai = [row for row in runs if str(row["effort"]) == "none"]
+    grok_low_5 = [
+        row
+        for row in runs
+        if row["model"] == "grok-4.7" and row["effort"] == "low" and int(row["repeats"]) == 5
+    ]
+    one_repeat = [row for row in runs if row["model"] == "grok-4.7" and int(row["repeats"]) == 1]
+    if len(openai) >= 2 and len({row["frozen_group"] for row in openai}) == 1:
+        names = _join_labels([_run_label(row) for row in openai])
+        parts.append(f"{names} share frozen inputs.")
+    if grok_low_5 and openai:
+        label = _run_label(grok_low_5[0])
+        parts.append(
+            f"{label} does not: the frozen runner files changed, "
+            "so its interval is not compared with theirs."
+        )
+    elif grok_low_5 and not openai:
+        parts.append(f"{_run_label(grok_low_5[0])} is outside the 1-repeat comparison.")
+    if len(one_repeat) >= 2:
+        names = _join_labels([_run_label(row) for row in one_repeat])
+        parts.append(f"{names} are like-for-like with each other.")
+    if grok_low_5 and one_repeat:
+        parts.append(
+            f"{_run_label(grok_low_5[0])} differs from them in the dataset snapshot id "
+            "embedded in the instructions, so its interval is not compared with theirs."
+        )
+    if not parts:
+        return "Intervals are compared only inside a shared frozen-input group."
+    return " ".join(parts)
 
 
 def _wilson_caption(runs: list[dict]) -> str:
-    ordered = _by_gate(runs)
+    ordered = list(runs)
     clear = [_run_label(row) for row in ordered if not row["hard_fail"]]
     failed = [_run_label(row) for row in ordered if row["hard_fail"]]
     if clear and failed:
@@ -344,19 +393,16 @@ def _wilson_caption(runs: list[dict]) -> str:
     elif failed:
         gate = f"{', '.join(failed)} hard-fails."
     else:
-        gate = "Every headline run clears the gate."
-    groups = _frozen_groups(runs)
+        gate = "Every shown run clears the gate."
     pairs = []
-    if groups is not None:
-        for group in groups.values():
-            if len(group) < 2:
+    for index, left in enumerate(ordered):
+        for right in ordered[index + 1 :]:
+            if not _interval_comparable(left, right):
                 continue
-            for index, left in enumerate(group):
-                for right in group[index + 1 :]:
-                    verb = "overlap" if _ranges_overlap(left, right) else "do not overlap"
-                    pairs.append(f"{_run_label(left)} and {_run_label(right)} {verb}")
+            verb = "overlap" if _ranges_overlap(left, right) else "do not overlap"
+            pairs.append(f"{_run_label(left)} and {_run_label(right)} {verb}")
     gap = (" ".join(pairs) + ".") if pairs else ""
-    note = _comparability_note(groups) if groups is not None else ""
+    note = _comparability_note(ordered)
     priced = [f"{_run_label(row)} {_usd(row['known_gross_cost_usd'])}" for row in ordered]
     costs = ", ".join(priced)
     parts = [f"Gate first: {gate}"]
@@ -365,6 +411,11 @@ def _wilson_caption(runs: list[dict]) -> str:
     if note:
         parts.append(note)
     parts.append(f"Known cost is {costs}.")
+    parts.append(
+        "Reasoning tokens are listed with that cost. "
+        "A 1-repeat Wilson bar is the receipt interval on 48 trials. "
+        "It is not redrawn as a 5-repeat rate, and this page does not recompute it."
+    )
     return " ".join(parts)
 
 
@@ -436,21 +487,16 @@ def _boundary_case(cases: list[dict], model: str) -> list[dict]:
 
 
 def _grid_caption(cases: list[dict]) -> str:
-    sol = _boundary_case(cases, "gpt-6-sol")
-    luna = _boundary_case(cases, "gpt-6-luna")
-    if not sol or not luna:
-        return (
-            "Color and the printed count are repeats passed. A pale cell is a miss on every repeat."
-        )
-    text = (
-        "Color and the printed count are repeats passed. boundary_budget is "
-        f"{sol[0]['passed']} of {sol[0]['repeats']} for gpt-6-sol and "
-        f"{luna[0]['passed']} of {luna[0]['repeats']} for gpt-6-luna"
+    intro = (
+        "Color is the pass fraction, passed divided by repeats. "
+        "The cell prints passed/repeats, so 5/5 and 1/1 are both a full pass. "
+        "Headline columns are 5 repeats and the grok sweep columns are 1."
     )
-    grok = _boundary_case(cases, "grok-4.7")
-    if grok:
-        text += f", and {grok[0]['passed']} of {grok[0]['repeats']} for grok-4.7"
-    return text + "."
+    budgets = [row for row in cases if row["case_id"] == "boundary_budget"]
+    if not budgets:
+        return intro
+    parts = [f"{row['passed']}/{row['repeats']} for {_run_label(row)}" for row in budgets]
+    return f"{intro} boundary_budget is {_join_labels(parts)}."
 
 
 def _build_rows(extract: dict, digest: str, rows) -> list[dict]:
@@ -663,6 +709,7 @@ def _sweep_table(effort_cases: list[dict]) -> list[dict]:
 
 
 def _sweep_card(row: dict) -> tuple[str, str, str]:
+    """Detail breaks only at `` · ``, so a token count is not cut mid-value."""
     gate = "Hard fail" if row["hard_fail"] else "Gate clear"
     noun = "repeat" if row["repeats"] == 1 else "repeats"
     per = _usd_trim(row["known_gross_cost_usd"] / row["repeats"])
@@ -670,7 +717,7 @@ def _sweep_card(row: dict) -> tuple[str, str, str]:
     return (
         _run_label(row),
         f"{row['passed']}/{row['trials']}",
-        f"{row['repeats']} {noun}. {gate}. {per} per repeat. {reasoning} reasoning tokens.",
+        f"{row['repeats']} {noun} · {gate} · {per} per repeat · {reasoning} reasoning tokens",
     )
 
 
@@ -685,7 +732,7 @@ def _grok_effort_sweep(
     st.subheader("Grok reasoning-effort sweep")
     cards = []
     if low is None:
-        cards.append(("grok-4.7 · low", "—", "1 repeat. Receipt not in yet."))
+        cards.append(("grok-4.7 · low ×1", "—", "1 repeat · Receipt not in yet."))
     else:
         cards.append(_sweep_card(low))
     cards.extend(_sweep_card(row) for row in (medium, high))
@@ -702,7 +749,7 @@ def _grok_effort_sweep(
             "Low, medium, and high are 1-repeat runs on the same instructions."
         )
     _chart(charts, charts.wilson(_sweep_wilson_rows(present)), alt=sweep_alt)
-    _caption(_sweep_caption(low, medium, high, headline_low))
+    _caption(f"{_sweep_caption(low, medium, high, headline_low)} {_AXIS_RULE}")
     note = _grok_snapshot_explanation(headline_low, medium, low)
     signs = _sweep_signs(low, medium, high, effort_cases, case_ids)
     lines = [f"- {item}" for item in signs]
@@ -715,8 +762,129 @@ def _grok_effort_sweep(
     )
 
 
+_AXIS_RULE = (
+    "The axis starts 10 percentage points below the lowest pass rate or interval bound, "
+    "clamped at 0, and ends at 100%."
+)
+
+
 def _headline_runs(runs: list[dict]) -> list[dict]:
     return [row for row in runs if row["headline"]]
+
+
+def _display_runs(runs: list[dict]) -> list[dict]:
+    """Headline gate order, then the 1-repeat grok arms low, medium, high."""
+    headline = _by_gate(_headline_runs(runs))
+    arms = _grok_one_repeat_arms(runs)
+    if arms is None:
+        return headline
+    low, medium, high, _headline_low = arms
+    return headline + [row for row in (low, medium, high) if row is not None]
+
+
+def _case_catalog(cases: list[dict]) -> list[dict]:
+    seen: dict[str, dict] = {}
+    for row in cases:
+        seen.setdefault(str(row["case_id"]), row)
+    return sorted(seen.values(), key=lambda row: int(row["case_order"]))
+
+
+def _one_repeat_cases(run: dict, catalog: list[dict], effort_cases: list[dict]) -> list[dict]:
+    """Fill a 1-repeat grid from the miss table. A missing case passed.
+
+    The extract stores only the 1-repeat cases that miss at least once. The
+    pass total is checked against the run row, which matches the receipt.
+    """
+    indexed = {
+        row["case_id"]: row
+        for row in effort_cases
+        if row["model"] == run["model"]
+        and row["effort"] == run["effort"]
+        and int(row["repeats"]) == int(run["repeats"])
+    }
+    built: list[dict] = []
+    for case in catalog:
+        hit = indexed.get(case["case_id"])
+        if hit is None:
+            passed = int(run["repeats"])
+            modes = "none"
+        else:
+            passed = int(hit["passed"])
+            modes = str(hit["failure_modes"])
+        built.append(
+            {
+                "case_id": case["case_id"],
+                "case_order": case["case_order"],
+                "category": case["category"],
+                "effort": run["effort"],
+                "model": run["model"],
+                "passed": passed,
+                "repeats": int(run["repeats"]),
+                "severity": case["severity"],
+                "failure_modes": modes,
+            }
+        )
+    if sum(int(row["passed"]) for row in built) != int(run["passed"]):
+        raise ValueError(f"{_run_label(run)} case grid does not match the run")
+    if len(built) * int(run["repeats"]) != int(run["trials"]):
+        raise ValueError(f"{_run_label(run)} case grid does not match the run")
+    return built
+
+
+def _categories_from_cases(run: dict, case_rows: list[dict]) -> list[dict]:
+    totals: dict[str, list[int]] = defaultdict(lambda: [0, 0])
+    for row in case_rows:
+        totals[str(row["category"])][0] += int(row["passed"])
+        totals[str(row["category"])][1] += int(row["repeats"])
+    return [
+        {
+            "category": category,
+            "effort": run["effort"],
+            "model": run["model"],
+            "passed": passed,
+            "repeats": int(run["repeats"]),
+            "trials": trials,
+        }
+        for category, (passed, trials) in sorted(totals.items())
+    ]
+
+
+def _stamp_headline_categories(categories: list[dict], runs: list[dict]) -> list[dict]:
+    stamped = []
+    for row in categories:
+        matches = [
+            run
+            for run in runs
+            if run["headline"] and run["model"] == row["model"] and run["effort"] == row["effort"]
+        ]
+        if len(matches) != 1:
+            raise ValueError(f"live eval category is missing a headline run: {row['model']}")
+        stamped.append({**row, "repeats": matches[0]["repeats"]})
+    return stamped
+
+
+def _cost_token_table(runs: list[dict]) -> list[dict]:
+    return [
+        {
+            "Run": _run_label(row),
+            "Known cost": _usd_trim(float(row["known_gross_cost_usd"])),
+            "Reasoning tokens": _token_count(float(row["reasoning_tokens"])),
+        }
+        for row in runs
+    ]
+
+
+def _miss_table(case_rows: list[dict]) -> list[dict]:
+    table = []
+    for row in case_rows:
+        if int(row["passed"]) >= int(row["repeats"]):
+            continue
+        result = f"{int(row['passed'])}/{int(row['repeats'])}"
+        modes = row.get("failure_modes")
+        if isinstance(modes, str) and modes not in {"", "none"}:
+            result = f"{result}, {modes.replace(',', ', ')}"
+        table.append({"Run": _run_label(row), "Case": row["case_id"], "Result": result})
+    return table
 
 
 def _eval_cards(layout, runs: list[dict]) -> None:
@@ -727,14 +895,17 @@ def _eval_cards(layout, runs: list[dict]) -> None:
             (
                 _run_label(row),
                 _pct(row["pass_rate"]),
-                f"{row['passed']:,} of {row['trials']:,}. {gate}",
+                f"{row['passed']:,} of {row['trials']:,} · {gate}",
             )
         )
         cards.append(
             (
                 f"{_run_label(row)} cost",
                 _usd(row["known_gross_cost_usd"]),
-                f"Cap {_usd(row['max_run_usd'])}",
+                (
+                    f"Cap {_usd(row['max_run_usd'])} · "
+                    f"{_token_count(float(row['reasoning_tokens']))} reasoning tokens"
+                ),
             )
         )
     st.markdown(
@@ -747,9 +918,30 @@ def _eval_tab(layout, charts, extract: dict, rows) -> None:
     runs = rows(extract, "live_eval_run")
     cases = rows(extract, "live_eval_case")
     categories = rows(extract, "live_eval_category")
-    headline = _headline_runs(runs)
-    headline_keys = {(row["model"], row["effort"]) for row in headline}
-    _eval_cards(layout, headline)
+    effort_cases = rows(extract, "live_eval_effort_case")
+    shown = _display_runs(runs)
+    catalog = _case_catalog(cases)
+    one_repeat_rows: list[dict] = []
+    one_repeat_categories: list[dict] = []
+    for run in shown:
+        if run["headline"]:
+            continue
+        built = _one_repeat_cases(run, catalog, effort_cases)
+        one_repeat_rows.extend(built)
+        one_repeat_categories.extend(_categories_from_cases(run, built))
+    headline_categories = _stamp_headline_categories(categories, runs)
+    all_categories = headline_categories + one_repeat_categories
+    headline_cases = []
+    for row in cases:
+        if not any(
+            run["headline"] and run["model"] == row["model"] and run["effort"] == row["effort"]
+            for run in shown
+        ):
+            continue
+        headline_cases.append({**row, "failure_modes": "none"})
+    # Stamp repeats from the headline run. Case rows already carry repeats.
+    all_cases = headline_cases + one_repeat_rows
+    _eval_cards(layout, runs)
     _caption(
         "Published live-eval report: "
         "[live-eval.html](https://jfk-ssa.github.io/chess-analytics-lab/live-eval.html)."
@@ -757,13 +949,20 @@ def _eval_tab(layout, charts, extract: dict, rows) -> None:
     st.subheader("Pass rate")
     _chart(
         charts,
-        charts.wilson(_wilson_rows(_by_gate(headline))),
-        alt="Headline pass rate for each model with its Wilson 95 percent interval.",
+        charts.wilson(_wilson_rows(shown)),
+        alt=(
+            "Pass rate for each committed run with its Wilson 95 percent interval. "
+            "A 1-repeat interval is that receipt's Wilson interval on 48 trials."
+        ),
     )
-    _caption(_wilson_caption(headline))
+    _caption(_wilson_caption(shown))
     _caption(
         "Query origin: committed_report. The bar is the receipt Wilson 95 percent interval. "
-        "A 1-repeat run would not be drawn as a 5-repeat rate."
+        f"{_AXIS_RULE}"
+    )
+    _show(
+        _cost_token_table(shown),
+        alt="Known gross cost and reasoning tokens for each committed live-eval run.",
     )
     chosen = st.multiselect(
         "Category",
@@ -771,41 +970,69 @@ def _eval_tab(layout, charts, extract: dict, rows) -> None:
         default=list(_CATEGORIES),
         key="eval_category",
     )
-    headline_categories = [
-        row for row in categories if (row["model"], row["effort"]) in headline_keys
-    ]
-    visible_categories = _category_rows(headline_categories, set(chosen))
+    visible_categories = _category_rows(all_categories, set(chosen))
     if visible_categories:
         order = [name for name in _CATEGORIES if name in chosen]
+        model_order = [_run_label(row) for row in shown]
         _chart(
             charts,
-            charts.category_dumbbell(visible_categories, category_order=order),
-            alt="Dumbbell of pass rate by category. Each point is one model.",
+            charts.category_dumbbell(
+                visible_categories, category_order=order, model_order=model_order
+            ),
+            alt="Dumbbell of pass rate by category. Each point is one run.",
         )
-    headline_cases = [row for row in cases if (row["model"], row["effort"]) in headline_keys]
-    _caption(_category_caption(headline_categories, headline_cases, headline, set(chosen)))
-    visible_cases = _case_rows(headline_cases, set(chosen))
+    _caption(_category_caption(all_categories, all_cases, shown, set(chosen)))
+    _caption(_AXIS_RULE)
+    visible_cases = _case_rows(all_cases, set(chosen))
     if visible_cases:
         case_order = [
             row["case_id"]
-            for row in sorted(visible_cases, key=lambda item: item["case_order"])
-            if row["model"] == visible_cases[0]["model"]
+            for row in sorted(catalog, key=lambda item: int(item["case_order"]))
+            if row["category"] in chosen
         ]
-        # unique while keeping order
         seen: list[str] = []
         for case_id in case_order:
             if case_id not in seen:
                 seen.append(case_id)
-        model_order = [_run_label(row) for row in _by_gate(headline)]
-        plotted = [{**row, "model": _run_label(row)} for row in visible_cases]
+        model_order = [_axis_run_label(row) for row in shown]
+        plotted = []
+        by_key = {
+            (row["model"], row["effort"], int(row["repeats"]), row["case_id"]): row
+            for row in visible_cases
+        }
+        for run in shown:
+            for case_id in seen:
+                row = by_key.get((run["model"], run["effort"], int(run["repeats"]), case_id))
+                if row is None:
+                    continue
+                plotted.append({**row, "model": _axis_run_label(run), "run": _run_label(run)})
         _chart(
             charts,
             charts.case_grid(plotted, case_order=seen, model_order=model_order),
-            alt="Grid of cases by model, colored by how many repeats passed.",
+            alt=(
+                "Grid of cases by run, colored by pass fraction. "
+                "Each cell prints passed/repeats. Column labels are horizontal."
+            ),
+            content_width=True,
         )
-    _caption(_grid_caption(visible_cases))
-    case_ids = sorted({row["case_id"] for row in cases})
-    _grok_effort_sweep(layout, charts, runs, rows(extract, "live_eval_effort_case"), case_ids)
+    ordered_cases = [
+        row
+        for run in shown
+        for row in visible_cases
+        if row["model"] == run["model"]
+        and row["effort"] == run["effort"]
+        and int(row["repeats"]) == int(run["repeats"])
+    ]
+    _caption(_grid_caption(ordered_cases))
+    misses = _miss_table(all_cases)
+    if misses:
+        _show(
+            misses,
+            alt="Cases that missed at least one repeat, for every committed run.",
+            height=360,
+        )
+    case_ids = [row["case_id"] for row in catalog]
+    _grok_effort_sweep(layout, charts, runs, effort_cases, case_ids)
 
 
 def _about(extract: dict, path: Path, rows) -> None:

@@ -62,7 +62,9 @@ use `white-space: nowrap`. The detail nowraps the fraction and can
 break at ` · `. 256px is 16rem at the CSS
 reference pixel. With 256px, a 390px viewport is one column and a
 1280px viewport holds several tracks. The eight KPI cards and the six
-eval cards share that track. The grok sweep is three cards.
+eval cards share that track. The grok sweep is three cards. Sweep detail breaks only at ` · `, so a
+cost or a token count stays on one line. The three cards share one track
+width.
 The shared `.streamlit/config.toml` is unchanged.
 
 Version 2 adds `opening_color_score` (French and Sicilian, both colors,
@@ -75,13 +77,24 @@ summary (`live_eval_run`, `live_eval_category`, `live_eval_case`,
 Those receipts are `committed_report`. Category and case rows omit
 `source_report`; the run row keeps the filename, and model plus effort
 joins a row to that run. Each run row also carries `frozen_group`,
-`instructions_sha256`, and `reasoning_tokens`. Headline charts and the
-six eval cards stay on the 5-repeat runs. The eval tab adds a grok
-reasoning-effort sweep for one repeat each of low, medium, and high on
-the same instructions. Low x1 is 47/48 at $0.22253 and fails `coverage_2`.
-Medium x1 is 45/48 and high x1 is 47/48. All three clear the gate. The
-5-repeat low stays on the headline cards and is not strictly comparable
-with that trio. The file is 259,711 bytes.
+`instructions_sha256`, and `reasoning_tokens`. Headline cards stay on the 5-repeat runs and name grok as
+`grok-4.7 · low ×5`. The pass-rate chart, the category chart, and the
+case grid also draw the three 1-repeat grok runs, labelled
+`grok-4.7 · low ×1`, `grok-4.7 · medium ×1`, and `grok-4.7 · high ×1`.
+Those 1-repeat case rows are not stored in full: the page fills them from
+`live_eval_effort_case` and treats a missing case as passed, then checks
+the pass total against the run row. A 1-repeat Wilson bar is that
+receipt's interval on 48 trials. The page does not recompute it.
+Pass-rate axes start 10 percentage points below the lowest plotted value
+or interval bound, clamped at 0, and end at 100%. The margin is 10
+percentage points, not 10 percent of the minimum. The case grid colors
+the pass fraction and prints `passed/repeats`. Column labels are
+horizontal, and the grid scrolls inside its block on a narrow viewport.
+The category legend is one column. Low ×5 is not strictly comparable with
+Luna and Sol, because the frozen runner files changed. The 1-repeat runs are like-for-like
+with each other. Low ×5 differs from them in the dataset snapshot id
+embedded in the instructions. Wilson intervals are compared only inside
+those two groups. The file is 259,711 bytes.
 
 ## Run locally
 
