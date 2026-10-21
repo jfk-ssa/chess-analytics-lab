@@ -38,7 +38,7 @@ def test_provider_http_error_records_bounded_reason_without_key(monkeypatch):
     with pytest.raises(
         RuntimeError, match="provider HTTP 400: invalid_request_error: temporary issue"
     ):
-        _default_transport(b"{}", "test-personal-key")
+        _default_transport(b'{"model":"gpt-6-luna"}', "test-personal-key")
 
 
 def _personal_config(tmp_path, cap=1.0):

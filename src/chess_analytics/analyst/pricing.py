@@ -3,6 +3,8 @@
 import math
 import re
 
+from chess_analytics.analyst.model_catalog import GROK_MODEL_ID, XAI_KEY_ENV, price_grok_usage
+
 KEY_ENV = "CHESSLAB_OPENAI_API_KEY"
 
 
@@ -18,16 +20,20 @@ def validate_personal_config(config: dict) -> dict:
         "api_key_env",
     }
     cache_prices = {"cache_write_usd_per_million", "cached_input_usd_per_million"}
-    if (
-        not isinstance(config, dict)
-        or not required <= set(config)
-        or set(config) - required - cache_prices
-        or len(set(config) & cache_prices) not in {0, 2}
-    ):
+    if not isinstance(config, dict) or not required <= set(config):
+        raise ValueError("complete personal provider configuration required")
+    cache_present = cache_prices & set(config)
+    extra = set(config) - required - cache_prices
+    grok = config.get("model") == GROK_MODEL_ID
+    cached_only = {"cached_input_usd_per_million"}
+    grok_cache = cache_present in (cached_only, cache_prices)
+    openai_cache = len(cache_present) in {0, 2}
+    if extra or (grok and not grok_cache) or (not grok and not openai_cache):
         raise ValueError("complete personal provider configuration required")
     if config["enabled"] is not True or config["personal_account_acknowledged"] is not True:
         raise ValueError("live provider explicitly disabled")
-    if config["api_key_env"] != KEY_ENV:
+    expected_key = XAI_KEY_ENV if grok else KEY_ENV
+    if config["api_key_env"] != expected_key:
         raise ValueError("only the named personal API key environment variable is allowed")
     if (
         not isinstance(config["model"], str)
@@ -68,6 +74,8 @@ def cache_rates(config: dict) -> tuple[float, float]:
 
 def price_usage(config: dict, usage: object) -> tuple[float, str]:
     """Price reported tokens; missing cache detail uses a conservative input bound."""
+    if isinstance(config, dict) and config.get("model") == GROK_MODEL_ID:
+        return price_grok_usage(config, usage)
     if not isinstance(usage, dict) or not all(
         type(usage.get(key)) is int and usage[key] >= 0 for key in ("input_tokens", "output_tokens")
     ):

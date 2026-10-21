@@ -222,7 +222,7 @@ def test_semantic_repair_does_not_flip_the_headline(live_eval_stage):
 
 
 def test_recommended_caps_are_the_adr_figures():
-    assert RECOMMENDED_CAP_USD == {"gpt-6-luna": 0.50, "gpt-6-sol": 10.0}
+    assert RECOMMENDED_CAP_USD == {"gpt-6-luna": 0.50, "gpt-6-sol": 10.0, "grok-4.7": 5.0}
     assert recorded_rates("gpt-6-luna")["input_usd_per_million"] == 0.10
     assert recorded_rates("gpt-6-sol")["output_usd_per_million"] == 10.0
     with pytest.raises(ValueError, match="explicit prices required"):

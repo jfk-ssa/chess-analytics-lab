@@ -1,12 +1,14 @@
 """Run the frozen live-eval case set through an injectable transport.
 
 This module quotes requests with ``quote_request`` and parses plans with the
-same extract and normalize helpers ``provider.py`` uses. It does not edit
-those files. It scores ``model_plan_before_semantic_repair`` and does not
-execute the semantically repaired plan as the headline.
+same extract and normalize helpers ``provider.py`` uses. It scores
+``model_plan_before_semantic_repair`` and does not execute the semantically
+repaired plan as the headline.
 
 No call is scheduled. A dry run quotes and prints the reservation and does
-not read an API key. A real run reads only ``CHESSLAB_OPENAI_API_KEY``.
+not read an API key. A real run reads ``CHESSLAB_OPENAI_API_KEY`` for
+``gpt-6-luna`` and ``gpt-6-sol``, and ``CHESSLAB_XAI_API_KEY`` for
+``grok-4.7``. It does not read the other key.
 """
 
 import hashlib
@@ -26,6 +28,13 @@ from chess_analytics.analyst.live_stats import (
     hard_fail,
     wilson_interval,
 )
+from chess_analytics.analyst.model_catalog import (
+    GROK_MODEL_ID,
+    RECOMMENDED_CAP_USD,
+    XAI_KEY_ENV,
+    grok_short_rates,
+    resolve_effort,
+)
 from chess_analytics.analyst.plan_recovery import (
     _extract_plan,
     _normalize_plan,
@@ -38,7 +47,6 @@ from chess_analytics.analyst.preflight import (
     DEFAULT_MAX_OUTPUT_TOKENS,
     DEFAULT_OUTPUT_USD_PER_MILLION,
     DEFAULT_PRICE_CHECKED_UTC_DATE,
-    _load_named_key,
 )
 from chess_analytics.analyst.pricing import KEY_ENV, price_usage, validate_personal_config
 from chess_analytics.analyst.provider import quote_request
@@ -50,7 +58,6 @@ RECEIPT_VERSION = "1"
 DEFAULT_REPEATS = 5
 DEFAULT_SEED = 20261018
 DEFAULT_RESAMPLES = 2000
-RECOMMENDED_CAP_USD = {"gpt-6-luna": 0.50, "gpt-6-sol": 10.0}
 LUNA_RATES = {
     "cache_write_usd_per_million": DEFAULT_CACHE_WRITE_USD_PER_MILLION,
     "cached_input_usd_per_million": DEFAULT_CACHED_INPUT_USD_PER_MILLION,
@@ -66,6 +73,7 @@ SOL_RATES = {
 }
 FROZEN_FILES = (
     "src/chess_analytics/analyst/provider.py",
+    "src/chess_analytics/analyst/model_catalog.py",
     "src/chess_analytics/analyst/pricing.py",
     "src/chess_analytics/analyst/plan_recovery.py",
     "src/chess_analytics/analyst/preflight.py",
@@ -157,16 +165,18 @@ class ReservationError(ValueError):
 
 
 def recorded_rates(model: str, override: dict | None = None) -> dict:
-    """Prices last recorded on 2026-10-04, or an explicit override."""
+    """Luna and Sol rates from the 2026-10-04 diagnostic, grok-4.7 short rates, or an override."""
     if override is not None:
         return override
     if model == "gpt-6-luna":
         return dict(LUNA_RATES)
     if model == "gpt-6-sol":
         return dict(SOL_RATES)
+    if model == GROK_MODEL_ID:
+        return grok_short_rates()
     raise ValueError(
-        "explicit prices required for this model; recorded 2026-10-04 rates "
-        "cover only gpt-6-luna and gpt-6-sol"
+        "explicit prices required for this model; recorded rates "
+        "cover only gpt-6-luna, gpt-6-sol, and grok-4.7"
     )
 
 
@@ -182,7 +192,7 @@ def build_config(
     chosen = recorded_rates(model, rates)
     return validate_personal_config(
         {
-            "api_key_env": KEY_ENV,
+            "api_key_env": XAI_KEY_ENV if model == GROK_MODEL_ID else KEY_ENV,
             "enabled": True,
             "max_output_tokens": max_output_tokens,
             "max_run_usd": max_run_usd,
@@ -211,6 +221,7 @@ def run(
     rates: dict | None = None,
     max_output_tokens: int = DEFAULT_MAX_OUTPUT_TOKENS,
     run_id: str | None = None,
+    reasoning_effort: str | None = None,
 ) -> dict:
     """Quote every request, refuse an over-cap reservation, then score or dry-run.
 
@@ -223,6 +234,7 @@ def run(
         raise ValueError("repeats must be an integer from 1 to 20")
     if dry_run and output is not None:
         raise ValueError("dry run does not write a receipt")
+    effort = resolve_effort(model, reasoning_effort)
     config = build_config(
         model=model,
         max_run_usd=max_run_usd,
@@ -231,17 +243,17 @@ def run(
         max_output_tokens=max_output_tokens,
     )
     manifest, cases = load_live_cases(repo)
-    quotes = [_quote(staged, case, config) for case in cases]
+    quotes = [_quote(staged, case, config, effort) for case in cases]
     instructions = _one_instructions_hash(quotes)
     reserved = sum(item["reserved_cost_usd"] for item in quotes) * repeats
     if reserved > config["max_run_usd"]:
         raise ReservationError(reserved, config["max_run_usd"])
-    plan = _dry_plan(config, manifest, cases, repeats, instructions, reserved)
+    plan = _dry_plan(config, manifest, cases, repeats, instructions, reserved, effort, quotes)
     if dry_run:
         return plan
     if env_file is not None:
-        _load_named_key(env_file)
-    key = os.environ.get(KEY_ENV)
+        _load_model_key(env_file, config["api_key_env"])
+    key = os.environ.get(config["api_key_env"])
     if not key:
         raise ValueError("explicit personal API key is absent")
     send = transport or _default_send
@@ -271,6 +283,8 @@ def format_dry_run(plan: dict) -> str:
     lines = [
         "live-eval dry run",
         f"model: {plan['model']}",
+        f"reasoning_effort: {plan['reasoning_effort']}",
+        f"price_tier: {plan['price_tier']}",
         f"repeats: {plan['repeats']}",
         f"cases: {plan['cases']}",
         f"planned_requests: {plan['planned_requests']}",
@@ -284,7 +298,7 @@ def format_dry_run(plan: dict) -> str:
         f"rubric_version: {plan['rubric_version']}",
         "prices_rechecked: false",
         "scheduled: false",
-        "pre_run: recheck the Sol model id, reasoning.effort=none, and prices before a live run",
+        plan["pre_run"],
     ]
     return "\n".join(lines) + "\n"
 
@@ -306,6 +320,11 @@ def add_arguments(parser) -> None:
     parser.add_argument("--cache-write-usd-per-million", type=float)
     parser.add_argument("--cached-input-usd-per-million", type=float)
     parser.add_argument("--max-output-tokens", type=int, default=DEFAULT_MAX_OUTPUT_TOKENS)
+    parser.add_argument(
+        "--reasoning-effort",
+        default=None,
+        help="Omit for the model default: none on OpenAI ids, low on grok-4.7.",
+    )
 
 
 def execute_from_args(repo: Path, args) -> int:
@@ -331,6 +350,7 @@ def execute_from_args(repo: Path, args) -> int:
             baseline_rate=args.baseline_rate,
             rates=rates,
             max_output_tokens=args.max_output_tokens,
+            reasoning_effort=args.reasoning_effort,
         )
     except (OSError, TimeoutError, ValueError) as exc:
         print(f"live-eval: {exc}", file=sys.stderr)
@@ -353,17 +373,36 @@ def main(argv: list[str] | None = None) -> int:
     return execute_from_args(args.project.resolve(), args)
 
 
+def _load_model_key(env_file: Path, key_env: str) -> None:
+    """Load one named key. The OpenAI and xAI variables are not interchangeable."""
+    if os.environ.get(key_env):
+        return
+    matches = []
+    for raw in env_file.read_text().splitlines():
+        line = raw.strip()
+        if line.startswith("export "):
+            line = line[7:].strip()
+        if line.startswith(f"{key_env}="):
+            value = line.split("=", 1)[1].strip()
+            if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
+                value = value[1:-1]
+            matches.append(value)
+    if len(matches) != 1 or not matches[0]:
+        raise ValueError("env file must contain exactly one named personal API key")
+    os.environ[key_env] = matches[0]
+
+
 def _default_send(body: bytes, key: str) -> dict:
     from chess_analytics.analyst.provider import _default_transport
 
     return _default_transport(body, key)
 
 
-def _quote(staged: Path, case: dict, config: dict) -> dict:
-    quote = quote_request(staged, case["question"], config, "semantic_context")
+def _quote(staged: Path, case: dict, config: dict, effort: str) -> dict:
+    quote = quote_request(staged, case["question"], config, "semantic_context", effort)
     payload = json.loads(quote["body"])
-    if payload.get("reasoning") != {"effort": "none"}:
-        raise ValueError("frozen planner quote does not set reasoning.effort to none")
+    if payload.get("reasoning") != {"effort": effort}:
+        raise ValueError("quoted reasoning effort does not match the run")
     if payload.get("input") != case["question"]:
         raise ValueError("quoted input is not the case question")
     instructions = payload.get("instructions")
@@ -380,7 +419,10 @@ def _one_instructions_hash(quotes: list[dict]) -> str:
     return hashes.pop()
 
 
-def _dry_plan(config, manifest, cases, repeats, instructions, reserved) -> dict:
+def _dry_plan(config, manifest, cases, repeats, instructions, reserved, effort, quotes) -> dict:
+    tiers = {item["price_tier"] for item in quotes}
+    if len(tiers) != 1:
+        raise ValueError("price tier differs across cases")
     return {
         "case_set_sha256": manifest["case_set_sha256"],
         "cases": len(cases),
@@ -391,15 +433,26 @@ def _dry_plan(config, manifest, cases, repeats, instructions, reserved) -> dict:
         "max_run_usd": config["max_run_usd"],
         "model": config["model"],
         "planned_requests": len(cases) * repeats,
+        "pre_run": _pre_run_line(config["model"]),
         "price_checked_utc_date": PRICE_CHECKED_UTC_DATE,
+        "price_tier": tiers.pop(),
         "prices_rechecked": False,
-        "reasoning_effort": "none",
+        "reasoning_effort": effort,
         "recommended_cap_usd": RECOMMENDED_CAP_USD.get(config["model"]),
         "repeats": repeats,
         "reserved_usd": reserved,
         "rubric_version": RUBRIC_VERSION,
         "scheduled": False,
     }
+
+
+def _pre_run_line(model: str) -> str:
+    if model == GROK_MODEL_ID:
+        return (
+            "pre_run: recheck grok-4.7 prices, the 200k tier, and the reasoning effort; "
+            "reasoning cannot be none"
+        )
+    return "pre_run: recheck the Sol model id, reasoning.effort=none, and prices before a live run"
 
 
 def _execute(repo, staged, cases, quotes, config, key, send, plan, **options) -> dict:
@@ -601,7 +654,7 @@ def _receipt(repo, rows, plan, config, incomplete, **options) -> dict:
         "planned_requests": plan["planned_requests"],
         "price_checked_utc_date": PRICE_CHECKED_UTC_DATE,
         "prices_rechecked": False,
-        "reasoning_effort": "none",
+        "reasoning_effort": plan["reasoning_effort"],
         "receipt_version": RECEIPT_VERSION,
         "repair_counts": {
             "argument": sum(len(row["argument_repairs"]) for row in rows),
