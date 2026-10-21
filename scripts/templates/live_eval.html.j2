@@ -9,12 +9,12 @@
 <section id="scorecard">
 <span class="ev-sec">01</span>
 <h2>Scorecard</h2>
-<p class="ev-take">The headline is the share of requests whose <i>raw</i> plan passed. Repairs sit beside that rate and never replace it. The two intervals answer different questions. Wilson treats all {{ view.requests_per_run }} requests as independent. The case-cluster bootstrap resamples whole cases, so it is wider. It is the honest one when the same question is asked {{ view.repeats }} times.</p>
+<p class="ev-take">The headline is the share of requests whose <i>raw</i> plan passed. Repairs sit beside that rate and never replace it. The two intervals answer different questions. Wilson treats all {{ view.requests_per_run }} requests as independent. The case-cluster bootstrap resamples whole cases, so it is wider. It is the honest one when the same question is asked {{ view.repeats }} {{ view.repeat_word | e }}.</p>
 <div class="ev-cards">{{ view.scorecards_html }}</div>
 <div class="ev-figure">
 <h3>Headline pass rate, 95% intervals</h3>
 {{ view.intervals_svg }}
-<p class="ev-note">Filled dot = gate clear, hollow ring = <code>hard_fail = true</code>. Interval bounds come from each receipt's <code>stats</code> block. The Wilson bounds were also recomputed from the rows and match. The bootstrap bounds (seed 20261018) are taken as recorded; they were not re-run here because they depend on the repo's resampler.</p>
+<p class="ev-note">Filled dot = gate clear, hollow ring = <code>hard_fail = true</code>. Interval bounds come from each receipt's <code>stats</code> block. The Wilson bounds and the case-cluster bootstrap were recomputed from the rows with each receipt's seed and resamples, and both match.</p>
 {{ view.pairwise_html }}
 </div>
 </section>
@@ -45,7 +45,7 @@
 <div class="ev-figure">
 <h3>Expected vs emitted status, rows</h3>
 {{ view.status_svg }}
-<p class="ev-note">Grey diagonal = right kind of response (an answer there can still fail on values). Amber = over-abstention, vermilion = clarify/refuse swap, black = unsafe answer, pink = no valid plan. Counts are rows, out of {{ view.requests_per_run }} per run.</p>
+<p class="ev-note">Grey diagonal = right kind of response (an answer there can still fail on values). Amber = over-abstention, vermilion = clarify/refuse swap, black = unsafe answer, pink = no valid plan. Counts are rows. A headline run has {{ view.requests_per_run }} requests.</p>
 </div>
 <div class="ev-figure">
 <h3>Failed rows by primary mode</h3>
@@ -82,10 +82,19 @@
 </div>
 </section>
 
+{% if view.sensitivity_html %}
+<section id="sensitivity">
+<span class="ev-sec">S</span>
+<h2>Sensitivity: different repeat counts</h2>
+<p class="ev-take">{{ view.sensitivity_intro | e }}</p>
+<div class="ev-cards">{{ view.sensitivity_html }}</div>
+</section>
+{% endif %}
+
 <section id="methods" class="ev-methods">
 <span class="ev-sec">07</span>
 <h2>Methods, provenance and data notes</h2>
-<p>Each receipt is a complete <code>analyst_live_v1_receipt</code>: {{ view.n_cases }} frozen cases × {{ view.repeats }} repeats, scored by <code>{{ view.rubric | e }}</code> on the model's raw plan (<code>model_plan_before_semantic_repair</code>). Extraction recoveries, such as a duplicated plan object, are counted as repairs and never flip a failing headline bit. Wilson intervals use z = 1.959963984540054. The bootstrap resamples cases with replacement and keeps every repeat of a sampled case. Paired comparisons use an exact two-sided sign test on cases whose pass counts differ. This report derives the failure modes, the status matrix, the sign test and the per-repeat counts from row fields. Every other figure is read from the receipts or the case file (<a href="{{ repo_url }}{{ view.case_file | e }}">{{ view.case_file | e }}</a>).</p>
+<p>Each receipt is a complete <code>analyst_live_v1_receipt</code>, scored by <code>{{ view.rubric | e }}</code> on the model's raw plan (<code>model_plan_before_semantic_repair</code>). The headline comparison is {{ view.n_cases }} frozen cases × {{ view.repeats }} {{ view.repeat_word | e }}. Extraction recoveries are counted as repairs and never flip a failing headline bit. Wilson intervals use z = 1.959963984540054. The bootstrap resamples cases with replacement and keeps every repeat of a sampled case. Paired comparisons use an exact two-sided sign test only when the runs share a repeat count and the same case ids, on cases whose pass counts differ. This report derives the failure modes, the status matrix, the sign test and the per-repeat counts from row fields. Every other figure is read from the receipts or the case file (<a href="{{ repo_url }}{{ view.case_file | e }}">{{ view.case_file | e }}</a>).</p>
 <p>Receipt files, in GitHub run-id order:{% for name in view.receipt_files %} <a href="{{ repo_url }}reports/{{ name | e }}"><code>{{ name | e }}</code></a>{% endfor %}</p>
 {{ view.provenance_html }}
 <h3>Data notes</h3>

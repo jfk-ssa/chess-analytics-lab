@@ -195,9 +195,11 @@ The documentation build reads `reports/live-eval-receipt-*.json` and
 publishes [the live-eval page](https://jfk-ssa.github.io/chess-analytics-lab/live-eval.html).
 The headline there is the raw pass rate, with repair counts beside it.
 Sol's hard fail is the five `boundary_budget` rows described above.
-The instruction-hash note on that page is this explanation: the prompts
-differ by the snapshot id, and a later receipt should record
-`dataset_id` and `implementation_sha256`. See
+The instruction-hash note on that page uses this explanation for the
+two committed hashes. A later receipt gets the same claim only when it
+records a differing `dataset_id` and the other frozen inputs still
+match. Otherwise the page says the cause is not recorded and does not
+call the runs comparable. See
 [ADR 0096](adr/0096-published-live-eval-report.md).
 
 `grok-4.7` is a third manual model. The headline comparison with the
@@ -206,7 +208,8 @@ effort that model accepts, beside `reasoning.effort` of `none`. Medium
 and high are a sensitivity check at 1 repeat each. Those receipts and
 the job summary carry `repeats: 1`. Their pass rates are not 5-repeat
 headline rates and are not compared with Luna, Sol, or the low 5-repeat
-rate. The per-run cap is $10. See
+rate. The published page keeps one label per effort and places those
+1-repeat runs in the sensitivity section. The per-run cap is $10. See
 [ADR 0095](adr/0095-grok-4-7-live-eval.md).
 
 For offline replay, first run `chesslab demo --scope all`, then use the command

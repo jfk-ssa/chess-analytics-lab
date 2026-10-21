@@ -195,6 +195,8 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     assert "fonts.googleapis.com" not in report
     assert "data:font/woff2" not in report
     assert 'id="ev-heatmap-title"' in report and 'id="ev-heatmap-desc"' in report
+    assert "were not re-run" not in report
+    assert "recomputed from the rows" in report
     assert 'rel="preload"' in report
     assert "inter-latin-wght-normal.woff2" in report
     assert "live-eval.html" in (output / "sitemap.xml").read_text()
