@@ -1708,6 +1708,28 @@ figure .full-size {
     columns: 1;
   }
 }
+@media print {
+  .page-live-eval .topbar,
+  .page-live-eval .skip {
+    display: none;
+  }
+  .page-live-eval main {
+    max-width: none;
+    padding: 0;
+  }
+  .live-eval .ev-card,
+  .live-eval .ev-callout {
+    break-inside: avoid;
+  }
+  .live-eval .scroll,
+  .live-eval .scroll svg.heat,
+  .live-eval .scroll svg.wide {
+    overflow: visible;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+}
 @media (max-width: 750px) {
   .game-import {
     padding: 1rem;
