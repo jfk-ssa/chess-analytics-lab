@@ -2,18 +2,22 @@
 
 The script reads a local ``warehouse.duckdb``. It does not download. Cells
 under 10 games are dropped, and player or game identifiers are not written.
-This checkout has no warehouse, so the committed cube stays the published
-aggregate until the command below succeeds. The file stays under 10 MB or
-the write fails.
+``opening_game`` is the training selection. ``retained_game`` is not read.
+A ``fact_game`` warehouse still builds the analytical grains, including
+clock cells when ``fact_move`` has them. This checkout has no warehouse,
+so the committed cube stays the published aggregate until the command
+below succeeds. The file stays under 10 MB or the write fails.
 
-From the repository root, with the warehouse on disk:
+From the repository root on the machine that has the openings warehouse:
 
-    uv run --locked --offline --no-editable --extra dashboard \
+    uv run --locked --no-editable --extra dashboard \
       python scripts/build_warehouse_cube.py \
-      --warehouse /path/to/warehouse.duckdb
+      --warehouse data/openings/published/00e7a73fbf67c401e23b4b4b/warehouse.duckdb
 
 Search order when ``--warehouse`` is omitted: ``CHESSLAB_WAREHOUSE``,
-``data/warehouse.duckdb``, then the latest ``data/published/*/warehouse.duckdb``.
+``data/warehouse.duckdb``, ``warehouse.duckdb``, the latest
+``data/published/*/warehouse.duckdb``, then the latest
+``data/openings/published/*/warehouse.duckdb``.
 """
 
 from __future__ import annotations
@@ -32,6 +36,7 @@ from chess_analytics.dashboard_cube import (  # noqa: E402
     connect,
     locate_warehouse,
     warehouse_rows,
+    warehouse_source,
     write_cube,
 )
 
@@ -59,6 +64,13 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     connection = duckdb.connect(str(source), read_only=True)
     try:
+        kind = warehouse_source(connection)
+        if not kind:
+            print(
+                "warehouse is missing fact_game or opening_game.",
+                file=sys.stderr,
+            )
+            return 2
         added = warehouse_rows(connection)
     finally:
         connection.close()
@@ -66,9 +78,10 @@ def main(argv: list[str] | None = None) -> int:
     kept = [row for row in existing if row["grain"] not in WAREHOUSE_GRAINS]
     destination = args.output or args.cube
     size = write_cube([*kept, *added], destination)
+    covered = sum(int(row["games"]) for row in added if row["grain"] == "game_cell")
     print(
         f"Wrote {destination} ({size} bytes, {len(kept) + len(added)} rows, "
-        f"{len(added)} warehouse rows)"
+        f"{len(added)} from {kind}; game_cell covers {covered} games)"
     )
     return 0
 

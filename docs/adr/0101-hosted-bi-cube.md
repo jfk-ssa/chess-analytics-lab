@@ -59,9 +59,11 @@ opening, clock, rating, and color:
   board is one `transposition` row (games, and `ply` as the route
   count) plus one `transposition_route` row per move order. The page
   shows the top boards, the route count, total games, the top three
-  orders, and a board from the Board control. Family and date apply.
-  Color, time control, and rating do not, unless a later warehouse
-  build fills those columns.
+  orders, and a board from the Board control. Each card is titled the
+  way the transpositions page names that row: `After Black's move N`
+  from the leading arrival, then that arrival's SAN. Sibling cards use
+  that same form. Family and date apply. Color, time control, and
+  rating do not, unless a later warehouse build fills those columns.
 - White and black color cells are not added. With no color selected,
   win rate and loss rate use the White published cells (French and
   Sicilian, 1,400–1,599, 60+0): 253/592 and 329/592. The unfiltered
@@ -71,15 +73,28 @@ opening, clock, rating, and color:
   date range does not contain that day, the card still shows the
   figure and says so. They are not split by opening family or color.
 
-`scripts/build_warehouse_cube.py` aggregates a local `warehouse.duckdb`
-into `game_cell`, `result_cell`, `result_line`, and, when `fact_move`
-has the clock columns, `clock_cell`. Cells under 10 games are dropped.
-The script does not download and does not select identifiers. This
-environment has no warehouse, so the committed file was not rebuilt
-from it. The hosted page uses those grains when they are present, so
-month, time control, rating band, color, and opening family then change
-the same cards. Expected size stays under the 10 MB budget; the write
-fails closed above it.
+`scripts/build_warehouse_cube.py` aggregates a local `warehouse.duckdb`.
+An analytical warehouse (`fact_game` and `fact_player_game`) still
+writes `game_cell`, `result_cell`, `result_line`, and, when `fact_move`
+has the clock columns, `clock_cell`. The openings warehouse at
+`data/openings/published/00e7a73fbf67c401e23b4b4b/warehouse.duckdb`
+is detected from `opening_game` (1,042,346 training games).
+`retained_game` is not read. That file has no move or clock table, so
+the builder writes `game_cell` and `result_cell` only. Color is one row
+per side, from `white_rating`, `black_rating`, and `result`. Opening
+family is the text before the first colon, the same split as
+`opening_family_expr`. Cohort is `source_cohort` and period is
+`source_period`. The row window is the min and max `utc_date` of that
+source, so it lines up with `corpus_month` (a rated-public prefix stays
+one day; the elite month stays 2025-11-01 through 2025-11-30). Cells
+under 10 games are dropped, so the summed games can sit slightly under
+1,042,346. The script does not download and does not select
+identifiers. This environment has no warehouse, so the committed file
+was not rebuilt from it. The hosted page uses those grains when they
+are present, so month, time control, rating band, color, and opening
+family then change the same cards. With no color selected, a rating
+filter counts the White cells so the two sides are not added. Expected
+size stays under the 10 MB budget; the write fails closed above it.
 
 Sidebar filters are the date range, time control, color, rating band,
 and opening family. A row is included when its period is fully inside
@@ -107,13 +122,20 @@ path because that report is not on the tip. A missing cube fails closed
 with "Dashboard cube unavailable". The JSON extract remains the
 live-eval source and keeps its 256 KiB budget.
 
-On a machine that has the warehouse:
+On the machine that has the openings warehouse, from the repository
+root, without `--offline`:
 
 ```sh
-uv run --locked --offline --no-editable --extra dashboard \
+uv run --locked --no-editable --extra dashboard \
   python scripts/build_warehouse_cube.py \
-  --warehouse /path/to/warehouse.duckdb
+  --warehouse data/openings/published/00e7a73fbf67c401e23b4b4b/warehouse.duckdb
 ```
 
-The population in that file is the snapshot the path points at. It is
-not automatically the 1,042,346 training games.
+The command writes `data/public/dashboard_cube.parquet`, keeps the
+published rows, and replaces any previous warehouse grains. It prints
+the byte size, the row count, and the `game_cell` game total after the
+10-game floor. It exits 2 when the file is missing and refuses a file
+over 10 MB. Report that printed size and game total before committing
+the Parquet. The population is the `opening_game` selection in that
+snapshot. An analytical `fact_game` warehouse uses the same script and
+the same `--warehouse` flag.

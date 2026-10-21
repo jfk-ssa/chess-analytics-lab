@@ -3,6 +3,7 @@
 import hashlib
 import json
 import re
+from html import escape
 
 import pytest
 
@@ -109,6 +110,10 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
         "Board",
     }
     assert "Top positions" in labels["Board"]
+    titled = [option for option in labels["Board"] if option != "Top positions"]
+    assert titled
+    assert all("After Black's move " in option for option in titled)
+    assert len(titled) == len(set(titled))
     assert labels["Color"] == ["All", "White", "Black"]
     assert "French Defense" in labels["Opening family"]
     assert "Sicilian Defense" in labels["Opening family"]
@@ -360,12 +365,14 @@ def test_equal_width_rows_share_one_track_definition(project):
         [
             {
                 "family": "French Defense",
+                "title": "After Black's move 2 · 1.e4 e6 2.d4 d5",
                 "games": 1200,
                 "move_orders": 2,
                 "routes": [("1.e4 e6 2.d4 d5", 700), ("1.d4 d5 2.e4 e6", 500)],
             },
             {
                 "family": "Sicilian Defense",
+                "title": "After Black's move 1 · 1.e4 c5",
                 "games": 900,
                 "move_orders": 3,
                 "routes": [("1.e4 c5", 400)],
@@ -378,6 +385,10 @@ def test_equal_width_rows_share_one_track_definition(project):
     assert board.count("white-space:nowrap") >= 4
     assert "overflow-wrap:anywhere" not in board
     assert "1,200" in board and "1.e4 e6 2.d4 d5" in board
+    french = escape("After Black's move 2 · 1.e4 e6 2.d4 d5")
+    sicilian = escape("After Black's move 1 · 1.e4 c5")
+    assert french in board and sicilian in board
+    assert board.index(french) < board.index("1,200")
 
 
 def _chart_spec(node) -> dict:

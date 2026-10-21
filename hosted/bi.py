@@ -338,7 +338,7 @@ def _transpositions(layout, connection, filters: Filters) -> None:
 
 def _transposition_board(rows: list[dict]) -> None:
     options = ["Top positions"] + [
-        f"{index}. {row['family']} · {int(row['games']):,}"
+        f"{index}. {row['title']} · {int(row['games']):,}"
         for index, row in enumerate(rows, start=1)
     ]
     if st.session_state.get("transpose_board") not in options:

@@ -793,6 +793,8 @@ def sql_text() -> list[str]:
         _RESULT_CELL_SQL,
         _RESULT_LINE_SQL,
         _CLOCK_CELL_SQL,
+        _OPENING_GAME_CELL_SQL,
+        _OPENING_RESULT_CELL_SQL,
     ]
 
 
@@ -1429,19 +1431,36 @@ def _transposition_caption(notes: Sequence[str]) -> str:
     return "Move orders are not split by " + _join_or(ignored) + "."
 
 
+def _position_title(ply: int, san: str) -> str:
+    """Name a board the way the transpositions page names a row.
+
+    The explorer's row button is ``After Black's move N``, from the leading
+    arrival. The same page prints that arrival's SAN as the line. Every card
+    uses both, in that order.
+    """
+    whole, remainder = divmod(ply, 2)
+    depth = str(whole) if remainder == 0 else f"{ply / 2:g}"
+    line = san.strip()
+    if not line:
+        return f"After Black's move {depth}"
+    return f"After Black's move {depth} · {line}"
+
+
 def _pack_transposition(connection, cohort: str, row: Mapping[str, object]) -> dict[str, object]:
     fen = str(row["fen"])
     family = str(row["opening_family"])
     routes = connection.execute(
-        'select "opening_line", "games" from "cube" '
+        'select "opening_line", "games", "ply" from "cube" '
         'where "grain" = ? and "cohort" = ? and "fen" = ? and "opening_family" = ? '
         'order by "games" desc',
         ["transposition_route", cohort, fen, family],
     ).fetchall()
-    top = [(str(san), _num(games)) for san, games in routes[:3]]
+    top = [(str(san), _num(games)) for san, games, _ply in routes[:3]]
+    title = _position_title(_num(routes[0][2]), str(routes[0][0])) if routes else "Inspect board"
     return {
         "fen": fen,
         "family": family,
+        "title": title,
         "games": _num(row["games"]),
         "move_orders": _num(row["ply"]),
         "routes": top,
@@ -1450,15 +1469,27 @@ def _pack_transposition(connection, cohort: str, row: Mapping[str, object]) -> d
 
 
 def _warehouse_games_kpi(connection, filters: Filters) -> Kpi:
-    grain = "result_cell" if filters.color or filters.rating_band else "game_cell"
-    if not _grain_present(connection, grain):
-        grain = "game_cell" if _grain_present(connection, "game_cell") else "result_cell"
-    rows, notes = _collect(connection, grain, filters)
+    """Count each game once. A rating filter with no color uses the White cells."""
+    player = bool(filters.color or filters.rating_band)
+    if player and _grain_present(connection, "result_cell"):
+        rows, notes = _collect(
+            connection, "result_cell", filters, force_color=filters.color or "white"
+        )
+    elif _grain_present(connection, "game_cell"):
+        rows, notes = _collect(connection, "game_cell", filters)
+    else:
+        rows, notes = _collect(
+            connection, "result_cell", filters, force_color=filters.color or "white"
+        )
     total = sum(_num(row["games"]) for row in rows)
     if not notes and not _dimensional(filters):
         return Kpi("Games", f"{total:,}", "warehouse")
+    detail = "warehouse"
+    if "White" in notes:
+        detail += " · White"
     ignored = [item for item in notes if item != "White"]
-    detail = "warehouse" if not ignored else _with_note("warehouse", ignored)
+    if ignored:
+        detail = _with_note(detail, ignored)
     return Kpi("Games", f"{total:,}", detail)
 
 
@@ -1722,24 +1753,144 @@ where m."clock_bucket" is not null
 group by 1, 2, 3, 4, 5, 6
 having count(distinct m."game_id") >= 10
 """.strip()
+_OPENING_GAME_CELL_SQL = """
+with "bounds" as (
+  select
+    "source_cohort",
+    "source_period",
+    min("utc_date") as "period_start",
+    max("utc_date") as "period_end"
+  from "opening_game"
+  group by 1, 2
+)
+select
+  g."source_period" as "period",
+  g."source_cohort" as "cohort",
+  b."period_start",
+  b."period_end",
+  g."time_control",
+  nullif(trim(split_part(coalesce(g."source_opening", ''), ':', 1)), '') as "opening_family",
+  count(*) as "games",
+  avg(g."ply_count") as "mean_ply"
+from "opening_game" as g
+join "bounds" as b
+  on b."source_cohort" = g."source_cohort"
+ and b."source_period" = g."source_period"
+where g."result" in ('1-0', '0-1', '1/2-1/2')
+  and g."marked_bot" = false
+group by 1, 2, 3, 4, 5, 6
+having count(*) >= 10
+""".strip()
+_OPENING_RESULT_CELL_SQL = """
+with "bounds" as (
+  select
+    "source_cohort",
+    "source_period",
+    min("utc_date") as "period_start",
+    max("utc_date") as "period_end"
+  from "opening_game"
+  group by 1, 2
+),
+"played" as (
+  select
+    "source_period" as "period",
+    "source_cohort" as "cohort",
+    "time_control",
+    'white' as "color",
+    "white_rating" as "rating",
+    "black_rating" as "opponent_rating",
+    case
+      when "result" = '1-0' then 1.0
+      when "result" = '1/2-1/2' then 0.5
+      else 0.0
+    end as "score",
+    "ply_count",
+    "source_opening"
+  from "opening_game"
+  where "result" in ('1-0', '0-1', '1/2-1/2')
+    and "marked_bot" = false
+    and "white_rating" is not null
+    and "black_rating" is not null
+  union all
+  select
+    "source_period",
+    "source_cohort",
+    "time_control",
+    'black',
+    "black_rating",
+    "white_rating",
+    case
+      when "result" = '0-1' then 1.0
+      when "result" = '1/2-1/2' then 0.5
+      else 0.0
+    end,
+    "ply_count",
+    "source_opening"
+  from "opening_game"
+  where "result" in ('1-0', '0-1', '1/2-1/2')
+    and "marked_bot" = false
+    and "white_rating" is not null
+    and "black_rating" is not null
+)
+select
+  played."period",
+  played."cohort",
+  bounds."period_start",
+  bounds."period_end",
+  played."time_control",
+  played."color",
+  case
+    when played."rating" < 1200 then 'under_1200'
+    when played."rating" < 1600 then '1200_1599'
+    when played."rating" < 2000 then '1600_1999'
+    else '2000_plus'
+  end as "rating_band",
+  nullif(trim(split_part(coalesce(played."source_opening", ''), ':', 1)), '')
+    as "opening_family",
+  count(*) as "games",
+  count(*) filter (where played."score" = 1.0) as "wins",
+  count(*) filter (where played."score" = 0.5) as "draws",
+  count(*) filter (where played."score" = 0.0) as "losses",
+  avg(played."rating" - played."opponent_rating") as "rating_diff",
+  avg(played."ply_count") as "mean_ply"
+from "played"
+join "bounds"
+  on bounds."source_cohort" = played."cohort"
+ and bounds."source_period" = played."period"
+group by 1, 2, 3, 4, 5, 6, 7, 8
+having count(*) >= 10
+""".strip()
+
+
+def warehouse_source(connection) -> str:
+    """``fact_game`` when the analytical tables exist, else ``opening_game``."""
+    tables = _table_names(connection)
+    if "fact_game" in tables and "fact_player_game" in tables:
+        return "fact_game"
+    if "opening_game" in tables:
+        return "opening_game"
+    return ""
 
 
 def warehouse_rows(connection) -> list[dict[str, object]]:
     """Aggregate a local warehouse. Cells under 10 games are dropped.
 
-    The connection is a DuckDB database with ``fact_game`` and
-    ``fact_player_game``. ``fact_move`` adds clock cells when it is present.
-    Identifiers stay in the warehouse; this function does not select them.
+    ``fact_game`` plus ``fact_player_game`` is the analytical warehouse.
+    ``fact_move`` adds clock cells when it is present. ``opening_game`` is
+    the training selection; ``retained_game`` is not read, and that warehouse
+    has no move table so it does not emit clock cells. Opening family is the
+    text before the first colon, the same split as ``opening_family_expr``.
+    Cohort and period are ``source_cohort`` and ``source_period``, and the
+    row window is the min and max ``utc_date`` of that source, matching
+    ``corpus_month``. Identifiers stay in the warehouse.
     """
-    tables = _table_names(connection)
-    if "fact_game" not in tables or "fact_player_game" not in tables:
-        raise ValueError("warehouse is missing fact_game or fact_player_game")
-    rows: list[dict[str, object]] = []
-    rows.extend(_game_cells(connection))
-    rows.extend(_result_cells(connection, "result_cell", _RESULT_CELL_SQL, line=False))
-    rows.extend(_result_cells(connection, "result_line", _RESULT_LINE_SQL, line=True))
-    if "fact_move" in tables and _clock_columns_ready(connection):
-        rows.extend(_clock_cells(connection))
+    source = warehouse_source(connection)
+    if source == "fact_game":
+        rows = _fact_warehouse_rows(connection)
+    elif source == "opening_game":
+        rows = _opening_warehouse_rows(connection)
+    else:
+        raise ValueError("warehouse is missing fact_game or opening_game")
     issues = public_issues(rows)
     if issues:
         raise ValueError(f"warehouse cube failed the public check: {issues[0]}")
@@ -1765,6 +1916,9 @@ def locate_warehouse(explicit: Path | None = None, root: Path | None = None) -> 
     published = sorted((base / "data" / "published").glob("*/warehouse.duckdb"))
     if published:
         return published[-1]
+    openings = sorted((base / "data" / "openings" / "published").glob("*/warehouse.duckdb"))
+    if openings:
+        return openings[-1]
     return None
 
 
@@ -1792,6 +1946,24 @@ def _clock_columns_ready(connection) -> bool:
     return required <= columns
 
 
+def _fact_warehouse_rows(connection) -> list[dict[str, object]]:
+    tables = _table_names(connection)
+    rows: list[dict[str, object]] = []
+    rows.extend(_game_cells(connection))
+    rows.extend(_result_cells(connection, "result_cell", _RESULT_CELL_SQL, line=False))
+    rows.extend(_result_cells(connection, "result_line", _RESULT_LINE_SQL, line=True))
+    if "fact_move" in tables and _clock_columns_ready(connection):
+        rows.extend(_clock_cells(connection))
+    return rows
+
+
+def _opening_warehouse_rows(connection) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    rows.extend(_opening_game_cells(connection))
+    rows.extend(_opening_result_cells(connection))
+    return rows
+
+
 def _game_cells(connection) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
     for period, start, end, control, family, games, mean_ply in connection.execute(
@@ -1807,6 +1979,53 @@ def _game_cells(connection) -> list[dict[str, object]]:
                 time_control=None if control is None else str(control),
                 opening_family=None if family is None else str(family),
                 games=_num(games),
+                mean_ply=None if mean_ply is None else float(mean_ply),
+            )
+        )
+    return rows
+
+
+def _opening_game_cells(connection) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    found = connection.execute(_OPENING_GAME_CELL_SQL).fetchall()
+    for period, cohort, start, end, control, family, games, mean_ply in found:
+        rows.append(
+            _row(
+                grain="game_cell",
+                cohort=str(cohort),
+                period=str(period),
+                period_start=_parse_date(start),
+                period_end=_parse_date(end),
+                time_control=None if control is None else str(control),
+                opening_family=None if family is None else str(family),
+                games=_num(games),
+                mean_ply=None if mean_ply is None else float(mean_ply),
+            )
+        )
+    return rows
+
+
+def _opening_result_cells(connection) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for record in connection.execute(_OPENING_RESULT_CELL_SQL).fetchall():
+        period, cohort, start, end, control, color, rating, family = record[:8]
+        games, wins, draws, losses, rating_diff, mean_ply = record[8:]
+        rows.append(
+            _row(
+                grain="result_cell",
+                cohort=str(cohort),
+                period=str(period),
+                period_start=_parse_date(start),
+                period_end=_parse_date(end),
+                time_control=None if control is None else str(control),
+                color=None if color is None else str(color),
+                rating_band=None if rating is None else str(rating),
+                opening_family=None if family is None else str(family),
+                games=_num(games),
+                wins=_num(wins),
+                draws=_num(draws),
+                losses=_num(losses),
+                rating_diff=None if rating_diff is None else float(rating_diff),
                 mean_ply=None if mean_ply is None else float(mean_ply),
             )
         )

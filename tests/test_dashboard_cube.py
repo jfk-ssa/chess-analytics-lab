@@ -267,6 +267,10 @@ def test_committed_cube_matches_the_published_totals() -> None:
     sicilian_boards, sicilian_caption = transpositions(connection, sicilian)
     assert sicilian_boards
     assert all(item["family"] == "Sicilian Defense" for item in sicilian_boards)
+    titles = [str(item["title"]) for item in sicilian_boards]
+    assert len(titles) == len(set(titles))
+    assert all(title.startswith("After Black's move ") and " · " in title for title in titles)
+    assert titles[0] == "After Black's move 3 · 1.e4 c5 2.Nf3 Nc6 3.d4 cxd4"
     assert "not split" not in sicilian_caption
     colored = Filters(wide.start, wide.end, None, "black", None, "Sicilian Defense")
     colored_boards, colored_caption = transpositions(connection, colored)
@@ -311,6 +315,7 @@ def test_transposition_rows_drop_routes_under_ten_games(tmp_path: Path) -> None:
     assert len(found) == 1
     assert found[0]["move_orders"] == 2
     assert [item[0] for item in found[0]["routes"]] == ["1.e4 e6 2.d4 d5", "1.e4 e6 2.d4"]
+    assert found[0]["title"] == "After Black's move 2 · 1.e4 e6 2.d4 d5"
     assert "color" in caption
 
 
@@ -376,6 +381,150 @@ def _insert_game(connection, index: int, opening: str, ply: int, score: float) -
     connection.execute(
         "insert into fact_player_game values (?, ?, 'white', 'secret-user', 1500, 1400, ?)",
         ["lichess", game_id, score],
+    )
+
+
+def test_opening_game_warehouse_matches_corpus_windows(tmp_path: Path) -> None:
+    import duckdb
+
+    path = tmp_path / "warehouse.duckdb"
+    connection = duckdb.connect(str(path))
+    columns = """
+        provider varchar, game_id varchar, result varchar, rated boolean,
+        variant varchar, utc_date date, time_control varchar,
+        base_seconds bigint, increment_seconds bigint, source_opening varchar,
+        source_eco varchar, marked_bot boolean, ply_count bigint,
+        source_ordinal bigint, source_event varchar, record_fingerprint varchar,
+        white_rating bigint, black_rating bigint, source_snapshot_id varchar,
+        source_period varchar, source_file varchar, source_cohort varchar
+    """
+    connection.execute(f"create table opening_game ({columns})")
+    connection.execute(f"create table retained_game ({columns})")
+    for index in range(12):
+        _insert_opening(connection, index, "French Defense: Advance", "1-0", 40, date(2026, 8, 1))
+    for index in range(12, 22):
+        _insert_opening(connection, index, "Sicilian Defense: Najdorf", "0-1", 30, date(2026, 8, 1))
+    for index in range(22, 31):
+        _insert_opening(connection, index, "Caro-Kann Defense", "1/2-1/2", 20, date(2026, 8, 1))
+    _insert_opening(
+        connection,
+        31,
+        "French Defense: Advance",
+        "1-0",
+        40,
+        date(2026, 8, 1),
+        marked_bot=True,
+    )
+    _insert_opening(connection, 32, "French Defense: Advance", "*", 40, date(2026, 8, 1))
+    for index, played in enumerate((date(2025, 11, 1),) * 6 + (date(2025, 11, 30),) * 4, start=40):
+        _insert_opening(
+            connection,
+            index,
+            "King's Indian Defense: Classical",
+            "1-0",
+            50,
+            played,
+            cohort="elite_reference",
+            period="2025-11",
+        )
+    for index in range(60, 75):
+        _insert_opening(
+            connection,
+            index,
+            "Queen's Gambit: Declined",
+            "1-0",
+            40,
+            date(2026, 8, 1),
+            table="retained_game",
+        )
+    rows = warehouse_rows(connection)
+    connection.close()
+    assert public_issues(rows) == []
+    blob = " ".join(str(value) for row in rows for value in row.values())
+    assert "secret.pgn" not in blob
+    assert "fingerprint-secret" not in blob
+    assert {row["grain"] for row in rows} == {"game_cell", "result_cell"}
+    families = {row["opening_family"] for row in rows if row["grain"] == "game_cell"}
+    assert families == {"French Defense", "Sicilian Defense", "King's Indian Defense"}
+    french = next(
+        row
+        for row in rows
+        if row["grain"] == "game_cell" and row["opening_family"] == "French Defense"
+    )
+    assert french["cohort"] == "rated_public"
+    assert french["period"] == "2026-08"
+    assert french["period_start"] == date(2026, 8, 1)
+    assert french["period_end"] == date(2026, 8, 1)
+    assert french["games"] == 12
+    elite = next(row for row in rows if row["cohort"] == "elite_reference")
+    assert elite["period"] == "2025-11"
+    assert elite["period_start"] == date(2025, 11, 1)
+    assert elite["period_end"] == date(2025, 11, 30)
+    white = next(
+        row
+        for row in rows
+        if row["grain"] == "result_cell"
+        and row["opening_family"] == "French Defense"
+        and row["color"] == "white"
+    )
+    assert white["wins"] == 12
+    assert white["rating_band"] == "1200_1599"
+    assert white["rating_diff"] == 100
+    assert white["mean_ply"] == 40
+    black = next(
+        row
+        for row in rows
+        if row["grain"] == "result_cell"
+        and row["opening_family"] == "French Defense"
+        and row["color"] == "black"
+    )
+    assert black["wins"] == 0
+    assert black["losses"] == 12
+    assert black["rating_diff"] == -100
+    cube = tmp_path / CUBE_FILENAME
+    write_cube(rows, cube)
+    shown = connect(cube)
+    august = Filters(date(2026, 8, 1), date(2026, 8, 1))
+    cards = {item.label: item for item in kpis(shown, august)}
+    assert cards["Games"].value == "22"
+    assert cards["Win rate"].detail == "12 / 22 · White"
+    rated = Filters(date(2026, 8, 1), date(2026, 8, 1), None, None, "1200_1599")
+    rated_cards = {item.label: item for item in kpis(shown, rated)}
+    assert rated_cards["Games"].value == "22"
+    assert "White" in rated_cards["Games"].detail
+    black_only = Filters(date(2026, 8, 1), date(2026, 8, 1), None, "black")
+    black_cards = {item.label: item for item in kpis(shown, black_only)}
+    assert black_cards["Games"].value == "22"
+    assert black_cards["Win rate"].detail == "10 / 22"
+    full = Filters(date(2025, 11, 1), date(2026, 8, 1))
+    assert {item.label: item for item in kpis(shown, full)}["Games"].value == "32"
+    search_root = tmp_path / "search"
+    openings = search_root / "data" / "openings" / "published" / "abc"
+    openings.mkdir(parents=True)
+    found = openings / "warehouse.duckdb"
+    found.write_bytes(b"")
+    assert locate_warehouse(None, search_root) == found
+
+
+def _insert_opening(
+    connection,
+    index: int,
+    opening: str,
+    result: str,
+    ply: int,
+    played: date,
+    *,
+    marked_bot: bool = False,
+    cohort: str = "rated_public",
+    period: str = "2026-08",
+    table: str = "opening_game",
+) -> None:
+    connection.execute(
+        f'insert into "{table}" values ('
+        "?, ?, ?, true, 'standard', ?, '60+0', 60, 0, ?, 'C00', ?, ?, 1, "
+        "'rated blitz', 'fingerprint-secret', 1500, 1400, 'snapshot', ?, "
+        "'data/raw/secret.pgn', ?)",
+        ["lichess", f"{index:08d}", result, played, opening, marked_bot, ply, period, cohort],
     )
 
 

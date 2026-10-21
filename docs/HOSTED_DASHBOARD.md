@@ -26,7 +26,9 @@ and its continuations. The line chart uses the full SAN, does not stack
 bars that share a prefix, and lists the same lines in a table. Most
 common transpositions lists boards reached by at least two acyclic move
 orders, with the route count, total games, the top three orders, and a
-board from the Board control. Routes under 10 games are omitted. Family
+board from the Board control. Each card title is `After Black's move N`
+plus the leading SAN, matching the transpositions page, and sibling
+cards keep that form. Routes under 10 games are omitted. Family
 and date apply. Color, time control, and rating do not, and the caption
 says so. Clock drills from a band to the largest slices in that band.
 A slice is a rating, a time control, and a phase. Each section has one
@@ -84,19 +86,25 @@ uv run --locked --offline --no-editable --extra dashboard \
 The positions report is not on the tip. The script does not download it.
 The committed cube is 99,617 bytes and 6,623 rows.
 
-To append warehouse aggregates on a machine that has `warehouse.duckdb`:
+To append the 1,042,346-game openings warehouse, from the repository
+root on the machine that has the file, without `--offline`:
 
 ```sh
-uv run --locked --offline --no-editable --extra dashboard \
+uv run --locked --no-editable --extra dashboard \
   python scripts/build_warehouse_cube.py \
-  --warehouse /path/to/warehouse.duckdb
+  --warehouse data/openings/published/00e7a73fbf67c401e23b4b4b/warehouse.duckdb
 ```
 
-The command exits 2 when the file is missing. It drops cells under 10
-games, writes `game_cell`, `result_cell`, `result_line`, and `clock_cell`
-when `fact_move` is present, and refuses a file over 10 MB. This
-checkout has no warehouse, so that command was not used for the
-committed cube. The page reads those grains when they are present.
+The command exits 2 when the file is missing. It reads `opening_game`
+and does not read `retained_game`. It writes `game_cell` and
+`result_cell` (color, rating band, time control, the corpus period, and
+the opening family before the first colon). It does not write clock
+cells from that file. Cells under 10 games are dropped. The printed
+line includes the byte size and the `game_cell` game total. The write
+refuses a file over 10 MB. A `fact_game` warehouse uses the same script
+and can still add `result_line` and `clock_cell`. This checkout has no
+warehouse, so that command was not used for the committed cube. The
+page reads those grains when they are present.
 
 Check the page without a browser:
 

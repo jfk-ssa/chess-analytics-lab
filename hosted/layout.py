@@ -60,9 +60,9 @@ def equal_width_row(cards: list[tuple[str, str, str]]) -> str:
 def transposition_cards(items: list[dict]) -> str:
     """Equal-width cards for transposing positions.
 
-    Each item has ``family``, ``games``, ``move_orders``, and ``routes``.
-    A route is a ``(san, games)`` pair. Counts stay on one line. Move text
-    wraps on spaces.
+    Each item has ``title``, ``games``, ``move_orders``, and ``routes``.
+    ``title`` is the transpositions-page name of that board. A route is a
+    ``(san, games)`` pair. Counts stay on one line. Move text wraps on spaces.
     """
     columns = equal_width_columns(len(items))
     cells: list[str] = []
@@ -89,7 +89,7 @@ def transposition_cards(items: list[dict]) -> str:
             'color:#203433;overflow-wrap:normal;word-break:normal">'
             '<div class="cal-k" style="font-size:0.72rem;font-weight:600;'
             "line-height:1.3;overflow-wrap:normal;white-space:normal;"
-            f'">{escape(str(item["family"]))}</div>'
+            f'">{escape(str(item["title"]))}</div>'
             '<div class="cal-v" style="font-size:clamp(0.95rem,5.5cqi,1.45rem);'
             "font-weight:600;line-height:1.15;color:#116559;"
             "font-variant-numeric:tabular-nums;white-space:nowrap;"
