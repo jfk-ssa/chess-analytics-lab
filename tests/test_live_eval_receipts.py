@@ -1,4 +1,4 @@
-"""Pinned bytes for the first two committed live-eval receipts.
+"""Pinned bytes for the committed live-eval receipts.
 
 The files are the workflow artifacts. This module loads them and checks
 the runner's receipt fields. It does not call a provider.
@@ -9,7 +9,7 @@ import json
 from pathlib import Path
 from typing import TypedDict
 
-from chess_analytics.analyst.live_runner import RECEIPT_FIELDS, ROW_FIELDS
+from chess_analytics.analyst.live_runner import FROZEN_FILES, RECEIPT_FIELDS, ROW_FIELDS
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -64,6 +64,22 @@ PINS: tuple[_Pin, ...] = (
         "wilson": (0.9465407405415174, 0.9884930355140018),
         "bootstrap": (0.9291666666666667, 1.0),
     },
+    {
+        "path": "reports/live-eval-receipt-grok-4.7-low-r5-39541049632.json",
+        "sha256": "ddfce80bcc55b58e6f65f43765b79743c0849c061fb03510d790fa18c4ffa316",
+        "model": "grok-4.7",
+        "headline_passed": 233,
+        "headline_pass_rate": 0.9708333333333333,
+        "hard_fail": False,
+        "instructions_sha256": "622007a3deb785c204e58ba68419af0adbb0c0929d29dd97241038514d17181f",
+        "high_severity_misses": 0,
+        "over_abstention": 6,
+        "unsafe_answer": 0,
+        "known_gross_cost_usd": 1.003306,
+        "repair_counts": {"argument": 0, "extraction": 0, "semantic": 0},
+        "wilson": (0.9410304560608658, 0.9858012693274998),
+        "bootstrap": (0.9166666666666666, 1.0),
+    },
 )
 
 
@@ -107,8 +123,22 @@ def test_committed_receipts_match_the_schema_and_the_pinned_sha256():
         assert bootstrap["seed"] == 20261018
         assert bootstrap["resamples"] == 2000
         seen.append(receipt)
-    luna, sol = seen
+    luna, sol, grok = seen
     assert luna["frozen_file_sha256"] == sol["frozen_file_sha256"]
+    assert grok["frozen_file_sha256"] != luna["frozen_file_sha256"]
+    assert grok["reasoning_effort"] == "low"
+    assert grok["repeats"] == 5
+    assert grok["max_run_usd"] == 10.0
+    assert grok["reserved_usd"] == 9.82247
+    assert grok["unknown_cost_reservation_usd"] == 0
+    assert "dataset_id" not in grok
+    assert grok["case_set_sha256"] == luna["case_set_sha256"] == sol["case_set_sha256"]
+    assert grok["fixture_sha256"] == luna["fixture_sha256"] == sol["fixture_sha256"]
+    manifest = json.loads((ROOT / "evals/cases/analyst_live_v1_manifest.json").read_text())
+    assert grok["case_set_sha256"] == manifest["case_set_sha256"]
+    assert grok["fixture_sha256"] == manifest["fixture_sha256"]
+    frozen = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in FROZEN_FILES}
+    assert grok["frozen_file_sha256"] == frozen
     assert luna["instructions_sha256"] != sol["instructions_sha256"]
     assert luna["case_set_sha256"] == sol["case_set_sha256"]
     assert luna["fixture_sha256"] == sol["fixture_sha256"]
@@ -132,3 +162,28 @@ def test_committed_receipts_match_the_schema_and_the_pinned_sha256():
     assert indirect[0]["over_abstention"] is True
     assert indirect[0]["high_severity_miss"] is False
     assert indirect[0]["model_plan_before_semantic_repair"]["status"] == "needs_clarification"
+    assert grok["instructions_sha256"] not in {
+        luna["instructions_sha256"],
+        sol["instructions_sha256"],
+    }
+    assert grok["rubric_version"] == "live-eval-1.0"
+    assert grok["flaky_cases"] == ["usage_sicilian_3"]
+    grok_budget = [row for row in grok["rows"] if row["case_id"] == "boundary_budget"]
+    assert len(grok_budget) == 5
+    assert all(row["passed"] is True for row in grok_budget)
+    assert all(row["high_severity_miss"] is False for row in grok_budget)
+    grok_indirect = [row for row in grok["rows"] if row["case_id"] == "indirect_opening_1"]
+    assert len(grok_indirect) == 5
+    assert all(row["passed"] is False for row in grok_indirect)
+    assert all(row["over_abstention"] is True for row in grok_indirect)
+    assert all(row["high_severity_miss"] is False for row in grok_indirect)
+    assert all(row["model_plan_before_semantic_repair"]["actions"] == [] for row in grok_indirect)
+    sicilian = sorted(
+        (row for row in grok["rows"] if row["case_id"] == "usage_sicilian_3"),
+        key=lambda row: row["repeat"],
+    )
+    assert [row["passed"] for row in sicilian] == [True, False, False, True, True]
+    assert sicilian[1]["over_abstention"] is True
+    assert sicilian[2]["over_abstention"] is False
+    assert sicilian[2]["model_plan_before_semantic_repair"]["status"] == "answered"
+    assert sicilian[2]["failures"] == ["result_values", "tool_or_filters"]

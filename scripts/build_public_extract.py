@@ -947,7 +947,6 @@ def live_eval_tables(project: Path) -> tuple[list[dict], list[dict], list[dict]]
                     "passed": passed,
                     "repeats": receipt.repeats,
                     "severity": case.severity,
-                    "source_report": receipt.path.name,
                 }
             )
         for category, (passed, trials) in sorted(totals.items()):
@@ -957,7 +956,6 @@ def live_eval_tables(project: Path) -> tuple[list[dict], list[dict], list[dict]]
                     "effort": receipt.effort,
                     "model": receipt.model,
                     "passed": passed,
-                    "source_report": receipt.path.name,
                     "trials": trials,
                 }
             )

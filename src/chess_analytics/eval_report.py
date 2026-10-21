@@ -695,11 +695,35 @@ def _shared_field(receipts: list[Receipt], key: str) -> bool:
     return len({json.dumps(receipt.raw.get(key), sort_keys=True) for receipt in receipts}) == 1
 
 
+_FROZEN_INPUT_KEYS = (
+    "case_set_sha256",
+    "fixture_sha256",
+    "rubric_version",
+    "frozen_file_sha256",
+)
+
+
 def _frozen_inputs_match(receipts: list[Receipt]) -> bool:
-    return all(
-        _shared_field(receipts, key)
-        for key in ("case_set_sha256", "fixture_sha256", "rubric_version", "frozen_file_sha256")
-    )
+    return all(_shared_field(receipts, key) for key in _FROZEN_INPUT_KEYS)
+
+
+def _frozen_input_keys_that_differ(left: Receipt, right: Receipt) -> list[str]:
+    differed = []
+    for key in _FROZEN_INPUT_KEYS:
+        left_value = json.dumps(left.raw.get(key), sort_keys=True)
+        right_value = json.dumps(right.raw.get(key), sort_keys=True)
+        if left_value != right_value:
+            differed.append(key)
+    return differed
+
+
+def _changed_frozen_files(left: Receipt, right: Receipt) -> list[str]:
+    left_map = left.raw.get("frozen_file_sha256")
+    right_map = right.raw.get("frozen_file_sha256")
+    if not isinstance(left_map, dict) or not isinstance(right_map, dict):
+        return []
+    names = set(left_map) | set(right_map)
+    return sorted(name for name in names if left_map.get(name) != right_map.get(name))
 
 
 def _recorded_dataset_id(receipt: Receipt) -> str | None:
@@ -754,6 +778,22 @@ def _known_hash_explanation() -> str:
 
 def _pair_explanation(left: Receipt, right: Receipt) -> str:
     names = f"<b>{esc(left.label)}</b> vs <b>{esc(right.label)}</b>"
+    differed = _frozen_input_keys_that_differ(left, right)
+    if differed:
+        listed = ", ".join(f"<code>{esc(key)}</code>" for key in differed)
+        file_note = ""
+        if "frozen_file_sha256" in differed:
+            files = _changed_frozen_files(left, right)
+            if files:
+                shown = ", ".join(f"<code>{esc(name)}</code>" for name in files)
+                file_note = f" Changed files: {shown}."
+        instruction = ""
+        if str(left.raw.get("instructions_sha256")) != str(right.raw.get("instructions_sha256")):
+            instruction = " <code>instructions_sha256</code> also differs."
+        return (
+            f"{names}: frozen inputs differ on {listed}.{file_note}{instruction} "
+            "This report does not treat this pair as comparable."
+        )
     if not pair_explained_by_dataset_id(left, right):
         return (
             f"{names}: <code>instructions_sha256</code> differs and the cause is not recorded. "
@@ -1974,6 +2014,17 @@ def headline_title(receipts: list[Receipt]) -> str:
     return f"{best.label} leads and clears the gate"
 
 
+def _intervals_overlap(left: tuple[float, float], right: tuple[float, float]) -> bool:
+    return left[0] <= right[1] and right[0] <= left[1]
+
+
+def _only_high_severity_case(receipt: Receipt) -> str | None:
+    missed = {row.case_id for row in receipt.rows if row.high_severity_miss}
+    if len(missed) == 1:
+        return next(iter(missed))
+    return None
+
+
 def headline_sentence(receipts: list[Receipt]) -> str:
     best = max(receipts, key=lambda receipt: receipt.rate)
     sentence = (
@@ -1985,10 +2036,19 @@ def headline_sentence(receipts: list[Receipt]) -> str:
         misses = int(best.raw["high_severity_misses"])
         sentence += f" but records {_misses(misses)}, which sets hard_fail"
         if clear:
-            cheaper = max(clear, key=lambda receipt: receipt.rate)
-            sentence += f"; {cheaper.label} clears the gate at {pct(cheaper.rate, 2)}"
-            if cheaper.cost < best.cost:
-                sentence += f" and costs about 1/{best.cost / cheaper.cost:.0f} as much"
+            clearer = max(clear, key=lambda receipt: receipt.rate)
+            sentence += f"; {clearer.label} clears the gate at {pct(clearer.rate, 2)}"
+            if _intervals_overlap(clearer.wilson, best.wilson):
+                sentence += (
+                    f", the same pass-rate level on this one {best.repeats}-repeat sample "
+                    f"({clearer.passed}/{clearer.n} versus {best.passed}/{best.n}) "
+                    f"at {_ratio(clearer.cost, best.cost)} the leader's cost"
+                )
+                only = _only_high_severity_case(best)
+                if only is not None:
+                    sentence += f", without {best.label}'s hard fail on {only}"
+            elif clearer.cost < best.cost:
+                sentence += f" and costs about 1/{best.cost / clearer.cost:.0f} as much"
     return sentence + "."
 
 
@@ -2008,7 +2068,8 @@ def description_text(receipts: list[Receipt], n_cases: int) -> str:
         )
     return (
         f"{sentence} {asked} against a frozen chess fixture. Every reply is a tool plan, scored "
-        "against a governed reference plan; no LLM grades another LLM."
+        "against a governed reference plan; no LLM grades another LLM. "
+        "Each headline rate is one sample. The intervals describe that sample, not a second run."
     )
 
 
@@ -2137,6 +2198,8 @@ def hard_intro(receipts: list[Receipt], cases: dict[str, Case]) -> str:
 
 
 def _pair_caveat(left: Receipt, right: Receipt) -> str:
+    if _frozen_input_keys_that_differ(left, right):
+        return " (frozen inputs differ, see caveat)"
     if left.raw.get("instructions_sha256") == right.raw.get("instructions_sha256"):
         return ""
     if pair_explained_by_dataset_id(left, right):
@@ -2446,6 +2509,25 @@ def _repair_note(receipt: Receipt) -> str | None:
     )
 
 
+def _reasoning_tokens(receipt: Receipt) -> int:
+    usage = receipt.raw.get("token_usage")
+    if not isinstance(usage, dict):
+        return 0
+    return int(usage.get("reasoning_tokens") or 0)
+
+
+def _median_input(receipt: Receipt) -> float:
+    return float(statistics.median(row.input_tokens for row in receipt.rows))
+
+
+def _prompt_gap_is_price(receipts: list[Receipt]) -> bool:
+    """True when medians stay within 5% and no run records reasoning tokens."""
+    medians = [_median_input(receipt) for receipt in receipts]
+    if min(medians) <= 0 or max(medians) / min(medians) > 1.05:
+        return False
+    return all(_reasoning_tokens(receipt) == 0 for receipt in receipts)
+
+
 def _cost_take(receipts: list[Receipt]) -> str:
     if len(receipts) < 2:
         return "One run is plotted. Add another receipt under reports/ and the comparison appears."
@@ -2455,28 +2537,61 @@ def _cost_take(receipts: list[Receipt]) -> str:
             "Request counts differ "
             f"({listed}), so this report does not quote a cost ratio for the same work."
         )
-    expensive = max(receipts, key=lambda receipt: receipt.cost)
-    cheapest = min(receipts, key=lambda receipt: receipt.cost)
+    ordered = sorted(receipts, key=lambda receipt: receipt.cost)
+    cheapest = ordered[0]
+    expensive = ordered[-1]
     text = (
         f"<strong>{esc(expensive.label)} cost {_ratio(expensive.cost, cheapest.cost)} as "
         f"much</strong> "
         f"as {esc(cheapest.label)} ({usd(expensive.cost)} vs {usd(cheapest.cost)} for the same "
         f"{cheapest.n} requests)"
     )
+    if len(ordered) >= 3:
+        middle = ordered[-2]
+        text += (
+            f", and {_ratio(expensive.cost, middle.cost)} as much as {esc(middle.label)} "
+            f"({usd(middle.cost)})"
+        )
     if expensive.rate > cheapest.rate:
         gained = pct_num(expensive.rate - cheapest.rate, 2)
-        text += f" and bought {gained} points of headline pass rate."
-    else:
-        text += "."
+        text += f" and bought {gained} points of headline pass rate"
+    text += "."
+    leader = max(receipts, key=lambda receipt: receipt.rate)
+    if leader.hard_fail:
+        overlapping = [
+            receipt
+            for receipt in receipts
+            if receipt is not leader
+            and not receipt.hard_fail
+            and _intervals_overlap(receipt.wilson, leader.wilson)
+        ]
+        if overlapping:
+            who = max(overlapping, key=lambda receipt: receipt.rate)
+            text += (
+                f" {esc(leader.label)} has the highest pass rate and hard-fails. "
+                f"{esc(who.label)} clears the gate inside an overlapping Wilson interval, "
+                "so this sample does not separate them on quality."
+            )
     medians = ", ".join(
-        f"{esc(receipt.label)} {statistics.median(row.input_tokens for row in receipt.rows):,.0f}"
-        for receipt in receipts
+        f"{esc(receipt.label)} {_median_input(receipt):,.0f}" for receipt in receipts
+    )
+    sample = (
+        f" Each figure is one {receipts[0].repeats}-repeat sample, not a second run of the "
+        "same model."
+    )
+    if _prompt_gap_is_price(receipts):
+        return (
+            text
+            + f" Prompts are almost the same size (median input tokens: {medians}) and nearly all "
+            "of each is served from cache. So the gap comes from the price per token, not from "
+            "prompt length." + sample
+        )
+    reasoning = ", ".join(
+        f"{esc(receipt.label)} {_reasoning_tokens(receipt):,}" for receipt in receipts
     )
     return (
-        text
-        + f" Prompts are almost the same size (median input tokens: {medians}) and nearly all of "
-        f"each "
-        "is served from cache. So the gap comes from the price per token, not from prompt length."
+        text + f" Median input tokens: {medians}. Reasoning tokens: {reasoning}. "
+        "The gap is that reasoning and the longer reported input, not prompt length alone." + sample
     )
 
 
@@ -2588,6 +2703,20 @@ def _sensitivity_copy(extra: list[Receipt], headline: list[Receipt]) -> tuple[st
     return intro, "".join(scorecard(receipt) for receipt in extra)
 
 
+def _flaky_phrase(receipt: Receipt) -> str:
+    count = receipt.flaky_count()
+    phrase = f"<strong>{count}</strong> for {esc(receipt.label)}"
+    if count == 0 or count > 3:
+        return phrase
+    ids = [
+        case_id
+        for case_id, passed in receipt.passes_by_case().items()
+        if 0 < passed < receipt.repeats
+    ]
+    listed = ", ".join(f"<code>{esc(case_id)}</code>" for case_id in sorted(ids))
+    return f"{phrase} ({listed})"
+
+
 def _request_note(receipts: list[Receipt]) -> str:
     if len({receipt.n for receipt in receipts}) == 1:
         prefix = f"One dot per request, {receipts[0].n} per run."
@@ -2625,9 +2754,7 @@ def build_page(
     headline, extra = split_cohorts(receipts)
     repeats = headline[0].repeats
     n_cases = len(cases)
-    flaky = " vs ".join(
-        f"<strong>{receipt.flaky_count()}</strong> for {esc(receipt.label)}" for receipt in headline
-    )
+    flaky = " vs ".join(_flaky_phrase(receipt) for receipt in headline)
     sensitivity_intro, sensitivity_html = _sensitivity_copy(extra, headline)
     cost_take = _cost_take(headline)
     if extra:

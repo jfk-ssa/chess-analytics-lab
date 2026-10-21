@@ -10,8 +10,8 @@ version 2 and the page that sits on it. The local six-view dashboard
 is a different program and still needs the analytical warehouse.
 
 The page opens with three equal-width cards: opening-corpus training
-games, the August draw rate, and the analyst gate (Luna clears, Sol
-fails). Tabs are Overview, Openings, Clock pressure, AI analyst eval,
+games, the August draw rate, and the analyst gate (Luna and grok-4.7
+low clear; Sol fails). Tabs are Overview, Openings, Clock pressure, AI analyst eval,
 and About the data. Filters cover opening family, color, rating band,
 time control, phase, transposition cohort, and eval category. Charts
 are Altair, with the `chesslab` theme (Inter and the page palette).
@@ -21,9 +21,11 @@ Card rows use an inline grid,
 `repeat(auto-fit, minmax(min(100%, 256px), 1fr))`. The value is
 `white-space: nowrap`. 256px is 16rem at the CSS reference pixel.
 Streamlit's 14px root would make a literal 16rem 224px, and three of
-those tracks fit at 768px. With 256px, a 390px viewport is one column,
-four cards are two by two at 768px, and both card rows are one row at
-1280px. A leftover card stays as wide as the cards in the row above.
+those tracks fit at 768px. With 256px, a 390px viewport is one column
+and a 768px viewport holds two tracks. The three-card hero is one row
+at 1280px. The eval tab has six cards, so that row is four plus two at
+1280px and three rows of two at 768px. A leftover card stays as wide as
+the cards in the row above.
 The shared `.streamlit/config.toml` is unchanged.
 
 Version 2 adds `opening_color_score` (French and Sicilian, both colors,
@@ -32,7 +34,9 @@ the transposition reduction (`transposition_view`,
 `transposition_compression`, `transposition_coverage`,
 `transposition_scope`, `transposition_limitation`), and the live-eval
 summary (`live_eval_run`, `live_eval_category`, `live_eval_case`).
-Those receipts are `committed_report`. The file is 246,655 bytes.
+Those receipts are `committed_report`. Category and case rows omit
+`source_report`; the run row keeps the filename, and model plus effort
+joins a row to that run. The file is 253,517 bytes.
 
 ## Run locally
 

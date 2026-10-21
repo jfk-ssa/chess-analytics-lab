@@ -98,6 +98,11 @@ def _literal_currency(text: str) -> str:
     return text.replace("$", r"\$")
 
 
+def _html_currency(text: str) -> str:
+    """Escape a dollar inside HTML. A backslash would render inside the tag."""
+    return text.replace("$", "&#36;")
+
+
 def _caption(text: str) -> None:
     st.caption(_literal_currency(text))
 
@@ -627,21 +632,35 @@ def _short_model(model: str) -> str:
     return model
 
 
+def _ranges_overlap(left: dict, right: dict) -> bool:
+    return left["wilson_low"] <= right["wilson_high"] and right["wilson_low"] <= left["wilson_high"]
+
+
+def _join_labels(labels: list[str]) -> str:
+    if len(labels) == 1:
+        return labels[0]
+    if len(labels) == 2:
+        return f"{labels[0]} and {labels[1]}"
+    return ", ".join(labels[:-1]) + f", and {labels[-1]}"
+
+
 def _wilson_caption(runs: list[dict]) -> str:
-    by_rate = sorted(runs, key=lambda row: row["pass_rate"])
-    if len(by_rate) >= 2 and by_rate[-1]["wilson_low"] > by_rate[0]["wilson_high"]:
-        gap = "The Wilson intervals do not overlap."
-    else:
-        gap = "The Wilson intervals overlap."
-    clear = [_run_label(row) for row in runs if not row["hard_fail"]]
-    failed = [_run_label(row) for row in runs if row["hard_fail"]]
+    ordered = _by_gate(runs)
+    clear = [_run_label(row) for row in ordered if not row["hard_fail"]]
+    failed = [_run_label(row) for row in ordered if row["hard_fail"]]
     if clear and failed:
-        gate = f"{', '.join(clear)} clears and {', '.join(failed)} hard-fails."
+        gate = f"{_join_labels(clear)} clear; {', '.join(failed)} hard-fails."
     elif failed:
         gate = f"{', '.join(failed)} hard-fails."
     else:
         gate = "Every headline run clears the gate."
-    priced = [f"{_run_label(row)} {_usd(row['known_gross_cost_usd'])}" for row in _by_gate(runs)]
+    pairs = []
+    for index, left in enumerate(ordered):
+        for right in ordered[index + 1 :]:
+            verb = "overlap" if _ranges_overlap(left, right) else "do not overlap"
+            pairs.append(f"{_run_label(left)} and {_run_label(right)} {verb}")
+    gap = (" ".join(pairs) + ".") if pairs else ""
+    priced = [f"{_run_label(row)} {_usd(row['known_gross_cost_usd'])}" for row in ordered]
     costs = ", ".join(priced)
     return f"Gate first: {gate} {gap} Known cost is {costs}."
 
@@ -679,14 +698,14 @@ def _category_caption(
         )
     luna = _one_category(categories, "gpt-6-luna", "coverage")
     sol = _one_category(categories, "gpt-6-sol", "boundary")
-    luna_run = _one(runs, "model", "gpt-6-luna")
-    sol_run = _one(runs, "model", "gpt-6-sol")
     budget = _boundary_case(cases, "gpt-6-sol")
     missed = f"{budget[0]['passed']} of {budget[0]['repeats']}" if budget else "unscored"
+    abstentions = "; ".join(
+        f"{_run_label(row)} has {row['over_abstention']} over-abstentions" for row in _by_gate(runs)
+    )
     return (
-        f"Luna's coverage cases pass {luna['passed']} of {luna['trials']}, "
-        f"with {luna_run['over_abstention']} over-abstentions against Sol's "
-        f"{sol_run['over_abstention']}. "
+        f"{abstentions}. "
+        f"Luna's coverage cases pass {luna['passed']} of {luna['trials']}. "
         f"Sol's boundary cases pass {sol['passed']} of {sol['trials']}, "
         f"and boundary_budget passes {missed}."
     )
@@ -714,11 +733,15 @@ def _grid_caption(cases: list[dict]) -> str:
         return (
             "Color and the printed count are repeats passed. A pale cell is a miss on every repeat."
         )
-    return (
+    text = (
         "Color and the printed count are repeats passed. boundary_budget is "
         f"{sol[0]['passed']} of {sol[0]['repeats']} for gpt-6-sol and "
-        f"{luna[0]['passed']} of {luna[0]['repeats']} for gpt-6-luna."
+        f"{luna[0]['passed']} of {luna[0]['repeats']} for gpt-6-luna"
     )
+    grok = _boundary_case(cases, "grok-4.7")
+    if grok:
+        text += f", and {grok[0]['passed']} of {grok[0]['repeats']} for grok-4.7"
+    return text + "."
 
 
 def _build_rows(extract: dict, digest: str, rows) -> list[dict]:
@@ -756,23 +779,31 @@ def _figure_caption(extract: dict, rows) -> tuple[list[dict], str]:
     )
 
 
+def _gate_name(row: dict) -> str:
+    name = _short_model(row["model"])
+    if row["effort"] not in {"none", ""}:
+        return f"{name} {row['effort']}"
+    return name
+
+
 def _gate_card(runs: list[dict], cases: list[dict]) -> tuple[str, str, str]:
-    headline = [row for row in runs if row["headline"]]
-    clear = [row for row in headline if not row["hard_fail"]]
-    failed = [row for row in headline if row["hard_fail"]]
+    ordered = _by_gate([row for row in runs if row["headline"]])
+    clear = [row for row in ordered if not row["hard_fail"]]
+    failed = [row for row in ordered if row["hard_fail"]]
     if not clear or not failed:
         return ("Analyst gate", "No split gate", "This extract has one gate outcome.")
-    value = f"{_short_model(clear[0]['model'])} clear, {_short_model(failed[0]['model'])} fail"
+    clear_names = ", ".join(_gate_name(row) for row in clear)
+    fail_names = ", ".join(_gate_name(row) for row in failed)
+    value = f"{clear_names} clear; {fail_names} fail"
     parts = []
+    for row in clear:
+        parts.append(f"{_gate_name(row)} {_pct(row['pass_rate'])} clears")
     for row in failed:
         budget = _boundary_case(cases, row["model"])
         miss = f"{budget[0]['passed']}/{budget[0]['repeats']}" if budget else "unscored"
         parts.append(
-            f"{_short_model(row['model'])} {_pct(row['pass_rate'])} "
-            f"but misses boundary_budget {miss}"
+            f"{_gate_name(row)} {_pct(row['pass_rate'])} but misses boundary_budget {miss}"
         )
-    for row in clear:
-        parts.append(f"{_short_model(row['model'])} {_pct(row['pass_rate'])} clears")
     return ("Analyst gate", value, "; ".join(parts))
 
 
@@ -795,7 +826,7 @@ def _hero(layout, extract: dict, rows) -> None:
         _gate_card(runs, rows(extract, "live_eval_case")),
     ]
     st.markdown(
-        _literal_currency(layout.equal_width_row(cards)),
+        _html_currency(layout.equal_width_row(cards)),
         unsafe_allow_html=True,
     )
 
@@ -819,7 +850,7 @@ def _eval_cards(layout, runs: list[dict]) -> None:
             )
         )
     st.markdown(
-        _literal_currency(layout.equal_width_row(cards)),
+        _html_currency(layout.equal_width_row(cards)),
         unsafe_allow_html=True,
     )
 
@@ -1195,7 +1226,16 @@ def _table_index(extract: dict, rows) -> list[dict]:
     for name in extract["tables"]:
         body = rows(extract, name)
         sources = sorted({row["source_report"] for row in body if row.get("source_report")})
-        source = ", ".join(sources) if sources else "metric_receipt"
+        if sources:
+            source = ", ".join(sources)
+        elif name in {"live_eval_case", "live_eval_category"}:
+            run_rows = rows(extract, "live_eval_run")
+            run_sources = sorted(
+                {row["source_report"] for row in run_rows if row.get("source_report")}
+            )
+            source = ", ".join(run_sources) if run_sources else "live_eval_run"
+        else:
+            source = "metric_receipt"
         table.append({"Table": name, "Rows": f"{len(body):,}", "Source": source})
     return table
 

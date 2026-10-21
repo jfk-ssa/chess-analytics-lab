@@ -130,9 +130,11 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
         "7.8%",
         "86.3%",
         "97.5%",
-        "Luna clear, Sol fail",
+        "97.1%",
+        "Luna, grok-4.7 low clear; Sol fail",
         "boundary_budget 0/5",
         "25 over-abstentions",
+        "6 over-abstentions",
         draw["mart_id"],
         extract["build"]["source_snapshot_id"],
         extract["build"]["model_sha256"],
@@ -167,13 +169,14 @@ def test_cost_captions_keep_a_literal_dollar(project, monkeypatch):
     app = _run(project, monkeypatch)
     caption = _caption(app, "Known cost")
     visible = caption.replace(r"\$", "$")
-    assert "gpt-6-luna $0.0150, gpt-6-sol $0.2550" in visible
+    assert "gpt-6-luna $0.0150, grok-4.7 · low $1.0033, gpt-6-sol $0.2550" in visible
     for item in app.caption:
         assert "$" not in item.value.replace(r"\$", "")
     cards = "\n".join(item.value for item in app.markdown if "cal-card" in item.value)
-    for amount in (r"\$0.0150", r"\$0.2550", r"\$0.5000", r"\$10.0000"):
+    for amount in ("&#36;0.0150", "&#36;0.2550", "&#36;1.0033", "&#36;0.5000", "&#36;10.0000"):
         assert amount in cards
-    assert "$" not in cards.replace(r"\$", "")
+    assert "$" not in cards
+    assert r"\$" not in cards
 
 
 def _assert_live_eval_link(app) -> None:
@@ -285,7 +288,7 @@ _TRACKS = "repeat(auto-fit,minmax(min(100%,256px),1fr))"
 
 def _assert_equal_width_markup(app) -> None:
     markup = "\n".join(item.value for item in app.markdown)
-    for count in (3, 4):
+    for count in (3, 6):
         assert f'data-cards="{count}"' in markup
     assert _TRACKS in markup
     assert "white-space:nowrap" in markup

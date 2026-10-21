@@ -124,6 +124,20 @@ def validate_dispatch(
     }
 
 
+def run_title_effort(model: str, effort: str) -> str:
+    """Effort shown in the Actions run title.
+
+    GitHub evaluates ``run-name`` before any step, so the title cannot read
+    ``LIVE_EVAL_RESOLVED_EFFORT``. ``model-default`` uses ``DEFAULT_EFFORT``.
+    Any other input is shown as typed, including an effort ``check-inputs``
+    later rejects. The expression in ``.github/workflows/live-eval.yml``
+    matches this function for the three dispatch models.
+    """
+    if effort not in ("", "model-default"):
+        return effort
+    return DEFAULT_EFFORT.get(model, "none")
+
+
 def resolve_effort(model: str, effort: str) -> str:
     """model-default keeps OpenAI on none and grok-4.7 on low."""
     chosen = DEFAULT_EFFORT[model] if effort in ("", "model-default") else effort

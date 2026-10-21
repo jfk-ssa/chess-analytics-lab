@@ -788,9 +788,9 @@ def test_dashboard_reduction_matches_the_pinned_blob(project):
 def test_live_eval_rows_match_the_committed_receipts(project):
     extract = load_extract(extract_path(project))
     runs = {row["model"]: row for row in table_rows(extract, "live_eval_run")}
-    assert set(runs) == {"gpt-6-luna", "gpt-6-sol"}
+    assert set(runs) == {"gpt-6-luna", "gpt-6-sol", "grok-4.7"}
     receipts = sorted((project / "reports").glob("live-eval-receipt-*.json"))
-    assert len(receipts) == 2
+    assert len(receipts) == 3
     for path in receipts:
         receipt = json.loads(path.read_text())
         row = runs[receipt["model"]]
@@ -810,8 +810,18 @@ def test_live_eval_rows_match_the_committed_receipts(project):
     assert runs["gpt-6-luna"]["hard_fail"] is False
     assert runs["gpt-6-sol"]["passed"] == 234
     assert runs["gpt-6-luna"]["passed"] == 207
+    assert runs["grok-4.7"]["passed"] == 233
+    assert runs["grok-4.7"]["hard_fail"] is False
+    assert runs["grok-4.7"]["effort"] == "low"
+    assert runs["grok-4.7"]["known_gross_cost_usd"] == 1.003306
+    assert runs["grok-4.7"]["wilson_low"] == 0.9410304560608658
     cases = table_rows(extract, "live_eval_case")
-    assert len(cases) == 96
+    assert len(cases) == 144
+    assert "source_report" not in cases[0]
+    categories = table_rows(extract, "live_eval_category")
+    assert "source_report" not in categories[0]
+    by_run = {(row["model"], row["effort"]): row["source_report"] for row in runs.values()}
+    assert len(by_run) == len(runs)
 
     def passed(model: str, case_id: str) -> int:
         matches = [row for row in cases if row["model"] == model and row["case_id"] == case_id]
@@ -820,7 +830,24 @@ def test_live_eval_rows_match_the_committed_receipts(project):
 
     assert passed("gpt-6-sol", "boundary_budget") == 0
     assert passed("gpt-6-luna", "boundary_budget") == 5
-    assert len(table_rows(extract, "live_eval_category")) == 20
+    assert passed("grok-4.7", "boundary_budget") == 5
+    assert passed("grok-4.7", "indirect_opening_1") == 0
+    assert passed("grok-4.7", "usage_sicilian_3") == 3
+    assert len(categories) == 30
+    rate_ids = {
+        row["receipt_id"]
+        for row in table_rows(extract, "metric_receipt")
+        if row["metric"] == "live_eval_pass_rate"
+    }
+    assert rate_ids == {
+        "live_eval_pass_rate:gpt-6-luna none",
+        "live_eval_pass_rate:gpt-6-sol none",
+        "live_eval_pass_rate:grok-4.7 low",
+    }
+    grok_rate = _receipt(extract, "live_eval_pass_rate:grok-4.7 low")
+    assert grok_rate["numerator"] == 233
+    assert grok_rate["denominator"] == 240
+    assert grok_rate["query_origin"] == "committed_report"
 
 
 def test_builder_help_matches_the_readme_mac_command(project, capsys):

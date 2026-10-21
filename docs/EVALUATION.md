@@ -99,7 +99,8 @@ byte for byte, under `reports/`:
 - `reports/live-eval-receipt-39519293762.json`, SHA-256
   `e62b777d6d77280d2423277ebe387d39f496ba23af0d04894e0a77ab9d507fee`
 
-Every score below is a field on those receipts. The commit is the Actions
+Every score below is a field on those receipts. The grok-4.7 receipt is
+in the section after this one. The commit is the Actions
 head SHA of the dispatch. It is not a receipt field. Luna's dispatch is
 [run 39494372489](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39494372489)
 at `04c757dc0ee7159db38420cbf2e2b681870b8029`. Sol's dispatch is
@@ -200,7 +201,10 @@ two committed hashes, judged as a pair. A later pair gets the same claim
 only when both receipts record `dataset_id`, those ids correspond one
 to one with the hashes, and the other frozen inputs still match.
 Otherwise that pair says the cause is not recorded and is not called
-comparable. An extra receipt does not change another pair's explanation.
+comparable. When `case_set_sha256`, `fixture_sha256`, `rubric_version`,
+or `frozen_file_sha256` differ, the page names those keys and does not
+call the pair comparable, even if the instruction hashes also differ.
+An extra receipt does not change another pair's explanation.
 See
 [ADR 0096](adr/0096-published-live-eval-report.md).
 
@@ -217,6 +221,38 @@ stopped on the first request with HTTP 400 and no scored row. The
 receipt text was `unavailable` because the error body was not an
 OpenAI object. That failure is retained in
 [ADR 0097](adr/0097-grok-http-error-detail.md). It is not a pass rate.
+
+A later low x5 dispatch completed. The artifact is committed as
+`reports/live-eval-receipt-grok-4.7-low-r5-39541049632.json`, SHA-256
+`ddfce80bcc55b58e6f65f43765b79743c0849c061fb03510d790fa18c4ffa316`.
+The Actions run is
+[39541049632](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39541049632)
+at `e396cf45dd111ec860b0ba06d1cf504189d1349d`. The input was
+`model-default`. The receipt records `reasoning_effort` `low`. The
+headline is 233/240 (0.9708333333333333). Wilson 95% is
+0.9410304560608658 to 0.9858012693274998. Bootstrap 95% is
+0.9166666666666666 to 1.0. `hard_fail` is false. High-severity misses,
+unsafe answers, and repairs are 0. Over-abstention is 6. Known gross
+cost is $1.003306 against `reserved_usd` 9.82247 and cap 10. That is
+67.036 times Luna and 3.935 times Sol, shown on the page as 67.0× and
+3.9×. The gap is reasoning tokens (69,776 inside 81,896 output tokens)
+and a longer reported input (median 3,810.5), not prompt length alone.
+
+`indirect_opening_1` failed all five repeats as over-abstentions
+(`unsupported`, empty actions). `usage_sicilian_3` is the only flaky
+case: 3/5 passed. Repeat 1 is an over-abstention. Repeat 2 answered
+with family `Sicilian` instead of `Sicilian Defense` and is a wrong
+answer. `boundary_budget` passed 5/5, so this run does not take Sol's
+hard fail. Sol's Wilson interval overlaps Grok's. Luna's does not.
+Sol versus Grok is an exact sign test p = 1.0000 (2 cases against 1).
+These are one 5-repeat sample per model.
+
+`frozen_file_sha256` differs from the Luna/Sol map on `live_runner.py`,
+`model_catalog.py`, `pricing.py`, and `provider.py`. The case set, the
+fixture, and the rubric match. There is no `dataset_id`. Luna versus
+Sol remains the comparable pair. Grok versus either OpenAI receipt is
+not comparable. See
+[ADR 0099](adr/0099-grok-live-eval-receipt.md).
 
 For offline replay, first run `chesslab demo --scope all`, then use the command
 in [DEMO.md](DEMO.md). Historical fixture harness checks are available with

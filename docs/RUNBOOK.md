@@ -363,7 +363,8 @@ before the first dispatch. The job does not probe the provider.
    default. Type a cap at or under the ceiling: Luna $0.50, Sol $10, or
    grok-4.7 $10. The ceiling is not scaled when the repeat count
    changes. `reasoning_effort` defaults to `model-default`, which is
-   `none` on the OpenAI ids and `low` on grok-4.7. The grok headline is
+   `none` on the OpenAI ids and `low` on grok-4.7. The run title shows
+   that resolved effort. The grok headline is
    low at 5 repeats with cap $10. For the sensitivity check, dispatch
    grok-4.7 twice more with `repeats` 1 and effort `medium`, then
    `high`. Run low first and compare its receipt `known_gross_cost_usd`
@@ -387,9 +388,11 @@ before the first dispatch. The job does not probe the provider.
 5. Download the artifact named
    `live-eval-receipt-<model>-<resolved effort>-r<repeats>-<run_id>`.
    `<run_id>` is the Actions run id. Retention is 90 days. The run title includes
-   the model, the reasoning-effort input, the repeats, and the cap.
-   Select `low` with 5 repeats, or `medium` or `high` with 1 repeat, so
-   the title matches the receipt. The job summary shows the model, the
+   the model, the resolved reasoning effort, the repeats, and the cap.
+   `model-default` is shown as `none` for the OpenAI ids and `low` for
+   grok-4.7. An explicit choice is shown as typed. Select `low` with 5
+   repeats, or `medium` or `high` with 1 repeat, so the title matches
+   the receipt. The job summary shows the model, the
    reasoning effort, the repeats, the pass rate labelled with that
    repeat count, its Wilson interval, the repair counts, hard fail, the
    known gross cost, and complete true or false. A 1-repeat summary

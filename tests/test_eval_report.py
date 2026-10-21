@@ -53,6 +53,7 @@ def test_receipts_are_discovered_by_github_run_id_not_a_hard_coded_list(tmp_path
     assert [path.name for path in committed] == [
         "live-eval-receipt-39494372489.json",
         "live-eval-receipt-39519293762.json",
+        "live-eval-receipt-grok-4.7-low-r5-39541049632.json",
     ]
     source = SOURCE.read_text(encoding="utf-8")
     assert "39494372489" not in source
@@ -64,11 +65,12 @@ def test_receipts_are_discovered_by_github_run_id_not_a_hard_coded_list(tmp_path
 
 def test_committed_page_matches_receipt_numbers_and_every_case():
     page = _page(_committed())
-    luna, sol = (json.loads(path.read_text(encoding="utf-8")) for path in _committed())
+    luna, sol, grok = (json.loads(path.read_text(encoding="utf-8")) for path in _committed())
     cases = _cases()
     assert page.title == "The most accurate model failed the gate"
     assert f"{pct(luna['headline_pass_rate'], 2)}" in page.scorecards_html
     assert f"{pct(sol['headline_pass_rate'], 2)}" in page.scorecards_html
+    assert f"{pct(grok['headline_pass_rate'], 2)}" in page.scorecards_html
     assert (
         f"{luna['headline_passed']} of {len(luna['rows'])} requests passed · 7 extraction repairs"
         in page.scorecards_html
@@ -77,10 +79,14 @@ def test_committed_page_matches_receipt_numbers_and_every_case():
         f"{sol['headline_passed']} of {len(sol['rows'])} requests passed · 0 repairs"
         in page.scorecards_html
     )
+    assert (
+        f"{grok['headline_passed']} of {len(grok['rows'])} requests passed · 0 repairs"
+        in page.scorecards_html
+    )
     assert "Hard fail" in page.scorecards_html
     assert "Gate clear" in page.scorecards_html
-    assert page.scorecards_html.count('class="ev-stat"') == 2
-    assert page.scorecards_html.count('class="ev-rate"') == 2
+    assert page.scorecards_html.count('class="ev-stat"') == 3
+    assert page.scorecards_html.count('class="ev-rate"') == 3
     assert "<small" not in page.scorecards_html
     assert all(ok for _, ok in page.checks)
     for case_id in cases:
@@ -116,13 +122,34 @@ def test_committed_page_matches_receipt_numbers_and_every_case():
     assert f"better on {wins_sol}" in page.pairwise_html
     assert f"on {wins_luna}" in page.pairwise_html
     assert "prompts differ only by dataset id" in page.pairwise_html
-    assert "86.25%" in page.description and "97.50%" in page.description
+    assert "frozen inputs differ" in page.pairwise_html
+    assert "frozen inputs differ" in page.caveat_html
+    assert "model_catalog.py" in page.caveat_html
+    wins_sol_grok, wins_grok, grok_probability = sign_test(_bits(sol), _bits(grok))
+    assert f"p = {grok_probability:.4f}" in page.pairwise_html
+    assert grok_probability == 1.0
+    assert f"better on {wins_grok}" in page.pairwise_html
+    assert f"on {wins_sol_grok}" in page.pairwise_html
+    assert "97.50%" in page.description
+    assert "86.25%" in page.scorecards_html
+    assert "97.08%" in page.description
+    assert "3.9×" in page.description
+    assert "boundary_budget" in page.description
+    assert "one 5-repeat sample" in page.description
+    assert "not a second run" in page.description
     assert "5 times" in page.description
     assert "5 high-severity misses" in page.description
     assert "cautious direction" not in page.fail_take_html
     assert "25 over-abstentions" in page.fail_take_html
+    assert "6 over-abstentions" in page.fail_take_html
     assert "7 no valid plans" in page.fail_take_html
     assert "1 wrong answer" in page.fail_take_html
+    assert "usage_sicilian_3" in page.flaky_take_html
+    assert "indirect_opening_1" in page.flaky_take_html
+    assert "67.0×" in page.cost_take_html
+    assert "3.9×" in page.cost_take_html
+    assert "not prompt length alone" in page.cost_take_html
+    assert "one 5-repeat sample" in page.cost_take_html
     assert "recovered_argument_suffixes" in page.notes_html
     assert "duplicated or trailing" not in page.notes_html
     assert "#9aa0a8" not in page.heatmap_svg
@@ -130,6 +157,7 @@ def test_committed_page_matches_receipt_numbers_and_every_case():
     assert PERFECT_TEXT in page.heatmap_svg
     assert PERFECT_DOT in page.heatmap_svg
     assert "live-eval-receipt-39494372489.json" in page.provenance_html
+    assert "live-eval-receipt-grok-4.7-low-r5-39541049632.json" in page.provenance_html
     assert "differs" in page.provenance_html
     assert "240 requests" in page.provenance_html
 
@@ -158,12 +186,13 @@ def test_page_builds_for_one_receipt_and_for_an_extra_effort(tmp_path):
     three = build_page([*committed, extra], cases, strict=True)
     assert "gpt-6-sol · high" in three.scorecards_html
     assert "gpt-6-luna" in three.scorecards_html
-    assert three.scorecards_html.count('class="ev-stat"') == 3
+    assert three.scorecards_html.count('class="ev-stat"') == 4
     assert "<small" not in three.scorecards_html
     assert three.receipt_files == (
         extra.name,
         committed[0].name,
         committed[1].name,
+        committed[2].name,
     )
     sol["headline_passed"] = 0
     broken = tmp_path / "live-eval-receipt-8.json"
@@ -247,7 +276,8 @@ def test_one_repeat_receipt_stays_out_of_the_headline_comparison(tmp_path):
     assert "grok-4.7 · high" in page.sensitivity_html
     assert "1 time" in page.sensitivity_intro
     assert "sign test" in page.sensitivity_intro
-    assert "grok-4.7" not in page.pairwise_html
+    assert "grok-4.7 · high" not in page.pairwise_html
+    assert "grok-4.7 · low" in page.pairwise_html
     assert "p = 0.0000" not in page.pairwise_html
     assert "Each model answered the same 48 analytics questions 5 times" not in page.description
     assert "Repeat counts differ" in page.description
@@ -264,9 +294,12 @@ def test_one_repeat_receipt_stays_out_of_the_headline_comparison(tmp_path):
     assert "This pair is comparable." in luna_sol
     grok_items = [item for item in items if "grok-4.7 · high" in item]
     assert grok_items
-    assert all(
-        "cause is not recorded" in item and "differ only by" not in item for item in grok_items
-    )
+    assert all("differ only by" not in item for item in grok_items)
+    assert all("does not treat this pair as comparable" in item for item in grok_items)
+    hashed = [item for item in grok_items if "cause is not recorded" in item]
+    frozen = [item for item in grok_items if "frozen inputs differ" in item]
+    assert hashed and frozen
+    assert all("gpt-6-" in item for item in hashed)
     assert "grok-4.7 · high (48)" in page.status_svg
     assert "gpt-6-luna (240)" in page.status_svg
     assert "grok-4.7 · high (48)" in page.failure_svg
@@ -445,7 +478,8 @@ def test_grok_efforts_stay_separate_and_one_repeat_is_sensitivity(tmp_path):
     assert "grok-4.7 · low" not in page.sensitivity_html
     assert "grok-4.7 · medium 1 time" in page.description
     assert "grok-4.7 · high 1 time" in page.description
-    assert "grok-4.7 · low 5 times" in page.description
+    assert "grok-4.7 · low" in page.description
+    assert "grok-4.7 · low 1 time" not in page.description
     assert "Not in this ratio" in page.cost_take_html
 
 

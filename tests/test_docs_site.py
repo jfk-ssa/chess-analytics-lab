@@ -258,7 +258,7 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     report = (output / "live-eval.html").read_text()
     assert 'class="page-live-eval"' in report
     assert 'href="live-eval.html" aria-current="page"' in report
-    assert "86.25%" in report and "97.50%" in report
+    assert "86.25%" in report and "97.50%" in report and "97.08%" in report
     assert "boundary_budget" in report
     assert "needs_clarification" in report
     assert "public_extract.py" in report
@@ -273,7 +273,8 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     assert "GitHub run-id order" in report
     luna_at = report.index("live-eval-receipt-39494372489.json")
     sol_at = report.index("live-eval-receipt-39519293762.json")
-    assert luna_at < sol_at
+    grok_at = report.index("live-eval-receipt-grok-4.7-low-r5-39541049632.json")
+    assert luna_at < sol_at < grok_at
     assert 'rel="preload"' in report
     assert "inter-latin-wght-normal.woff2" in report
     assert "live-eval.html" in (output / "sitemap.xml").read_text()
