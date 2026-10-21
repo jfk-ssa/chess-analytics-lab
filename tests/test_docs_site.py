@@ -68,6 +68,7 @@ def test_header_layouts_fit_without_a_horizontal_scroller():
     assert "min-height: 44px" in phone and "min-height: 24px" in phone
     assert "flex-wrap: wrap" in phone and "display: contents" in phone
     assert "repeat(5, minmax(0, 1fr))" in tablet
+    assert "repeat(6, minmax(0, 1fr))" in tablet
     assert ".cards.preview-cards" in css
     assert "grid-template-columns: minmax(0, 1fr);" in css
     assert "Analyze games" in (ROOT / "scripts/build_docs_site.py").read_text()
@@ -87,7 +88,7 @@ def test_materialized_positions_match_the_publication_checkpoint():
 def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     before = (ROOT / "reports/decisions-routing-comparison.html").read_bytes()
     result = site.build(ROOT, tmp_path / "output")
-    assert len(result["pages"]) == 8
+    assert len(result["pages"]) == 9
     assert result["local_links_checked"] > 50
     assert result["live_requests"] == result["data_downloads"] == 0
     output = tmp_path / "output"
@@ -121,6 +122,7 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
         ("Run the demo", "demo.html"),
         ("AI comparison", "comparison.html"),
         ("Opening learning", "opening-learning.html"),
+        ("Live eval", "live-eval.html"),
     )
     descriptions = set()
     for name in result["pages"]:
@@ -180,6 +182,22 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     index = (output / "index.html").read_text()
     assert 'class="cards preview-cards"' in index
     assert "Drop in a PGN" in index
+    report = (output / "live-eval.html").read_text()
+    assert 'class="page-live-eval"' in report
+    assert 'href="live-eval.html" aria-current="page"' in report
+    assert "86.25%" in report and "97.50%" in report
+    assert "boundary_budget" in report
+    assert "needs_clarification" in report
+    assert "public_extract.py" in report
+    assert "implementation_sha256" in report
+    assert "unexplained" not in report.lower()
+    assert "under investigation" not in report.lower()
+    assert "fonts.googleapis.com" not in report
+    assert "data:font/woff2" not in report
+    assert 'id="ev-heatmap-title"' in report and 'id="ev-heatmap-desc"' in report
+    assert 'rel="preload"' in report
+    assert "inter-latin-wght-normal.woff2" in report
+    assert "live-eval.html" in (output / "sitemap.xml").read_text()
     site.build(ROOT, output)  # A generated output is safely rebuildable.
 
 

@@ -19,6 +19,7 @@ live evaluations are recorded separately.
 | Analyze local game exports | [Local PGN guide](GAME_IMPORT.md) | Select Chess.com/Lichess files and a player per provider; inspect White-game recurrence and selected public-set coverage |
 | Explore opening learning | [Transposition learning](TRANSPOSITION_LEARNING.md) | [Interactive HTML](https://jfk-ssa.github.io/chess-analytics-lab/opening-learning.html), illustrative walkthrough, learning rationale and evaluation design |
 | Assess the AI evidence | [Evaluation guide](EVALUATION.md) → [evidence index](EVIDENCE_INDEX.md) | Fixture tests versus actual responses; frozen references and retained failures |
+| Read the live analyst scores | [Live eval page](https://jfk-ssa.github.io/chess-analytics-lab/live-eval.html) | Raw pass rate, intervals, hard fail, and per-case chart from the committed receipts |
 | Call the checked tools from another client | [MCP guide](MCP.md) | Optional stdio server; per-call evidence; planner scores do not transfer. [Real August prefix](MCP_EXAMPLE.md) |
 | Score a position locally | [Engine checks](ENGINE.md) | Configured local engine and opening continuations; not a new accuracy claim |
 | Compare rules, Jev and Decisions | [Classifier comparison](CLASSIFIER_COMPARISON.md) | Shared-case scores, cost and conclusions readable directly on GitHub |

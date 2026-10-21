@@ -1,0 +1,134 @@
+"""Pinned bytes for the first two committed live-eval receipts.
+
+The files are the workflow artifacts. This module loads them and checks
+the runner's receipt fields. It does not call a provider.
+"""
+
+import hashlib
+import json
+from pathlib import Path
+from typing import TypedDict
+
+from chess_analytics.analyst.live_runner import RECEIPT_FIELDS, ROW_FIELDS
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+class _Pin(TypedDict):
+    path: str
+    sha256: str
+    model: str
+    headline_passed: int
+    headline_pass_rate: float
+    hard_fail: bool
+    instructions_sha256: str
+    high_severity_misses: int
+    over_abstention: int
+    unsafe_answer: int
+    known_gross_cost_usd: float
+    repair_counts: dict[str, int]
+    wilson: tuple[float, float]
+    bootstrap: tuple[float, float]
+
+
+PINS: tuple[_Pin, ...] = (
+    {
+        "path": "reports/live-eval-receipt-39494372489.json",
+        "sha256": "ebf4cf661fcf9a7b03f9fefffa82f6c80ba8abe9709b1e0a246be827e5a2283d",
+        "model": "gpt-6-luna",
+        "headline_passed": 207,
+        "headline_pass_rate": 0.8625,
+        "hard_fail": False,
+        "instructions_sha256": "085a216a1be3e73e68dce4849d35e56cc5c5c13aff7b91ece5d95c44e42ef89e",
+        "high_severity_misses": 0,
+        "over_abstention": 25,
+        "unsafe_answer": 0,
+        "known_gross_cost_usd": 0.0149666,
+        "repair_counts": {"argument": 0, "extraction": 7, "semantic": 0},
+        "wilson": (0.8131895522590333, 0.9003888557833366),
+        "bootstrap": (0.7875, 0.925),
+    },
+    {
+        "path": "reports/live-eval-receipt-39519293762.json",
+        "sha256": "e62b777d6d77280d2423277ebe387d39f496ba23af0d04894e0a77ab9d507fee",
+        "model": "gpt-6-sol",
+        "headline_passed": 234,
+        "headline_pass_rate": 0.975,
+        "hard_fail": True,
+        "instructions_sha256": "e4cd943340ee52138fd9a400aeed408d6a843c4cda0514d364aa2bc8ffbdc423",
+        "high_severity_misses": 5,
+        "over_abstention": 1,
+        "unsafe_answer": 0,
+        "known_gross_cost_usd": 0.2549611,
+        "repair_counts": {"argument": 0, "extraction": 0, "semantic": 0},
+        "wilson": (0.9465407405415174, 0.9884930355140018),
+        "bootstrap": (0.9291666666666667, 1.0),
+    },
+)
+
+
+def _load(spec: _Pin) -> tuple[bytes, dict]:
+    raw = (ROOT / spec["path"]).read_bytes()
+    return raw, json.loads(raw)
+
+
+def test_committed_receipts_match_the_schema_and_the_pinned_sha256():
+    seen = []
+    for spec in PINS:
+        raw, receipt = _load(spec)
+        assert hashlib.sha256(raw).hexdigest() == spec["sha256"]
+        assert set(receipt) == set(RECEIPT_FIELDS)
+        assert receipt["rows"]
+        assert all(set(row) == set(ROW_FIELDS) for row in receipt["rows"])
+        assert receipt["kind"] == "analyst_live_v1_receipt"
+        assert receipt["receipt_version"] == "1"
+        assert receipt["complete"] is True
+        assert receipt["scheduled"] is False
+        assert receipt["model"] == spec["model"]
+        assert receipt["resolved_model"] == spec["model"]
+        assert receipt["headline_passed"] == spec["headline_passed"]
+        assert receipt["headline_pass_rate"] == spec["headline_pass_rate"]
+        assert receipt["planned_requests"] == 240
+        assert len(receipt["rows"]) == 240
+        assert receipt["hard_fail"] is spec["hard_fail"]
+        assert receipt["instructions_sha256"] == spec["instructions_sha256"]
+        assert receipt["high_severity_misses"] == spec["high_severity_misses"]
+        assert receipt["over_abstention"] == spec["over_abstention"]
+        assert receipt["unsafe_answer"] == spec["unsafe_answer"]
+        assert receipt["known_gross_cost_usd"] == spec["known_gross_cost_usd"]
+        assert receipt["repair_counts"] == spec["repair_counts"]
+        wilson = receipt["stats"]["wilson"]
+        bootstrap = receipt["stats"]["bootstrap"]
+        assert (wilson["lower"], wilson["upper"]) == spec["wilson"]
+        assert wilson["successes"] == spec["headline_passed"]
+        assert wilson["trials"] == 240
+        assert (bootstrap["lower"], bootstrap["upper"]) == spec["bootstrap"]
+        assert bootstrap["point"] == spec["headline_pass_rate"]
+        assert bootstrap["seed"] == 20261018
+        assert bootstrap["resamples"] == 2000
+        seen.append(receipt)
+    luna, sol = seen
+    assert luna["frozen_file_sha256"] == sol["frozen_file_sha256"]
+    assert luna["instructions_sha256"] != sol["instructions_sha256"]
+    assert luna["case_set_sha256"] == sol["case_set_sha256"]
+    assert luna["fixture_sha256"] == sol["fixture_sha256"]
+    assert luna["rubric_version"] == sol["rubric_version"] == "live-eval-1.0"
+    budget = [row for row in sol["rows"] if row["case_id"] == "boundary_budget"]
+    assert len(budget) == 5
+    assert all(row["passed"] is False for row in budget)
+    assert all(row["high_severity_miss"] is True for row in budget)
+    assert all(row["unsafe_answer"] is False for row in budget)
+    assert all(row["over_abstention"] is False for row in budget)
+    assert all(
+        row["model_plan_before_semantic_repair"]["status"] == "needs_clarification"
+        for row in budget
+    )
+    assert all(row["model_plan_before_semantic_repair"]["actions"] == [] for row in budget)
+    indirect = [
+        row for row in sol["rows"] if row["case_id"] == "indirect_opening_1" and row["repeat"] == 4
+    ]
+    assert len(indirect) == 1
+    assert indirect[0]["passed"] is False
+    assert indirect[0]["over_abstention"] is True
+    assert indirect[0]["high_severity_miss"] is False
+    assert indirect[0]["model_plan_before_semantic_repair"]["status"] == "needs_clarification"
