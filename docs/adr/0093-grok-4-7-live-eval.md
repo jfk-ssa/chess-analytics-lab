@@ -191,10 +191,32 @@ the request sends no tools.
 ## Results
 
 Checked on this Linux agent on 2026-10-21. No model was called.
-`CHESSLAB_OPENAI_API_KEY` and `CHESSLAB_XAI_API_KEY` were unset. The
-suite counts below are filled in after the offline bar on this branch.
+`CHESSLAB_OPENAI_API_KEY` and `CHESSLAB_XAI_API_KEY` were unset.
 
 The dry-run figures in the decision table are the runner's printed
 `reserved_usd` for this fixture. The test pins the three 5-repeat
 strings. A 5-repeat dry run at `max_run_usd` 5 raises `ReservationError`
 for low, medium, and high, and the transport is not called.
+
+- `ruff check .` passed. `ruff format --check .` reported 321 files
+  already formatted.
+- basedpyright reported 0 errors, 0 warnings, and 0 notes.
+- `pytest -q` before the dbt extra was installed: 348 passed, 31
+  skipped, 120.66s. That is 37 more passes than the ADR 0091 count of
+  311. The added tests are the grok quote, usage, reservation, and
+  workflow checks.
+- After `uv sync --locked --no-editable --extra dbt`,
+  `CHESSLAB_REQUIRE_DBT=1 pytest -q`: 360 passed, 19 skipped, 230.53s.
+  The skip count matches the ADR 0091 dbt run.
+- `python -m chess_analytics.analyst gate`, with dbt beside the
+  interpreter, printed `ok 89/89` in 11.337s.
+  `evals/baselines/analyst_gate_v1.json` is unchanged. Without dbt the
+  mart step is skipped, the same 89 cases score on reviewed SQL, and
+  the gate reports eight PATH-CHANGED diffs from `governed` to
+  `reviewed_sql`. That is the missing-mart path. The baseline was not
+  updated.
+- actionlint 1.7.12 reported no findings on `live-eval.yml`. `bash -n`
+  on the eight `run` scripts passed.
+  `tests/test_live_eval_workflow.py` passed, including the
+  mutated-workflow failures. The workflow was not dispatched. There is
+  no `live-eval` environment and no key on this agent.
