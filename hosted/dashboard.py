@@ -93,6 +93,15 @@ def _usd(value: float) -> str:
     return f"${value:,.4f}"
 
 
+def _literal_currency(text: str) -> str:
+    """Keep a currency amount literal. Streamlit treats ``$...$`` as LaTeX."""
+    return text.replace("$", r"\$")
+
+
+def _caption(text: str) -> None:
+    st.caption(_literal_currency(text))
+
+
 def _share(value: float, numerator: int) -> str:
     shown = _pct(value)
     if numerator > 0 and shown == "0.0%":
@@ -785,7 +794,10 @@ def _hero(layout, extract: dict, rows) -> None:
         ),
         _gate_card(runs, rows(extract, "live_eval_case")),
     ]
-    st.markdown(layout.equal_width_row(cards), unsafe_allow_html=True)
+    st.markdown(
+        _literal_currency(layout.equal_width_row(cards)),
+        unsafe_allow_html=True,
+    )
 
 
 def _eval_cards(layout, runs: list[dict]) -> None:
@@ -806,7 +818,10 @@ def _eval_cards(layout, runs: list[dict]) -> None:
                 f"Cap {_usd(row['max_run_usd'])}",
             )
         )
-    st.markdown(layout.equal_width_row(cards), unsafe_allow_html=True)
+    st.markdown(
+        _literal_currency(layout.equal_width_row(cards)),
+        unsafe_allow_html=True,
+    )
 
 
 def _overview(charts, extract: dict, rows) -> None:
@@ -824,13 +839,13 @@ def _overview(charts, extract: dict, rows) -> None:
         charts.funnel(funnel_rows),
         alt="Games removed from the August prefix: unrated, marked bots, and unknown results.",
     )
-    st.caption(
+    _caption(
         f"Of {seen:,} games read, {accepted:,} are accepted and {eligible:,} are eligible. "
         f"{removed:,} games are removed: "
         + ", ".join(f"{row['count']:,} {row['stage'].lower()}" for row in funnel_rows)
         + ". The opening corpus is not added to this funnel."
     )
-    st.caption(
+    _caption(
         "Query origin: metricflow. The draw-rate denominator matches "
         "m3_august_prefix:eligible_games."
     )
@@ -841,8 +856,8 @@ def _overview(charts, extract: dict, rows) -> None:
         charts.horizontal_bars(top, x_title="Games"),
         alt="Twelve largest opening families by games.",
     )
-    st.caption(_share_caption(top, denominator).replace("selected", "twelve largest"))
-    st.caption(
+    _caption(_share_caption(top, denominator).replace("selected", "twelve largest"))
+    _caption(
         f"Query origin: metricflow. Each share uses the opening_usage denominator, {denominator:,}."
     )
 
@@ -867,7 +882,7 @@ def _openings(charts, extract: dict, rows) -> None:
             charts.horizontal_bars(selected, x_title="Games"),
             alt="Opening family game counts for the families selected above.",
         )
-    st.caption(_share_caption(selected, denominator))
+    _caption(_share_caption(selected, denominator))
     st.subheader("Score and adjusted interval")
     plotted = _score_rows(rows(extract, "opening_color_score"), color=color, families=set(chosen))
     if plotted:
@@ -881,12 +896,12 @@ def _openings(charts, extract: dict, rows) -> None:
         for cell in rows(extract, "opening_color_score")
         if cell["family"] in set(chosen) and (color == "all" or cell["color"] == color)
     ]
-    st.caption(_score_caption(shown_cells))
-    st.caption("Query origin: metricflow. The raw half-point score is wins plus half the draws.")
+    _caption(_score_caption(shown_cells))
+    _caption("Query origin: metricflow. The raw half-point score is wins plus half the draws.")
     _score_table(rows(extract, "opening_color_score"))
     st.subheader("Transpositions")
     _transpositions(charts, extract, rows)
-    st.caption(f"All {len(families):,} families in opening_family_share, in extract order.")
+    _caption(f"All {len(families):,} families in opening_family_share, in extract order.")
     _show(_catalog(families), alt="Opening family game counts and shares.", height=420)
 
 
@@ -920,7 +935,7 @@ def _score_table(cells: list[dict]) -> None:
             }
         )
     _show(table, alt="Raw scores and, for Black, adjusted scores with bootstrap intervals.")
-    st.caption(
+    _caption(
         "Query origin: committed_report. The interval is adjusted_interval_low to "
         "adjusted_interval_high. Low support is under 100 games; these four cells are not flagged."
     )
@@ -928,23 +943,21 @@ def _score_table(cells: list[dict]) -> None:
 
 def _transpositions(charts, extract: dict, rows) -> None:
     scope = rows(extract, "transposition_scope")[0]
-    st.caption(
-        f"{scope['scope']} {scope['visits']:,} position visits from {scope['games']:,} games."
-    )
+    _caption(f"{scope['scope']} {scope['visits']:,} position visits from {scope['games']:,} games.")
     compression = rows(extract, "transposition_compression")
     _chart(
         charts,
         charts.compression(_compression_rows(compression)),
         alt="Endpoint compression by ply for the elite month and the rated public prefixes.",
     )
-    st.caption(_compression_caption(compression))
+    _caption(_compression_caption(compression))
     coverage = _coverage_rows(rows(extract, "transposition_coverage"))
     _chart(
         charts,
         charts.coverage(coverage),
         alt="Share of games covered by the top N recurring positions.",
     )
-    st.caption(_coverage_caption(rows(extract, "transposition_coverage")))
+    _caption(_coverage_caption(rows(extract, "transposition_coverage")))
     views = rows(extract, "transposition_view")
     cohort = st.selectbox(
         "Cohort",
@@ -958,7 +971,7 @@ def _transpositions(charts, extract: dict, rows) -> None:
         charts.transposition_bars(bars),
         alt="Share of distinct positions that can be reached by more than one route.",
     )
-    st.caption(
+    _caption(
         "A higher bar means more of that opening's positions are true transpositions. "
         "Frequency is not move quality."
     )
@@ -966,11 +979,11 @@ def _transpositions(charts, extract: dict, rows) -> None:
         _lens_table(views),
         alt="Game counts for the three d4 and g3 fianchetto lenses.",
     )
-    st.caption(
+    _caption(
         "Inside d4-g3, the elite month has more Catalan and King's Indian games "
         "than the public prefixes."
     )
-    st.caption("Query origin: committed_report. The reduction has no position ids.")
+    _caption("Query origin: committed_report. The reduction has no position ids.")
 
 
 def _clock(charts, extract: dict, rows) -> None:
@@ -1011,10 +1024,10 @@ def _clock(charts, extract: dict, rows) -> None:
             ),
             alt="Heatmap of the clock-pressure error proxy by rating band and time control.",
         )
-        st.caption(_heatmap_caption(plotted))
+        _caption(_heatmap_caption(plotted))
     else:
-        st.caption("Select a rating band and a time control.")
-    st.caption(
+        _caption("Select a rating band and a time control.")
+    _caption(
         "Query origin: committed_report. The heatmap pools clock_stratum "
         "from the same M4 publication as the four buckets. "
         "Gray cells have no evaluable moves. No independent-move interval is claimed."
@@ -1026,8 +1039,8 @@ def _clock(charts, extract: dict, rows) -> None:
         charts.bucket_bars(_bucket_rows(buckets)),
         alt="Error proxy for the four clock buckets.",
     )
-    st.caption(_bucket_caption(buckets))
-    st.caption("Query origin: reviewed_sql. Error proxy is proxy_errors / evaluable_moves.")
+    _caption(_bucket_caption(buckets))
+    _caption("Query origin: reviewed_sql. Error proxy is proxy_errors / evaluable_moves.")
     _show(_bucket_table(buckets), alt="Clock-bucket error proxy and evaluation coverage.")
 
 
@@ -1036,7 +1049,7 @@ def _eval_tab(layout, charts, extract: dict, rows) -> None:
     cases = rows(extract, "live_eval_case")
     categories = rows(extract, "live_eval_category")
     _eval_cards(layout, runs)
-    st.caption(
+    _caption(
         "Published live-eval report: "
         "[live-eval.html](https://jfk-ssa.github.io/chess-analytics-lab/live-eval.html)."
     )
@@ -1046,8 +1059,8 @@ def _eval_tab(layout, charts, extract: dict, rows) -> None:
         charts.wilson(_wilson_rows(_by_gate(runs))),
         alt="Headline pass rate for each model with its Wilson 95 percent interval.",
     )
-    st.caption(_wilson_caption(runs))
-    st.caption(
+    _caption(_wilson_caption(runs))
+    _caption(
         "Query origin: committed_report. The bar is the receipt Wilson 95 percent interval. "
         "A 1-repeat run would not be drawn as a 5-repeat rate."
     )
@@ -1065,7 +1078,7 @@ def _eval_tab(layout, charts, extract: dict, rows) -> None:
             charts.category_dumbbell(visible_categories, category_order=order),
             alt="Dumbbell of pass rate by category. Each point is one model.",
         )
-    st.caption(_category_caption(categories, cases, runs, set(chosen)))
+    _caption(_category_caption(categories, cases, runs, set(chosen)))
     visible_cases = _case_rows(cases, set(chosen))
     if visible_cases:
         case_order = [
@@ -1085,13 +1098,13 @@ def _eval_tab(layout, charts, extract: dict, rows) -> None:
             charts.case_grid(plotted, case_order=seen, model_order=model_order),
             alt="Grid of cases by model, colored by how many repeats passed.",
         )
-    st.caption(_grid_caption(visible_cases))
+    _caption(_grid_caption(visible_cases))
 
 
 def _about(extract: dict, path: Path, rows) -> None:
     digest = hashlib.sha256(path.read_bytes()).hexdigest()
     st.subheader("Build provenance")
-    st.caption(
+    _caption(
         "Mart id is the game_draw_rate receipt. Source snapshot, model sha256, "
         "lock sha256, and semantic manifest sha256 are the extract build record. "
         "Extract sha256 is the hash of that file's bytes."
@@ -1102,7 +1115,7 @@ def _about(extract: dict, path: Path, rows) -> None:
     )
     figure_rows, figure_caption = _figure_caption(extract, rows)
     st.subheader("Figure analytical id")
-    st.caption(figure_caption)
+    _caption(figure_caption)
     _show(
         figure_rows,
         alt="analytical_id on opening_family_share, opening_score_cell, and clock_bucket.",
@@ -1110,7 +1123,7 @@ def _about(extract: dict, path: Path, rows) -> None:
     st.subheader("Where the figures come from")
     _origin_captions(rows(extract, "metric_receipt"))
     st.subheader("Lineage")
-    st.caption(
+    _caption(
         "Query origin: committed_report. The extract stores these lineages separately. "
         "This page does not add them."
     )
@@ -1125,9 +1138,9 @@ def _about(extract: dict, path: Path, rows) -> None:
         ],
         alt="Pinned opening-positions report hash, games, and position visits.",
     )
-    st.caption(scope["scope"])
+    _caption(scope["scope"])
     for limitation in rows(extract, "transposition_limitation"):
-        st.caption(limitation["text"])
+        _caption(limitation["text"])
     st.subheader("Tables in this extract")
     _show(
         _table_index(extract, rows),
@@ -1142,14 +1155,14 @@ def _origin_captions(receipts: list[dict]) -> None:
         grouped[row["query_origin"]].add(row["metric"])
     for origin in ("metricflow", "reviewed_sql", "committed_report"):
         metrics = ", ".join(sorted(grouped[origin]))
-        st.caption(f"Query origin: {origin}. Metrics: {metrics}.")
+        _caption(f"Query origin: {origin}. Metrics: {metrics}.")
 
 
 def _lineage_tables(stages: list[dict]) -> None:
     ordered = sorted(stages, key=lambda row: (row["lineage"], row["stage_order"]))
     corpus = [row for row in ordered if row["lineage"] == "opening_corpus"]
     august = [row for row in ordered if row["lineage"] == "m3_august_prefix"]
-    st.caption("Opening corpus. A dash is an empty period or cohort.")
+    _caption("Opening corpus. A dash is an empty period or cohort.")
     _show(
         [
             {
@@ -1166,8 +1179,8 @@ def _lineage_tables(stages: list[dict]) -> None:
         if row["note"] not in notes:
             notes.append(row["note"])
     for note in notes:
-        st.caption(note)
-    st.caption("August prefix.")
+        _caption(note)
+    _caption("August prefix.")
     _show(
         [
             {"Population": row["population"], "Games": f"{row['count']:,}", "Note": row["note"]}
@@ -1193,7 +1206,7 @@ def _render(layout, charts, extract: dict, path: Path, rows) -> None:
     if stylesheet.is_file():
         st.html(stylesheet)
     st.title("Chess Analytics Lab")
-    st.caption(
+    _caption(
         "Read-only figures from data/public/dashboard_extract.json. "
         "No warehouse, no uploads, and no external calls."
     )
