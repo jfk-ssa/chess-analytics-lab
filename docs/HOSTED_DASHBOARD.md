@@ -33,12 +33,16 @@ Version 2 adds `opening_color_score` (French and Sicilian, both colors,
 the transposition reduction (`transposition_view`,
 `transposition_compression`, `transposition_coverage`,
 `transposition_scope`, `transposition_limitation`), and the live-eval
-summary (`live_eval_run`, `live_eval_category`, `live_eval_case`).
+summary (`live_eval_run`, `live_eval_category`, `live_eval_case`,
+`live_eval_effort_case`).
 Those receipts are `committed_report`. Category and case rows omit
 `source_report`; the run row keeps the filename, and model plus effort
-joins a row to that run. Each run row also carries `frozen_group`. The
-eval tab compares Wilson intervals only inside one group and says when
-a run sits outside it. The file is 253,793 bytes.
+joins a row to that run. Each run row also carries `frozen_group`,
+`instructions_sha256`, and `reasoning_tokens`. Headline charts and the
+six eval cards stay on the 5-repeat runs. The eval tab adds a grok
+reasoning-effort sweep for low (5 repeats) against medium and high
+(1 repeat each). Low is not strictly comparable with those two. The
+file is 259,038 bytes.
 
 ## Run locally
 

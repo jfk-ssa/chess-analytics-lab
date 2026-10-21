@@ -1,4 +1,4 @@
-# 0099. grok-4.7 low live-eval receipt
+# 0099. grok-4.7 live-eval receipts and reasoning-effort sweep
 
 - Status: accepted
 - Date: 2026-10-21
@@ -146,6 +146,82 @@ map as `resolve_effort`. `model-default` with `grok-4.7` shows `low`.
 shown as typed, including an effort `check-inputs` later rejects. This
 supersedes the ADR 0095 sentence that a model-default grok title says
 `model-default`.
+
+## Reasoning-effort sweep
+
+Two more artifacts are committed unchanged.
+
+`reports/live-eval-receipt-grok-4.7-medium-r1-39583448999.json`, SHA-256
+`539210c8ec139f48f3d8664ce8b827c61a6bbee8cabae2bb86c7358c1923b856`. Actions run
+[39583448999](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39583448999)
+at `15aaeb364d8b066a742d3d2db5b7eb8219238b17`. Runner `run_id`
+`10f0661cc4054f31a5eaaf76e60a1a31`. Effort `medium`, one repeat, cap 4,
+`reserved_usd` 3.734254, `known_gross_cost_usd` 0.322454. Headline 45/48
+(0.9375). Wilson 0.8316456194505365 to 0.9785167670916107. Bootstrap
+0.8541666666666666 to 1.0. `hard_fail` false. Over-abstention 3. Reasoning
+tokens 32,410. The failed rows are `coverage_1`, `coverage_2`, and
+`indirect_opening_1`, each an `unsupported` over-abstention.
+
+`reports/live-eval-receipt-grok-4.7-high-r1-39583461520.json`, SHA-256
+`185d7dfcc4dcd9b92983420ed7798ac218788a65c2d2927d13bd024302ff724a`. Actions run
+[39583461520](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39583461520)
+at the same commit. Runner `run_id` `471dacf9c8be41ab95b62d21978729ec`. Effort
+`high`, one repeat, cap 6.5, `reserved_usd` 6.093358. The JSON number
+`known_gross_cost_usd` is `0.40874600000000005`; six decimal places print
+$0.408746. Headline 47/48 (0.9791666666666666). Wilson 0.8910078200474814 to
+0.9963128890224893. Bootstrap 0.9375 to 1.0. `hard_fail` false.
+Over-abstention 1. Reasoning tokens 46,763. The failed row is
+`indirect_opening_1`, an `unsupported` over-abstention.
+
+`frozen_file_sha256`, `case_set_sha256`, and `fixture_sha256` match the low
+receipt and this checkout. `instructions_sha256` does not. Low is
+`622007a3deb785c204e58ba68419af0adbb0c0929d29dd97241038514d17181f`. Medium and
+high are both
+`be294fd35f35327317ab64e58a202ef822347e9ac3451cda01bdc29ae15cc8d3`. That digest
+is SHA-256 of the system prompt in `quote_request`. Reasoning effort is not in
+that string, so medium and high share it. Rebuilding the prompt at e396cf4 and
+at 15aaeb3, with the analytical snapshot id each tree produces, matches those
+two digests. Both prompts are 10,427 characters. The only difference is
+`Dataset: 06bc03a3eabab5bbf3b958ec` versus
+`Dataset: bea194558220eb669940d8f3`. The source snapshot ids are
+`000af1d6788d6662b5ddbc5f` and `833e99dd7038ee87a28ae339`. `analytics_hash` is
+unchanged (`d6b3209a334ab3ad`). The files inside `implementation_hash` that
+differ are only `src/chess_analytics/eval_report.py` and
+`src/chess_analytics/public_extract.py`. `uv.lock` and
+`tests/fixtures/live_eval_100.pgn` are the same bytes. The model therefore
+sees a different 24-character snapshot id. That is material. ADR 0096 treats
+a dataset-id-only difference as comparable only for the known Luna/Sol hash
+pair, or when both receipts record distinct `dataset_id` values. These grok
+receipts have no `dataset_id`. `pair_explained_by_dataset_id` stays false for
+this hash pair. Low versus medium, and low versus high, are not strictly
+comparable. The page says so and still shows the sweep. Medium versus high
+share the prompt, the frozen inputs, the case ids, and one repeat, so they
+are a matched pair. The sweep sign-tests only that pair: high is better on 2
+cases, medium on 0, exact two-sided p = 0.5. It does not sign-test low
+against either, and it does not say whether low's Wilson interval overlaps
+theirs. Medium and high Wilson intervals do overlap. All three clear the gate.
+That is a gate fact, not a pass-rate ranking.
+
+Per repeat, low costs $0.200661 (about $0.20) and uses 13,955.2 reasoning
+tokens. Medium costs $0.322454 and uses 32,410. High costs $0.408746 and uses
+46,763. The other 44 cases pass on every repeat of every effort.
+`coverage_1` and `coverage_2` pass 5/5 at low and 1/1 at high, and fail the
+one medium draw as over-abstention. `indirect_opening_1` fails every repeat
+of every effort as over-abstention. `usage_sicilian_3` is 3/5 at low (one
+over-abstention, one wrong answer) and passes the single medium draw and the
+single high draw.
+
+The 1-repeat runs are not folded into the 5-repeat Wilson chart, the category
+chart, the case grid, or the six headline cards. The gate card stays
+`Luna, grok-4.7 low clear; Sol fail`. Full case and category rows for the two
+1-repeat runs would not fit the 262,144 byte budget. Those rows are omitted.
+`live_eval_effort_case` stores the 12 grok rows for the four cases above.
+Run rows gain `instructions_sha256` and `reasoning_tokens`. The committed
+extract is 259,038 bytes. The same tables without the `build` key are
+258,692 bytes. Both are under 262,144. The metric receipts
+`live_eval_pass_rate:grok-4.7 medium` (45/48) and
+`live_eval_pass_rate:grok-4.7 high` (47/48) are `committed_report`. The build
+record and the non-live tables are unchanged.
 
 ## What this record leaves in place
 

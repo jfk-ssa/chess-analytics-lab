@@ -12,14 +12,17 @@ from chess_analytics.eval_report import (
     PERFECT_TEXT,
     ReportIntegrityError,
     _misses,
+    _pair_explanation,
     _times,
     build_page,
     discover_receipts,
     load_cases,
     load_receipts,
+    pair_explained_by_dataset_id,
     pct,
     scorecard,
     sign_test,
+    usd,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -54,6 +57,8 @@ def test_receipts_are_discovered_by_github_run_id_not_a_hard_coded_list(tmp_path
         "live-eval-receipt-39494372489.json",
         "live-eval-receipt-39519293762.json",
         "live-eval-receipt-grok-4.7-low-r5-39541049632.json",
+        "live-eval-receipt-grok-4.7-medium-r1-39583448999.json",
+        "live-eval-receipt-grok-4.7-high-r1-39583461520.json",
     ]
     source = SOURCE.read_text(encoding="utf-8")
     assert "39494372489" not in source
@@ -65,7 +70,12 @@ def test_receipts_are_discovered_by_github_run_id_not_a_hard_coded_list(tmp_path
 
 def test_committed_page_matches_receipt_numbers_and_every_case():
     page = _page(_committed())
-    luna, sol, grok = (json.loads(path.read_text(encoding="utf-8")) for path in _committed())
+    by_name = {path.name: json.loads(path.read_text(encoding="utf-8")) for path in _committed()}
+    luna = by_name["live-eval-receipt-39494372489.json"]
+    sol = by_name["live-eval-receipt-39519293762.json"]
+    grok = by_name["live-eval-receipt-grok-4.7-low-r5-39541049632.json"]
+    medium = by_name["live-eval-receipt-grok-4.7-medium-r1-39583448999.json"]
+    high = by_name["live-eval-receipt-grok-4.7-high-r1-39583461520.json"]
     cases = _cases()
     assert page.title == "The most accurate model failed the gate"
     assert f"{pct(luna['headline_pass_rate'], 2)}" in page.scorecards_html
@@ -165,6 +175,57 @@ def test_committed_page_matches_receipt_numbers_and_every_case():
     assert "live-eval-receipt-grok-4.7-low-r5-39541049632.json" in page.provenance_html
     assert "differs" in page.provenance_html
     assert "240 requests" in page.provenance_html
+    sweep = page.sweep_lead_html + page.sweep_cards_html + page.sweep_detail_html
+    assert page.sensitivity_html == ""
+    assert "1-repeat sensitivity check" in sweep
+    assert "not strictly comparable" in sweep
+    assert "06bc03a3eabab5bbf3b958ec" in sweep
+    assert "bea194558220eb669940d8f3" in sweep
+    assert "cause is not recorded" not in page.caveat_html
+    assert "cause is not recorded" not in sweep
+    assert "This pair is comparable." in page.caveat_html
+    for case_id in ("coverage_1", "coverage_2", "indirect_opening_1", "usage_sicilian_3"):
+        assert case_id in sweep
+    assert "The other 44 cases" in sweep
+    assert f"{pct(medium['headline_pass_rate'], 2)}" in sweep
+    assert f"{pct(high['headline_pass_rate'], 2)}" in sweep
+    assert "93.75%" not in page.scorecards_html
+    assert "97.92%" not in page.scorecards_html
+    assert usd(grok["known_gross_cost_usd"] / grok["repeats"], 6) in sweep
+    assert usd(medium["known_gross_cost_usd"], 6) in sweep
+    assert usd(high["known_gross_cost_usd"], 6) in sweep
+    assert "about $0.20" in sweep
+    assert "13,955.2" in sweep
+    assert f"{medium['token_usage']['reasoning_tokens']:,}" in sweep
+    assert f"{high['token_usage']['reasoning_tokens']:,}" in sweep
+    wins_medium, wins_high, sweep_p = sign_test(_bits(medium), _bits(high))
+    assert f"p = {sweep_p:.4f}" in sweep
+    assert f"better on {wins_high}" in sweep
+    assert f"on {wins_medium}" in sweep
+    assert "grok-4.7 · low</b> vs" not in sweep
+    assert "vs <b>grok-4.7 · low</b>" not in sweep
+    assert "Low's interval is not compared" in sweep
+    assert "All three clear the gate" in sweep
+    assert page.sweep_cards_html.count('class="ev-card"') == 3
+    assert 'id="ev-sweep-intervals-title"' in sweep
+    assert "The system prompt is the same except" in sweep
+    assert "the system prompt is the same except" not in sweep
+
+
+def test_grok_snapshot_pair_is_not_treated_as_comparable():
+    """ADR 0096's dataset-id exception does not cover the grok effort hashes."""
+    receipts = load_receipts(_committed())
+    by_key = {(receipt.model, receipt.effort): receipt for receipt in receipts}
+    low = by_key[("grok-4.7", "low")]
+    medium = by_key[("grok-4.7", "medium")]
+    high = by_key[("grok-4.7", "high")]
+    luna = by_key[("gpt-6-luna", "none")]
+    sol = by_key[("gpt-6-sol", "none")]
+    assert not pair_explained_by_dataset_id(low, medium)
+    assert not pair_explained_by_dataset_id(low, high)
+    assert pair_explained_by_dataset_id(luna, sol)
+    assert "not strictly comparable" in _pair_explanation(low, medium)
+    assert "This pair is comparable." not in _pair_explanation(low, medium)
 
 
 def _bits(receipt):
@@ -193,12 +254,7 @@ def test_page_builds_for_one_receipt_and_for_an_extra_effort(tmp_path):
     assert "gpt-6-luna" in three.scorecards_html
     assert three.scorecards_html.count('class="ev-stat"') == 4
     assert "<small" not in three.scorecards_html
-    assert three.receipt_files == (
-        extra.name,
-        committed[0].name,
-        committed[1].name,
-        committed[2].name,
-    )
+    assert three.receipt_files == (extra.name, *(path.name for path in committed))
     sol["headline_passed"] = 0
     broken = tmp_path / "live-eval-receipt-8.json"
     broken.write_text(json.dumps(sol), encoding="utf-8")
@@ -287,7 +343,8 @@ def test_one_repeat_receipt_stays_out_of_the_headline_comparison(tmp_path):
     assert "Each model answered the same 48 analytics questions 5 times" not in page.description
     assert "Repeat counts differ" in page.description
     assert "gpt-6-luna 5 times" in page.description
-    assert "grok-4.7 · high 1 time" in page.description
+    assert "grok-4.7 · high" in page.description
+    assert "1 time" in page.description
     assert "Not in this ratio" in page.cost_take_html
     assert "48 requests" in page.cost_take_html
     assert "headline sign test" in page.sensitivity_intro
@@ -300,15 +357,19 @@ def test_one_repeat_receipt_stays_out_of_the_headline_comparison(tmp_path):
     grok_items = [item for item in items if "grok-4.7 · high" in item]
     assert grok_items
     assert all("differ only by" not in item for item in grok_items)
-    assert all("does not treat this pair as comparable" in item for item in grok_items)
+    assert all(
+        "does not treat this pair as comparable" in item or "not strictly comparable" in item
+        for item in grok_items
+    )
     hashed = [item for item in grok_items if "cause is not recorded" in item]
     frozen = [item for item in grok_items if "frozen inputs differ" in item]
     assert hashed and frozen
     assert all("gpt-6-" in item for item in hashed)
-    assert "grok-4.7 · high (48)" in page.status_svg
+    one_repeat_label = "grok-4.7 · high (grok-h) (48)"
+    assert one_repeat_label in page.status_svg
     assert "gpt-6-luna (240)" in page.status_svg
-    assert "grok-4.7 · high (48)" in page.failure_svg
-    assert "grok-4.7 · high (48)" in page.request_svg
+    assert one_repeat_label in page.failure_svg
+    assert one_repeat_label in page.request_svg
     assert "out of 48 requests" in page.fail_take_html
     assert "out of 240 requests" in page.fail_take_html
 
@@ -481,8 +542,9 @@ def test_grok_efforts_stay_separate_and_one_repeat_is_sensitivity(tmp_path):
     assert "grok-4.7 · medium" in page.sensitivity_html
     assert "grok-4.7 · high" in page.sensitivity_html
     assert "grok-4.7 · low" not in page.sensitivity_html
-    assert "grok-4.7 · medium 1 time" in page.description
-    assert "grok-4.7 · high 1 time" in page.description
+    assert "grok-4.7 · medium" in page.description
+    assert "grok-4.7 · high" in page.description
+    assert "1 time" in page.description
     assert "grok-4.7 · low" in page.description
     assert "grok-4.7 · low 1 time" not in page.description
     assert "Not in this ratio" in page.cost_take_html

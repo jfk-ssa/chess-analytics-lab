@@ -5767,6 +5767,104 @@
         "trials": 10
       }
     ],
+    "live_eval_effort_case": [
+      {
+        "case_id": "coverage_1",
+        "effort": "high",
+        "failure_modes": "none",
+        "model": "grok-4.7",
+        "passed": 1,
+        "repeats": 1
+      },
+      {
+        "case_id": "coverage_1",
+        "effort": "low",
+        "failure_modes": "none",
+        "model": "grok-4.7",
+        "passed": 5,
+        "repeats": 5
+      },
+      {
+        "case_id": "coverage_1",
+        "effort": "medium",
+        "failure_modes": "over_abstention",
+        "model": "grok-4.7",
+        "passed": 0,
+        "repeats": 1
+      },
+      {
+        "case_id": "coverage_2",
+        "effort": "high",
+        "failure_modes": "none",
+        "model": "grok-4.7",
+        "passed": 1,
+        "repeats": 1
+      },
+      {
+        "case_id": "coverage_2",
+        "effort": "low",
+        "failure_modes": "none",
+        "model": "grok-4.7",
+        "passed": 5,
+        "repeats": 5
+      },
+      {
+        "case_id": "coverage_2",
+        "effort": "medium",
+        "failure_modes": "over_abstention",
+        "model": "grok-4.7",
+        "passed": 0,
+        "repeats": 1
+      },
+      {
+        "case_id": "indirect_opening_1",
+        "effort": "high",
+        "failure_modes": "over_abstention",
+        "model": "grok-4.7",
+        "passed": 0,
+        "repeats": 1
+      },
+      {
+        "case_id": "indirect_opening_1",
+        "effort": "low",
+        "failure_modes": "over_abstention",
+        "model": "grok-4.7",
+        "passed": 0,
+        "repeats": 5
+      },
+      {
+        "case_id": "indirect_opening_1",
+        "effort": "medium",
+        "failure_modes": "over_abstention",
+        "model": "grok-4.7",
+        "passed": 0,
+        "repeats": 1
+      },
+      {
+        "case_id": "usage_sicilian_3",
+        "effort": "high",
+        "failure_modes": "none",
+        "model": "grok-4.7",
+        "passed": 1,
+        "repeats": 1
+      },
+      {
+        "case_id": "usage_sicilian_3",
+        "effort": "low",
+        "failure_modes": "over_abstention,wrong_answer",
+        "model": "grok-4.7",
+        "passed": 3,
+        "repeats": 5
+      },
+      {
+        "case_id": "usage_sicilian_3",
+        "effort": "medium",
+        "failure_modes": "none",
+        "model": "grok-4.7",
+        "passed": 1,
+        "repeats": 1
+      }
+    ],
     "live_eval_run": [
       {
         "bootstrap_high": 0.925,
@@ -5778,12 +5876,14 @@
         "hard_fail": false,
         "headline": true,
         "high_severity_misses": 0,
+        "instructions_sha256": "085a216a1be3e73e68dce4849d35e56cc5c5c13aff7b91ece5d95c44e42ef89e",
         "known_gross_cost_usd": 0.0149666,
         "max_run_usd": 0.5,
         "model": "gpt-6-luna",
         "over_abstention": 25,
         "pass_rate": 0.8625,
         "passed": 207,
+        "reasoning_tokens": 0,
         "repeats": 5,
         "source_report": "live-eval-receipt-39494372489.json",
         "trials": 240,
@@ -5801,12 +5901,14 @@
         "hard_fail": true,
         "headline": true,
         "high_severity_misses": 5,
+        "instructions_sha256": "e4cd943340ee52138fd9a400aeed408d6a843c4cda0514d364aa2bc8ffbdc423",
         "known_gross_cost_usd": 0.2549611,
         "max_run_usd": 10.0,
         "model": "gpt-6-sol",
         "over_abstention": 1,
         "pass_rate": 0.975,
         "passed": 234,
+        "reasoning_tokens": 0,
         "repeats": 5,
         "source_report": "live-eval-receipt-39519293762.json",
         "trials": 240,
@@ -5824,18 +5926,70 @@
         "hard_fail": false,
         "headline": true,
         "high_severity_misses": 0,
+        "instructions_sha256": "622007a3deb785c204e58ba68419af0adbb0c0929d29dd97241038514d17181f",
         "known_gross_cost_usd": 1.003306,
         "max_run_usd": 10.0,
         "model": "grok-4.7",
         "over_abstention": 6,
         "pass_rate": 0.9708333333333333,
         "passed": 233,
+        "reasoning_tokens": 69776,
         "repeats": 5,
         "source_report": "live-eval-receipt-grok-4.7-low-r5-39541049632.json",
         "trials": 240,
         "unsafe_answer": 0,
         "wilson_high": 0.9858012693274998,
         "wilson_low": 0.9410304560608658
+      },
+      {
+        "bootstrap_high": 1.0,
+        "bootstrap_low": 0.8541666666666666,
+        "cases": 48,
+        "effort": "medium",
+        "frozen_group": "465d71c5b030724252f179234646a5de4ea1344daef7f94db44d3572a5f0ae41",
+        "github_run_id": 39583448999,
+        "hard_fail": false,
+        "headline": false,
+        "high_severity_misses": 0,
+        "instructions_sha256": "be294fd35f35327317ab64e58a202ef822347e9ac3451cda01bdc29ae15cc8d3",
+        "known_gross_cost_usd": 0.322454,
+        "max_run_usd": 4.0,
+        "model": "grok-4.7",
+        "over_abstention": 3,
+        "pass_rate": 0.9375,
+        "passed": 45,
+        "reasoning_tokens": 32410,
+        "repeats": 1,
+        "source_report": "live-eval-receipt-grok-4.7-medium-r1-39583448999.json",
+        "trials": 48,
+        "unsafe_answer": 0,
+        "wilson_high": 0.9785167670916107,
+        "wilson_low": 0.8316456194505365
+      },
+      {
+        "bootstrap_high": 1.0,
+        "bootstrap_low": 0.9375,
+        "cases": 48,
+        "effort": "high",
+        "frozen_group": "465d71c5b030724252f179234646a5de4ea1344daef7f94db44d3572a5f0ae41",
+        "github_run_id": 39583461520,
+        "hard_fail": false,
+        "headline": false,
+        "high_severity_misses": 0,
+        "instructions_sha256": "be294fd35f35327317ab64e58a202ef822347e9ac3451cda01bdc29ae15cc8d3",
+        "known_gross_cost_usd": 0.40874600000000005,
+        "max_run_usd": 6.5,
+        "model": "grok-4.7",
+        "over_abstention": 1,
+        "pass_rate": 0.9791666666666666,
+        "passed": 47,
+        "reasoning_tokens": 46763,
+        "repeats": 1,
+        "source_report": "live-eval-receipt-grok-4.7-high-r1-39583461520.json",
+        "trials": 48,
+        "unsafe_answer": 0,
+        "wilson_high": 0.9963128890224893,
+        "wilson_low": 0.8910078200474814
       }
     ],
     "metric_receipt": [
@@ -5939,6 +6093,17 @@
         "subject": "gpt-6-sol none"
       },
       {
+        "denominator": 48,
+        "mart_id": null,
+        "metric": "live_eval_pass_rate",
+        "model_sha256": null,
+        "numerator": 47,
+        "query_origin": "committed_report",
+        "receipt_id": "live_eval_pass_rate:grok-4.7 high",
+        "semantic_manifest_sha256": null,
+        "subject": "grok-4.7 high"
+      },
+      {
         "denominator": 240,
         "mart_id": null,
         "metric": "live_eval_pass_rate",
@@ -5948,6 +6113,17 @@
         "receipt_id": "live_eval_pass_rate:grok-4.7 low",
         "semantic_manifest_sha256": null,
         "subject": "grok-4.7 low"
+      },
+      {
+        "denominator": 48,
+        "mart_id": null,
+        "metric": "live_eval_pass_rate",
+        "model_sha256": null,
+        "numerator": 45,
+        "query_origin": "committed_report",
+        "receipt_id": "live_eval_pass_rate:grok-4.7 medium",
+        "semantic_manifest_sha256": null,
+        "subject": "grok-4.7 medium"
       },
       {
         "denominator": null,

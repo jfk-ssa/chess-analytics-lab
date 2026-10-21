@@ -137,6 +137,16 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
         "25 over-abstentions",
         "6 over-abstentions",
         "1 over-abstention",
+        "not strictly comparable",
+        "45/48",
+        "47/48",
+        "06bc03a3eabab5bbf3b958ec",
+        "bea194558220eb669940d8f3",
+        "coverage_1",
+        "coverage_2",
+        "indirect_opening_1",
+        "usage_sicilian_3",
+        "about \\$0.20",
         "share frozen inputs",
         "not compared",
         draw["mart_id"],
@@ -289,6 +299,10 @@ def _assert_alt_text(app) -> None:
         "Headline pass rate for each model with its Wilson 95 percent interval.",
         "Dumbbell of pass rate by category. Each point is one model.",
         "Grid of cases by model, colored by how many repeats passed.",
+        (
+            "Grok reasoning-effort pass rates with Wilson 95 percent intervals. "
+            "Low is a 5-repeat run. Medium and high are 1-repeat runs."
+        ),
     )
     assert alts == list(expected)
 

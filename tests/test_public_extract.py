@@ -787,37 +787,58 @@ def test_dashboard_reduction_matches_the_pinned_blob(project):
 
 def test_live_eval_rows_match_the_committed_receipts(project):
     extract = load_extract(extract_path(project))
-    runs = {row["model"]: row for row in table_rows(extract, "live_eval_run")}
-    assert set(runs) == {"gpt-6-luna", "gpt-6-sol", "grok-4.7"}
+    runs = {(row["model"], row["effort"]): row for row in table_rows(extract, "live_eval_run")}
+    assert set(runs) == {
+        ("gpt-6-luna", "none"),
+        ("gpt-6-sol", "none"),
+        ("grok-4.7", "low"),
+        ("grok-4.7", "medium"),
+        ("grok-4.7", "high"),
+    }
     receipts = sorted((project / "reports").glob("live-eval-receipt-*.json"))
-    assert len(receipts) == 3
+    assert len(receipts) == 5
     for path in receipts:
         receipt = json.loads(path.read_text())
-        row = runs[receipt["model"]]
+        row = runs[(receipt["model"], receipt["reasoning_effort"])]
         assert row["effort"] == receipt["reasoning_effort"]
         assert row["passed"] == receipt["headline_passed"]
         assert row["trials"] == receipt["planned_requests"]
         assert row["pass_rate"] == receipt["headline_pass_rate"]
         assert row["hard_fail"] is receipt["hard_fail"]
         assert row["repeats"] == receipt["repeats"]
-        assert row["headline"] is True
+        assert row["headline"] is (receipt["repeats"] == 5)
         assert row["wilson_low"] == receipt["stats"]["wilson"]["lower"]
         assert row["wilson_high"] == receipt["stats"]["wilson"]["upper"]
         assert row["known_gross_cost_usd"] == receipt["known_gross_cost_usd"]
+        assert row["instructions_sha256"] == receipt["instructions_sha256"]
+        assert row["reasoning_tokens"] == int(receipt["token_usage"].get("reasoning_tokens") or 0)
         assert row["source_report"] == path.name
-    assert runs["gpt-6-sol"]["wilson_low"] > runs["gpt-6-luna"]["wilson_high"]
-    assert runs["gpt-6-sol"]["hard_fail"] is True
-    assert runs["gpt-6-luna"]["hard_fail"] is False
-    assert runs["gpt-6-sol"]["passed"] == 234
-    assert runs["gpt-6-luna"]["passed"] == 207
-    assert runs["grok-4.7"]["passed"] == 233
-    assert runs["grok-4.7"]["hard_fail"] is False
-    assert runs["grok-4.7"]["effort"] == "low"
-    assert runs["grok-4.7"]["known_gross_cost_usd"] == 1.003306
-    assert runs["grok-4.7"]["wilson_low"] == 0.9410304560608658
-    assert runs["gpt-6-luna"]["frozen_group"] == runs["gpt-6-sol"]["frozen_group"]
-    assert runs["grok-4.7"]["frozen_group"] != runs["gpt-6-luna"]["frozen_group"]
-    assert len(runs["gpt-6-luna"]["frozen_group"]) == 64
+    assert runs[("gpt-6-sol", "none")]["wilson_low"] > runs[("gpt-6-luna", "none")]["wilson_high"]
+    assert runs[("gpt-6-sol", "none")]["hard_fail"] is True
+    assert runs[("gpt-6-luna", "none")]["hard_fail"] is False
+    assert runs[("gpt-6-sol", "none")]["passed"] == 234
+    assert runs[("gpt-6-luna", "none")]["passed"] == 207
+    grok = runs[("grok-4.7", "low")]
+    medium = runs[("grok-4.7", "medium")]
+    high = runs[("grok-4.7", "high")]
+    assert grok["passed"] == 233
+    assert grok["hard_fail"] is False
+    assert grok["effort"] == "low"
+    assert grok["known_gross_cost_usd"] == 1.003306
+    assert grok["wilson_low"] == 0.9410304560608658
+    assert medium["passed"] == 45
+    assert medium["headline"] is False
+    assert medium["trials"] == 48
+    assert high["passed"] == 47
+    assert high["headline"] is False
+    assert medium["frozen_group"] == high["frozen_group"] == grok["frozen_group"]
+    assert medium["instructions_sha256"] == high["instructions_sha256"]
+    assert medium["instructions_sha256"] != grok["instructions_sha256"]
+    assert (
+        runs[("gpt-6-luna", "none")]["frozen_group"] == runs[("gpt-6-sol", "none")]["frozen_group"]
+    )
+    assert grok["frozen_group"] != runs[("gpt-6-luna", "none")]["frozen_group"]
+    assert len(runs[("gpt-6-luna", "none")]["frozen_group"]) == 64
     cases = table_rows(extract, "live_eval_case")
     assert len(cases) == 144
     assert "source_report" not in cases[0]
@@ -846,11 +867,43 @@ def test_live_eval_rows_match_the_committed_receipts(project):
         "live_eval_pass_rate:gpt-6-luna none",
         "live_eval_pass_rate:gpt-6-sol none",
         "live_eval_pass_rate:grok-4.7 low",
+        "live_eval_pass_rate:grok-4.7 medium",
+        "live_eval_pass_rate:grok-4.7 high",
     }
     grok_rate = _receipt(extract, "live_eval_pass_rate:grok-4.7 low")
     assert grok_rate["numerator"] == 233
     assert grok_rate["denominator"] == 240
     assert grok_rate["query_origin"] == "committed_report"
+    medium_rate = _receipt(extract, "live_eval_pass_rate:grok-4.7 medium")
+    high_rate = _receipt(extract, "live_eval_pass_rate:grok-4.7 high")
+    assert medium_rate["numerator"] == 45 and medium_rate["denominator"] == 48
+    assert high_rate["numerator"] == 47 and high_rate["denominator"] == 48
+    assert medium_rate["query_origin"] == high_rate["query_origin"] == "committed_report"
+    effort = table_rows(extract, "live_eval_effort_case")
+    assert len(effort) == 12
+    assert {row["case_id"] for row in effort} == {
+        "coverage_1",
+        "coverage_2",
+        "indirect_opening_1",
+        "usage_sicilian_3",
+    }
+    assert "source_report" not in effort[0]
+
+    def effort_row(case_id: str, effort_name: str) -> dict:
+        matches = [
+            row for row in effort if row["case_id"] == case_id and row["effort"] == effort_name
+        ]
+        assert len(matches) == 1
+        return matches[0]
+
+    assert effort_row("coverage_1", "low")["passed"] == 5
+    assert effort_row("coverage_1", "medium")["passed"] == 0
+    assert effort_row("coverage_1", "high")["passed"] == 1
+    assert effort_row("coverage_2", "medium")["failure_modes"] == "over_abstention"
+    assert effort_row("indirect_opening_1", "high")["passed"] == 0
+    assert effort_row("usage_sicilian_3", "low")["failure_modes"] == "over_abstention,wrong_answer"
+    assert effort_row("usage_sicilian_3", "medium")["passed"] == 1
+    assert effort_row("usage_sicilian_3", "high")["passed"] == 1
 
 
 def test_live_eval_model_effort_must_be_unique(project, tmp_path):

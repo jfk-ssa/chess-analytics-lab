@@ -101,7 +101,7 @@ def test_scorecard_rows_use_equal_tracks():
     """Model cards share fr tracks. Caps keep a 56px rate inside the card."""
     css = (ROOT / "site/assets/site.css").read_text()
     template = (ROOT / "scripts/templates/live_eval.html.j2").read_text()
-    assert template.count('class="ev-cards"') == 2
+    assert template.count('class="ev-cards"') == 3
     cards = css[css.index(".ev-cards {") : css.index("}", css.index(".ev-cards {"))]
     assert "--ev-card-columns: 1;" in cards
     assert "grid-template-columns: repeat(var(--ev-card-columns), minmax(0, 1fr));" in cards
@@ -279,7 +279,15 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     luna_at = report.index("live-eval-receipt-39494372489.json")
     sol_at = report.index("live-eval-receipt-39519293762.json")
     grok_at = report.index("live-eval-receipt-grok-4.7-low-r5-39541049632.json")
-    assert luna_at < sol_at < grok_at
+    medium_at = report.index("live-eval-receipt-grok-4.7-medium-r1-39583448999.json")
+    high_at = report.index("live-eval-receipt-grok-4.7-high-r1-39583461520.json")
+    assert luna_at < sol_at < grok_at < medium_at < high_at
+    assert 'id="effort-sweep"' in report
+    assert "Grok reasoning-effort sweep" in report
+    assert "not strictly comparable" in report
+    assert "06bc03a3eabab5bbf3b958ec" in report
+    assert "bea194558220eb669940d8f3" in report
+    assert "1-repeat sensitivity check" in report
     assert 'rel="preload"' in report
     assert "inter-latin-wght-normal.woff2" in report
     assert "live-eval.html" in (output / "sitemap.xml").read_text()

@@ -33,6 +33,7 @@ TABLES = (
     "live_eval_run",
     "live_eval_category",
     "live_eval_case",
+    "live_eval_effort_case",
     "metric_receipt",
 )
 QUERY_ORIGINS = frozenset({"metricflow", "reviewed_sql", "committed_report"})
@@ -428,6 +429,25 @@ def _case_id(_row: dict, value: object) -> bool:
     return isinstance(value, str) and _CASE_ID.fullmatch(value) is not None
 
 
+_FAILURE_MODE_NAMES = (
+    "boundary_swap",
+    "other",
+    "over_abstention",
+    "plan_hallucination",
+    "unsafe",
+    "wrong_answer",
+)
+
+
+def _failure_modes(_row: dict, value: object) -> bool:
+    if not isinstance(value, str) or not value:
+        return False
+    if value == "none":
+        return True
+    parts = value.split(",")
+    return parts == sorted(set(parts)) and all(part in _FAILURE_MODE_NAMES for part in parts)
+
+
 _COLUMN_RULES = {
     "analytical_id": _hex(_HEX_24, optional=False),
     "bucket": _one_of(_BUCKETS),
@@ -436,8 +456,10 @@ _COLUMN_RULES = {
     "cohort": _optional_one_of(_COHORTS),
     "color": _one_of(_COLORS),
     "effort": _one_of(_EFFORTS),
+    "failure_modes": _failure_modes,
     "family": _family,
     "frozen_group": _hex(_HEX_64, optional=False),
+    "instructions_sha256": _hex(_HEX_64, optional=False),
     "interval_source_report": _optional_source,
     "lineage": _one_of(_LINEAGES),
     "mart_id": _hex(_HEX_24, optional=True),

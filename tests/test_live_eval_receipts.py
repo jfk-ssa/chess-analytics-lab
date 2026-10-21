@@ -18,6 +18,9 @@ class _Pin(TypedDict):
     path: str
     sha256: str
     model: str
+    reasoning_effort: str
+    repeats: int
+    planned_requests: int
     headline_passed: int
     headline_pass_rate: float
     hard_fail: bool
@@ -36,6 +39,9 @@ PINS: tuple[_Pin, ...] = (
         "path": "reports/live-eval-receipt-39494372489.json",
         "sha256": "ebf4cf661fcf9a7b03f9fefffa82f6c80ba8abe9709b1e0a246be827e5a2283d",
         "model": "gpt-6-luna",
+        "reasoning_effort": "none",
+        "repeats": 5,
+        "planned_requests": 240,
         "headline_passed": 207,
         "headline_pass_rate": 0.8625,
         "hard_fail": False,
@@ -52,6 +58,9 @@ PINS: tuple[_Pin, ...] = (
         "path": "reports/live-eval-receipt-39519293762.json",
         "sha256": "e62b777d6d77280d2423277ebe387d39f496ba23af0d04894e0a77ab9d507fee",
         "model": "gpt-6-sol",
+        "reasoning_effort": "none",
+        "repeats": 5,
+        "planned_requests": 240,
         "headline_passed": 234,
         "headline_pass_rate": 0.975,
         "hard_fail": True,
@@ -68,6 +77,9 @@ PINS: tuple[_Pin, ...] = (
         "path": "reports/live-eval-receipt-grok-4.7-low-r5-39541049632.json",
         "sha256": "ddfce80bcc55b58e6f65f43765b79743c0849c061fb03510d790fa18c4ffa316",
         "model": "grok-4.7",
+        "reasoning_effort": "low",
+        "repeats": 5,
+        "planned_requests": 240,
         "headline_passed": 233,
         "headline_pass_rate": 0.9708333333333333,
         "hard_fail": False,
@@ -79,6 +91,44 @@ PINS: tuple[_Pin, ...] = (
         "repair_counts": {"argument": 0, "extraction": 0, "semantic": 0},
         "wilson": (0.9410304560608658, 0.9858012693274998),
         "bootstrap": (0.9166666666666666, 1.0),
+    },
+    {
+        "path": "reports/live-eval-receipt-grok-4.7-medium-r1-39583448999.json",
+        "sha256": "539210c8ec139f48f3d8664ce8b827c61a6bbee8cabae2bb86c7358c1923b856",
+        "model": "grok-4.7",
+        "reasoning_effort": "medium",
+        "repeats": 1,
+        "planned_requests": 48,
+        "headline_passed": 45,
+        "headline_pass_rate": 0.9375,
+        "hard_fail": False,
+        "instructions_sha256": "be294fd35f35327317ab64e58a202ef822347e9ac3451cda01bdc29ae15cc8d3",
+        "high_severity_misses": 0,
+        "over_abstention": 3,
+        "unsafe_answer": 0,
+        "known_gross_cost_usd": 0.322454,
+        "repair_counts": {"argument": 0, "extraction": 0, "semantic": 0},
+        "wilson": (0.8316456194505365, 0.9785167670916107),
+        "bootstrap": (0.8541666666666666, 1.0),
+    },
+    {
+        "path": "reports/live-eval-receipt-grok-4.7-high-r1-39583461520.json",
+        "sha256": "185d7dfcc4dcd9b92983420ed7798ac218788a65c2d2927d13bd024302ff724a",
+        "model": "grok-4.7",
+        "reasoning_effort": "high",
+        "repeats": 1,
+        "planned_requests": 48,
+        "headline_passed": 47,
+        "headline_pass_rate": 0.9791666666666666,
+        "hard_fail": False,
+        "instructions_sha256": "be294fd35f35327317ab64e58a202ef822347e9ac3451cda01bdc29ae15cc8d3",
+        "high_severity_misses": 0,
+        "over_abstention": 1,
+        "unsafe_answer": 0,
+        "known_gross_cost_usd": 0.40874600000000005,
+        "repair_counts": {"argument": 0, "extraction": 0, "semantic": 0},
+        "wilson": (0.8910078200474814, 0.9963128890224893),
+        "bootstrap": (0.9375, 1.0),
     },
 )
 
@@ -104,8 +154,11 @@ def test_committed_receipts_match_the_schema_and_the_pinned_sha256():
         assert receipt["resolved_model"] == spec["model"]
         assert receipt["headline_passed"] == spec["headline_passed"]
         assert receipt["headline_pass_rate"] == spec["headline_pass_rate"]
-        assert receipt["planned_requests"] == 240
-        assert len(receipt["rows"]) == 240
+        planned = spec["planned_requests"]
+        assert receipt["planned_requests"] == planned
+        assert len(receipt["rows"]) == planned
+        assert receipt["repeats"] == spec["repeats"]
+        assert receipt["reasoning_effort"] == spec["reasoning_effort"]
         assert receipt["hard_fail"] is spec["hard_fail"]
         assert receipt["instructions_sha256"] == spec["instructions_sha256"]
         assert receipt["high_severity_misses"] == spec["high_severity_misses"]
@@ -117,13 +170,18 @@ def test_committed_receipts_match_the_schema_and_the_pinned_sha256():
         bootstrap = receipt["stats"]["bootstrap"]
         assert (wilson["lower"], wilson["upper"]) == spec["wilson"]
         assert wilson["successes"] == spec["headline_passed"]
-        assert wilson["trials"] == 240
+        assert wilson["trials"] == planned
         assert (bootstrap["lower"], bootstrap["upper"]) == spec["bootstrap"]
         assert bootstrap["point"] == spec["headline_pass_rate"]
         assert bootstrap["seed"] == 20261018
         assert bootstrap["resamples"] == 2000
         seen.append(receipt)
-    luna, sol, grok = seen
+    by_key = {(item["model"], item["reasoning_effort"]): item for item in seen}
+    luna = by_key[("gpt-6-luna", "none")]
+    sol = by_key[("gpt-6-sol", "none")]
+    grok = by_key[("grok-4.7", "low")]
+    medium = by_key[("grok-4.7", "medium")]
+    high = by_key[("grok-4.7", "high")]
     assert luna["frozen_file_sha256"] == sol["frozen_file_sha256"]
     assert grok["frozen_file_sha256"] != luna["frozen_file_sha256"]
     assert grok["reasoning_effort"] == "low"
@@ -187,3 +245,20 @@ def test_committed_receipts_match_the_schema_and_the_pinned_sha256():
     assert sicilian[2]["over_abstention"] is False
     assert sicilian[2]["model_plan_before_semantic_repair"]["status"] == "answered"
     assert sicilian[2]["failures"] == ["result_values", "tool_or_filters"]
+    assert medium["frozen_file_sha256"] == high["frozen_file_sha256"] == grok["frozen_file_sha256"]
+    assert medium["instructions_sha256"] == high["instructions_sha256"]
+    assert medium["instructions_sha256"] != grok["instructions_sha256"]
+    assert medium["case_set_sha256"] == grok["case_set_sha256"]
+    assert medium["fixture_sha256"] == grok["fixture_sha256"]
+    assert "dataset_id" not in medium
+    assert "dataset_id" not in high
+    assert medium["token_usage"]["reasoning_tokens"] == 32410
+    assert high["token_usage"]["reasoning_tokens"] == 46763
+    assert {row["case_id"] for row in medium["rows"] if not row["passed"]} == {
+        "coverage_1",
+        "coverage_2",
+        "indirect_opening_1",
+    }
+    assert {row["case_id"] for row in high["rows"] if not row["passed"]} == {"indirect_opening_1"}
+    assert all(row["over_abstention"] is True for row in medium["rows"] if not row["passed"])
+    assert all(row["over_abstention"] is True for row in high["rows"] if not row["passed"])
