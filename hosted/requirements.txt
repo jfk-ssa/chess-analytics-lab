@@ -1,12 +1,14 @@
-# Community Cloud installs this file with pip and does not install
-# chess-analytics-lab. The app imports the extract reader from src/.
-# Streamlit matches the dashboard extra. Pandas, protobuf, Altair, and
-# narwhals are pinned to uv.lock: an unpinned transitive install can
-# resolve different versions. Altair 5.5.0 is the version Streamlit
-# 1.65.0 depends on. Narwhals 2.26.0 has no dependencies of its own.
+# Community Cloud installs this file with pip. It does not install
+# chess-analytics-lab, and Streamlit does not install these pins itself.
+# The app imports the extract reader from src/.
+# Streamlit 1.65.0 depends on Altair. Altair 5.5.0 depends on narwhals
+# and jsonschema. Pandas and protobuf are Streamlit dependencies.
+# Each pin matches uv.lock so pip cannot resolve a different release.
 # Streamlit 1.65.0 accepts pandas<4,>=1.4.0 and protobuf<8,>=5.26.1.
+# Narwhals 2.26.0 has no dependencies of its own.
 streamlit==1.65.0
 altair==5.5.0
 narwhals==2.26.0
+jsonschema==4.26.0
 pandas==2.3.3
 protobuf==6.33.6

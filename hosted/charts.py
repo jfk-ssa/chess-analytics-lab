@@ -11,6 +11,8 @@ _Drawn = alt.Chart | alt.LayerChart
 _INSTALLED = False
 _SERIES = ("White, raw", "Black, raw", "Black, adjusted")
 _SERIES_COLORS = ("#3d6b8c", "#203433", "#116559")
+_ORANGE = "#a84a1f"
+_TEAL = "#116559"
 
 
 def install_theme() -> None:
@@ -45,7 +47,7 @@ def install_theme() -> None:
                     "labelFontSize": 12,
                     "titleFontSize": 12,
                 },
-                "range": {"category": ["#116559", "#c4552a", "#3d6b8c", "#b0892e", "#6b4c7a"]},
+                "range": {"category": ["#116559", "#a84a1f", "#3d6b8c", "#203433", "#6b4c7a"]},
                 "bar": {"color": "#116559"},
             }
         }
@@ -58,35 +60,30 @@ def _frame(chart: _Drawn, height: int) -> _Drawn:
 
 
 def funnel(rows: list[dict]) -> _Drawn:
-    """Centered bars. ``rows`` need stage, count, and order."""
-    plotted = [{**row, "left": -row["count"] / 2, "right": row["count"] / 2} for row in rows]
+    """Games removed. ``rows`` need stage, count, and order."""
+    order = alt.EncodingSortField(field="order", order="ascending")
     bars = (
-        alt.Chart(alt.Data(values=plotted))
-        .mark_bar(color="#116559", cornerRadius=3)
+        alt.Chart(alt.Data(values=rows))
+        .mark_bar(color=_TEAL, cornerRadius=2)
         .encode(
-            y=alt.Y(
-                "stage:N",
-                sort=alt.EncodingSortField(field="order", order="ascending"),
-                title=None,
-            ),
+            y=alt.Y("stage:N", sort=order, title=None),
             x=alt.X(
-                "left:Q",
-                title=None,
-                axis=alt.Axis(labels=False, ticks=False, grid=False, domain=False),
+                "count:Q",
+                title="Games removed",
+                scale=alt.Scale(domainMin=0),
             ),
-            x2="right:Q",
             tooltip=[
-                alt.Tooltip("stage:N", title="Stage"),
+                alt.Tooltip("stage:N", title="Removed"),
                 alt.Tooltip("count:Q", title="Games", format=","),
             ],
         )
     )
     labels = (
-        alt.Chart(alt.Data(values=plotted))
-        .mark_text(align="left", dx=8, color="#203433", font="Inter", fontSize=12)
+        alt.Chart(alt.Data(values=rows))
+        .mark_text(align="left", dx=6, color="#203433", font="Inter", fontSize=12)
         .encode(
-            y=alt.Y("stage:N", sort=alt.EncodingSortField(field="order", order="ascending")),
-            x="right:Q",
+            y=alt.Y("stage:N", sort=order),
+            x="count:Q",
             text=alt.Text("count:Q", format=","),
         )
     )
@@ -134,7 +131,7 @@ def score_intervals(rows: list[dict]) -> _Drawn:
             "rate:Q",
             title="Score",
             axis=alt.Axis(format="%"),
-            scale=alt.Scale(domain=[0.35, 0.62]),
+            scale=alt.Scale(domain=[0, 1]),
         )
     )
     intervals = [row for row in rows if row["low"] is not None]
@@ -142,15 +139,31 @@ def score_intervals(rows: list[dict]) -> _Drawn:
         return _frame(bars, 280)
     errors = (
         alt.Chart(alt.Data(values=intervals))
-        .mark_errorbar(color="#c4552a", ticks=True)
+        .mark_errorbar(color=_ORANGE, ticks=True)
         .encode(
             x=alt.X("family:N"),
             xOffset=alt.XOffset("series:N", scale=offset),
-            y=alt.Y("low:Q"),
+            y=alt.Y("low:Q", scale=alt.Scale(domain=[0, 1])),
             y2="high:Q",
         )
     )
     return _frame(bars + errors, 300)
+
+
+def _rate_domain(rows: list[dict]) -> list[float]:
+    rates = [
+        row["error_proxy_rate"]
+        for row in rows
+        if row.get("evaluable_moves") and row.get("error_proxy_rate") is not None
+    ]
+    if not rates:
+        return [0, 1]
+    low = min(rates)
+    high = max(rates)
+    if high <= low:
+        low = max(0.0, low - 0.05)
+        high = min(1.0, high + 0.05)
+    return [low, high]
 
 
 def heatmap(rows: list[dict], *, x_order: list[str], y_order: list[str]) -> _Drawn:
@@ -166,7 +179,7 @@ def heatmap(rows: list[dict], *, x_order: list[str], y_order: list[str]) -> _Dra
                 alt.Color(
                     "error_proxy_rate:Q",
                     title="Error proxy",
-                    scale=alt.Scale(domain=[0.04, 0.20], scheme="goldgreen", reverse=True),
+                    scale=alt.Scale(domain=_rate_domain(rows), scheme="goldgreen", reverse=True),
                     legend=alt.Legend(format=".0%"),
                 ),
                 alt.value("#e7e4da"),
@@ -203,7 +216,7 @@ def bucket_bars(rows: list[dict]) -> _Drawn:
 def wilson(rows: list[dict]) -> _Drawn:
     """Pass rate with the receipt's Wilson interval as a horizontal bar."""
     order = [row["label"] for row in rows]
-    color = alt.Scale(domain=["Gate clear", "Hard fail"], range=["#116559", "#c4552a"])
+    color = alt.Scale(domain=["Gate clear", "Hard fail"], range=[_TEAL, _ORANGE])
     rules = (
         alt.Chart(alt.Data(values=rows))
         .mark_rule(strokeWidth=3)
@@ -213,7 +226,7 @@ def wilson(rows: list[dict]) -> _Drawn:
                 "wilson_low:Q",
                 title="Pass rate",
                 axis=alt.Axis(format="%"),
-                scale=alt.Scale(domain=[0.75, 1]),
+                scale=alt.Scale(domain=[0, 1]),
             ),
             x2="wilson_high:Q",
             color=alt.Color("gate:N", scale=color, title=None),
@@ -224,7 +237,7 @@ def wilson(rows: list[dict]) -> _Drawn:
         .mark_point(filled=True, size=90)
         .encode(
             y=alt.Y("label:N", sort=order),
-            x="pass_rate:Q",
+            x=alt.X("pass_rate:Q", scale=alt.Scale(domain=[0, 1])),
             color=alt.Color("gate:N", scale=color, title=None),
             tooltip=[
                 alt.Tooltip("label:N", title="Run"),
@@ -238,19 +251,49 @@ def wilson(rows: list[dict]) -> _Drawn:
     return _frame(rules + points, 160)
 
 
-def category_bars(rows: list[dict], *, category_order: list[str]) -> _Drawn:
-    chart = (
-        alt.Chart(alt.Data(values=rows))
-        .mark_bar(cornerRadius=2)
+def category_dumbbell(rows: list[dict], *, category_order: list[str]) -> _Drawn:
+    """Pass rate by category. Points are models; the rule joins one category."""
+    models: list[str] = []
+    grouped: dict[str, list[float]] = {}
+    for row in rows:
+        if row["model"] not in models:
+            models.append(row["model"])
+        grouped.setdefault(row["category"], []).append(row["rate"])
+    spans = [
+        {"category": category, "low": min(rates), "high": max(rates)}
+        for category, rates in grouped.items()
+    ]
+    axis = alt.Scale(domain=[0, 1])
+    rules = (
+        alt.Chart(alt.Data(values=spans))
+        .mark_rule(color="#8aa399", strokeWidth=2)
         .encode(
             y=alt.Y("category:N", sort=category_order, title=None),
-            x=alt.X("rate:Q", title="Pass rate", axis=alt.Axis(format="%")),
+            x=alt.X(
+                "low:Q",
+                title="Pass rate",
+                axis=alt.Axis(format="%"),
+                scale=axis,
+                stack=None,
+            ),
+            x2="high:Q",
+        )
+    )
+    points = (
+        alt.Chart(alt.Data(values=rows))
+        .mark_point(filled=True, size=110)
+        .encode(
+            y=alt.Y("category:N", sort=category_order, title=None),
+            x=alt.X("rate:Q", scale=axis, stack=None),
             color=alt.Color(
                 "model:N",
                 title=None,
-                scale=alt.Scale(range=["#116559", "#c4552a", "#3d6b8c", "#b0892e"]),
+                sort=models,
+                scale=alt.Scale(
+                    domain=models,
+                    range=[_TEAL, _ORANGE, "#3d6b8c", "#203433"][: len(models)],
+                ),
             ),
-            xOffset="model:N",
             tooltip=[
                 alt.Tooltip("model:N", title="Model"),
                 alt.Tooltip("category:N", title="Category"),
@@ -258,42 +301,44 @@ def category_bars(rows: list[dict], *, category_order: list[str]) -> _Drawn:
             ],
         )
     )
-    return _frame(chart, max(220, 36 * len(category_order) + 24))
+    return _frame(rules + points, max(220, 32 * len(category_order) + 36))
 
 
 def case_grid(rows: list[dict], *, case_order: list[str], model_order: list[str]) -> _Drawn:
-    """Color is the number of repeats passed, on a fixed 0–5 scale."""
-    height = max(180, 16 * len(case_order) + 36)
-    chart = (
-        alt.Chart(alt.Data(values=rows))
-        .mark_rect(stroke="#faf9f5", strokeWidth=1)
-        .encode(
-            x=alt.X("model:N", sort=model_order, title=None),
-            y=alt.Y(
-                "case_id:N",
-                sort=case_order,
-                title=None,
-                axis=alt.Axis(labelLimit=220, labelFontSize=11),
-            ),
-            color=alt.Color(
-                "passed:O",
-                title="Repeats passed",
-                scale=alt.Scale(
-                    domain=[0, 1, 2, 3, 4, 5],
-                    range=["#f4d6c6", "#f6e7c1", "#e4efd4", "#b7d4c4", "#6eae9a", "#116559"],
-                ),
-            ),
-            tooltip=[
-                alt.Tooltip("case_id:N", title="Case"),
-                alt.Tooltip("category:N", title="Category"),
-                alt.Tooltip("model:N", title="Model"),
-                alt.Tooltip("passed:Q", title="Repeats passed"),
-                alt.Tooltip("repeats:Q", title="Repeats"),
-                alt.Tooltip("severity:N", title="Severity"),
-            ],
-        )
+    """One teal ramp. The printed number is repeats passed, on a fixed 0–5 scale."""
+    height = max(220, 22 * len(case_order) + 40)
+    base = alt.Chart(alt.Data(values=rows)).encode(
+        x=alt.X("model:N", sort=model_order, title=None),
+        y=alt.Y(
+            "case_id:N",
+            sort=case_order,
+            title=None,
+            axis=alt.Axis(labelLimit=220, labelFontSize=11),
+        ),
     )
-    return _frame(chart, height)
+    rects = base.mark_rect(stroke="#faf9f5", strokeWidth=1).encode(
+        color=alt.Color(
+            "passed:O",
+            title="Repeats passed",
+            scale=alt.Scale(
+                domain=[0, 1, 2, 3, 4, 5],
+                range=["#e7f3ef", "#c5e0d6", "#8ec4b0", "#4f9d86", "#1f7a64", "#116559"],
+            ),
+        ),
+        tooltip=[
+            alt.Tooltip("case_id:N", title="Case"),
+            alt.Tooltip("category:N", title="Category"),
+            alt.Tooltip("model:N", title="Model"),
+            alt.Tooltip("passed:Q", title="Repeats passed"),
+            alt.Tooltip("repeats:Q", title="Repeats"),
+            alt.Tooltip("severity:N", title="Severity"),
+        ],
+    )
+    counts = base.mark_text(font="Inter", fontSize=11).encode(
+        text=alt.Text("passed:Q", format="d"),
+        color=alt.condition(alt.datum.passed >= 3, alt.value("#faf9f5"), alt.value("#203433")),
+    )
+    return _frame(rects + counts, height)
 
 
 def compression(rows: list[dict]) -> _Drawn:
@@ -310,7 +355,7 @@ def compression(rows: list[dict]) -> _Drawn:
             color=alt.Color(
                 "cohort:N",
                 title=None,
-                scale=alt.Scale(range=["#116559", "#c4552a"]),
+                scale=alt.Scale(range=["#116559", "#a84a1f"]),
             ),
             tooltip=[
                 alt.Tooltip("cohort:N", title="Cohort"),
@@ -334,7 +379,7 @@ def coverage(rows: list[dict]) -> _Drawn:
             color=alt.Color(
                 "cohort:N",
                 title=None,
-                scale=alt.Scale(range=["#116559", "#c4552a"]),
+                scale=alt.Scale(range=["#116559", "#a84a1f"]),
             ),
             tooltip=[
                 alt.Tooltip("cohort:N", title="Cohort"),

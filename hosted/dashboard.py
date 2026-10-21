@@ -276,19 +276,28 @@ def _catalog(families: list[dict]) -> list[dict]:
     ]
 
 
+def _august(stages: list[dict], population: str) -> int:
+    match = [
+        row
+        for row in stages
+        if row["lineage"] == "m3_august_prefix" and row["population"] == population
+    ]
+    if len(match) != 1:
+        raise ValueError(f"August lineage stage is missing: {population}")
+    return match[0]["count"]
+
+
 def _funnel(stages: list[dict]) -> list[dict]:
-    labels = {"seen": "Seen", "accepted": "Accepted", "eligible_games": "Eligible"}
-    rows = []
-    for order, population in enumerate(labels):
-        match = [
-            row
-            for row in stages
-            if row["lineage"] == "m3_august_prefix" and row["population"] == population
-        ]
-        if len(match) != 1:
-            raise ValueError(f"August lineage stage is missing: {population}")
-        rows.append({"stage": labels[population], "count": match[0]["count"], "order": order})
-    return rows
+    """Games removed from the August prefix, not the near-equal population counts."""
+    labels = (
+        ("excluded", "Unrated"),
+        ("marked_bots", "Marked bots"),
+        ("unknown_results", "Unknown results"),
+    )
+    return [
+        {"stage": label, "count": _august(stages, population), "order": order}
+        for order, (population, label) in enumerate(labels)
+    ]
 
 
 def _score_rows(cells: list[dict], *, color: str, families: set[str]) -> list[dict]:
@@ -330,17 +339,37 @@ def _score_rows(cells: list[dict], *, color: str, families: set[str]) -> list[di
     return plotted
 
 
-def _score_caption(rows: list[dict]) -> str:
-    if not rows:
-        return "The committed score cells are French and Sicilian, 1400–1599, 60+0."
-    adjusted = [row for row in rows if row["series"] == "Black, adjusted"]
-    if not adjusted:
-        return (
-            "These are raw half-point scores. The adjusted interval was published for Black only."
+def _score_caption(cells: list[dict]) -> str:
+    sentences = []
+    families = []
+    for cell in cells:
+        if cell["family"] not in families:
+            families.append(cell["family"])
+    for family in families:
+        white = [row for row in cells if row["family"] == family and row["color"] == "white"]
+        black = [row for row in cells if row["family"] == family and row["color"] == "black"]
+        if not white or not black or black[0]["adjusted_interval_low"] is None:
+            continue
+        rate = white[0]["score_rate"]
+        low = black[0]["adjusted_interval_low"]
+        high = black[0]["adjusted_interval_high"]
+        if rate < low:
+            place = "below"
+        elif rate > high:
+            place = "above"
+        else:
+            place = "inside"
+        short = family.removesuffix(" Defense")
+        interval = f"{_pct(low)}–{_pct(high)}"
+        sentences.append(
+            f"{short} White is {_pct(rate)} ({_half_points(white[0])}), "
+            f"{place} the Black interval {interval}."
         )
+    if sentences:
+        return " ".join(sentences)
     return (
-        "White's raw score is lower in both families. "
-        "Both Black adjusted intervals cover a band around one half."
+        "These are raw half-point scores for the selected families. "
+        "The adjusted interval was published for Black only."
     )
 
 
@@ -464,9 +493,14 @@ def _bucket_table(buckets: list[dict]) -> list[dict]:
 
 def _bucket_caption(buckets: list[dict]) -> str:
     under = _one(buckets, "bucket", "under_10")
+    slow = _one(buckets, "bucket", "60_plus")
+    mid = _one(buckets, "bucket", "30_to_59")
+    relation = "above" if slow["error_proxy_rate"] > mid["error_proxy_rate"] else "below"
     return (
         f"Under 10 seconds has the highest error proxy, {_pct(under['error_proxy_rate'])}, "
-        f"and the thinnest coverage, {_pct(under['evaluation_coverage'])}."
+        f"and the thinnest coverage, {_pct(under['evaluation_coverage'])}. "
+        f"60+ seconds ({_pct(slow['error_proxy_rate'])}) is slightly {relation} "
+        f"30–59 seconds ({_pct(mid['error_proxy_rate'])})."
     )
 
 
@@ -558,7 +592,7 @@ def _view_games(views: list[dict], cohort: str, view: str) -> int:
 
 def _wilson_rows(runs: list[dict]) -> list[dict]:
     plotted = []
-    for row in sorted(runs, key=lambda item: item["github_run_id"]):
+    for row in _by_gate(runs):
         plotted.append(
             {
                 "label": _run_label(row),
@@ -574,16 +608,33 @@ def _wilson_rows(runs: list[dict]) -> list[dict]:
     return plotted
 
 
+def _by_gate(runs: list[dict]) -> list[dict]:
+    return sorted(runs, key=lambda row: (row["hard_fail"], row["github_run_id"]))
+
+
+def _short_model(model: str) -> str:
+    if model.startswith("gpt-6-"):
+        return model.removeprefix("gpt-6-").title()
+    return model
+
+
 def _wilson_caption(runs: list[dict]) -> str:
-    ordered = sorted(runs, key=lambda row: row["pass_rate"])
-    if len(ordered) >= 2 and ordered[-1]["wilson_low"] > ordered[0]["wilson_high"]:
+    by_rate = sorted(runs, key=lambda row: row["pass_rate"])
+    if len(by_rate) >= 2 and by_rate[-1]["wilson_low"] > by_rate[0]["wilson_high"]:
         gap = "The Wilson intervals do not overlap."
     else:
         gap = "The Wilson intervals overlap."
+    clear = [_run_label(row) for row in runs if not row["hard_fail"]]
     failed = [_run_label(row) for row in runs if row["hard_fail"]]
-    if failed:
-        return f"{gap} {', '.join(failed)} hard-fails."
-    return f"{gap} No run in this extract hard-fails."
+    if clear and failed:
+        gate = f"{', '.join(clear)} clears and {', '.join(failed)} hard-fails."
+    elif failed:
+        gate = f"{', '.join(failed)} hard-fails."
+    else:
+        gate = "Every headline run clears the gate."
+    priced = [f"{_run_label(row)} {_usd(row['known_gross_cost_usd'])}" for row in _by_gate(runs)]
+    costs = ", ".join(priced)
+    return f"Gate first: {gate} {gap} Known cost is {costs}."
 
 
 def _category_rows(categories: list[dict], chosen: set[str]) -> list[dict]:
@@ -602,7 +653,12 @@ def _category_rows(categories: list[dict], chosen: set[str]) -> list[dict]:
     return plotted
 
 
-def _category_caption(categories: list[dict], cases: list[dict], chosen: set[str]) -> str:
+def _category_caption(
+    categories: list[dict],
+    cases: list[dict],
+    runs: list[dict],
+    chosen: set[str],
+) -> str:
     visible = [row for row in categories if row["category"] in chosen]
     if not visible:
         return "Select a category to compare pass rates."
@@ -614,18 +670,17 @@ def _category_caption(categories: list[dict], cases: list[dict], chosen: set[str
         )
     luna = _one_category(categories, "gpt-6-luna", "coverage")
     sol = _one_category(categories, "gpt-6-sol", "boundary")
-    budget = [
-        row for row in cases if row["case_id"] == "boundary_budget" and row["model"] == "gpt-6-sol"
-    ]
-    missed = budget[0]["passed"] if budget else None
-    sentence = (
-        f"Luna's coverage cases pass {luna['passed']} of {luna['trials']}. "
-        f"Sol's boundary cases pass {sol['passed']} of {sol['trials']}"
+    luna_run = _one(runs, "model", "gpt-6-luna")
+    sol_run = _one(runs, "model", "gpt-6-sol")
+    budget = _boundary_case(cases, "gpt-6-sol")
+    missed = f"{budget[0]['passed']} of {budget[0]['repeats']}" if budget else "unscored"
+    return (
+        f"Luna's coverage cases pass {luna['passed']} of {luna['trials']}, "
+        f"with {luna_run['over_abstention']} over-abstentions against Sol's "
+        f"{sol_run['over_abstention']}. "
+        f"Sol's boundary cases pass {sol['passed']} of {sol['trials']}, "
+        f"and boundary_budget passes {missed}."
     )
-    if missed is None:
-        return sentence + "."
-    repeats = budget[0]["repeats"]
-    return sentence + f", and boundary_budget passes {missed} of {repeats}."
 
 
 def _one_category(rows: list[dict], model: str, category: str) -> dict:
@@ -647,9 +702,11 @@ def _grid_caption(cases: list[dict]) -> str:
     sol = _boundary_case(cases, "gpt-6-sol")
     luna = _boundary_case(cases, "gpt-6-luna")
     if not sol or not luna:
-        return "Color is repeats passed. A pale cell is a miss on every repeat."
+        return (
+            "Color and the printed count are repeats passed. A pale cell is a miss on every repeat."
+        )
     return (
-        "Color is repeats passed. boundary_budget is "
+        "Color and the printed count are repeats passed. boundary_budget is "
         f"{sol[0]['passed']} of {sol[0]['repeats']} for gpt-6-sol and "
         f"{luna[0]['passed']} of {luna[0]['repeats']} for gpt-6-luna."
     )
@@ -690,13 +747,31 @@ def _figure_caption(extract: dict, rows) -> tuple[list[dict], str]:
     )
 
 
+def _gate_card(runs: list[dict], cases: list[dict]) -> tuple[str, str, str]:
+    headline = [row for row in runs if row["headline"]]
+    clear = [row for row in headline if not row["hard_fail"]]
+    failed = [row for row in headline if row["hard_fail"]]
+    if not clear or not failed:
+        return ("Analyst gate", "No split gate", "This extract has one gate outcome.")
+    value = f"{_short_model(clear[0]['model'])} clear, {_short_model(failed[0]['model'])} fail"
+    parts = []
+    for row in failed:
+        budget = _boundary_case(cases, row["model"])
+        miss = f"{budget[0]['passed']}/{budget[0]['repeats']}" if budget else "unscored"
+        parts.append(
+            f"{_short_model(row['model'])} {_pct(row['pass_rate'])} "
+            f"but misses boundary_budget {miss}"
+        )
+    for row in clear:
+        parts.append(f"{_short_model(row['model'])} {_pct(row['pass_rate'])} clears")
+    return ("Analyst gate", value, "; ".join(parts))
+
+
 def _hero(layout, extract: dict, rows) -> None:
     receipts = rows(extract, "metric_receipt")
     draw = _one(receipts, "receipt_id", "game_draw_rate")
     training = _one(receipts, "receipt_id", "opening_corpus_training_games")
-    headline = [row for row in rows(extract, "live_eval_run") if row["headline"]]
-    best = max(headline, key=lambda row: (row["pass_rate"], row["model"]))
-    gate = "hard fail" if best["hard_fail"] else "gate clear"
+    runs = rows(extract, "live_eval_run")
     cards = [
         (
             "Opening corpus",
@@ -708,34 +783,29 @@ def _hero(layout, extract: dict, rows) -> None:
             _pct(draw["numerator"] / draw["denominator"]),
             f"{draw['numerator']:,} / {draw['denominator']:,} eligible games",
         ),
-        (
-            "Highest pass rate",
-            _pct(best["pass_rate"]),
-            f"{_run_label(best)}, {best['repeats']} repeats, {gate}",
-        ),
+        _gate_card(runs, rows(extract, "live_eval_case")),
     ]
     st.markdown(layout.equal_width_row(cards), unsafe_allow_html=True)
 
 
 def _eval_cards(layout, runs: list[dict]) -> None:
-    ordered = sorted(runs, key=lambda row: row["github_run_id"])
-    cards = [
-        (
-            _run_label(row),
-            _pct(row["pass_rate"]),
-            f"{row['passed']:,} of {row['trials']:,}. "
-            + ("Hard fail" if row["hard_fail"] else "Gate clear"),
+    cards: list[tuple[str, str, str]] = []
+    for row in _by_gate(runs):
+        gate = "Hard fail" if row["hard_fail"] else "Gate clear"
+        cards.append(
+            (
+                _run_label(row),
+                _pct(row["pass_rate"]),
+                f"{row['passed']:,} of {row['trials']:,}. {gate}",
+            )
         )
-        for row in ordered
-    ]
-    cards.extend(
-        (
-            f"{_run_label(row)} cost",
-            _usd(row["known_gross_cost_usd"]),
-            f"Cap {_usd(row['max_run_usd'])}",
+        cards.append(
+            (
+                f"{_run_label(row)} cost",
+                _usd(row["known_gross_cost_usd"]),
+                f"Cap {_usd(row['max_run_usd'])}",
+            )
         )
-        for row in ordered
-    )
     st.markdown(layout.equal_width_row(cards), unsafe_allow_html=True)
 
 
@@ -744,16 +814,21 @@ def _overview(charts, extract: dict, rows) -> None:
     families = rows(extract, "opening_family_share")
     denominator = families[0]["denominator"]
     funnel_rows = _funnel(stages)
-    seen, accepted, eligible = (row["count"] for row in funnel_rows)
+    seen = _august(stages, "seen")
+    accepted = _august(stages, "accepted")
+    eligible = _august(stages, "eligible_games")
+    removed = sum(row["count"] for row in funnel_rows)
     st.subheader("August prefix")
     _chart(
         charts,
         charts.funnel(funnel_rows),
-        alt="Funnel of seen, accepted, and eligible August games.",
+        alt="Games removed from the August prefix: unrated, marked bots, and unknown results.",
     )
     st.caption(
         f"Of {seen:,} games read, {accepted:,} are accepted and {eligible:,} are eligible. "
-        "The opening corpus is not added to this funnel."
+        f"{removed:,} games are removed: "
+        + ", ".join(f"{row['count']:,} {row['stage'].lower()}" for row in funnel_rows)
+        + ". The opening corpus is not added to this funnel."
     )
     st.caption(
         "Query origin: metricflow. The draw-rate denominator matches "
@@ -801,7 +876,12 @@ def _openings(charts, extract: dict, rows) -> None:
             charts.score_intervals(plotted),
             alt="Raw score by color and the Black adjusted score with its bootstrap interval.",
         )
-    st.caption(_score_caption(plotted))
+    shown_cells = [
+        cell
+        for cell in rows(extract, "opening_color_score")
+        if cell["family"] in set(chosen) and (color == "all" or cell["color"] == color)
+    ]
+    st.caption(_score_caption(shown_cells))
     st.caption("Query origin: metricflow. The raw half-point score is wins plus half the draws.")
     _score_table(rows(extract, "opening_color_score"))
     st.subheader("Transpositions")
@@ -963,7 +1043,7 @@ def _eval_tab(layout, charts, extract: dict, rows) -> None:
     st.subheader("Pass rate")
     _chart(
         charts,
-        charts.wilson(_wilson_rows(runs)),
+        charts.wilson(_wilson_rows(_by_gate(runs))),
         alt="Headline pass rate for each model with its Wilson 95 percent interval.",
     )
     st.caption(_wilson_caption(runs))
@@ -982,10 +1062,10 @@ def _eval_tab(layout, charts, extract: dict, rows) -> None:
         order = [name for name in _CATEGORIES if name in chosen]
         _chart(
             charts,
-            charts.category_bars(visible_categories, category_order=order),
-            alt="Pass rate by case category and model.",
+            charts.category_dumbbell(visible_categories, category_order=order),
+            alt="Dumbbell of pass rate by category. Each point is one model.",
         )
-    st.caption(_category_caption(categories, cases, set(chosen)))
+    st.caption(_category_caption(categories, cases, runs, set(chosen)))
     visible_cases = _case_rows(cases, set(chosen))
     if visible_cases:
         case_order = [
@@ -998,8 +1078,7 @@ def _eval_tab(layout, charts, extract: dict, rows) -> None:
         for case_id in case_order:
             if case_id not in seen:
                 seen.append(case_id)
-        ordered_runs = sorted(runs, key=lambda item: item["github_run_id"])
-        model_order = [_run_label(row) for row in ordered_runs]
+        model_order = [_run_label(row) for row in _by_gate(runs)]
         plotted = [{**row, "model": _run_label(row)} for row in visible_cases]
         _chart(
             charts,

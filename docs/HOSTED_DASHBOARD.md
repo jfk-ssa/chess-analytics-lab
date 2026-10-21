@@ -10,18 +10,21 @@ version 2 and the page that sits on it. The local six-view dashboard
 is a different program and still needs the analytical warehouse.
 
 The page opens with three equal-width cards: opening-corpus training
-games, the August draw rate, and the highest 5-repeat live-eval pass
-rate. Tabs are Overview, Openings, Clock pressure, AI analyst eval,
+games, the August draw rate, and the analyst gate (Luna clears, Sol
+fails). Tabs are Overview, Openings, Clock pressure, AI analyst eval,
 and About the data. Filters cover opening family, color, rating band,
 time control, phase, transposition cohort, and eval category. Charts
 are Altair, with the `chesslab` theme (Inter and the page palette).
 Provenance hashes are on About the data.
 
 Card rows use an inline grid,
-`repeat(N, minmax(0, 1fr))`, with `min-width: 0` on each card. `N` is
-the number of cards in that row, so a row of three and a row of four
-are both equal at desktop and phone widths. The shared
-`.streamlit/config.toml` is unchanged.
+`repeat(auto-fit, minmax(min(100%, 256px), 1fr))`. The value is
+`white-space: nowrap`. 256px is 16rem at the CSS reference pixel.
+Streamlit's 14px root would make a literal 16rem 224px, and three of
+those tracks fit at 768px. With 256px, a 390px viewport is one column,
+four cards are two by two at 768px, and both card rows are one row at
+1280px. A leftover card stays as wide as the cards in the row above.
+The shared `.streamlit/config.toml` is unchanged.
 
 Version 2 adds `opening_color_score` (French and Sicilian, both colors,
 1400–1599, 60+0, with Black bootstrap intervals), `clock_pressure_band`,
@@ -73,11 +76,13 @@ Set the requirements path in the app's advanced settings. There is no
 extract is already in the repository.
 
 Community Cloud installs only the packages named in
-`hosted/requirements.txt`. The file pins `streamlit==1.65.0`. Pandas,
-protobuf, Altair, and narwhals are transitive dependencies of that pin.
-If they stay unpinned, pip can install versions that differ from
-`uv.lock`. The requirements file therefore also pins the locked
-versions, `altair==5.5.0`, `narwhals==2.26.0`, `pandas==2.3.3`, and
-`protobuf==6.33.6`. Streamlit 1.65.0 accepts `pandas<4,>=1.4.0` and
-`protobuf<8,>=5.26.1`, so those pins install. Narwhals 2.26.0 has no
-dependencies of its own.
+`hosted/requirements.txt` with pip. Streamlit does not install those
+pins itself. The file pins `streamlit==1.65.0`. Pandas, protobuf,
+Altair, narwhals, and jsonschema are dependencies of that pin or of
+Altair. If they stay unpinned, pip can install versions that differ
+from `uv.lock`. The requirements file therefore also pins the locked
+versions, `altair==5.5.0`, `narwhals==2.26.0`, `jsonschema==4.26.0`,
+`pandas==2.3.3`, and `protobuf==6.33.6`. Streamlit 1.65.0 accepts
+`pandas<4,>=1.4.0` and `protobuf<8,>=5.26.1`, so those pins install.
+Narwhals 2.26.0 has no dependencies of its own. Altair 5.5.0 depends
+on jsonschema and narwhals.

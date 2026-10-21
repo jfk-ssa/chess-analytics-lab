@@ -62,11 +62,11 @@ validate. This extract does not invent a grok row.
 
 The hosted page leads with three cards: opening-corpus training games
 (1,042,346), the August draw rate (3.7%, 3,669 / 99,117), and the
-highest 5-repeat pass rate. That rate is gpt-6-sol at 97.5%, and the
-card says hard fail. Tabs are Overview, Openings, Clock pressure, AI
-analyst eval, and About the data. Provenance hashes are on About the
-data. Each chart has a one-line takeaway, and a separate caption names
-one query origin.
+analyst gate. The gate card says Luna clears and Sol fails. Sol's
+97.5% still misses `boundary_budget` 0/5; Luna's 86.3% clears. Tabs
+are Overview, Openings, Clock pressure, AI analyst eval, and About
+the data. Provenance hashes are on About the data. Each chart has a
+one-line takeaway, and a separate caption names one query origin.
 
 Charts use an Altair theme named `chesslab`: Inter, a transparent
 background, and the page palette. `st.altair_chart` is called with
@@ -75,14 +75,26 @@ is unchanged, and the local six-view dashboard is unchanged. The font
 file is still the copy recorded in ADR 0094.
 
 Card rows are an inline grid,
-`grid-template-columns: repeat(N, minmax(0, 1fr))`, with `min-width: 0`
-on each card. `N` is the number of cards in that row. The hero uses 3.
-The eval tab uses 4. The contract is the same at every viewport,
-including 390px, so the row stays one row of equal tracks.
+`grid-template-columns: repeat(auto-fit, minmax(min(100%, 256px), 1fr))`.
+The value uses `white-space: nowrap` and does not use
+`overflow-wrap: anywhere`. 256px is the length of 16rem at the CSS
+reference pixel. Streamlit sets the document root to 14px, so a literal
+16rem is 224px. Three 224px tracks fit in the 740px content box at a
+768px viewport, and four cards become three plus one. 256px fits twice
+in that box and not three times, so four cards are two by two. It does
+not fit twice in the 362px content box at 390px, so that viewport is
+one column. At 1280px the content box is 1140px, which holds four
+tracks, so the three-card hero and the four-card eval row are each one
+row. Cards in the same row share a track width. A short last row keeps
+that width: the leftover card occupies one cell and does not grow wider
+than the cards above it.
 
-`hosted/requirements.txt` adds `altair==5.5.0` and `narwhals==2.26.0`,
-the lock versions that Streamlit 1.65.0 installs. Narwhals has no
-dependencies. The extract is 246,655 bytes, under the 256 KiB budget.
+Community Cloud installs `hosted/requirements.txt` with pip. That file
+pins `altair==5.5.0`, `narwhals==2.26.0`, and `jsonschema==4.26.0` to
+`uv.lock`. Streamlit does not install those packages in this
+deployment. Streamlit 1.65.0 depends on Altair, and Altair 5.5.0
+depends on narwhals and jsonschema. Narwhals has no dependencies. The
+extract is 246,655 bytes, under the 256 KiB budget.
 
 ## Consequences
 
@@ -91,8 +103,8 @@ Community Cloud settings stay main file `hosted/dashboard.py`, Python
 network at runtime. `tests/test_public_extract.py` copies the reduction,
 the checkpoint, the live-eval receipts, and the case file into the
 warehouse-less builder fixture. `tests/test_hosted_dashboard.py` checks
-the chart list and the equal-width markup. A browser check measures
-card widths at 1280px and 390px.
+the chart list, the dumbbell spec, and the equal-width markup. A
+browser check measures card widths at 390px, 768px, and 1280px.
 
 The page states these limits in the captions: one published rating
 window; adjusted intervals for Black only; no clock interval; the
