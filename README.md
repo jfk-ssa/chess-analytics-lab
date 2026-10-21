@@ -56,6 +56,10 @@ proxy; 8 moves are eligible. These are fixture arithmetic, not player behavior.
 The dashboard flags the source as synthetic. See the [demo guide](docs/DEMO.md)
 for replay and verification commands.
 
+The hosted page is separate from the six-view dashboard above. It reads only
+the committed aggregate extract and does not open a warehouse. See
+[the hosted dashboard](docs/HOSTED_DASHBOARD.md).
+
 The existing `chesslab demo` remains the smaller foundation fixture path:
 26 records seen, 22 accepted, 4/20 eligible draws. `chesslab demo --scope all`
 uses ignored `work/portfolio-demo` and never changes the real `data/` pointers.
