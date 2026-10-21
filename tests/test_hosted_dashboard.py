@@ -329,6 +329,7 @@ def test_equal_width_rows_share_one_track_definition(project):
 
 
 def test_category_dumbbell_is_unstacked_on_a_unit_axis(project):
+    pytest.importorskip("altair")
     charts = _load_hosted(project, "charts")
     chart = charts.category_dumbbell(
         [
@@ -360,6 +361,7 @@ def test_category_dumbbell_is_unstacked_on_a_unit_axis(project):
 
 
 def test_chart_scales_follow_the_plotted_data(project):
+    pytest.importorskip("altair")
     charts = _load_hosted(project, "charts")
     heat = charts.heatmap(
         [
