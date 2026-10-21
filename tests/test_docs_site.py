@@ -259,6 +259,11 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     assert 'class="page-live-eval"' in report
     assert 'href="live-eval.html" aria-current="page"' in report
     assert "86.25%" in report and "97.50%" in report and "97.08%" in report
+    assert "same pass-rate" not in report
+    assert "does not separate" not in report
+    assert "3,810.5" in report
+    assert "same frozen inputs" in report
+    assert "left out of the test" in report
     assert "boundary_budget" in report
     assert "needs_clarification" in report
     assert "public_extract.py" in report

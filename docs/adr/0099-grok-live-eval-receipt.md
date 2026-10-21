@@ -61,47 +61,69 @@ instruction-hash difference is the known dataset-id pair, or both
 receipts record distinct `dataset_id` values in one-to-one
 correspondence with the hashes. Luna versus Sol remains that known
 pair. Grok versus Luna and Grok versus Sol are not comparable. The page
-says so. Adding this receipt does not withdraw the Luna/Sol explanation.
+says so and does not rank those pairs. Adding this receipt does not
+withdraw the Luna/Sol explanation.
 
-Sign tests still run because the repeats and the case ids match, with
-that caveat. Luna versus Sol, and Luna versus Grok, are exact two-sided
-p = 0.0013 (16 cases against 2). Sol versus Grok is p = 1.0000 (Sol
-better on 2 cases, Grok on 1). Luna's Wilson interval separates from
-both others. Sol and Grok overlap. Each of these is one 5-repeat sample.
-The intervals describe that sample, not a second run.
+The hero ranks only inside a frozen-input-matched group. The group is
+the largest set of headline receipts whose `case_set_sha256`,
+`fixture_sha256`, `rubric_version`, and `frozen_file_sha256` all match.
+A tie keeps the group that contains the earliest receipt. With these
+three receipts that group is Luna and Sol. Sol has the higher pass rate
+and hard-fails; Luna clears at 86.25% and costs about 1/17 as much.
+The title stays "The most accurate model failed the gate" for that
+pair. Grok's 97.08% stays on its own scorecard. The dek does not call
+that rate the same level as Sol, and it does not price Grok as a
+multiple of the leader.
+
+The sign test runs only when repeats, case ids, and those frozen inputs
+all match. A pair whose frozen inputs differ is left out of the test.
+Luna versus Sol remains an exact two-sided p = 0.0013 (16 cases against
+2). Grok is not sign-tested against either OpenAI receipt. Wilson
+intervals are described as overlapping or separated only inside a
+frozen-input group. Luna's interval does not overlap Sol's. The page
+does not say whether Grok's interval overlaps either of them. Each
+headline rate is one 5-repeat sample. The intervals describe that
+sample, not a second run.
 
 Cost against Luna is 1.003306 / 0.0149666 = 67.036, shown as 67.0×.
-Against Sol it is 1.003306 / 0.2549611 = 3.935, shown as 3.9×. Grok
-records 69,776 reasoning tokens inside 81,896 output tokens. Median
-input tokens are 3,810.5, against about 2,387 for Luna and 2,384 for
-Sol. The page does not attribute that gap to prompt length or to price
-per token alone. Cached input is 878,080 of 914,525. The first request
-is not the most expensive row, so the Luna/Sol cache note does not fire
-for this run.
+Against Sol it is 1.003306 / 0.2549611 = 3.935, shown as 3.9×. The cost
+section labels those ratios as this run's spend, not a quality result.
+Grok records 69,776 reasoning tokens inside 81,896 output tokens. Median
+input tokens are 3,810.5, printed with one decimal, against about 2,387
+for Luna and 2,384 for Sol. The page does not attribute that gap to
+prompt length or to price per token alone. Cached input is 878,080 of
+914,525. The first request is not the most expensive row, so the Luna/Sol
+cache note does not fire for this run.
 
-The published page keeps three equal-width scorecards. The headline
-stays "The most accurate model failed the gate" because Sol's 97.50%
-is above Grok's 97.08% and Sol hard-fails. The dek says Grok clears at
-the same pass-rate level on this one sample, at 3.9× the leader's cost,
-without Sol's hard fail on `boundary_budget`.
+The published page keeps three equal-width scorecards, including Grok's
+intervals, failure modes, and spend. Grok is not the headline comparison.
 
 ### Extract
 
 `live_eval_category` and `live_eval_case` omit `source_report`. The run
-row keeps the filename. A case or category row joins that run on model
-and effort, which is unique in this extract. Repeating the filename on
-every case row put the file at 265,407 bytes, over the 262,144 budget.
-Omitting it leaves the committed file at 253,517 bytes and the
-builder-shaped payload, which has no `build` key, at 253,171. The
+row keeps the filename and a `frozen_group`, the SHA-256 of
+`case_set_sha256`, `fixture_sha256`, `rubric_version`, and
+`frozen_file_sha256`. Luna and Sol share that digest. Grok's differs.
+The dashboard compares Wilson intervals only inside one `frozen_group`
+and says when a run is outside that group. It does not call those
+intervals overlapping or separated. A case or category row joins the
+run on model and effort. The builder rejects a second receipt with the
+same model and effort, because that join would collide. Repeating the
+filename on every case row put the file at 265,407 bytes, over the
+262,144 budget. Omitting it, then adding `frozen_group` on the three
+run rows, leaves the committed file at 253,793 bytes and the
+builder-shaped payload, which has no `build` key, at 253,447. The
 metric receipt `live_eval_pass_rate:grok-4.7 low` is 233/240 with
 `query_origin` `committed_report`. The build record and the non-live
 tables are unchanged. When those two tables have no `source_report`
 column, the dashboard lists the run filenames instead of the label
 `metric_receipt`.
 
-The hero gate card ranks every clear above a hard fail:
-`Luna, grok-4.7 low clear; Sol fail`. The detail keeps
-`boundary_budget 0/5`. Caption dollars stay a backslash escape. Amounts inside the card HTML
+The hero gate card still ranks every clear above a hard fail:
+`Luna, grok-4.7 low clear; Sol fail`. That is the gate, not a pass-rate
+ranking. The detail keeps `boundary_budget 0/5`. A count of 1 uses the
+singular "over-abstention"; Sol's category line says 1 over-abstention.
+Caption dollars stay a backslash escape. Amounts inside the card HTML
 use `&#36;`, so the rendered value is a dollar sign and the markdown
 source still has no `$`. A backslash inside that HTML would show in
 the value.

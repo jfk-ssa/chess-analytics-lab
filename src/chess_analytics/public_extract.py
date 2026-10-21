@@ -437,6 +437,7 @@ _COLUMN_RULES = {
     "color": _one_of(_COLORS),
     "effort": _one_of(_EFFORTS),
     "family": _family,
+    "frozen_group": _hex(_HEX_64, optional=False),
     "interval_source_report": _optional_source,
     "lineage": _one_of(_LINEAGES),
     "mart_id": _hex(_HEX_24, optional=True),

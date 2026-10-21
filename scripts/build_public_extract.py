@@ -879,7 +879,13 @@ def reduce_opening_positions(report: dict) -> dict:
 
 
 def live_eval_tables(project: Path) -> tuple[list[dict], list[dict], list[dict]]:
-    from chess_analytics.eval_report import discover_receipts, load_cases, load_receipts, verify
+    from chess_analytics.eval_report import (
+        discover_receipts,
+        frozen_input_group,
+        load_cases,
+        load_receipts,
+        verify,
+    )
 
     case_path = project / "evals" / "cases" / "analyst_live_v1.json"
     cases = load_cases(case_path)
@@ -895,6 +901,11 @@ def live_eval_tables(project: Path) -> tuple[list[dict], list[dict], list[dict]]
     failed = [f"{label} {detail}".strip() for label, ok, detail in integrity.checks if not ok]
     if failed:
         raise ValueError("live eval receipt failed integrity: " + "; ".join(failed[:4]))
+    pairs = [(receipt.model, receipt.effort) for receipt in receipts]
+    if len(pairs) != len(set(pairs)):
+        raise ValueError(
+            "live eval (model, effort) is not unique, so case and category rows cannot join a run"
+        )
     runs = []
     categories = []
     case_rows = []
@@ -913,6 +924,7 @@ def live_eval_tables(project: Path) -> tuple[list[dict], list[dict], list[dict]]
                 "bootstrap_low": bootstrap_low,
                 "cases": int(receipt.raw["cases"]),
                 "effort": receipt.effort,
+                "frozen_group": frozen_input_group(receipt),
                 "github_run_id": run_id,
                 "hard_fail": receipt.hard_fail,
                 "headline": receipt.repeats == 5,

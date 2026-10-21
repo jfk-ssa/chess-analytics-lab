@@ -36,7 +36,9 @@ the transposition reduction (`transposition_view`,
 summary (`live_eval_run`, `live_eval_category`, `live_eval_case`).
 Those receipts are `committed_report`. Category and case rows omit
 `source_report`; the run row keeps the filename, and model plus effort
-joins a row to that run. The file is 253,517 bytes.
+joins a row to that run. Each run row also carries `frozen_group`. The
+eval tab compares Wilson intervals only inside one group and says when
+a run sits outside it. The file is 253,793 bytes.
 
 ## Run locally
 

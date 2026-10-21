@@ -815,6 +815,9 @@ def test_live_eval_rows_match_the_committed_receipts(project):
     assert runs["grok-4.7"]["effort"] == "low"
     assert runs["grok-4.7"]["known_gross_cost_usd"] == 1.003306
     assert runs["grok-4.7"]["wilson_low"] == 0.9410304560608658
+    assert runs["gpt-6-luna"]["frozen_group"] == runs["gpt-6-sol"]["frozen_group"]
+    assert runs["grok-4.7"]["frozen_group"] != runs["gpt-6-luna"]["frozen_group"]
+    assert len(runs["gpt-6-luna"]["frozen_group"]) == 64
     cases = table_rows(extract, "live_eval_case")
     assert len(cases) == 144
     assert "source_report" not in cases[0]
@@ -848,6 +851,16 @@ def test_live_eval_rows_match_the_committed_receipts(project):
     assert grok_rate["numerator"] == 233
     assert grok_rate["denominator"] == 240
     assert grok_rate["query_origin"] == "committed_report"
+
+
+def test_live_eval_model_effort_must_be_unique(project, tmp_path):
+    builder = load_script()
+    bare = _reports_project(tmp_path, project)
+    source = next((bare / "reports").glob("live-eval-receipt-grok-4.7-low-r5-*.json"))
+    duplicate = bare / "reports" / "live-eval-receipt-grok-4.7-low-r5-99.json"
+    duplicate.write_bytes(source.read_bytes())
+    with pytest.raises(ValueError, match="not unique"):
+        builder.live_eval_tables(bare)
 
 
 def test_builder_help_matches_the_readme_mac_command(project, capsys):

@@ -122,20 +122,20 @@ def test_committed_page_matches_receipt_numbers_and_every_case():
     assert f"better on {wins_sol}" in page.pairwise_html
     assert f"on {wins_luna}" in page.pairwise_html
     assert "prompts differ only by dataset id" in page.pairwise_html
-    assert "frozen inputs differ" in page.pairwise_html
+    assert "frozen inputs differ" not in page.pairwise_html
+    assert "grok-4.7" not in page.pairwise_html
     assert "frozen inputs differ" in page.caveat_html
     assert "model_catalog.py" in page.caveat_html
-    wins_sol_grok, wins_grok, grok_probability = sign_test(_bits(sol), _bits(grok))
-    assert f"p = {grok_probability:.4f}" in page.pairwise_html
-    assert grok_probability == 1.0
-    assert f"better on {wins_grok}" in page.pairwise_html
-    assert f"on {wins_sol_grok}" in page.pairwise_html
     assert "97.50%" in page.description
+    assert "86.25%" in page.description
     assert "86.25%" in page.scorecards_html
-    assert "97.08%" in page.description
-    assert "3.9×" in page.description
-    assert "boundary_budget" in page.description
-    assert "one 5-repeat sample" in page.description
+    assert "97.08%" in page.scorecards_html
+    assert "97.08%" not in page.description
+    assert "3.9×" not in page.description
+    assert "same pass-rate" not in page.description
+    assert "1/17" in page.description
+    assert "boundary_budget" not in page.description
+    assert "one sample" in page.description
     assert "not a second run" in page.description
     assert "5 times" in page.description
     assert "5 high-severity misses" in page.description
@@ -148,6 +148,11 @@ def test_committed_page_matches_receipt_numbers_and_every_case():
     assert "indirect_opening_1" in page.flaky_take_html
     assert "67.0×" in page.cost_take_html
     assert "3.9×" in page.cost_take_html
+    assert "3,810.5" in page.cost_take_html
+    assert "not a quality result" in page.cost_take_html
+    assert "bought" not in page.cost_take_html
+    assert "does not separate" not in page.cost_take_html
+    assert "overlapping" not in page.cost_take_html
     assert "not prompt length alone" in page.cost_take_html
     assert "one 5-repeat sample" in page.cost_take_html
     assert "recovered_argument_suffixes" in page.notes_html
@@ -277,7 +282,7 @@ def test_one_repeat_receipt_stays_out_of_the_headline_comparison(tmp_path):
     assert "1 time" in page.sensitivity_intro
     assert "sign test" in page.sensitivity_intro
     assert "grok-4.7 · high" not in page.pairwise_html
-    assert "grok-4.7 · low" in page.pairwise_html
+    assert "grok-4.7 · low" not in page.pairwise_html
     assert "p = 0.0000" not in page.pairwise_html
     assert "Each model answered the same 48 analytics questions 5 times" not in page.description
     assert "Repeat counts differ" in page.description

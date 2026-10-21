@@ -8,6 +8,7 @@ fragments. Run labels use the receipt model and, when present, reasoning effort.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import html
 import json
 import math
@@ -715,6 +716,13 @@ def _frozen_input_keys_that_differ(left: Receipt, right: Receipt) -> list[str]:
         if left_value != right_value:
             differed.append(key)
     return differed
+
+
+def frozen_input_group(receipt: Receipt) -> str:
+    """SHA-256 of the four frozen inputs. Equal digests are one comparable group."""
+    payload = {key: receipt.raw.get(key) for key in _FROZEN_INPUT_KEYS}
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+    return hashlib.sha256(encoded).hexdigest()
 
 
 def _changed_frozen_files(left: Receipt, right: Receipt) -> list[str]:
@@ -2005,11 +2013,46 @@ def hard_fail_details(receipt: Receipt, cases: dict[str, Case]) -> list[dict[str
     return details
 
 
+def _frozen_matched_groups(receipts: list[Receipt]) -> list[list[Receipt]]:
+    """Cluster receipts whose frozen inputs match, transitively."""
+    parent = list(range(len(receipts)))
+
+    def find(index: int) -> int:
+        while parent[index] != index:
+            parent[index] = parent[parent[index]]
+            index = parent[index]
+        return index
+
+    for left in range(len(receipts)):
+        for right in range(left + 1, len(receipts)):
+            if _frozen_input_keys_that_differ(receipts[left], receipts[right]):
+                continue
+            left_root, right_root = find(left), find(right)
+            if left_root != right_root:
+                parent[right_root] = left_root
+    buckets: dict[int, list[Receipt]] = {}
+    for index, receipt in enumerate(receipts):
+        buckets.setdefault(find(index), []).append(receipt)
+    return list(buckets.values())
+
+
+def _rank_group(receipts: list[Receipt]) -> list[Receipt]:
+    """Largest frozen-input-matched group. A tie keeps the earliest receipt."""
+    groups = _frozen_matched_groups(receipts)
+
+    def sort_key(group: list[Receipt]) -> tuple[int, int]:
+        first = min(receipts.index(item) for item in group)
+        return (-len(group), first)
+
+    return min(groups, key=sort_key)
+
+
 def headline_title(receipts: list[Receipt]) -> str:
-    best = max(receipts, key=lambda receipt: receipt.rate)
-    if best.hard_fail and any(not receipt.hard_fail for receipt in receipts):
+    ranked = _rank_group(receipts)
+    best = max(ranked, key=lambda receipt: receipt.rate)
+    if best.hard_fail and any(not receipt.hard_fail for receipt in ranked):
         return "The most accurate model failed the gate"
-    if all(receipt.hard_fail for receipt in receipts):
+    if all(receipt.hard_fail for receipt in ranked):
         return "Every run tripped the hard-fail gate"
     return f"{best.label} leads and clears the gate"
 
@@ -2026,12 +2069,13 @@ def _only_high_severity_case(receipt: Receipt) -> str | None:
 
 
 def headline_sentence(receipts: list[Receipt]) -> str:
-    best = max(receipts, key=lambda receipt: receipt.rate)
+    ranked = _rank_group(receipts)
+    best = max(ranked, key=lambda receipt: receipt.rate)
     sentence = (
         f"{best.label} has the highest headline pass rate "
         f"({pct(best.rate, 2)}, {best.passed}/{best.n})"
     )
-    clear = [receipt for receipt in receipts if not receipt.hard_fail]
+    clear = [receipt for receipt in ranked if not receipt.hard_fail]
     if best.hard_fail:
         misses = int(best.raw["high_severity_misses"])
         sentence += f" but records {_misses(misses)}, which sets hard_fail"
@@ -2208,12 +2252,14 @@ def _pair_caveat(left: Receipt, right: Receipt) -> str:
 
 
 def pairwise_html(receipts: list[Receipt]) -> str:
-    """Sign-test only pairs with equal repeats and the same case ids."""
+    """Sign-test pairs that share repeats, case ids, and frozen inputs."""
     items = []
     for left_index in range(len(receipts)):
         for right_index in range(left_index + 1, len(receipts)):
             left, right = receipts[left_index], receipts[right_index]
             if left.repeats != right.repeats or set(left.pass_bits()) != set(right.pass_bits()):
+                continue
+            if _frozen_input_keys_that_differ(left, right):
                 continue
             wins_left, wins_right, probability = sign_test(left.pass_bits(), right.pass_bits())
             caveat = _pair_caveat(left, right)
@@ -2520,6 +2566,12 @@ def _median_input(receipt: Receipt) -> float:
     return float(statistics.median(row.input_tokens for row in receipt.rows))
 
 
+def _token_count(value: float) -> str:
+    if float(value).is_integer():
+        return f"{value:,.0f}"
+    return f"{value:,.1f}"
+
+
 def _prompt_gap_is_price(receipts: list[Receipt]) -> bool:
     """True when medians stay within 5% and no run records reasoning tokens."""
     medians = [_median_input(receipt) for receipt in receipts]
@@ -2552,28 +2604,9 @@ def _cost_take(receipts: list[Receipt]) -> str:
             f", and {_ratio(expensive.cost, middle.cost)} as much as {esc(middle.label)} "
             f"({usd(middle.cost)})"
         )
-    if expensive.rate > cheapest.rate:
-        gained = pct_num(expensive.rate - cheapest.rate, 2)
-        text += f" and bought {gained} points of headline pass rate"
-    text += "."
-    leader = max(receipts, key=lambda receipt: receipt.rate)
-    if leader.hard_fail:
-        overlapping = [
-            receipt
-            for receipt in receipts
-            if receipt is not leader
-            and not receipt.hard_fail
-            and _intervals_overlap(receipt.wilson, leader.wilson)
-        ]
-        if overlapping:
-            who = max(overlapping, key=lambda receipt: receipt.rate)
-            text += (
-                f" {esc(leader.label)} has the highest pass rate and hard-fails. "
-                f"{esc(who.label)} clears the gate inside an overlapping Wilson interval, "
-                "so this sample does not separate them on quality."
-            )
+    text += ". Those ratios are this run's spend, not a quality result."
     medians = ", ".join(
-        f"{esc(receipt.label)} {_median_input(receipt):,.0f}" for receipt in receipts
+        f"{esc(receipt.label)} {_token_count(_median_input(receipt))}" for receipt in receipts
     )
     sample = (
         f" Each figure is one {receipts[0].repeats}-repeat sample, not a second run of the "

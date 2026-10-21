@@ -235,17 +235,19 @@ headline is 233/240 (0.9708333333333333). Wilson 95% is
 unsafe answers, and repairs are 0. Over-abstention is 6. Known gross
 cost is $1.003306 against `reserved_usd` 9.82247 and cap 10. That is
 67.036 times Luna and 3.935 times Sol, shown on the page as 67.0× and
-3.9×. The gap is reasoning tokens (69,776 inside 81,896 output tokens)
-and a longer reported input (median 3,810.5), not prompt length alone.
+3.9× and labelled as that run's spend, not a quality result. The gap is
+reasoning tokens (69,776 inside 81,896 output tokens) and a longer
+reported input (median 3,810.5), not prompt length alone.
 
 `indirect_opening_1` failed all five repeats as over-abstentions
 (`unsupported`, empty actions). `usage_sicilian_3` is the only flaky
 case: 3/5 passed. Repeat 1 is an over-abstention. Repeat 2 answered
 with family `Sicilian` instead of `Sicilian Defense` and is a wrong
 answer. `boundary_budget` passed 5/5, so this run does not take Sol's
-hard fail. Sol's Wilson interval overlaps Grok's. Luna's does not.
-Sol versus Grok is an exact sign test p = 1.0000 (2 cases against 1).
-These are one 5-repeat sample per model.
+hard fail. These are one 5-repeat sample per model. The hero ranks only
+Luna against Sol, the frozen-input-matched pair. Sol hard-fails and
+Luna clears. Grok is not sign-tested against either, and the page does
+not say whether its Wilson interval overlaps theirs.
 
 `frozen_file_sha256` differs from the Luna/Sol map on `live_runner.py`,
 `model_catalog.py`, `pricing.py`, and `provider.py`. The case set, the

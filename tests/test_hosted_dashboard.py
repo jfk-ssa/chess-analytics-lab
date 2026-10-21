@@ -97,6 +97,7 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
     assert not app.chat_input
     assert not app.button
     text = _visible(app)
+    assert "1 over-abstentions" not in text
     extract = load_extract(extract_path(project))
     receipts = {row["receipt_id"]: row for row in table_rows(extract, "metric_receipt")}
     draw = receipts["game_draw_rate"]
@@ -135,6 +136,9 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
         "boundary_budget 0/5",
         "25 over-abstentions",
         "6 over-abstentions",
+        "1 over-abstention",
+        "share frozen inputs",
+        "not compared",
         draw["mart_id"],
         extract["build"]["source_snapshot_id"],
         extract["build"]["model_sha256"],
@@ -170,6 +174,12 @@ def test_cost_captions_keep_a_literal_dollar(project, monkeypatch):
     caption = _caption(app, "Known cost")
     visible = caption.replace(r"\$", "$")
     assert "gpt-6-luna $0.0150, grok-4.7 · low $1.0033, gpt-6-sol $0.2550" in visible
+    assert "gpt-6-luna and gpt-6-sol do not overlap" in visible
+    assert "gpt-6-luna and gpt-6-sol share frozen inputs" in visible
+    assert "grok-4.7 · low does not" in visible
+    assert "its interval is not compared with theirs" in visible
+    assert "grok-4.7 · low overlap" not in visible
+    assert "grok-4.7 · low do not overlap" not in visible
     for item in app.caption:
         assert "$" not in item.value.replace(r"\$", "")
     cards = "\n".join(item.value for item in app.markdown if "cal-card" in item.value)

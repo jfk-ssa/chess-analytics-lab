@@ -644,6 +644,33 @@ def _join_labels(labels: list[str]) -> str:
     return ", ".join(labels[:-1]) + f", and {labels[-1]}"
 
 
+def _frozen_groups(runs: list[dict]) -> dict[str, list[dict]] | None:
+    if any("frozen_group" not in row for row in runs):
+        return None
+    groups: dict[str, list[dict]] = {}
+    for row in _by_gate(runs):
+        groups.setdefault(str(row["frozen_group"]), []).append(row)
+    return groups
+
+
+def _comparability_note(groups: dict[str, list[dict]]) -> str:
+    if len(groups) <= 1:
+        return ""
+    ordered = sorted(groups.values(), key=lambda group: (-len(group), group[0]["github_run_id"]))
+    shared = [group for group in ordered if len(group) >= 2]
+    alone = [group[0] for group in ordered if len(group) == 1]
+    if len(shared) == 1 and alone:
+        names = _join_labels([_run_label(row) for row in shared[0]])
+        outsider = _join_labels([_run_label(row) for row in alone])
+        verb = "does" if len(alone) == 1 else "do"
+        if len(alone) == 1:
+            tail = "its interval is not compared with theirs."
+        else:
+            tail = "their intervals are not compared with the others."
+        return f"{names} share frozen inputs. {outsider} {verb} not; {tail}"
+    return "Intervals are compared only inside a shared frozen-input group."
+
+
 def _wilson_caption(runs: list[dict]) -> str:
     ordered = _by_gate(runs)
     clear = [_run_label(row) for row in ordered if not row["hard_fail"]]
@@ -654,15 +681,32 @@ def _wilson_caption(runs: list[dict]) -> str:
         gate = f"{', '.join(failed)} hard-fails."
     else:
         gate = "Every headline run clears the gate."
+    groups = _frozen_groups(runs)
     pairs = []
-    for index, left in enumerate(ordered):
-        for right in ordered[index + 1 :]:
-            verb = "overlap" if _ranges_overlap(left, right) else "do not overlap"
-            pairs.append(f"{_run_label(left)} and {_run_label(right)} {verb}")
+    if groups is not None:
+        for group in groups.values():
+            if len(group) < 2:
+                continue
+            for index, left in enumerate(group):
+                for right in group[index + 1 :]:
+                    verb = "overlap" if _ranges_overlap(left, right) else "do not overlap"
+                    pairs.append(f"{_run_label(left)} and {_run_label(right)} {verb}")
     gap = (" ".join(pairs) + ".") if pairs else ""
+    note = _comparability_note(groups) if groups is not None else ""
     priced = [f"{_run_label(row)} {_usd(row['known_gross_cost_usd'])}" for row in ordered]
     costs = ", ".join(priced)
-    return f"Gate first: {gate} {gap} Known cost is {costs}."
+    parts = [f"Gate first: {gate}"]
+    if gap:
+        parts.append(gap)
+    if note:
+        parts.append(note)
+    parts.append(f"Known cost is {costs}.")
+    return " ".join(parts)
+
+
+def _over_abstention_phrase(count: int) -> str:
+    noun = "over-abstention" if count == 1 else "over-abstentions"
+    return f"{count} {noun}"
 
 
 def _category_rows(categories: list[dict], chosen: set[str]) -> list[dict]:
@@ -701,7 +745,8 @@ def _category_caption(
     budget = _boundary_case(cases, "gpt-6-sol")
     missed = f"{budget[0]['passed']} of {budget[0]['repeats']}" if budget else "unscored"
     abstentions = "; ".join(
-        f"{_run_label(row)} has {row['over_abstention']} over-abstentions" for row in _by_gate(runs)
+        f"{_run_label(row)} has {_over_abstention_phrase(row['over_abstention'])}"
+        for row in _by_gate(runs)
     )
     return (
         f"{abstentions}. "
