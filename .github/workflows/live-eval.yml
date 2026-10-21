@@ -35,7 +35,7 @@ on:
         required: false
         default: false
       reasoning_effort:
-        description: "model-default keeps OpenAI on none and grok-4.7 on low. The grok headline is low at 5 repeats. medium and high are 1-repeat sensitivity checks. none is rejected for grok-4.7."
+        description: "model-default keeps OpenAI on none and grok-4.7 on low. The grok headline is low at 5 repeats. The comparable group is the 1-repeat trio of low, medium, and high that share an instruction hash. none is rejected for grok-4.7."
         type: choice
         required: true
         default: model-default

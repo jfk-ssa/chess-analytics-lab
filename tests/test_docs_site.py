@@ -146,6 +146,16 @@ def test_scorecard_rows_use_equal_tracks():
     assert "min-width: 0;" in stat and "overflow-wrap: anywhere;" in stat
     assert "text-wrap: pretty;" in stat
     assert ".ev-big small" not in css
+    sweep_name = css[
+        css.index("#effort-sweep .ev-name,") : css.index("}", css.index("#effort-sweep .ev-name,"))
+    ]
+    assert "white-space: nowrap;" in sweep_name
+    sweep_pad = css[
+        css.index("#effort-sweep .ev-name {") : css.index(
+            "}", css.index("#effort-sweep .ev-name {")
+        )
+    ]
+    assert "padding-right: 0;" in sweep_pad
 
 
 def test_materialized_positions_match_the_publication_checkpoint():
@@ -288,11 +298,22 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     assert "not strictly comparable" in report
     assert "06bc03a3eabab5bbf3b958ec" in report
     assert "bea194558220eb669940d8f3" in report
-    assert "1-repeat effort comparison" in report
+    assert "split_cohorts keeps the highest repeat count" in report
+    assert "instruction hash is what keeps that run out of the sign test" in report
     assert 'data-sweep-slot="low-1"' not in report
     assert "1-repeat receipt not in this report yet" not in report
-    assert "All three 1-repeat runs clear the gate" in report
-    assert "grok-4.7 · low (1f45f2)" in report
+    assert "grok-4.7 · low (1f45f2)" not in report
+    assert "grok-4.7 · low (aded2b)" not in report
+    assert "low ×5" in report and "low ×1" in report
+    sweep = report[report.index('id="effort-sweep"') : report.index('id="methods"')]
+    assert "grok-4.7 · low</div>" in sweep or "grok-4.7 · low<" in sweep
+    for title in ("grok-4.7 · low", "grok-4.7 · medium", "grok-4.7 · high"):
+        assert title in sweep
+    assert "(1f45f2)" not in sweep
+    assert "(aded2b)" not in sweep
+    assert "different instruction hash, stays the headline" in sweep
+    assert "$0.22253" in sweep and "$0.322454" in sweep and "$0.408746" in sweep
+    assert "reasoning effort <code>low</code> · run <code>1f45f2ec</code>" in sweep
     assert 'rel="preload"' in report
     assert "inter-latin-wght-normal.woff2" in report
     assert "live-eval.html" in (output / "sitemap.xml").read_text()

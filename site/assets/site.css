@@ -1496,6 +1496,27 @@ figure .full-size {
   letter-spacing: -0.035em;
   font-variant-numeric: lining-nums tabular-nums;
 }
+/* Sweep titles stay one line so the rate row lines up across the three cards. */
+#effort-sweep .ev-badge {
+  position: static;
+  display: inline-block;
+  margin: 0 0 10px;
+}
+#effort-sweep .ev-name,
+#effort-sweep .ev-sub,
+#effort-sweep .ev-big,
+#effort-sweep .ev-kv span:nth-child(even) {
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+#effort-sweep .ev-name {
+  padding-right: 0;
+}
+#effort-sweep .ev-stat,
+#effort-sweep .ev-ci {
+  overflow-wrap: normal;
+  word-break: normal;
+}
 .ev-stat {
   display: block;
   width: 100%;

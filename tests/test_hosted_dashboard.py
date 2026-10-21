@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import re
 
 import pytest
 
@@ -145,13 +146,14 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
         "coverage_1",
         "coverage_2",
         "indirect_opening_1",
-        "usage_sicilian_3",
-        "about \\$0.20",
         "share frozen inputs",
         "not compared",
-        "All three 1-repeat runs clear the gate",
+        "all three 1-repeat runs",
+        "repeat count both differ",
         "14,768",
-        "\\$0.2225",
+        "\\$0.22253",
+        "\\$0.322454",
+        "\\$0.408746",
         draw["mart_id"],
         extract["build"]["source_snapshot_id"],
         extract["build"]["model_sha256"],
@@ -364,13 +366,79 @@ def test_equal_width_rows_share_one_track_definition(project):
         assert f"grid-template-columns:{_TRACKS}" in html
         assert html.count('class="cal-card"') == count
         assert html.count('class="cal-v"') == count
-        assert html.count("white-space:nowrap") == count
+        assert html.count("white-space:nowrap") == 2 * count
         assert "overflow-wrap:anywhere" not in html
         assert "minmax(min(100%,256px),1fr)" in html
     with pytest.raises(ValueError, match="at least one card"):
         module.equal_width_columns(0)
     with pytest.raises(ValueError, match="at least one card"):
         module.equal_width_columns(True)
+
+
+def _chart_spec(node) -> dict:
+    spec = getattr(node, "spec", None)
+    if isinstance(spec, dict):
+        return spec
+    raw = node.proto.spec
+    if isinstance(raw, str):
+        return json.loads(raw)
+    if isinstance(raw, bytes):
+        return json.loads(raw.decode())
+    return dict(raw)
+
+
+def _y_sorts(spec: dict) -> list:
+    found: list = []
+
+    def walk(node) -> None:
+        if isinstance(node, dict):
+            encoding = node.get("encoding")
+            if isinstance(encoding, dict):
+                channel = encoding.get("y")
+                if isinstance(channel, dict) and "sort" in channel:
+                    found.append(channel["sort"])
+            for value in node.values():
+                walk(value)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item)
+
+    walk(spec)
+    return found
+
+
+def test_sweep_cards_and_chart_name_the_effort(project, monkeypatch):
+    """Sweep titles are model and effort. The chart rows run low, medium, high."""
+    app = _run(project, monkeypatch)
+    cards = [
+        item.value
+        for item in app.markdown
+        if "cal-card" in item.value and "45/48" in item.value and "47/48" in item.value
+    ]
+    assert len(cards) == 1
+    labels = re.findall(r'class="cal-k"[^>]*>([^<]+)', cards[0])
+    assert labels == ["grok-4.7 · low", "grok-4.7 · medium", "grok-4.7 · high"]
+    assert "(" not in "".join(labels)
+    assert "1f45f2" not in cards[0]
+    charts = [node for node in app if getattr(node, "type", None) == "vega_lite_chart"]
+    sweep = [node for node in charts if "Low, medium, and high" in node.proto.alt]
+    assert len(sweep) == 1
+    sorts = _y_sorts(_chart_spec(sweep[0]))
+    assert sorts
+    assert all(item == ["low", "medium", "high"] for item in sorts)
+    caption = _caption(app, "outside this comparison")
+    assert "different instruction hash, stays the headline" in caption
+    assert "low $0.22253, medium $0.322454, high $0.408746" in caption.replace(r"\$", "$")
+    assert "(1f45f2)" not in caption
+    assert "(aded2b)" not in caption
+    visible = _visible(app)
+    assert "Of 48 cases" in visible
+    assert "low ×5 versus low ×1" in visible
+    tables = [
+        table for table in app.table if list(table.value.columns) == ["Case", "Effort", "Result"]
+    ]
+    assert len(tables) == 1
+    assert set(tables[0].value["Effort"]) == {"low", "medium", "high"}
 
 
 def test_category_dumbbell_is_unstacked_on_a_unit_axis(project):

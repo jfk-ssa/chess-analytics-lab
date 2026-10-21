@@ -1,6 +1,7 @@
 """Structural checks for the live-eval report. No provider and no network."""
 
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -180,18 +181,27 @@ def test_committed_page_matches_receipt_numbers_and_every_case():
     assert "240 requests" in page.provenance_html
     sweep = page.sweep_lead_html + page.sweep_cards_html + page.sweep_detail_html
     assert page.sensitivity_html == ""
-    assert "1-repeat effort comparison" in sweep
+    assert (
+        "The 5-repeat low run uses a different instruction hash, stays the headline, "
+        "and is outside this comparison."
+    ) in page.sweep_lead_html
     assert 'data-sweep-slot="low-1"' not in page.sweep_cards_html
     assert "1-repeat receipt not in this report yet" not in sweep
     assert "Waiting" not in page.sweep_cards_html
-    assert "not strictly comparable" in sweep
-    assert "06bc03a3eabab5bbf3b958ec" in sweep
-    assert "bea194558220eb669940d8f3" in sweep
+    assert "not strictly comparable" in page.caveat_html
+    assert "all three 1-repeat runs" in page.caveat_html
+    assert "06bc03a3eabab5bbf3b958ec" in page.caveat_html
+    assert "bea194558220eb669940d8f3" in page.caveat_html
+    assert "<b>low ×5</b> vs <b>low ×1</b>" in page.caveat_html
+    assert "repeat count both differ" in page.caveat_html
     assert "cause is not recorded" not in page.caveat_html
     assert "cause is not recorded" not in sweep
     assert "This pair is comparable." in page.caveat_html
-    for case_id in ("coverage_1", "coverage_2", "indirect_opening_1", "usage_sicilian_3"):
+    assert "(aded2b)" not in page.scorecards_html
+    assert "(1f45f2)" not in page.scorecards_html
+    for case_id in ("coverage_1", "coverage_2", "indirect_opening_1"):
         assert case_id in sweep
+    assert "usage_sicilian_3" not in sweep
     assert "The other 45 cases" in sweep
     assert f"{pct(low['headline_pass_rate'], 2)}" in sweep
     assert f"{pct(medium['headline_pass_rate'], 2)}" in sweep
@@ -201,12 +211,11 @@ def test_committed_page_matches_receipt_numbers_and_every_case():
     assert "97.92%" in page.sweep_cards_html
     assert "47 of 48 requests passed" in page.sweep_cards_html
     assert "45 of 48 requests passed" in page.sweep_cards_html
-    assert usd(grok["known_gross_cost_usd"] / grok["repeats"], 6) in sweep
-    assert usd(low["known_gross_cost_usd"], 6) in sweep
-    assert usd(medium["known_gross_cost_usd"], 6) in sweep
-    assert usd(high["known_gross_cost_usd"], 6) in sweep
-    assert "about $0.20" in sweep
-    assert "13,955.2" in sweep
+    assert "$0.22253" in page.sweep_cards_html
+    assert "$0.322454" in page.sweep_cards_html
+    assert "$0.408746" in page.sweep_cards_html
+    assert "$0.222530" not in page.sweep_cards_html
+    assert usd(grok["known_gross_cost_usd"]) in page.scorecards_html
     assert f"{low['token_usage']['reasoning_tokens']:,}" in sweep
     assert f"{medium['token_usage']['reasoning_tokens']:,}" in sweep
     assert f"{high['token_usage']['reasoning_tokens']:,}" in sweep
@@ -221,20 +230,42 @@ def test_committed_page_matches_receipt_numbers_and_every_case():
     assert f"better on {wins_medium_vs_low}" in sweep
     assert f"on {wins_low}" in sweep
     assert wins_low_vs_high == 1 and wins_high_vs_low == 1
-    assert "grok-4.7 · low (1f45f2)</b> vs <b>grok-4.7 · medium</b>" in sweep
-    assert "grok-4.7 · low (1f45f2)</b> vs <b>grok-4.7 · high</b>" in sweep
-    assert "grok-4.7 · low</b> vs" not in sweep
+    assert "<b>low</b> vs <b>medium</b>" in sweep
+    assert "<b>low</b> vs <b>high</b>" in sweep
+    assert "<b>medium</b> vs <b>high</b>" in sweep
+    assert "grok-4.7 · low (1f45f2)" not in sweep
+    assert "grok-4.7 · low (aded2b)" not in sweep
     assert "Low's interval is not compared" not in sweep
-    assert "The 5-repeat headline low run's interval is not on this figure." in sweep
-    assert "All three 1-repeat runs clear the gate" in sweep
+    assert "low ×5 is not on this figure." in sweep
+    assert "All three 1-repeat runs clear the gate" not in sweep
     assert "Medium and high clear the gate" not in sweep
     assert "The 1-repeat low run is not in this test." not in sweep
-    assert "The 5-repeat headline low run is not in this test." in sweep
+    assert "low ×5 is not in this test." in sweep
+    assert ">low</text>" in page.sweep_detail_html
+    assert ">medium</text>" in page.sweep_detail_html
+    assert ">high</text>" in page.sweep_detail_html
     assert "The low column stays empty" not in sweep
     assert page.sweep_cards_html.count('class="ev-card"') == 3
     assert 'id="ev-sweep-intervals-title"' in sweep
-    assert "The system prompt is the same except" in sweep
-    assert "the system prompt is the same except" not in sweep
+    assert "The system prompt is the same except" in page.caveat_html
+    assert "the system prompt is the same except" not in page.caveat_html
+
+
+def test_sweep_card_titles_omit_the_run_hash():
+    """Sweep cards name the effort. The run id stays on the meta line."""
+    page = build_page(_committed(), _cases(), strict=True)
+    cards = page.sweep_cards_html
+    names = re.findall(r'class="ev-name">.*?</span>\s*([^<]+)</div>', cards)
+    assert names == ["grok-4.7 · low", "grok-4.7 · medium", "grok-4.7 · high"]
+    assert all("(" not in name for name in names)
+    subs = re.findall(r'class="ev-sub">(.*?)</div>', cards)
+    assert subs == [
+        "reasoning effort <code>low</code> · run <code>1f45f2ec</code>",
+        "reasoning effort <code>medium</code> · run <code>10f0661c</code>",
+        "reasoning effort <code>high</code> · run <code>471dacf9</code>",
+    ]
+    assert "(1f45f2)" not in cards
+    assert "(aded2b)" not in cards
 
 
 def test_grok_snapshot_pair_is_not_treated_as_comparable():
@@ -261,7 +292,11 @@ def test_grok_snapshot_pair_is_not_treated_as_comparable():
     assert not pair_explained_by_dataset_id(low_once, medium)
     assert pair_explained_by_dataset_id(luna, sol)
     assert "not strictly comparable" in _pair_explanation(low, medium)
+    assert "all three 1-repeat runs" in _pair_explanation(low, medium)
     assert "This pair is comparable." not in _pair_explanation(low, medium)
+    pair = _pair_explanation(low, low_once)
+    assert "<b>low ×5</b> vs <b>low ×1</b>" in pair
+    assert "repeat count both differ" in pair
 
 
 def test_a_second_one_repeat_low_hides_the_sweep(tmp_path):
@@ -420,7 +455,7 @@ def test_one_repeat_receipt_stays_out_of_the_headline_comparison(tmp_path):
     frozen = [item for item in grok_items if "frozen inputs differ" in item]
     assert hashed and frozen
     assert all("gpt-6-" in item for item in hashed)
-    one_repeat_label = "grok-4.7 · high (grok-h) (48)"
+    one_repeat_label = "grok-4.7 · high (48)"
     assert one_repeat_label in page.status_svg
     assert "gpt-6-luna (240)" in page.status_svg
     assert one_repeat_label in page.failure_svg
