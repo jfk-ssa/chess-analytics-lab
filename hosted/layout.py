@@ -41,7 +41,7 @@ def equal_width_row(cards: list[tuple[str, str, str]]) -> str:
             "font-variant-numeric:tabular-nums;white-space:nowrap;"
             f'overflow-wrap:normal">{escape(value)}</div>'
             '<div class="cal-d" style="font-size:clamp(0.68rem,4cqi,0.82rem);'
-            "line-height:1.35;color:#3d524c;overflow-wrap:normal;"
+            "line-height:1.35;color:#3d524c;overflow-wrap:normal;white-space:nowrap;"
             f'word-break:normal">{escape(detail)}</div>'
             "</div>"
         )

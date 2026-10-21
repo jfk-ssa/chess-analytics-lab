@@ -395,6 +395,62 @@ def coverage(rows: list[dict]) -> _Drawn:
     return _frame(chart, 260)
 
 
+def selectable_bars(
+    rows: list[dict],
+    *,
+    name: str,
+    field: str,
+    value_title: str,
+    label_field: str | None = None,
+) -> _Drawn:
+    """Horizontal bars with a point selection named ``name`` on ``field``."""
+    shown = label_field or field
+    height = max(180, 28 * max(len(rows), 1) + 24)
+    pick = alt.selection_point(name=name, fields=[field])
+    chart = (
+        alt.Chart(alt.Data(values=rows))
+        .mark_bar(color=_TEAL, cornerRadius=2, cursor="pointer")
+        .encode(
+            y=alt.Y(
+                f"{shown}:N",
+                sort="-x",
+                title=None,
+                axis=alt.Axis(labelLimit=160, labelFont="Inter"),
+            ),
+            x=alt.X("games:Q", title=value_title, axis=alt.Axis(labelFont="Inter")),
+            opacity=alt.condition(pick, alt.value(1), alt.value(0.4)),
+            tooltip=[
+                alt.Tooltip(f"{field}:N", title=""),
+                alt.Tooltip("games:Q", title=value_title, format=","),
+            ],
+        )
+        .add_params(pick)
+    )
+    return _frame(chart, height)
+
+
+def period_bars(rows: list[dict]) -> _Drawn:
+    """Training games by published period. No selection."""
+    chart = (
+        alt.Chart(alt.Data(values=rows))
+        .mark_bar(color=_TEAL, cornerRadius=2)
+        .encode(
+            x=alt.X(
+                "label:N",
+                sort=None,
+                title=None,
+                axis=alt.Axis(labelAngle=-40, labelFont="Inter"),
+            ),
+            y=alt.Y("games:Q", title="Games"),
+            tooltip=[
+                alt.Tooltip("label:N", title="Period"),
+                alt.Tooltip("games:Q", title="Games", format=","),
+            ],
+        )
+    )
+    return _frame(chart, 240)
+
+
 def transposition_bars(rows: list[dict]) -> _Drawn:
     height = max(180, 26 * len(rows) + 24)
     chart = (

@@ -1,4 +1,4 @@
-"""AppTest for the hosted read-only dashboard. Offline; no warehouse."""
+"""AppTest for the hosted dashboard. Offline; no warehouse."""
 
 import hashlib
 import json
@@ -79,6 +79,7 @@ def test_hosted_streamlit_pin_matches_the_lock(project):
         "jsonschema==4.26.0",
         "pandas==2.3.3",
         "protobuf==6.33.6",
+        "duckdb==1.5.6",
     ]
     assert "streamlit==1.65.0" in (project / "pyproject.toml").read_text()
     assert "1.65.0" in (project / "THIRD_PARTY_NOTICES.md").read_text()
@@ -96,45 +97,39 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
     assert not app.text_input
     assert not app.text_area
     assert not app.chat_input
-    assert not app.button
+    assert [item.label for item in app.button] == ["Reset filters"]
+    assert len(app.date_input) == 1
+    assert app.date_input[0].label == "Date range"
+    labels = {item.label: list(item.options) for item in app.selectbox}
+    assert set(labels) == {"Time control", "Color", "Rating band", "Opening family"}
+    assert labels["Color"] == ["All", "White", "Black"]
+    assert "French Defense" in labels["Opening family"]
+    assert "Sicilian Defense" in labels["Opening family"]
     text = _visible(app)
     assert "1 over-abstentions" not in text
     extract = load_extract(extract_path(project))
     receipts = {row["receipt_id"]: row for row in table_rows(extract, "metric_receipt")}
     draw = receipts["game_draw_rate"]
-    french = receipts["opening_player_score:French Defense"]
-    sicilian = receipts["opening_player_score:Sicilian Defense"]
-    clock = receipts["clock_pressure_error_proxy:under_10"]
     path = extract_path(project)
     digest = hashlib.sha256(path.read_bytes()).hexdigest()
     expected = (
         f"{draw['numerator']:,} / {draw['denominator']:,}",
-        f"{french['numerator']:,} / {french['denominator']:,}",
-        f"{sicilian['numerator']:,} / {sicilian['denominator']:,}",
-        f"{clock['numerator']:,} / {clock['denominator']:,}",
         "1,042,346",
+        "3.7%",
+        "9.3%",
+        "2,132 / 22,994",
+        "no prior period",
+        "needs a color",
+        "rated public",
         "99,467",
         "100,000",
-        "French Defense",
-        "Sicilian Defense",
-        "50.3%",
-        "48.0%",
-        "44.7%–56.1%",
-        "42.1%–53.3%",
-        "41.9%",
-        "44.8%",
-        "106 / 253",
-        "152 / 339",
-        "883",
         "533",
         "342",
-        "8.3%",
-        "7.8%",
         "86.3%",
         "97.5%",
         "97.1%",
-        "Luna, grok-4.7 low clear; Sol fail",
-        "boundary_budget 0/5",
+        "gpt-6-luna and grok-4.7 · low clear; gpt-6-sol hard-fails",
+        "boundary_budget is 0 of 5",
         "25 over-abstentions",
         "6 over-abstentions",
         "1 over-abstention",
@@ -161,10 +156,7 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
         extract["build"]["semantic_manifest_sha256"],
         digest,
         "nikonoel",
-        "under_10",
-        "10_to_29",
-        "30_to_59",
-        "60_plus",
+        "Date 2025-11-01–2026-08-01 · Time All · Color All · Rating All · Opening All",
     )
     missing = [item for item in expected if item not in text]
     assert not missing, missing
@@ -173,11 +165,14 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
     _assert_section_origins(app)
     _assert_live_eval_link(app)
     _assert_build_table_omits_the_figure_id(app, extract)
-    _assert_small_shares_are_below_a_tenth(app, extract)
     _assert_alt_text(app)
     _assert_equal_width_markup(app)
     for table in app.table:
         assert len(table.value.columns) <= 3
+
+
+def _chart_alts(app) -> list[str]:
+    return [node.proto.alt for node in app if getattr(node, "type", None) == "vega_lite_chart"]
 
 
 def _caption(app, fragment: str) -> str:
@@ -212,21 +207,17 @@ def _assert_live_eval_link(app) -> None:
 
 
 def _assert_section_origins(app) -> None:
-    sections = (
-        ("m3_august_prefix:eligible_games", "metricflow"),
-        ("opening_usage denominator", "metricflow"),
-        ("wins plus half the draws", "metricflow"),
-        ("adjusted_interval_low", "committed_report"),
-        ("proxy_errors", "reviewed_sql"),
-        ("lineages separately", "committed_report"),
-    )
-    origins = ("metricflow", "reviewed_sql", "committed_report")
-    for fragment, origin in sections:
-        caption = _caption(app, fragment)
-        assert f"Query origin: {origin}" in caption
-        for other in origins:
-            if other != origin:
-                assert other not in caption
+    openings = _caption(app, "Published positions only")
+    assert "Query origin:" not in openings
+    clock = _caption(app, "not a game")
+    assert clock.startswith("Reviewed SQL.")
+    assert "metricflow" not in clock
+    periods = _caption(app, "previous N periods")
+    assert "Query origin:" not in periods
+    lineage = _caption(app, "lineages separately")
+    assert "Query origin: committed_report" in lineage
+    assert "metricflow" not in lineage
+    assert "reviewed_sql" not in lineage
 
 
 def _field_table(app, field: str):
@@ -272,20 +263,6 @@ def _assert_build_table_omits_the_figure_id(app, extract) -> None:
     assert snapshot not in caption
 
 
-def _assert_small_shares_are_below_a_tenth(app, extract) -> None:
-    families = table_rows(extract, "opening_family_share")
-    small = [row for row in families if row["numerator"] > 0 and f"{row['value']:.1%}" == "0.0%"]
-    assert small
-    catalogs = [
-        table.value
-        for table in app.table
-        if list(table.value.columns) == ["Family", "Games", "Share"]
-    ]
-    catalog = max(catalogs, key=len)
-    assert int((catalog["Share"] == "<0.1%").sum()) == len(small)
-    assert "0.0%" not in set(catalog["Share"])
-
-
 def _assert_alt_text(app) -> None:
     assert app.table
     for table in app.table:
@@ -294,15 +271,9 @@ def _assert_alt_text(app) -> None:
     alts = [node.proto.alt for node in charts]
     assert all(isinstance(item, str) and item.strip() for item in alts)
     expected = (
-        "Games removed from the August prefix: unrated, marked bots, and unknown results.",
-        "Twelve largest opening families by games.",
-        "Opening family game counts for the families selected above.",
-        "Raw score by color and the Black adjusted score with its bootstrap interval.",
-        "Endpoint compression by ply for the elite month and the rated public prefixes.",
-        "Share of games covered by the top N recurring positions.",
-        "Share of distinct positions that can be reached by more than one route.",
-        "Heatmap of the clock-pressure error proxy by rating band and time control.",
-        "Error proxy for the four clock buckets.",
+        "Opening families by games. Select a bar to drill into lines.",
+        "Clock bands by evaluable moves. Select a bar to list the slices in that band.",
+        "Training games by published period.",
         "Headline pass rate for each model with its Wilson 95 percent interval.",
         "Dumbbell of pass rate by category. Each point is one model.",
         "Grid of cases by model, colored by how many repeats passed.",
@@ -366,7 +337,7 @@ def test_equal_width_rows_share_one_track_definition(project):
         assert f"grid-template-columns:{_TRACKS}" in html
         assert html.count('class="cal-card"') == count
         assert html.count('class="cal-v"') == count
-        assert html.count("white-space:nowrap") == 2 * count
+        assert html.count("white-space:nowrap") == 3 * count
         assert "overflow-wrap:anywhere" not in html
         assert "minmax(min(100%,256px),1fr)" in html
     with pytest.raises(ValueError, match="at least one card"):
@@ -600,3 +571,54 @@ def test_hosted_dashboard_fails_closed_when_the_extract_is_invalid(project, tmp_
     message = " ".join(item.value for item in app.error)
     assert "Public extract failed validation" in message
     assert "unsupported public extract version" in message
+
+
+def test_hosted_dashboard_fails_closed_when_the_cube_is_missing(project, tmp_path, monkeypatch):
+    pytest.importorskip("streamlit")
+    from streamlit.testing.v1 import AppTest
+
+    monkeypatch.setenv(
+        "CHESSLAB_PUBLIC_EXTRACT",
+        str(project / "data" / "public" / "dashboard_extract.json"),
+    )
+    monkeypatch.setenv("CHESSLAB_DASHBOARD_CUBE", str(tmp_path / "missing.parquet"))
+    app = AppTest.from_file(str(project / "hosted" / "dashboard.py"), default_timeout=60).run()
+    assert not app.exception, [item.message for item in app.exception]
+    message = " ".join(item.value for item in app.error)
+    assert "Dashboard cube unavailable" in message
+    assert "dashboard cube not found" in message
+
+
+def test_color_filter_hides_positions_and_shows_the_french_cell(project, monkeypatch):
+    app = _run(project, monkeypatch)
+    app.session_state["filter_color"] = "Black"
+    app.session_state["filter_family"] = "French Defense"
+    app.run()
+    assert not app.exception, [item.message for item in app.exception]
+    text = _visible(app)
+    assert "Positions are not published on this color, time control, or rating cut." in text
+    assert "239" in text
+    assert "47.7%" in text
+    assert "114 / 239" in text
+    sidebar = " ".join(item.value for item in app.sidebar.caption)
+    assert "Color Black" in sidebar
+    assert "Opening French Defense" in sidebar
+
+
+def test_opening_drill_lists_lines_and_climbs_back(project, monkeypatch):
+    from chess_analytics.dashboard_cube import Drill
+
+    app = _run(project, monkeypatch)
+    app.session_state["filter_family"] = "Sicilian Defense"
+    app.session_state["drill"] = Drill(family="Sicilian Defense")
+    app.run()
+    assert not app.exception, [item.message for item in app.exception]
+    text = _visible(app)
+    assert "Openings / Sicilian Defense" in text
+    assert "Opening lines by games. Select a bar to open the position." in _chart_alts(app)
+    backs = [item for item in app.button if item.label == "Back"]
+    assert len(backs) == 1
+    backs[0].click().run()
+    assert not app.exception, [item.message for item in app.exception]
+    assert "Opening families by games. Select a bar to drill into lines." in _chart_alts(app)
+    assert [item.label for item in app.button] == ["Reset filters"]

@@ -577,7 +577,11 @@ def test_public_data_ignore_rules_track_only_the_extract(project):
         "data/public/warehouse.duckdb",
         "data/public/nested/games.csv",
     )
-    tracked = ("data/public/dashboard_extract.json", "data/README.md")
+    tracked = (
+        "data/public/dashboard_extract.json",
+        "data/public/dashboard_cube.parquet",
+        "data/README.md",
+    )
     for relative in ignored:
         result = subprocess.run(
             [git, "check-ignore", "-q", "--no-index", relative],

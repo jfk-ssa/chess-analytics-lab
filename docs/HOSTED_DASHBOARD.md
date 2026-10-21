@@ -1,31 +1,35 @@
-# Hosted read-only dashboard
+# Hosted dashboard
 
-`hosted/dashboard.py` reads `data/public/dashboard_extract.json` through
-`chess_analytics.public_extract`. It does not open a warehouse, take
-uploads, read secrets, or call the network. Figures and lineage come
-from that file. [ADR 0094](adr/0094-hosted-read-only-dashboard.md)
-records the deployment choice, and
-[ADR 0098](adr/0098-hosted-dashboard-analysis.md) records extract
-version 2 and the page that sits on it. The local six-view dashboard
-is a different program and still needs the analytical warehouse.
+`hosted/dashboard.py` queries `data/public/dashboard_cube.parquet` with
+DuckDB and reads `data/public/dashboard_extract.json` for live eval.
+It does not open a warehouse, take uploads, read secrets, or call the
+network. [ADR 0094](adr/0094-hosted-read-only-dashboard.md) records the
+deployment choice. [ADR 0098](adr/0098-hosted-dashboard-analysis.md)
+records extract version 2. [ADR 0101](adr/0101-hosted-bi-cube.md)
+records the cube. The local six-view dashboard is a different program
+and still needs the analytical warehouse.
 
-The page opens with three equal-width cards: opening-corpus training
-games, the August draw rate, and the analyst gate (Luna and grok-4.7
-low clear; Sol fails). Tabs are Overview, Openings, Clock pressure, AI analyst eval,
-and About the data. Filters cover opening family, color, rating band,
-time control, phase, transposition cohort, and eval category. Charts
-are Altair, with the `chesslab` theme (Inter and the page palette).
-Provenance hashes are on About the data.
+The sidebar filters are date range, time control, color, rating band,
+and opening family, with the active line and a reset. Those filters
+apply to the KPI strip, openings, clock, and periods. They do not
+change the live-eval numbers. The KPI strip is games, win rate, draw
+rate, loss rate, clock error, and published positions. Each card shows
+a delta against the previous equal count of published months when that
+window exists. Win rate and loss rate need a color, because white and
+black cells are not added.
+
+Openings drill from a family bar to lines, then to one published FEN
+and its continuations. Clock drills from a band to the largest slices
+in that band. A slice is a rating, a time control, and a phase. Each
+section has one short caption. Provenance stays in a collapsed expander.
+Charts are Altair, with the `chesslab` theme (Inter and the page palette).
 
 Card rows use an inline grid,
-`repeat(auto-fit, minmax(min(100%, 256px), 1fr))`. The value is
-`white-space: nowrap`. 256px is 16rem at the CSS reference pixel.
-Streamlit's 14px root would make a literal 16rem 224px, and three of
-those tracks fit at 768px. With 256px, a 390px viewport is one column
-and a 768px viewport holds two tracks. The three-card hero is one row
-at 1280px. The eval tab has six cards, so that row is four plus two at
-1280px and three rows of two at 768px. A leftover card stays as wide as
-the cards in the row above.
+`repeat(auto-fit, minmax(min(100%, 256px), 1fr))`. The label, value,
+and detail use `white-space: nowrap`. 256px is 16rem at the CSS
+reference pixel. With 256px, a 390px viewport is one column and a
+1280px viewport holds several tracks. The six KPI cards and the six
+eval cards share that track. The grok sweep is three cards.
 The shared `.streamlit/config.toml` is unchanged.
 
 Version 2 adds `opening_color_score` (French and Sicilian, both colors,
@@ -57,9 +61,18 @@ uv run --locked --offline --no-editable --extra dashboard \
   streamlit run hosted/dashboard.py
 ```
 
-The script adds `src/` to the import path for the extract reader. You
-do not install the project package to run this page, and the page does
-not import DuckDB.
+The script adds `src/` to the import path for the extract reader and
+the cube module. You do not install the project package to run this
+page. The page queries the cube with DuckDB, which Community Cloud
+installs from `hosted/requirements.txt`. Rebuild the cube, when a
+committed source changes, with:
+
+```sh
+uv run --locked --offline --no-editable --extra dashboard \
+  python scripts/build_dashboard_cube.py --positions /path/to/opening-positions.json
+```
+
+The positions report is not on the tip. The script does not download it.
 
 Check the page without a browser:
 
@@ -75,7 +88,7 @@ in that file still runs.
 
 Use these settings. Community Cloud installs `hosted/requirements.txt`
 with pip and starts the entrypoint. The repository root is the working
-directory, which is where the reader finds the committed extract.
+directory, which is where the reader finds the committed extract and cube.
 
 | Setting | Value |
 |---|---|
@@ -94,7 +107,9 @@ Altair, narwhals, and jsonschema are dependencies of that pin or of
 Altair. If they stay unpinned, pip can install versions that differ
 from `uv.lock`. The requirements file therefore also pins the locked
 versions, `altair==5.5.0`, `narwhals==2.26.0`, `jsonschema==4.26.0`,
-`pandas==2.3.3`, and `protobuf==6.33.6`. Streamlit 1.65.0 accepts
-`pandas<4,>=1.4.0` and `protobuf<8,>=5.26.1`, so those pins install.
-Narwhals 2.26.0 has no dependencies of its own. Altair 5.5.0 depends
-on jsonschema and narwhals.
+`pandas==2.3.3`, `protobuf==6.33.6`, and `duckdb==1.5.6`. Streamlit
+1.65.0 accepts `pandas<4,>=1.4.0` and `protobuf<8,>=5.26.1`, so those
+pins install. Narwhals 2.26.0 has no dependencies of its own. Altair
+5.5.0 depends on jsonschema and narwhals. DuckDB 1.5.6 has no
+dependencies. The cp312 manylinux x86_64 wheel recorded in `uv.lock`
+is 21,568,087 bytes.
