@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
-from typing import cast
+from typing import Any, cast
 
 import altair as alt  # pyright: ignore[reportMissingImports]
 
-_Drawn = alt.Chart | alt.LayerChart
+# The offline job typechecks before the dashboard extra exists, so Altair's
+# classes are not a type form in that environment. Chart and LayerChart both
+# satisfy this alias once the extra is installed.
+type _Drawn = Any
 
 _INSTALLED = False
 _SERIES = ("White, raw", "Black, raw", "Black, adjusted")
