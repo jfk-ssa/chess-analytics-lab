@@ -150,4 +150,7 @@ is open. The expected status stays `unsupported`. The rubric stays
 
 Push and pull-request CI still skip the live job. The offline gate
 baseline is unchanged. A later schedule still needs a new ADR and
-explicit owner approval. Astra still has no id and no cap.
+explicit owner approval. Astra still has no id and no cap. A later
+receipt can record `dataset_id` and `implementation_sha256`, since
+`FROZEN_FILES` does not cover the snapshot-identity inputs that changed
+the prompt here.

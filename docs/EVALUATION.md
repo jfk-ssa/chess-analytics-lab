@@ -166,8 +166,9 @@ payload field `model` in `provider.py`, beside that string.
 `semantic_context`, appends the governed metric definitions.
 `CheckedTools.dataset_id` is the staged `analytical_id`.
 `snapshot_identity` includes the source snapshot id, and `ingest` hashes
-`implementation_hash` into that id. `implementation_hash` covers every
-`src/**/*.py` file. `FROZEN_FILES` does not include
+`implementation_hash` into that id. `implementation_hash` covers every `src/**/*.py`
+file, every `src/**/*.sql` file, and every `contracts/*.json` file.
+`FROZEN_FILES` does not include
 `src/chess_analytics/public_extract.py`, which is the only `src/` or
 `contracts/` file that differs between the two commits. A local restage
 of each commit, with no model call, reproduced the receipt hashes.
