@@ -1,48 +1,28 @@
-"""Read-only hosted dashboard for the committed public aggregate extract.
+"""Hosted dashboard: a filterable cube, plus the committed live-eval extract.
 
 Run from the repository root:
 
     streamlit run hosted/dashboard.py
 
 Streamlit Community Cloud installs ``hosted/requirements.txt`` only. That file
-pins Streamlit, Altair, narwhals, pandas, and protobuf. It does not install
-this project. The page reads ``data/public/dashboard_extract.json`` and does
-not open a warehouse.
+pins Streamlit, Altair, DuckDB, narwhals, pandas, and protobuf. It does not
+install this project. The page reads ``data/public/dashboard_cube.parquet``
+and ``data/public/dashboard_extract.json``. It does not open a warehouse.
 """
 
 from __future__ import annotations
 
 import hashlib
 import importlib.util
-import itertools
 import json
 import sys
 from collections import defaultdict
-from collections.abc import Sequence
 from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
 import streamlit as st  # pyright: ignore[reportMissingImports]
 
 _BUCKETS = ("under_10", "10_to_29", "30_to_59", "60_plus")
-_BANDS = ("under_1200", "1200_1599", "1600_1999", "2000_plus")
-_BAND_LABEL = {
-    "under_1200": "Under 1200",
-    "1200_1599": "1200–1599",
-    "1600_1999": "1600–1999",
-    "2000_plus": "2000+",
-}
-_PHASES = ("all", "early_ply", "middle_ply", "late_ply")
-_PHASE_LABEL = {
-    "all": "All phases",
-    "early_ply": "Early ply",
-    "middle_ply": "Middle ply",
-    "late_ply": "Late ply",
-}
-_COHORT_LABEL = {
-    "elite_reference": "Elite reference",
-    "rated_public": "Rated public",
-}
 _CATEGORIES = (
     "boundary",
     "clarification",
@@ -56,7 +36,6 @@ _CATEGORIES = (
     "unsupported",
 )
 _FIGURE_TABLES = ("opening_family_share", "opening_score_cell", "clock_bucket")
-_LENSES = ("d4-g3", "d4-g3-catalan", "d4-g3-kings-indian")
 
 
 def _load_local(name: str):
@@ -113,13 +92,6 @@ def _caption(text: str) -> None:
     st.caption(_literal_currency(text))
 
 
-def _share(value: float, numerator: int) -> str:
-    shown = _pct(value)
-    if numerator > 0 and shown == "0.0%":
-        return "<0.1%"
-    return shown
-
-
 def _one(rows: list[dict], column: str, value: object) -> dict:
     matches = [row for row in rows if row[column] == value]
     if len(matches) != 1:
@@ -141,11 +113,6 @@ def _close(stored: float | None, numerator: int | float, denominator: int) -> No
         raise ValueError("public extract rate does not match its numerator and denominator")
 
 
-def _control_order(value: str) -> tuple[int, int]:
-    base, increment = value.split("+")
-    return int(base), int(increment)
-
-
 def _run_label(row: dict) -> str:
     if row["effort"] in {"none", ""}:
         return row["model"]
@@ -160,11 +127,20 @@ def _show(rows: list[dict], *, alt: str, height: int | None = None) -> None:
     st.table(rows, hide_index=True, height="content" if height is None else height, alt=alt)
 
 
-def _chart(charts, chart, *, alt: str) -> None:
+def _chart(charts, chart, *, alt: str, key: str | None = None):
     if not alt.strip():
         raise ValueError("dashboard chart needs alt text")
-    st.altair_chart(chart, width="stretch", theme=None, alt=alt)
     del charts
+    if key is None:
+        return st.altair_chart(chart, width="stretch", theme=None, alt=alt)
+    return st.altair_chart(
+        chart,
+        width="stretch",
+        theme=None,
+        alt=alt,
+        on_select="rerun",
+        key=key,
+    )
 
 
 def _validate(extract: dict, rows) -> None:
@@ -293,343 +269,6 @@ def _validate_lineage(extract: dict, rows) -> None:
         raise ValueError("public extract analytical ids differ")
 
 
-def _family_rows(families: list[dict], names: set[str] | None = None) -> list[dict]:
-    chosen = families if names is None else [row for row in families if row["family"] in names]
-    return [
-        {
-            "family": row["family"],
-            "games": row["numerator"],
-            "share_label": _share(row["value"], row["numerator"]),
-        }
-        for row in chosen
-    ]
-
-
-def _catalog(families: list[dict]) -> list[dict]:
-    return [
-        {
-            "Family": row["family"],
-            "Games": f"{row['numerator']:,}",
-            "Share": _share(row["value"], row["numerator"]),
-        }
-        for row in families
-    ]
-
-
-def _august(stages: list[dict], population: str) -> int:
-    match = [
-        row
-        for row in stages
-        if row["lineage"] == "m3_august_prefix" and row["population"] == population
-    ]
-    if len(match) != 1:
-        raise ValueError(f"August lineage stage is missing: {population}")
-    return match[0]["count"]
-
-
-def _funnel(stages: list[dict]) -> list[dict]:
-    """Games removed from the August prefix, not the near-equal population counts."""
-    labels = (
-        ("excluded", "Unrated"),
-        ("marked_bots", "Marked bots"),
-        ("unknown_results", "Unknown results"),
-    )
-    return [
-        {"stage": label, "count": _august(stages, population), "order": order}
-        for order, (population, label) in enumerate(labels)
-    ]
-
-
-def _score_rows(cells: list[dict], *, color: str, families: set[str]) -> list[dict]:
-    plotted = []
-    for cell in cells:
-        if color != "all" and cell["color"] != color:
-            continue
-        if cell["family"] not in families:
-            continue
-        side = "White" if cell["color"] == "white" else "Black"
-        plotted.append(
-            {
-                "family": cell["family"],
-                "series": f"{side}, raw",
-                "rate": cell["score_rate"],
-                "low": None,
-                "high": None,
-                "rate_label": _pct(cell["score_rate"]),
-                "interval_label": "not published",
-                "support_label": "yes" if cell["low_support"] else "no",
-            }
-        )
-        if cell["adjusted_score_rate"] is None:
-            continue
-        plotted.append(
-            {
-                "family": cell["family"],
-                "series": "Black, adjusted",
-                "rate": cell["adjusted_score_rate"],
-                "low": cell["adjusted_interval_low"],
-                "high": cell["adjusted_interval_high"],
-                "rate_label": _pct(cell["adjusted_score_rate"]),
-                "interval_label": (
-                    f"{_pct(cell['adjusted_interval_low'])}–{_pct(cell['adjusted_interval_high'])}"
-                ),
-                "support_label": "yes" if cell["low_support"] else "no",
-            }
-        )
-    return plotted
-
-
-def _score_caption(cells: list[dict]) -> str:
-    sentences = []
-    families = []
-    for cell in cells:
-        if cell["family"] not in families:
-            families.append(cell["family"])
-    for family in families:
-        white = [row for row in cells if row["family"] == family and row["color"] == "white"]
-        black = [row for row in cells if row["family"] == family and row["color"] == "black"]
-        if not white or not black or black[0]["adjusted_interval_low"] is None:
-            continue
-        rate = white[0]["score_rate"]
-        low = black[0]["adjusted_interval_low"]
-        high = black[0]["adjusted_interval_high"]
-        if rate < low:
-            place = "below"
-        elif rate > high:
-            place = "above"
-        else:
-            place = "inside"
-        short = family.removesuffix(" Defense")
-        interval = f"{_pct(low)}–{_pct(high)}"
-        sentences.append(
-            f"{short} White is {_pct(rate)} ({_half_points(white[0])}), "
-            f"{place} the Black interval {interval}."
-        )
-    if sentences:
-        return " ".join(sentences)
-    return (
-        "These are raw half-point scores for the selected families. "
-        "The adjusted interval was published for Black only."
-    )
-
-
-def _share_caption(selected: list[dict], denominator: int) -> str:
-    if not selected or not denominator:
-        return "Select a family to see its share of known-opening games."
-    games = sum(row["games"] for row in selected)
-    return (
-        f"The selected families are {_pct(games / denominator)} "
-        f"of {denominator:,} known-opening games."
-    )
-
-
-def _heatmap_rows(
-    strata: list[dict],
-    bands: Sequence[str],
-    controls: Sequence[str],
-    phase: str,
-) -> list[dict]:
-    totals = {(band, control): [0, 0, 0] for band in bands for control in controls}
-    for row in strata:
-        key = (row["rating_band"], row["time_control"])
-        if key not in totals:
-            continue
-        if phase != "all" and row["phase"] != phase:
-            continue
-        found = totals[key]
-        found[0] += row["eligible_moves"]
-        found[1] += row["evaluable_moves"]
-        found[2] += row["proxy_errors"]
-    plotted = []
-    for band in bands:
-        for control in controls:
-            eligible, evaluable, errors = totals[(band, control)]
-            rate = None if evaluable == 0 else errors / evaluable
-            coverage = None if eligible == 0 else evaluable / eligible
-            plotted.append(
-                {
-                    "rating_band": _BAND_LABEL[band],
-                    "time_control": control,
-                    "rating_code": band,
-                    "error_proxy_rate": rate,
-                    "evaluable_moves": evaluable,
-                    "rate_label": "no evaluable moves" if rate is None else _pct(rate),
-                    "coverage_label": "none" if coverage is None else _pct(coverage),
-                }
-            )
-    return plotted
-
-
-def _falling_controls(rows: list[dict]) -> tuple[list[str], list[str]]:
-    by_control: dict[str, dict[str, float]] = defaultdict(dict)
-    for row in rows:
-        rate = row["error_proxy_rate"]
-        if row["evaluable_moves"] <= 0 or rate is None:
-            continue
-        by_control[row["time_control"]][row["rating_code"]] = rate
-    falling = []
-    other = []
-    for control, rates in by_control.items():
-        ordered = [rates[band] for band in _BANDS if band in rates]
-        monotone = len(ordered) >= 3 and all(
-            left + 1e-12 >= right for left, right in itertools.pairwise(ordered)
-        )
-        if monotone:
-            falling.append(control)
-        else:
-            other.append(control)
-    falling.sort(key=_control_order)
-    other.sort(key=_control_order)
-    return falling, other
-
-
-def _heatmap_caption(rows: list[dict]) -> str:
-    falling, other = _falling_controls(rows)
-    if not falling and not other:
-        return "This filter has no evaluable moves, so the error proxy is blank."
-    if falling and not other:
-        joined = ", ".join(falling)
-        return f"On {joined} the error proxy falls as the rating band rises."
-    if falling:
-        return (
-            f"On {', '.join(falling)} the error proxy falls as the rating band rises. "
-            f"{', '.join(other)} is not monotone in this filter."
-        )
-    return "In this filter the error proxy does not fall steadily with rating."
-
-
-def _bucket_rows(buckets: list[dict]) -> list[dict]:
-    plotted = []
-    for name in _BUCKETS:
-        row = _one(buckets, "bucket", name)
-        plotted.append(
-            {
-                "bucket": name,
-                "error_proxy_rate": row["error_proxy_rate"],
-                "rate_label": _pct(row["error_proxy_rate"]),
-                "coverage_label": _pct(row["evaluation_coverage"]),
-            }
-        )
-    return plotted
-
-
-def _bucket_table(buckets: list[dict]) -> list[dict]:
-    table = []
-    for name in _BUCKETS:
-        row = _one(buckets, "bucket", name)
-        proxy = (
-            f"{_pct(row['error_proxy_rate'])} "
-            f"({row['proxy_errors']:,} / {row['evaluable_moves']:,})"
-        )
-        table.append(
-            {
-                "Bucket": name,
-                "Error proxy": proxy,
-                "Coverage": _pct(row["evaluation_coverage"]),
-            }
-        )
-    return table
-
-
-def _bucket_caption(buckets: list[dict]) -> str:
-    under = _one(buckets, "bucket", "under_10")
-    slow = _one(buckets, "bucket", "60_plus")
-    mid = _one(buckets, "bucket", "30_to_59")
-    relation = "above" if slow["error_proxy_rate"] > mid["error_proxy_rate"] else "below"
-    return (
-        f"Under 10 seconds has the highest error proxy, {_pct(under['error_proxy_rate'])}, "
-        f"and the thinnest coverage, {_pct(under['evaluation_coverage'])}. "
-        f"60+ seconds ({_pct(slow['error_proxy_rate'])}) is slightly {relation} "
-        f"30–59 seconds ({_pct(mid['error_proxy_rate'])})."
-    )
-
-
-def _compression_rows(rows: list[dict]) -> list[dict]:
-    return [
-        {
-            "cohort": _COHORT_LABEL[row["cohort"]],
-            "ply": row["ply"],
-            "endpoint_compression": row["endpoint_compression"],
-            "compression_label": _pct(row["endpoint_compression"]),
-            "distinct_positions": row["distinct_positions"],
-            "distinct_routes": row["distinct_routes"],
-        }
-        for row in rows
-    ]
-
-
-def _compression_caption(rows: list[dict]) -> str:
-    ends = {(row["cohort"], row["ply"]): row["endpoint_compression"] for row in rows}
-    elite = ends[("elite_reference", 20)]
-    public = ends[("rated_public", 20)]
-    return (
-        "Endpoint compression falls from ply 6 to ply 20 in both cohorts. "
-        f"At ply 20 the elite month is {_pct(elite)} and the public prefixes are {_pct(public)}."
-    )
-
-
-def _coverage_rows(rows: list[dict]) -> list[dict]:
-    plotted = []
-    for row in rows:
-        if row["view"] != "all" or row["mode"] != "recurring":
-            continue
-        plotted.append(
-            {
-                "cohort": _COHORT_LABEL[row["cohort"]],
-                "n": row["n"],
-                "share": row["share"],
-                "share_label": _pct(row["share"]),
-                "games": row["games"],
-            }
-        )
-    return plotted
-
-
-def _coverage_caption(rows: list[dict]) -> str:
-    top = [row for row in rows if row["n"] == 20]
-    if len(top) != 2:
-        return "Union coverage of the top positions, for the all-positions view."
-    by_cohort = {row["cohort"]: row["share"] for row in top}
-    return (
-        "The 20 most frequent positions cover "
-        f"{_pct(by_cohort['elite_reference'])} of elite games and "
-        f"{_pct(by_cohort['rated_public'])} of public games. Coverage is a union."
-    )
-
-
-def _transposing_rows(views: list[dict], cohort: str) -> list[dict]:
-    plotted = []
-    for row in views:
-        if row["cohort"] != cohort or row["view"] == "all" or row["view"].startswith("d4-"):
-            continue
-        share = row["transposing_positions"] / row["distinct_positions"]
-        plotted.append(
-            {
-                "view": row["view"],
-                "share": share,
-                "share_label": _pct(share),
-                "denominator_games": row["denominator_games"],
-            }
-        )
-    return plotted
-
-
-def _lens_table(views: list[dict]) -> list[dict]:
-    table = []
-    for lens in _LENSES:
-        elite = _view_games(views, "elite_reference", lens)
-        public = _view_games(views, "rated_public", lens)
-        table.append({"Lens": lens, "Elite games": f"{elite:,}", "Public games": f"{public:,}"})
-    return table
-
-
-def _view_games(views: list[dict], cohort: str, view: str) -> int:
-    matches = [row for row in views if row["cohort"] == cohort and row["view"] == view]
-    if len(matches) != 1:
-        raise ValueError(f"transposition view is missing: {cohort} {view}")
-    return matches[0]["denominator_games"]
-
-
 def _plotted_row(row: dict, label: str) -> dict:
     return {
         "label": label,
@@ -655,12 +294,6 @@ def _sweep_wilson_rows(runs: list[dict]) -> list[dict]:
 
 def _by_gate(runs: list[dict]) -> list[dict]:
     return sorted(runs, key=lambda row: (row["hard_fail"], row["github_run_id"]))
-
-
-def _short_model(model: str) -> str:
-    if model.startswith("gpt-6-"):
-        return model.removeprefix("gpt-6-").title()
-    return model
 
 
 def _ranges_overlap(left: dict, right: dict) -> bool:
@@ -853,306 +486,6 @@ def _figure_caption(extract: dict, rows) -> tuple[list[dict], str]:
         [{"Field": "analytical_id", "Value": analytical_id}],
         f"This analytical_id is on the committed rows of {names}. {relation}",
     )
-
-
-def _gate_name(row: dict) -> str:
-    name = _short_model(row["model"])
-    if row["effort"] not in {"none", ""}:
-        return f"{name} {row['effort']}"
-    return name
-
-
-def _gate_card(runs: list[dict], cases: list[dict]) -> tuple[str, str, str]:
-    ordered = _by_gate([row for row in runs if row["headline"]])
-    clear = [row for row in ordered if not row["hard_fail"]]
-    failed = [row for row in ordered if row["hard_fail"]]
-    if not clear or not failed:
-        return ("Analyst gate", "No split gate", "This extract has one gate outcome.")
-    clear_names = ", ".join(_gate_name(row) for row in clear)
-    fail_names = ", ".join(_gate_name(row) for row in failed)
-    value = f"{clear_names} clear; {fail_names} fail"
-    parts = []
-    for row in clear:
-        parts.append(f"{_gate_name(row)} {_pct(row['pass_rate'])} clears")
-    for row in failed:
-        budget = _boundary_case(cases, row["model"])
-        miss = f"{budget[0]['passed']}/{budget[0]['repeats']}" if budget else "unscored"
-        parts.append(
-            f"{_gate_name(row)} {_pct(row['pass_rate'])} but misses boundary_budget {miss}"
-        )
-    return ("Analyst gate", value, "; ".join(parts))
-
-
-def _hero(layout, extract: dict, rows) -> None:
-    receipts = rows(extract, "metric_receipt")
-    draw = _one(receipts, "receipt_id", "game_draw_rate")
-    training = _one(receipts, "receipt_id", "opening_corpus_training_games")
-    runs = rows(extract, "live_eval_run")
-    cards = [
-        (
-            "Opening corpus",
-            f"{training['numerator']:,}",
-            "Training games. A separate lineage from the August prefix.",
-        ),
-        (
-            "Draw rate",
-            _pct(draw["numerator"] / draw["denominator"]),
-            f"{draw['numerator']:,} / {draw['denominator']:,} eligible games",
-        ),
-        _gate_card(runs, rows(extract, "live_eval_case")),
-    ]
-    st.markdown(
-        _html_currency(layout.equal_width_row(cards)),
-        unsafe_allow_html=True,
-    )
-
-
-def _headline_runs(runs: list[dict]) -> list[dict]:
-    return [row for row in runs if row["headline"]]
-
-
-def _eval_cards(layout, runs: list[dict]) -> None:
-    cards: list[tuple[str, str, str]] = []
-    for row in _by_gate(_headline_runs(runs)):
-        gate = "Hard fail" if row["hard_fail"] else "Gate clear"
-        cards.append(
-            (
-                _run_label(row),
-                _pct(row["pass_rate"]),
-                f"{row['passed']:,} of {row['trials']:,}. {gate}",
-            )
-        )
-        cards.append(
-            (
-                f"{_run_label(row)} cost",
-                _usd(row["known_gross_cost_usd"]),
-                f"Cap {_usd(row['max_run_usd'])}",
-            )
-        )
-    st.markdown(
-        _html_currency(layout.equal_width_row(cards)),
-        unsafe_allow_html=True,
-    )
-
-
-def _overview(charts, extract: dict, rows) -> None:
-    stages = rows(extract, "lineage_stage")
-    families = rows(extract, "opening_family_share")
-    denominator = families[0]["denominator"]
-    funnel_rows = _funnel(stages)
-    seen = _august(stages, "seen")
-    accepted = _august(stages, "accepted")
-    eligible = _august(stages, "eligible_games")
-    removed = sum(row["count"] for row in funnel_rows)
-    st.subheader("August prefix")
-    _chart(
-        charts,
-        charts.funnel(funnel_rows),
-        alt="Games removed from the August prefix: unrated, marked bots, and unknown results.",
-    )
-    _caption(
-        f"Of {seen:,} games read, {accepted:,} are accepted and {eligible:,} are eligible. "
-        f"{removed:,} games are removed: "
-        + ", ".join(f"{row['count']:,} {row['stage'].lower()}" for row in funnel_rows)
-        + ". The opening corpus is not added to this funnel."
-    )
-    _caption(
-        "Query origin: metricflow. The draw-rate denominator matches "
-        "m3_august_prefix:eligible_games."
-    )
-    st.subheader("Opening families")
-    top = _family_rows(families)[:12]
-    _chart(
-        charts,
-        charts.horizontal_bars(top, x_title="Games"),
-        alt="Twelve largest opening families by games.",
-    )
-    _caption(_share_caption(top, denominator).replace("selected", "twelve largest"))
-    _caption(
-        f"Query origin: metricflow. Each share uses the opening_usage denominator, {denominator:,}."
-    )
-
-
-def _openings(charts, extract: dict, rows) -> None:
-    families = rows(extract, "opening_family_share")
-    names = [row["family"] for row in families]
-    default = names[:8]
-    chosen = st.multiselect("Family", names, default=default, key="opening_family")
-    color = st.selectbox(
-        "Color",
-        ("all", "white", "black"),
-        format_func=_color_label,
-        key="opening_color",
-    )
-    selected = _family_rows(families, set(chosen))
-    denominator = families[0]["denominator"]
-    st.subheader("Share of known openings")
-    if selected:
-        _chart(
-            charts,
-            charts.horizontal_bars(selected, x_title="Games"),
-            alt="Opening family game counts for the families selected above.",
-        )
-    _caption(_share_caption(selected, denominator))
-    st.subheader("Score and adjusted interval")
-    plotted = _score_rows(rows(extract, "opening_color_score"), color=color, families=set(chosen))
-    if plotted:
-        _chart(
-            charts,
-            charts.score_intervals(plotted),
-            alt="Raw score by color and the Black adjusted score with its bootstrap interval.",
-        )
-    shown_cells = [
-        cell
-        for cell in rows(extract, "opening_color_score")
-        if cell["family"] in set(chosen) and (color == "all" or cell["color"] == color)
-    ]
-    _caption(_score_caption(shown_cells))
-    _caption("Query origin: metricflow. The raw half-point score is wins plus half the draws.")
-    _score_table(rows(extract, "opening_color_score"))
-    st.subheader("Transpositions")
-    _transpositions(charts, extract, rows)
-    _caption(f"All {len(families):,} families in opening_family_share, in extract order.")
-    _show(_catalog(families), alt="Opening family game counts and shares.", height=420)
-
-
-def _color_label(item: str) -> str:
-    if item == "all":
-        return "Both colors"
-    return item.title()
-
-
-def _half_points(cell: dict) -> str:
-    points = cell["wins"] + cell["draws"] / 2
-    shown = f"{int(points):,}" if points == int(points) else f"{points:,.1f}"
-    return f"{shown} / {cell['games']:,}"
-
-
-def _score_table(cells: list[dict]) -> None:
-    table = []
-    for cell in cells:
-        score = f"{_pct(cell['score_rate'])} ({_half_points(cell)})"
-        if cell["adjusted_score_rate"] is None:
-            interval = "not published"
-        else:
-            low = _pct(cell["adjusted_interval_low"])
-            high = _pct(cell["adjusted_interval_high"])
-            interval = f"{_pct(cell['adjusted_score_rate'])} ({low}–{high})"
-        table.append(
-            {
-                "Family": cell["family"],
-                "Color": cell["color"],
-                "Raw / adjusted": f"{score} / {interval}",
-            }
-        )
-    _show(table, alt="Raw scores and, for Black, adjusted scores with bootstrap intervals.")
-    _caption(
-        "Query origin: committed_report. The interval is adjusted_interval_low to "
-        "adjusted_interval_high. Low support is under 100 games; these four cells are not flagged."
-    )
-
-
-def _transpositions(charts, extract: dict, rows) -> None:
-    scope = rows(extract, "transposition_scope")[0]
-    _caption(f"{scope['scope']} {scope['visits']:,} position visits from {scope['games']:,} games.")
-    compression = rows(extract, "transposition_compression")
-    _chart(
-        charts,
-        charts.compression(_compression_rows(compression)),
-        alt="Endpoint compression by ply for the elite month and the rated public prefixes.",
-    )
-    _caption(_compression_caption(compression))
-    coverage = _coverage_rows(rows(extract, "transposition_coverage"))
-    _chart(
-        charts,
-        charts.coverage(coverage),
-        alt="Share of games covered by the top N recurring positions.",
-    )
-    _caption(_coverage_caption(rows(extract, "transposition_coverage")))
-    views = rows(extract, "transposition_view")
-    cohort = st.selectbox(
-        "Cohort",
-        ("elite_reference", "rated_public"),
-        format_func=lambda item: _COHORT_LABEL[item],
-        key="transposition_cohort",
-    )
-    bars = _transposing_rows(views, cohort)
-    _chart(
-        charts,
-        charts.transposition_bars(bars),
-        alt="Share of distinct positions that can be reached by more than one route.",
-    )
-    _caption(
-        "A higher bar means more of that opening's positions are true transpositions. "
-        "Frequency is not move quality."
-    )
-    _show(
-        _lens_table(views),
-        alt="Game counts for the three d4 and g3 fianchetto lenses.",
-    )
-    _caption(
-        "Inside d4-g3, the elite month has more Catalan and King's Indian games "
-        "than the public prefixes."
-    )
-    _caption("Query origin: committed_report. The reduction has no position ids.")
-
-
-def _clock(charts, extract: dict, rows) -> None:
-    bands = rows(extract, "clock_pressure_band")
-    by_control: dict[str, int] = defaultdict(int)
-    for row in bands:
-        by_control[row["time_control"]] += row["evaluable_moves"]
-    options = sorted(by_control, key=_control_order)
-    default = [control for control in options if by_control[control] >= 100]
-    chosen_bands = st.multiselect(
-        "Rating band",
-        list(_BANDS),
-        default=list(_BANDS),
-        format_func=lambda item: _BAND_LABEL[item],
-        key="clock_band",
-    )
-    chosen_controls = st.multiselect("Time control", options, default=default, key="clock_control")
-    phase = st.selectbox(
-        "Phase",
-        _PHASES,
-        format_func=lambda item: _PHASE_LABEL[item],
-        key="clock_phase",
-    )
-    st.subheader("Error proxy by rating and time control")
-    if chosen_bands and chosen_controls:
-        plotted = _heatmap_rows(
-            rows(extract, "clock_stratum"),
-            chosen_bands,
-            chosen_controls,
-            phase,
-        )
-        _chart(
-            charts,
-            charts.heatmap(
-                plotted,
-                x_order=sorted(chosen_controls, key=_control_order),
-                y_order=[_BAND_LABEL[band] for band in _BANDS if band in chosen_bands],
-            ),
-            alt="Heatmap of the clock-pressure error proxy by rating band and time control.",
-        )
-        _caption(_heatmap_caption(plotted))
-    else:
-        _caption("Select a rating band and a time control.")
-    _caption(
-        "Query origin: committed_report. The heatmap pools clock_stratum "
-        "from the same M4 publication as the four buckets. "
-        "Gray cells have no evaluable moves. No independent-move interval is claimed."
-    )
-    st.subheader("Four clock buckets")
-    buckets = rows(extract, "clock_bucket")
-    _chart(
-        charts,
-        charts.bucket_bars(_bucket_rows(buckets)),
-        alt="Error proxy for the four clock buckets.",
-    )
-    _caption(_bucket_caption(buckets))
-    _caption("Query origin: reviewed_sql. Error proxy is proxy_errors / evaluable_moves.")
-    _show(_bucket_table(buckets), alt="Clock-bucket error proxy and evaluation coverage.")
 
 
 _GROK_LOW_INSTRUCTIONS = "622007a3deb785c204e58ba68419af0adbb0c0929d29dd97241038514d17181f"
@@ -1382,6 +715,34 @@ def _grok_effort_sweep(
     )
 
 
+def _headline_runs(runs: list[dict]) -> list[dict]:
+    return [row for row in runs if row["headline"]]
+
+
+def _eval_cards(layout, runs: list[dict]) -> None:
+    cards: list[tuple[str, str, str]] = []
+    for row in _by_gate(_headline_runs(runs)):
+        gate = "Hard fail" if row["hard_fail"] else "Gate clear"
+        cards.append(
+            (
+                _run_label(row),
+                _pct(row["pass_rate"]),
+                f"{row['passed']:,} of {row['trials']:,}. {gate}",
+            )
+        )
+        cards.append(
+            (
+                f"{_run_label(row)} cost",
+                _usd(row["known_gross_cost_usd"]),
+                f"Cap {_usd(row['max_run_usd'])}",
+            )
+        )
+    st.markdown(
+        _html_currency(layout.equal_width_row(cards)),
+        unsafe_allow_html=True,
+    )
+
+
 def _eval_tab(layout, charts, extract: dict, rows) -> None:
     runs = rows(extract, "live_eval_run")
     cases = rows(extract, "live_eval_case")
@@ -1539,7 +900,12 @@ def _lineage_tables(stages: list[dict]) -> None:
 def _table_index(extract: dict, rows) -> list[dict]:
     table = []
     for name in extract["tables"]:
-        body = rows(extract, name)
+        try:
+            body = rows(extract, name)
+        except ValueError as exc:
+            if "unknown public extract table" not in str(exc):
+                raise
+            continue
         sources = sorted({row["source_report"] for row in body if row.get("source_report")})
         if sources:
             source = ", ".join(sources)
@@ -1555,30 +921,42 @@ def _table_index(extract: dict, rows) -> list[dict]:
     return table
 
 
-def _render(layout, charts, extract: dict, path: Path, rows) -> None:
+def _render(
+    layout,
+    charts,
+    bi,
+    extract: dict,
+    path: Path,
+    rows,
+    connection,
+    cube_bounds,
+    extract_error: str | None = None,
+) -> None:
     charts.install_theme()
     stylesheet = Path(__file__).resolve().parent / "static" / "dashboard.css"
     if stylesheet.is_file():
-        st.html(stylesheet)
+        st.html("<style>" + stylesheet.read_text() + "</style>")
     st.title("Chess Analytics Lab")
-    _caption(
-        "Read-only figures from data/public/dashboard_extract.json. "
-        "No warehouse, no uploads, and no external calls."
-    )
-    _hero(layout, extract, rows)
-    overview, openings, clock, analyst, about = st.tabs(
-        ["Overview", "Openings", "Clock pressure", "AI analyst eval", "About the data"]
-    )
-    with overview:
-        _overview(charts, extract, rows)
-    with openings:
-        _openings(charts, extract, rows)
-    with clock:
-        _clock(charts, extract, rows)
-    with analyst:
-        _eval_tab(layout, charts, extract, rows)
-    with about:
+    bi.render(layout, charts, connection, cube_bounds)
+    st.subheader("Live eval")
+    if extract_error is not None:
+        st.error(extract_error)
+        return
+    _eval_tab(layout, charts, extract, rows)
+    with st.expander("Provenance"):
         _about(extract, path, rows)
+
+
+def _duckdb_error(exc: BaseException) -> bool:
+    """True for ``duckdb.Error``, including the ``_duckdb`` implementation class."""
+    module = type(exc).__module__.split(".")[0]
+    if module in {"duckdb", "_duckdb"}:
+        return True
+    try:
+        import duckdb
+    except ModuleNotFoundError:
+        return False
+    return isinstance(exc, duckdb.Error)
 
 
 def _fail(message: str) -> None:
@@ -1587,7 +965,27 @@ def _fail(message: str) -> None:
     st.stop()
 
 
+def _cube():
+    src = str(Path(__file__).resolve().parents[1] / "src")
+    inserted = src not in sys.path
+    if inserted:
+        sys.path.insert(0, src)
+    try:
+        from chess_analytics.dashboard_cube import bounds, connect, cube_path
+
+        return bounds, connect, cube_path
+    finally:
+        if inserted:
+            sys.path.remove(src)
+
+
 def main() -> None:
+    extract_error: str | None = None
+    layout = None
+    charts = None
+    extract = None
+    path = None
+    table_rows = None
     try:
         layout = _load_local("layout")
         charts = _load_local("charts")
@@ -1595,15 +993,46 @@ def main() -> None:
         path = extract_path()
         extract = load_extract(path)
         _validate(extract, table_rows)
-        _render(layout, charts, extract, path, table_rows)
     except json.JSONDecodeError as exc:
-        _fail(f"Public extract is not valid JSON: {exc}")
+        extract_error = f"Public extract is not valid JSON: {exc}"
     except ValueError as exc:
-        _fail(f"Public extract failed validation: {exc}")
+        extract_error = f"Public extract failed validation: {exc}"
     except OSError as exc:
-        _fail(f"Public extract unavailable: {exc}")
+        extract_error = f"Public extract unavailable: {exc}"
     except ModuleNotFoundError as exc:
-        _fail(f"Public extract reader could not be imported: {exc}")
+        extract_error = f"Public extract reader could not be imported: {exc}"
+    if layout is None or charts is None:
+        _fail(extract_error or "Dashboard view could not be imported")
+    try:
+        bounds, connect, cube_path = _cube()
+        source = cube_path()
+        connection = connect(source)
+        cube_bounds = bounds(connection)
+        bi = _load_local("bi")
+    except FileNotFoundError as exc:
+        if extract_error is not None:
+            _fail(extract_error)
+        _fail(f"Dashboard cube unavailable: {exc}")
+    except ModuleNotFoundError as exc:
+        _fail(f"Dashboard cube could not be imported: {exc}")
+    except Exception as exc:
+        if _duckdb_error(exc):
+            _fail(f"Dashboard cube unavailable: {exc}")
+        raise
+    if extract_error is not None or extract is None or path is None or table_rows is None:
+        _render(
+            layout,
+            charts,
+            bi,
+            {},
+            Path(),
+            table_rows if table_rows is not None else (lambda *_args: []),
+            connection,
+            cube_bounds,
+            extract_error or "Public extract unavailable",
+        )
+        return
+    _render(layout, charts, bi, extract, path, table_rows, connection, cube_bounds)
 
 
 st.set_page_config(page_title="Chess Analytics Lab", layout="wide")

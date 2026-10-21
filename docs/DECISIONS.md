@@ -106,3 +106,4 @@ short summary of the current checkout, not a log of new decisions.
 | 0098 | 2026-10-21 | [Hosted dashboard analysis](adr/0098-hosted-dashboard-analysis.md) |
 | 0099 | 2026-10-21 | [grok-4.7 live-eval receipts and reasoning-effort sweep](adr/0099-grok-live-eval-receipt.md) |
 | 0100 | 2026-10-21 | [Change-aware offline integrity](adr/0100-change-aware-offline-integrity.md) |
+| 0101 | 2026-10-21 | [Hosted dashboard cube](adr/0101-hosted-bi-cube.md) |

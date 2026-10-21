@@ -1,8 +1,9 @@
-"""AppTest for the hosted read-only dashboard. Offline; no warehouse."""
+"""AppTest for the hosted dashboard. Offline; no warehouse."""
 
 import hashlib
 import json
 import re
+from html import escape
 
 import pytest
 
@@ -79,6 +80,7 @@ def test_hosted_streamlit_pin_matches_the_lock(project):
         "jsonschema==4.26.0",
         "pandas==2.3.3",
         "protobuf==6.33.6",
+        "duckdb==1.5.6",
     ]
     assert "streamlit==1.65.0" in (project / "pyproject.toml").read_text()
     assert "1.65.0" in (project / "THIRD_PARTY_NOTICES.md").read_text()
@@ -96,45 +98,60 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
     assert not app.text_input
     assert not app.text_area
     assert not app.chat_input
-    assert not app.button
-    text = _visible(app)
+    assert [item.label for item in app.button] == ["Reset filters"]
+    assert len(app.date_input) == 1
+    assert app.date_input[0].label == "Date range"
+    labels = {item.label: list(item.options) for item in app.selectbox}
+    assert set(labels) == {
+        "Time control",
+        "Color",
+        "Rating band",
+        "Opening family",
+        "Board",
+    }
+    assert "Top positions" in labels["Board"]
+    titled = [option for option in labels["Board"] if option != "Top positions"]
+    assert titled
+    assert all("After Black's move " in option for option in titled)
+    assert any("1.e4\u00a0c5" in option for option in titled)
+    assert len(titled) == len(set(titled))
+    assert labels["Color"] == ["All", "White", "Black"]
+    assert "French Defense" in labels["Opening family"]
+    assert "Sicilian Defense" in labels["Opening family"]
+    text = re.sub(r"<[^>]+>", "", _visible(app))
     assert "1 over-abstentions" not in text
     extract = load_extract(extract_path(project))
     receipts = {row["receipt_id"]: row for row in table_rows(extract, "metric_receipt")}
     draw = receipts["game_draw_rate"]
-    french = receipts["opening_player_score:French Defense"]
-    sicilian = receipts["opening_player_score:Sicilian Defense"]
-    clock = receipts["clock_pressure_error_proxy:under_10"]
     path = extract_path(project)
     digest = hashlib.sha256(path.read_bytes()).hexdigest()
     expected = (
-        f"{draw['numerator']:,} / {draw['denominator']:,}",
-        f"{french['numerator']:,} / {french['denominator']:,}",
-        f"{sicilian['numerator']:,} / {sicilian['denominator']:,}",
-        f"{clock['numerator']:,} / {clock['denominator']:,}",
         "1,042,346",
+        "1,009,445",
+        "warehouse",
+        "49.2%",
+        "476,741 / 968,874 · White",
+        "5.1%",
+        "49,271 / 968,874 · White",
+        "45.7%",
+        "442,862 / 968,874 · White",
+        "9.3%",
+        "2,128 / 22,978",
+        "+0.1",
+        "72.8",
+        "warehouse cells of at least 10 games",
+        "Most common transpositions",
+        "Distinct acyclic move orders",
+        "rated public",
         "99,467",
         "100,000",
-        "French Defense",
-        "Sicilian Defense",
-        "50.3%",
-        "48.0%",
-        "44.7%–56.1%",
-        "42.1%–53.3%",
-        "41.9%",
-        "44.8%",
-        "106 / 253",
-        "152 / 339",
-        "883",
         "533",
         "342",
-        "8.3%",
-        "7.8%",
         "86.3%",
         "97.5%",
         "97.1%",
-        "Luna, grok-4.7 low clear; Sol fail",
-        "boundary_budget 0/5",
+        "gpt-6-luna and grok-4.7 · low clear; gpt-6-sol hard-fails",
+        "boundary_budget is 0 of 5",
         "25 over-abstentions",
         "6 over-abstentions",
         "1 over-abstention",
@@ -161,10 +178,7 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
         extract["build"]["semantic_manifest_sha256"],
         digest,
         "nikonoel",
-        "under_10",
-        "10_to_29",
-        "30_to_59",
-        "60_plus",
+        "Date 2025-11-01–2026-08-01 · Time All · Color All · Rating All · Opening All",
     )
     missing = [item for item in expected if item not in text]
     assert not missing, missing
@@ -173,11 +187,14 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
     _assert_section_origins(app)
     _assert_live_eval_link(app)
     _assert_build_table_omits_the_figure_id(app, extract)
-    _assert_small_shares_are_below_a_tenth(app, extract)
     _assert_alt_text(app)
     _assert_equal_width_markup(app)
     for table in app.table:
         assert len(table.value.columns) <= 3
+
+
+def _chart_alts(app) -> list[str]:
+    return [node.proto.alt for node in app if getattr(node, "type", None) == "vega_lite_chart"]
 
 
 def _caption(app, fragment: str) -> str:
@@ -212,21 +229,18 @@ def _assert_live_eval_link(app) -> None:
 
 
 def _assert_section_origins(app) -> None:
-    sections = (
-        ("m3_august_prefix:eligible_games", "metricflow"),
-        ("opening_usage denominator", "metricflow"),
-        ("wins plus half the draws", "metricflow"),
-        ("adjusted_interval_low", "committed_report"),
-        ("proxy_errors", "reviewed_sql"),
-        ("lineages separately", "committed_report"),
-    )
-    origins = ("metricflow", "reviewed_sql", "committed_report")
-    for fragment, origin in sections:
-        caption = _caption(app, fragment)
-        assert f"Query origin: {origin}" in caption
-        for other in origins:
-            if other != origin:
-                assert other not in caption
+    openings = _caption(app, "Published positions only")
+    assert "Query origin:" not in openings
+    clock = _caption(app, "not a game")
+    assert clock.startswith("Reviewed SQL.")
+    assert "metricflow" not in clock
+    periods = _caption(app, "one published period")
+    assert "Query origin:" not in periods
+    assert "warehouse cells of at least 10 games" in periods
+    lineage = _caption(app, "lineages separately")
+    assert "Query origin: committed_report" in lineage
+    assert "metricflow" not in lineage
+    assert "reviewed_sql" not in lineage
 
 
 def _field_table(app, field: str):
@@ -272,20 +286,6 @@ def _assert_build_table_omits_the_figure_id(app, extract) -> None:
     assert snapshot not in caption
 
 
-def _assert_small_shares_are_below_a_tenth(app, extract) -> None:
-    families = table_rows(extract, "opening_family_share")
-    small = [row for row in families if row["numerator"] > 0 and f"{row['value']:.1%}" == "0.0%"]
-    assert small
-    catalogs = [
-        table.value
-        for table in app.table
-        if list(table.value.columns) == ["Family", "Games", "Share"]
-    ]
-    catalog = max(catalogs, key=len)
-    assert int((catalog["Share"] == "<0.1%").sum()) == len(small)
-    assert "0.0%" not in set(catalog["Share"])
-
-
 def _assert_alt_text(app) -> None:
     assert app.table
     for table in app.table:
@@ -294,15 +294,9 @@ def _assert_alt_text(app) -> None:
     alts = [node.proto.alt for node in charts]
     assert all(isinstance(item, str) and item.strip() for item in alts)
     expected = (
-        "Games removed from the August prefix: unrated, marked bots, and unknown results.",
-        "Twelve largest opening families by games.",
-        "Opening family game counts for the families selected above.",
-        "Raw score by color and the Black adjusted score with its bootstrap interval.",
-        "Endpoint compression by ply for the elite month and the rated public prefixes.",
-        "Share of games covered by the top N recurring positions.",
-        "Share of distinct positions that can be reached by more than one route.",
-        "Heatmap of the clock-pressure error proxy by rating band and time control.",
-        "Error proxy for the four clock buckets.",
+        "Opening families by games. Select a bar to drill into lines.",
+        "Clock bands by evaluable moves. Select a bar to list the slices in that band.",
+        "Training games by published period.",
         "Headline pass rate for each model with its Wilson 95 percent interval.",
         "Dumbbell of pass rate by category. Each point is one model.",
         "Grid of cases by model, colored by how many repeats passed.",
@@ -314,17 +308,17 @@ def _assert_alt_text(app) -> None:
     assert alts == list(expected)
 
 
-_TRACKS = "repeat(auto-fit,minmax(min(100%,256px),1fr))"
+_TRACKS = "repeat(auto-fill,minmax(min(100%,256px),1fr))"
 
 
 def _assert_equal_width_markup(app) -> None:
     markup = "\n".join(item.value for item in app.markdown)
-    for count in (3, 6):
+    for count in (3, 6, 8):
         assert f'data-cards="{count}"' in markup
     assert _TRACKS in markup
     assert "white-space:nowrap" in markup
     assert "overflow-wrap:anywhere" not in markup
-    assert "minmax(0,1fr)" not in markup
+    assert "auto-fit,minmax(0,1fr)" not in markup
 
 
 def _load_hosted(project, name: str):
@@ -356,9 +350,82 @@ def _scale_domains(spec: dict) -> list:
     return found
 
 
+def test_san_groups_keep_each_move_pair_together(project):
+    module = _load_hosted(project, "layout")
+    assert module.san_groups("1.e4 c5 2.Nf3 Nc6 3.d4 cxd4") == [
+        "1.e4 c5",
+        "2.Nf3 Nc6",
+        "3.d4 cxd4",
+    ]
+    assert module.san_groups("1.e4 c5 2.Nf3 d6 3.Nf3 d6") == [
+        "1.e4 c5",
+        "2.Nf3 d6",
+        "3.Nf3 d6",
+    ]
+    assert module.san_groups("1.e4 c5 2.Nf3 Nc6 3.Bc4") == [
+        "1.e4 c5",
+        "2.Nf3 Nc6",
+        "3.Bc4",
+    ]
+    assert module.san_text("3.d4 cxd4") == "3.d4\u00a0cxd4"
+    html = module.transposition_cards(
+        [
+            {
+                "title": "After Black's move 3 · 1.e4 c5 2.Nf3 Nc6 3.Bc4",
+                "games": 40,
+                "move_orders": 2,
+                "routes": [
+                    ("1.e4 c5 2.Nf3 Nc6 3.Bc4", 30),
+                    ("1.e4 c5 2.d4 cxd4 3.Nf3 d6", 10),
+                ],
+            }
+        ]
+    )
+    assert 'white-space:nowrap">3.Bc4<' in html
+    assert 'white-space:nowrap">3.Nf3 d6<' in html
+    assert 'white-space:nowrap">2.Nf3 Nc6<' in html
+    assert 'white-space:nowrap">d6<' not in html
+    assert "</span> <span" in html
+    assert "</span>\u00a0<span" not in html
+
+
+def test_time_control_sort_keeps_a_value_without_an_increment(project):
+    pytest.importorskip("streamlit")
+    module = _load_hosted(project, "bi")
+    ordered = sorted(["180+2", "-", "60+0", "15+0", "180+0"], key=module._time_sort_key)
+    assert ordered == ["15+0", "60+0", "180+0", "180+2", "-"]
+
+
+def _assert_rows_reconcile(html: str) -> None:
+    """Bars are shares of the headline. Rows sum to it unless the gap is under 10."""
+    cards = html.split('class="cal-card"')[1:]
+    assert cards
+    for card in cards:
+        headline = int(re.search(r'class="cal-v"[^>]*>([^<]+)', card).group(1).replace(",", ""))
+        counts = [
+            int(value.replace(",", "")) for value in re.findall(r'class="cal-n"[^>]*>([^<]+)', card)
+        ]
+        assert counts
+        widths = [
+            float(value)
+            for value in re.findall(r'class="cal-share"[^>]*>\s*<div style="width:([0-9.]+)%', card)
+        ]
+        assert len(widths) == len(counts)
+        for count, width in zip(counts, widths, strict=True):
+            assert width == float(f"{100 * count / headline:.1f}")
+        gaps = re.findall(r'class="cal-gap"[^>]*>([^<]*)', card)
+        if gaps:
+            assert gaps == ["rarer orders not shown"]
+            assert "other orders" not in card
+            assert "plus " not in card
+            assert 1 <= headline - sum(counts) <= 9
+        else:
+            assert sum(counts) == headline
+
+
 def test_equal_width_rows_share_one_track_definition(project):
     module = _load_hosted(project, "layout")
-    for count in range(1, 8):
+    for count in range(1, 9):
         assert module.equal_width_columns(count) == _TRACKS
         cards = [(f"Label {index}", f"Value {index}", f"Detail {index}") for index in range(count)]
         html = module.equal_width_row(cards)
@@ -366,13 +433,220 @@ def test_equal_width_rows_share_one_track_definition(project):
         assert f"grid-template-columns:{_TRACKS}" in html
         assert html.count('class="cal-card"') == count
         assert html.count('class="cal-v"') == count
-        assert html.count("white-space:nowrap") == 2 * count
+        assert html.count("white-space:nowrap") == 3 * count
+        assert 'class="cal-d"' in html
+        detail_style = html.split('class="cal-d"', 1)[1].split(">", 1)[0]
+        assert "white-space:nowrap" not in detail_style
         assert "overflow-wrap:anywhere" not in html
         assert "minmax(min(100%,256px),1fr)" in html
     with pytest.raises(ValueError, match="at least one card"):
         module.equal_width_columns(0)
     with pytest.raises(ValueError, match="at least one card"):
         module.equal_width_columns(True)
+    board = module.transposition_cards(
+        [
+            {
+                "family": "French Defense",
+                "title": "After Black's move 2 · 1.e4 e6 2.d4 d5",
+                "games": 1200,
+                "move_orders": 2,
+                "routes": [("1.e4 e6 2.d4 d5", 700), ("1.d4 d5 2.e4 e6", 500)],
+            },
+            {
+                "family": "Sicilian Defense",
+                "title": "After Black's move 5 · 1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 a6",
+                "games": 2530,
+                "move_orders": 3,
+                "routes": [
+                    ("1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 a6", 2253),
+                ],
+            },
+        ]
+    )
+    assert 'data-cards="2"' in board
+    assert f"grid-template-columns:{_TRACKS}" in board
+    assert "grid-template-columns:6ch minmax(0,1fr)" in board
+    assert "min-height:2.9em" in board
+    assert board.count('class="cal-v"') == 2
+    assert board.count('class="cal-share"') == 4
+    assert board.count("white-space:nowrap") >= 4
+    assert "overflow-wrap:anywhere" not in board
+    assert "word-break:break-all" not in board
+    assert "1,200" in board
+    for pair in ("1.e4 e6", "2.d4 d5", "1.d4 d5", "2.e4 e6"):
+        assert f'white-space:nowrap">{pair}<' in board
+    for pair in ("1.e4 c5", "2.Nf3 d6", "3.d4 cxd4", "4.Nxd4 Nf6", "5.Nc3 a6"):
+        assert f'white-space:nowrap">{pair}<' in board
+    assert 'white-space:nowrap">4.Nxd4<' not in board
+    assert 'white-space:nowrap">cxd4<' not in board
+    assert escape("After Black's move 2") in board
+    assert escape("After Black's move 5") in board
+    assert " games" in board and "2 move orders" in board
+    assert "top 1 move order" in board
+    assert "2,253" in board
+    assert "2,530" in board
+    assert "other orders" in board
+    assert "277" in board
+    assert "position games" not in board
+    assert "rarer orders not shown" not in board
+    assert "width:58.3%" in board
+    assert "width:41.7%" in board
+    assert "width:89.1%" in board
+    assert "width:10.9%" in board
+    assert "width:100.0%" not in board
+    assert board.index("After Black") < board.index("1,200")
+    _assert_rows_reconcile(board)
+    wrapped = module.equal_width_row([("Win rate", "49.2%", "476,741 / 968,874 · White")])
+    assert 'white-space:nowrap">476,741 / 968,874<' in wrapped
+    assert 'white-space:nowrap">476,741 / 968,874 · White<' not in wrapped
+    marked = module.transposition_cards(
+        [
+            {
+                "title": "After Black's move 2 · 1.e4 e6 2.d4 d5",
+                "games": 40,
+                "kept_games": 23,
+                "move_orders": 2,
+                "routes": [("1.e4 e6 2.d4 d5", 12), ("1.e4 e6 2.d4", 11)],
+            }
+        ]
+    )
+    assert "width:30.0%" in marked
+    assert "width:27.5%" in marked
+    assert "width:42.5%" in marked
+    assert ">40<" in marked
+    assert "other orders" in marked
+    assert ">17<" in marked
+    assert "position games" not in marked
+    assert "top 2 move orders" in marked
+    _assert_rows_reconcile(marked)
+
+
+def test_visible_transposition_rows_reconcile(project):
+    """A remainder of 10 or more is an other-orders row that meets the headline."""
+    module = _load_hosted(project, "layout")
+    folded = {
+        "title": "After Black's move 4 · 1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6",
+        "games": 9000,
+        "kept_games": 7000,
+        "move_orders": 5,
+        "routes": [
+            ("1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6", 4000),
+            ("1.e4 c5 2.Nf3 Nc6 3.d4 cxd4 4.Nxd4 Nf6", 1800),
+            ("1.e4 c5 2.d4 cxd4 3.Nf3 d6 4.Nxd4 Nf6", 700),
+        ],
+    }
+    headline, rows, label, note = module._visible_routes(folded)
+    assert (headline, label, note) == (9000, "top 3 move orders", "")
+    assert rows[-1] == ("other orders", 2500)
+    assert sum(games for _san, games in rows) == headline
+    html = module.transposition_cards([folded])
+    assert "9,000" in html
+    assert "other orders" in html
+    assert "2,500" in html
+    assert 'class="cal-route cal-other"' in html
+    assert "background:#5c726b" in html
+    assert "top 3 move orders" in html
+    assert "position games" not in html
+    assert "width:44.4%" in html
+    assert "width:20.0%" in html
+    assert "width:7.8%" in html
+    assert "width:27.8%" in html
+    for pair in ("1.e4 c5", "2.Nf3 d6", "3.d4 cxd4", "4.Nxd4 Nf6", "2.Nf3 Nc6"):
+        assert f'white-space:nowrap">{pair}<' in html
+    _assert_rows_reconcile(html)
+    counted = {
+        "title": "After Black's move 3 · 1.e4 c5 2.Nf3 Nc6 3.d4 cxd4",
+        "games": 7000,
+        "kept_games": 7000,
+        "move_orders": 5,
+        "routes": [
+            ("1.e4 c5 2.Nf3 Nc6 3.d4 cxd4", 4000),
+            ("1.e4 c5 2.d4 cxd4 3.Nf3 Nc6", 1800),
+            ("1.e4 c5 2.Nc3 Nc6 3.Nf3 d6", 700),
+        ],
+    }
+    headline, rows, label, note = module._visible_routes(counted)
+    assert (headline, label, note) == (7000, "5 move orders", "")
+    assert rows[-1] == ("other orders", 500)
+    assert sum(games for _san, games in rows) == headline
+    boundary = {
+        "title": "After Black's move 2 · 1.e4 e6 2.d4 d5",
+        "games": 110,
+        "kept_games": 100,
+        "move_orders": 1,
+        "routes": [("1.e4 e6 2.d4 d5", 100)],
+    }
+    headline, rows, label, note = module._visible_routes(boundary)
+    assert (headline, rows[-1], label, note) == (110, ("other orders", 10), "top 1 move order", "")
+    assert module.transposition_cards([boundary]).count("other orders") == 1
+    small = {
+        "title": "After Black's move 2 · 1.e4 e6 2.d4 d5",
+        "games": 199,
+        "kept_games": 190,
+        "move_orders": 2,
+        "routes": [("1.e4 e6 2.d4 d5", 100), ("1.d4 d5 2.e4 e6", 90)],
+    }
+    headline, rows, label, note = module._visible_routes(small)
+    assert headline == 199
+    assert rows == [("1.e4 e6 2.d4 d5", 100), ("1.d4 d5 2.e4 e6", 90)]
+    assert label == "top 2 move orders"
+    assert note == "rarer orders not shown"
+    quiet = module.transposition_cards([small])
+    assert "other orders" not in quiet
+    assert "199" in quiet
+    assert "rarer orders not shown" in quiet
+    assert "plus " not in quiet
+    assert re.search(r"cal-gap[^>]*>rarer orders not shown<", quiet)
+    assert not re.search(r"cal-gap[^>]*>[^<]*\d", quiet)
+    _assert_rows_reconcile(quiet)
+
+
+def test_committed_transposition_cards_reconcile(project):
+    """Position totals stay the headline. A remainder of 10 or more is on the card."""
+    from datetime import date
+
+    from chess_analytics.dashboard_cube import Filters, connect, cube_path, transpositions
+
+    layout = _load_hosted(project, "layout")
+    connection = connect(cube_path(project))
+    boards, _caption = transpositions(
+        connection, Filters(date(2000, 1, 1), date(2100, 1, 1)), limit=10_000
+    )
+    assert len(boards) == 217
+    _assert_rows_reconcile(layout.transposition_cards(boards))
+    other = small = zero = 0
+    for item in boards:
+        headline, rows, label, note = layout._visible_routes(item)
+        shown_games = sum(int(games) for _san, games in item["routes"])
+        remainder = int(item["games"]) - shown_games
+        shown_count = len(item["routes"])
+        assert headline == int(item["games"])
+        if remainder >= 10:
+            other += 1
+            assert rows[-1] == ("other orders", remainder)
+            assert sum(games for _name, games in rows) == headline
+            assert note == ""
+            assert label == f"top {shown_count} move orders"
+        elif remainder > 0:
+            small += 1
+            assert note == "rarer orders not shown"
+            assert all(name != "other orders" for name, _games in rows)
+            assert label == f"top {shown_count} move orders"
+        else:
+            zero += 1
+            assert note == ""
+            assert sum(games for _name, games in rows) == headline
+            assert label == f"{shown_count} move orders"
+    assert (other, small, zero) == (154, 38, 25)
+    nc6 = next(
+        item
+        for item in boards
+        if item["title"] == "After Black's move 3 · 1.e4 c5 2.Nf3 Nc6 3.d4 cxd4"
+    )
+    headline, rows, label, note = layout._visible_routes(nc6)
+    assert headline == 8054
+    assert rows[-1] == ("other orders", 70)
+    assert (label, note) == ("top 3 move orders", "")
 
 
 def _chart_spec(node) -> dict:
@@ -586,7 +860,9 @@ def test_hosted_dashboard_fails_closed_when_the_extract_is_missing(project, tmp_
     assert "public extract not found" in message
 
 
-def test_hosted_dashboard_fails_closed_when_the_extract_is_invalid(project, tmp_path, monkeypatch):
+def test_hosted_dashboard_renders_the_cube_when_the_extract_is_invalid(
+    project, tmp_path, monkeypatch
+):
     pytest.importorskip("streamlit")
     from streamlit.testing.v1 import AppTest
 
@@ -595,8 +871,115 @@ def test_hosted_dashboard_fails_closed_when_the_extract_is_invalid(project, tmp_
     monkeypatch.setenv("CHESSLAB_PUBLIC_EXTRACT", str(invalid))
     app = AppTest.from_file(str(project / "hosted" / "dashboard.py"), default_timeout=60).run()
     assert not app.exception, [item.message for item in app.exception]
-    assert not app.table
-    assert not app.metric
+    text = _visible(app)
+    assert "Public extract failed validation" in text
+    assert "unsupported public extract version" in text
+    assert "1,009,445" in text
+
+
+def test_hosted_dashboard_renders_the_cube_when_the_extract_has_an_extra_table(
+    project, tmp_path, monkeypatch
+):
+    pytest.importorskip("streamlit")
+    from streamlit.testing.v1 import AppTest
+
+    payload = json.loads((project / "data" / "public" / "dashboard_extract.json").read_text())
+    payload["tables"]["future_metric"] = [{"value": 1}]
+    extra = tmp_path / "dashboard_extract.json"
+    extra.write_text(json.dumps(payload))
+    monkeypatch.setenv("CHESSLAB_PUBLIC_EXTRACT", str(extra))
+    app = AppTest.from_file(str(project / "hosted" / "dashboard.py"), default_timeout=60).run()
+    assert not app.exception, [item.message for item in app.exception]
+    assert not app.error
+    assert "1,009,445" in _visible(app)
+
+
+def test_hosted_dashboard_fails_closed_when_the_cube_is_missing(project, tmp_path, monkeypatch):
+    pytest.importorskip("streamlit")
+    from streamlit.testing.v1 import AppTest
+
+    monkeypatch.setenv(
+        "CHESSLAB_PUBLIC_EXTRACT",
+        str(project / "data" / "public" / "dashboard_extract.json"),
+    )
+    monkeypatch.setenv("CHESSLAB_DASHBOARD_CUBE", str(tmp_path / "missing.parquet"))
+    app = AppTest.from_file(str(project / "hosted" / "dashboard.py"), default_timeout=60).run()
+    assert not app.exception, [item.message for item in app.exception]
     message = " ".join(item.value for item in app.error)
-    assert "Public extract failed validation" in message
-    assert "unsupported public extract version" in message
+    assert "Dashboard cube unavailable" in message
+    assert "dashboard cube not found" in message
+
+
+def test_hosted_dashboard_fails_closed_when_the_cube_is_not_parquet(project, tmp_path, monkeypatch):
+    pytest.importorskip("streamlit")
+    from streamlit.testing.v1 import AppTest
+
+    bad = tmp_path / "cube.parquet"
+    bad.write_bytes(b"not a parquet file")
+    monkeypatch.setenv(
+        "CHESSLAB_PUBLIC_EXTRACT",
+        str(project / "data" / "public" / "dashboard_extract.json"),
+    )
+    monkeypatch.setenv("CHESSLAB_DASHBOARD_CUBE", str(bad))
+    app = AppTest.from_file(str(project / "hosted" / "dashboard.py"), default_timeout=60).run()
+    assert not app.exception, [item.message for item in app.exception]
+    message = " ".join(item.value for item in app.error)
+    assert "Dashboard cube unavailable" in message
+    assert "1,009,445" not in _visible(app)
+
+
+def test_color_filter_hides_positions_and_shows_the_french_cell(project, monkeypatch):
+    app = _run(project, monkeypatch)
+    app.session_state["filter_color"] = "Black"
+    app.session_state["filter_family"] = "French Defense"
+    app.run()
+    assert not app.exception, [item.message for item in app.exception]
+    text = _visible(app)
+    assert "Positions are not split by color." in text
+    assert "Move orders are not split by color." in text
+    assert "Clock pressure is not split by color or opening." in text
+    assert "Period totals are not split by color or opening." in text
+    assert "63,484" in text
+    assert "46.8%" in text
+    assert "29,728 / 63,484" in text
+    assert "Opening lines by games. Select a bar to open the position." in _chart_alts(app)
+    assert "Training games by published period." in _chart_alts(app)
+    clock_alt = "Clock bands by evaluable moves. Select a bar to list the slices in that band."
+    assert clock_alt in _chart_alts(app)
+    sidebar = " ".join(item.value for item in app.sidebar.caption)
+    assert "Color Black" in sidebar
+    assert "Opening French Defense" in sidebar
+
+
+def test_opening_drill_lists_lines_and_climbs_back(project, monkeypatch):
+    from chess_analytics.dashboard_cube import Drill
+
+    app = _run(project, monkeypatch)
+    app.session_state["filter_family"] = "Sicilian Defense"
+    app.session_state["drill"] = Drill(family="Sicilian Defense")
+    app.run()
+    assert not app.exception, [item.message for item in app.exception]
+    text = _visible(app)
+    assert "Openings / Sicilian Defense" in text
+    assert "Opening lines by games. Select a bar to open the position." in _chart_alts(app)
+    line = "1.e4 c5 2.Nf3 Nc6 3.d4 cxd4"
+    shown = _load_hosted(project, "layout").san_text(line)
+    assert shown in text
+    tables = [table for table in app.table if "Line" in list(table.value.columns)]
+    assert tables and shown in set(tables[0].value["Line"])
+    assert "1.e4\u00a0c5" in shown
+    line_chart = next(
+        node
+        for node in app
+        if getattr(node, "type", None) == "vega_lite_chart"
+        and "Opening lines by games" in node.proto.alt
+    )
+    encoded = json.dumps(_chart_spec(line_chart))
+    assert '"stack": null' in encoded or '"stack":null' in encoded
+    assert "line_label" in encoded
+    backs = [item for item in app.button if item.label == "Back"]
+    assert len(backs) == 1
+    backs[0].click().run()
+    assert not app.exception, [item.message for item in app.exception]
+    assert "Opening families by games. Select a bar to drill into lines." in _chart_alts(app)
+    assert [item.label for item in app.button] == ["Reset filters"]

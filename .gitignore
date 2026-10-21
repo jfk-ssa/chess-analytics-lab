@@ -14,6 +14,7 @@ __pycache__/
 !/data/public/
 /data/public/**
 !/data/public/dashboard_extract.json
+!/data/public/dashboard_cube.parquet
 /artifacts/
 /work/
 /dbt/target/

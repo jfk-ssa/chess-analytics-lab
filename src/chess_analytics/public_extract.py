@@ -169,13 +169,17 @@ def live_eval_rate_id(model: str, effort: str, repeats: int, *, shared: bool) ->
 
 
 def load_extract(path: Path | None = None) -> dict:
-    """Load and check the extract shape. Does not open DuckDB."""
+    """Load and check the extract shape. Does not open DuckDB.
+
+    A table the reader does not know is ignored. A missing required table
+    still fails.
+    """
     source = Path(path) if path is not None else extract_path()
     payload = json.loads(source.read_text())
     if payload.get("extract_version") != EXTRACT_VERSION:
         raise ValueError("unsupported public extract version")
     tables = payload.get("tables")
-    if not isinstance(tables, dict) or set(tables) != set(TABLES):
+    if not isinstance(tables, dict) or not set(TABLES) <= set(tables):
         raise ValueError("public extract tables do not match the reader")
     for name in TABLES:
         rows = tables[name]

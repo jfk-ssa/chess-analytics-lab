@@ -1,31 +1,68 @@
-# Hosted read-only dashboard
+# Hosted dashboard
 
-`hosted/dashboard.py` reads `data/public/dashboard_extract.json` through
-`chess_analytics.public_extract`. It does not open a warehouse, take
-uploads, read secrets, or call the network. Figures and lineage come
-from that file. [ADR 0094](adr/0094-hosted-read-only-dashboard.md)
-records the deployment choice, and
-[ADR 0098](adr/0098-hosted-dashboard-analysis.md) records extract
-version 2 and the page that sits on it. The local six-view dashboard
-is a different program and still needs the analytical warehouse.
+`hosted/dashboard.py` queries `data/public/dashboard_cube.parquet` with
+DuckDB and reads `data/public/dashboard_extract.json` for live eval.
+It does not open a warehouse, take uploads, read secrets, or call the
+network. [ADR 0094](adr/0094-hosted-read-only-dashboard.md) records the
+deployment choice. [ADR 0098](adr/0098-hosted-dashboard-analysis.md)
+records extract version 2. [ADR 0101](adr/0101-hosted-bi-cube.md)
+records the cube. The local six-view dashboard is a different program
+and still needs the analytical warehouse.
 
-The page opens with three equal-width cards: opening-corpus training
-games, the August draw rate, and the analyst gate (Luna and grok-4.7
-low clear; Sol fails). Tabs are Overview, Openings, Clock pressure, AI analyst eval,
-and About the data. Filters cover opening family, color, rating band,
-time control, phase, transposition cohort, and eval category. Charts
-are Altair, with the `chesslab` theme (Inter and the page palette).
-Provenance hashes are on About the data.
+The sidebar filters are date range, time control, color, rating band,
+and opening family, with the active line and a reset. Those filters
+apply to the KPI strip, openings, transpositions, clock, and periods.
+They do not change the live-eval numbers. The KPI strip is games, win
+rate, draw rate, loss rate, clock error, published positions, rating
+diff, and game length. Each card shows a value. Games is the
+`game_cell` total, 1,009,445 on the full range, with detail
+`warehouse`. With no color selected, win, draw, and loss are the White
+`result_cell` rows: 49.2% (476,741 / 968,874), 5.1% (49,271 / 968,874),
+and 45.7% (442,862 / 968,874). Rating diff is +0.1 and game length is
+72.8 ply. A color or rating filter counts one side. Clock error stays
+2,128 / 22,978, and positions stay 256. A filter the grain cannot
+split is named on the card instead of leaving the value blank. A filter
+on a column the grain stores, which matches nothing, says `no cells for
+this cut` and does not widen the population. Clock error stays
+2,128 / 22,978 when time and rating are All. A time control the August
+slices do not contain, such as `180+2` or `-`, shows no slices and is
+not labeled August. Period
+bars stay the published months (1,042,346 training games).
+
+Openings drill from a family bar to lines, then to one published FEN
+and its continuations. The line chart uses the full SAN, does not stack
+bars that share a prefix, and lists the same lines in a table. Most
+common transpositions lists boards reached by at least two acyclic move
+orders, with the route count, total games, the top three orders, and a
+board from the Board control. Each card title is `After Black's move N`
+plus the leading SAN, matching the transpositions page, and sibling
+cards keep that form. The depth, the line, and the game count are
+separate rows. The line reserves two lines so the counts line up across
+a row. Each move order is a count column sized to the widest count, about six
+tabular characters, and a SAN column, and a
+thin bar shows that order's share of the position total. The
+headline is that total. Games the card does not list are a muted
+other-orders row when they add up to at least 10 games. A remainder
+of 1–9 stays off the rows, and the card says rarer orders are not
+shown, with no count. Each move
+number stays with its reply, as in `4.Nxd4 Nf6` or `5.Nc3 a6`. A
+trailing White move such as `3.Bc4` is its own unit. A line breaks only
+between those units. The same grouping is on the line labels and the
+Board control. Routes under 10 games are
+omitted. Family
+and date apply. Color, time control, and rating do not, and the caption
+says so. Clock drills from a band to the largest slices in that band.
+A slice is a rating, a time control, and a phase. Each section has one
+short caption. Provenance stays in a collapsed expander.
+Charts are Altair, with the `chesslab` theme (Inter and the page palette).
 
 Card rows use an inline grid,
-`repeat(auto-fit, minmax(min(100%, 256px), 1fr))`. The value is
-`white-space: nowrap`. 256px is 16rem at the CSS reference pixel.
-Streamlit's 14px root would make a literal 16rem 224px, and three of
-those tracks fit at 768px. With 256px, a 390px viewport is one column
-and a 768px viewport holds two tracks. The three-card hero is one row
-at 1280px. The eval tab has six cards, so that row is four plus two at
-1280px and three rows of two at 768px. A leftover card stays as wide as
-the cards in the row above.
+`repeat(auto-fill, minmax(min(100%, 256px), 1fr))`. The label and value
+use `white-space: nowrap`. The detail nowraps the fraction and can
+break at ` · `. 256px is 16rem at the CSS
+reference pixel. With 256px, a 390px viewport is one column and a
+1280px viewport holds several tracks. The eight KPI cards and the six
+eval cards share that track. The grok sweep is three cards.
 The shared `.streamlit/config.toml` is unchanged.
 
 Version 2 adds `opening_color_score` (French and Sicilian, both colors,
@@ -57,9 +94,39 @@ uv run --locked --offline --no-editable --extra dashboard \
   streamlit run hosted/dashboard.py
 ```
 
-The script adds `src/` to the import path for the extract reader. You
-do not install the project package to run this page, and the page does
-not import DuckDB.
+The script adds `src/` to the import path for the extract reader and
+the cube module. You do not install the project package to run this
+page. The page queries the cube with DuckDB, which Community Cloud
+installs from `hosted/requirements.txt`. Rebuild the cube, when a
+committed source changes, with:
+
+```sh
+uv run --locked --offline --no-editable --extra dashboard \
+  python scripts/build_dashboard_cube.py --positions /path/to/opening-positions.json
+```
+
+The positions report is not on the tip. The script does not download it.
+The committed cube is 569,634 bytes and 34,084 rows. `game_cell` covers
+1,009,445 games.
+
+The openings warehouse was appended with this command, from the
+repository root on the machine that has the file, without `--offline`:
+
+```sh
+uv run --locked --no-editable --extra dashboard \
+  python scripts/build_warehouse_cube.py \
+  --warehouse data/openings/published/00e7a73fbf67c401e23b4b4b/warehouse.duckdb
+```
+
+The command exits 2 when the file is missing. It reads `opening_game`
+and does not read `retained_game`. It writes `game_cell` and
+`result_cell` (color, rating band, time control, the corpus period, and
+the opening family before the first colon). It does not write clock
+cells from that file. Cells under 10 games are dropped. The printed
+line includes the byte size and the `game_cell` game total. The write
+refuses a file over 10 MB. A `fact_game` warehouse uses the same script
+and can still add `result_line` and `clock_cell`. The committed cube
+is the result of that openings command. The page reads those grains.
 
 Check the page without a browser:
 
@@ -75,7 +142,7 @@ in that file still runs.
 
 Use these settings. Community Cloud installs `hosted/requirements.txt`
 with pip and starts the entrypoint. The repository root is the working
-directory, which is where the reader finds the committed extract.
+directory, which is where the reader finds the committed extract and cube.
 
 | Setting | Value |
 |---|---|
@@ -94,7 +161,9 @@ Altair, narwhals, and jsonschema are dependencies of that pin or of
 Altair. If they stay unpinned, pip can install versions that differ
 from `uv.lock`. The requirements file therefore also pins the locked
 versions, `altair==5.5.0`, `narwhals==2.26.0`, `jsonschema==4.26.0`,
-`pandas==2.3.3`, and `protobuf==6.33.6`. Streamlit 1.65.0 accepts
-`pandas<4,>=1.4.0` and `protobuf<8,>=5.26.1`, so those pins install.
-Narwhals 2.26.0 has no dependencies of its own. Altair 5.5.0 depends
-on jsonschema and narwhals.
+`pandas==2.3.3`, `protobuf==6.33.6`, and `duckdb==1.5.6`. Streamlit
+1.65.0 accepts `pandas<4,>=1.4.0` and `protobuf<8,>=5.26.1`, so those
+pins install. Narwhals 2.26.0 has no dependencies of its own. Altair
+5.5.0 depends on jsonschema and narwhals. DuckDB 1.5.6 has no
+dependencies. The cp312 manylinux x86_64 wheel recorded in `uv.lock`
+is 21,568,087 bytes.
