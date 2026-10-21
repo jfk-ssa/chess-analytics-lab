@@ -395,9 +395,12 @@ before the first dispatch. The job does not probe the provider.
    known gross cost, and complete true or false. A 1-repeat summary
    says the rate is not a 5-repeat headline comparison.
 6. Read the receipt and commit the artifact bytes unchanged in a separate
-   pull request, as `reports/live-eval-receipt-<run_id>.json`. `<run_id>`
-   is the Actions run id from the artifact name. The workflow does not
-   commit it. `work/` is ignored.
+   pull request. Keep the artifact name:
+   `reports/live-eval-receipt-<model>-<resolved effort>-r<repeats>-<run_id>.json`.
+   `<run_id>` is the Actions run id at the end of that name. The published
+   report sorts `reports/live-eval-receipt-*.json` by that trailing integer.
+   The Luna and Sol receipts stay `reports/live-eval-receipt-<run_id>.json`.
+   The workflow does not commit the file. `work/` is ignored.
 
 ### Adding a schedule later
 

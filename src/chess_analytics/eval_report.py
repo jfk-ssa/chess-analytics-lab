@@ -50,7 +50,10 @@ REFUSAL_STATUSES = frozenset({"needs_clarification", "unsupported"})
 SANS = "Inter, -apple-system, 'Segoe UI', system-ui, Roboto, sans-serif"
 MONO = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
 RECEIPT_GLOB = "live-eval-receipt-*.json"
-_RUN_ID = re.compile(r"live-eval-receipt-(\d+)\.json$")
+# ADR 0091: live-eval-receipt-<run id>.json
+# ADR 0095: live-eval-receipt-<model>-<effort>-r<repeats>-<run id>.json
+# The run id is the trailing integer. Repeats stay behind the r marker.
+_RUN_ID = re.compile(r"live-eval-receipt-(?:(\d+)|.+-r\d+-(\d+))\.json$")
 _REQUIRED = (
     "model",
     "rows",
@@ -245,6 +248,8 @@ def discover_receipts(directory: Path) -> list[Path]:
     """Return receipt paths sorted by the GitHub run id in the filename.
 
     ADR 0091 names the artifact ``live-eval-receipt-<github run id>.json``.
+    ADR 0095 names it
+    ``live-eval-receipt-<model>-<effort>-r<repeats>-<github run id>.json``.
     The runner's own ``run_id`` is a different uuid and stays inside the JSON.
     """
 
@@ -252,7 +257,8 @@ def discover_receipts(directory: Path) -> list[Path]:
 
     def key(path: Path) -> tuple[int, str]:
         match = _RUN_ID.fullmatch(path.name)
-        run_id = int(match.group(1)) if match else 10**18
+        digits = match.group(1) or match.group(2) if match else None
+        run_id = int(digits) if digits is not None else 10**18
         return run_id, path.name
 
     return sorted(paths, key=key)

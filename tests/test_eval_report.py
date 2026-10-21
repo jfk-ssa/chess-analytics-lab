@@ -143,6 +143,30 @@ def test_page_builds_for_one_receipt_and_for_an_extra_effort(tmp_path):
         build_page([broken], cases, strict=True)
 
 
+def test_model_effort_artifact_names_sort_by_the_trailing_run_id(tmp_path):
+    """The grok artifact name keeps the GitHub run id last, after r<repeats>."""
+    names = [
+        "live-eval-receipt-grok-4.7-low-r5-20.json",
+        "live-eval-receipt-gpt-6-luna-none-r5-3.json",
+        "live-eval-receipt-gpt-6-sol-none-r1-100.json",
+        "live-eval-receipt-grok-4.7-high-r1-9.json",
+        "live-eval-receipt-grok-4.7-xhigh-r20-8.json",
+        "live-eval-receipt-4.json",
+        "live-eval-receipt-notes.json",
+    ]
+    for name in names:
+        (tmp_path / name).write_text("{}", encoding="utf-8")
+    assert [path.name for path in discover_receipts(tmp_path)] == [
+        "live-eval-receipt-gpt-6-luna-none-r5-3.json",
+        "live-eval-receipt-4.json",
+        "live-eval-receipt-grok-4.7-xhigh-r20-8.json",
+        "live-eval-receipt-grok-4.7-high-r1-9.json",
+        "live-eval-receipt-grok-4.7-low-r5-20.json",
+        "live-eval-receipt-gpt-6-sol-none-r1-100.json",
+        "live-eval-receipt-notes.json",
+    ]
+
+
 def test_discover_on_the_committed_directory_ignores_other_reports():
     names = {path.name for path in _committed()}
     assert names == {path.name for path in REPORTS.glob("live-eval-receipt-*.json")}

@@ -3,10 +3,9 @@
 - Status: accepted
 - Date: 2026-10-21
 
-Main ends at [ADR 0092](0092-public-aggregate-extract.md). Open pull
-request #43 adds `0093-first-live-eval-receipts.md`. Open pull request
-#44 adds `0094-hosted-read-only-dashboard.md`. Open pull request #46
-adds ADR 0096 and leaves 0095 for this record.
+Main includes [ADR 0093](0093-first-live-eval-receipts.md) and
+[ADR 0096](0096-published-live-eval-report.md). This record is 0095.
+Open pull request #44 adds `0094-hosted-read-only-dashboard.md`.
 
 ## Motivation
 
@@ -56,7 +55,10 @@ Actions run title is `Live eval <model> effort <input> x<repeats> cap
 <cap>`, using the raw input because GitHub evaluates `run-name` before
 any step. The artifact name is
 `live-eval-receipt-<model>-<resolved effort>-r<repeats>-<run_id>`.
-`check-inputs`
+Commit that name under `reports/`. [ADR 0096](0096-published-live-eval-report.md)
+sorts `reports/live-eval-receipt-*.json` by the trailing run id, so
+`r<repeats>` is not read as the run id. The committed Luna and Sol
+files stay `live-eval-receipt-<run_id>.json`. `check-inputs`
 writes the resolved effort to `LIVE_EVAL_RESOLVED_EFFORT`. For the
 sensitivity analysis, select `low`, `medium`, and `high` explicitly so
 the title, the receipt, and the artifact all name that effort. A
@@ -247,17 +249,19 @@ Medium and high at 5 repeats raise `ReservationError`. The transport
 is not called. A live loop whose wall clock is already past the limit
 writes `incomplete_reason` `wall_clock` and sends no further request.
 
-- `ruff check .` passed. `ruff format --check .` reported 321 files
-  already formatted.
+- `ruff check .` passed. After the rebase onto the published report,
+  `ruff format --check .` reported 326 files already formatted.
 - basedpyright reported 0 errors, 0 warnings, and 0 notes.
-- After the usage-pricing fix, `pytest -q` reported 364 passed, 31
-  skipped, 118.41s. That is 53 more passes than the ADR 0091 count of
-  311. The added tests cover the grok quote, reservation, workflow
-  checks, the wall-clock stop, and the usage rows that must not price
-  below the reported bill. Those rows are the omitted total gap,
-  reasoning smaller than that gap, reasoning larger than output when
-  the total matches input plus output, tick charges above and below
-  the reconstruction, and server-side tools without ticks.
+- After that rebase and the trailing-run-id sort, `pytest -q` reported
+  370 passed, 31 skipped, 118.65s. The grok tests still cover the quote,
+  reservation, workflow checks, the wall-clock stop, and the usage rows
+  that must not price below the reported bill. Those rows are the
+  omitted total gap, reasoning smaller than that gap, reasoning larger
+  than output when the total matches input plus output, tick charges
+  above and below the reconstruction, and server-side tools without
+  ticks. `discover_receipts` sorts both `live-eval-receipt-<run id>.json`
+  and `live-eval-receipt-<model>-<effort>-r<repeats>-<run id>.json` by
+  the trailing run id.
 - The dbt extra and the gate were not re-run for this pricing change.
   Before it, on this date, `CHESSLAB_REQUIRE_DBT=1 pytest -q` reported
   361 passed and 19 skipped, and the gate printed `ok 89/89`.
