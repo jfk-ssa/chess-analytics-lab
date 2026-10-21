@@ -131,6 +131,7 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
     missing = [item for item in expected if item not in text]
     assert not missing, missing
     _assert_section_origins(app)
+    _assert_live_eval_link(app)
     _assert_build_table_omits_the_figure_id(app, extract)
     _assert_small_shares_are_below_a_tenth(app, extract)
     _assert_alt_text(app)
@@ -142,6 +143,11 @@ def _caption(app, fragment: str) -> str:
     matches = [item.value for item in app.caption if fragment in item.value]
     assert len(matches) == 1, matches
     return matches[0]
+
+
+def _assert_live_eval_link(app) -> None:
+    caption = _caption(app, "Published live-eval report")
+    assert "https://jfk-ssa.github.io/chess-analytics-lab/live-eval.html" in caption
 
 
 def _assert_section_origins(app) -> None:

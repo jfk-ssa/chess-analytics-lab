@@ -350,6 +350,10 @@ def _render(view: dict) -> None:
         "Read-only figures from data/public/dashboard_extract.json. "
         "No warehouse, no uploads, and no external calls."
     )
+    st.caption(
+        "Published live-eval report: "
+        "[live-eval.html](https://jfk-ssa.github.io/chess-analytics-lab/live-eval.html)."
+    )
     st.header("Build provenance")
     st.caption(
         "Mart id is the game_draw_rate receipt. Source snapshot, model sha256, "
