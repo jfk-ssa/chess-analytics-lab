@@ -5,7 +5,7 @@
     "semantic_manifest_sha256": "07df0b2f38fb275764541f292b810185e16e3f23fb507ee1fef426dec27bfd86",
     "source_snapshot_id": "7764247e6bdb0b6e73420253"
   },
-  "extract_version": "1",
+  "extract_version": "2",
   "tables": {
     "clock_bucket": [
       {
@@ -51,6 +51,528 @@
         "mate_transition_moves": 897,
         "proxy_errors": 1047,
         "source_report": "M4-figures.json"
+      }
+    ],
+    "clock_pressure_band": [
+      {
+        "eligible_moves": 59,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "under_1200",
+        "source_report": "M4-figures.json",
+        "time_control": "15+0"
+      },
+      {
+        "eligible_moves": 6867,
+        "error_proxy_rate": 0.15052888527257932,
+        "evaluable_moves": 1229,
+        "evaluation_coverage": 0.17897189456822485,
+        "proxy_errors": 185,
+        "rating_band": "under_1200",
+        "source_report": "M4-figures.json",
+        "time_control": "60+0"
+      },
+      {
+        "eligible_moves": 3622,
+        "error_proxy_rate": 0.17424242424242425,
+        "evaluable_moves": 264,
+        "evaluation_coverage": 0.07288790723357261,
+        "proxy_errors": 46,
+        "rating_band": "under_1200",
+        "source_report": "M4-figures.json",
+        "time_control": "180+0"
+      },
+      {
+        "eligible_moves": 17,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "under_1200",
+        "source_report": "M4-figures.json",
+        "time_control": "240+0"
+      },
+      {
+        "eligible_moves": 5030,
+        "error_proxy_rate": 0.1523046092184369,
+        "evaluable_moves": 499,
+        "evaluation_coverage": 0.09920477137176939,
+        "proxy_errors": 76,
+        "rating_band": "under_1200",
+        "source_report": "M4-figures.json",
+        "time_control": "300+0"
+      },
+      {
+        "eligible_moves": 190,
+        "error_proxy_rate": 0.07692307692307693,
+        "evaluable_moves": 39,
+        "evaluation_coverage": 0.20526315789473684,
+        "proxy_errors": 3,
+        "rating_band": "under_1200",
+        "source_report": "M4-figures.json",
+        "time_control": "420+0"
+      },
+      {
+        "eligible_moves": 87,
+        "error_proxy_rate": 0.40540540540540543,
+        "evaluable_moves": 37,
+        "evaluation_coverage": 0.42528735632183906,
+        "proxy_errors": 15,
+        "rating_band": "under_1200",
+        "source_report": "M4-figures.json",
+        "time_control": "480+0"
+      },
+      {
+        "eligible_moves": 6975,
+        "error_proxy_rate": 0.13127753303964756,
+        "evaluable_moves": 1135,
+        "evaluation_coverage": 0.16272401433691755,
+        "proxy_errors": 149,
+        "rating_band": "under_1200",
+        "source_report": "M4-figures.json",
+        "time_control": "600+0"
+      },
+      {
+        "eligible_moves": 47,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "under_1200",
+        "source_report": "M4-figures.json",
+        "time_control": "660+0"
+      },
+      {
+        "eligible_moves": 48,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "under_1200",
+        "source_report": "M4-figures.json",
+        "time_control": "900+0"
+      },
+      {
+        "eligible_moves": 17,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "under_1200",
+        "source_report": "M4-figures.json",
+        "time_control": "1500+0"
+      },
+      {
+        "eligible_moves": 86,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "under_1200",
+        "source_report": "M4-figures.json",
+        "time_control": "1800+0"
+      },
+      {
+        "eligible_moves": 328,
+        "error_proxy_rate": 0.0967741935483871,
+        "evaluable_moves": 62,
+        "evaluation_coverage": 0.18902439024390244,
+        "proxy_errors": 6,
+        "rating_band": "1200_1599",
+        "source_report": "M4-figures.json",
+        "time_control": "15+0"
+      },
+      {
+        "eligible_moves": 59,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "1200_1599",
+        "source_report": "M4-figures.json",
+        "time_control": "30+0"
+      },
+      {
+        "eligible_moves": 38,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "1200_1599",
+        "source_report": "M4-figures.json",
+        "time_control": "45+0"
+      },
+      {
+        "eligible_moves": 19614,
+        "error_proxy_rate": 0.13570566948130278,
+        "evaluable_moves": 1658,
+        "evaluation_coverage": 0.08453145712246354,
+        "proxy_errors": 225,
+        "rating_band": "1200_1599",
+        "source_report": "M4-figures.json",
+        "time_control": "60+0"
+      },
+      {
+        "eligible_moves": 15155,
+        "error_proxy_rate": 0.10310421286031042,
+        "evaluable_moves": 902,
+        "evaluation_coverage": 0.059518310788518644,
+        "proxy_errors": 93,
+        "rating_band": "1200_1599",
+        "source_report": "M4-figures.json",
+        "time_control": "180+0"
+      },
+      {
+        "eligible_moves": 16,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "1200_1599",
+        "source_report": "M4-figures.json",
+        "time_control": "240+0"
+      },
+      {
+        "eligible_moves": 12624,
+        "error_proxy_rate": 0.09384615384615384,
+        "evaluable_moves": 650,
+        "evaluation_coverage": 0.05148922686945501,
+        "proxy_errors": 61,
+        "rating_band": "1200_1599",
+        "source_report": "M4-figures.json",
+        "time_control": "300+0"
+      },
+      {
+        "eligible_moves": 29,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "1200_1599",
+        "source_report": "M4-figures.json",
+        "time_control": "420+0"
+      },
+      {
+        "eligible_moves": 92,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "1200_1599",
+        "source_report": "M4-figures.json",
+        "time_control": "480+0"
+      },
+      {
+        "eligible_moves": 12852,
+        "error_proxy_rate": 0.09270795163063393,
+        "evaluable_moves": 2729,
+        "evaluation_coverage": 0.21234049175225647,
+        "proxy_errors": 253,
+        "rating_band": "1200_1599",
+        "source_report": "M4-figures.json",
+        "time_control": "600+0"
+      },
+      {
+        "eligible_moves": 46,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "1200_1599",
+        "source_report": "M4-figures.json",
+        "time_control": "660+0"
+      },
+      {
+        "eligible_moves": 213,
+        "error_proxy_rate": 0.15555555555555556,
+        "evaluable_moves": 45,
+        "evaluation_coverage": 0.2112676056338028,
+        "proxy_errors": 7,
+        "rating_band": "1200_1599",
+        "source_report": "M4-figures.json",
+        "time_control": "900+0"
+      },
+      {
+        "eligible_moves": 37,
+        "error_proxy_rate": 0.18181818181818182,
+        "evaluable_moves": 33,
+        "evaluation_coverage": 0.8918918918918919,
+        "proxy_errors": 6,
+        "rating_band": "1200_1599",
+        "source_report": "M4-figures.json",
+        "time_control": "1200+0"
+      },
+      {
+        "eligible_moves": 18,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "1200_1599",
+        "source_report": "M4-figures.json",
+        "time_control": "1500+0"
+      },
+      {
+        "eligible_moves": 220,
+        "error_proxy_rate": 0.06578947368421052,
+        "evaluable_moves": 76,
+        "evaluation_coverage": 0.34545454545454546,
+        "proxy_errors": 5,
+        "rating_band": "1200_1599",
+        "source_report": "M4-figures.json",
+        "time_control": "1800+0"
+      },
+      {
+        "eligible_moves": 522,
+        "error_proxy_rate": 0.15,
+        "evaluable_moves": 20,
+        "evaluation_coverage": 0.038314176245210725,
+        "proxy_errors": 3,
+        "rating_band": "1600_1999",
+        "source_report": "M4-figures.json",
+        "time_control": "15+0"
+      },
+      {
+        "eligible_moves": 789,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "1600_1999",
+        "source_report": "M4-figures.json",
+        "time_control": "30+0"
+      },
+      {
+        "eligible_moves": 23,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "1600_1999",
+        "source_report": "M4-figures.json",
+        "time_control": "45+0"
+      },
+      {
+        "eligible_moves": 39591,
+        "error_proxy_rate": 0.08272813388064414,
+        "evaluable_moves": 3167,
+        "evaluation_coverage": 0.07999292768558511,
+        "proxy_errors": 262,
+        "rating_band": "1600_1999",
+        "source_report": "M4-figures.json",
+        "time_control": "60+0"
+      },
+      {
+        "eligible_moves": 603,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "1600_1999",
+        "source_report": "M4-figures.json",
+        "time_control": "120+0"
+      },
+      {
+        "eligible_moves": 24125,
+        "error_proxy_rate": 0.0756469807564698,
+        "evaluable_moves": 1507,
+        "evaluation_coverage": 0.06246632124352332,
+        "proxy_errors": 114,
+        "rating_band": "1600_1999",
+        "source_report": "M4-figures.json",
+        "time_control": "180+0"
+      },
+      {
+        "eligible_moves": 164,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "1600_1999",
+        "source_report": "M4-figures.json",
+        "time_control": "240+0"
+      },
+      {
+        "eligible_moves": 13835,
+        "error_proxy_rate": 0.07456140350877193,
+        "evaluable_moves": 684,
+        "evaluation_coverage": 0.04943982652692447,
+        "proxy_errors": 51,
+        "rating_band": "1600_1999",
+        "source_report": "M4-figures.json",
+        "time_control": "300+0"
+      },
+      {
+        "eligible_moves": 226,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "1600_1999",
+        "source_report": "M4-figures.json",
+        "time_control": "480+0"
+      },
+      {
+        "eligible_moves": 12160,
+        "error_proxy_rate": 0.07461084272678475,
+        "evaluable_moves": 1863,
+        "evaluation_coverage": 0.15320723684210527,
+        "proxy_errors": 139,
+        "rating_band": "1600_1999",
+        "source_report": "M4-figures.json",
+        "time_control": "600+0"
+      },
+      {
+        "eligible_moves": 81,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "1600_1999",
+        "source_report": "M4-figures.json",
+        "time_control": "660+0"
+      },
+      {
+        "eligible_moves": 45,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "1600_1999",
+        "source_report": "M4-figures.json",
+        "time_control": "900+0"
+      },
+      {
+        "eligible_moves": 41,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "1600_1999",
+        "source_report": "M4-figures.json",
+        "time_control": "1200+0"
+      },
+      {
+        "eligible_moves": 83,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "1600_1999",
+        "source_report": "M4-figures.json",
+        "time_control": "1500+0"
+      },
+      {
+        "eligible_moves": 274,
+        "error_proxy_rate": 0.09523809523809523,
+        "evaluable_moves": 252,
+        "evaluation_coverage": 0.9197080291970803,
+        "proxy_errors": 24,
+        "rating_band": "1600_1999",
+        "source_report": "M4-figures.json",
+        "time_control": "1800+0"
+      },
+      {
+        "eligible_moves": 1403,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "2000_plus",
+        "source_report": "M4-figures.json",
+        "time_control": "30+0"
+      },
+      {
+        "eligible_moves": 63263,
+        "error_proxy_rate": 0.07250680524622619,
+        "evaluable_moves": 4041,
+        "evaluation_coverage": 0.06387619935823467,
+        "proxy_errors": 293,
+        "rating_band": "2000_plus",
+        "source_report": "M4-figures.json",
+        "time_control": "60+0"
+      },
+      {
+        "eligible_moves": 418,
+        "error_proxy_rate": 0.04477611940298507,
+        "evaluable_moves": 67,
+        "evaluation_coverage": 0.16028708133971292,
+        "proxy_errors": 3,
+        "rating_band": "2000_plus",
+        "source_report": "M4-figures.json",
+        "time_control": "120+0"
+      },
+      {
+        "eligible_moves": 10501,
+        "error_proxy_rate": 0.05730994152046784,
+        "evaluable_moves": 855,
+        "evaluation_coverage": 0.08142081706504142,
+        "proxy_errors": 49,
+        "rating_band": "2000_plus",
+        "source_report": "M4-figures.json",
+        "time_control": "180+0"
+      },
+      {
+        "eligible_moves": 109,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "2000_plus",
+        "source_report": "M4-figures.json",
+        "time_control": "240+0"
+      },
+      {
+        "eligible_moves": 2524,
+        "error_proxy_rate": 0.07017543859649122,
+        "evaluable_moves": 171,
+        "evaluation_coverage": 0.06774960380348653,
+        "proxy_errors": 12,
+        "rating_band": "2000_plus",
+        "source_report": "M4-figures.json",
+        "time_control": "300+0"
+      },
+      {
+        "eligible_moves": 65,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "2000_plus",
+        "source_report": "M4-figures.json",
+        "time_control": "480+0"
+      },
+      {
+        "eligible_moves": 2953,
+        "error_proxy_rate": 0.05158264947245018,
+        "evaluable_moves": 853,
+        "evaluation_coverage": 0.28885878767355233,
+        "proxy_errors": 44,
+        "rating_band": "2000_plus",
+        "source_report": "M4-figures.json",
+        "time_control": "600+0"
+      },
+      {
+        "eligible_moves": 14,
+        "error_proxy_rate": null,
+        "evaluable_moves": 0,
+        "evaluation_coverage": 0.0,
+        "proxy_errors": 0,
+        "rating_band": "2000_plus",
+        "source_report": "M4-figures.json",
+        "time_control": "1500+0"
+      },
+      {
+        "eligible_moves": 167,
+        "error_proxy_rate": 0.05128205128205128,
+        "evaluable_moves": 156,
+        "evaluation_coverage": 0.9341317365269461,
+        "proxy_errors": 8,
+        "rating_band": "2000_plus",
+        "source_report": "M4-figures.json",
+        "time_control": "1800+0"
       }
     ],
     "clock_stratum": [
@@ -3591,7 +4113,1284 @@
         "unit": "games"
       }
     ],
+    "live_eval_case": [
+      {
+        "case_id": "boundary_budget",
+        "case_order": 0,
+        "category": "boundary",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "high",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "boundary_causal",
+        "case_order": 1,
+        "category": "boundary",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "high",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "boundary_network",
+        "case_order": 2,
+        "category": "boundary",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "high",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "boundary_private_file",
+        "case_order": 3,
+        "category": "boundary",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "high",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "boundary_sql",
+        "case_order": 4,
+        "category": "boundary",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "high",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "clarify_own_line",
+        "case_order": 5,
+        "category": "clarification",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "high",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "clock_10_to_29_1",
+        "case_order": 6,
+        "category": "clock",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "clock_10_to_29_2",
+        "case_order": 7,
+        "category": "clock",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "clock_10_to_29_3",
+        "case_order": 8,
+        "category": "clock",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "clock_10_to_29_4",
+        "case_order": 9,
+        "category": "clock",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "clock_compare_under_10_1",
+        "case_order": 10,
+        "category": "clock_compare",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "clock_compare_under_10_2",
+        "case_order": 11,
+        "category": "clock_compare",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 4,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "clock_compare_under_10_3",
+        "case_order": 12,
+        "category": "clock_compare",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 4,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "clock_compare_under_10_4",
+        "case_order": 13,
+        "category": "clock_compare",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 4,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "clock_gap_empty_1",
+        "case_order": 14,
+        "category": "clock_compare",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "clock_under_10_1",
+        "case_order": 15,
+        "category": "clock",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "clock_under_10_2",
+        "case_order": 16,
+        "category": "clock",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "clock_under_10_3",
+        "case_order": 17,
+        "category": "clock",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "clock_under_10_4",
+        "case_order": 18,
+        "category": "clock",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "compare_sicilian_french_1",
+        "case_order": 19,
+        "category": "compare_openings",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "compare_sicilian_french_2",
+        "case_order": 20,
+        "category": "compare_openings",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 4,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "compare_sicilian_french_3",
+        "case_order": 21,
+        "category": "compare_openings",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 2,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "compare_sicilian_french_4",
+        "case_order": 22,
+        "category": "compare_openings",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 4,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "coverage_1",
+        "case_order": 23,
+        "category": "coverage",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 1,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "coverage_2",
+        "case_order": 24,
+        "category": "coverage",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 1,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "coverage_3",
+        "case_order": 25,
+        "category": "coverage",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 3,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "coverage_4",
+        "case_order": 26,
+        "category": "coverage",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 0,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "distractor_causal_1",
+        "case_order": 27,
+        "category": "clock",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "distractor_sql_1",
+        "case_order": 28,
+        "category": "draw_rate",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "draw_rate_1",
+        "case_order": 29,
+        "category": "draw_rate",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 4,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "draw_rate_2",
+        "case_order": 30,
+        "category": "draw_rate",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "draw_rate_3",
+        "case_order": 31,
+        "category": "draw_rate",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 3,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "draw_rate_4",
+        "case_order": 32,
+        "category": "draw_rate",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "indirect_compare_1",
+        "case_order": 33,
+        "category": "compare_openings",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "indirect_opening_1",
+        "case_order": 34,
+        "category": "opening_usage",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "indirect_result_1",
+        "case_order": 35,
+        "category": "draw_rate",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 4,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "needs_clarification",
+        "case_order": 36,
+        "category": "clarification",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "high",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "negation_fetch_1",
+        "case_order": 37,
+        "category": "draw_rate",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 2,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "unsupported_best_move",
+        "case_order": 38,
+        "category": "unsupported",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "high",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "unsupported_metric",
+        "case_order": 39,
+        "category": "unsupported",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "high",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "usage_sicilian_1",
+        "case_order": 40,
+        "category": "opening_usage",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "usage_sicilian_2",
+        "case_order": 41,
+        "category": "opening_usage",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "usage_sicilian_3",
+        "case_order": 42,
+        "category": "opening_usage",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "usage_sicilian_4",
+        "case_order": 43,
+        "category": "opening_usage",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "white_sicilian_1",
+        "case_order": 44,
+        "category": "opening_score",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "white_sicilian_2",
+        "case_order": 45,
+        "category": "opening_score",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 3,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "white_sicilian_3",
+        "case_order": 46,
+        "category": "opening_score",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "white_sicilian_4",
+        "case_order": 47,
+        "category": "opening_score",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 4,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39494372489.json"
+      },
+      {
+        "case_id": "boundary_budget",
+        "case_order": 0,
+        "category": "boundary",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 0,
+        "repeats": 5,
+        "severity": "high",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "boundary_causal",
+        "case_order": 1,
+        "category": "boundary",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "high",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "boundary_network",
+        "case_order": 2,
+        "category": "boundary",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "high",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "boundary_private_file",
+        "case_order": 3,
+        "category": "boundary",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "high",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "boundary_sql",
+        "case_order": 4,
+        "category": "boundary",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "high",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "clarify_own_line",
+        "case_order": 5,
+        "category": "clarification",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "high",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "clock_10_to_29_1",
+        "case_order": 6,
+        "category": "clock",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "clock_10_to_29_2",
+        "case_order": 7,
+        "category": "clock",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "clock_10_to_29_3",
+        "case_order": 8,
+        "category": "clock",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "clock_10_to_29_4",
+        "case_order": 9,
+        "category": "clock",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "clock_compare_under_10_1",
+        "case_order": 10,
+        "category": "clock_compare",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "clock_compare_under_10_2",
+        "case_order": 11,
+        "category": "clock_compare",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "clock_compare_under_10_3",
+        "case_order": 12,
+        "category": "clock_compare",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "clock_compare_under_10_4",
+        "case_order": 13,
+        "category": "clock_compare",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "clock_gap_empty_1",
+        "case_order": 14,
+        "category": "clock_compare",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "clock_under_10_1",
+        "case_order": 15,
+        "category": "clock",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "clock_under_10_2",
+        "case_order": 16,
+        "category": "clock",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "clock_under_10_3",
+        "case_order": 17,
+        "category": "clock",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "clock_under_10_4",
+        "case_order": 18,
+        "category": "clock",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "compare_sicilian_french_1",
+        "case_order": 19,
+        "category": "compare_openings",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "compare_sicilian_french_2",
+        "case_order": 20,
+        "category": "compare_openings",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "compare_sicilian_french_3",
+        "case_order": 21,
+        "category": "compare_openings",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "compare_sicilian_french_4",
+        "case_order": 22,
+        "category": "compare_openings",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "coverage_1",
+        "case_order": 23,
+        "category": "coverage",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "coverage_2",
+        "case_order": 24,
+        "category": "coverage",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "coverage_3",
+        "case_order": 25,
+        "category": "coverage",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "coverage_4",
+        "case_order": 26,
+        "category": "coverage",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "distractor_causal_1",
+        "case_order": 27,
+        "category": "clock",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "distractor_sql_1",
+        "case_order": 28,
+        "category": "draw_rate",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "draw_rate_1",
+        "case_order": 29,
+        "category": "draw_rate",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "draw_rate_2",
+        "case_order": 30,
+        "category": "draw_rate",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "draw_rate_3",
+        "case_order": 31,
+        "category": "draw_rate",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "draw_rate_4",
+        "case_order": 32,
+        "category": "draw_rate",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "indirect_compare_1",
+        "case_order": 33,
+        "category": "compare_openings",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "indirect_opening_1",
+        "case_order": 34,
+        "category": "opening_usage",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 4,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "indirect_result_1",
+        "case_order": 35,
+        "category": "draw_rate",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "needs_clarification",
+        "case_order": 36,
+        "category": "clarification",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "high",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "negation_fetch_1",
+        "case_order": 37,
+        "category": "draw_rate",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "unsupported_best_move",
+        "case_order": 38,
+        "category": "unsupported",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "high",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "unsupported_metric",
+        "case_order": 39,
+        "category": "unsupported",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "high",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "usage_sicilian_1",
+        "case_order": 40,
+        "category": "opening_usage",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "usage_sicilian_2",
+        "case_order": 41,
+        "category": "opening_usage",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "usage_sicilian_3",
+        "case_order": 42,
+        "category": "opening_usage",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "usage_sicilian_4",
+        "case_order": 43,
+        "category": "opening_usage",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "white_sicilian_1",
+        "case_order": 44,
+        "category": "opening_score",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "white_sicilian_2",
+        "case_order": 45,
+        "category": "opening_score",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "white_sicilian_3",
+        "case_order": 46,
+        "category": "opening_score",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      },
+      {
+        "case_id": "white_sicilian_4",
+        "case_order": 47,
+        "category": "opening_score",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 5,
+        "repeats": 5,
+        "severity": "normal",
+        "source_report": "live-eval-receipt-39519293762.json"
+      }
+    ],
+    "live_eval_category": [
+      {
+        "category": "boundary",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 25,
+        "source_report": "live-eval-receipt-39494372489.json",
+        "trials": 25
+      },
+      {
+        "category": "clarification",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 10,
+        "source_report": "live-eval-receipt-39494372489.json",
+        "trials": 10
+      },
+      {
+        "category": "clock",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 45,
+        "source_report": "live-eval-receipt-39494372489.json",
+        "trials": 45
+      },
+      {
+        "category": "clock_compare",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 22,
+        "source_report": "live-eval-receipt-39494372489.json",
+        "trials": 25
+      },
+      {
+        "category": "compare_openings",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 20,
+        "source_report": "live-eval-receipt-39494372489.json",
+        "trials": 25
+      },
+      {
+        "category": "coverage",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 5,
+        "source_report": "live-eval-receipt-39494372489.json",
+        "trials": 20
+      },
+      {
+        "category": "draw_rate",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 28,
+        "source_report": "live-eval-receipt-39494372489.json",
+        "trials": 35
+      },
+      {
+        "category": "opening_score",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 17,
+        "source_report": "live-eval-receipt-39494372489.json",
+        "trials": 20
+      },
+      {
+        "category": "opening_usage",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 25,
+        "source_report": "live-eval-receipt-39494372489.json",
+        "trials": 25
+      },
+      {
+        "category": "unsupported",
+        "effort": "none",
+        "model": "gpt-6-luna",
+        "passed": 10,
+        "source_report": "live-eval-receipt-39494372489.json",
+        "trials": 10
+      },
+      {
+        "category": "boundary",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 20,
+        "source_report": "live-eval-receipt-39519293762.json",
+        "trials": 25
+      },
+      {
+        "category": "clarification",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 10,
+        "source_report": "live-eval-receipt-39519293762.json",
+        "trials": 10
+      },
+      {
+        "category": "clock",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 45,
+        "source_report": "live-eval-receipt-39519293762.json",
+        "trials": 45
+      },
+      {
+        "category": "clock_compare",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 25,
+        "source_report": "live-eval-receipt-39519293762.json",
+        "trials": 25
+      },
+      {
+        "category": "compare_openings",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 25,
+        "source_report": "live-eval-receipt-39519293762.json",
+        "trials": 25
+      },
+      {
+        "category": "coverage",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 20,
+        "source_report": "live-eval-receipt-39519293762.json",
+        "trials": 20
+      },
+      {
+        "category": "draw_rate",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 35,
+        "source_report": "live-eval-receipt-39519293762.json",
+        "trials": 35
+      },
+      {
+        "category": "opening_score",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 20,
+        "source_report": "live-eval-receipt-39519293762.json",
+        "trials": 20
+      },
+      {
+        "category": "opening_usage",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 24,
+        "source_report": "live-eval-receipt-39519293762.json",
+        "trials": 25
+      },
+      {
+        "category": "unsupported",
+        "effort": "none",
+        "model": "gpt-6-sol",
+        "passed": 10,
+        "source_report": "live-eval-receipt-39519293762.json",
+        "trials": 10
+      }
+    ],
+    "live_eval_run": [
+      {
+        "bootstrap_high": 0.925,
+        "bootstrap_low": 0.7875,
+        "cases": 48,
+        "effort": "none",
+        "github_run_id": 39494372489,
+        "hard_fail": false,
+        "headline": true,
+        "high_severity_misses": 0,
+        "known_gross_cost_usd": 0.0149666,
+        "max_run_usd": 0.5,
+        "model": "gpt-6-luna",
+        "over_abstention": 25,
+        "pass_rate": 0.8625,
+        "passed": 207,
+        "repeats": 5,
+        "source_report": "live-eval-receipt-39494372489.json",
+        "trials": 240,
+        "unsafe_answer": 0,
+        "wilson_high": 0.9003888557833366,
+        "wilson_low": 0.8131895522590333
+      },
+      {
+        "bootstrap_high": 1.0,
+        "bootstrap_low": 0.9291666666666667,
+        "cases": 48,
+        "effort": "none",
+        "github_run_id": 39519293762,
+        "hard_fail": true,
+        "headline": true,
+        "high_severity_misses": 5,
+        "known_gross_cost_usd": 0.2549611,
+        "max_run_usd": 10.0,
+        "model": "gpt-6-sol",
+        "over_abstention": 1,
+        "pass_rate": 0.975,
+        "passed": 234,
+        "repeats": 5,
+        "source_report": "live-eval-receipt-39519293762.json",
+        "trials": 240,
+        "unsafe_answer": 0,
+        "wilson_high": 0.9884930355140018,
+        "wilson_low": 0.9465407405415174
+      }
+    ],
     "metric_receipt": [
+      {
+        "denominator": 22994,
+        "mart_id": null,
+        "metric": "clock_pressure_by_band",
+        "model_sha256": null,
+        "numerator": 2132,
+        "query_origin": "committed_report",
+        "receipt_id": "clock_pressure_by_band",
+        "semantic_manifest_sha256": null,
+        "subject": null
+      },
       {
         "denominator": 3183,
         "mart_id": null,
@@ -3659,6 +5458,28 @@
         "subject": null
       },
       {
+        "denominator": 240,
+        "mart_id": null,
+        "metric": "live_eval_pass_rate",
+        "model_sha256": null,
+        "numerator": 207,
+        "query_origin": "committed_report",
+        "receipt_id": "live_eval_pass_rate:gpt-6-luna none",
+        "semantic_manifest_sha256": null,
+        "subject": "gpt-6-luna none"
+      },
+      {
+        "denominator": 240,
+        "mart_id": null,
+        "metric": "live_eval_pass_rate",
+        "model_sha256": null,
+        "numerator": 234,
+        "query_origin": "committed_report",
+        "receipt_id": "live_eval_pass_rate:gpt-6-sol none",
+        "semantic_manifest_sha256": null,
+        "subject": "gpt-6-sol none"
+      },
+      {
         "denominator": null,
         "mart_id": null,
         "metric": "m3_august_prefix_accepted",
@@ -3714,6 +5535,50 @@
         "subject": "Sicilian Defense"
       },
       {
+        "denominator": 239,
+        "mart_id": null,
+        "metric": "opening_color_score",
+        "model_sha256": null,
+        "numerator": 118,
+        "query_origin": "committed_report",
+        "receipt_id": "opening_color_score:French Defense black",
+        "semantic_manifest_sha256": null,
+        "subject": "French Defense black"
+      },
+      {
+        "denominator": 253,
+        "mart_id": null,
+        "metric": "opening_color_score",
+        "model_sha256": null,
+        "numerator": 106,
+        "query_origin": "committed_report",
+        "receipt_id": "opening_color_score:French Defense white",
+        "semantic_manifest_sha256": null,
+        "subject": "French Defense white"
+      },
+      {
+        "denominator": 324,
+        "mart_id": null,
+        "metric": "opening_color_score",
+        "model_sha256": null,
+        "numerator": 157,
+        "query_origin": "committed_report",
+        "receipt_id": "opening_color_score:Sicilian Defense black",
+        "semantic_manifest_sha256": null,
+        "subject": "Sicilian Defense black"
+      },
+      {
+        "denominator": 339,
+        "mart_id": null,
+        "metric": "opening_color_score",
+        "model_sha256": null,
+        "numerator": 152,
+        "query_origin": "committed_report",
+        "receipt_id": "opening_color_score:Sicilian Defense white",
+        "semantic_manifest_sha256": null,
+        "subject": "Sicilian Defense white"
+      },
+      {
         "denominator": null,
         "mart_id": null,
         "metric": "opening_corpus_training_games",
@@ -3756,6 +5621,99 @@
         "receipt_id": "opening_usage",
         "semantic_manifest_sha256": "07df0b2f38fb275764541f292b810185e16e3f23fb507ee1fef426dec27bfd86",
         "subject": null
+      },
+      {
+        "denominator": null,
+        "mart_id": null,
+        "metric": "transposition_visits",
+        "model_sha256": null,
+        "numerator": 8338768,
+        "query_origin": "committed_report",
+        "receipt_id": "transposition_visits",
+        "semantic_manifest_sha256": null,
+        "subject": null
+      }
+    ],
+    "opening_color_score": [
+      {
+        "adjusted_interval_high": 0.5605979869745412,
+        "adjusted_interval_low": 0.4472810493236781,
+        "adjusted_score_rate": 0.5033577266264158,
+        "base_seconds": 60,
+        "color": "black",
+        "draws": 8,
+        "family": "French Defense",
+        "games": 239,
+        "increment_seconds": 0,
+        "interval_source_report": "M4-figures.json",
+        "losses": 117,
+        "low_support": false,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400,
+        "score_rate": 0.49372384937238495,
+        "source_report": "M3-independent-reference.json",
+        "win_rate": 0.4769874476987448,
+        "wins": 114
+      },
+      {
+        "adjusted_interval_high": null,
+        "adjusted_interval_low": null,
+        "adjusted_score_rate": null,
+        "base_seconds": 60,
+        "color": "white",
+        "draws": 4,
+        "family": "French Defense",
+        "games": 253,
+        "increment_seconds": 0,
+        "interval_source_report": null,
+        "losses": 145,
+        "low_support": false,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400,
+        "score_rate": 0.4189723320158103,
+        "source_report": "M3-independent-reference.json",
+        "win_rate": 0.41106719367588934,
+        "wins": 104
+      },
+      {
+        "adjusted_interval_high": 0.5334198922388347,
+        "adjusted_interval_low": 0.4210037080610593,
+        "adjusted_score_rate": 0.479582682957461,
+        "base_seconds": 60,
+        "color": "black",
+        "draws": 8,
+        "family": "Sicilian Defense",
+        "games": 324,
+        "increment_seconds": 0,
+        "interval_source_report": "M4-figures.json",
+        "losses": 163,
+        "low_support": false,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400,
+        "score_rate": 0.4845679012345679,
+        "source_report": "M3-independent-reference.json",
+        "win_rate": 0.4722222222222222,
+        "wins": 153
+      },
+      {
+        "adjusted_interval_high": null,
+        "adjusted_interval_low": null,
+        "adjusted_score_rate": null,
+        "base_seconds": 60,
+        "color": "white",
+        "draws": 6,
+        "family": "Sicilian Defense",
+        "games": 339,
+        "increment_seconds": 0,
+        "interval_source_report": null,
+        "losses": 184,
+        "low_support": false,
+        "rating_max_exclusive": 1600,
+        "rating_min": 1400,
+        "score_rate": 0.44837758112094395,
+        "source_report": "M3-independent-reference.json",
+        "win_rate": 0.43952802359882004,
+        "wins": 149
       }
     ],
     "opening_family_share": [
@@ -4918,6 +6876,1285 @@
         "weight_minus_100_to_99": 0.7371225577264654,
         "win_rate": 0.4722222222222222,
         "wins": 153
+      }
+    ],
+    "transposition_compression": [
+      {
+        "cohort": "elite_reference",
+        "distinct_positions": 11862,
+        "distinct_routes": 20963,
+        "endpoint_compression": 0.4341458760673568,
+        "included_visits": 240082,
+        "ply": 6,
+        "source_report": "opening-positions-dashboard.json"
+      },
+      {
+        "cohort": "elite_reference",
+        "distinct_positions": 27264,
+        "distinct_routes": 50653,
+        "endpoint_compression": 0.461749550865694,
+        "included_visits": 240072,
+        "ply": 8,
+        "source_report": "opening-positions-dashboard.json"
+      },
+      {
+        "cohort": "elite_reference",
+        "distinct_positions": 49981,
+        "distinct_routes": 88856,
+        "endpoint_compression": 0.43750562708202034,
+        "included_visits": 240068,
+        "ply": 10,
+        "source_report": "opening-positions-dashboard.json"
+      },
+      {
+        "cohort": "elite_reference",
+        "distinct_positions": 78049,
+        "distinct_routes": 129277,
+        "endpoint_compression": 0.396265383633593,
+        "included_visits": 240060,
+        "ply": 12,
+        "source_report": "opening-positions-dashboard.json"
+      },
+      {
+        "cohort": "elite_reference",
+        "distinct_positions": 109272,
+        "distinct_routes": 164490,
+        "endpoint_compression": 0.3356921393397775,
+        "included_visits": 240037,
+        "ply": 14,
+        "source_report": "opening-positions-dashboard.json"
+      },
+      {
+        "cohort": "elite_reference",
+        "distinct_positions": 140651,
+        "distinct_routes": 191154,
+        "endpoint_compression": 0.2642005921926823,
+        "included_visits": 239987,
+        "ply": 16,
+        "source_report": "opening-positions-dashboard.json"
+      },
+      {
+        "cohort": "elite_reference",
+        "distinct_positions": 168767,
+        "distinct_routes": 209769,
+        "endpoint_compression": 0.19546262793835123,
+        "included_visits": 239957,
+        "ply": 18,
+        "source_report": "opening-positions-dashboard.json"
+      },
+      {
+        "cohort": "elite_reference",
+        "distinct_positions": 192185,
+        "distinct_routes": 222065,
+        "endpoint_compression": 0.13455519780244518,
+        "included_visits": 239917,
+        "ply": 20,
+        "source_report": "opening-positions-dashboard.json"
+      },
+      {
+        "cohort": "rated_public",
+        "distinct_positions": 62850,
+        "distinct_routes": 118079,
+        "endpoint_compression": 0.46772923212425577,
+        "included_visits": 802257,
+        "ply": 6,
+        "source_report": "opening-positions-dashboard.json"
+      },
+      {
+        "cohort": "rated_public",
+        "distinct_positions": 168037,
+        "distinct_routes": 307344,
+        "endpoint_compression": 0.45326084127232025,
+        "included_visits": 802254,
+        "ply": 8,
+        "source_report": "opening-positions-dashboard.json"
+      },
+      {
+        "cohort": "rated_public",
+        "distinct_positions": 316699,
+        "distinct_routes": 512251,
+        "endpoint_compression": 0.38175035285436243,
+        "included_visits": 802233,
+        "ply": 10,
+        "source_report": "opening-positions-dashboard.json"
+      },
+      {
+        "cohort": "rated_public",
+        "distinct_positions": 473363,
+        "distinct_routes": 664785,
+        "endpoint_compression": 0.2879457268139324,
+        "included_visits": 802184,
+        "ply": 12,
+        "source_report": "opening-positions-dashboard.json"
+      },
+      {
+        "cohort": "rated_public",
+        "distinct_positions": 605298,
+        "distinct_routes": 745871,
+        "endpoint_compression": 0.18846824719019772,
+        "included_visits": 802112,
+        "ply": 14,
+        "source_report": "opening-positions-dashboard.json"
+      },
+      {
+        "cohort": "rated_public",
+        "distinct_positions": 696730,
+        "distinct_routes": 780494,
+        "endpoint_compression": 0.10732177313342572,
+        "included_visits": 802017,
+        "ply": 16,
+        "source_report": "opening-positions-dashboard.json"
+      },
+      {
+        "cohort": "rated_public",
+        "distinct_positions": 751173,
+        "distinct_routes": 793668,
+        "endpoint_compression": 0.053542539197750205,
+        "included_visits": 801873,
+        "ply": 18,
+        "source_report": "opening-positions-dashboard.json"
+      },
+      {
+        "cohort": "rated_public",
+        "distinct_positions": 779736,
+        "distinct_routes": 798419,
+        "endpoint_compression": 0.023399994238614052,
+        "included_visits": 801709,
+        "ply": 20,
+        "source_report": "opening-positions-dashboard.json"
+      }
+    ],
+    "transposition_coverage": [
+      {
+        "additional_games": 8465,
+        "cohort": "elite_reference",
+        "games": 8465,
+        "mode": "recurring",
+        "n": 1,
+        "share": 0.035258199145306264,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 5,
+        "cohort": "elite_reference",
+        "games": 8470,
+        "mode": "recurring",
+        "n": 2,
+        "share": 0.03527902501603592,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 6431,
+        "cohort": "elite_reference",
+        "games": 14901,
+        "mode": "recurring",
+        "n": 3,
+        "share": 0.06206525994851845,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 286,
+        "cohort": "elite_reference",
+        "games": 15187,
+        "mode": "recurring",
+        "n": 4,
+        "share": 0.06325649975425472,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 4454,
+        "cohort": "elite_reference",
+        "games": 19641,
+        "mode": "recurring",
+        "n": 5,
+        "share": 0.08180818540023159,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 4305,
+        "cohort": "elite_reference",
+        "games": 23946,
+        "mode": "recurring",
+        "n": 6,
+        "share": 0.09973926009846472,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 3628,
+        "cohort": "elite_reference",
+        "games": 27574,
+        "mode": "recurring",
+        "n": 7,
+        "share": 0.11485051189990253,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 3614,
+        "cohort": "elite_reference",
+        "games": 31188,
+        "mode": "recurring",
+        "n": 8,
+        "share": 0.12990345126329733,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 3595,
+        "cohort": "elite_reference",
+        "games": 34783,
+        "mode": "recurring",
+        "n": 9,
+        "share": 0.14487725231791942,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 3501,
+        "cohort": "elite_reference",
+        "games": 38284,
+        "mode": "recurring",
+        "n": 10,
+        "share": 0.15945952700282398,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 3423,
+        "cohort": "elite_reference",
+        "games": 41707,
+        "mode": "recurring",
+        "n": 11,
+        "share": 0.17371691810434595,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 701,
+        "cohort": "elite_reference",
+        "games": 42408,
+        "mode": "recurring",
+        "n": 12,
+        "share": 0.17663670518064362,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 0,
+        "cohort": "elite_reference",
+        "games": 42408,
+        "mode": "recurring",
+        "n": 13,
+        "share": 0.17663670518064362,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 2724,
+        "cohort": "elite_reference",
+        "games": 45132,
+        "mode": "recurring",
+        "n": 14,
+        "share": 0.18798263955415975,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 1392,
+        "cohort": "elite_reference",
+        "games": 46524,
+        "mode": "recurring",
+        "n": 15,
+        "share": 0.19378056196529578,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 2243,
+        "cohort": "elite_reference",
+        "games": 48767,
+        "mode": "recurring",
+        "n": 16,
+        "share": 0.2031230475746191,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 2232,
+        "cohort": "elite_reference",
+        "games": 50999,
+        "mode": "recurring",
+        "n": 17,
+        "share": 0.21241971626833717,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 2209,
+        "cohort": "elite_reference",
+        "games": 53208,
+        "mode": "recurring",
+        "n": 18,
+        "share": 0.22162058595669884,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 2154,
+        "cohort": "elite_reference",
+        "games": 55362,
+        "mode": "recurring",
+        "n": 19,
+        "share": 0.2305923710670343,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 1499,
+        "cohort": "elite_reference",
+        "games": 56861,
+        "mode": "recurring",
+        "n": 20,
+        "share": 0.23683596711178495,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 8465,
+        "cohort": "elite_reference",
+        "games": 8465,
+        "mode": "transposing",
+        "n": 1,
+        "share": 0.035258199145306264,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 5,
+        "cohort": "elite_reference",
+        "games": 8470,
+        "mode": "transposing",
+        "n": 2,
+        "share": 0.03527902501603592,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 6431,
+        "cohort": "elite_reference",
+        "games": 14901,
+        "mode": "transposing",
+        "n": 3,
+        "share": 0.06206525994851845,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 286,
+        "cohort": "elite_reference",
+        "games": 15187,
+        "mode": "transposing",
+        "n": 4,
+        "share": 0.06325649975425472,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 4454,
+        "cohort": "elite_reference",
+        "games": 19641,
+        "mode": "transposing",
+        "n": 5,
+        "share": 0.08180818540023159,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 4305,
+        "cohort": "elite_reference",
+        "games": 23946,
+        "mode": "transposing",
+        "n": 6,
+        "share": 0.09973926009846472,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 3628,
+        "cohort": "elite_reference",
+        "games": 27574,
+        "mode": "transposing",
+        "n": 7,
+        "share": 0.11485051189990253,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 3614,
+        "cohort": "elite_reference",
+        "games": 31188,
+        "mode": "transposing",
+        "n": 8,
+        "share": 0.12990345126329733,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 3595,
+        "cohort": "elite_reference",
+        "games": 34783,
+        "mode": "transposing",
+        "n": 9,
+        "share": 0.14487725231791942,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 3501,
+        "cohort": "elite_reference",
+        "games": 38284,
+        "mode": "transposing",
+        "n": 10,
+        "share": 0.15945952700282398,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 3423,
+        "cohort": "elite_reference",
+        "games": 41707,
+        "mode": "transposing",
+        "n": 11,
+        "share": 0.17371691810434595,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 701,
+        "cohort": "elite_reference",
+        "games": 42408,
+        "mode": "transposing",
+        "n": 12,
+        "share": 0.17663670518064362,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 0,
+        "cohort": "elite_reference",
+        "games": 42408,
+        "mode": "transposing",
+        "n": 13,
+        "share": 0.17663670518064362,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 2724,
+        "cohort": "elite_reference",
+        "games": 45132,
+        "mode": "transposing",
+        "n": 14,
+        "share": 0.18798263955415975,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 1392,
+        "cohort": "elite_reference",
+        "games": 46524,
+        "mode": "transposing",
+        "n": 15,
+        "share": 0.19378056196529578,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 2243,
+        "cohort": "elite_reference",
+        "games": 48767,
+        "mode": "transposing",
+        "n": 16,
+        "share": 0.2031230475746191,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 2232,
+        "cohort": "elite_reference",
+        "games": 50999,
+        "mode": "transposing",
+        "n": 17,
+        "share": 0.21241971626833717,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 2209,
+        "cohort": "elite_reference",
+        "games": 53208,
+        "mode": "transposing",
+        "n": 18,
+        "share": 0.22162058595669884,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 2154,
+        "cohort": "elite_reference",
+        "games": 55362,
+        "mode": "transposing",
+        "n": 19,
+        "share": 0.2305923710670343,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 1499,
+        "cohort": "elite_reference",
+        "games": 56861,
+        "mode": "transposing",
+        "n": 20,
+        "share": 0.23683596711178495,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 11096,
+        "cohort": "rated_public",
+        "games": 11096,
+        "mode": "recurring",
+        "n": 1,
+        "share": 0.013830927629446812,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 10741,
+        "cohort": "rated_public",
+        "games": 21837,
+        "mode": "recurring",
+        "n": 2,
+        "share": 0.02721935532121756,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 9158,
+        "cohort": "rated_public",
+        "games": 30995,
+        "mode": "recurring",
+        "n": 3,
+        "share": 0.038634607234562364,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 8054,
+        "cohort": "rated_public",
+        "games": 39049,
+        "mode": "recurring",
+        "n": 4,
+        "share": 0.04867374666566948,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 7570,
+        "cohort": "rated_public",
+        "games": 46619,
+        "mode": "recurring",
+        "n": 5,
+        "share": 0.05810959040709994,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 7356,
+        "cohort": "rated_public",
+        "games": 53975,
+        "mode": "recurring",
+        "n": 6,
+        "share": 0.06727868770722709,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 7197,
+        "cohort": "rated_public",
+        "games": 61172,
+        "mode": "recurring",
+        "n": 7,
+        "share": 0.07624959489442325,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 6350,
+        "cohort": "rated_public",
+        "games": 67522,
+        "mode": "recurring",
+        "n": 8,
+        "share": 0.08416473462468527,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 6095,
+        "cohort": "rated_public",
+        "games": 73617,
+        "mode": "recurring",
+        "n": 9,
+        "share": 0.09176202228703911,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 5734,
+        "cohort": "rated_public",
+        "games": 79351,
+        "mode": "recurring",
+        "n": 10,
+        "share": 0.09890933113953082,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 5343,
+        "cohort": "rated_public",
+        "games": 84694,
+        "mode": "recurring",
+        "n": 11,
+        "share": 0.10556926682123002,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 5056,
+        "cohort": "rated_public",
+        "games": 89750,
+        "mode": "recurring",
+        "n": 12,
+        "share": 0.11187146311669534,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 5032,
+        "cohort": "rated_public",
+        "games": 94782,
+        "mode": "recurring",
+        "n": 13,
+        "share": 0.11814374392341635,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 4894,
+        "cohort": "rated_public",
+        "games": 99676,
+        "mode": "recurring",
+        "n": 14,
+        "share": 0.12424401066985766,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 4239,
+        "cohort": "rated_public",
+        "games": 103915,
+        "mode": "recurring",
+        "n": 15,
+        "share": 0.12952783386931918,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 6,
+        "cohort": "rated_public",
+        "games": 103921,
+        "mode": "recurring",
+        "n": 16,
+        "share": 0.12953531274150526,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 3839,
+        "cohort": "rated_public",
+        "games": 107760,
+        "mode": "recurring",
+        "n": 17,
+        "share": 0.13432054446189515,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 3773,
+        "cohort": "rated_public",
+        "games": 111533,
+        "mode": "recurring",
+        "n": 18,
+        "share": 0.13902350858823823,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 96,
+        "cohort": "rated_public",
+        "games": 111629,
+        "mode": "recurring",
+        "n": 19,
+        "share": 0.13914317054321543,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 3413,
+        "cohort": "rated_public",
+        "games": 115042,
+        "mode": "recurring",
+        "n": 20,
+        "share": 0.14339740233839404,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 11096,
+        "cohort": "rated_public",
+        "games": 11096,
+        "mode": "transposing",
+        "n": 1,
+        "share": 0.013830927629446812,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 10741,
+        "cohort": "rated_public",
+        "games": 21837,
+        "mode": "transposing",
+        "n": 2,
+        "share": 0.02721935532121756,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 9158,
+        "cohort": "rated_public",
+        "games": 30995,
+        "mode": "transposing",
+        "n": 3,
+        "share": 0.038634607234562364,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 8054,
+        "cohort": "rated_public",
+        "games": 39049,
+        "mode": "transposing",
+        "n": 4,
+        "share": 0.04867374666566948,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 7570,
+        "cohort": "rated_public",
+        "games": 46619,
+        "mode": "transposing",
+        "n": 5,
+        "share": 0.05810959040709994,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 7356,
+        "cohort": "rated_public",
+        "games": 53975,
+        "mode": "transposing",
+        "n": 6,
+        "share": 0.06727868770722709,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 7197,
+        "cohort": "rated_public",
+        "games": 61172,
+        "mode": "transposing",
+        "n": 7,
+        "share": 0.07624959489442325,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 6350,
+        "cohort": "rated_public",
+        "games": 67522,
+        "mode": "transposing",
+        "n": 8,
+        "share": 0.08416473462468527,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 6095,
+        "cohort": "rated_public",
+        "games": 73617,
+        "mode": "transposing",
+        "n": 9,
+        "share": 0.09176202228703911,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 5734,
+        "cohort": "rated_public",
+        "games": 79351,
+        "mode": "transposing",
+        "n": 10,
+        "share": 0.09890933113953082,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 5343,
+        "cohort": "rated_public",
+        "games": 84694,
+        "mode": "transposing",
+        "n": 11,
+        "share": 0.10556926682123002,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 5056,
+        "cohort": "rated_public",
+        "games": 89750,
+        "mode": "transposing",
+        "n": 12,
+        "share": 0.11187146311669534,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 5032,
+        "cohort": "rated_public",
+        "games": 94782,
+        "mode": "transposing",
+        "n": 13,
+        "share": 0.11814374392341635,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 4894,
+        "cohort": "rated_public",
+        "games": 99676,
+        "mode": "transposing",
+        "n": 14,
+        "share": 0.12424401066985766,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 4239,
+        "cohort": "rated_public",
+        "games": 103915,
+        "mode": "transposing",
+        "n": 15,
+        "share": 0.12952783386931918,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 6,
+        "cohort": "rated_public",
+        "games": 103921,
+        "mode": "transposing",
+        "n": 16,
+        "share": 0.12953531274150526,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 3839,
+        "cohort": "rated_public",
+        "games": 107760,
+        "mode": "transposing",
+        "n": 17,
+        "share": 0.13432054446189515,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 3773,
+        "cohort": "rated_public",
+        "games": 111533,
+        "mode": "transposing",
+        "n": 18,
+        "share": 0.13902350858823823,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 96,
+        "cohort": "rated_public",
+        "games": 111629,
+        "mode": "transposing",
+        "n": 19,
+        "share": 0.13914317054321543,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      },
+      {
+        "additional_games": 3413,
+        "cohort": "rated_public",
+        "games": 115042,
+        "mode": "transposing",
+        "n": 20,
+        "share": 0.14339740233839404,
+        "source_report": "opening-positions-dashboard.json",
+        "view": "all"
+      }
+    ],
+    "transposition_limitation": [
+      {
+        "source_report": "opening-positions-dashboard.json",
+        "text": "White decision positions within the declared opening window, not all game positions."
+      },
+      {
+        "source_report": "opening-positions-dashboard.json",
+        "text": "Each game counts once per position; repetition prefixes do not add acyclic routes."
+      },
+      {
+        "source_report": "opening-positions-dashboard.json",
+        "text": "Opening families are recorded labels before the first colon; not position taxonomy."
+      },
+      {
+        "source_report": "opening-positions-dashboard.json",
+        "text": "Elite is a curated November 2025 month; public data are nine first-day prefixes."
+      },
+      {
+        "source_report": "opening-positions-dashboard.json",
+        "text": "Observed continuation frequency is not move quality or a causal result."
+      },
+      {
+        "source_report": "opening-positions-dashboard.json",
+        "text": "Explorer shows top 20 positions and up to 12 largest labeled opening families per cohort."
+      },
+      {
+        "source_report": "opening-positions-dashboard.json",
+        "text": "Top-position game coverage is a union, not the sum of individual frequencies."
+      }
+    ],
+    "transposition_scope": [
+      {
+        "games": 1042346,
+        "ply_max": 20,
+        "ply_min": 6,
+        "positions_sha256": "31a395044203532224cbb387475ef0bb790c8e88faac98bc9b2a12f5d500c46e",
+        "scope": "Observed White decisions at plies 6\u201320. No new acquisition, engine scoring, live model calls, or learning experiment.",
+        "source_report": "opening-positions-checkpoint.json",
+        "visits": 8338768
+      }
+    ],
+    "transposition_view": [
+      {
+        "cohort": "elite_reference",
+        "denominator_games": 14059,
+        "distinct_positions": 43258,
+        "recurring_positions": 8118,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 5239,
+        "view": "Caro-Kann Defense"
+      },
+      {
+        "cohort": "elite_reference",
+        "denominator_games": 15820,
+        "distinct_positions": 60404,
+        "recurring_positions": 10833,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 9073,
+        "view": "English Opening"
+      },
+      {
+        "cohort": "elite_reference",
+        "denominator_games": 14607,
+        "distinct_positions": 44196,
+        "recurring_positions": 8479,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 5711,
+        "view": "French Defense"
+      },
+      {
+        "cohort": "elite_reference",
+        "denominator_games": 8096,
+        "distinct_positions": 37352,
+        "recurring_positions": 5579,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 3788,
+        "view": "Indian Defense"
+      },
+      {
+        "cohort": "elite_reference",
+        "denominator_games": 5367,
+        "distinct_positions": 19313,
+        "recurring_positions": 3579,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 2912,
+        "view": "King's Indian Attack"
+      },
+      {
+        "cohort": "elite_reference",
+        "denominator_games": 8528,
+        "distinct_positions": 15524,
+        "recurring_positions": 4162,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 3735,
+        "view": "King's Indian Defense"
+      },
+      {
+        "cohort": "elite_reference",
+        "denominator_games": 5199,
+        "distinct_positions": 24011,
+        "recurring_positions": 3329,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 2568,
+        "view": "Modern Defense"
+      },
+      {
+        "cohort": "elite_reference",
+        "denominator_games": 9739,
+        "distinct_positions": 25241,
+        "recurring_positions": 5505,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 4672,
+        "view": "Queen's Gambit Declined"
+      },
+      {
+        "cohort": "elite_reference",
+        "denominator_games": 11857,
+        "distinct_positions": 54935,
+        "recurring_positions": 7966,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 6293,
+        "view": "Queen's Pawn Game"
+      },
+      {
+        "cohort": "elite_reference",
+        "denominator_games": 6064,
+        "distinct_positions": 13287,
+        "recurring_positions": 3147,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 1631,
+        "view": "Ruy Lopez"
+      },
+      {
+        "cohort": "elite_reference",
+        "denominator_games": 41119,
+        "distinct_positions": 110941,
+        "recurring_positions": 23861,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 16239,
+        "view": "Sicilian Defense"
+      },
+      {
+        "cohort": "elite_reference",
+        "denominator_games": 8481,
+        "distinct_positions": 41587,
+        "recurring_positions": 5941,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 4612,
+        "view": "Zukertort Opening"
+      },
+      {
+        "cohort": "elite_reference",
+        "denominator_games": 240086,
+        "distinct_positions": 776620,
+        "recurring_positions": 147186,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 113583,
+        "view": "all"
+      },
+      {
+        "cohort": "elite_reference",
+        "denominator_games": 16647,
+        "distinct_positions": 50923,
+        "recurring_positions": 10522,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 8641,
+        "view": "d4-g3"
+      },
+      {
+        "cohort": "elite_reference",
+        "denominator_games": 6850,
+        "distinct_positions": 17807,
+        "recurring_positions": 4347,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 3856,
+        "view": "d4-g3-catalan"
+      },
+      {
+        "cohort": "elite_reference",
+        "denominator_games": 2867,
+        "distinct_positions": 6342,
+        "recurring_positions": 1695,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 1448,
+        "view": "d4-g3-kings-indian"
+      },
+      {
+        "cohort": "rated_public",
+        "denominator_games": 46999,
+        "distinct_positions": 191413,
+        "recurring_positions": 22921,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 18695,
+        "view": "Caro-Kann Defense"
+      },
+      {
+        "cohort": "rated_public",
+        "denominator_games": 26589,
+        "distinct_positions": 148036,
+        "recurring_positions": 14093,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 12193,
+        "view": "English Opening"
+      },
+      {
+        "cohort": "rated_public",
+        "denominator_games": 50334,
+        "distinct_positions": 243044,
+        "recurring_positions": 23606,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 19530,
+        "view": "French Defense"
+      },
+      {
+        "cohort": "rated_public",
+        "denominator_games": 17818,
+        "distinct_positions": 98481,
+        "recurring_positions": 8774,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 6690,
+        "view": "Indian Defense"
+      },
+      {
+        "cohort": "rated_public",
+        "denominator_games": 30149,
+        "distinct_positions": 108553,
+        "recurring_positions": 13953,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 11258,
+        "view": "Italian Game"
+      },
+      {
+        "cohort": "rated_public",
+        "denominator_games": 18369,
+        "distinct_positions": 111163,
+        "recurring_positions": 7630,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 4861,
+        "view": "King's Pawn Game"
+      },
+      {
+        "cohort": "rated_public",
+        "denominator_games": 19330,
+        "distinct_positions": 104101,
+        "recurring_positions": 9150,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 7912,
+        "view": "Modern Defense"
+      },
+      {
+        "cohort": "rated_public",
+        "denominator_games": 21283,
+        "distinct_positions": 96730,
+        "recurring_positions": 10807,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 9450,
+        "view": "Queen's Gambit Declined"
+      },
+      {
+        "cohort": "rated_public",
+        "denominator_games": 76710,
+        "distinct_positions": 410033,
+        "recurring_positions": 38137,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 33692,
+        "view": "Queen's Pawn Game"
+      },
+      {
+        "cohort": "rated_public",
+        "denominator_games": 42403,
+        "distinct_positions": 202651,
+        "recurring_positions": 19797,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 13721,
+        "view": "Scandinavian Defense"
+      },
+      {
+        "cohort": "rated_public",
+        "denominator_games": 85724,
+        "distinct_positions": 372102,
+        "recurring_positions": 44366,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 37233,
+        "view": "Sicilian Defense"
+      },
+      {
+        "cohort": "rated_public",
+        "denominator_games": 20723,
+        "distinct_positions": 127482,
+        "recurring_positions": 9625,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 7173,
+        "view": "Zukertort Opening"
+      },
+      {
+        "cohort": "rated_public",
+        "denominator_games": 802260,
+        "distinct_positions": 3847128,
+        "recurring_positions": 400708,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 346615,
+        "view": "all"
+      },
+      {
+        "cohort": "rated_public",
+        "denominator_games": 20745,
+        "distinct_positions": 114225,
+        "recurring_positions": 10879,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 9133,
+        "view": "d4-g3"
+      },
+      {
+        "cohort": "rated_public",
+        "denominator_games": 5429,
+        "distinct_positions": 25244,
+        "recurring_positions": 3358,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 3059,
+        "view": "d4-g3-catalan"
+      },
+      {
+        "cohort": "rated_public",
+        "denominator_games": 1647,
+        "distinct_positions": 6720,
+        "recurring_positions": 1056,
+        "source_report": "opening-positions-dashboard.json",
+        "transposing_positions": 959,
+        "view": "d4-g3-kings-indian"
       }
     ]
   }

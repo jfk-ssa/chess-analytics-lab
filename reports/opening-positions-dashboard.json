@@ -1,0 +1,1128 @@
+{
+  "compression": [
+    {
+      "cohort": "elite_reference",
+      "distinct_positions": 11862,
+      "distinct_routes": 20963,
+      "endpoint_compression": 0.4341458760673568,
+      "included_visits": 240082,
+      "ply": 6
+    },
+    {
+      "cohort": "elite_reference",
+      "distinct_positions": 27264,
+      "distinct_routes": 50653,
+      "endpoint_compression": 0.461749550865694,
+      "included_visits": 240072,
+      "ply": 8
+    },
+    {
+      "cohort": "elite_reference",
+      "distinct_positions": 49981,
+      "distinct_routes": 88856,
+      "endpoint_compression": 0.43750562708202034,
+      "included_visits": 240068,
+      "ply": 10
+    },
+    {
+      "cohort": "elite_reference",
+      "distinct_positions": 78049,
+      "distinct_routes": 129277,
+      "endpoint_compression": 0.396265383633593,
+      "included_visits": 240060,
+      "ply": 12
+    },
+    {
+      "cohort": "elite_reference",
+      "distinct_positions": 109272,
+      "distinct_routes": 164490,
+      "endpoint_compression": 0.3356921393397775,
+      "included_visits": 240037,
+      "ply": 14
+    },
+    {
+      "cohort": "elite_reference",
+      "distinct_positions": 140651,
+      "distinct_routes": 191154,
+      "endpoint_compression": 0.2642005921926823,
+      "included_visits": 239987,
+      "ply": 16
+    },
+    {
+      "cohort": "elite_reference",
+      "distinct_positions": 168767,
+      "distinct_routes": 209769,
+      "endpoint_compression": 0.19546262793835123,
+      "included_visits": 239957,
+      "ply": 18
+    },
+    {
+      "cohort": "elite_reference",
+      "distinct_positions": 192185,
+      "distinct_routes": 222065,
+      "endpoint_compression": 0.13455519780244518,
+      "included_visits": 239917,
+      "ply": 20
+    },
+    {
+      "cohort": "rated_public",
+      "distinct_positions": 62850,
+      "distinct_routes": 118079,
+      "endpoint_compression": 0.46772923212425577,
+      "included_visits": 802257,
+      "ply": 6
+    },
+    {
+      "cohort": "rated_public",
+      "distinct_positions": 168037,
+      "distinct_routes": 307344,
+      "endpoint_compression": 0.45326084127232025,
+      "included_visits": 802254,
+      "ply": 8
+    },
+    {
+      "cohort": "rated_public",
+      "distinct_positions": 316699,
+      "distinct_routes": 512251,
+      "endpoint_compression": 0.38175035285436243,
+      "included_visits": 802233,
+      "ply": 10
+    },
+    {
+      "cohort": "rated_public",
+      "distinct_positions": 473363,
+      "distinct_routes": 664785,
+      "endpoint_compression": 0.2879457268139324,
+      "included_visits": 802184,
+      "ply": 12
+    },
+    {
+      "cohort": "rated_public",
+      "distinct_positions": 605298,
+      "distinct_routes": 745871,
+      "endpoint_compression": 0.18846824719019772,
+      "included_visits": 802112,
+      "ply": 14
+    },
+    {
+      "cohort": "rated_public",
+      "distinct_positions": 696730,
+      "distinct_routes": 780494,
+      "endpoint_compression": 0.10732177313342572,
+      "included_visits": 802017,
+      "ply": 16
+    },
+    {
+      "cohort": "rated_public",
+      "distinct_positions": 751173,
+      "distinct_routes": 793668,
+      "endpoint_compression": 0.053542539197750205,
+      "included_visits": 801873,
+      "ply": 18
+    },
+    {
+      "cohort": "rated_public",
+      "distinct_positions": 779736,
+      "distinct_routes": 798419,
+      "endpoint_compression": 0.023399994238614052,
+      "included_visits": 801709,
+      "ply": 20
+    }
+  ],
+  "coverage": [
+    {
+      "additional_games": 8465,
+      "cohort": "elite_reference",
+      "games": 8465,
+      "mode": "recurring",
+      "n": 1,
+      "share": 0.035258199145306264,
+      "view": "all"
+    },
+    {
+      "additional_games": 5,
+      "cohort": "elite_reference",
+      "games": 8470,
+      "mode": "recurring",
+      "n": 2,
+      "share": 0.03527902501603592,
+      "view": "all"
+    },
+    {
+      "additional_games": 6431,
+      "cohort": "elite_reference",
+      "games": 14901,
+      "mode": "recurring",
+      "n": 3,
+      "share": 0.06206525994851845,
+      "view": "all"
+    },
+    {
+      "additional_games": 286,
+      "cohort": "elite_reference",
+      "games": 15187,
+      "mode": "recurring",
+      "n": 4,
+      "share": 0.06325649975425472,
+      "view": "all"
+    },
+    {
+      "additional_games": 4454,
+      "cohort": "elite_reference",
+      "games": 19641,
+      "mode": "recurring",
+      "n": 5,
+      "share": 0.08180818540023159,
+      "view": "all"
+    },
+    {
+      "additional_games": 4305,
+      "cohort": "elite_reference",
+      "games": 23946,
+      "mode": "recurring",
+      "n": 6,
+      "share": 0.09973926009846472,
+      "view": "all"
+    },
+    {
+      "additional_games": 3628,
+      "cohort": "elite_reference",
+      "games": 27574,
+      "mode": "recurring",
+      "n": 7,
+      "share": 0.11485051189990253,
+      "view": "all"
+    },
+    {
+      "additional_games": 3614,
+      "cohort": "elite_reference",
+      "games": 31188,
+      "mode": "recurring",
+      "n": 8,
+      "share": 0.12990345126329733,
+      "view": "all"
+    },
+    {
+      "additional_games": 3595,
+      "cohort": "elite_reference",
+      "games": 34783,
+      "mode": "recurring",
+      "n": 9,
+      "share": 0.14487725231791942,
+      "view": "all"
+    },
+    {
+      "additional_games": 3501,
+      "cohort": "elite_reference",
+      "games": 38284,
+      "mode": "recurring",
+      "n": 10,
+      "share": 0.15945952700282398,
+      "view": "all"
+    },
+    {
+      "additional_games": 3423,
+      "cohort": "elite_reference",
+      "games": 41707,
+      "mode": "recurring",
+      "n": 11,
+      "share": 0.17371691810434595,
+      "view": "all"
+    },
+    {
+      "additional_games": 701,
+      "cohort": "elite_reference",
+      "games": 42408,
+      "mode": "recurring",
+      "n": 12,
+      "share": 0.17663670518064362,
+      "view": "all"
+    },
+    {
+      "additional_games": 0,
+      "cohort": "elite_reference",
+      "games": 42408,
+      "mode": "recurring",
+      "n": 13,
+      "share": 0.17663670518064362,
+      "view": "all"
+    },
+    {
+      "additional_games": 2724,
+      "cohort": "elite_reference",
+      "games": 45132,
+      "mode": "recurring",
+      "n": 14,
+      "share": 0.18798263955415975,
+      "view": "all"
+    },
+    {
+      "additional_games": 1392,
+      "cohort": "elite_reference",
+      "games": 46524,
+      "mode": "recurring",
+      "n": 15,
+      "share": 0.19378056196529578,
+      "view": "all"
+    },
+    {
+      "additional_games": 2243,
+      "cohort": "elite_reference",
+      "games": 48767,
+      "mode": "recurring",
+      "n": 16,
+      "share": 0.2031230475746191,
+      "view": "all"
+    },
+    {
+      "additional_games": 2232,
+      "cohort": "elite_reference",
+      "games": 50999,
+      "mode": "recurring",
+      "n": 17,
+      "share": 0.21241971626833717,
+      "view": "all"
+    },
+    {
+      "additional_games": 2209,
+      "cohort": "elite_reference",
+      "games": 53208,
+      "mode": "recurring",
+      "n": 18,
+      "share": 0.22162058595669884,
+      "view": "all"
+    },
+    {
+      "additional_games": 2154,
+      "cohort": "elite_reference",
+      "games": 55362,
+      "mode": "recurring",
+      "n": 19,
+      "share": 0.2305923710670343,
+      "view": "all"
+    },
+    {
+      "additional_games": 1499,
+      "cohort": "elite_reference",
+      "games": 56861,
+      "mode": "recurring",
+      "n": 20,
+      "share": 0.23683596711178495,
+      "view": "all"
+    },
+    {
+      "additional_games": 8465,
+      "cohort": "elite_reference",
+      "games": 8465,
+      "mode": "transposing",
+      "n": 1,
+      "share": 0.035258199145306264,
+      "view": "all"
+    },
+    {
+      "additional_games": 5,
+      "cohort": "elite_reference",
+      "games": 8470,
+      "mode": "transposing",
+      "n": 2,
+      "share": 0.03527902501603592,
+      "view": "all"
+    },
+    {
+      "additional_games": 6431,
+      "cohort": "elite_reference",
+      "games": 14901,
+      "mode": "transposing",
+      "n": 3,
+      "share": 0.06206525994851845,
+      "view": "all"
+    },
+    {
+      "additional_games": 286,
+      "cohort": "elite_reference",
+      "games": 15187,
+      "mode": "transposing",
+      "n": 4,
+      "share": 0.06325649975425472,
+      "view": "all"
+    },
+    {
+      "additional_games": 4454,
+      "cohort": "elite_reference",
+      "games": 19641,
+      "mode": "transposing",
+      "n": 5,
+      "share": 0.08180818540023159,
+      "view": "all"
+    },
+    {
+      "additional_games": 4305,
+      "cohort": "elite_reference",
+      "games": 23946,
+      "mode": "transposing",
+      "n": 6,
+      "share": 0.09973926009846472,
+      "view": "all"
+    },
+    {
+      "additional_games": 3628,
+      "cohort": "elite_reference",
+      "games": 27574,
+      "mode": "transposing",
+      "n": 7,
+      "share": 0.11485051189990253,
+      "view": "all"
+    },
+    {
+      "additional_games": 3614,
+      "cohort": "elite_reference",
+      "games": 31188,
+      "mode": "transposing",
+      "n": 8,
+      "share": 0.12990345126329733,
+      "view": "all"
+    },
+    {
+      "additional_games": 3595,
+      "cohort": "elite_reference",
+      "games": 34783,
+      "mode": "transposing",
+      "n": 9,
+      "share": 0.14487725231791942,
+      "view": "all"
+    },
+    {
+      "additional_games": 3501,
+      "cohort": "elite_reference",
+      "games": 38284,
+      "mode": "transposing",
+      "n": 10,
+      "share": 0.15945952700282398,
+      "view": "all"
+    },
+    {
+      "additional_games": 3423,
+      "cohort": "elite_reference",
+      "games": 41707,
+      "mode": "transposing",
+      "n": 11,
+      "share": 0.17371691810434595,
+      "view": "all"
+    },
+    {
+      "additional_games": 701,
+      "cohort": "elite_reference",
+      "games": 42408,
+      "mode": "transposing",
+      "n": 12,
+      "share": 0.17663670518064362,
+      "view": "all"
+    },
+    {
+      "additional_games": 0,
+      "cohort": "elite_reference",
+      "games": 42408,
+      "mode": "transposing",
+      "n": 13,
+      "share": 0.17663670518064362,
+      "view": "all"
+    },
+    {
+      "additional_games": 2724,
+      "cohort": "elite_reference",
+      "games": 45132,
+      "mode": "transposing",
+      "n": 14,
+      "share": 0.18798263955415975,
+      "view": "all"
+    },
+    {
+      "additional_games": 1392,
+      "cohort": "elite_reference",
+      "games": 46524,
+      "mode": "transposing",
+      "n": 15,
+      "share": 0.19378056196529578,
+      "view": "all"
+    },
+    {
+      "additional_games": 2243,
+      "cohort": "elite_reference",
+      "games": 48767,
+      "mode": "transposing",
+      "n": 16,
+      "share": 0.2031230475746191,
+      "view": "all"
+    },
+    {
+      "additional_games": 2232,
+      "cohort": "elite_reference",
+      "games": 50999,
+      "mode": "transposing",
+      "n": 17,
+      "share": 0.21241971626833717,
+      "view": "all"
+    },
+    {
+      "additional_games": 2209,
+      "cohort": "elite_reference",
+      "games": 53208,
+      "mode": "transposing",
+      "n": 18,
+      "share": 0.22162058595669884,
+      "view": "all"
+    },
+    {
+      "additional_games": 2154,
+      "cohort": "elite_reference",
+      "games": 55362,
+      "mode": "transposing",
+      "n": 19,
+      "share": 0.2305923710670343,
+      "view": "all"
+    },
+    {
+      "additional_games": 1499,
+      "cohort": "elite_reference",
+      "games": 56861,
+      "mode": "transposing",
+      "n": 20,
+      "share": 0.23683596711178495,
+      "view": "all"
+    },
+    {
+      "additional_games": 11096,
+      "cohort": "rated_public",
+      "games": 11096,
+      "mode": "recurring",
+      "n": 1,
+      "share": 0.013830927629446812,
+      "view": "all"
+    },
+    {
+      "additional_games": 10741,
+      "cohort": "rated_public",
+      "games": 21837,
+      "mode": "recurring",
+      "n": 2,
+      "share": 0.02721935532121756,
+      "view": "all"
+    },
+    {
+      "additional_games": 9158,
+      "cohort": "rated_public",
+      "games": 30995,
+      "mode": "recurring",
+      "n": 3,
+      "share": 0.038634607234562364,
+      "view": "all"
+    },
+    {
+      "additional_games": 8054,
+      "cohort": "rated_public",
+      "games": 39049,
+      "mode": "recurring",
+      "n": 4,
+      "share": 0.04867374666566948,
+      "view": "all"
+    },
+    {
+      "additional_games": 7570,
+      "cohort": "rated_public",
+      "games": 46619,
+      "mode": "recurring",
+      "n": 5,
+      "share": 0.05810959040709994,
+      "view": "all"
+    },
+    {
+      "additional_games": 7356,
+      "cohort": "rated_public",
+      "games": 53975,
+      "mode": "recurring",
+      "n": 6,
+      "share": 0.06727868770722709,
+      "view": "all"
+    },
+    {
+      "additional_games": 7197,
+      "cohort": "rated_public",
+      "games": 61172,
+      "mode": "recurring",
+      "n": 7,
+      "share": 0.07624959489442325,
+      "view": "all"
+    },
+    {
+      "additional_games": 6350,
+      "cohort": "rated_public",
+      "games": 67522,
+      "mode": "recurring",
+      "n": 8,
+      "share": 0.08416473462468527,
+      "view": "all"
+    },
+    {
+      "additional_games": 6095,
+      "cohort": "rated_public",
+      "games": 73617,
+      "mode": "recurring",
+      "n": 9,
+      "share": 0.09176202228703911,
+      "view": "all"
+    },
+    {
+      "additional_games": 5734,
+      "cohort": "rated_public",
+      "games": 79351,
+      "mode": "recurring",
+      "n": 10,
+      "share": 0.09890933113953082,
+      "view": "all"
+    },
+    {
+      "additional_games": 5343,
+      "cohort": "rated_public",
+      "games": 84694,
+      "mode": "recurring",
+      "n": 11,
+      "share": 0.10556926682123002,
+      "view": "all"
+    },
+    {
+      "additional_games": 5056,
+      "cohort": "rated_public",
+      "games": 89750,
+      "mode": "recurring",
+      "n": 12,
+      "share": 0.11187146311669534,
+      "view": "all"
+    },
+    {
+      "additional_games": 5032,
+      "cohort": "rated_public",
+      "games": 94782,
+      "mode": "recurring",
+      "n": 13,
+      "share": 0.11814374392341635,
+      "view": "all"
+    },
+    {
+      "additional_games": 4894,
+      "cohort": "rated_public",
+      "games": 99676,
+      "mode": "recurring",
+      "n": 14,
+      "share": 0.12424401066985766,
+      "view": "all"
+    },
+    {
+      "additional_games": 4239,
+      "cohort": "rated_public",
+      "games": 103915,
+      "mode": "recurring",
+      "n": 15,
+      "share": 0.12952783386931918,
+      "view": "all"
+    },
+    {
+      "additional_games": 6,
+      "cohort": "rated_public",
+      "games": 103921,
+      "mode": "recurring",
+      "n": 16,
+      "share": 0.12953531274150526,
+      "view": "all"
+    },
+    {
+      "additional_games": 3839,
+      "cohort": "rated_public",
+      "games": 107760,
+      "mode": "recurring",
+      "n": 17,
+      "share": 0.13432054446189515,
+      "view": "all"
+    },
+    {
+      "additional_games": 3773,
+      "cohort": "rated_public",
+      "games": 111533,
+      "mode": "recurring",
+      "n": 18,
+      "share": 0.13902350858823823,
+      "view": "all"
+    },
+    {
+      "additional_games": 96,
+      "cohort": "rated_public",
+      "games": 111629,
+      "mode": "recurring",
+      "n": 19,
+      "share": 0.13914317054321543,
+      "view": "all"
+    },
+    {
+      "additional_games": 3413,
+      "cohort": "rated_public",
+      "games": 115042,
+      "mode": "recurring",
+      "n": 20,
+      "share": 0.14339740233839404,
+      "view": "all"
+    },
+    {
+      "additional_games": 11096,
+      "cohort": "rated_public",
+      "games": 11096,
+      "mode": "transposing",
+      "n": 1,
+      "share": 0.013830927629446812,
+      "view": "all"
+    },
+    {
+      "additional_games": 10741,
+      "cohort": "rated_public",
+      "games": 21837,
+      "mode": "transposing",
+      "n": 2,
+      "share": 0.02721935532121756,
+      "view": "all"
+    },
+    {
+      "additional_games": 9158,
+      "cohort": "rated_public",
+      "games": 30995,
+      "mode": "transposing",
+      "n": 3,
+      "share": 0.038634607234562364,
+      "view": "all"
+    },
+    {
+      "additional_games": 8054,
+      "cohort": "rated_public",
+      "games": 39049,
+      "mode": "transposing",
+      "n": 4,
+      "share": 0.04867374666566948,
+      "view": "all"
+    },
+    {
+      "additional_games": 7570,
+      "cohort": "rated_public",
+      "games": 46619,
+      "mode": "transposing",
+      "n": 5,
+      "share": 0.05810959040709994,
+      "view": "all"
+    },
+    {
+      "additional_games": 7356,
+      "cohort": "rated_public",
+      "games": 53975,
+      "mode": "transposing",
+      "n": 6,
+      "share": 0.06727868770722709,
+      "view": "all"
+    },
+    {
+      "additional_games": 7197,
+      "cohort": "rated_public",
+      "games": 61172,
+      "mode": "transposing",
+      "n": 7,
+      "share": 0.07624959489442325,
+      "view": "all"
+    },
+    {
+      "additional_games": 6350,
+      "cohort": "rated_public",
+      "games": 67522,
+      "mode": "transposing",
+      "n": 8,
+      "share": 0.08416473462468527,
+      "view": "all"
+    },
+    {
+      "additional_games": 6095,
+      "cohort": "rated_public",
+      "games": 73617,
+      "mode": "transposing",
+      "n": 9,
+      "share": 0.09176202228703911,
+      "view": "all"
+    },
+    {
+      "additional_games": 5734,
+      "cohort": "rated_public",
+      "games": 79351,
+      "mode": "transposing",
+      "n": 10,
+      "share": 0.09890933113953082,
+      "view": "all"
+    },
+    {
+      "additional_games": 5343,
+      "cohort": "rated_public",
+      "games": 84694,
+      "mode": "transposing",
+      "n": 11,
+      "share": 0.10556926682123002,
+      "view": "all"
+    },
+    {
+      "additional_games": 5056,
+      "cohort": "rated_public",
+      "games": 89750,
+      "mode": "transposing",
+      "n": 12,
+      "share": 0.11187146311669534,
+      "view": "all"
+    },
+    {
+      "additional_games": 5032,
+      "cohort": "rated_public",
+      "games": 94782,
+      "mode": "transposing",
+      "n": 13,
+      "share": 0.11814374392341635,
+      "view": "all"
+    },
+    {
+      "additional_games": 4894,
+      "cohort": "rated_public",
+      "games": 99676,
+      "mode": "transposing",
+      "n": 14,
+      "share": 0.12424401066985766,
+      "view": "all"
+    },
+    {
+      "additional_games": 4239,
+      "cohort": "rated_public",
+      "games": 103915,
+      "mode": "transposing",
+      "n": 15,
+      "share": 0.12952783386931918,
+      "view": "all"
+    },
+    {
+      "additional_games": 6,
+      "cohort": "rated_public",
+      "games": 103921,
+      "mode": "transposing",
+      "n": 16,
+      "share": 0.12953531274150526,
+      "view": "all"
+    },
+    {
+      "additional_games": 3839,
+      "cohort": "rated_public",
+      "games": 107760,
+      "mode": "transposing",
+      "n": 17,
+      "share": 0.13432054446189515,
+      "view": "all"
+    },
+    {
+      "additional_games": 3773,
+      "cohort": "rated_public",
+      "games": 111533,
+      "mode": "transposing",
+      "n": 18,
+      "share": 0.13902350858823823,
+      "view": "all"
+    },
+    {
+      "additional_games": 96,
+      "cohort": "rated_public",
+      "games": 111629,
+      "mode": "transposing",
+      "n": 19,
+      "share": 0.13914317054321543,
+      "view": "all"
+    },
+    {
+      "additional_games": 3413,
+      "cohort": "rated_public",
+      "games": 115042,
+      "mode": "transposing",
+      "n": 20,
+      "share": 0.14339740233839404,
+      "view": "all"
+    }
+  ],
+  "coverage_view": "all",
+  "kind": "opening_positions_dashboard_reduction",
+  "limitations": [
+    "White decision positions within the declared opening window, not all game positions.",
+    "Each game counts once per position; repetition prefixes do not add acyclic routes.",
+    "Opening families are recorded labels before the first colon; not position taxonomy.",
+    "Elite is a curated November 2025 month; public data are nine first-day prefixes.",
+    "Observed continuation frequency is not move quality or a causal result.",
+    "Explorer shows top 20 positions and up to 12 largest labeled opening families per cohort.",
+    "Top-position game coverage is a union, not the sum of individual frequencies."
+  ],
+  "plan_max_ply": 20,
+  "plan_min_ply": 6,
+  "source_report": "opening-positions.json",
+  "source_sha256": "31a395044203532224cbb387475ef0bb790c8e88faac98bc9b2a12f5d500c46e",
+  "source_version": "1.1.0",
+  "views": [
+    {
+      "cohort": "elite_reference",
+      "denominator_games": 14059,
+      "distinct_positions": 43258,
+      "recurring_positions": 8118,
+      "transposing_positions": 5239,
+      "view": "Caro-Kann Defense"
+    },
+    {
+      "cohort": "elite_reference",
+      "denominator_games": 15820,
+      "distinct_positions": 60404,
+      "recurring_positions": 10833,
+      "transposing_positions": 9073,
+      "view": "English Opening"
+    },
+    {
+      "cohort": "elite_reference",
+      "denominator_games": 14607,
+      "distinct_positions": 44196,
+      "recurring_positions": 8479,
+      "transposing_positions": 5711,
+      "view": "French Defense"
+    },
+    {
+      "cohort": "elite_reference",
+      "denominator_games": 8096,
+      "distinct_positions": 37352,
+      "recurring_positions": 5579,
+      "transposing_positions": 3788,
+      "view": "Indian Defense"
+    },
+    {
+      "cohort": "elite_reference",
+      "denominator_games": 5367,
+      "distinct_positions": 19313,
+      "recurring_positions": 3579,
+      "transposing_positions": 2912,
+      "view": "King's Indian Attack"
+    },
+    {
+      "cohort": "elite_reference",
+      "denominator_games": 8528,
+      "distinct_positions": 15524,
+      "recurring_positions": 4162,
+      "transposing_positions": 3735,
+      "view": "King's Indian Defense"
+    },
+    {
+      "cohort": "elite_reference",
+      "denominator_games": 5199,
+      "distinct_positions": 24011,
+      "recurring_positions": 3329,
+      "transposing_positions": 2568,
+      "view": "Modern Defense"
+    },
+    {
+      "cohort": "elite_reference",
+      "denominator_games": 9739,
+      "distinct_positions": 25241,
+      "recurring_positions": 5505,
+      "transposing_positions": 4672,
+      "view": "Queen's Gambit Declined"
+    },
+    {
+      "cohort": "elite_reference",
+      "denominator_games": 11857,
+      "distinct_positions": 54935,
+      "recurring_positions": 7966,
+      "transposing_positions": 6293,
+      "view": "Queen's Pawn Game"
+    },
+    {
+      "cohort": "elite_reference",
+      "denominator_games": 6064,
+      "distinct_positions": 13287,
+      "recurring_positions": 3147,
+      "transposing_positions": 1631,
+      "view": "Ruy Lopez"
+    },
+    {
+      "cohort": "elite_reference",
+      "denominator_games": 41119,
+      "distinct_positions": 110941,
+      "recurring_positions": 23861,
+      "transposing_positions": 16239,
+      "view": "Sicilian Defense"
+    },
+    {
+      "cohort": "elite_reference",
+      "denominator_games": 8481,
+      "distinct_positions": 41587,
+      "recurring_positions": 5941,
+      "transposing_positions": 4612,
+      "view": "Zukertort Opening"
+    },
+    {
+      "cohort": "elite_reference",
+      "denominator_games": 240086,
+      "distinct_positions": 776620,
+      "recurring_positions": 147186,
+      "transposing_positions": 113583,
+      "view": "all"
+    },
+    {
+      "cohort": "elite_reference",
+      "denominator_games": 16647,
+      "distinct_positions": 50923,
+      "recurring_positions": 10522,
+      "transposing_positions": 8641,
+      "view": "d4-g3"
+    },
+    {
+      "cohort": "elite_reference",
+      "denominator_games": 6850,
+      "distinct_positions": 17807,
+      "recurring_positions": 4347,
+      "transposing_positions": 3856,
+      "view": "d4-g3-catalan"
+    },
+    {
+      "cohort": "elite_reference",
+      "denominator_games": 2867,
+      "distinct_positions": 6342,
+      "recurring_positions": 1695,
+      "transposing_positions": 1448,
+      "view": "d4-g3-kings-indian"
+    },
+    {
+      "cohort": "rated_public",
+      "denominator_games": 46999,
+      "distinct_positions": 191413,
+      "recurring_positions": 22921,
+      "transposing_positions": 18695,
+      "view": "Caro-Kann Defense"
+    },
+    {
+      "cohort": "rated_public",
+      "denominator_games": 26589,
+      "distinct_positions": 148036,
+      "recurring_positions": 14093,
+      "transposing_positions": 12193,
+      "view": "English Opening"
+    },
+    {
+      "cohort": "rated_public",
+      "denominator_games": 50334,
+      "distinct_positions": 243044,
+      "recurring_positions": 23606,
+      "transposing_positions": 19530,
+      "view": "French Defense"
+    },
+    {
+      "cohort": "rated_public",
+      "denominator_games": 17818,
+      "distinct_positions": 98481,
+      "recurring_positions": 8774,
+      "transposing_positions": 6690,
+      "view": "Indian Defense"
+    },
+    {
+      "cohort": "rated_public",
+      "denominator_games": 30149,
+      "distinct_positions": 108553,
+      "recurring_positions": 13953,
+      "transposing_positions": 11258,
+      "view": "Italian Game"
+    },
+    {
+      "cohort": "rated_public",
+      "denominator_games": 18369,
+      "distinct_positions": 111163,
+      "recurring_positions": 7630,
+      "transposing_positions": 4861,
+      "view": "King's Pawn Game"
+    },
+    {
+      "cohort": "rated_public",
+      "denominator_games": 19330,
+      "distinct_positions": 104101,
+      "recurring_positions": 9150,
+      "transposing_positions": 7912,
+      "view": "Modern Defense"
+    },
+    {
+      "cohort": "rated_public",
+      "denominator_games": 21283,
+      "distinct_positions": 96730,
+      "recurring_positions": 10807,
+      "transposing_positions": 9450,
+      "view": "Queen's Gambit Declined"
+    },
+    {
+      "cohort": "rated_public",
+      "denominator_games": 76710,
+      "distinct_positions": 410033,
+      "recurring_positions": 38137,
+      "transposing_positions": 33692,
+      "view": "Queen's Pawn Game"
+    },
+    {
+      "cohort": "rated_public",
+      "denominator_games": 42403,
+      "distinct_positions": 202651,
+      "recurring_positions": 19797,
+      "transposing_positions": 13721,
+      "view": "Scandinavian Defense"
+    },
+    {
+      "cohort": "rated_public",
+      "denominator_games": 85724,
+      "distinct_positions": 372102,
+      "recurring_positions": 44366,
+      "transposing_positions": 37233,
+      "view": "Sicilian Defense"
+    },
+    {
+      "cohort": "rated_public",
+      "denominator_games": 20723,
+      "distinct_positions": 127482,
+      "recurring_positions": 9625,
+      "transposing_positions": 7173,
+      "view": "Zukertort Opening"
+    },
+    {
+      "cohort": "rated_public",
+      "denominator_games": 802260,
+      "distinct_positions": 3847128,
+      "recurring_positions": 400708,
+      "transposing_positions": 346615,
+      "view": "all"
+    },
+    {
+      "cohort": "rated_public",
+      "denominator_games": 20745,
+      "distinct_positions": 114225,
+      "recurring_positions": 10879,
+      "transposing_positions": 9133,
+      "view": "d4-g3"
+    },
+    {
+      "cohort": "rated_public",
+      "denominator_games": 5429,
+      "distinct_positions": 25244,
+      "recurring_positions": 3358,
+      "transposing_positions": 3059,
+      "view": "d4-g3-catalan"
+    },
+    {
+      "cohort": "rated_public",
+      "denominator_games": 1647,
+      "distinct_positions": 6720,
+      "recurring_positions": 1056,
+      "transposing_positions": 959,
+      "view": "d4-g3-kings-indian"
+    }
+  ]
+}

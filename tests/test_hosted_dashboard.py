@@ -73,6 +73,9 @@ def test_hosted_streamlit_pin_matches_the_lock(project):
     ]
     assert requirements == [
         "streamlit==1.65.0",
+        "altair==5.5.0",
+        "narwhals==2.26.0",
+        "jsonschema==4.26.0",
         "pandas==2.3.3",
         "protobuf==6.33.6",
     ]
@@ -116,6 +119,20 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
         "48.0%",
         "44.7%–56.1%",
         "42.1%–53.3%",
+        "41.9%",
+        "44.8%",
+        "106 / 253",
+        "152 / 339",
+        "883",
+        "533",
+        "342",
+        "8.3%",
+        "7.8%",
+        "86.3%",
+        "97.5%",
+        "Luna clear, Sol fail",
+        "boundary_budget 0/5",
+        "25 over-abstentions",
         draw["mart_id"],
         extract["build"]["source_snapshot_id"],
         extract["build"]["model_sha256"],
@@ -135,6 +152,7 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
     _assert_build_table_omits_the_figure_id(app, extract)
     _assert_small_shares_are_below_a_tenth(app, extract)
     _assert_alt_text(app)
+    _assert_equal_width_markup(app)
     for table in app.table:
         assert len(table.value.columns) <= 3
 
@@ -143,6 +161,19 @@ def _caption(app, fragment: str) -> str:
     matches = [item.value for item in app.caption if fragment in item.value]
     assert len(matches) == 1, matches
     return matches[0]
+
+
+def test_cost_captions_keep_a_literal_dollar(project, monkeypatch):
+    app = _run(project, monkeypatch)
+    caption = _caption(app, "Known cost")
+    visible = caption.replace(r"\$", "$")
+    assert "gpt-6-luna $0.0150, gpt-6-sol $0.2550" in visible
+    for item in app.caption:
+        assert "$" not in item.value.replace(r"\$", "")
+    cards = "\n".join(item.value for item in app.markdown if "cal-card" in item.value)
+    for amount in (r"\$0.0150", r"\$0.2550", r"\$0.5000", r"\$10.0000"):
+        assert amount in cards
+    assert "$" not in cards.replace(r"\$", "")
 
 
 def _assert_live_eval_link(app) -> None:
@@ -230,8 +261,214 @@ def _assert_alt_text(app) -> None:
     for table in app.table:
         assert isinstance(table.proto.alt, str) and table.proto.alt.strip()
     charts = [node for node in app if getattr(node, "type", None) == "vega_lite_chart"]
-    assert len(charts) == 1
-    assert isinstance(charts[0].proto.alt, str) and charts[0].proto.alt.strip()
+    alts = [node.proto.alt for node in charts]
+    assert all(isinstance(item, str) and item.strip() for item in alts)
+    expected = (
+        "Games removed from the August prefix: unrated, marked bots, and unknown results.",
+        "Twelve largest opening families by games.",
+        "Opening family game counts for the families selected above.",
+        "Raw score by color and the Black adjusted score with its bootstrap interval.",
+        "Endpoint compression by ply for the elite month and the rated public prefixes.",
+        "Share of games covered by the top N recurring positions.",
+        "Share of distinct positions that can be reached by more than one route.",
+        "Heatmap of the clock-pressure error proxy by rating band and time control.",
+        "Error proxy for the four clock buckets.",
+        "Headline pass rate for each model with its Wilson 95 percent interval.",
+        "Dumbbell of pass rate by category. Each point is one model.",
+        "Grid of cases by model, colored by how many repeats passed.",
+    )
+    assert alts == list(expected)
+
+
+_TRACKS = "repeat(auto-fit,minmax(min(100%,256px),1fr))"
+
+
+def _assert_equal_width_markup(app) -> None:
+    markup = "\n".join(item.value for item in app.markdown)
+    for count in (3, 4):
+        assert f'data-cards="{count}"' in markup
+    assert _TRACKS in markup
+    assert "white-space:nowrap" in markup
+    assert "overflow-wrap:anywhere" not in markup
+    assert "minmax(0,1fr)" not in markup
+
+
+def _load_hosted(project, name: str):
+    import importlib.util
+
+    path = project / "hosted" / f"{name}.py"
+    spec = importlib.util.spec_from_file_location(f"hosted_{name}_contract", path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+    return module
+
+
+def _scale_domains(spec: dict) -> list:
+    found: list = []
+
+    def walk(node) -> None:
+        if isinstance(node, dict):
+            scale = node.get("scale")
+            if isinstance(scale, dict) and "domain" in scale:
+                found.append(scale["domain"])
+            for value in node.values():
+                walk(value)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item)
+
+    walk(spec)
+    return found
+
+
+def test_equal_width_rows_share_one_track_definition(project):
+    module = _load_hosted(project, "layout")
+    for count in range(1, 8):
+        assert module.equal_width_columns(count) == _TRACKS
+        cards = [(f"Label {index}", f"Value {index}", f"Detail {index}") for index in range(count)]
+        html = module.equal_width_row(cards)
+        assert f'data-cards="{count}"' in html
+        assert f"grid-template-columns:{_TRACKS}" in html
+        assert html.count('class="cal-card"') == count
+        assert html.count('class="cal-v"') == count
+        assert html.count("white-space:nowrap") == count
+        assert "overflow-wrap:anywhere" not in html
+        assert "minmax(min(100%,256px),1fr)" in html
+    with pytest.raises(ValueError, match="at least one card"):
+        module.equal_width_columns(0)
+    with pytest.raises(ValueError, match="at least one card"):
+        module.equal_width_columns(True)
+
+
+def test_category_dumbbell_is_unstacked_on_a_unit_axis(project):
+    pytest.importorskip("altair")
+    charts = _load_hosted(project, "charts")
+    chart = charts.category_dumbbell(
+        [
+            {"category": "coverage", "model": "gpt-6-luna", "rate": 0.25, "passed_label": "5 / 20"},
+            {"category": "coverage", "model": "gpt-6-sol", "rate": 1.0, "passed_label": "20 / 20"},
+            {"category": "boundary", "model": "gpt-6-luna", "rate": 1.0, "passed_label": "25 / 25"},
+            {"category": "boundary", "model": "gpt-6-sol", "rate": 0.8, "passed_label": "20 / 25"},
+        ],
+        category_order=["coverage", "boundary"],
+    )
+    spec = chart.to_dict()
+    layers = spec["layer"]
+    marks = []
+    for layer in layers:
+        mark = layer["mark"]
+        marks.append(mark["type"] if isinstance(mark, dict) else mark)
+    assert marks == ["rule", "point"]
+    blob = json.dumps(spec)
+    assert "xOffset" not in blob
+    assert '"stack": "zero"' not in blob
+    assert [0, 1] in _scale_domains(spec)
+    for layer in layers:
+        encoding = layer["encoding"]
+        for channel in ("x", "x2"):
+            if channel not in encoding:
+                continue
+            stacked = encoding[channel].get("stack")
+            assert stacked in (None, "none")
+
+
+def test_chart_scales_follow_the_plotted_data(project):
+    pytest.importorskip("altair")
+    charts = _load_hosted(project, "charts")
+    heat = charts.heatmap(
+        [
+            {
+                "rating_band": "Under 1200",
+                "time_control": "480+0",
+                "error_proxy_rate": 0.405,
+                "evaluable_moves": 10,
+                "rate_label": "40.5%",
+                "coverage_label": "1%",
+            },
+            {
+                "rating_band": "2000+",
+                "time_control": "60+0",
+                "error_proxy_rate": 0.05,
+                "evaluable_moves": 10,
+                "rate_label": "5%",
+                "coverage_label": "1%",
+            },
+            {
+                "rating_band": "2000+",
+                "time_control": "480+0",
+                "error_proxy_rate": None,
+                "evaluable_moves": 0,
+                "rate_label": "none",
+                "coverage_label": "none",
+            },
+        ],
+        x_order=["60+0", "480+0"],
+        y_order=["Under 1200", "2000+"],
+    )
+    assert [0.05, 0.405] in _scale_domains(heat.to_dict())
+    scores = charts.score_intervals(
+        [
+            {
+                "family": "French Defense",
+                "series": "White, raw",
+                "rate": 0.419,
+                "low": None,
+                "high": None,
+                "rate_label": "41.9%",
+                "interval_label": "not published",
+                "support_label": "no",
+            },
+            {
+                "family": "French Defense",
+                "series": "Black, adjusted",
+                "rate": 0.503,
+                "low": 0.447,
+                "high": 0.561,
+                "rate_label": "50.3%",
+                "interval_label": "44.7%–56.1%",
+                "support_label": "no",
+            },
+        ]
+    )
+    assert [0, 1] in _scale_domains(scores.to_dict())
+    wilson = charts.wilson(
+        [
+            {
+                "label": "gpt-6-luna",
+                "pass_rate": 0.8625,
+                "wilson_low": 0.813,
+                "wilson_high": 0.900,
+                "gate": "Gate clear",
+                "rate_label": "86.3%",
+                "wilson_label": "81.3%–90.0%",
+                "cost_label": "$0.0150",
+            }
+        ]
+    )
+    assert [0, 1] in _scale_domains(wilson.to_dict())
+    grid = charts.case_grid(
+        [
+            {
+                "case_id": "boundary_budget",
+                "model": "gpt-6-sol",
+                "passed": 0,
+                "repeats": 5,
+                "category": "boundary",
+                "severity": "high",
+            }
+        ],
+        case_order=["boundary_budget"],
+        model_order=["gpt-6-sol"],
+    )
+    grid_spec = grid.to_dict()
+    grid_marks = [
+        layer["mark"]["type"] if isinstance(layer["mark"], dict) else layer["mark"]
+        for layer in grid_spec["layer"]
+    ]
+    assert grid_marks == ["rect", "text"]
+    assert "#b0892e" not in json.dumps(grid_spec)
+    assert "#c4552a" not in json.dumps(grid_spec)
 
 
 def test_hosted_dashboard_fails_closed_when_the_extract_is_missing(project, tmp_path, monkeypatch):
