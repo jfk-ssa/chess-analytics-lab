@@ -227,7 +227,7 @@ and the required reviewer are already in place.
 [ADR 0089](adr/0089-llm-quality-evaluation.md) is the plan.
 [ADR 0090](adr/0090-live-eval-scorer-runner-stats.md) is the runner.
 [ADR 0091](adr/0091-manual-live-eval-workflow.md) is the manual job.
-[ADR 0094](adr/0094-grok-4-7-live-eval.md) adds `grok-4.7`. The headline
+[ADR 0095](adr/0095-grok-4-7-live-eval.md) adds `grok-4.7`. The headline
 run is low at 5 repeats. Medium and high are 1-repeat sensitivity
 checks. Their pass rates are not 5-repeat comparisons.
 
@@ -272,7 +272,7 @@ does not probe the API.
    fits under $10. Medium and high fit at 1 repeat ($3.734254 and
    $6.093358) and stop at 5 repeats. The expected cost of the three
    planned runs is about $4–5. The assumptions are in
-   [ADR 0094](adr/0094-grok-4-7-live-eval.md). A reservation over the cap
+   [ADR 0095](adr/0095-grok-4-7-live-eval.md). A reservation over the cap
    refuses before any request is sent.
 5. Acknowledge the personal account on the command line. OpenAI runs
    read `CHESSLAB_OPENAI_API_KEY`. grok-4.7 runs read

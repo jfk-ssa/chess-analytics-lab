@@ -1,12 +1,12 @@
-# 0094. grok-4.7 live eval and reasoning-effort sensitivity
+# 0095. grok-4.7 live eval and reasoning-effort sensitivity
 
 - Status: accepted
 - Date: 2026-10-21
 
 Main ends at [ADR 0092](0092-public-aggregate-extract.md). Open pull
 request #43 adds `0093-first-live-eval-receipts.md`. Open pull request
-#44 adds `0093-hosted-read-only-dashboard.md`. Neither adds 0094, so
-this record is 0094.
+#44 adds `0094-hosted-read-only-dashboard.md`. Open pull request #46
+adds ADR 0096 and leaves 0095 for this record.
 
 ## Motivation
 
