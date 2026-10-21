@@ -131,7 +131,6 @@ def _drill_for(filters: Filters) -> Drill:
 
 
 def _openings(layout, charts, connection, filters: Filters, drill: Drill) -> None:
-    del layout
     st.subheader("Openings")
     _crumb(drill)
     cohort, covered = position_cohort(connection, filters)
@@ -143,7 +142,7 @@ def _openings(layout, charts, connection, filters: Filters, drill: Drill) -> Non
     elif drill.fen and drill.family and drill.line:
         _position(charts, connection, filters, cohort, drill, dates=covered)
     elif drill.family:
-        _lines(charts, connection, filters, cohort, drill, dates=covered)
+        _lines(layout, charts, connection, filters, cohort, drill, dates=covered)
     else:
         _families(charts, connection, filters, cohort, dates=covered)
     st.caption(_opening_caption(filters, cohort, covered))
@@ -189,24 +188,37 @@ def _families(charts, connection, filters: Filters, cohort: str, *, dates: bool)
     _take(event, "family_pick", "label", None, _set_family)
 
 
-def _lines(charts, connection, filters: Filters, cohort: str, drill: Drill, *, dates: bool) -> None:
+def _lines(
+    layout, charts, connection, filters: Filters, cohort: str, drill: Drill, *, dates: bool
+) -> None:
     assert drill.family is not None
     rows = opening_lines(connection, filters, cohort, drill.family, dates=dates)
     if not rows:
         return
-    plotted = [{"line": row["label"], "games": row["games"]} for row in rows[:12]]
+    plotted = [
+        {
+            "line": row["label"],
+            "line_label": layout.san_text(str(row["label"])),
+            "games": row["games"],
+        }
+        for row in rows[:12]
+    ]
     event = _draw(
         charts.selectable_bars(
             plotted,
             name="line_pick",
             field="line",
+            label_field="line_label",
             value_title="Games",
         ),
         alt="Opening lines by games. Select a bar to open the position.",
         key=_key("line_bars"),
     )
     st.table(
-        [{"Line": str(row["label"]), "Games": f"{_count(row['games']):,}"} for row in rows[:12]],
+        [
+            {"Line": layout.san_text(str(row["label"])), "Games": f"{_count(row['games']):,}"}
+            for row in rows[:12]
+        ],
         hide_index=True,
         height="content",
         alt="Opening lines and game counts. The full move order is the line.",
@@ -338,13 +350,13 @@ def _transpositions(layout, connection, filters: Filters) -> None:
     rows, note = transpositions(connection, filters)
     if rows:
         st.markdown(layout.transposition_cards(rows), unsafe_allow_html=True)
-        _transposition_board(rows)
+        _transposition_board(layout, rows)
     st.caption(note)
 
 
-def _transposition_board(rows: list[dict]) -> None:
+def _transposition_board(layout, rows: list[dict]) -> None:
     options = ["Top positions"] + [
-        f"{index}. {row['title']} · {int(row['games']):,}"
+        f"{index}. {layout.display_title(str(row['title']))} · {int(row['games']):,}"
         for index, row in enumerate(rows, start=1)
     ]
     if st.session_state.get("transpose_board") not in options:
@@ -355,7 +367,10 @@ def _transposition_board(rows: list[dict]) -> None:
     row = rows[options.index(str(choice)) - 1]
     _board(str(row["fen"]))
     st.table(
-        [{"Move order": san, "Games": f"{games:,}"} for san, games in row["routes"]],
+        [
+            {"Move order": layout.san_text(str(san)), "Games": f"{games:,}"}
+            for san, games in row["routes"]
+        ],
         hide_index=True,
         height="content",
         alt="Top acyclic move orders for the selected position.",

@@ -11,7 +11,10 @@ the row above; the leftover card does not grow into the empty cell.
 
 from __future__ import annotations
 
+import re
 from html import escape
+
+_MOVE_NUMBER = re.compile(r"\d+\.")
 
 _TRACKS = "repeat(auto-fit,minmax(min(100%,256px),1fr))"
 
@@ -65,13 +68,42 @@ def _split_title(title: str) -> tuple[str, str]:
     return head, line
 
 
+def san_groups(san: str) -> list[str]:
+    """One group per move number: ``1.e4 c5``, or a lone White move such as ``3.Bc4``."""
+    tokens = [token for token in str(san).split() if token]
+    groups: list[str] = []
+    index = 0
+    while index < len(tokens):
+        token = tokens[index]
+        reply = tokens[index + 1] if index + 1 < len(tokens) else None
+        if _MOVE_NUMBER.match(token) and reply is not None and not _MOVE_NUMBER.match(reply):
+            groups.append(f"{token} {reply}")
+            index += 2
+        else:
+            groups.append(token)
+            index += 1
+    return groups
+
+
+def san_text(san: str) -> str:
+    """Plain SAN. A pair stays together; a break is only between move numbers."""
+    return " ".join(group.replace(" ", "\u00a0") for group in san_groups(san))
+
+
+def display_title(title: str) -> str:
+    """Group the SAN after the title separator. The depth label stays as written."""
+    head, separator, line = str(title).partition(" · ")
+    if not separator:
+        return san_text(title)
+    return f"{head}{separator}{san_text(line)}"
+
+
 def _san_html(san: str) -> str:
-    """One nowrap unit per move, so ``4.Nxd4`` stays together and wraps as a whole."""
+    """One nowrap span per move pair, with a normal space between pairs."""
     spans = [
         '<span class="cal-ply" style="display:inline-block;white-space:nowrap">'
-        f"{escape(token)}</span>"
-        for token in str(san).split()
-        if token
+        f"{escape(group)}</span>"
+        for group in san_groups(san)
     ]
     return " ".join(spans)
 
@@ -83,10 +115,16 @@ def _share_percent(part: int, total: int) -> str:
     return f"{100 * bounded / total:.1f}"
 
 
-def _route_row(san: str, games: int, total: int) -> str:
+def _count_track(counts: list[int]) -> str:
+    """Column for the widest count. Tabular digits are about one ch each."""
+    widest = max((len(f"{int(count):,}") for count in counts), default=1)
+    return f"{max(widest, 6)}ch"
+
+
+def _route_row(san: str, games: int, total: int, track: str) -> str:
     share = _share_percent(games, total)
     return (
-        '<div class="cal-route" style="display:grid;grid-template-columns:8ch minmax(0,1fr);'
+        f'<div class="cal-route" style="display:grid;grid-template-columns:{track} minmax(0,1fr);'
         'column-gap:10px;row-gap:5px;align-items:start;line-height:1.55">'
         '<div class="cal-n" style="text-align:right;white-space:nowrap;'
         'font-variant-numeric:tabular-nums;font-weight:600;color:#116559">'
@@ -107,13 +145,16 @@ def transposition_cards(items: list[dict]) -> str:
     ``title`` is ``After Black's move N · <SAN>``. The depth, the line, and
     the game count are separate rows. The line reserves two lines so sibling
     cards keep the count on the same row. A route is a ``(san, games)`` pair:
-    the count is a fixed column and the SAN wraps inside the second column.
+    the count column is the widest count, about six tabular characters, and the
+    SAN wraps inside the second column.
     """
     columns = equal_width_columns(len(items))
     cells: list[str] = []
     for item in items:
         total = int(item["games"])
-        routes = "".join(_route_row(str(san), int(games), total) for san, games in item["routes"])
+        route_pairs = [(str(san), int(games)) for san, games in item["routes"]]
+        track = _count_track([games for _san, games in route_pairs])
+        routes = "".join(_route_row(san, games, total, track) for san, games in route_pairs)
         depth, line = _split_title(str(item["title"]))
         orders = int(item["move_orders"])
         order_label = "1 move order" if orders == 1 else f"{orders} move orders"

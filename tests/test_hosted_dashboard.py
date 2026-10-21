@@ -113,6 +113,7 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
     titled = [option for option in labels["Board"] if option != "Top positions"]
     assert titled
     assert all("After Black's move " in option for option in titled)
+    assert any("1.e4\u00a0c5" in option for option in titled)
     assert len(titled) == len(set(titled))
     assert labels["Color"] == ["All", "White", "Black"]
     assert "French Defense" in labels["Opening family"]
@@ -349,7 +350,47 @@ def _scale_domains(spec: dict) -> list:
     return found
 
 
+def test_san_groups_keep_each_move_pair_together(project):
+    module = _load_hosted(project, "layout")
+    assert module.san_groups("1.e4 c5 2.Nf3 Nc6 3.d4 cxd4") == [
+        "1.e4 c5",
+        "2.Nf3 Nc6",
+        "3.d4 cxd4",
+    ]
+    assert module.san_groups("1.e4 c5 2.Nf3 d6 3.Nf3 d6") == [
+        "1.e4 c5",
+        "2.Nf3 d6",
+        "3.Nf3 d6",
+    ]
+    assert module.san_groups("1.e4 c5 2.Nf3 Nc6 3.Bc4") == [
+        "1.e4 c5",
+        "2.Nf3 Nc6",
+        "3.Bc4",
+    ]
+    assert module.san_text("3.d4 cxd4") == "3.d4\u00a0cxd4"
+    html = module.transposition_cards(
+        [
+            {
+                "title": "After Black's move 3 · 1.e4 c5 2.Nf3 Nc6 3.Bc4",
+                "games": 40,
+                "move_orders": 2,
+                "routes": [
+                    ("1.e4 c5 2.Nf3 Nc6 3.Bc4", 30),
+                    ("1.e4 c5 2.d4 cxd4 3.Nf3 d6", 10),
+                ],
+            }
+        ]
+    )
+    assert 'white-space:nowrap">3.Bc4<' in html
+    assert 'white-space:nowrap">3.Nf3 d6<' in html
+    assert 'white-space:nowrap">2.Nf3 Nc6<' in html
+    assert 'white-space:nowrap">d6<' not in html
+    assert "</span> <span" in html
+    assert "</span>\u00a0<span" not in html
+
+
 def test_time_control_sort_keeps_a_value_without_an_increment(project):
+    pytest.importorskip("streamlit")
     module = _load_hosted(project, "bi")
     ordered = sorted(["180+2", "-", "60+0", "15+0", "180+0"], key=module._time_sort_key)
     assert ordered == ["15+0", "60+0", "180+0", "180+2", "-"]
@@ -394,7 +435,7 @@ def test_equal_width_rows_share_one_track_definition(project):
     )
     assert 'data-cards="2"' in board
     assert f"grid-template-columns:{_TRACKS}" in board
-    assert "grid-template-columns:8ch minmax(0,1fr)" in board
+    assert "grid-template-columns:6ch minmax(0,1fr)" in board
     assert "min-height:2.9em" in board
     assert board.count('class="cal-v"') == 2
     assert board.count('class="cal-share"') == 3
@@ -402,12 +443,15 @@ def test_equal_width_rows_share_one_track_definition(project):
     assert "overflow-wrap:anywhere" not in board
     assert "word-break:break-all" not in board
     assert "1,200" in board
-    for token in ("1.e4", "e6", "2.d4", "d5"):
-        assert f'white-space:nowrap">{token}<' in board
+    for pair in ("1.e4 e6", "2.d4 d5", "1.d4 d5", "2.e4 e6"):
+        assert f'white-space:nowrap">{pair}<' in board
+    for pair in ("1.e4 c5", "2.Nf3 d6", "3.d4 cxd4", "4.Nxd4 Nf6", "5.Nc3 a6"):
+        assert f'white-space:nowrap">{pair}<' in board
+    assert 'white-space:nowrap">4.Nxd4<' not in board
+    assert 'white-space:nowrap">cxd4<' not in board
     assert escape("After Black's move 2") in board
     assert escape("After Black's move 5") in board
     assert " games" in board and "2 move orders" in board
-    assert 'white-space:nowrap">4.Nxd4<' in board
     assert "width:58.3%" in board
     assert "width:89.1%" in board
     assert board.index("After Black") < board.index("1,200")
@@ -691,9 +735,11 @@ def test_opening_drill_lists_lines_and_climbs_back(project, monkeypatch):
     assert "Openings / Sicilian Defense" in text
     assert "Opening lines by games. Select a bar to open the position." in _chart_alts(app)
     line = "1.e4 c5 2.Nf3 Nc6 3.d4 cxd4"
-    assert line in text
+    shown = _load_hosted(project, "layout").san_text(line)
+    assert shown in text
     tables = [table for table in app.table if "Line" in list(table.value.columns)]
-    assert tables and line in set(tables[0].value["Line"])
+    assert tables and shown in set(tables[0].value["Line"])
+    assert "1.e4\u00a0c5" in shown
     line_chart = next(
         node
         for node in app
@@ -702,6 +748,7 @@ def test_opening_drill_lists_lines_and_climbs_back(project, monkeypatch):
     )
     encoded = json.dumps(_chart_spec(line_chart))
     assert '"stack": null' in encoded or '"stack":null' in encoded
+    assert "line_label" in encoded
     backs = [item for item in app.button if item.label == "Back"]
     assert len(backs) == 1
     backs[0].click().run()
