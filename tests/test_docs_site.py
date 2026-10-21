@@ -158,6 +158,17 @@ def test_scorecard_rows_use_equal_tracks():
     assert "padding-right: 0;" in sweep_pad
 
 
+def test_case_id_cells_do_not_break_mid_value():
+    """Case ids in both live-eval case tables stay on one line."""
+    css = (ROOT / "site/assets/site.css").read_text()
+    marker = '.ev-cases th[scope="row"],'
+    rule = css[css.index(marker) : css.index("}", css.index(marker))]
+    assert "white-space: nowrap;" in rule
+    assert "overflow-wrap: normal;" in rule
+    assert "word-break: normal;" in rule
+    assert '.ev-cases th[scope="row"] code' in rule
+
+
 def test_materialized_positions_match_the_publication_checkpoint():
     checkpoint = json.loads((ROOT / "reports/opening-positions-checkpoint.json").read_text())
     target = ROOT / "reports/opening-positions.json"

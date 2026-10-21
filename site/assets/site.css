@@ -1743,6 +1743,12 @@ figure .full-size {
   cursor: pointer;
   font-weight: 650;
 }
+.ev-cases th[scope="row"],
+.ev-cases th[scope="row"] code {
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
 .ev-cases caption {
   caption-side: bottom;
   padding-top: 8px;
