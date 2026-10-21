@@ -11,15 +11,19 @@ see the gate, the intervals, and the hard fail without opening those
 files. The documentation site already publishes recorded evidence. This
 report belongs there, generated in the same offline build.
 
-0094 is left for the hosted dashboard record on #44. 0095 is left for
-the open Grok 4.7 live-eval record on #45, which still files its ADR as
-0093. This record is the next number that does not collide with either.
+0094 is left for the hosted dashboard record on #44. 0095 is the
+grok-4.7 live-eval record on #45. This record is 0096 so it does not
+take either number.
 
 ## Decision
 
 `chess_analytics.eval_report` reads every
 `reports/live-eval-receipt-*.json`, sorted by the GitHub run id in the
-filename. It does not list run ids. A run is labelled with its `model`.
+filename. It does not list run ids. ADR 0091 files are
+`live-eval-receipt-<run id>.json`. ADR 0095 files are
+`live-eval-receipt-<model>-<effort>-r<repeats>-<run id>.json`. The
+sort key is the trailing integer in either name. A run is labelled
+with its `model`.
 When `reasoning_effort` is present and is not `none`, the label adds
 that effort, so later Grok 4.7 receipts at low, medium, and high can
 render as extra runs.

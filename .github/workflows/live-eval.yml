@@ -1,24 +1,25 @@
 # Manual live analyst eval. The only trigger is workflow_dispatch.
 name: Live analyst eval
-run-name: "Live eval ${{ inputs.model }} x${{ inputs.repeats }} cap ${{ inputs.max_run_usd }}"
+run-name: "Live eval ${{ inputs.model }} effort ${{ inputs.reasoning_effort }} x${{ inputs.repeats }} cap ${{ inputs.max_run_usd }}"
 on:
   workflow_dispatch:
     inputs:
       model:
-        description: "Model id. Luna is the baseline. Sol is the paired model. Astra is omitted because ADR 0089 sets no id and no cap."
+        description: "Model id. Luna is the baseline. Sol is the paired OpenAI model. grok-4.7 is the xAI comparison. Astra is omitted because ADR 0089 sets no id and no cap."
         type: choice
         required: true
         default: gpt-6-luna
         options:
           - gpt-6-luna
           - gpt-6-sol
+          - grok-4.7
       repeats:
         description: "Repeats of the 48-case set. Default 5. Integer from 1 to 20. The dollar ceiling stays the 5-repeat cap and is not scaled."
         type: string
         required: true
         default: "5"
       max_run_usd:
-        description: "Required gross cap in USD. No default. Refuse above Luna 0.50 or Sol 10, the ADR 0089 caps for a 5-repeat run."
+        description: "Required gross cap in USD. No default. Refuse above Luna 0.50, Sol 10, or grok-4.7 10. Those ceilings are not scaled."
         type: string
         required: true
       acknowledge_personal_account:
@@ -27,10 +28,22 @@ on:
         required: true
         default: false
       allow_stale_price_check:
-        description: "Set true only after rechecking gpt-6-sol versus gpt-6.1-sol, reasoning.effort=none, and prices. Required when the recorded price-check date is older than 14 days. Does not probe the API."
+        description: "Set true only after rechecking gpt-6-sol versus gpt-6.1-sol, the reasoning effort for the chosen model, and prices including the grok-4.7 200k tier. Required when the recorded price-check date is older than 14 days. Does not probe the API."
         type: boolean
         required: false
         default: false
+      reasoning_effort:
+        description: "model-default keeps OpenAI on none and grok-4.7 on low. The grok headline is low at 5 repeats. medium and high are 1-repeat sensitivity checks. none is rejected for grok-4.7."
+        type: choice
+        required: true
+        default: model-default
+        options:
+          - model-default
+          - none
+          - low
+          - medium
+          - high
+          - xhigh
 permissions:
   contents: read
 concurrency:
@@ -39,6 +52,7 @@ concurrency:
 jobs:
   live-eval:
     runs-on: ubuntu-latest
+    timeout-minutes: 150
     environment: live-eval
     env:
       LIVE_EVAL_MODEL: "${{ inputs.model }}"
@@ -46,6 +60,7 @@ jobs:
       LIVE_EVAL_MAX_RUN_USD: "${{ inputs.max_run_usd }}"
       LIVE_EVAL_ACKNOWLEDGE: "${{ inputs.acknowledge_personal_account }}"
       LIVE_EVAL_ALLOW_STALE: "${{ inputs.allow_stale_price_check }}"
+      LIVE_EVAL_REASONING_EFFORT: "${{ inputs.reasoning_effort }}"
     steps:
       - name: Refuse a ref other than main
         if: github.ref != 'refs/heads/main'
@@ -85,6 +100,7 @@ jobs:
           uv run --locked --offline --no-editable python -m chess_analytics.analyst live-eval \
             --staged work/live-eval/project \
             --model "$LIVE_EVAL_MODEL" \
+            --reasoning-effort "$LIVE_EVAL_REASONING_EFFORT" \
             --max-run-usd "$LIVE_EVAL_MAX_RUN_USD" \
             --repeats "$LIVE_EVAL_REPEATS" \
             --acknowledge-personal-account \
@@ -97,16 +113,33 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Run the live eval
         env:
-          CHESSLAB_OPENAI_API_KEY: "${{ secrets.CHESSLAB_OPENAI_API_KEY }}"
+          CHESSLAB_OPENAI_API_KEY: "${{ inputs.model != 'grok-4.7' && secrets.CHESSLAB_OPENAI_API_KEY || '' }}"
+          CHESSLAB_XAI_API_KEY: "${{ inputs.model == 'grok-4.7' && secrets.CHESSLAB_XAI_API_KEY || '' }}"
         run: |
           set -euo pipefail
-          if [ -z "${CHESSLAB_OPENAI_API_KEY}" ]; then
-            echo "CHESSLAB_OPENAI_API_KEY is empty. Add it as a secret on the live-eval environment." >&2
-            exit 1
+          if [ "$LIVE_EVAL_MODEL" = "grok-4.7" ]; then
+            if [ -n "${CHESSLAB_OPENAI_API_KEY}" ]; then
+              echo "Refusing a grok-4.7 run while CHESSLAB_OPENAI_API_KEY is set." >&2
+              exit 1
+            fi
+            if [ -z "${CHESSLAB_XAI_API_KEY}" ]; then
+              echo "CHESSLAB_XAI_API_KEY is empty. Add it as a secret on the live-eval environment." >&2
+              exit 1
+            fi
+          else
+            if [ -n "${CHESSLAB_XAI_API_KEY}" ]; then
+              echo "Refusing an OpenAI run while CHESSLAB_XAI_API_KEY is set." >&2
+              exit 1
+            fi
+            if [ -z "${CHESSLAB_OPENAI_API_KEY}" ]; then
+              echo "CHESSLAB_OPENAI_API_KEY is empty. Add it as a secret on the live-eval environment." >&2
+              exit 1
+            fi
           fi
           uv run --locked --no-editable python -m chess_analytics.analyst live-eval \
             --staged work/live-eval/project \
             --model "$LIVE_EVAL_MODEL" \
+            --reasoning-effort "$LIVE_EVAL_REASONING_EFFORT" \
             --max-run-usd "$LIVE_EVAL_MAX_RUN_USD" \
             --repeats "$LIVE_EVAL_REPEATS" \
             --acknowledge-personal-account \
@@ -120,7 +153,7 @@ jobs:
         if: "always() && hashFiles('work/live-eval-receipt.json') != ''"
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: "live-eval-receipt-${{ github.run_id }}"
+          name: "live-eval-receipt-${{ inputs.model }}-${{ env.LIVE_EVAL_RESOLVED_EFFORT }}-r${{ inputs.repeats }}-${{ github.run_id }}"
           path: work/live-eval-receipt.json
           retention-days: 90
           if-no-files-found: error

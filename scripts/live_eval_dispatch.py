@@ -15,7 +15,21 @@ from pathlib import Path
 
 PRICE_CHECK_MAX_AGE_DAYS = 14
 MAX_REPEATS = 20
-CAPS_USD = {"gpt-6-luna": Decimal("0.50"), "gpt-6-sol": Decimal("10")}
+CAPS_USD = {
+    "gpt-6-luna": Decimal("0.50"),
+    "gpt-6-sol": Decimal("10"),
+    "grok-4.7": Decimal("10"),
+}
+EFFORTS = {
+    "gpt-6-luna": ("none",),
+    "gpt-6-sol": ("none",),
+    "grok-4.7": ("low", "medium", "high", "xhigh"),
+}
+DEFAULT_EFFORT = {
+    "gpt-6-luna": "none",
+    "gpt-6-sol": "none",
+    "grok-4.7": "low",
+}
 PRICE_DATE_PATH = Path("src/chess_analytics/analyst/preflight.py")
 _DATE_LINE = re.compile(r'^DEFAULT_PRICE_CHECKED_UTC_DATE = "(\d{4}-\d{2}-\d{2})"$', re.MULTILINE)
 _REPEATS = re.compile(r"^[1-9][0-9]*$")
@@ -26,13 +40,20 @@ CHECKLIST_LINES = (
     "Before this job reads a key or calls the provider:",
     "",
     "1. Recheck the provider model page. Past Sol runs use gpt-6-sol. "
-    "The approved plan records that OpenAI's page has listed gpt-6.1-sol.",
-    "2. Confirm reasoning.effort set to none is accepted on the chosen id. "
-    "The frozen quote sends that value. This job does not probe the API.",
+    "The approved plan records that OpenAI's page has listed gpt-6.1-sol. "
+    "The xAI id is grok-4.7.",
+    "2. Confirm the reasoning effort. OpenAI ids in this harness accept "
+    "reasoning.effort none, and the quote sends none. grok-4.7 cannot disable "
+    "reasoning. Allowed efforts are low, medium, high, and xhigh. The headline "
+    "comparison is low at 5 repeats. medium and high are a 1-repeat sensitivity "
+    "check and are not a second 5-repeat headline. This job does not probe the API.",
     "3. Recheck prices. The recorded date is DEFAULT_PRICE_CHECKED_UTC_DATE in "
     "src/chess_analytics/analyst/preflight.py. pricing.py does not store that date. "
     f"This job stops when the date is older than {PRICE_CHECK_MAX_AGE_DAYS} days "
-    "unless allow_stale_price_check is true. The receipt keeps prices_rechecked false.",
+    "unless allow_stale_price_check is true. The receipt keeps prices_rechecked false. "
+    "grok-4.7 below 200k prompt tokens is $2 input, $0.50 cached input, and $6 output "
+    "per 1M tokens. At 200k prompt tokens the whole request uses $4, $1, and $12. "
+    "Reasoning tokens bill as output.",
 )
 
 
@@ -61,16 +82,24 @@ def enforce_price_check(checked: date, today: date, *, allow_stale: bool) -> int
         raise DispatchError(
             f"recorded price check {checked.isoformat()} is {age} days old "
             f"(limit {PRICE_CHECK_MAX_AGE_DAYS}). Recheck the Sol model id, "
-            "reasoning.effort=none, and prices, then set allow_stale_price_check. "
+            "reasoning.effort for the chosen model, grok-4.7 prices including the "
+            "200k tier, and the OpenAI prices, then set allow_stale_price_check. "
             "This command does not probe the API."
         )
     return age
 
 
-def validate_dispatch(model: str, repeats: str, max_run_usd: str, acknowledge: str) -> dict:
-    """Refuse a model, repeat count, cap, or acknowledgement outside the workflow contract."""
+def validate_dispatch(
+    model: str,
+    repeats: str,
+    max_run_usd: str,
+    acknowledge: str,
+    reasoning_effort: str = "model-default",
+) -> dict:
+    """Refuse a model, effort, repeat count, cap, or acknowledgement outside the contract."""
     if model not in CAPS_USD:
-        raise DispatchError("model must be gpt-6-luna or gpt-6-sol")
+        raise DispatchError("model must be gpt-6-luna, gpt-6-sol, or grok-4.7")
+    effort = resolve_effort(model, reasoning_effort)
     if acknowledge != "true":
         raise DispatchError("acknowledge_personal_account must be true")
     if not _REPEATS.fullmatch(repeats):
@@ -86,7 +115,24 @@ def validate_dispatch(model: str, repeats: str, max_run_usd: str, acknowledge: s
         raise DispatchError("max_run_usd must be a positive decimal")
     if amount > ceiling:
         raise DispatchError(f"max_run_usd {amount} is above the {model} 5-repeat cap {ceiling}")
-    return {"cap_usd": ceiling, "max_run_usd": amount, "model": model, "repeats": count}
+    return {
+        "cap_usd": ceiling,
+        "max_run_usd": amount,
+        "model": model,
+        "reasoning_effort": effort,
+        "repeats": count,
+    }
+
+
+def resolve_effort(model: str, effort: str) -> str:
+    """model-default keeps OpenAI on none and grok-4.7 on low."""
+    chosen = DEFAULT_EFFORT[model] if effort in ("", "model-default") else effort
+    allowed = EFFORTS[model]
+    if chosen not in allowed:
+        raise DispatchError(
+            f"{model} does not accept reasoning effort {chosen}; allowed: {', '.join(allowed)}"
+        )
+    return chosen
 
 
 def format_summary(receipt: dict) -> str:
@@ -144,9 +190,12 @@ def report_inputs() -> None:
         _required("LIVE_EVAL_REPEATS"),
         _required("LIVE_EVAL_MAX_RUN_USD"),
         _required("LIVE_EVAL_ACKNOWLEDGE"),
+        os.environ.get("LIVE_EVAL_REASONING_EFFORT", "model-default"),
     )
+    _publish_effort(chosen["reasoning_effort"])
     print(
         f"model: {chosen['model']}\n"
+        f"reasoning_effort: {chosen['reasoning_effort']}\n"
         f"repeats: {chosen['repeats']}\n"
         f"max_run_usd: {chosen['max_run_usd']}\n"
         f"cap_usd: {chosen['cap_usd']}\n"
@@ -200,20 +249,40 @@ def _format_summary(receipt: dict) -> str:
         f"extraction {repairs['extraction']}, "
         f"semantic {repairs['semantic']}"
     )
+    repeat_label = "1 repeat" if receipt["repeats"] == 1 else f"{receipt['repeats']} repeats"
     lines = [
         "### Live eval receipt",
         f"- model: {receipt['model']}",
+        f"- reasoning effort: {receipt['reasoning_effort']}",
         f"- repeats: {receipt['repeats']}",
-        f"- headline raw pass rate: {rate_text}; repair counts: {repair_text}",
+        f"- headline raw pass rate for {repeat_label}: {rate_text}; repair counts: {repair_text}",
         f"- Wilson interval: {interval}",
         f"- hard_fail: {str(receipt['hard_fail']).lower()}",
         f"- gross cost USD: {float(receipt['known_gross_cost_usd']):.6f}",
         f"- complete: {str(receipt['complete']).lower()}",
     ]
+    if receipt["repeats"] != 5:
+        lines.append(
+            f"- note: this pass rate is for {repeat_label} "
+            "and is not a 5-repeat headline comparison"
+        )
+    reason = receipt.get("incomplete_reason")
+    if reason:
+        lines.append(f"- incomplete reason: {reason}")
     unknown = receipt["unknown_cost_reservation_usd"]
     if unknown:
         lines.append(f"- unknown cost reservation USD: {float(unknown):.6f}")
     return "\n".join(lines) + "\n"
+
+
+def _publish_effort(effort: str) -> None:
+    """Later steps, including the artifact name, read the resolved effort."""
+    path = os.environ.get("GITHUB_ENV")
+    if not path:
+        return
+    with Path(path).open("a", encoding="utf-8") as handle:
+        handle.write(f"LIVE_EVAL_REASONING_EFFORT={effort}\n")
+        handle.write(f"LIVE_EVAL_RESOLVED_EFFORT={effort}\n")
 
 
 def _allow_stale() -> bool:

@@ -200,6 +200,15 @@ differ by the snapshot id, and a later receipt should record
 `dataset_id` and `implementation_sha256`. See
 [ADR 0096](adr/0096-published-live-eval-report.md).
 
+`grok-4.7` is a third manual model. The headline comparison with the
+OpenAI models is reasoning effort `low` at 5 repeats, the smallest
+effort that model accepts, beside `reasoning.effort` of `none`. Medium
+and high are a sensitivity check at 1 repeat each. Those receipts and
+the job summary carry `repeats: 1`. Their pass rates are not 5-repeat
+headline rates and are not compared with Luna, Sol, or the low 5-repeat
+rate. The per-run cap is $10. See
+[ADR 0095](adr/0095-grok-4-7-live-eval.md).
+
 For offline replay, first run `chesslab demo --scope all`, then use the command
 in [DEMO.md](DEMO.md). Historical fixture harness checks are available with
 `python -m chess_analytics.analyst eval --split both` **only when its matching analytical

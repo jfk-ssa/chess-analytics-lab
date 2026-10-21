@@ -10,6 +10,15 @@ import uuid
 from pathlib import Path
 
 from chess_analytics.analyst.core import execute_plan
+from chess_analytics.analyst.model_catalog import (
+    GROK_MODEL_ID,
+    PROMPT_CACHE_KEY,
+    XAI_KEY_ENV,
+    endpoint_for,
+    grok_reservation_usd,
+    resolve_effort,
+    timeout_for,
+)
 from chess_analytics.analyst.plan_recovery import (
     PLAN_SCHEMA,
     _extract_plan,
@@ -29,14 +38,15 @@ ENDPOINT = "https://api.openai.com/v1/responses"
 
 
 def _default_transport(body: bytes, key: str) -> dict:
+    model = _model_in_body(body)
     request = urllib.request.Request(
-        ENDPOINT,
+        endpoint_for(model),
         body,
         headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
         method="POST",
     )
     try:
-        with urllib.request.urlopen(request, timeout=30) as response:
+        with urllib.request.urlopen(request, timeout=timeout_for(model)) as response:
             return json.load(response)
     except urllib.error.HTTPError as exc:
         try:
@@ -48,12 +58,30 @@ def _default_transport(body: bytes, key: str) -> dict:
         raise RuntimeError(f"provider HTTP {exc.code}: {detail}") from exc
 
 
+def _model_in_body(body: bytes) -> str:
+    try:
+        payload = json.loads(body)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError("provider request is not json") from exc
+    model = payload.get("model") if isinstance(payload, dict) else None
+    if not isinstance(model, str):
+        raise RuntimeError("provider request has no model")
+    return model
+
+
 CONDITIONS = {"schema_only", "semantic_context"}
 
 
-def quote_request(project: Path, question: str, config: dict, condition="semantic_context") -> dict:
+def quote_request(
+    project: Path,
+    question: str,
+    config: dict,
+    condition="semantic_context",
+    reasoning_effort: str | None = None,
+) -> dict:
     """Build and price an exact planner request without reading any credential."""
     config = validate_personal_config(config)
+    effort = resolve_effort(config["model"], reasoning_effort)
     if condition not in CONDITIONS:
         raise ValueError("unknown experiment condition")
     tools = CheckedTools(project)
@@ -137,7 +165,7 @@ def quote_request(project: Path, question: str, config: dict, condition="semanti
         "instructions": prompt,
         "input": question,
         "max_output_tokens": config["max_output_tokens"],
-        "reasoning": {"effort": "none"},
+        "reasoning": {"effort": effort},
         "store": False,
         "text": {
             "format": {
@@ -148,19 +176,28 @@ def quote_request(project: Path, question: str, config: dict, condition="semanti
             }
         },
     }
-    body = json.dumps(payload, ensure_ascii=True).encode()
-    # JSON ASCII bytes plus a fixed envelope allowance; verify billed usage afterward.
-    reserved_usd = (
-        (len(body) + 1000) * max(config["input_usd_per_million"], *cache_rates(config))
-        + config["max_output_tokens"] * config["output_usd_per_million"]
-    ) / 1_000_000
+    if config["model"] == GROK_MODEL_ID:
+        payload["prompt_cache_key"] = PROMPT_CACHE_KEY
+        body = json.dumps(payload, ensure_ascii=True, sort_keys=True).encode()
+        reserved_usd, price_tier = grok_reservation_usd(body, config, effort)
+    else:
+        # Insertion order matches the historical OpenAI quote. Do not sort keys.
+        body = json.dumps(payload, ensure_ascii=True).encode()
+        price_tier = "flat"
+        # JSON ASCII bytes plus a fixed envelope allowance; verify billed usage afterward.
+        reserved_usd = (
+            (len(body) + 1000) * max(config["input_usd_per_million"], *cache_rates(config))
+            + config["max_output_tokens"] * config["output_usd_per_million"]
+        ) / 1_000_000
     if not math.isfinite(reserved_usd):
         raise ValueError("request cost bound is not finite")
     return {
         "body": body,
+        "condition": condition,
+        "price_tier": price_tier,
         "request_sha256": hashlib.sha256(body).hexdigest(),
         "reserved_cost_usd": reserved_usd,
-        "condition": condition,
+        "reasoning_effort": effort,
     }
 
 
@@ -195,7 +232,8 @@ def live_answer(
         remaining_usd is not None and reserved_usd > remaining_usd
     ):
         raise ValueError("explicit run spending cap below conservative request bound")
-    key = os.environ.get(KEY_ENV)
+    key_env = config["api_key_env"]
+    key = os.environ.get(key_env)
     if not key:
         raise ValueError("explicit personal API key is absent")
     response = (transport or _default_transport)(quote["body"], key)
@@ -230,6 +268,15 @@ def live_answer(
     return answer
 
 
+def _redact_known_keys(message: str) -> str:
+    redacted = message
+    for name in (KEY_ENV, XAI_KEY_ENV):
+        key = os.environ.get(name)
+        if key:
+            redacted = redacted.replace(key, "[redacted]")
+    return redacted
+
+
 def recorded_live_answer(project: Path, question: str, config_path: Path) -> dict:
     """Retain successful and failed attempts without copying API keys."""
     attempt_id = uuid.uuid4().hex
@@ -254,8 +301,7 @@ def recorded_live_answer(project: Path, question: str, config_path: Path) -> dic
         )
         return answer
     except Exception as exc:
-        key = os.environ.get(KEY_ENV)
-        message = str(exc).replace(key, "[redacted]") if key else str(exc)
+        message = _redact_known_keys(str(exc))
         write_json(
             path,
             {

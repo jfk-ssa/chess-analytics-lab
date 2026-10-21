@@ -25,7 +25,13 @@ _SECRET = re.compile(r"secrets\.([A-Za-z0-9_]+)")
 _GIT_WRITE = re.compile(r"\bgit\s+(?:commit|add|push)\b")
 _SET_X = re.compile(r"\bset\s+-[A-Za-z]*x[A-Za-z]*\b")
 _ECHO_KEY = re.compile(
-    r"(?m)^\s*(?:echo|printf)\b.*\$(?:\{CHESSLAB_OPENAI_API_KEY\}|CHESSLAB_OPENAI_API_KEY)\b"
+    r"(?m)^\s*(?:echo|printf)\b.*\$(?:\{CHESSLAB_(?:OPENAI|XAI)_API_KEY\}|CHESSLAB_(?:OPENAI|XAI)_API_KEY)\b"
+)
+_OPENAI_SECRET = "${{ inputs.model != 'grok-4.7' && secrets.CHESSLAB_OPENAI_API_KEY || '' }}"
+_XAI_SECRET = "${{ inputs.model == 'grok-4.7' && secrets.CHESSLAB_XAI_API_KEY || '' }}"
+_ARTIFACT = (
+    "live-eval-receipt-${{ inputs.model }}-${{ env.LIVE_EVAL_RESOLVED_EFFORT }}"
+    "-r${{ inputs.repeats }}-${{ github.run_id }}"
 )
 _EXPR_IN_RUN = re.compile(r"\$\{\{")
 _STEP_ORDER = (
@@ -78,6 +84,7 @@ def workflow_problems(text: str) -> list[str]:
     _check_run_scripts(job, problems)
     _check_always(job, problems)
     _check_ref_guard(job, problems)
+    _check_dry_run_pipefail(job, problems)
     return _unique(problems)
 
 
@@ -160,9 +167,20 @@ def test_each_workflow_assertion_fails_when_mutated():
             1,
         ),
         "key-echo": text.replace(
-            '          if [ -z "${CHESSLAB_OPENAI_API_KEY}" ]; then\n',
-            '          echo "$CHESSLAB_OPENAI_API_KEY"\n'
-            '          if [ -z "${CHESSLAB_OPENAI_API_KEY}" ]; then\n',
+            '            if [ -z "${CHESSLAB_OPENAI_API_KEY}" ]; then\n',
+            '            echo "$CHESSLAB_OPENAI_API_KEY"\n'
+            '            if [ -z "${CHESSLAB_OPENAI_API_KEY}" ]; then\n',
+            1,
+        ),
+        "key-echo-xai": text.replace(
+            '            if [ -z "${CHESSLAB_XAI_API_KEY}" ]; then\n',
+            '            echo "$CHESSLAB_XAI_API_KEY"\n'
+            '            if [ -z "${CHESSLAB_XAI_API_KEY}" ]; then\n',
+            1,
+        ),
+        "effort-removed": text.replace(
+            "      reasoning_effort:\n",
+            "      reasoning_removed:\n",
             1,
         ),
         "expression": text.replace(
@@ -179,6 +197,16 @@ def test_each_workflow_assertion_fails_when_mutated():
         "ref-guard": text.replace(
             "github.ref != 'refs/heads/main'",
             "github.ref != 'refs/heads/other'",
+            1,
+        ),
+        "timeout": text.replace("    timeout-minutes: 150\n", "", 1),
+        "pipefail": text.replace(
+            "Stage the fixture and print the dry-run reservation\n"
+            "        run: |\n"
+            "          set -euo pipefail\n",
+            "Stage the fixture and print the dry-run reservation\n"
+            "        run: |\n"
+            "          set -eu\n",
             1,
         ),
     }
@@ -202,10 +230,14 @@ def test_each_workflow_assertion_fails_when_mutated():
         "credentials": "credentials",
         "trace": "trace",
         "key-echo": "key-echo",
+        "key-echo-xai": "key-echo",
+        "effort-removed": "effort-input",
         "expression": "expression",
         "always-summary": "always",
         "always-upload": "always",
         "ref-guard": "ref-guard",
+        "timeout": "timeout",
+        "pipefail": "pipefail",
     }
     seen = []
     for name, mutated in cases.items():
@@ -227,9 +259,12 @@ def test_each_workflow_assertion_fails_when_mutated():
         "credentials",
         "trace",
         "key-echo",
+        "effort-input",
         "expression",
         "always",
         "ref-guard",
+        "timeout",
+        "pipefail",
     } <= set(seen)
 
 
@@ -271,14 +306,51 @@ def test_caps_acknowledgement_and_repeats_match_the_five_repeat_ceilings():
         dispatch.validate_dispatch("gpt-6-sol", "5", "10.01", "true")
     with pytest.raises(dispatch.DispatchError, match="positive decimal"):
         dispatch.validate_dispatch("gpt-6-luna", "5", "0", "true")
-    with pytest.raises(dispatch.DispatchError, match="gpt-6-luna or gpt-6-sol"):
+    with pytest.raises(dispatch.DispatchError, match=r"gpt-6-luna, gpt-6-sol, or grok-4.7"):
         dispatch.validate_dispatch("gpt-6-astra", "1", "1", "true")
+    grok = dispatch.validate_dispatch("grok-4.7", "5", "5", "true", "low")
+    assert grok["reasoning_effort"] == "low"
+    assert grok["cap_usd"] == dispatch.CAPS_USD["grok-4.7"]
+    assert dispatch.validate_dispatch("grok-4.7", "5", "5", "true")["reasoning_effort"] == "low"
+    luna_default = dispatch.validate_dispatch("gpt-6-luna", "5", "0.50", "true")
+    assert luna_default["reasoning_effort"] == "none"
+    for effort in ("low", "medium", "high"):
+        assert (
+            dispatch.validate_dispatch("grok-4.7", "5", "5", "true", effort)["reasoning_effort"]
+            == effort
+        )
+    with pytest.raises(dispatch.DispatchError, match="does not accept reasoning effort none"):
+        dispatch.validate_dispatch("grok-4.7", "5", "5", "true", "none")
+    with pytest.raises(dispatch.DispatchError, match="does not accept reasoning effort low"):
+        dispatch.validate_dispatch("gpt-6-luna", "5", "0.50", "true", "low")
+    with pytest.raises(dispatch.DispatchError, match=r"\b10\b"):
+        dispatch.validate_dispatch("grok-4.7", "5", "10.01", "true", "high")
+    accepted = dispatch.validate_dispatch("grok-4.7", "5", "10", "true", "low")
+    assert accepted["cap_usd"] == dispatch.CAPS_USD["grok-4.7"]
     with pytest.raises(dispatch.DispatchError, match="must be true"):
         dispatch.validate_dispatch("gpt-6-luna", "5", "0.50", "false")
     with pytest.raises(dispatch.DispatchError, match="1 to 20"):
         dispatch.validate_dispatch("gpt-6-luna", "21", "0.50", "true")
     with pytest.raises(dispatch.DispatchError, match="1 to 20"):
         dispatch.validate_dispatch("gpt-6-luna", "5.0", "0.50", "true")
+
+
+def test_check_inputs_publishes_the_resolved_grok_effort(monkeypatch, tmp_path, capsys):
+    monkeypatch.setenv("LIVE_EVAL_MODEL", "grok-4.7")
+    monkeypatch.setenv("LIVE_EVAL_REPEATS", "5")
+    monkeypatch.setenv("LIVE_EVAL_MAX_RUN_USD", "5")
+    monkeypatch.setenv("LIVE_EVAL_ACKNOWLEDGE", "true")
+    monkeypatch.setenv("LIVE_EVAL_REASONING_EFFORT", "model-default")
+    env_file = tmp_path / "github.env"
+    monkeypatch.setenv("GITHUB_ENV", str(env_file))
+    assert dispatch.main(["check-inputs"]) == 0
+    published = env_file.read_text(encoding="utf-8")
+    assert "LIVE_EVAL_REASONING_EFFORT=low\n" in published
+    assert "LIVE_EVAL_RESOLVED_EFFORT=low\n" in published
+    assert "reasoning_effort: low" in capsys.readouterr().out
+    monkeypatch.setenv("LIVE_EVAL_REASONING_EFFORT", "none")
+    assert dispatch.main(["check-inputs"]) == 1
+    assert "does not accept reasoning effort none" in capsys.readouterr().err
 
 
 def test_check_inputs_cli_refuses_a_luna_cap_above_the_ceiling(monkeypatch, capsys):
@@ -299,6 +371,7 @@ def test_summary_shows_the_rate_wilson_repairs_and_an_incomplete_receipt(tmp_pat
         "known_gross_cost_usd": 0.012345,
         "model": "gpt-6-luna",
         "planned_requests": 240,
+        "reasoning_effort": "none",
         "repair_counts": {"argument": 1, "extraction": 2, "semantic": 0},
         "repeats": 5,
         "stats": {"wilson": {"lower": 0.82, "successes": 210, "trials": 240, "upper": 0.91}},
@@ -306,8 +379,10 @@ def test_summary_shows_the_rate_wilson_repairs_and_an_incomplete_receipt(tmp_pat
     }
     text = dispatch.format_summary(receipt)
     assert "model: gpt-6-luna" in text
+    assert "reasoning effort: none" in text
     assert "repeats: 5" in text
-    assert "headline raw pass rate: 0.875000 (210/240)" in text
+    assert "headline raw pass rate for 5 repeats: 0.875000 (210/240)" in text
+    assert "not a 5-repeat headline comparison" not in text
     assert "repair counts: argument 1, extraction 2, semantic 0" in text
     assert "Wilson interval: [0.820000, 0.910000] (210/240)" in text
     assert "hard_fail: false" in text
@@ -316,16 +391,23 @@ def test_summary_shows_the_rate_wilson_repairs_and_an_incomplete_receipt(tmp_pat
     assert "unknown cost reservation" not in text
     incomplete = dict(receipt)
     incomplete["complete"] = False
+    incomplete["incomplete_reason"] = "wall_clock"
     incomplete["hard_fail"] = True
     incomplete["headline_pass_rate"] = None
     incomplete["stats"] = None
     incomplete["unknown_cost_reservation_usd"] = 0.25
     stopped = dispatch.format_summary(incomplete)
-    assert "headline raw pass rate: unavailable; repair counts:" in stopped
+    assert "headline raw pass rate for 5 repeats: unavailable; repair counts:" in stopped
     assert "Wilson interval: unavailable" in stopped
     assert "hard_fail: true" in stopped
     assert "complete: false" in stopped
+    assert "incomplete reason: wall_clock" in stopped
     assert "unknown cost reservation USD: 0.250000" in stopped
+    once = dict(receipt, repeats=1, planned_requests=48, headline_passed=40)
+    once["headline_pass_rate"] = 40 / 48
+    labelled = dispatch.format_summary(once)
+    assert "headline raw pass rate for 1 repeat:" in labelled
+    assert "not a 5-repeat headline comparison" in labelled
     missing = tmp_path / "missing.json"
     summary = tmp_path / "summary.md"
     monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(summary))
@@ -391,6 +473,8 @@ def _job(document: dict, problems: list[str]) -> dict | None:
 def _check_environment(job: dict, problems: list[str]) -> None:
     if job.get("environment") != "live-eval":
         problems.append("environment")
+    if job.get("timeout-minutes") != 150:
+        problems.append("timeout")
 
 
 def _check_inputs(document: dict, problems: list[str]) -> None:
@@ -399,8 +483,23 @@ def _check_inputs(document: dict, problems: list[str]) -> None:
         problems.extend(["model-choice", "repeats", "cap-input", "acknowledge", "price-override"])
         return
     model = inputs.get("model")
-    if not isinstance(model, dict) or model.get("options") != ["gpt-6-luna", "gpt-6-sol"]:
+    if not isinstance(model, dict) or model.get("options") != [
+        "gpt-6-luna",
+        "gpt-6-sol",
+        "grok-4.7",
+    ]:
         problems.append("model-choice")
+    effort = inputs.get("reasoning_effort")
+    effort_options = ["model-default", "none", "low", "medium", "high", "xhigh"]
+    effort_ok = (
+        isinstance(effort, dict)
+        and effort.get("type") == "choice"
+        and effort.get("required") is True
+        and effort.get("default") == "model-default"
+        and effort.get("options") == effort_options
+    )
+    if not effort_ok:
+        problems.append("effort-input")
     repeats = inputs.get("repeats")
     if not isinstance(repeats, dict) or repeats.get("default") not in {5, "5"}:
         problems.append("repeats")
@@ -423,18 +522,26 @@ def _check_inputs(document: dict, problems: list[str]) -> None:
 
 
 def _check_secret(text: str, job: dict, problems: list[str]) -> None:
-    if _SECRET.findall(text) != ["CHESSLAB_OPENAI_API_KEY"]:
+    if _SECRET.findall(text) != ["CHESSLAB_OPENAI_API_KEY", "CHESSLAB_XAI_API_KEY"]:
         problems.append("secret")
-    if "CHESSLAB_OPENAI_API_KEY" in (job.get("env") or {}):
-        problems.append("secret")
+    for name in ("CHESSLAB_OPENAI_API_KEY", "CHESSLAB_XAI_API_KEY"):
+        if name in (job.get("env") or {}):
+            problems.append("secret")
     live = _step(job, "Run the live eval")
-    expected = "${{ secrets.CHESSLAB_OPENAI_API_KEY }}"
-    if live is None or (live.get("env") or {}).get("CHESSLAB_OPENAI_API_KEY") != expected:
+    live_env = {} if live is None else live.get("env") or {}
+    if live_env.get("CHESSLAB_OPENAI_API_KEY") != _OPENAI_SECRET:
+        problems.append("secret")
+    if live_env.get("CHESSLAB_XAI_API_KEY") != _XAI_SECRET:
+        problems.append("secret")
+    if "inputs.model != 'grok-4.7'" not in _OPENAI_SECRET:
+        problems.append("secret")
+    if "inputs.model == 'grok-4.7'" not in _XAI_SECRET:
         problems.append("secret")
     for step in job.get("steps") or []:
         if step is live:
             continue
-        if "CHESSLAB_OPENAI_API_KEY" in (step.get("env") or {}):
+        step_env = step.get("env") or {}
+        if "CHESSLAB_OPENAI_API_KEY" in step_env or "CHESSLAB_XAI_API_KEY" in step_env:
             problems.append("secret")
 
 
@@ -454,6 +561,8 @@ def _check_receipt(job: dict, problems: list[str]) -> None:
     else:
         payload = uploads[0].get("with") or {}
         if payload.get("path") != "work/live-eval-receipt.json":
+            problems.append("receipt-upload")
+        if payload.get("name") != _ARTIFACT:
             problems.append("receipt-upload")
         if payload.get("retention-days") != 90:
             problems.append("receipt-upload")
@@ -479,6 +588,11 @@ def _check_runner(text: str, job: dict, problems: list[str]) -> None:
         problems.append("runner")
     if "--output work/live-eval-receipt.json" not in live_run:
         problems.append("runner")
+    if "--reasoning-effort" not in dry_run or "--reasoning-effort" not in live_run:
+        problems.append("effort-input")
+    job_env = job.get("env") or {}
+    if job_env.get("LIVE_EVAL_REASONING_EFFORT") != "${{ inputs.reasoning_effort }}":
+        problems.append("effort-input")
     if "check-price" not in price_run or "--today" in text:
         problems.append("price-step")
     summary = _step(job, "Write the job summary")
@@ -493,6 +607,15 @@ def _check_credentials(job: dict, problems: list[str]) -> None:
     payload = {} if checkout is None else checkout.get("with") or {}
     if payload.get("persist-credentials") is not False:
         problems.append("credentials")
+
+
+def _check_dry_run_pipefail(job: dict, problems: list[str]) -> None:
+    """The dry-run quote is piped to tee. pipefail is what fails an over-cap run."""
+    dry = _step(job, "Stage the fixture and print the dry-run reservation")
+    script = "" if dry is None else dry.get("run") or ""
+    tee_at = script.find("| tee ")
+    if tee_at < 0 or not re.search(r"(?m)^\s*set\s+.*\bpipefail\b", script[:tee_at]):
+        problems.append("pipefail")
 
 
 def _check_run_scripts(job: dict, problems: list[str]) -> None:
