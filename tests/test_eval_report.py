@@ -16,7 +16,9 @@ from chess_analytics.eval_report import (
     build_page,
     discover_receipts,
     load_cases,
+    load_receipts,
     pct,
+    scorecard,
     sign_test,
 )
 
@@ -168,6 +170,16 @@ def test_page_builds_for_one_receipt_and_for_an_extra_effort(tmp_path):
     broken.write_text(json.dumps(sol), encoding="utf-8")
     with pytest.raises(ReportIntegrityError):
         build_page([broken], cases, strict=True)
+
+
+def test_scorecard_escapes_repair_names(tmp_path):
+    raw = json.loads(_committed()[0].read_text(encoding="utf-8"))
+    raw["repair_counts"] = {"<img alt=x>": 7}
+    path = tmp_path / "live-eval-receipt-1.json"
+    path.write_text(json.dumps(raw), encoding="utf-8")
+    html = scorecard(load_receipts([path])[0])
+    assert html.count("&lt;img alt=x&gt;") == 2
+    assert "<img" not in html
 
 
 def test_model_effort_artifact_names_sort_by_the_trailing_run_id(tmp_path):

@@ -1409,6 +1409,18 @@ figure .full-size {
 .ev-cards:has(> .ev-card:nth-child(4)) {
   --ev-card-columns: 4;
 }
+/* A 56px rate needs about a 260px track. Four-up waits for 1200px; three-up waits for 901px. */
+@media (max-width: 1199px) {
+  .ev-cards:has(> .ev-card:nth-child(4)) {
+    --ev-card-columns: 2;
+  }
+}
+@media (max-width: 900px) {
+  .ev-cards:has(> .ev-card:nth-child(3)),
+  .ev-cards:has(> .ev-card:nth-child(4)) {
+    --ev-card-columns: 2;
+  }
+}
 @media (max-width: 600px) {
   .ev-cards,
   .ev-cards:has(> .ev-card:nth-child(2)),
@@ -1437,7 +1449,9 @@ figure .full-size {
   vertical-align: 1px;
 }
 .ev-name {
+  min-width: 0;
   padding-right: 112px;
+  overflow-wrap: anywhere;
   font-weight: 700;
   font-size: 18px;
 }
@@ -1493,6 +1507,7 @@ figure .full-size {
   line-height: 1.35;
   letter-spacing: 0;
   color: var(--ev-ink3);
+  overflow-wrap: anywhere;
   text-wrap: pretty;
 }
 .ev-ci,

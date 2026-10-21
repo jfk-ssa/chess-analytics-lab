@@ -75,30 +75,76 @@ def test_header_layouts_fit_without_a_horizontal_scroller():
     assert "Analyze my games" not in (ROOT / "scripts/build_docs_site.py").read_text()
 
 
+def _scorecard_media(css: str) -> list[tuple[int, str, int]]:
+    """Media blocks that style the scorecard row, in source order."""
+    found = []
+    pattern = r"@media\s*\(\s*max-width:\s*(\d+)px\s*\)\s*\{"
+    for match in re.finditer(pattern, css):
+        body = _media_block(css[match.start() :], pattern)
+        if ".ev-cards" in body:
+            found.append((match.start(), body, int(match.group(1))))
+    return found
+
+
+def _scorecard_columns(viewport: int, cards: int) -> int:
+    """Column count implied by the scorecard caps. Five cards still use the four-up cap."""
+    if viewport <= 600:
+        return 1
+    if cards >= 4 and viewport <= 1199:
+        return 2
+    if cards >= 3 and viewport <= 900:
+        return 2
+    return min(max(cards, 1), 4)
+
+
 def test_scorecard_rows_use_equal_tracks():
-    """Model cards share fr tracks. A long token cannot widen one column."""
+    """Model cards share fr tracks. Caps keep a 56px rate inside the card."""
     css = (ROOT / "site/assets/site.css").read_text()
     template = (ROOT / "scripts/templates/live_eval.html.j2").read_text()
     assert template.count('class="ev-cards"') == 2
     cards = css[css.index(".ev-cards {") : css.index("}", css.index(".ev-cards {"))]
     assert "--ev-card-columns: 1;" in cards
     assert "grid-template-columns: repeat(var(--ev-card-columns), minmax(0, 1fr));" in cards
+    assert "gap: 20px;" in cards
     for count in (2, 3, 4):
         marker = f".ev-cards:has(> .ev-card:nth-child({count})) {{"
         rule = css[css.index(marker) : css.index("}", css.index(marker))]
         assert f"--ev-card-columns: {count};" in rule
-    phone_at = [match.start() for match in re.finditer(r"@media \(max-width: 600px\) \{", css)]
-    assert len(phone_at) == 2
-    phone = _media_block(css[phone_at[1] :], r"@media \(max-width: 600px\) \{")
+    media = _scorecard_media(css)
+    assert [width for _, _, width in media] == [1199, 900, 600]
+    wide, mid, phone = (body for _, body, _ in media)
+    assert ".ev-cards:has(> .ev-card:nth-child(4))" in wide
+    assert "--ev-card-columns: 2;" in wide
+    assert "nth-child(3)" not in wide
+    assert ".ev-cards:has(> .ev-card:nth-child(3))" in mid
+    assert ".ev-cards:has(> .ev-card:nth-child(4))" in mid
+    assert "--ev-card-columns: 2;" in mid
     assert ".ev-cards," in phone
     assert "--ev-card-columns: 1;" in phone
     for count in (2, 3, 4):
         assert f":has(> .ev-card:nth-child({count}))" in phone
+    # 205px of 56px ink, 52px of card padding and the 1px border, on each side of the rate.
+    minimum_track = 260
+    big = css[css.index(".ev-big {") : css.index("}", css.index(".ev-big {"))]
+    assert "font-size: 56px;" in big
+    assert ".page-live-eval main {\n  max-width: 1200px;" in css
+    narrow_page = _media_block(css, r"@media\s*\(\s*max-width:\s*750px\s*\)\s*\{")
+    assert "padding: 28px 18px;" in narrow_page
+    for viewport in (390, 601, 700, 800, 900, 1024, 1199, 1280):
+        pad = 18 if viewport <= 750 else 28
+        content = min(viewport, 1200) - 2 * pad
+        for count in (1, 2, 3, 4, 5):
+            columns = _scorecard_columns(viewport, count)
+            track = (content - 20 * (columns - 1)) / columns
+            assert track >= minimum_track, (viewport, count, columns, track)
     card = css[css.index(".ev-card {") : css.index("}", css.index(".ev-card {"))]
     assert "min-width: 0;" in card
+    name = css[css.index(".ev-name {") : css.index("}", css.index(".ev-name {"))]
     stat = css[css.index(".ev-stat {") : css.index("}", css.index(".ev-stat {"))]
+    assert "overflow-wrap: anywhere;" in name
     assert "display: block;" in stat and "width: 100%;" in stat
-    assert "min-width: 0;" in stat and "text-wrap: pretty;" in stat
+    assert "min-width: 0;" in stat and "overflow-wrap: anywhere;" in stat
+    assert "text-wrap: pretty;" in stat
     assert ".ev-big small" not in css
 
 

@@ -1924,7 +1924,7 @@ def scorecard(receipt: Receipt) -> str:
         '<div class="ev-rate">'
         f'<div class="ev-big">{pct(receipt.rate, 2)}</div>'
         f'<p class="ev-stat">{receipt.passed} of {receipt.n} requests passed · '
-        f"{_repair_phrase(receipt)}</p></div>"
+        f"{esc(_repair_phrase(receipt))}</p></div>"
         f'<div class="ev-ci">95% CI · Wilson {pct(wilson_low)}–{pct(wilson_high)}'
         f" · case bootstrap {pct(boot_low)}–{pct(boot_high)}</div>"
         '<div class="ev-kv">'
