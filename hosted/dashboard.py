@@ -947,6 +947,18 @@ def _render(
         _about(extract, path, rows)
 
 
+def _duckdb_error(exc: BaseException) -> bool:
+    """True for ``duckdb.Error``, including the ``_duckdb`` implementation class."""
+    module = type(exc).__module__.split(".")[0]
+    if module in {"duckdb", "_duckdb"}:
+        return True
+    try:
+        import duckdb
+    except ModuleNotFoundError:
+        return False
+    return isinstance(exc, duckdb.Error)
+
+
 def _fail(message: str) -> None:
     st.title("Chess Analytics Lab")
     st.error(message)
@@ -1004,7 +1016,7 @@ def main() -> None:
     except ModuleNotFoundError as exc:
         _fail(f"Dashboard cube could not be imported: {exc}")
     except Exception as exc:
-        if type(exc).__module__.split(".")[0] == "duckdb":
+        if _duckdb_error(exc):
             _fail(f"Dashboard cube unavailable: {exc}")
         raise
     if extract_error is not None or extract is None or path is None or table_rows is None:
