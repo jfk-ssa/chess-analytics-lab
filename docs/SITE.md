@@ -17,6 +17,7 @@ The site is static: it cannot run the analyst, contact a model or download games
 | [Demo](https://jfk-ssa.github.io/chess-analytics-lab/demo.html) | [Demo walkthrough](DEMO.md), synthetic dashboard screenshots | Actual example screens and copyable commands |
 | [Transpositions](https://jfk-ssa.github.io/chess-analytics-lab/transpositions.html) | [Analysis guide](TRANSPOSITIONS.md), checked corpus and position reports | Rankings, route balance, coverage/depth/scatter charts, public fianchetto lenses and route comparisons |
 | [Opening learning](https://jfk-ssa.github.io/chess-analytics-lab/opening-learning.html) | [Transposition learning](TRANSPOSITION_LEARNING.md) | Illustrative board, lesson design and evaluation proposal |
+| [Live eval](https://jfk-ssa.github.io/chess-analytics-lab/live-eval.html) | Committed `reports/live-eval-receipt-*.json` files and [analyst_live_v1.json](../evals/cases/analyst_live_v1.json) | Scorecard, intervals, hard-fail panel, and per-case chart. Generated in the Pages build. |
 
 | [Analyze games](https://jfk-ssa.github.io/chess-analytics-lab/import-games.html) | [Local PGN guide](GAME_IMPORT.md), [import contract](../contracts/imported_games.json), authored fixtures | Local worker replay, explicit provider/player selection, bounded reference coverage and summary download |
 
@@ -75,12 +76,13 @@ optional `docs` extra pins Markdown and Jinja2; the application does not need th
 Every generated page shows the same links. No group is behind a dropdown or a
 Menu button. Primary links are Home, Data pipeline, Transpositions, Analyze
 games, and AI analyst. The Lab strip lists Metrics & data, Architecture, Run
-the demo, AI comparison, and Opening learning. Data pipeline and Architecture
+the demo, AI comparison, Opening learning, and Live eval. Data pipeline and Architecture
 both open the architecture guide. AI analyst and AI comparison both open the
 comparison guide. Each link to the current page has `aria-current="page"`.
 
 Above 960 CSS pixels the header is sticky. From 601px through 960px it scrolls
-away and both rows are five-column grids. At 600px and below the primary links
+away. The primary row is a five-column grid and the Lab row is a six-column
+grid. At 600px and below the primary links
 are full-width 44px rows and Lab is one wrapping line of text links at least
 24px tall. The compact header is CSS, so it does not wait for JavaScript and
 does not shift into place. `site.js` no longer watches a navigation breakpoint.
@@ -172,6 +174,12 @@ pinned chess library. This is an illustrative walkthrough, not a trainer or a
 measured improvement in learning. The complete rationale is maintained in
 Markdown and uses the same visual style and navigation as the other guides.
 
+On Live eval, read the raw pass rate first. Repair counts sit beside it.
+The hard-fail panel is Sol's `boundary_budget` rows unless a later receipt
+adds another high-severity miss. Charts are inline SVG. The wide case chart
+scrolls inside its frame on a narrow screen. The page is rebuilt from
+`reports/live-eval-receipt-*.json` whenever the site is built.
+
 ## Shared appearance
 
 [The visual style guide](DESIGN.md) explains the Inter heading/body font roles,
@@ -189,7 +197,7 @@ stacked cards; ordinary article tables align to the prose reading width.
 
 ## Site review improvements
 
-The eight current pages have distinct descriptions, self-canonical URLs,
+The nine current pages have distinct descriptions, self-canonical URLs,
 Open Graph and Twitter sharing tags, a shared 1200×630 PNG preview and SVG/ICO
 favicons. The homepage canonical URL is the directory URL. Sharing metadata is
 checked locally; provider preview caches may need to be refreshed after deployment.

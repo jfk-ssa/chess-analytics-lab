@@ -191,6 +191,15 @@ sentence is open. The expected status stays `unsupported`. The rubric
 stays `live-eval-1.0`. The gate stays advisory, and this checkout adds
 no schedule.
 
+The documentation build reads `reports/live-eval-receipt-*.json` and
+publishes [the live-eval page](https://jfk-ssa.github.io/chess-analytics-lab/live-eval.html).
+The headline there is the raw pass rate, with repair counts beside it.
+Sol's hard fail is the five `boundary_budget` rows described above.
+The instruction-hash note on that page is this explanation: the prompts
+differ by the snapshot id, and a later receipt should record
+`dataset_id` and `implementation_sha256`. See
+[ADR 0096](adr/0096-published-live-eval-report.md).
+
 For offline replay, first run `chesslab demo --scope all`, then use the command
 in [DEMO.md](DEMO.md). Historical fixture harness checks are available with
 `python -m chess_analytics.analyst eval --split both` **only when its matching analytical

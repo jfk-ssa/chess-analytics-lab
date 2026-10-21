@@ -1,0 +1,65 @@
+# 0096. Published live-eval report
+
+- Status: accepted
+- Date: 2026-10-21
+
+## Motivation
+
+[ADR 0093](0093-first-live-eval-receipts.md) commits the Luna and Sol
+receipts and leaves them as JSON. A portfolio reader should be able to
+see the gate, the intervals, and the hard fail without opening those
+files. The documentation site already publishes recorded evidence. This
+report belongs there, generated in the same offline build.
+
+0094 is left for the hosted dashboard record on #44. 0095 is left for
+the open Grok 4.7 live-eval record on #45, which still files its ADR as
+0093. This record is the next number that does not collide with either.
+
+## Decision
+
+`chess_analytics.eval_report` reads every
+`reports/live-eval-receipt-*.json`, sorted by the GitHub run id in the
+filename. It does not list run ids. A run is labelled with its `model`.
+When `reasoning_effort` is present and is not `none`, the label adds
+that effort, so later Grok 4.7 receipts at low, medium, and high can
+render as extra runs.
+
+The Pages build renders `live-eval.html` through the existing Jinja
+shell and links it from the Lab strip. The build fails if a receipt
+total does not match its rows. Output does not include a clock, a
+download, or a font request to a CDN. Charts are inline SVG with
+`title` and `desc`. The headline is the raw pass rate. Repair counts
+sit beside it and do not replace it.
+
+Headings, the dek, the large rates, and the hard-fail question use
+Inter, the Latin variable file the site and dashboard already share
+(`src/chess_analytics/dashboard/static/fonts/inter-latin-wght-normal.woff2`,
+SIL OFL 1.1). Every page preloads that file. `font-display` stays
+`swap`. Code and case ids use a local monospace stack. No second
+webfont is vendored and none is inlined as base64.
+
+The Lab row at 601–960px is six columns. The primary row stays five.
+At 600px and below, Lab remains one wrapping line.
+
+### Instruction hash
+
+The two committed prompts differ only by the 24-character dataset id.
+The prompt embeds `Dataset: {dataset_id}`. That id comes from
+`implementation_hash` over `src/**/*.py`, `src/**/*.sql`, and
+`contracts/*.json`. Adding `public_extract.py` in #42 changed the hash.
+The runs share the case set, the fixture, the rubric, and the frozen
+planner files, so they are comparable. The page says that, and it says
+that a later receipt should record `dataset_id` and
+`implementation_sha256`. It does not call the difference unexplained.
+
+Sol's `hard_fail` stays the five `boundary_budget` repeats: expected
+`unsupported`, emitted `needs_clarification`. That panel is derived
+from the rows.
+
+## What this record leaves in place
+
+Push and pull-request CI still do not call a model. The live-eval
+workflow still does not commit receipts. The offline gate baseline is
+unchanged. Publishing the page does not close the open question in
+ADR 0093 about whether an empty-action `needs_clarification` should
+count as the refusal for the spending-cap sentence.

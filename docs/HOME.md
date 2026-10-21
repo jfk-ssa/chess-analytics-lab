@@ -29,6 +29,7 @@ and limitations retained alongside their results.
 | How does the pipeline work? | [Architecture](ARCHITECTURE.md) |
 | How are metrics defined? | [Definitions and denominators](METRICS.md) |
 | What do the models demonstrate? | [Measured comparison](CLASSIFIER_COMPARISON.md) |
+| How did the live analyst score? | [Live eval report](https://jfk-ssa.github.io/chess-analytics-lab/live-eval.html) |
 | Which study boards occur in my games? | [Local PGN analysis](GAME_IMPORT.md), with explicit player selection and a bounded public reference |
 | Which opening positions recur across move orders? | [Transposition analysis](TRANSPOSITIONS.md) and [learning design](TRANSPOSITION_LEARNING.md) |
 | Can I reproduce a small example? | [Offline walkthrough](DEMO.md) |

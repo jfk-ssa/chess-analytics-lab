@@ -1,0 +1,100 @@
+<div class="live-eval">
+<div class="ev-meta">
+{% for label, value in view.meta %}
+<span><b>{{ label | e }}</b> {{ value | e }}</span>
+{% endfor %}
+</div>
+{{ view.caveat_html }}
+
+<section id="scorecard">
+<span class="ev-sec">01</span>
+<h2>Scorecard</h2>
+<p class="ev-take">The headline is the share of requests whose <i>raw</i> plan passed. Repairs sit beside that rate and never replace it. The two intervals answer different questions. Wilson treats all {{ view.requests_per_run }} requests as independent. The case-cluster bootstrap resamples whole cases, so it is wider. It is the honest one when the same question is asked {{ view.repeats }} times.</p>
+<div class="ev-cards">{{ view.scorecards_html }}</div>
+<div class="ev-figure">
+<h3>Headline pass rate, 95% intervals</h3>
+{{ view.intervals_svg }}
+<p class="ev-note">Filled dot = gate clear, hollow ring = <code>hard_fail = true</code>. Interval bounds come from each receipt's <code>stats</code> block. The Wilson bounds were also recomputed from the rows and match. The bootstrap bounds (seed 20261018) are taken as recorded; they were not re-run here because they depend on the repo's resampler.</p>
+{{ view.pairwise_html }}
+</div>
+</section>
+
+<section id="hard-fail">
+<span class="ev-sec">02</span>
+<h2>The hard fail, explained</h2>
+<p class="ev-take">{{ view.hard_intro | e }}</p>
+{{ view.callouts_html }}
+</section>
+
+<section id="cases">
+<span class="ev-sec">03</span>
+<h2>Every case, every repeat</h2>
+<p class="ev-take">{{ view.heat_take_html }}</p>
+<div class="ev-figure">
+{{ view.heat_legend_html }}
+<div class="scroll">{{ view.heatmap_svg }}</div>
+{{ view.heat_table_html }}
+<p class="ev-note">Categories, questions, expected status and severity come from the case file (<code>{{ view.case_file | e }}</code>). High-severity groups are listed first. “refuse” = expected <i>unsupported</i>, “clarify” = expected <i>needs_clarification</i>. Hover a cell for each repeat, or open the table.</p>
+</div>
+</section>
+
+<section id="failures">
+<span class="ev-sec">04</span>
+<h2>How the models fail</h2>
+<p class="ev-take">{{ view.fail_take_html }}</p>
+<div class="ev-figure">
+<h3>Expected vs emitted status, rows</h3>
+{{ view.status_svg }}
+<p class="ev-note">Grey diagonal = right kind of response (an answer there can still fail on values). Amber = over-abstention, vermilion = clarify/refuse swap, black = unsafe answer, pink = no valid plan. Counts are rows, out of {{ view.requests_per_run }} per run.</p>
+</div>
+<div class="ev-figure">
+<h3>Failed rows by primary mode</h3>
+{{ view.failure_legend_html }}
+{{ view.failure_svg }}
+<p class="ev-note">{{ view.failure_note_html }}</p>
+</div>
+</section>
+
+<section id="consistency">
+<span class="ev-sec">05</span>
+<h2>Consistency across repeats</h2>
+<p class="ev-take">{{ view.flaky_take_html }}</p>
+<div class="ev-figure">
+<div class="scroll">{{ view.consistency_svg }}</div>
+</div>
+</section>
+
+<section id="cost">
+<span class="ev-sec">06</span>
+<h2>What it costs</h2>
+<p class="ev-take">{{ view.cost_take_html }}</p>
+<div class="ev-grid2">
+<div class="ev-figure">
+<h3>Quality vs cost</h3>
+{{ view.cost_svg }}
+<p class="ev-note">Whiskers: Wilson 95%. The dashed line connects runs that no cheaper run beats on pass rate. Hollow ring = hard fail.</p>
+</div>
+<div class="ev-figure">
+<h3>Cost per request</h3>
+{{ view.request_svg }}
+<p class="ev-note">{{ view.request_note_html }}</p>
+</div>
+</div>
+</section>
+
+<section id="methods" class="ev-methods">
+<span class="ev-sec">07</span>
+<h2>Methods, provenance and data notes</h2>
+<p>Each receipt is a complete <code>analyst_live_v1_receipt</code>: {{ view.n_cases }} frozen cases × {{ view.repeats }} repeats, scored by <code>{{ view.rubric | e }}</code> on the model's raw plan (<code>model_plan_before_semantic_repair</code>). Extraction recoveries, such as a duplicated plan object, are counted as repairs and never flip a failing headline bit. Wilson intervals use z = 1.959963984540054. The bootstrap resamples cases with replacement and keeps every repeat of a sampled case. Paired comparisons use an exact two-sided sign test on cases whose pass counts differ. This report derives the failure modes, the status matrix, the sign test and the per-repeat counts from row fields. Every other figure is read from the receipts or the case file (<a href="{{ repo_url }}{{ view.case_file | e }}">{{ view.case_file | e }}</a>).</p>
+<p>Receipt files, in GitHub run-id order:{% for name in view.receipt_files %} <a href="{{ repo_url }}reports/{{ name | e }}"><code>{{ name | e }}</code></a>{% endfor %}</p>
+{{ view.provenance_html }}
+<h3>Data notes</h3>
+<ul class="ev-notes">{{ view.notes_html }}</ul>
+<h3>Integrity checks: receipt aggregates re-derived from rows</h3>
+<ul class="ev-checks">
+{% for label, ok in view.checks %}
+<li><span class="{{ 'ev-y' if ok else 'ev-n' }}">{{ '✓' if ok else '✗' }}</span>{{ label | e }}</li>
+{% endfor %}
+</ul>
+</section>
+</div>

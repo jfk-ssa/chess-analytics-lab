@@ -113,7 +113,9 @@ report is linked as a separate artifact, preserving its historical appearance.
 - [Website builder](../scripts/build_docs_site.py) copies only named assets.
   The site and dashboard share the same checked Inter file from
   `src/chess_analytics/dashboard/static/fonts`. All current guide and dashboard text uses Inter
-  except code, which keeps its monospace role.
+  except code, which keeps its monospace role. The live-eval page uses that
+  same file for headings, the lead, large rates, and callouts, and preloads it.
+  Case ids stay on the local monospace stack. No extra webfont is added.
 
 The font files are Latin-subset normal-style variable WOFF2 files. Other scripts
 and unsupported glyphs use the fallback fonts; italic text can use synthesized

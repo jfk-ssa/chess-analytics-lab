@@ -46,6 +46,9 @@ from Fontsource packages **5.3.0**, under **SIL Open Font License 1.1**.
 It retains its own license; the project's GPL does not replace it.
 See [pinned URLs and SHA-256 hashes](site/assets/fonts/provenance.json),
 [Inter license](src/chess_analytics/dashboard/static/fonts/LICENSE.inter.txt).
+The live-eval page uses this same file. Every documentation page preloads
+it, `font-display` is `swap`, and the build does not inline a second face
+or request a font CDN. The OFL text is the file linked above.
 
 
 ## Bundled browser chess engine

@@ -18,6 +18,8 @@ import chess.svg
 import markdown
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
+from chess_analytics.eval_report import build_page, discover_receipts, load_cases
+
 TEMPLATES = Path(__file__).resolve().parent / "templates"
 ENV = Environment(loader=FileSystemLoader(TEMPLATES), autoescape=False, undefined=StrictUndefined)
 
@@ -91,6 +93,7 @@ LAB_NAV = (
     ("Run the demo", "demo.html"),
     ("AI comparison", "comparison.html"),
     ("Opening learning", "opening-learning.html"),
+    ("Live eval", "live-eval.html"),
 )
 
 
@@ -923,6 +926,20 @@ The documentation workflow replaces this page with
 """
 
 
+def live_eval(repo):
+    """Render the receipt report. Receipt filenames are discovered, not listed."""
+    case_path = repo / "evals/cases/analyst_live_v1.json"
+    receipts = discover_receipts(repo / "reports")
+    view = build_page(
+        receipts,
+        load_cases(case_path),
+        strict=True,
+        case_file=case_path.relative_to(repo).as_posix(),
+    )
+    body = render("live_eval.html.j2", view=view, repo_url=REPO_URL)
+    return view.title, view.description, body
+
+
 def build(repo, output):
     repo, output = repo.resolve(), output.resolve()
     if output == repo or (output.is_relative_to(repo) and not output.is_relative_to(repo / "work")):
@@ -1019,6 +1036,7 @@ def build(repo, output):
     ):
         if (repo / "site/assets" / name).exists():
             demo_images += render("demo_figure.html.j2", name=name, caption=caption)
+    live_title, live_description, live_body = live_eval(repo)
     bodies = {
         "index.html": (
             "Chess Analytics Lab",
@@ -1085,6 +1103,7 @@ def build(repo, output):
             + transpositions()
             + md(repo, "TRANSPOSITION_LEARNING.md"),
         ),
+        "live-eval.html": (live_title, live_description, live_body),
     }
     # Keep previously published learning-guide fragments useful after the page split.
     legacy = SiteLinks()
@@ -1146,6 +1165,9 @@ def build(repo, output):
         )
     )
     source_files.add(repo / "tests/fixtures/portfolio_expected.json")
+    source_files.add(repo / "src/chess_analytics/eval_report.py")
+    source_files.add(repo / "evals/cases/analyst_live_v1.json")
+    source_files.update(discover_receipts(repo / "reports"))
     source_files.add(repo / "site/assets/favicon.ico")
     source_files.update((repo / "contracts").glob("*.json"))
     source_files.update(
