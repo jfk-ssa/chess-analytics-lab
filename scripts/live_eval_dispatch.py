@@ -45,8 +45,9 @@ CHECKLIST_LINES = (
     "2. Confirm the reasoning effort. OpenAI ids in this harness accept "
     "reasoning.effort none, and the quote sends none. grok-4.7 cannot disable "
     "reasoning. Allowed efforts are low, medium, high, and xhigh. The headline "
-    "comparison is low at 5 repeats. medium and high are a 1-repeat sensitivity "
-    "check and are not a second 5-repeat headline. This job does not probe the API.",
+    "run is low at 5 repeats. The effort comparison is one repeat each of low, "
+    "medium, and high on the same instructions. medium and high are not a second "
+    "5-repeat headline. This job does not probe the API.",
     "3. Recheck prices. The recorded date is DEFAULT_PRICE_CHECKED_UTC_DATE in "
     "src/chess_analytics/analyst/preflight.py. pricing.py does not store that date. "
     f"This job stops when the date is older than {PRICE_CHECK_MAX_AGE_DAYS} days "

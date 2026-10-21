@@ -210,14 +210,15 @@ See
 
 `grok-4.7` is a third manual model. The headline comparison with the
 OpenAI models is reasoning effort `low` at 5 repeats, the smallest
-effort that model accepts, beside `reasoning.effort` of `none`. Medium
-and high are a sensitivity check at 1 repeat each. Those receipts and
-the job summary carry `repeats: 1`. Their pass rates are not 5-repeat
-headline rates and are not compared with Luna, Sol, or the low 5-repeat
-rate as a matched sample. The published page keeps one label per effort.
-When the committed set has one grok-4.7 receipt at each of low, medium,
-and high, and low has more repeats, those three arms are a reasoning-effort
-sweep instead of the generic sensitivity section. The per-run cap is $10. See
+effort that model accepts, beside `reasoning.effort` of `none`. The
+effort sweep compares one repeat each of low, medium, and high that
+share an instruction hash. Those 1-repeat receipts carry `repeats: 1`.
+Their pass rates are not 5-repeat headline rates and are not compared
+with Luna, Sol, or the low 5-repeat rate as a matched sample. The
+5-repeat low stays the headline. A missing 1-repeat low is an empty
+slot on the page, not a reason to put the 5-repeat run in the sweep.
+`(model, effort)` may repeat when the repeat counts differ and exactly
+one of them is the 5-repeat headline. The per-run cap is $10. See
 [ADR 0095](adr/0095-grok-4-7-live-eval.md). The first low x5 dispatch
 stopped on the first request with HTTP 400 and no scored row. The
 receipt text was `unavailable` because the error body was not an
@@ -281,14 +282,20 @@ share a hash. Rebuilding the prompt shows the only character difference is
 `Dataset: 06bc03a3eabab5bbf3b958ec` versus `Dataset: bea194558220eb669940d8f3`.
 The id includes `implementation_hash`. Between those commits the only files
 inside that hash that changed are `eval_report.py` and `public_extract.py`.
-The model sees a different snapshot id, so low is not strictly comparable with
-medium or high. The page says so and does not sign-test low against either.
-Medium versus high is a matched pair (same prompt, frozen inputs, case ids, and
-one repeat). Their Wilson intervals overlap. The exact sign test on that pair
-is p = 0.5 (high better on 2 cases, medium on 0). All three clear the gate.
-That is a gate fact, not a pass-rate ranking. Cost per repeat is about $0.20
-for low ($0.200661), $0.322454 for medium, and $0.408746 for high. Reasoning
-tokens per repeat are 13,955.2, 32,410, and 46,763.
+The model sees a different snapshot id, so the 5-repeat low is not strictly
+comparable with medium or high. `instructions_sha256` is the SHA-256 of the
+literal instructions text in `live_runner._quote`. The page says the 5-repeat
+run is not strictly comparable and does not sign-test it against either
+1-repeat arm. The clean comparison is low x1 versus medium x1 versus high x1.
+That low x1 receipt, from main 15aaeb3, is not in this tree yet. The page
+holds the slot. Medium versus high is a matched pair (same prompt, frozen
+inputs, case ids, and one repeat). Their Wilson intervals overlap. The exact
+sign test on that pair is p = 0.5 (high better on 2 cases, medium on 0).
+Medium and high clear the gate. That is a gate fact, not a pass-rate ranking.
+The 5-repeat low costs about $0.20 per repeat ($0.200661) and uses 13,955.2
+reasoning tokens. That spend, and its `usage_sicilian_3` miss, stay on the
+headline. Medium costs $0.322454 and uses 32,410 reasoning tokens. High costs
+$0.408746 and uses 46,763.
 
 For offline replay, first run `chesslab demo --scope all`, then use the command
 in [DEMO.md](DEMO.md). Historical fixture harness checks are available with

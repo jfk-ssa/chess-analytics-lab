@@ -40,9 +40,10 @@ Those receipts are `committed_report`. Category and case rows omit
 joins a row to that run. Each run row also carries `frozen_group`,
 `instructions_sha256`, and `reasoning_tokens`. Headline charts and the
 six eval cards stay on the 5-repeat runs. The eval tab adds a grok
-reasoning-effort sweep for low (5 repeats) against medium and high
-(1 repeat each). Low is not strictly comparable with those two. The
-file is 259,038 bytes.
+reasoning-effort sweep for one repeat each of low, medium, and high on
+the same instructions. The 1-repeat low receipt is not committed yet, so
+that card is empty. The 5-repeat low stays on the headline cards and is
+not strictly comparable with medium and high. The file is 257,899 bytes.
 
 ## Run locally
 

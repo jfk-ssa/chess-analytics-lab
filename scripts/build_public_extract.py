@@ -25,6 +25,7 @@ from chess_analytics.public_extract import (
     TABLES,
     extract_path,
     identifier_issues,
+    live_eval_rate_id,
 )
 
 PROJECT = Path(__file__).resolve().parents[1]
@@ -620,11 +621,27 @@ def receipt_rows(sources: dict, tables: dict) -> list[dict]:
             None,
         )
     )
+    shared = {
+        (run["model"], run["effort"])
+        for run in tables["live_eval_run"]
+        if sum(
+            1
+            for other in tables["live_eval_run"]
+            if other["model"] == run["model"] and other["effort"] == run["effort"]
+        )
+        > 1
+    }
     for run in tables["live_eval_run"]:
-        subject = f"{run['model']} {run['effort']}"
+        receipt_id = live_eval_rate_id(
+            run["model"],
+            run["effort"],
+            int(run["repeats"]),
+            shared=(run["model"], run["effort"]) in shared,
+        )
+        subject = receipt_id.split(":", 1)[1]
         rows.append(
             _receipt(
-                f"live_eval_pass_rate:{subject}",
+                receipt_id,
                 "live_eval_pass_rate",
                 subject,
                 run["passed"],
@@ -913,11 +930,19 @@ def live_eval_tables(project: Path) -> tuple[list[dict], list[dict], list[dict],
     failed = [f"{label} {detail}".strip() for label, ok, detail in integrity.checks if not ok]
     if failed:
         raise ValueError("live eval receipt failed integrity: " + "; ".join(failed[:4]))
-    pairs = [(receipt.model, receipt.effort) for receipt in receipts]
-    if len(pairs) != len(set(pairs)):
-        raise ValueError(
-            "live eval (model, effort) is not unique, so case and category rows cannot join a run"
-        )
+    by_pair: dict[tuple[str, str], list] = defaultdict(list)
+    for receipt in receipts:
+        by_pair[(receipt.model, receipt.effort)].append(receipt)
+    for (model, effort), items in by_pair.items():
+        if len(items) == 1:
+            continue
+        repeats = [item.repeats for item in items]
+        headlines = [item for item in items if item.repeats == 5]
+        if len(repeats) != len(set(repeats)) or len(headlines) != 1:
+            raise ValueError(
+                "live eval (model, effort) is not unique, so case and category rows cannot "
+                f"join a run ({model} {effort})"
+            )
     runs = []
     categories = []
     case_rows = []
@@ -990,7 +1015,15 @@ def live_eval_tables(project: Path) -> tuple[list[dict], list[dict], list[dict],
                     "trials": trials,
                 }
             )
-    grok = [receipt for receipt in receipts if receipt.model == "grok-4.7"]
+    # 1-repeat grok arms only. A later low x1 receipt fills the low rows.
+    # The 5-repeat low run stays in the headline case grid.
+    grok = [
+        receipt
+        for receipt in receipts
+        if receipt.model == "grok-4.7"
+        and receipt.repeats == 1
+        and receipt.effort in {"low", "medium", "high"}
+    ]
     imperfect = {
         case_id
         for receipt in grok
@@ -1107,7 +1140,11 @@ def _check_live_eval(extract: dict) -> None:
         if run["passed"] > run["trials"] or run["trials"] != run["cases"] * run["repeats"]:
             raise ValueError(f"{run['model']} live eval trials do not match")
         own = [
-            row for row in cases if row["model"] == run["model"] and row["effort"] == run["effort"]
+            row
+            for row in cases
+            if row["model"] == run["model"]
+            and row["effort"] == run["effort"]
+            and row["repeats"] == run["repeats"]
         ]
         if not own:
             if run["headline"]:

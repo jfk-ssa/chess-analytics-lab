@@ -178,7 +178,8 @@ receipt and this checkout. `instructions_sha256` does not. Low is
 `622007a3deb785c204e58ba68419af0adbb0c0929d29dd97241038514d17181f`. Medium and
 high are both
 `be294fd35f35327317ab64e58a202ef822347e9ac3451cda01bdc29ae15cc8d3`. That digest
-is SHA-256 of the system prompt in `quote_request`. Reasoning effort is not in
+is SHA-256 of the literal instructions text in `live_runner._quote`, the
+`instructions` field of the quoted request body. Reasoning effort is not in
 that string, so medium and high share it. Rebuilding the prompt at e396cf4 and
 at 15aaeb3, with the analytical snapshot id each tree produces, matches those
 two digests. Both prompts are 10,427 characters. The only difference is
@@ -193,32 +194,41 @@ sees a different 24-character snapshot id. That is material. ADR 0096 treats
 a dataset-id-only difference as comparable only for the known Luna/Sol hash
 pair, or when both receipts record distinct `dataset_id` values. These grok
 receipts have no `dataset_id`. `pair_explained_by_dataset_id` stays false for
-this hash pair. Low versus medium, and low versus high, are not strictly
-comparable. The page says so and still shows the sweep. Medium versus high
-share the prompt, the frozen inputs, the case ids, and one repeat, so they
-are a matched pair. The sweep sign-tests only that pair: high is better on 2
-cases, medium on 0, exact two-sided p = 0.5. It does not sign-test low
-against either, and it does not say whether low's Wilson interval overlaps
-theirs. Medium and high Wilson intervals do overlap. All three clear the gate.
-That is a gate fact, not a pass-rate ranking.
+this hash pair. The 5-repeat low run versus medium, and that low run versus
+high, are not strictly comparable. The clean comparison is one repeat each of
+low, medium, and high on the shared hash. The owner is running that low x1
+from 15aaeb3. It is not in this tree yet. The page holds an empty slot,
+`data-sweep-slot="low-1"`, and does not plot the 5-repeat run on the sweep
+chart. Medium versus high share the prompt, the frozen inputs, the case ids,
+and one repeat, so they are a matched pair. The sweep sign-tests only that
+pair until the slot fills: high is better on 2 cases, medium on 0, exact
+two-sided p = 0.5. It does not sign-test the 5-repeat low against either, and
+it does not say whether that run's Wilson interval overlaps theirs. Medium and
+high Wilson intervals do overlap. Medium and high clear the gate. That is a
+gate fact, not a pass-rate ranking.
 
-Per repeat, low costs $0.200661 (about $0.20) and uses 13,955.2 reasoning
-tokens. Medium costs $0.322454 and uses 32,410. High costs $0.408746 and uses
-46,763. The other 44 cases pass on every repeat of every effort.
-`coverage_1` and `coverage_2` pass 5/5 at low and 1/1 at high, and fail the
-one medium draw as over-abstention. `indirect_opening_1` fails every repeat
-of every effort as over-abstention. `usage_sicilian_3` is 3/5 at low (one
-over-abstention, one wrong answer) and passes the single medium draw and the
-single high draw.
+The 5-repeat low run stays the headline. Per repeat it costs $0.200661 (about
+$0.20) and uses 13,955.2 reasoning tokens. That spend is not a quality result.
+`usage_sicilian_3` is 3/5 on that headline run (one over-abstention, one wrong
+answer) and passes the single medium draw and the single high draw, so it
+stays on the headline grid and is not a 1-repeat sweep row. Medium costs
+$0.322454 and uses 32,410 reasoning tokens. High costs $0.408746 and uses
+46,763. On the 1-repeat arms, the other 45 cases pass. `coverage_1` and
+`coverage_2` fail the one medium draw as over-abstention and pass the one high
+draw. `indirect_opening_1` fails both as over-abstention.
 
 The 1-repeat runs are not folded into the 5-repeat Wilson chart, the category
 chart, the case grid, or the six headline cards. The gate card stays
-`Luna, grok-4.7 low clear; Sol fail`. Full case and category rows for the two
+`Luna, grok-4.7 low clear; Sol fail`. Full case and category rows for the
 1-repeat runs would not fit the 262,144 byte budget. Those rows are omitted.
-`live_eval_effort_case` stores the 12 grok rows for the four cases above.
-Run rows gain `instructions_sha256` and `reasoning_tokens`. The committed
-extract is 259,038 bytes. The same tables without the `build` key are
-258,692 bytes. Both are under 262,144. The metric receipts
+`live_eval_effort_case` stores the 6 grok rows for the three 1-repeat cases
+above, medium and high only. A later low x1 on the same hash fills the low
+rows. `(model, effort)` may repeat when the repeat counts differ and exactly
+one receipt has 5 repeats. The non-headline twin's rate id is
+`live_eval_pass_rate:grok-4.7 low r1`. A second 5-repeat low still fails the
+uniqueness check. Run rows gain `instructions_sha256` and `reasoning_tokens`.
+The committed extract is 257,899 bytes. The same tables without the `build`
+key are 257,553 bytes. Both are under 262,144. The metric receipts
 `live_eval_pass_rate:grok-4.7 medium` (45/48) and
 `live_eval_pass_rate:grok-4.7 high` (47/48) are `committed_report`. The build
 record and the non-live tables are unchanged.

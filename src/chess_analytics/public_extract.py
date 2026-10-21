@@ -160,6 +160,14 @@ def extract_path(project: Path | None = None) -> Path:
     )
 
 
+def live_eval_rate_id(model: str, effort: str, repeats: int, *, shared: bool) -> str:
+    """Pass-rate receipt id. A non-headline twin is suffixed so the ids stay unique."""
+    subject = f"{model} {effort}"
+    if shared and repeats != 5:
+        subject = f"{subject} r{repeats}"
+    return f"live_eval_pass_rate:{subject}"
+
+
 def load_extract(path: Path | None = None) -> dict:
     """Load and check the extract shape. Does not open DuckDB."""
     source = Path(path) if path is not None else extract_path()
@@ -394,6 +402,13 @@ def _color_subject(value: object) -> bool:
 def _eval_subject(value: object) -> bool:
     if not isinstance(value, str) or " " not in value:
         return False
+    # A second receipt of the same model and effort, at a different repeat count,
+    # uses "model effort rN". The 5-repeat id stays "model effort".
+    repeat = ""
+    if " r" in value:
+        value, repeat = value.rsplit(" r", 1)
+        if not repeat.isdigit():
+            return False
     model, effort = value.rsplit(" ", 1)
     return model in _MODELS and effort in _EFFORTS
 

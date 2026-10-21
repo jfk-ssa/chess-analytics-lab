@@ -287,7 +287,9 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     assert "not strictly comparable" in report
     assert "06bc03a3eabab5bbf3b958ec" in report
     assert "bea194558220eb669940d8f3" in report
-    assert "1-repeat sensitivity check" in report
+    assert "1-repeat effort comparison" in report
+    assert 'data-sweep-slot="low-1"' in report
+    assert "1-repeat receipt not in this report yet" in report
     assert 'rel="preload"' in report
     assert "inter-latin-wght-normal.woff2" in report
     assert "live-eval.html" in (output / "sitemap.xml").read_text()

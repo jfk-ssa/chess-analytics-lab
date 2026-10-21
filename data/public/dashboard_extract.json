@@ -5778,14 +5778,6 @@
       },
       {
         "case_id": "coverage_1",
-        "effort": "low",
-        "failure_modes": "none",
-        "model": "grok-4.7",
-        "passed": 5,
-        "repeats": 5
-      },
-      {
-        "case_id": "coverage_1",
         "effort": "medium",
         "failure_modes": "over_abstention",
         "model": "grok-4.7",
@@ -5799,14 +5791,6 @@
         "model": "grok-4.7",
         "passed": 1,
         "repeats": 1
-      },
-      {
-        "case_id": "coverage_2",
-        "effort": "low",
-        "failure_modes": "none",
-        "model": "grok-4.7",
-        "passed": 5,
-        "repeats": 5
       },
       {
         "case_id": "coverage_2",
@@ -5826,42 +5810,10 @@
       },
       {
         "case_id": "indirect_opening_1",
-        "effort": "low",
-        "failure_modes": "over_abstention",
-        "model": "grok-4.7",
-        "passed": 0,
-        "repeats": 5
-      },
-      {
-        "case_id": "indirect_opening_1",
         "effort": "medium",
         "failure_modes": "over_abstention",
         "model": "grok-4.7",
         "passed": 0,
-        "repeats": 1
-      },
-      {
-        "case_id": "usage_sicilian_3",
-        "effort": "high",
-        "failure_modes": "none",
-        "model": "grok-4.7",
-        "passed": 1,
-        "repeats": 1
-      },
-      {
-        "case_id": "usage_sicilian_3",
-        "effort": "low",
-        "failure_modes": "over_abstention,wrong_answer",
-        "model": "grok-4.7",
-        "passed": 3,
-        "repeats": 5
-      },
-      {
-        "case_id": "usage_sicilian_3",
-        "effort": "medium",
-        "failure_modes": "none",
-        "model": "grok-4.7",
-        "passed": 1,
         "repeats": 1
       }
     ],

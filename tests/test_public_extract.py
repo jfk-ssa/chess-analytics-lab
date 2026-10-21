@@ -880,13 +880,14 @@ def test_live_eval_rows_match_the_committed_receipts(project):
     assert high_rate["numerator"] == 47 and high_rate["denominator"] == 48
     assert medium_rate["query_origin"] == high_rate["query_origin"] == "committed_report"
     effort = table_rows(extract, "live_eval_effort_case")
-    assert len(effort) == 12
+    assert len(effort) == 6
     assert {row["case_id"] for row in effort} == {
         "coverage_1",
         "coverage_2",
         "indirect_opening_1",
-        "usage_sicilian_3",
     }
+    assert {row["effort"] for row in effort} == {"medium", "high"}
+    assert all(row["repeats"] == 1 for row in effort)
     assert "source_report" not in effort[0]
 
     def effort_row(case_id: str, effort_name: str) -> dict:
@@ -896,14 +897,37 @@ def test_live_eval_rows_match_the_committed_receipts(project):
         assert len(matches) == 1
         return matches[0]
 
-    assert effort_row("coverage_1", "low")["passed"] == 5
     assert effort_row("coverage_1", "medium")["passed"] == 0
     assert effort_row("coverage_1", "high")["passed"] == 1
     assert effort_row("coverage_2", "medium")["failure_modes"] == "over_abstention"
+    assert effort_row("indirect_opening_1", "medium")["failure_modes"] == "over_abstention"
     assert effort_row("indirect_opening_1", "high")["passed"] == 0
-    assert effort_row("usage_sicilian_3", "low")["failure_modes"] == "over_abstention,wrong_answer"
-    assert effort_row("usage_sicilian_3", "medium")["passed"] == 1
-    assert effort_row("usage_sicilian_3", "high")["passed"] == 1
+
+
+def test_one_repeat_low_fills_the_effort_slot(project, tmp_path):
+    from chess_analytics.public_extract import _eval_subject, live_eval_rate_id
+
+    headline_id = live_eval_rate_id("grok-4.7", "low", 5, shared=True)
+    slot_id = live_eval_rate_id("grok-4.7", "low", 1, shared=True)
+    assert headline_id == "live_eval_pass_rate:grok-4.7 low"
+    assert slot_id == "live_eval_pass_rate:grok-4.7 low r1"
+    assert _eval_subject("grok-4.7 low r1")
+    assert not _eval_subject("grok-4.7 low r")
+    builder = load_script()
+    bare = _reports_project(tmp_path, project)
+    source = next((bare / "reports").glob("live-eval-receipt-grok-4.7-medium-r1-*.json"))
+    payload = json.loads(source.read_text())
+    payload["reasoning_effort"] = "low"
+    payload["run_id"] = "low1slot0000000000000000000000"
+    (bare / "reports" / "live-eval-receipt-grok-4.7-low-r1-999.json").write_text(
+        json.dumps(payload),
+        encoding="utf-8",
+    )
+    runs, _categories, _cases, effort = builder.live_eval_tables(bare)
+    lows = [row for row in runs if row["model"] == "grok-4.7" and row["effort"] == "low"]
+    assert {row["repeats"] for row in lows} == {5, 1}
+    assert any(row["effort"] == "low" and row["repeats"] == 1 for row in effort)
+    assert all(row["repeats"] == 1 for row in effort)
 
 
 def test_live_eval_model_effort_must_be_unique(project, tmp_path):

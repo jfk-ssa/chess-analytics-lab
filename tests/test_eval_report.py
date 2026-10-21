@@ -177,7 +177,9 @@ def test_committed_page_matches_receipt_numbers_and_every_case():
     assert "240 requests" in page.provenance_html
     sweep = page.sweep_lead_html + page.sweep_cards_html + page.sweep_detail_html
     assert page.sensitivity_html == ""
-    assert "1-repeat sensitivity check" in sweep
+    assert "1-repeat effort comparison" in sweep
+    assert 'data-sweep-slot="low-1"' in page.sweep_cards_html
+    assert "1-repeat receipt not in this report yet" in sweep
     assert "not strictly comparable" in sweep
     assert "06bc03a3eabab5bbf3b958ec" in sweep
     assert "bea194558220eb669940d8f3" in sweep
@@ -186,7 +188,7 @@ def test_committed_page_matches_receipt_numbers_and_every_case():
     assert "This pair is comparable." in page.caveat_html
     for case_id in ("coverage_1", "coverage_2", "indirect_opening_1", "usage_sicilian_3"):
         assert case_id in sweep
-    assert "The other 44 cases" in sweep
+    assert "The other 45 cases" in sweep
     assert f"{pct(medium['headline_pass_rate'], 2)}" in sweep
     assert f"{pct(high['headline_pass_rate'], 2)}" in sweep
     assert "93.75%" not in page.scorecards_html
@@ -205,7 +207,10 @@ def test_committed_page_matches_receipt_numbers_and_every_case():
     assert "grok-4.7 · low</b> vs" not in sweep
     assert "vs <b>grok-4.7 · low</b>" not in sweep
     assert "Low's interval is not compared" in sweep
-    assert "All three clear the gate" in sweep
+    assert "Medium and high clear the gate" in sweep
+    assert "All three clear the gate" not in sweep
+    assert "The 1-repeat low run is not in this test." in sweep
+    assert "The 5-repeat headline low run is not in this test." in sweep
     assert page.sweep_cards_html.count('class="ev-card"') == 3
     assert 'id="ev-sweep-intervals-title"' in sweep
     assert "The system prompt is the same except" in sweep
@@ -226,6 +231,34 @@ def test_grok_snapshot_pair_is_not_treated_as_comparable():
     assert pair_explained_by_dataset_id(luna, sol)
     assert "not strictly comparable" in _pair_explanation(low, medium)
     assert "This pair is comparable." not in _pair_explanation(low, medium)
+
+
+def test_one_repeat_low_fills_the_sweep_slot(tmp_path):
+    """A later low x1 on the medium/high hash joins the sweep and leaves the headline."""
+    committed = _committed()
+    cases = _cases()
+    medium_path = next(path for path in committed if "medium-r1" in path.name)
+    payload = json.loads(medium_path.read_text(encoding="utf-8"))
+    payload["reasoning_effort"] = "low"
+    payload["run_id"] = "low1slot0000000000000000000000"
+    slot = tmp_path / "live-eval-receipt-grok-4.7-low-r1-999.json"
+    slot.write_text(json.dumps(payload), encoding="utf-8")
+    page = build_page([*committed, slot], cases, strict=True)
+    sweep = page.sweep_lead_html + page.sweep_cards_html + page.sweep_detail_html
+    assert page.title == "The most accurate model failed the gate"
+    assert "233 of 240 requests passed" in page.scorecards_html
+    assert 'data-sweep-slot="low-1"' not in sweep
+    assert "1-repeat receipt not in this report yet" not in sweep
+    assert "Waiting" not in page.sweep_cards_html
+    assert page.sweep_cards_html.count('class="ev-card"') == 3
+    assert "45 of 48 requests passed" in page.sweep_cards_html
+    assert "47 of 48 requests passed" in page.sweep_cards_html
+    assert "grok-4.7 · low (low1sl)</b> vs" in sweep
+    assert "p = 1.0000" in sweep
+    assert "The 5-repeat headline low run is not in this test." in sweep
+    assert "not strictly comparable" in sweep
+    assert "All three 1-repeat runs clear the gate" in sweep
+    assert page.sensitivity_html == ""
 
 
 def _bits(receipt):

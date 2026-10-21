@@ -798,18 +798,20 @@ def _known_hash_explanation() -> str:
 
 
 def _grok_snapshot_explanation() -> str:
-    """Known grok effort hashes. The id changed, and the pair stays incomparable."""
+    """Known grok effort hashes. The id changed, and the 5-repeat low stays incomparable."""
     return (
-        "The system prompt is the same except the dataset snapshot id the model sees, "
-        "<code>06bc03a3eabab5bbf3b958ec</code> on the low run from e396cf4 and "
-        "<code>bea194558220eb669940d8f3</code> on the medium and high runs from 15aaeb3. "
-        "That id includes <code>implementation_hash</code> over <code>src/**/*.py</code>, "
-        "<code>src/**/*.sql</code>, and <code>contracts/*.json</code>. Between those commits "
-        "the files inside that hash that changed are <code>eval_report.py</code> and "
-        "<code>public_extract.py</code>. Reasoning effort is not in the prompt. Frozen file "
-        "hashes, the case set, and the fixture match. These receipts do not record "
-        "<code>dataset_id</code>. Low is not strictly comparable with medium or high. "
-        "This report does not treat low versus medium, or low versus high, as comparable."
+        "<code>instructions_sha256</code> is the SHA-256 of the literal instructions text in "
+        "<code>live_runner._quote</code>. The system prompt is the same except the dataset "
+        "snapshot id the model sees, <code>06bc03a3eabab5bbf3b958ec</code> on the 5-repeat low "
+        "run from e396cf4 and <code>bea194558220eb669940d8f3</code> on the medium and high runs "
+        "from 15aaeb3. That id includes <code>implementation_hash</code> over "
+        "<code>src/**/*.py</code>, <code>src/**/*.sql</code>, and <code>contracts/*.json</code>. "
+        "Between those commits the files inside that hash that changed are "
+        "<code>eval_report.py</code> and <code>public_extract.py</code>. Reasoning effort is not "
+        "in the prompt. Frozen file hashes, the case set, and the fixture match. These receipts "
+        "do not record <code>dataset_id</code>. The 5-repeat low run is not strictly comparable "
+        "with medium or high. This report does not treat that low run versus medium, or that "
+        "low run versus high, as comparable."
     )
 
 
@@ -2762,22 +2764,34 @@ def _fail_take(receipts: list[Receipt], cases: dict[str, Case]) -> str:
     return " ".join(sentences)
 
 
-def _grok_effort_arms(
+def _grok_one_repeat_sweep(
     receipts: list[Receipt],
-) -> tuple[Receipt, Receipt, Receipt] | None:
-    """One grok-4.7 low, medium, and high, with low asked more often."""
-    grouped: dict[str, list[Receipt]] = defaultdict(list)
-    for receipt in receipts:
-        if receipt.model == "grok-4.7" and receipt.effort in {"low", "medium", "high"}:
-            grouped[receipt.effort].append(receipt)
-    if set(grouped) != {"low", "medium", "high"}:
+) -> tuple[Receipt | None, Receipt, Receipt, Receipt | None] | None:
+    """Medium and high at one repeat, plus the matching low when that receipt exists.
+
+    The 5-repeat low run is the headline. It is not an arm of this comparison.
+    A missing 1-repeat low is an empty slot, not a reason to hide the section.
+    """
+    grok = [
+        receipt
+        for receipt in receipts
+        if receipt.model == "grok-4.7" and receipt.effort in {"low", "medium", "high"}
+    ]
+    mediums = [receipt for receipt in grok if receipt.effort == "medium"]
+    highs = [receipt for receipt in grok if receipt.effort == "high"]
+    if len(mediums) != 1 or len(highs) != 1:
         return None
-    if any(len(items) != 1 for items in grouped.values()):
+    medium, high = mediums[0], highs[0]
+    if medium.repeats != high.repeats:
         return None
-    low, medium, high = grouped["low"][0], grouped["medium"][0], grouped["high"][0]
-    if low.repeats <= medium.repeats or medium.repeats != high.repeats:
+    one = medium.repeats
+    lows = [receipt for receipt in grok if receipt.effort == "low" and receipt.repeats == one]
+    headlines = [receipt for receipt in grok if receipt.effort == "low" and receipt.repeats != one]
+    if len(lows) > 1:
         return None
-    return low, medium, high
+    low = lows[0] if lows else None
+    headline_low = headlines[0] if len(headlines) == 1 else None
+    return low, medium, high, headline_low
 
 
 def _case_cell(receipt: Receipt, case_id: str, cases: dict[str, Case]) -> str:
@@ -2815,20 +2829,31 @@ def _matched_pair(left: Receipt, right: Receipt) -> bool:
     )
 
 
-def _sweep_sign(medium: Receipt, high: Receipt) -> str:
-    if not _matched_pair(medium, high):
+def _one_sign(left: Receipt, right: Receipt) -> str:
+    if not _matched_pair(left, right):
         return (
-            f"{esc(medium.label)} versus {esc(high.label)} is not sign-tested. "
-            "Low is not sign-tested against either."
+            f"{esc(left.label)} versus {esc(right.label)} is not sign-tested. "
+            "The repeat count, the case ids, the frozen inputs, or the instruction hash differs."
         )
-    wins_medium, wins_high, probability = sign_test(medium.pass_bits(), high.pass_bits())
+    wins_left, wins_right, probability = sign_test(left.pass_bits(), right.pass_bits())
     return (
-        f"<b>{esc(medium.label)}</b> vs <b>{esc(high.label)}</b> share the instruction hash, "
-        f"the frozen inputs, the case ids, and {_times(medium.repeats)}. Of "
-        f"{len(medium.pass_bits())} cases, {wins_medium + wins_high} have different pass counts. "
-        f"{esc(high.label)} is better on {wins_high}, {esc(medium.label)} on {wins_medium}. "
-        f"Exact two-sided sign test, p = {probability:.4f}. "
-        "Low is not in this test."
+        f"<b>{esc(left.label)}</b> vs <b>{esc(right.label)}</b> share the instruction hash, "
+        f"the frozen inputs, the case ids, and {_times(left.repeats)}. Of "
+        f"{len(left.pass_bits())} cases, {wins_left + wins_right} have different pass counts. "
+        f"{esc(right.label)} is better on {wins_right}, {esc(left.label)} on {wins_left}. "
+        f"Exact two-sided sign test, p = {probability:.4f}."
+    )
+
+
+def _pending_low_card() -> str:
+    return (
+        '<div class="ev-card" data-sweep-slot="low-1">'
+        '<span class="ev-badge">Waiting</span>'
+        '<div class="ev-name">grok-4.7 · low</div>'
+        '<div class="ev-sub">reasoning effort <code>low</code> · 1 repeat</div>'
+        '<div class="ev-rate"><div class="ev-big">—</div>'
+        '<p class="ev-stat">1-repeat receipt not in this report yet</p></div>'
+        "</div>"
     )
 
 
@@ -2849,81 +2874,132 @@ def _per_repeat_reasoning(receipt: Receipt) -> str:
     return f"{esc(receipt.label)} {_token_count(per)} per repeat ({total:,} over {receipt.repeats})"
 
 
+def _headline_low_note(headline_low: Receipt | None, medium: Receipt) -> str:
+    if headline_low is None:
+        return ""
+    per = headline_low.cost / headline_low.repeats
+    about = " (about $0.20)" if usd(per, 2) == "$0.20" else ""
+    reasoning = _token_count(_reasoning_tokens(headline_low) / headline_low.repeats)
+    spend = (
+        f"{esc(headline_low.label)} is the headline run, {_times(headline_low.repeats)}. "
+        f"Per repeat it cost {usd(per, 6)}{about} and used {reasoning} reasoning tokens. "
+        "That spend is not a quality result. Its misses, including "
+        "<code>usage_sicilian_3</code>, stay on the headline grid and are not this comparison."
+    )
+    hashes = {
+        str(headline_low.raw.get("instructions_sha256")),
+        str(medium.raw.get("instructions_sha256")),
+    }
+    if hashes == _GROK_SNAPSHOT_INSTRUCTION_HASHES:
+        return f"{spend} {_grok_snapshot_explanation()}"
+    if len(hashes) == 1:
+        return (
+            f"{spend} It uses the same instruction hash as the 1-repeat arms. Repeat counts "
+            "differ, so it is not an arm of this comparison."
+        )
+    return (
+        f"{spend} Its instructions differ and the cause is not recorded. It is not an arm "
+        "of this comparison."
+    )
+
+
 def _grok_effort_sweep(
-    arms: tuple[Receipt, Receipt, Receipt],
+    low: Receipt | None,
+    medium: Receipt,
+    high: Receipt,
+    headline_low: Receipt | None,
     cases: dict[str, Case],
 ) -> tuple[str, str, str]:
-    low, medium, high = arms
-    ordered = (low, medium, high)
-    if all(not receipt.hard_fail for receipt in ordered):
-        gate = "All three clear the gate. That is a gate fact, not a pass-rate ranking."
+    present = [receipt for receipt in (low, medium, high) if receipt is not None]
+    if all(not receipt.hard_fail for receipt in present):
+        if low is None:
+            gate = "Medium and high clear the gate. That is a gate fact, not a pass-rate ranking."
+        else:
+            gate = (
+                "All three 1-repeat runs clear the gate. "
+                "That is a gate fact, not a pass-rate ranking."
+            )
     else:
-        clear = [esc(receipt.label) for receipt in ordered if not receipt.hard_fail]
-        failed = [esc(receipt.label) for receipt in ordered if receipt.hard_fail]
+        clear = [esc(receipt.label) for receipt in present if not receipt.hard_fail]
+        failed = [esc(receipt.label) for receipt in present if receipt.hard_fail]
         gate = (
             f"Gate first: {', '.join(clear) or 'none'} clear; "
             f"{', '.join(failed) or 'none'} hard-fail. That is the gate, not a pass-rate ranking."
         )
-    hashes = {
-        str(low.raw.get("instructions_sha256")),
-        str(medium.raw.get("instructions_sha256")),
-        str(high.raw.get("instructions_sha256")),
-    }
-    if hashes == _GROK_SNAPSHOT_INSTRUCTION_HASHES and _matched_pair(medium, high):
-        comparable = (
+    matched_later = _matched_pair(medium, high)
+    low_matched = low is not None and _matched_pair(low, medium) and matched_later
+    if low is None and matched_later:
+        slot = (
             f"{esc(medium.label)} and {esc(high.label)} share frozen inputs and "
-            "<code>instructions_sha256</code>. They are a matched pair. "
-            + _grok_snapshot_explanation()
+            "<code>instructions_sha256</code>. They are a matched pair. The comparable "
+            "effort comparison is one repeat each of low, medium, and high on that same "
+            "hash. The 1-repeat low receipt is not in this report yet."
         )
-    elif _matched_pair(medium, high) and str(low.raw.get("instructions_sha256")) == str(
-        medium.raw.get("instructions_sha256")
-    ):
-        comparable = (
+    elif low_matched and low is not None:
+        slot = (
+            f"{esc(low.label)}, {esc(medium.label)}, and {esc(high.label)} each asked every "
+            f"question {_times(medium.repeats)} and share the instruction hash, the frozen "
+            "inputs, and the case ids. They are the comparable effort trio."
+        )
+    elif matched_later:
+        slot = (
             f"{esc(medium.label)} and {esc(high.label)} are a matched pair. "
-            f"{esc(low.label)} uses the same instruction hash. Repeat counts differ, so low "
-            "is not sign-tested against either."
+            f"{esc(low.label) if low is not None else 'The 1-repeat low run'} does not share "
+            "that instruction hash, so it is not in the sign test."
         )
     else:
-        comparable = (
-            f"{esc(low.label)} is not strictly comparable with {esc(medium.label)} or "
-            f"{esc(high.label)}. <code>instructions_sha256</code> differs and the cause is "
-            "not recorded. This report does not sign-test low against either."
+        slot = (
+            "Medium and high are not a matched pair. This report does not sign-test them. "
+            "The 5-repeat low run is not an arm of this comparison."
         )
-    if _matched_pair(medium, high):
-        if _intervals_overlap(medium.wilson, high.wilson):
-            intervals = "overlap"
-        else:
-            intervals = "do not overlap"
+    if matched_later:
+        word = "overlap" if _intervals_overlap(medium.wilson, high.wilson) else "do not overlap"
         interval_sentence = (
-            f"Wilson intervals for {esc(medium.label)} and {esc(high.label)} {intervals} "
+            f"Wilson intervals for {esc(medium.label)} and {esc(high.label)} {word} "
             f"({pct(medium.wilson[0])}–{pct(medium.wilson[1])} and "
             f"{pct(high.wilson[0])}–{pct(high.wilson[1])}). "
-            "Low's interval is not compared with either."
         )
+        if low_matched and low is not None and _intervals_overlap(low.wilson, medium.wilson):
+            interval_sentence += (
+                f"Wilson intervals for {esc(low.label)} and {esc(medium.label)} overlap. "
+            )
+        elif low_matched and low is not None:
+            interval_sentence += (
+                f"Wilson intervals for {esc(low.label)} and {esc(medium.label)} do not overlap. "
+            )
+        if low is None:
+            interval_sentence += "Low's interval is not compared with either."
+        else:
+            interval_sentence += "The 5-repeat headline low run's interval is not on this figure."
     else:
         interval_sentence = "Low's interval is not compared with medium or high."
     changed = sorted(
         {
             case_id
-            for receipt in ordered
+            for receipt in present
             for case_id, passed in receipt.passes_by_case().items()
             if passed != receipt.repeats
         }
     )
-    rest = len(low.passes_by_case()) - len(changed)
-    heads = "".join(f'<th scope="col">{esc(receipt.effort)}</th>' for receipt in ordered)
+    rest = len(medium.passes_by_case()) - len(changed)
+    heads = '<th scope="col">low</th><th scope="col">medium</th><th scope="col">high</th>'
     body = []
     for case_id in changed:
-        cells = "".join(f"<td>{_case_cell(receipt, case_id, cases)}</td>" for receipt in ordered)
-        body.append(f'<tr><th scope="row"><code>{esc(case_id)}</code></th>{cells}</tr>')
+        cells = []
+        for receipt in (low, medium, high):
+            if receipt is None:
+                cells.append("<td>not in this report yet</td>")
+            else:
+                cells.append(f"<td>{_case_cell(receipt, case_id, cases)}</td>")
+        body.append(f'<tr><th scope="row"><code>{esc(case_id)}</code></th>{"".join(cells)}</tr>')
     table = (
-        '<div class="scroll"><table class="ev-cases"><caption>Passes out of repeats for cases '
-        "that miss on at least one grok effort. The other cases pass on every repeat of every "
-        'effort.</caption><thead><tr><th scope="col">Case</th>'
+        '<div class="scroll"><table class="ev-cases"><caption>Passes for the 1-repeat arms on '
+        "cases that miss at least once. The low column stays empty until that receipt is "
+        'committed.</caption><thead><tr><th scope="col">Case</th>'
         f"{heads}</tr></thead><tbody>{''.join(body)}</tbody></table></div>"
     )
     failures = []
-    for receipt in ordered:
+    for receipt in present:
         counts = failure_mode_counts(receipt, cases)
         total = sum(counts.values())
         if not total:
@@ -2935,16 +3011,21 @@ def _grok_effort_sweep(
         verb = "row is" if total == 1 else "rows are"
         failures.append(f"{esc(receipt.label)}: {total} failed {verb} {listed}.")
     chart = chart_intervals(
-        [low, medium, high],
-        title="Grok reasoning-effort pass rate with 95% Wilson and case-bootstrap intervals",
+        present,
+        title="Grok 1-repeat effort pass rate with 95% Wilson and case-bootstrap intervals",
         chart_id="ev-sweep-intervals",
     )
-    if _matched_pair(medium, high):
+    if low is None:
         chart_note = (
-            "These intervals describe each run's own sample. Medium and high share the "
-            "instruction hash, so their Wilson intervals are compared with each other. "
-            "Low is not strictly comparable with them when its instruction hash differs, and "
-            "this figure does not say whether low's interval overlaps either one."
+            "These intervals describe each 1-repeat run's own sample. Medium and high share "
+            "the instruction hash, so their Wilson intervals are compared with each other. "
+            "The 1-repeat low run is not drawn. The 5-repeat headline low run is not on this "
+            "figure, and this figure does not say whether its interval overlaps either arm."
+        )
+    elif low_matched:
+        chart_note = (
+            "These intervals describe each 1-repeat run's own sample. The three arms share "
+            "the instruction hash. The 5-repeat headline low run is not on this figure."
         )
     else:
         chart_note = (
@@ -2952,24 +3033,36 @@ def _grok_effort_sweep(
             "Wilson intervals across an instruction-hash mismatch."
         )
     intro = (
-        f"This is a 1-repeat sensitivity check against {esc(low.label)}'s "
-        f"{low.repeats}-repeat headline. {esc(medium.label)} and {esc(high.label)} each asked "
-        f"every question {_times(medium.repeats)}. {gate} {comparable} {interval_sentence}"
+        "This is the 1-repeat effort comparison: low, medium, and high on the same "
+        f"instructions. {slot} {gate} {_headline_low_note(headline_low, medium)} "
+        f"{interval_sentence}"
     )
-    costs = " ".join(_per_repeat_cost(receipt) for receipt in ordered)
-    reasoning = " ".join(_per_repeat_reasoning(receipt) for receipt in ordered)
+    costs = " ".join(_per_repeat_cost(receipt) for receipt in present)
+    reasoning = " ".join(_per_repeat_reasoning(receipt) for receipt in present)
+    signs = []
+    if low_matched and low is not None:
+        signs.append(_one_sign(low, medium))
+        signs.append(_one_sign(low, high))
+    signs.append(_one_sign(medium, high))
+    if low is None:
+        signs.append("The 1-repeat low run is not in this test.")
+    signs.append("The 5-repeat headline low run is not in this test.")
+    sign_html = '<ul class="ev-tests">' + "".join(f"<li>{item}</li>" for item in signs) + "</ul>"
+    cards = _pending_low_card() if low is None else scorecard(low)
+    cards += "".join(scorecard(receipt) for receipt in (medium, high))
     detail = (
         '<div class="ev-figure"><h3>Pass rate by reasoning effort, 95% intervals</h3>'
         f"{chart}"
         f'<p class="ev-note">{chart_note}</p></div>'
-        f"<p>{' '.join(failures)} The other {rest} cases pass on every repeat of every effort.</p>"
+        f"<p>{' '.join(failures)} The other {rest} cases pass on every 1-repeat arm in "
+        "this report.</p>"
         f"{table}"
-        f"<p>Cost per repeat: {costs}. "
+        f"<p>Cost per repeat, 1-repeat arms: {costs}. "
         "Those amounts are this run's spend, not a quality result.</p>"
-        f"<p>Reasoning tokens per repeat: {reasoning}.</p>"
-        f'<ul class="ev-tests"><li>{_sweep_sign(medium, high)}</li></ul>'
+        f"<p>Reasoning tokens per repeat, 1-repeat arms: {reasoning}.</p>"
+        f"{sign_html}"
     )
-    return f'<p class="ev-take">{intro}</p>', "".join(scorecard(r) for r in ordered), detail
+    return f'<p class="ev-take">{intro}</p>', cards, detail
 
 
 def _sensitivity_copy(extra: list[Receipt], headline: list[Receipt]) -> tuple[str, str]:
@@ -3040,15 +3133,17 @@ def build_page(
     repeats = headline[0].repeats
     n_cases = len(cases)
     flaky = " vs ".join(_flaky_phrase(receipt) for receipt in headline)
-    arms = _grok_effort_arms(receipts)
-    if arms is not None:
-        sweep_lead_html, sweep_cards_html, sweep_detail_html = _grok_effort_sweep(arms, cases)
+    record = _grok_one_repeat_sweep(receipts)
+    if record is not None:
+        low_arm, medium_arm, high_arm, headline_low = record
+        sweep_lead_html, sweep_cards_html, sweep_detail_html = _grok_effort_sweep(
+            low_arm, medium_arm, high_arm, headline_low, cases
+        )
+        hidden = {id(item) for item in (low_arm, medium_arm, high_arm) if item is not None}
     else:
         sweep_lead_html, sweep_cards_html, sweep_detail_html = "", "", ""
-    shown_extra = extra
-    if arms is not None:
-        hidden = {id(item) for item in arms}
-        shown_extra = [item for item in extra if id(item) not in hidden]
+        hidden = set()
+    shown_extra = [item for item in extra if id(item) not in hidden]
     sensitivity_intro, sensitivity_html = _sensitivity_copy(shown_extra, headline)
     cost_take = _cost_take(headline)
     if extra:

@@ -239,6 +239,18 @@ def _validate_transposition(extract: dict, rows) -> None:
         raise ValueError("transposition visits do not match the scope row")
 
 
+def _live_eval_rate_id(run: dict, runs: list[dict]) -> str:
+    """Match ``live_eval_rate_id``. Inlined: Community Cloud does not install the package."""
+    model = str(run["model"])
+    effort = str(run["effort"])
+    repeats = int(run["repeats"])
+    shared = sum(1 for other in runs if other["model"] == model and other["effort"] == effort) > 1
+    subject = f"{model} {effort}"
+    if shared and repeats != 5:
+        subject = f"{subject} r{repeats}"
+    return f"live_eval_pass_rate:{subject}"
+
+
 def _validate_eval(extract: dict, rows) -> None:
     runs = rows(extract, "live_eval_run")
     cases = rows(extract, "live_eval_case")
@@ -250,7 +262,11 @@ def _validate_eval(extract: dict, rows) -> None:
         if run["wilson_low"] > run["pass_rate"] or run["pass_rate"] > run["wilson_high"]:
             raise ValueError("live eval pass rate is outside its Wilson interval")
         own = [
-            row for row in cases if row["model"] == run["model"] and row["effort"] == run["effort"]
+            row
+            for row in cases
+            if row["model"] == run["model"]
+            and row["effort"] == run["effort"]
+            and row["repeats"] == run["repeats"]
         ]
         if not own:
             if run["headline"]:
@@ -258,7 +274,7 @@ def _validate_eval(extract: dict, rows) -> None:
             continue
         if sum(row["passed"] for row in own) != run["passed"]:
             raise ValueError("live eval case passes do not match the run")
-        receipt_id = f"live_eval_pass_rate:{run['model']} {run['effort']}"
+        receipt_id = _live_eval_rate_id(run, runs)
         receipt = _one(receipts, "receipt_id", receipt_id)
         if receipt["numerator"] != run["passed"] or receipt["denominator"] != run["trials"]:
             raise ValueError("live eval receipt does not match the run")
@@ -1139,122 +1155,169 @@ def _token_count(value: float) -> str:
     return f"{value:,.1f}"
 
 
-def _grok_sweep_arms(runs: list[dict]) -> tuple[dict, dict, dict] | None:
-    grouped: dict[str, list[dict]] = defaultdict(list)
-    for row in runs:
-        if row["model"] == "grok-4.7" and row["effort"] in {"low", "medium", "high"}:
-            grouped[row["effort"]].append(row)
-    if set(grouped) != {"low", "medium", "high"}:
+def _grok_one_repeat_arms(
+    runs: list[dict],
+) -> tuple[dict | None, dict, dict, dict | None] | None:
+    """Medium and high at one repeat, plus a matching low when that receipt exists.
+
+    The 5-repeat low run is the headline. It is not an arm of this comparison.
+    """
+    grok = [
+        row
+        for row in runs
+        if row["model"] == "grok-4.7" and row["effort"] in {"low", "medium", "high"}
+    ]
+    mediums = [row for row in grok if row["effort"] == "medium"]
+    highs = [row for row in grok if row["effort"] == "high"]
+    if len(mediums) != 1 or len(highs) != 1:
         return None
-    if any(len(items) != 1 for items in grouped.values()):
+    medium, high = mediums[0], highs[0]
+    if medium["repeats"] != high["repeats"]:
         return None
-    low, medium, high = grouped["low"][0], grouped["medium"][0], grouped["high"][0]
-    if not (low["headline"] and not medium["headline"] and not high["headline"]):
+    one = medium["repeats"]
+    lows = [row for row in grok if row["effort"] == "low" and row["repeats"] == one]
+    headlines = [row for row in grok if row["effort"] == "low" and row["repeats"] != one]
+    if len(lows) > 1:
         return None
-    if low["repeats"] <= medium["repeats"] or medium["repeats"] != high["repeats"]:
-        return None
-    return low, medium, high
+    low = lows[0] if lows else None
+    headline_low = headlines[0] if len(headlines) == 1 else None
+    return low, medium, high, headline_low
 
 
-def _sweep_sign(medium: dict, high: dict, effort_cases: list[dict], n_cases: int) -> str:
+def _matched_run(left: dict, right: dict) -> bool:
+    return (
+        left["instructions_sha256"] == right["instructions_sha256"]
+        and left["frozen_group"] == right["frozen_group"]
+        and left["repeats"] == right["repeats"]
+    )
+
+
+def _sweep_sign(left: dict, right: dict, effort_cases: list[dict], n_cases: int) -> str:
     from chess_analytics.analyst.live_stats import exact_sign_test
 
-    bits: dict[str, dict[str, list[bool]]] = {"medium": {}, "high": {}}
+    bits: dict[str, dict[str, list[bool]]] = {left["effort"]: {}, right["effort"]: {}}
     for row in effort_cases:
         if row["model"] != "grok-4.7" or row["effort"] not in bits:
             continue
         bits[row["effort"]][row["case_id"]] = [True] * row["passed"] + [False] * (
             row["repeats"] - row["passed"]
         )
-    shared = set(bits["medium"]) & set(bits["high"])
+    shared = set(bits[left["effort"]]) & set(bits[right["effort"]])
     result = exact_sign_test(
-        {case_id: bits["medium"][case_id] for case_id in shared},
-        {case_id: bits["high"][case_id] for case_id in shared},
+        {case_id: bits[left["effort"]][case_id] for case_id in shared},
+        {case_id: bits[right["effort"]][case_id] for case_id in shared},
     )
     discordant = result["favor_left"] + result["favor_right"]
+    noun = "repeat" if left["repeats"] == 1 else "repeats"
     return (
-        f"{_run_label(medium)} vs {_run_label(high)} share the instruction hash, "
-        f"the frozen inputs, and {medium['repeats']} "
-        f"{'repeat' if medium['repeats'] == 1 else 'repeats'}. Of {n_cases} cases, "
-        f"{discordant} have different pass counts. {_run_label(high)} is better on "
-        f"{result['favor_right']}, {_run_label(medium)} on {result['favor_left']}. "
-        f"Exact two-sided sign test, p = {result['p_value']:.4f}. Low is not in this test."
+        f"{_run_label(left)} vs {_run_label(right)} share the instruction hash, "
+        f"the frozen inputs, and {left['repeats']} {noun}. Of {n_cases} cases, "
+        f"{discordant} have different pass counts. {_run_label(right)} is better on "
+        f"{result['favor_right']}, {_run_label(left)} on {result['favor_left']}. "
+        f"Exact two-sided sign test, p = {result['p_value']:.4f}."
     )
 
 
-def _sweep_caption(low: dict, medium: dict, high: dict, effort_cases: list[dict]) -> str:
-    ordered = (low, medium, high)
-    if all(not row["hard_fail"] for row in ordered):
-        gate = "All three clear the gate. That is a gate fact, not a pass-rate ranking."
+def _headline_low_sentence(headline_low: dict | None, medium: dict) -> str:
+    if headline_low is None:
+        return ""
+    per = headline_low["known_gross_cost_usd"] / headline_low["repeats"]
+    about = " (about $0.20)" if f"${per:,.2f}" == "$0.20" else ""
+    reasoning = _token_count(headline_low["reasoning_tokens"] / headline_low["repeats"])
+    sentence = (
+        f"{_run_label(headline_low)} is the headline run, {headline_low['repeats']} repeats. "
+        f"Per repeat it cost {_usd(per)}{about} and used {reasoning} reasoning tokens. "
+        "That spend is not a quality result. Its misses, including usage_sicilian_3, "
+        "stay on the headline grid and are not this comparison. "
+    )
+    hashes = {headline_low["instructions_sha256"], medium["instructions_sha256"]}
+    if hashes == {_GROK_LOW_INSTRUCTIONS, _GROK_LATER_INSTRUCTIONS}:
+        sentence += (
+            "instructions_sha256 is the SHA-256 of the literal instructions text in "
+            "live_runner._quote. The system prompt is the same except the dataset snapshot "
+            "id the model sees: 06bc03a3eabab5bbf3b958ec on the 5-repeat low run from "
+            "e396cf4 and bea194558220eb669940d8f3 on the medium and high runs from 15aaeb3. "
+            "That id changed because eval_report.py and public_extract.py changed "
+            "implementation_hash. The receipts do not record dataset_id. The 5-repeat low "
+            "run is not strictly comparable with medium or high. "
+        )
+    return sentence
+
+
+def _sweep_caption(
+    low: dict | None,
+    medium: dict,
+    high: dict,
+    headline_low: dict | None,
+    effort_cases: list[dict],
+) -> str:
+    present = [row for row in (low, medium, high) if row is not None]
+    matched = _matched_run(medium, high)
+    low_matched = low is not None and matched and _matched_run(low, medium)
+    if all(not row["hard_fail"] for row in present):
+        if low is None:
+            gate = "Medium and high clear the gate. That is a gate fact, not a pass-rate ranking."
+        else:
+            gate = (
+                "All three 1-repeat runs clear the gate. "
+                "That is a gate fact, not a pass-rate ranking."
+            )
     else:
         gate = "The gate is separate from the pass rate."
-    same_later = (
-        medium["instructions_sha256"] == high["instructions_sha256"] == _GROK_LATER_INSTRUCTIONS
-        and low["instructions_sha256"] == _GROK_LOW_INSTRUCTIONS
-    )
-    matched = (
-        medium["instructions_sha256"] == high["instructions_sha256"]
-        and medium["frozen_group"] == high["frozen_group"]
-        and medium["repeats"] == high["repeats"]
-    )
-    if same_later and matched:
-        cause = (
-            f"{_run_label(medium)} and {_run_label(high)} are a matched pair. "
-            "Low is not strictly comparable with them. The system prompt is the same except "
-            "the dataset snapshot id the model sees: 06bc03a3eabab5bbf3b958ec on the low run "
-            "from e396cf4 and bea194558220eb669940d8f3 on medium and high from 15aaeb3. "
-            "That id changed because eval_report.py and public_extract.py changed "
-            "implementation_hash. The receipts do not record dataset_id."
+    if low is None and matched:
+        slot = (
+            f"{_run_label(medium)} and {_run_label(high)} share frozen inputs and "
+            "instructions_sha256. They are a matched pair. The comparable effort comparison "
+            "is one repeat each of low, medium, and high on that same hash. The 1-repeat "
+            "low receipt is not in this report yet."
         )
-    elif matched and low["instructions_sha256"] == medium["instructions_sha256"]:
-        cause = (
-            f"{_run_label(medium)} and {_run_label(high)} are a matched pair. "
-            "Low uses the same instruction hash. Repeat counts differ, so low is not "
-            "sign-tested against either."
+    elif low_matched and low is not None:
+        slot = (
+            f"{_run_label(low)}, {_run_label(medium)}, and {_run_label(high)} share frozen "
+            "inputs and the instruction hash. They are the comparable effort trio."
         )
     else:
-        cause = (
-            "Low is not strictly comparable with medium or high. instructions_sha256 differs "
-            "and the cause is not recorded."
-        )
+        slot = "Medium and high are not a matched pair."
     if matched and _ranges_overlap(medium, high):
-        intervals = (
-            f"Wilson intervals for {_run_label(medium)} and {_run_label(high)} overlap. "
-            "Low's interval is not compared with either."
-        )
+        intervals = f"Wilson intervals for {_run_label(medium)} and {_run_label(high)} overlap. "
     elif matched:
         intervals = (
             f"Wilson intervals for {_run_label(medium)} and {_run_label(high)} do not overlap. "
-            "Low's interval is not compared with either."
         )
     else:
-        intervals = "Low's interval is not compared with medium or high."
+        intervals = ""
+    if low is None:
+        intervals += "Low's interval is not compared with either."
+    else:
+        intervals += "The 5-repeat headline low run's interval is not on this figure."
     changed = {row["case_id"] for row in effort_cases if row["model"] == "grok-4.7"}
-    rest = int(low["cases"]) - len(changed)
-    low_per = low["known_gross_cost_usd"] / low["repeats"]
-    about = " (about $0.20)" if f"${low_per:,.2f}" == "$0.20" else ""
-    cost_bits = []
-    for row in ordered:
-        bit = f"{_run_label(row)} {_usd(row['known_gross_cost_usd'] / row['repeats'])} per repeat"
-        if row is low:
-            bit += about
-        cost_bits.append(bit)
-    costs = ", ".join(cost_bits)
+    rest = int(medium["cases"]) - len(changed)
+    costs = ", ".join(
+        f"{_run_label(row)} {_usd(row['known_gross_cost_usd'] / row['repeats'])} per repeat"
+        for row in present
+    )
     reasoning = ", ".join(
         f"{_run_label(row)} {_token_count(row['reasoning_tokens'] / row['repeats'])} per repeat"
-        for row in ordered
+        for row in present
     )
-    sign = (
-        _sweep_sign(medium, high, effort_cases, int(low["cases"]))
-        if matched
-        else "Medium versus high is not sign-tested. Low is not sign-tested against either."
-    )
+    signs = []
+    if low_matched and low is not None:
+        signs.append(_sweep_sign(low, medium, effort_cases, int(medium["cases"])))
+        signs.append(_sweep_sign(low, high, effort_cases, int(medium["cases"])))
+    if matched:
+        signs.append(_sweep_sign(medium, high, effort_cases, int(medium["cases"])))
+    else:
+        signs.append("Medium versus high is not sign-tested.")
+    if low is None:
+        signs.append("The 1-repeat low run is not in this test.")
+    signs.append("The 5-repeat headline low run is not in this test.")
     return (
-        "Grok reasoning-effort sweep. This is a 1-repeat sensitivity check against low's "
-        f"{low['repeats']}-repeat headline. {gate} {cause} {intervals} "
-        f"The other {rest} cases pass on every repeat of every effort. "
-        f"Cost per repeat: {costs}. Those amounts are this run's spend, not a quality "
-        f"result. Reasoning tokens per repeat: {reasoning}. {sign}"
+        "Grok reasoning-effort sweep. This is the 1-repeat effort comparison. "
+        f"{slot} {gate} {_headline_low_sentence(headline_low, medium)}{intervals} "
+        f"The other {rest} cases pass on every 1-repeat arm in this report. "
+        f"Cost per repeat, 1-repeat arms: {costs}. Those amounts are this run's spend, "
+        "not a quality result. Reasoning tokens per repeat, 1-repeat arms: "
+        f"{reasoning}. {' '.join(signs)}"
     )
 
 
@@ -1272,33 +1335,43 @@ def _sweep_table(effort_cases: list[dict]) -> list[dict]:
     return table
 
 
+def _sweep_card(row: dict) -> tuple[str, str, str]:
+    gate = "Hard fail" if row["hard_fail"] else "Gate clear"
+    noun = "repeat" if row["repeats"] == 1 else "repeats"
+    return (
+        _run_label(row),
+        f"{row['passed']}/{row['trials']}",
+        f"{row['repeats']} {noun}. {gate}.",
+    )
+
+
 def _grok_effort_sweep(layout, charts, runs: list[dict], effort_cases: list[dict]) -> None:
-    arms = _grok_sweep_arms(runs)
+    arms = _grok_one_repeat_arms(runs)
     if arms is None:
         return
-    low, medium, high = arms
+    low, medium, high, headline_low = arms
+    present = [row for row in (low, medium, high) if row is not None]
     st.subheader("Grok reasoning-effort sweep")
     cards = []
-    for row in (low, medium, high):
-        gate = "Hard fail" if row["hard_fail"] else "Gate clear"
-        noun = "repeat" if row["repeats"] == 1 else "repeats"
-        cards.append(
-            (
-                _run_label(row),
-                f"{row['passed']}/{row['trials']}",
-                f"{row['repeats']} {noun}. {gate}.",
-            )
-        )
+    if low is None:
+        cards.append(("grok-4.7 · low", "—", "1 repeat. Receipt not in yet."))
+    else:
+        cards.append(_sweep_card(low))
+    cards.extend(_sweep_card(row) for row in (medium, high))
     st.markdown(_html_currency(layout.equal_width_row(cards)), unsafe_allow_html=True)
-    _chart(
-        charts,
-        charts.wilson(_wilson_rows([low, medium, high])),
-        alt=(
+    if low is None:
+        sweep_alt = (
             "Grok reasoning-effort pass rates with Wilson 95 percent intervals. "
-            "Low is a 5-repeat run. Medium and high are 1-repeat runs."
-        ),
-    )
-    _caption(_sweep_caption(low, medium, high, effort_cases))
+            "Medium and high are 1-repeat runs on the same instructions. "
+            "The 1-repeat low run is not in this report."
+        )
+    else:
+        sweep_alt = (
+            "Grok reasoning-effort pass rates with Wilson 95 percent intervals. "
+            "Low, medium, and high are 1-repeat runs on the same instructions."
+        )
+    _chart(charts, charts.wilson(_wilson_rows(present)), alt=sweep_alt)
+    _caption(_sweep_caption(low, medium, high, headline_low, effort_cases))
     _show(
         _sweep_table(effort_cases),
         alt="Pass counts for grok-4.7 cases that are not perfect on every reasoning effort.",

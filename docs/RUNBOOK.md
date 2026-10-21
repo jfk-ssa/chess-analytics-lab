@@ -228,8 +228,9 @@ and the required reviewer are already in place.
 [ADR 0090](adr/0090-live-eval-scorer-runner-stats.md) is the runner.
 [ADR 0091](adr/0091-manual-live-eval-workflow.md) is the manual job.
 [ADR 0095](adr/0095-grok-4-7-live-eval.md) adds `grok-4.7`. The headline
-run is low at 5 repeats. Medium and high are 1-repeat sensitivity
-checks. Their pass rates are not 5-repeat comparisons.
+run is low at 5 repeats. The effort comparison is one repeat each of
+low, medium, and high on the same instructions. Medium and high are not
+5-repeat rates.
 
 The same commands work on macOS and Linux. They use the repository Python
 and do not depend on a Linux-only flag.
@@ -248,9 +249,9 @@ does not probe the API.
    OpenAI ids accepted `reasoning.effort` of `none`, and the OpenAI quote
    sends that value. `grok-4.7` cannot disable reasoning. Its allowed
    efforts are `low`, `medium`, `high`, and `xhigh`. The headline run is
-   `low` at 5 repeats. Medium and high are a sensitivity check at 1
-   repeat each. Their pass rates are not 5-repeat comparisons. This
-   command does not probe the API.
+   `low` at 5 repeats. The effort comparison is one repeat each of low,
+   medium, and high on the same instructions. Medium and high are not
+   5-repeat rates. This command does not probe the API.
 3. Recheck prices. On 2026-10-20 the official OpenAI pages matched the
    recorded rates exactly: Luna $0.10 input, $0.01 cached, $0.125 cache
    write, and $0.50 output; Sol $2, $0.20, $2.50, and $10. On 2026-10-21
@@ -365,10 +366,11 @@ before the first dispatch. The job does not probe the provider.
    changes. `reasoning_effort` defaults to `model-default`, which is
    `none` on the OpenAI ids and `low` on grok-4.7. The run title shows
    that resolved effort. The grok headline is
-   low at 5 repeats with cap $10. For the sensitivity check, dispatch
-   grok-4.7 twice more with `repeats` 1 and effort `medium`, then
-   `high`. Run low first and compare its receipt `known_gross_cost_usd`
-   and `token_usage` with the quote before those two. The token usage
+   low at 5 repeats with cap $10. The comparable effort check is one
+   repeat each of low, medium, and high on the same instructions.
+   Dispatch those three with `repeats` 1. Run low first and compare its
+   receipt `known_gross_cost_usd`
+   and `token_usage` with the quote before medium and high. The token usage
    sums input, output, reasoning, and billed output. Medium or high at
    5 repeats stops in the dry run. The dry-run step sets `pipefail`, so
    that failure does not continue into the secret step.

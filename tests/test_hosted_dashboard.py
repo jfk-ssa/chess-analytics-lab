@@ -149,6 +149,8 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
         "about \\$0.20",
         "share frozen inputs",
         "not compared",
+        "Receipt not in yet.",
+        "The 1-repeat low run is not in this test.",
         draw["mart_id"],
         extract["build"]["source_snapshot_id"],
         extract["build"]["model_sha256"],
@@ -301,7 +303,8 @@ def _assert_alt_text(app) -> None:
         "Grid of cases by model, colored by how many repeats passed.",
         (
             "Grok reasoning-effort pass rates with Wilson 95 percent intervals. "
-            "Low is a 5-repeat run. Medium and high are 1-repeat runs."
+            "Medium and high are 1-repeat runs on the same instructions. "
+            "The 1-repeat low run is not in this report."
         ),
     )
     assert alts == list(expected)
