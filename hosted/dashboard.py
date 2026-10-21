@@ -1286,6 +1286,9 @@ def _sweep_caption(
         )
     else:
         intervals = ""
+    if low_matched and low is not None:
+        relation = "overlap" if _ranges_overlap(low, medium) else "do not overlap"
+        intervals += f"Wilson intervals for {_run_label(low)} and {_run_label(medium)} {relation}. "
     if low is None:
         intervals += "Low's interval is not compared with either."
     else:

@@ -215,8 +215,9 @@ effort sweep compares one repeat each of low, medium, and high that
 share an instruction hash. Those 1-repeat receipts carry `repeats: 1`.
 Their pass rates are not 5-repeat headline rates and are not compared
 with Luna, Sol, or the low 5-repeat rate as a matched sample. The
-5-repeat low stays the headline. A missing 1-repeat low is an empty
-slot on the page, not a reason to put the 5-repeat run in the sweep.
+5-repeat low stays the headline. The matched 1-repeat low, medium, and
+high are the effort sweep. A second 1-repeat low hides that sweep
+rather than putting the 5-repeat run in it.
 `(model, effort)` may repeat when the repeat counts differ and exactly
 one of them is the 5-repeat headline. The per-run cap is $10. See
 [ADR 0095](adr/0095-grok-4-7-live-eval.md). The first low x5 dispatch
@@ -273,7 +274,7 @@ Medium is 45/48, Wilson 0.8316456194505365 to 0.9785167670916107, bootstrap
 0.9963128890224893, bootstrap 0.9375 to 1.0, `hard_fail` false, one
 over-abstention (`indirect_opening_1`), known gross cost $0.408746, 46,763
 reasoning tokens. `frozen_file_sha256`, `case_set_sha256`, and `fixture_sha256`
-match the low receipt. `instructions_sha256` does not. Low, run on e396cf4, is
+match the 5-repeat low receipt. `instructions_sha256` does not. That low, run on e396cf4, is
 `622007a3deb785c204e58ba68419af0adbb0c0929d29dd97241038514d17181f`. Medium and
 high, run on 15aaeb3, are both
 `be294fd35f35327317ab64e58a202ef822347e9ac3451cda01bdc29ae15cc8d3`. That hash is
@@ -283,19 +284,28 @@ share a hash. Rebuilding the prompt shows the only character difference is
 The id includes `implementation_hash`. Between those commits the only files
 inside that hash that changed are `eval_report.py` and `public_extract.py`.
 The model sees a different snapshot id, so the 5-repeat low is not strictly
-comparable with medium or high. `instructions_sha256` is the SHA-256 of the
+comparable with medium, high, or the 1-repeat low. `instructions_sha256` is the SHA-256 of the
 literal instructions text in `live_runner._quote`. The page says the 5-repeat
-run is not strictly comparable and does not sign-test it against either
+run is not strictly comparable and does not sign-test it against any
 1-repeat arm. The clean comparison is low x1 versus medium x1 versus high x1.
-That low x1 receipt, from main 15aaeb3, is not in this tree yet. The page
-holds the slot. Medium versus high is a matched pair (same prompt, frozen
-inputs, case ids, and one repeat). Their Wilson intervals overlap. The exact
-sign test on that pair is p = 0.5 (high better on 2 cases, medium on 0).
-Medium and high clear the gate. That is a gate fact, not a pass-rate ranking.
-The 5-repeat low costs about $0.20 per repeat ($0.200661) and uses 13,955.2
-reasoning tokens. That spend, and its `usage_sicilian_3` miss, stay on the
-headline. Medium costs $0.322454 and uses 32,410 reasoning tokens. High costs
-$0.408746 and uses 46,763.
+That low x1 receipt is committed as
+`reports/live-eval-receipt-grok-4.7-low-r1-39588587088.json`, SHA-256
+`cca411fd9d7de20938a127c24e6b84870180079b45d597da5dc24425d56f349d`, Actions run
+[39588587088](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39588587088).
+It is 47/48, Wilson 0.8910078200474814 to 0.9963128890224893 (the same
+interval as high), bootstrap 0.9375 to 1.0, `hard_fail` false, one
+over-abstention (`coverage_2`, `unsupported`, empty actions), known gross
+cost $0.22253, 14,768 reasoning tokens. `instructions_sha256`,
+`frozen_file_sha256`, `case_set_sha256`, and `fixture_sha256` match medium
+and high. The three 1-repeat arms are the comparable trio. Low versus medium
+is p = 0.5 (low better on 2, medium on 0). Low versus high is p = 1.0 (each
+better on 1). Medium versus high stays p = 0.5 (high better on 2, medium on
+0). Their Wilson intervals overlap. All three clear the gate. That is a gate
+fact, not a pass-rate ranking. The 5-repeat low costs about $0.20 per repeat
+($0.200661) and uses 13,955.2 reasoning tokens. That spend, and its
+`usage_sicilian_3` miss, stay on the headline. Low x1 costs $0.22253 and uses
+14,768 reasoning tokens. Medium costs $0.322454 and uses 32,410 reasoning
+tokens. High costs $0.408746 and uses 46,763.
 
 For offline replay, first run `chesslab demo --scope all`, then use the command
 in [DEMO.md](DEMO.md). Historical fixture harness checks are available with

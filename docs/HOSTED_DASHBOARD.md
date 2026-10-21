@@ -41,9 +41,10 @@ joins a row to that run. Each run row also carries `frozen_group`,
 `instructions_sha256`, and `reasoning_tokens`. Headline charts and the
 six eval cards stay on the 5-repeat runs. The eval tab adds a grok
 reasoning-effort sweep for one repeat each of low, medium, and high on
-the same instructions. The 1-repeat low receipt is not committed yet, so
-that card is empty. The 5-repeat low stays on the headline cards and is
-not strictly comparable with medium and high. The file is 257,899 bytes.
+the same instructions. Low x1 is 47/48 at $0.22253 and fails `coverage_2`.
+Medium x1 is 45/48 and high x1 is 47/48. All three clear the gate. The
+5-repeat low stays on the headline cards and is not strictly comparable
+with that trio. The file is 259,711 bytes.
 
 ## Run locally
 

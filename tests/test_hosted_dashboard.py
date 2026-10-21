@@ -149,8 +149,9 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
         "about \\$0.20",
         "share frozen inputs",
         "not compared",
-        "Receipt not in yet.",
-        "The 1-repeat low run is not in this test.",
+        "All three 1-repeat runs clear the gate",
+        "14,768",
+        "\\$0.2225",
         draw["mart_id"],
         extract["build"]["source_snapshot_id"],
         extract["build"]["model_sha256"],
@@ -165,6 +166,8 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
     )
     missing = [item for item in expected if item not in text]
     assert not missing, missing
+    assert "Receipt not in yet." not in text
+    assert "The 1-repeat low run is not in this test." not in text
     _assert_section_origins(app)
     _assert_live_eval_link(app)
     _assert_build_table_omits_the_figure_id(app, extract)
@@ -303,8 +306,7 @@ def _assert_alt_text(app) -> None:
         "Grid of cases by model, colored by how many repeats passed.",
         (
             "Grok reasoning-effort pass rates with Wilson 95 percent intervals. "
-            "Medium and high are 1-repeat runs on the same instructions. "
-            "The 1-repeat low run is not in this report."
+            "Low, medium, and high are 1-repeat runs on the same instructions."
         ),
     )
     assert alts == list(expected)

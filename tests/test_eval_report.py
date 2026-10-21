@@ -59,6 +59,7 @@ def test_receipts_are_discovered_by_github_run_id_not_a_hard_coded_list(tmp_path
         "live-eval-receipt-grok-4.7-low-r5-39541049632.json",
         "live-eval-receipt-grok-4.7-medium-r1-39583448999.json",
         "live-eval-receipt-grok-4.7-high-r1-39583461520.json",
+        "live-eval-receipt-grok-4.7-low-r1-39588587088.json",
     ]
     source = SOURCE.read_text(encoding="utf-8")
     assert "39494372489" not in source
@@ -74,6 +75,7 @@ def test_committed_page_matches_receipt_numbers_and_every_case():
     luna = by_name["live-eval-receipt-39494372489.json"]
     sol = by_name["live-eval-receipt-39519293762.json"]
     grok = by_name["live-eval-receipt-grok-4.7-low-r5-39541049632.json"]
+    low = by_name["live-eval-receipt-grok-4.7-low-r1-39588587088.json"]
     medium = by_name["live-eval-receipt-grok-4.7-medium-r1-39583448999.json"]
     high = by_name["live-eval-receipt-grok-4.7-high-r1-39583461520.json"]
     cases = _cases()
@@ -173,13 +175,15 @@ def test_committed_page_matches_receipt_numbers_and_every_case():
     assert PERFECT_DOT in page.heatmap_svg
     assert "live-eval-receipt-39494372489.json" in page.provenance_html
     assert "live-eval-receipt-grok-4.7-low-r5-39541049632.json" in page.provenance_html
+    assert "live-eval-receipt-grok-4.7-low-r1-39588587088.json" in page.provenance_html
     assert "differs" in page.provenance_html
     assert "240 requests" in page.provenance_html
     sweep = page.sweep_lead_html + page.sweep_cards_html + page.sweep_detail_html
     assert page.sensitivity_html == ""
     assert "1-repeat effort comparison" in sweep
-    assert 'data-sweep-slot="low-1"' in page.sweep_cards_html
-    assert "1-repeat receipt not in this report yet" in sweep
+    assert 'data-sweep-slot="low-1"' not in page.sweep_cards_html
+    assert "1-repeat receipt not in this report yet" not in sweep
+    assert "Waiting" not in page.sweep_cards_html
     assert "not strictly comparable" in sweep
     assert "06bc03a3eabab5bbf3b958ec" in sweep
     assert "bea194558220eb669940d8f3" in sweep
@@ -189,28 +193,44 @@ def test_committed_page_matches_receipt_numbers_and_every_case():
     for case_id in ("coverage_1", "coverage_2", "indirect_opening_1", "usage_sicilian_3"):
         assert case_id in sweep
     assert "The other 45 cases" in sweep
+    assert f"{pct(low['headline_pass_rate'], 2)}" in sweep
     assert f"{pct(medium['headline_pass_rate'], 2)}" in sweep
     assert f"{pct(high['headline_pass_rate'], 2)}" in sweep
     assert "93.75%" not in page.scorecards_html
     assert "97.92%" not in page.scorecards_html
+    assert "97.92%" in page.sweep_cards_html
+    assert "47 of 48 requests passed" in page.sweep_cards_html
+    assert "45 of 48 requests passed" in page.sweep_cards_html
     assert usd(grok["known_gross_cost_usd"] / grok["repeats"], 6) in sweep
+    assert usd(low["known_gross_cost_usd"], 6) in sweep
     assert usd(medium["known_gross_cost_usd"], 6) in sweep
     assert usd(high["known_gross_cost_usd"], 6) in sweep
     assert "about $0.20" in sweep
     assert "13,955.2" in sweep
+    assert f"{low['token_usage']['reasoning_tokens']:,}" in sweep
     assert f"{medium['token_usage']['reasoning_tokens']:,}" in sweep
     assert f"{high['token_usage']['reasoning_tokens']:,}" in sweep
+    wins_low, wins_medium_vs_low, low_medium_p = sign_test(_bits(low), _bits(medium))
+    wins_low_vs_high, wins_high_vs_low, low_high_p = sign_test(_bits(low), _bits(high))
     wins_medium, wins_high, sweep_p = sign_test(_bits(medium), _bits(high))
+    assert f"p = {low_medium_p:.4f}" in sweep
+    assert f"p = {low_high_p:.4f}" in sweep
     assert f"p = {sweep_p:.4f}" in sweep
     assert f"better on {wins_high}" in sweep
     assert f"on {wins_medium}" in sweep
+    assert f"better on {wins_medium_vs_low}" in sweep
+    assert f"on {wins_low}" in sweep
+    assert wins_low_vs_high == 1 and wins_high_vs_low == 1
+    assert "grok-4.7 · low (1f45f2)</b> vs <b>grok-4.7 · medium</b>" in sweep
+    assert "grok-4.7 · low (1f45f2)</b> vs <b>grok-4.7 · high</b>" in sweep
     assert "grok-4.7 · low</b> vs" not in sweep
-    assert "vs <b>grok-4.7 · low</b>" not in sweep
-    assert "Low's interval is not compared" in sweep
-    assert "Medium and high clear the gate" in sweep
-    assert "All three clear the gate" not in sweep
-    assert "The 1-repeat low run is not in this test." in sweep
+    assert "Low's interval is not compared" not in sweep
+    assert "The 5-repeat headline low run's interval is not on this figure." in sweep
+    assert "All three 1-repeat runs clear the gate" in sweep
+    assert "Medium and high clear the gate" not in sweep
+    assert "The 1-repeat low run is not in this test." not in sweep
     assert "The 5-repeat headline low run is not in this test." in sweep
+    assert "The low column stays empty" not in sweep
     assert page.sweep_cards_html.count('class="ev-card"') == 3
     assert 'id="ev-sweep-intervals-title"' in sweep
     assert "The system prompt is the same except" in sweep
@@ -220,21 +240,32 @@ def test_committed_page_matches_receipt_numbers_and_every_case():
 def test_grok_snapshot_pair_is_not_treated_as_comparable():
     """ADR 0096's dataset-id exception does not cover the grok effort hashes."""
     receipts = load_receipts(_committed())
-    by_key = {(receipt.model, receipt.effort): receipt for receipt in receipts}
-    low = by_key[("grok-4.7", "low")]
-    medium = by_key[("grok-4.7", "medium")]
-    high = by_key[("grok-4.7", "high")]
-    luna = by_key[("gpt-6-luna", "none")]
-    sol = by_key[("gpt-6-sol", "none")]
+
+    def pick(model: str, effort: str, repeats: int):
+        matches = [
+            receipt
+            for receipt in receipts
+            if receipt.model == model and receipt.effort == effort and receipt.repeats == repeats
+        ]
+        assert len(matches) == 1
+        return matches[0]
+
+    low = pick("grok-4.7", "low", 5)
+    low_once = pick("grok-4.7", "low", 1)
+    medium = pick("grok-4.7", "medium", 1)
+    high = pick("grok-4.7", "high", 1)
+    luna = pick("gpt-6-luna", "none", 5)
+    sol = pick("gpt-6-sol", "none", 5)
     assert not pair_explained_by_dataset_id(low, medium)
     assert not pair_explained_by_dataset_id(low, high)
+    assert not pair_explained_by_dataset_id(low_once, medium)
     assert pair_explained_by_dataset_id(luna, sol)
     assert "not strictly comparable" in _pair_explanation(low, medium)
     assert "This pair is comparable." not in _pair_explanation(low, medium)
 
 
-def test_one_repeat_low_fills_the_sweep_slot(tmp_path):
-    """A later low x1 on the medium/high hash joins the sweep and leaves the headline."""
+def test_a_second_one_repeat_low_hides_the_sweep(tmp_path):
+    """A second 1-repeat low is not one arm, so the sweep is not drawn."""
     committed = _committed()
     cases = _cases()
     medium_path = next(path for path in committed if "medium-r1" in path.name)
@@ -244,21 +275,12 @@ def test_one_repeat_low_fills_the_sweep_slot(tmp_path):
     slot = tmp_path / "live-eval-receipt-grok-4.7-low-r1-999.json"
     slot.write_text(json.dumps(payload), encoding="utf-8")
     page = build_page([*committed, slot], cases, strict=True)
-    sweep = page.sweep_lead_html + page.sweep_cards_html + page.sweep_detail_html
     assert page.title == "The most accurate model failed the gate"
     assert "233 of 240 requests passed" in page.scorecards_html
-    assert 'data-sweep-slot="low-1"' not in sweep
-    assert "1-repeat receipt not in this report yet" not in sweep
-    assert "Waiting" not in page.sweep_cards_html
-    assert page.sweep_cards_html.count('class="ev-card"') == 3
-    assert "45 of 48 requests passed" in page.sweep_cards_html
-    assert "47 of 48 requests passed" in page.sweep_cards_html
-    assert "grok-4.7 · low (low1sl)</b> vs" in sweep
-    assert "p = 1.0000" in sweep
-    assert "The 5-repeat headline low run is not in this test." in sweep
-    assert "not strictly comparable" in sweep
-    assert "All three 1-repeat runs clear the gate" in sweep
-    assert page.sensitivity_html == ""
+    assert page.sweep_cards_html == ""
+    assert page.sweep_lead_html == ""
+    assert page.sweep_detail_html == ""
+    assert "97.08%" in page.scorecards_html
 
 
 def _bits(receipt):
@@ -574,7 +596,8 @@ def test_grok_efforts_stay_separate_and_one_repeat_is_sensitivity(tmp_path):
     assert "grok-4.7 · high" not in page.pairwise_html
     assert "grok-4.7 · medium" in page.sensitivity_html
     assert "grok-4.7 · high" in page.sensitivity_html
-    assert "grok-4.7 · low" not in page.sensitivity_html
+    assert "grok-4.7 · low (grok-l)" not in page.sensitivity_html
+    assert "grok-4.7 · low (aded2b)" not in page.sensitivity_html
     assert "grok-4.7 · medium" in page.description
     assert "grok-4.7 · high" in page.description
     assert "1 time" in page.description

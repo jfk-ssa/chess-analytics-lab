@@ -281,15 +281,18 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     grok_at = report.index("live-eval-receipt-grok-4.7-low-r5-39541049632.json")
     medium_at = report.index("live-eval-receipt-grok-4.7-medium-r1-39583448999.json")
     high_at = report.index("live-eval-receipt-grok-4.7-high-r1-39583461520.json")
-    assert luna_at < sol_at < grok_at < medium_at < high_at
+    low_at = report.index("live-eval-receipt-grok-4.7-low-r1-39588587088.json")
+    assert luna_at < sol_at < grok_at < medium_at < high_at < low_at
     assert 'id="effort-sweep"' in report
     assert "Grok reasoning-effort sweep" in report
     assert "not strictly comparable" in report
     assert "06bc03a3eabab5bbf3b958ec" in report
     assert "bea194558220eb669940d8f3" in report
     assert "1-repeat effort comparison" in report
-    assert 'data-sweep-slot="low-1"' in report
-    assert "1-repeat receipt not in this report yet" in report
+    assert 'data-sweep-slot="low-1"' not in report
+    assert "1-repeat receipt not in this report yet" not in report
+    assert "All three 1-repeat runs clear the gate" in report
+    assert "grok-4.7 · low (1f45f2)" in report
     assert 'rel="preload"' in report
     assert "inter-latin-wght-normal.woff2" in report
     assert "live-eval.html" in (output / "sitemap.xml").read_text()

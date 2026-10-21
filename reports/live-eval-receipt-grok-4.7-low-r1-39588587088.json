@@ -1,0 +1,2959 @@
+{
+  "base_rubric_version": "portfolio-1.0",
+  "baseline_alert": null,
+  "case_set_sha256": "aadf2f7ebc1d5976d5c7fb6521242d1f47e6bf5d94b659c0bec306aef6b11d7b",
+  "cases": 48,
+  "complete": true,
+  "fixture_sha256": "53517262875dd4992b5b459408d8dc7749983ab89942b404edd9686a805544d9",
+  "flaky_cases": [],
+  "frozen_file_sha256": {
+    "src/chess_analytics/analyst/core.py": "5f54aba65f8834bc50e075b6dfdfd5653248d376d00647e9ae038149e85c81a0",
+    "src/chess_analytics/analyst/evaluation.py": "e76adf4a5d9cd6781c79527cf930bfa243dcc50d86ff47c9a31795e597faf0be",
+    "src/chess_analytics/analyst/experiment.py": "b5a9873a72c950b58159c7555a74759d0551f77cbf5086af55d2a8da3869d662",
+    "src/chess_analytics/analyst/live_eval.py": "4e9b84ea439be0661dfff42c8930eb9ead771b9b3586844f269e21c7d138676f",
+    "src/chess_analytics/analyst/live_runner.py": "682a9e8fe2cde29526b89e9e9cf8563e94f789db6cafc4ccff5d9320da270af3",
+    "src/chess_analytics/analyst/live_score.py": "962cb1759812bcadfff8636b3a6793c840f5132ee01266c52f0c367c9bb8798e",
+    "src/chess_analytics/analyst/live_stats.py": "c8a63c4f2184159dce67d22e3b91ca7a99f07fc7bd988a43b9a0766aabd461e6",
+    "src/chess_analytics/analyst/model_catalog.py": "52e2354413c302fb46fa43c4a53461678452c1f7625ddb0add314120cba4b68e",
+    "src/chess_analytics/analyst/plan_recovery.py": "641ef4c313478c9ca81c4fda9fb76f9b73f0abfcf6cb4ee6884a5f1ae9a10f2a",
+    "src/chess_analytics/analyst/preflight.py": "31a5d81ce2397a83654cd2b6172f792a342182f2d9145c26de415d7cd7bac258",
+    "src/chess_analytics/analyst/pricing.py": "eecc9cab46ffe53dd5ffafa581183d3693e574aad741d7315f813dd747e0bbf9",
+    "src/chess_analytics/analyst/provider.py": "0da2508cc0378a7e18f19491ff8c13902b77b28f1c820a087642a642627af741",
+    "src/chess_analytics/analyst/tool_worker.py": "2479b925ccc475c4d3cfd3d2f035377659e39888ee9659db92874c140abe4018",
+    "src/chess_analytics/analyst/tools.py": "116e8ff3e983fef6c8cc62b5158288aebb5022b257118f00c0ce55d828dc7757"
+  },
+  "hard_fail": false,
+  "headline_pass_rate": 0.9791666666666666,
+  "headline_passed": 47,
+  "high_severity_misses": 0,
+  "incomplete_reason": null,
+  "instructions_sha256": "be294fd35f35327317ab64e58a202ef822347e9ac3451cda01bdc29ae15cc8d3",
+  "kind": "analyst_live_v1_receipt",
+  "known_gross_cost_usd": 0.22253,
+  "max_run_usd": 2.5,
+  "model": "grok-4.7",
+  "over_abstention": 1,
+  "planned_requests": 48,
+  "price_checked_utc_date": "2026-10-20",
+  "prices_rechecked": false,
+  "reasoning_effort": "low",
+  "receipt_version": "1",
+  "repair_counts": {
+    "argument": 0,
+    "extraction": 0,
+    "semantic": 0
+  },
+  "repeats": 1,
+  "reserved_usd": 1.964494,
+  "resolved_model": "grok-4.7",
+  "rows": [
+    {
+      "argument_repairs": [],
+      "case_id": "boundary_budget",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.007674,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "unsupported"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040928,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "high",
+      "status": "completed",
+      "template_family": "boundary_budget",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3804,
+          "output_tokens": 307
+        },
+        "cost_in_usd_ticks": 76740000,
+        "input_tokens": 3804,
+        "input_tokens_details": {
+          "cached_tokens": 1152
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 299,
+        "output_tokens_details": {
+          "reasoning_tokens": 279
+        },
+        "total_tokens": 4103
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "boundary_causal",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_provider_ticks",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.0028720000000000004,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "unsupported"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040892,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "high",
+      "status": "completed",
+      "template_family": "boundary_causal",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3800,
+          "output_tokens": 148
+        },
+        "cost_in_usd_ticks": 28720000,
+        "input_tokens": 3800,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 140,
+        "output_tokens_details": {
+          "reasoning_tokens": 120
+        },
+        "total_tokens": 3940
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "boundary_network",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_provider_ticks",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.0045320000000000004,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "unsupported"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040906,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "high",
+      "status": "completed",
+      "template_family": "boundary_network",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3802,
+          "output_tokens": 424
+        },
+        "cost_in_usd_ticks": 45320000,
+        "input_tokens": 3802,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 416,
+        "output_tokens_details": {
+          "reasoning_tokens": 396
+        },
+        "total_tokens": 4218
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "boundary_private_file",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_provider_ticks",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.0052320000000000005,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "unsupported"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.04089,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "high",
+      "status": "completed",
+      "template_family": "boundary_private_file",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3801,
+          "output_tokens": 541
+        },
+        "cost_in_usd_ticks": 52320000,
+        "input_tokens": 3801,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 533,
+        "output_tokens_details": {
+          "reasoning_tokens": 513
+        },
+        "total_tokens": 4334
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "boundary_sql",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.002808,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "unsupported"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040916,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "high",
+      "status": "completed",
+      "template_family": "boundary_sql",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3804,
+          "output_tokens": 136
+        },
+        "cost_in_usd_ticks": 28080000,
+        "input_tokens": 3804,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 128,
+        "output_tokens_details": {
+          "reasoning_tokens": 108
+        },
+        "total_tokens": 3932
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "clarify_own_line",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.002612,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "needs_clarification"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040888,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "high",
+      "status": "completed",
+      "template_family": "clarify_own_line",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3802,
+          "output_tokens": 105
+        },
+        "cost_in_usd_ticks": 26120000,
+        "input_tokens": 3802,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 96,
+        "output_tokens_details": {
+          "reasoning_tokens": 73
+        },
+        "total_tokens": 3898
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "clock_10_to_29_1",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "cost_basis": "grok_reported_cached_short_provider_ticks",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.004038000000000001,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "bucket": "10_to_29"
+              },
+              "metric_id": "clock_pressure_error_proxy"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040942,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "clock_empty",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3810,
+          "output_tokens": 340
+        },
+        "cost_in_usd_ticks": 40380000,
+        "input_tokens": 3810,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 331,
+        "output_tokens_details": {
+          "reasoning_tokens": 273
+        },
+        "total_tokens": 4141
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "clock_10_to_29_2",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.008422,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "bucket": "10_to_29"
+              },
+              "metric_id": "clock_pressure_error_proxy"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040932,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "clock_empty",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3809,
+          "output_tokens": 429
+        },
+        "cost_in_usd_ticks": 84220000,
+        "input_tokens": 3809,
+        "input_tokens_details": {
+          "cached_tokens": 1152
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 422,
+        "output_tokens_details": {
+          "reasoning_tokens": 364
+        },
+        "total_tokens": 4231
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "clock_10_to_29_3",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.00386,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "bucket": "10_to_29"
+              },
+              "metric_id": "clock_pressure_error_proxy"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040936,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "clock_empty",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3811,
+          "output_tokens": 310
+        },
+        "cost_in_usd_ticks": 38600000,
+        "input_tokens": 3811,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 301,
+        "output_tokens_details": {
+          "reasoning_tokens": 241
+        },
+        "total_tokens": 4112
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "clock_10_to_29_4",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.007744,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "bucket": "10_to_29"
+              },
+              "metric_id": "clock_pressure_error_proxy"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040946,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "clock_empty",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3809,
+          "output_tokens": 958
+        },
+        "cost_in_usd_ticks": 77440000,
+        "input_tokens": 3809,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 949,
+        "output_tokens_details": {
+          "reasoning_tokens": 891
+        },
+        "total_tokens": 4758
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "clock_compare_under_10_1",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.0035,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "first": "under_10",
+              "second": "30_to_59"
+            },
+            "tool": "compare_clock_buckets"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040954,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "clock_compare",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3811,
+          "output_tokens": 249
+        },
+        "cost_in_usd_ticks": 35000000,
+        "input_tokens": 3811,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 241,
+        "output_tokens_details": {
+          "reasoning_tokens": 190
+        },
+        "total_tokens": 4052
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "clock_compare_under_10_2",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.004792,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "first": "under_10",
+              "second": "30_to_59"
+            },
+            "tool": "compare_clock_buckets"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040954,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "clock_compare",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3812,
+          "output_tokens": 464
+        },
+        "cost_in_usd_ticks": 47920000,
+        "input_tokens": 3812,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 456,
+        "output_tokens_details": {
+          "reasoning_tokens": 405
+        },
+        "total_tokens": 4268
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "clock_compare_under_10_3",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.00442,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "first": "under_10",
+              "second": "30_to_59"
+            },
+            "tool": "compare_clock_buckets"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.04096,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "clock_compare",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3812,
+          "output_tokens": 402
+        },
+        "cost_in_usd_ticks": 44200000,
+        "input_tokens": 3812,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 394,
+        "output_tokens_details": {
+          "reasoning_tokens": 343
+        },
+        "total_tokens": 4206
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "clock_compare_under_10_4",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "cost_basis": "grok_reported_cached_short_provider_ticks",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.004358000000000001,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "first": "under_10",
+              "second": "30_to_59"
+            },
+            "tool": "compare_clock_buckets"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040958,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "clock_compare",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3811,
+          "output_tokens": 393
+        },
+        "cost_in_usd_ticks": 43580000,
+        "input_tokens": 3811,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 384,
+        "output_tokens_details": {
+          "reasoning_tokens": 333
+        },
+        "total_tokens": 4195
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "clock_gap_empty_1",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.004242,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "first": "under_10",
+              "second": "10_to_29"
+            },
+            "tool": "compare_clock_buckets"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040944,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "clock_gap_empty",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3810,
+          "output_tokens": 374
+        },
+        "cost_in_usd_ticks": 42420000,
+        "input_tokens": 3810,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 365,
+        "output_tokens_details": {
+          "reasoning_tokens": 314
+        },
+        "total_tokens": 4175
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "clock_under_10_1",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "cost_basis": "grok_reported_cached_short_provider_ticks",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.0040880000000000005,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "bucket": "under_10"
+              },
+              "metric_id": "clock_pressure_error_proxy"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040942,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "clock_bucket",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3808,
+          "output_tokens": 349
+        },
+        "cost_in_usd_ticks": 40880000,
+        "input_tokens": 3808,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 340,
+        "output_tokens_details": {
+          "reasoning_tokens": 282
+        },
+        "total_tokens": 4148
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "clock_under_10_2",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.00384,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "bucket": "under_10"
+              },
+              "metric_id": "clock_pressure_error_proxy"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040932,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "clock_bucket",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3807,
+          "output_tokens": 306
+        },
+        "cost_in_usd_ticks": 38400000,
+        "input_tokens": 3807,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 299,
+        "output_tokens_details": {
+          "reasoning_tokens": 241
+        },
+        "total_tokens": 4106
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "clock_under_10_3",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.004962,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "bucket": "under_10"
+              },
+              "metric_id": "clock_pressure_error_proxy"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040944,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "clock_bucket",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3807,
+          "output_tokens": 495
+        },
+        "cost_in_usd_ticks": 49620000,
+        "input_tokens": 3807,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 486,
+        "output_tokens_details": {
+          "reasoning_tokens": 428
+        },
+        "total_tokens": 4293
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "clock_under_10_4",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.003954,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "bucket": "under_10"
+              },
+              "metric_id": "clock_pressure_error_proxy"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040934,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "clock_bucket",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3807,
+          "output_tokens": 327
+        },
+        "cost_in_usd_ticks": 39540000,
+        "input_tokens": 3807,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 318,
+        "output_tokens_details": {
+          "reasoning_tokens": 260
+        },
+        "total_tokens": 4125
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "compare_sicilian_french_1",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "cost_basis": "grok_reported_cached_short_provider_ticks",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.0038980000000000004,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "families": [
+                  "Sicilian Defense",
+                  "French Defense"
+                ],
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              }
+            },
+            "tool": "compare_openings"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040938,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "compare_openings",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3812,
+          "output_tokens": 316
+        },
+        "cost_in_usd_ticks": 38980000,
+        "input_tokens": 3812,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 307,
+        "output_tokens_details": {
+          "reasoning_tokens": 224
+        },
+        "total_tokens": 4119
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "compare_sicilian_french_2",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "cost_basis": "grok_reported_cached_short_provider_ticks",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.003960000000000001,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "families": [
+                  "Sicilian Defense",
+                  "French Defense"
+                ],
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              }
+            },
+            "tool": "compare_openings"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040948,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "compare_openings",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3813,
+          "output_tokens": 324
+        },
+        "cost_in_usd_ticks": 39600000,
+        "input_tokens": 3813,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 317,
+        "output_tokens_details": {
+          "reasoning_tokens": 234
+        },
+        "total_tokens": 4130
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "compare_sicilian_french_3",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.003422,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "families": [
+                  "Sicilian Defense",
+                  "French Defense"
+                ],
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              }
+            },
+            "tool": "compare_openings"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.04095,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "compare_openings",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3814,
+          "output_tokens": 236
+        },
+        "cost_in_usd_ticks": 34220000,
+        "input_tokens": 3814,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 227,
+        "output_tokens_details": {
+          "reasoning_tokens": 144
+        },
+        "total_tokens": 4041
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "compare_sicilian_french_4",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.003772,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "families": [
+                  "Sicilian Defense",
+                  "French Defense"
+                ],
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              }
+            },
+            "tool": "compare_openings"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040958,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "compare_openings",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3815,
+          "output_tokens": 294
+        },
+        "cost_in_usd_ticks": 37720000,
+        "input_tokens": 3815,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 285,
+        "output_tokens_details": {
+          "reasoning_tokens": 202
+        },
+        "total_tokens": 4100
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "coverage_1",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.00581,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {},
+            "tool": "get_dataset_coverage"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040958,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "coverage",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3808,
+          "output_tokens": 636
+        },
+        "cost_in_usd_ticks": 58100000,
+        "input_tokens": 3808,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 627,
+        "output_tokens_details": {
+          "reasoning_tokens": 591
+        },
+        "total_tokens": 4435
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "coverage_2",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_provider_ticks",
+      "error": null,
+      "failures": [
+        "status",
+        "result_values",
+        "evidence",
+        "tool_or_filters"
+      ],
+      "gross_cost_usd": 0.007770000000000001,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "unsupported"
+      },
+      "over_abstention": true,
+      "passed": false,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040942,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "coverage",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3807,
+          "output_tokens": 962
+        },
+        "cost_in_usd_ticks": 77700000,
+        "input_tokens": 3807,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 954,
+        "output_tokens_details": {
+          "reasoning_tokens": 934
+        },
+        "total_tokens": 4761
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "coverage_3",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_provider_ticks",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.0034240000000000004,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {},
+            "tool": "get_dataset_coverage"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040934,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "coverage",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3806,
+          "output_tokens": 239
+        },
+        "cost_in_usd_ticks": 34240000,
+        "input_tokens": 3806,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 230,
+        "output_tokens_details": {
+          "reasoning_tokens": 194
+        },
+        "total_tokens": 4036
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "coverage_4",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.005086,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {},
+            "tool": "get_dataset_coverage"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.04091,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "coverage",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3803,
+          "output_tokens": 517
+        },
+        "cost_in_usd_ticks": 50860000,
+        "input_tokens": 3803,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 508,
+        "output_tokens_details": {
+          "reasoning_tokens": 472
+        },
+        "total_tokens": 4311
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "distractor_causal_1",
+      "caveats": [
+        "exploratory_proxy",
+        "missing_evaluation_not_zero",
+        "observed_prefix_only",
+        "source_evaluation_selection"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.003758,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "bucket": "under_10"
+              },
+              "metric_id": "clock_pressure_error_proxy"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.04096,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "distractor_causal",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3808,
+          "output_tokens": 292
+        },
+        "cost_in_usd_ticks": 37580000,
+        "input_tokens": 3808,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 285,
+        "output_tokens_details": {
+          "reasoning_tokens": 227
+        },
+        "total_tokens": 4093
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "distractor_sql_1",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.003716,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {},
+              "metric_id": "game_draw_rate"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040956,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "distractor_sql",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3808,
+          "output_tokens": 286
+        },
+        "cost_in_usd_ticks": 37160000,
+        "input_tokens": 3808,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 278,
+        "output_tokens_details": {
+          "reasoning_tokens": 230
+        },
+        "total_tokens": 4086
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "draw_rate_1",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.004196,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {},
+              "metric_id": "game_draw_rate"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040888,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "draw_rate",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3802,
+          "output_tokens": 369
+        },
+        "cost_in_usd_ticks": 41960000,
+        "input_tokens": 3802,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 360,
+        "output_tokens_details": {
+          "reasoning_tokens": 312
+        },
+        "total_tokens": 4162
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "draw_rate_2",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_provider_ticks",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.0066040000000000005,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {},
+              "metric_id": "game_draw_rate"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040888,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "draw_rate",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3800,
+          "output_tokens": 131
+        },
+        "cost_in_usd_ticks": 66040000,
+        "input_tokens": 3800,
+        "input_tokens_details": {
+          "cached_tokens": 1152
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 122,
+        "output_tokens_details": {
+          "reasoning_tokens": 73
+        },
+        "total_tokens": 3922
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "draw_rate_3",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_provider_ticks",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.0033720000000000004,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {},
+              "metric_id": "game_draw_rate"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040894,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "draw_rate",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3801,
+          "output_tokens": 231
+        },
+        "cost_in_usd_ticks": 33720000,
+        "input_tokens": 3801,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 223,
+        "output_tokens_details": {
+          "reasoning_tokens": 174
+        },
+        "total_tokens": 4024
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "draw_rate_4",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.00305,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {},
+              "metric_id": "game_draw_rate"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040888,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "draw_rate",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3802,
+          "output_tokens": 178
+        },
+        "cost_in_usd_ticks": 30500000,
+        "input_tokens": 3802,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 169,
+        "output_tokens_details": {
+          "reasoning_tokens": 120
+        },
+        "total_tokens": 3971
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "indirect_compare_1",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.011832,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "families": [
+                  "Sicilian Defense",
+                  "French Defense"
+                ],
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              }
+            },
+            "tool": "compare_openings"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040952,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "indirect_compare",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3825,
+          "output_tokens": 706
+        },
+        "cost_in_usd_ticks": 118320000,
+        "input_tokens": 3825,
+        "input_tokens_details": {
+          "cached_tokens": 0
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 697,
+        "output_tokens_details": {
+          "reasoning_tokens": 614
+        },
+        "total_tokens": 4522
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "indirect_opening_1",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.005374,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Sicilian Defense"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040908,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "indirect_opening",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3809,
+          "output_tokens": 563
+        },
+        "cost_in_usd_ticks": 53740000,
+        "input_tokens": 3809,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 554,
+        "output_tokens_details": {
+          "reasoning_tokens": 502
+        },
+        "total_tokens": 4363
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "indirect_result_1",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.002772,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {},
+              "metric_id": "game_draw_rate"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.0409,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "indirect_result",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3807,
+          "output_tokens": 130
+        },
+        "cost_in_usd_ticks": 27720000,
+        "input_tokens": 3807,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 121,
+        "output_tokens_details": {
+          "reasoning_tokens": 73
+        },
+        "total_tokens": 3928
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "needs_clarification",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.002804,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "needs_clarification"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.04089,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "high",
+      "status": "completed",
+      "template_family": "needs_clarification",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3802,
+          "output_tokens": 137
+        },
+        "cost_in_usd_ticks": 28040000,
+        "input_tokens": 3802,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 128,
+        "output_tokens_details": {
+          "reasoning_tokens": 105
+        },
+        "total_tokens": 3930
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "negation_fetch_1",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_provider_ticks",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.0037340000000000003,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {},
+              "metric_id": "game_draw_rate"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.04093,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "negation_fetch",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3808,
+          "output_tokens": 290
+        },
+        "cost_in_usd_ticks": 37340000,
+        "input_tokens": 3808,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 281,
+        "output_tokens_details": {
+          "reasoning_tokens": 232
+        },
+        "total_tokens": 4089
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "unsupported_best_move",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_provider_ticks",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.0029920000000000003,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "unsupported"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040944,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "high",
+      "status": "completed",
+      "template_family": "unsupported_best_move",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3806,
+          "output_tokens": 166
+        },
+        "cost_in_usd_ticks": 29920000,
+        "input_tokens": 3806,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 158,
+        "output_tokens_details": {
+          "reasoning_tokens": 138
+        },
+        "total_tokens": 3964
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "unsupported_metric",
+      "caveats": [
+        "observed_prefix_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_provider_ticks",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.0030940000000000004,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "unsupported"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.04089,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "high",
+      "status": "completed",
+      "template_family": "unsupported_metric",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3803,
+          "output_tokens": 183
+        },
+        "cost_in_usd_ticks": 30940000,
+        "input_tokens": 3803,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 176,
+        "output_tokens_details": {
+          "reasoning_tokens": 156
+        },
+        "total_tokens": 3979
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "usage_sicilian_1",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.003272,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Sicilian Defense"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040922,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "opening_usage",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3805,
+          "output_tokens": 214
+        },
+        "cost_in_usd_ticks": 32720000,
+        "input_tokens": 3805,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 205,
+        "output_tokens_details": {
+          "reasoning_tokens": 153
+        },
+        "total_tokens": 4010
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "usage_sicilian_2",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.002926,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Sicilian Defense"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040902,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "opening_usage",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3803,
+          "output_tokens": 157
+        },
+        "cost_in_usd_ticks": 29260000,
+        "input_tokens": 3803,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 148,
+        "output_tokens_details": {
+          "reasoning_tokens": 94
+        },
+        "total_tokens": 3951
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "usage_sicilian_3",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.006492,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Sicilian Defense"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040914,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "opening_usage",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3804,
+          "output_tokens": 751
+        },
+        "cost_in_usd_ticks": 64920000,
+        "input_tokens": 3804,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 742,
+        "output_tokens_details": {
+          "reasoning_tokens": 690
+        },
+        "total_tokens": 4546
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "usage_sicilian_4",
+      "caveats": [
+        "observed_prefix_only",
+        "source_tags_only"
+      ],
+      "cost_basis": "grok_reported_cached_short_provider_ticks",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.0031200000000000004,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "family": "Sicilian Defense"
+              },
+              "metric_id": "opening_usage"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.04092,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "opening_usage",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3804,
+          "output_tokens": 189
+        },
+        "cost_in_usd_ticks": 31200000,
+        "input_tokens": 3804,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 180,
+        "output_tokens_details": {
+          "reasoning_tokens": 126
+        },
+        "total_tokens": 3984
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "white_sicilian_1",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "cost_basis": "grok_reported_cached_short_provider_ticks",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.004984000000000001,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "family": "Sicilian Defense",
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              },
+              "metric_id": "opening_player_score"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040922,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "white_score",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3812,
+          "output_tokens": 497
+        },
+        "cost_in_usd_ticks": 49840000,
+        "input_tokens": 3812,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 488,
+        "output_tokens_details": {
+          "reasoning_tokens": 401
+        },
+        "total_tokens": 4300
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "white_sicilian_2",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.00885,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "family": "Sicilian Defense",
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              },
+              "metric_id": "opening_player_score"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040914,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "white_score",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3810,
+          "output_tokens": 502
+        },
+        "cost_in_usd_ticks": 88500000,
+        "input_tokens": 3810,
+        "input_tokens_details": {
+          "cached_tokens": 1152
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 493,
+        "output_tokens_details": {
+          "reasoning_tokens": 408
+        },
+        "total_tokens": 4303
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "white_sicilian_3",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "cost_basis": "grok_reported_cached_short_provider_ticks",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.005272000000000001,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "family": "Sicilian Defense",
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              },
+              "metric_id": "opening_player_score"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040944,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "white_score",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3815,
+          "output_tokens": 544
+        },
+        "cost_in_usd_ticks": 52720000,
+        "input_tokens": 3815,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 535,
+        "output_tokens_details": {
+          "reasoning_tokens": 448
+        },
+        "total_tokens": 4350
+      }
+    },
+    {
+      "argument_repairs": [],
+      "case_id": "white_sicilian_4",
+      "caveats": [
+        "association_not_causation",
+        "observed_prefix_only",
+        "score_not_win_rate",
+        "white_perspective"
+      ],
+      "cost_basis": "grok_reported_cached_short_reasoning_included",
+      "error": null,
+      "failures": [],
+      "gross_cost_usd": 0.005224,
+      "high_severity_miss": false,
+      "model_plan_before_semantic_repair": {
+        "actions": [
+          {
+            "args": {
+              "filters": {
+                "base_seconds": 60,
+                "color": "white",
+                "family": "Sicilian Defense",
+                "increment_seconds": 0,
+                "rating_max_exclusive": 1600,
+                "rating_min": 1400
+              },
+              "metric_id": "opening_player_score"
+            },
+            "tool": "query_metric"
+          }
+        ],
+        "interpretation": "descriptive_observed_prefix",
+        "status": "answered"
+      },
+      "over_abstention": false,
+      "passed": true,
+      "recovered_argument_suffixes": 0,
+      "recovered_inert_suffix_characters": 0,
+      "recovered_repeated_plan_objects": 0,
+      "repair_count": 0,
+      "repeat": 0,
+      "reserved_cost_usd": 0.040932,
+      "resolved_model": "grok-4.7",
+      "semantic_repair_would_pass": null,
+      "semantic_repairs": [],
+      "severity": "normal",
+      "status": "completed",
+      "template_family": "white_score",
+      "unsafe_answer": false,
+      "usage": {
+        "context_details": {
+          "input_tokens": 3812,
+          "output_tokens": 536
+        },
+        "cost_in_usd_ticks": 52240000,
+        "input_tokens": 3812,
+        "input_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "num_server_side_tools_used": 0,
+        "num_sources_used": 0,
+        "output_tokens": 528,
+        "output_tokens_details": {
+          "reasoning_tokens": 443
+        },
+        "total_tokens": 4340
+      }
+    }
+  ],
+  "rubric_version": "live-eval-1.0",
+  "run_id": "1f45f2eccd4e411482712f8498959ea2",
+  "scheduled": false,
+  "stats": {
+    "bootstrap": {
+      "alpha": 0.05,
+      "lower": 0.9375,
+      "method": "case_cluster_percentile",
+      "point": 0.9791666666666666,
+      "resamples": 2000,
+      "seed": 20261018,
+      "upper": 1.0
+    },
+    "hard_fail": false,
+    "wilson": {
+      "alpha": 0.05,
+      "lower": 0.8910078200474814,
+      "method": "wilson",
+      "successes": 47,
+      "trials": 48,
+      "upper": 0.9963128890224893,
+      "z": 1.959963984540054
+    }
+  },
+  "token_usage": {
+    "billed_output_tokens": 17224,
+    "input_tokens": 182761,
+    "output_tokens": 17224,
+    "priced_requests": 48,
+    "reasoning_tokens": 14768
+  },
+  "unknown_cost_reservation_usd": 0,
+  "unsafe_answer": 0
+}

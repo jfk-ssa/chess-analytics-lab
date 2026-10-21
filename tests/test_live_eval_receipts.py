@@ -130,6 +130,25 @@ PINS: tuple[_Pin, ...] = (
         "wilson": (0.8910078200474814, 0.9963128890224893),
         "bootstrap": (0.9375, 1.0),
     },
+    {
+        "path": "reports/live-eval-receipt-grok-4.7-low-r1-39588587088.json",
+        "sha256": "cca411fd9d7de20938a127c24e6b84870180079b45d597da5dc24425d56f349d",
+        "model": "grok-4.7",
+        "reasoning_effort": "low",
+        "repeats": 1,
+        "planned_requests": 48,
+        "headline_passed": 47,
+        "headline_pass_rate": 0.9791666666666666,
+        "hard_fail": False,
+        "instructions_sha256": "be294fd35f35327317ab64e58a202ef822347e9ac3451cda01bdc29ae15cc8d3",
+        "high_severity_misses": 0,
+        "over_abstention": 1,
+        "unsafe_answer": 0,
+        "known_gross_cost_usd": 0.22253,
+        "repair_counts": {"argument": 0, "extraction": 0, "semantic": 0},
+        "wilson": (0.8910078200474814, 0.9963128890224893),
+        "bootstrap": (0.9375, 1.0),
+    },
 )
 
 
@@ -176,12 +195,13 @@ def test_committed_receipts_match_the_schema_and_the_pinned_sha256():
         assert bootstrap["seed"] == 20261018
         assert bootstrap["resamples"] == 2000
         seen.append(receipt)
-    by_key = {(item["model"], item["reasoning_effort"]): item for item in seen}
-    luna = by_key[("gpt-6-luna", "none")]
-    sol = by_key[("gpt-6-sol", "none")]
-    grok = by_key[("grok-4.7", "low")]
-    medium = by_key[("grok-4.7", "medium")]
-    high = by_key[("grok-4.7", "high")]
+    by_key = {(item["model"], item["reasoning_effort"], item["repeats"]): item for item in seen}
+    luna = by_key[("gpt-6-luna", "none", 5)]
+    sol = by_key[("gpt-6-sol", "none", 5)]
+    grok = by_key[("grok-4.7", "low", 5)]
+    low = by_key[("grok-4.7", "low", 1)]
+    medium = by_key[("grok-4.7", "medium", 1)]
+    high = by_key[("grok-4.7", "high", 1)]
     assert luna["frozen_file_sha256"] == sol["frozen_file_sha256"]
     assert grok["frozen_file_sha256"] != luna["frozen_file_sha256"]
     assert grok["reasoning_effort"] == "low"
@@ -262,3 +282,23 @@ def test_committed_receipts_match_the_schema_and_the_pinned_sha256():
     assert {row["case_id"] for row in high["rows"] if not row["passed"]} == {"indirect_opening_1"}
     assert all(row["over_abstention"] is True for row in medium["rows"] if not row["passed"])
     assert all(row["over_abstention"] is True for row in high["rows"] if not row["passed"])
+    assert low["instructions_sha256"] == medium["instructions_sha256"]
+    assert low["instructions_sha256"] == high["instructions_sha256"]
+    assert low["frozen_file_sha256"] == grok["frozen_file_sha256"]
+    assert low["case_set_sha256"] == grok["case_set_sha256"]
+    assert low["fixture_sha256"] == grok["fixture_sha256"]
+    assert low["rubric_version"] == "live-eval-1.0"
+    assert "dataset_id" not in low
+    assert low["token_usage"]["reasoning_tokens"] == 14768
+    assert low["max_run_usd"] == 2.5
+    assert low["reserved_usd"] == 1.964494
+    assert low["flaky_cases"] == []
+    failed = [row for row in low["rows"] if not row["passed"]]
+    assert len(failed) == 1
+    assert failed[0]["case_id"] == "coverage_2"
+    assert failed[0]["repeat"] == 0
+    assert failed[0]["over_abstention"] is True
+    assert failed[0]["high_severity_miss"] is False
+    plan = failed[0]["model_plan_before_semantic_repair"]
+    assert plan["status"] == "unsupported"
+    assert plan["actions"] == []

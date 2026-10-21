@@ -2992,10 +2992,16 @@ def _grok_effort_sweep(
             else:
                 cells.append(f"<td>{_case_cell(receipt, case_id, cases)}</td>")
         body.append(f'<tr><th scope="row"><code>{esc(case_id)}</code></th>{"".join(cells)}</tr>')
+    if low is None:
+        caption = (
+            "Passes for the 1-repeat arms on cases that miss at least once. "
+            "The low column stays empty until that receipt is committed."
+        )
+    else:
+        caption = "Passes for the 1-repeat arms on cases that miss at least once."
     table = (
-        '<div class="scroll"><table class="ev-cases"><caption>Passes for the 1-repeat arms on '
-        "cases that miss at least once. The low column stays empty until that receipt is "
-        'committed.</caption><thead><tr><th scope="col">Case</th>'
+        '<div class="scroll"><table class="ev-cases"><caption>'
+        f'{caption}</caption><thead><tr><th scope="col">Case</th>'
         f"{heads}</tr></thead><tbody>{''.join(body)}</tbody></table></div>"
     )
     failures = []
