@@ -1395,12 +1395,43 @@ figure .full-size {
   color: var(--ev-ink);
 }
 .ev-cards {
+  --ev-card-columns: 1;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  grid-template-columns: repeat(var(--ev-card-columns), minmax(0, 1fr));
   gap: 20px;
+}
+.ev-cards:has(> .ev-card:nth-child(2)) {
+  --ev-card-columns: 2;
+}
+.ev-cards:has(> .ev-card:nth-child(3)) {
+  --ev-card-columns: 3;
+}
+.ev-cards:has(> .ev-card:nth-child(4)) {
+  --ev-card-columns: 4;
+}
+/* A 56px rate needs about a 260px track. Four-up waits for 1200px; three-up waits for 901px. */
+@media (max-width: 1199px) {
+  .ev-cards:has(> .ev-card:nth-child(4)) {
+    --ev-card-columns: 2;
+  }
+}
+@media (max-width: 900px) {
+  .ev-cards:has(> .ev-card:nth-child(3)),
+  .ev-cards:has(> .ev-card:nth-child(4)) {
+    --ev-card-columns: 2;
+  }
+}
+@media (max-width: 600px) {
+  .ev-cards,
+  .ev-cards:has(> .ev-card:nth-child(2)),
+  .ev-cards:has(> .ev-card:nth-child(3)),
+  .ev-cards:has(> .ev-card:nth-child(4)) {
+    --ev-card-columns: 1;
+  }
 }
 .ev-card {
   position: relative;
+  min-width: 0;
   background: #fff;
   border: 1px solid var(--ev-rule);
   border-radius: 12px;
@@ -1418,7 +1449,9 @@ figure .full-size {
   vertical-align: 1px;
 }
 .ev-name {
+  min-width: 0;
   padding-right: 112px;
+  overflow-wrap: anywhere;
   font-weight: 700;
   font-size: 18px;
 }
@@ -1447,21 +1480,35 @@ figure .full-size {
   background: #e8f4ed;
   border: 1px solid #bcdcc9;
 }
-.ev-big {
+.ev-rate {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
   margin: 20px 0 6px;
+  min-width: 0;
+}
+.ev-big {
+  margin: 0;
   font-size: 56px;
   font-weight: 650;
   line-height: 1;
   letter-spacing: -0.035em;
   font-variant-numeric: lining-nums tabular-nums;
 }
-.ev-big small {
-  display: inline;
-  margin-left: 10px;
+.ev-stat {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
   font-size: 14px;
   font-weight: 500;
+  line-height: 1.35;
   letter-spacing: 0;
   color: var(--ev-ink3);
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
 }
 .ev-ci,
 .ev-kv span:nth-child(even),
@@ -1699,10 +1746,6 @@ figure .full-size {
   .ev-facts {
     padding-left: 0;
     border-left: 0;
-  }
-  .ev-big small {
-    display: block;
-    margin: 10px 0 0;
   }
   .ev-checks {
     columns: 1;
