@@ -78,8 +78,15 @@ stated for Luna versus Sol. Low ×5 is not compared with Luna or Sol, because
 the frozen runner files changed. The one-repeat runs are like-for-like with
 each other, 48 trials each, and use a different dataset snapshot from low ×5.
 
-Cost and reasoning tokens are one table per set. Headline cost cards
-also show the token count. The sweep table of imperfect 1-repeat cases stays.
+Cost and reasoning tokens are one table per set. Known cost in those
+tables is three decimals on every row (`$0.015`, `$1.003`, `$0.255`),
+the same precision as the sweep cards. The caption under the sweep chart
+still quotes the receipt figures. Luna and Sol show 0 reasoning tokens:
+every call records `output_tokens_details.reasoning_tokens` as 0, and the
+receipt summary omits the rollup key. Headline cost cards also show the
+token count. A miss result prints `passed/repeats` on its own line and
+each failure mode on the next. Run names do not wrap. The sweep table of
+imperfect 1-repeat cases stays.
 
 ## Consequences
 

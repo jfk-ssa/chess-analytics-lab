@@ -7,6 +7,22 @@
   overflow-x: auto;
 }
 
+/* Cost and miss tables keep a run name, a dollar amount, and a score on
+   one line. A failure mode is a second paragraph, not a wrap of the score. */
+[data-testid="stTable"]:has(table[aria-label*="Known gross cost"]) table,
+[data-testid="stTable"]:has(table[aria-label*="missed at least one repeat"]) table {
+  width: max-content;
+  min-width: 100%;
+  font-size: 12px;
+}
+
+[data-testid="stTable"]:has(table[aria-label*="Known gross cost"]) [data-testid="stMarkdownContainer"] p,
+[data-testid="stTable"]:has(table[aria-label*="missed at least one repeat"]) [data-testid="stMarkdownContainer"] p {
+  white-space: nowrap;
+  margin: 0;
+  font-size: 12px;
+}
+
 .cal-equal {
   font-family: Inter, sans-serif;
 }

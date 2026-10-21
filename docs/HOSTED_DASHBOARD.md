@@ -98,8 +98,9 @@ horizontal, and the grid scrolls inside its block on a narrow viewport.
 The category legend is one column. Tied category rates are stacked on
 the row label. Run colors stay pinned: Luna teal `#116559`, grok low ×5
 blue `#1d4ed8`, Sol orange `#a84a1f`, then low ×1 violet `#7c3aed`,
-medium ×1 pink `#db2777`, and high ×1 yellow-green `#4d7c0f`. Sweep cards print the per-repeat
-cost at three decimals. Low ×5 is not strictly comparable with
+medium ×1 pink `#db2777`, and high ×1 yellow-green `#4d7c0f`. Sweep cards and both cost tables print known cost at three decimals on
+every row. A miss prints passed/repeats, then each failure mode on its
+own line. Run names stay on one line. Low ×5 is not strictly comparable with
 Luna and Sol, because the frozen runner files changed. The 1-repeat runs
 are like-for-like with each other, 48 trials each, and use a different
 dataset snapshot from low ×5. Wilson intervals are compared only inside

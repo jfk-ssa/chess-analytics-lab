@@ -905,11 +905,21 @@ def _cost_token_table(runs: list[dict]) -> list[dict]:
     return [
         {
             "Run": _run_label(row),
-            "Known cost": _usd_trim(float(row["known_gross_cost_usd"])),
+            "Known cost": _usd_3(float(row["known_gross_cost_usd"])),
             "Reasoning tokens": _token_count(float(row["reasoning_tokens"])),
         }
         for row in runs
     ]
+
+
+def _miss_result(row: dict) -> str:
+    """Score on the first line. Each failure mode is its own following line."""
+    score = f"{int(row['passed'])}/{int(row['repeats'])}"
+    modes = row.get("failure_modes")
+    if not isinstance(modes, str) or modes in {"", "none"}:
+        return score
+    reasons = [part.strip() for part in modes.split(",") if part.strip()]
+    return "\n\n".join([score, *reasons])
 
 
 def _miss_table(case_rows: list[dict]) -> list[dict]:
@@ -917,11 +927,7 @@ def _miss_table(case_rows: list[dict]) -> list[dict]:
     for row in case_rows:
         if int(row["passed"]) >= int(row["repeats"]):
             continue
-        result = f"{int(row['passed'])}/{int(row['repeats'])}"
-        modes = row.get("failure_modes")
-        if isinstance(modes, str) and modes not in {"", "none"}:
-            result = f"{result}, {modes.replace(',', ', ')}"
-        table.append({"Run": _run_label(row), "Case": row["case_id"], "Result": result})
+        table.append({"Run": _run_label(row), "Case": row["case_id"], "Result": _miss_result(row)})
     return table
 
 

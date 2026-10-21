@@ -870,6 +870,9 @@ def test_every_grok_run_is_on_the_live_eval_charts(project, monkeypatch):
     assert set(misses[0].value["Run"]) == set(five_order)
     assert set(misses[1].value["Run"]) == set(one_order)
     assert "coverage_2" in set(misses[0].value["Case"]) | set(misses[1].value["Case"])
+    one_results = set(misses[1].value["Result"])
+    assert "0/1\n\nover_abstention" in one_results
+    assert all(", " not in value for value in one_results)
     costs = [
         table
         for table in app.table
@@ -879,7 +882,8 @@ def test_every_grok_run_is_on_the_live_eval_charts(project, monkeypatch):
     assert list(costs[0].value["Run"]) == five_order
     assert list(costs[1].value["Run"]) == one_order
     assert "14,768" in set(costs[1].value["Reasoning tokens"])
-    assert "$0.22253" in set(costs[1].value["Known cost"])
+    assert set(costs[0].value["Known cost"]) == {"$0.015", "$1.003", "$0.255"}
+    assert set(costs[1].value["Known cost"]) == {"$0.223", "$0.322", "$0.409"}
     assert "0" in set(costs[0].value["Reasoning tokens"])
 
 
