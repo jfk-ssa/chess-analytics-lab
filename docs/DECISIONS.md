@@ -98,3 +98,4 @@ short summary of the current checkout, not a log of new decisions.
 | 0090 | 2026-10-19 | [Live eval scorer, runner, and statistics](adr/0090-live-eval-scorer-runner-stats.md) |
 | 0091 | 2026-10-20 | [Manual live-eval workflow](adr/0091-manual-live-eval-workflow.md) |
 | 0092 | 2026-10-20 | [Public aggregate extract for a hosted read-only dashboard](adr/0092-public-aggregate-extract.md) |
+| 0093 | 2026-10-21 | [First live-eval receipts](adr/0093-first-live-eval-receipts.md) |

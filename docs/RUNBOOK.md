@@ -352,8 +352,10 @@ before the first dispatch. The job does not probe the provider.
    the model, the repeats, the headline raw pass rate with its Wilson
    interval, the repair counts beside that rate, hard fail, the known
    gross cost, and complete true or false.
-6. Read the receipt and commit it in a separate pull request, under
-   `reports/`. The workflow does not commit it. `work/` is ignored.
+6. Read the receipt and commit the artifact bytes unchanged in a separate
+   pull request, as `reports/live-eval-receipt-<run_id>.json`. `<run_id>`
+   is the Actions run id from the artifact name. The workflow does not
+   commit it. `work/` is ignored.
 
 ### Adding a schedule later
 
