@@ -198,6 +198,7 @@ def test_each_workflow_assertion_fails_when_mutated():
             "github.ref != 'refs/heads/other'",
             1,
         ),
+        "timeout": text.replace("    timeout-minutes: 150\n", "", 1),
     }
     expected = {
         "trigger": "trigger",
@@ -225,6 +226,7 @@ def test_each_workflow_assertion_fails_when_mutated():
         "always-summary": "always",
         "always-upload": "always",
         "ref-guard": "ref-guard",
+        "timeout": "timeout",
     }
     seen = []
     for name, mutated in cases.items():
@@ -250,6 +252,7 @@ def test_each_workflow_assertion_fails_when_mutated():
         "expression",
         "always",
         "ref-guard",
+        "timeout",
     } <= set(seen)
 
 
@@ -308,8 +311,10 @@ def test_caps_acknowledgement_and_repeats_match_the_five_repeat_ceilings():
         dispatch.validate_dispatch("grok-4.7", "5", "5", "true", "none")
     with pytest.raises(dispatch.DispatchError, match="does not accept reasoning effort low"):
         dispatch.validate_dispatch("gpt-6-luna", "5", "0.50", "true", "low")
-    with pytest.raises(dispatch.DispatchError, match=r"\b5\b"):
-        dispatch.validate_dispatch("grok-4.7", "5", "5.01", "true", "high")
+    with pytest.raises(dispatch.DispatchError, match=r"\b10\b"):
+        dispatch.validate_dispatch("grok-4.7", "5", "10.01", "true", "high")
+    accepted = dispatch.validate_dispatch("grok-4.7", "5", "10", "true", "low")
+    assert accepted["cap_usd"] == dispatch.CAPS_USD["grok-4.7"]
     with pytest.raises(dispatch.DispatchError, match="must be true"):
         dispatch.validate_dispatch("gpt-6-luna", "5", "0.50", "false")
     with pytest.raises(dispatch.DispatchError, match="1 to 20"):
@@ -364,7 +369,8 @@ def test_summary_shows_the_rate_wilson_repairs_and_an_incomplete_receipt(tmp_pat
     assert "model: gpt-6-luna" in text
     assert "reasoning effort: none" in text
     assert "repeats: 5" in text
-    assert "headline raw pass rate: 0.875000 (210/240)" in text
+    assert "headline raw pass rate for 5 repeats: 0.875000 (210/240)" in text
+    assert "not a 5-repeat headline comparison" not in text
     assert "repair counts: argument 1, extraction 2, semantic 0" in text
     assert "Wilson interval: [0.820000, 0.910000] (210/240)" in text
     assert "hard_fail: false" in text
@@ -373,16 +379,23 @@ def test_summary_shows_the_rate_wilson_repairs_and_an_incomplete_receipt(tmp_pat
     assert "unknown cost reservation" not in text
     incomplete = dict(receipt)
     incomplete["complete"] = False
+    incomplete["incomplete_reason"] = "wall_clock"
     incomplete["hard_fail"] = True
     incomplete["headline_pass_rate"] = None
     incomplete["stats"] = None
     incomplete["unknown_cost_reservation_usd"] = 0.25
     stopped = dispatch.format_summary(incomplete)
-    assert "headline raw pass rate: unavailable; repair counts:" in stopped
+    assert "headline raw pass rate for 5 repeats: unavailable; repair counts:" in stopped
     assert "Wilson interval: unavailable" in stopped
     assert "hard_fail: true" in stopped
     assert "complete: false" in stopped
+    assert "incomplete reason: wall_clock" in stopped
     assert "unknown cost reservation USD: 0.250000" in stopped
+    once = dict(receipt, repeats=1, planned_requests=48, headline_passed=40)
+    once["headline_pass_rate"] = 40 / 48
+    labelled = dispatch.format_summary(once)
+    assert "headline raw pass rate for 1 repeat:" in labelled
+    assert "not a 5-repeat headline comparison" in labelled
     missing = tmp_path / "missing.json"
     summary = tmp_path / "summary.md"
     monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(summary))
@@ -448,6 +461,8 @@ def _job(document: dict, problems: list[str]) -> dict | None:
 def _check_environment(job: dict, problems: list[str]) -> None:
     if job.get("environment") != "live-eval":
         problems.append("environment")
+    if job.get("timeout-minutes") != 150:
+        problems.append("timeout")
 
 
 def _check_inputs(document: dict, problems: list[str]) -> None:

@@ -20,6 +20,8 @@ from chess_analytics.analyst.model_catalog import (
     GROK_MODEL_ID,
     LIVE_EVAL_DEFAULT_EFFORT,
     LIVE_EVAL_EFFORTS,
+    LIVE_EVAL_JOB_TIMEOUT_MINUTES,
+    LIVE_EVAL_WALL_CLOCK_SECONDS,
     LONG_CONTEXT_PROMPT_TOKENS,
     PROMPT_CACHE_KEY,
     REASONING_RESERVE_TOKENS,
@@ -215,9 +217,7 @@ def test_invalid_effort_is_rejected_before_a_request(live_eval_stage, monkeypatc
     assert resolve_effort("gpt-6-sol", None) == "none"
 
 
-def test_five_repeat_efforts_reserve_the_short_tier_and_stop_over_the_cap(
-    live_eval_stage, monkeypatch
-):
+def test_planned_grok_runs_fit_the_ten_dollar_cap(live_eval_stage, monkeypatch):
     monkeypatch.delenv(XAI_KEY_ENV, raising=False)
     monkeypatch.delenv(KEY_ENV, raising=False)
     reserved = {}
@@ -241,23 +241,52 @@ def test_five_repeat_efforts_reserve_the_short_tier_and_stop_over_the_cap(
         assert plan["reasoning_effort"] == effort
         assert plan["price_tier"] == "short"
         assert plan["planned_requests"] == 240
-        assert plan["recommended_cap_usd"] == 5.0
+        assert plan["recommended_cap_usd"] == 10.0
+    assert reserved["low"] < reserved["medium"] < reserved["high"]
+    assert f"{reserved['low']:.6f}" == "9.822470"
+    assert f"{reserved['medium']:.6f}" == "18.671270"
+    assert f"{reserved['high']:.6f}" == "30.466790"
+    headline = run(
+        _repo(),
+        live_eval_stage,
+        acknowledged=True,
+        dry_run=True,
+        max_run_usd=10,
+        model=GROK_MODEL_ID,
+        reasoning_effort="low",
+        repeats=5,
+        transport=transport,
+    )
+    assert headline["repeats"] == 5
+    assert f"{headline['reserved_usd']:.6f}" == "9.822470"
+    for effort, expected in (("medium", "3.734254"), ("high", "6.093358")):
+        once = run(
+            _repo(),
+            live_eval_stage,
+            acknowledged=True,
+            dry_run=True,
+            max_run_usd=10,
+            model=GROK_MODEL_ID,
+            reasoning_effort=effort,
+            repeats=1,
+            transport=transport,
+        )
+        assert once["repeats"] == 1
+        assert once["reasoning_effort"] == effort
+        assert once["planned_requests"] == 48
+        assert f"{once['reserved_usd']:.6f}" == expected
         with pytest.raises(ReservationError, match="exceeds explicit cap"):
             run(
                 _repo(),
                 live_eval_stage,
                 acknowledged=True,
                 dry_run=True,
-                max_run_usd=5,
+                max_run_usd=10,
                 model=GROK_MODEL_ID,
                 reasoning_effort=effort,
                 repeats=5,
                 transport=transport,
             )
-    assert reserved["low"] < reserved["medium"] < reserved["high"]
-    assert f"{reserved['low']:.6f}" == "9.822470"
-    assert f"{reserved['medium']:.6f}" == "18.671270"
-    assert f"{reserved['high']:.6f}" == "30.466790"
 
 
 def test_runner_reads_only_the_xai_key_and_records_the_effort(live_eval_stage, monkeypatch):
@@ -343,6 +372,40 @@ def test_runner_reads_only_the_xai_key_and_records_the_effort(live_eval_stage, m
         transport=transport,
     )
     assert high["reasoning_effort"] == "high"
+
+
+def test_wall_clock_stops_before_another_request(live_eval_stage, monkeypatch):
+    monkeypatch.setenv(XAI_KEY_ENV, "xai-secret")
+    monkeypatch.setattr(
+        "chess_analytics.analyst.live_runner.LIVE_EVAL_WALL_CLOCK_SECONDS",
+        -1,
+    )
+    calls = []
+
+    def transport(_body, _key):
+        calls.append(_key)
+        raise AssertionError("wall clock sent a request")
+
+    receipt = run(
+        _repo(),
+        live_eval_stage,
+        acknowledged=True,
+        max_run_usd=10,
+        model=GROK_MODEL_ID,
+        reasoning_effort="medium",
+        repeats=1,
+        run_id="grok-medium-clock",
+        transport=transport,
+    )
+    assert calls == []
+    assert receipt["complete"] is False
+    assert receipt["incomplete_reason"] == "wall_clock"
+    assert receipt["repeats"] == 1
+    assert receipt["reasoning_effort"] == "medium"
+    assert receipt["rows"] == []
+    assert LIVE_EVAL_JOB_TIMEOUT_MINUTES == 150
+    assert LIVE_EVAL_WALL_CLOCK_SECONDS == 140 * 60
+    assert LIVE_EVAL_WALL_CLOCK_SECONDS < LIVE_EVAL_JOB_TIMEOUT_MINUTES * 60
 
 
 def test_dispatch_tables_match_the_catalog():

@@ -15,6 +15,7 @@ import hashlib
 import json
 import os
 import re
+import time
 import uuid
 from pathlib import Path
 
@@ -30,6 +31,7 @@ from chess_analytics.analyst.live_stats import (
 )
 from chess_analytics.analyst.model_catalog import (
     GROK_MODEL_ID,
+    LIVE_EVAL_WALL_CLOCK_SECONDS,
     RECOMMENDED_CAP_USD,
     XAI_KEY_ENV,
     grok_short_rates,
@@ -459,8 +461,12 @@ def _execute(repo, staged, cases, quotes, config, key, send, plan, **options) ->
     rows = []
     spent = 0.0
     incomplete = None
+    started = time.monotonic()
     for repeat in range(plan["repeats"]):
         for case, quote in zip(cases, quotes, strict=True):
+            if time.monotonic() - started > LIVE_EVAL_WALL_CLOCK_SECONDS:
+                incomplete = "wall_clock"
+                break
             if spent + quote["reserved_cost_usd"] > config["max_run_usd"]:
                 incomplete = "budget_exceeded"
                 break

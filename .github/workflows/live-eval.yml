@@ -19,7 +19,7 @@ on:
         required: true
         default: "5"
       max_run_usd:
-        description: "Required gross cap in USD. No default. Refuse above Luna 0.50, Sol 10, or grok-4.7 5. Those are the 5-repeat ceilings and are not scaled."
+        description: "Required gross cap in USD. No default. Refuse above Luna 0.50, Sol 10, or grok-4.7 10. Those ceilings are not scaled."
         type: string
         required: true
       acknowledge_personal_account:
@@ -33,7 +33,7 @@ on:
         required: false
         default: false
       reasoning_effort:
-        description: "model-default keeps OpenAI on none and grok-4.7 on low. low is the headline comparison. medium and high are separate sensitivity dispatches. none is rejected for grok-4.7."
+        description: "model-default keeps OpenAI on none and grok-4.7 on low. The grok headline is low at 5 repeats. medium and high are 1-repeat sensitivity checks. none is rejected for grok-4.7."
         type: choice
         required: true
         default: model-default
@@ -52,6 +52,7 @@ concurrency:
 jobs:
   live-eval:
     runs-on: ubuntu-latest
+    timeout-minutes: 150
     environment: live-eval
     env:
       LIVE_EVAL_MODEL: "${{ inputs.model }}"

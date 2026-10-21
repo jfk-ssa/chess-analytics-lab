@@ -18,7 +18,7 @@ MAX_REPEATS = 20
 CAPS_USD = {
     "gpt-6-luna": Decimal("0.50"),
     "gpt-6-sol": Decimal("10"),
-    "grok-4.7": Decimal("5"),
+    "grok-4.7": Decimal("10"),
 }
 EFFORTS = {
     "gpt-6-luna": ("none",),
@@ -45,8 +45,8 @@ CHECKLIST_LINES = (
     "2. Confirm the reasoning effort. OpenAI ids in this harness accept "
     "reasoning.effort none, and the quote sends none. grok-4.7 cannot disable "
     "reasoning. Allowed efforts are low, medium, high, and xhigh. The headline "
-    "default is low. medium and high are a sensitivity sweep, each its own "
-    "dispatch. This job does not probe the API.",
+    "comparison is low at 5 repeats. medium and high are a 1-repeat sensitivity "
+    "check and are not a second 5-repeat headline. This job does not probe the API.",
     "3. Recheck prices. The recorded date is DEFAULT_PRICE_CHECKED_UTC_DATE in "
     "src/chess_analytics/analyst/preflight.py. pricing.py does not store that date. "
     f"This job stops when the date is older than {PRICE_CHECK_MAX_AGE_DAYS} days "
@@ -249,17 +249,26 @@ def _format_summary(receipt: dict) -> str:
         f"extraction {repairs['extraction']}, "
         f"semantic {repairs['semantic']}"
     )
+    repeat_label = "1 repeat" if receipt["repeats"] == 1 else f"{receipt['repeats']} repeats"
     lines = [
         "### Live eval receipt",
         f"- model: {receipt['model']}",
         f"- reasoning effort: {receipt['reasoning_effort']}",
         f"- repeats: {receipt['repeats']}",
-        f"- headline raw pass rate: {rate_text}; repair counts: {repair_text}",
+        f"- headline raw pass rate for {repeat_label}: {rate_text}; repair counts: {repair_text}",
         f"- Wilson interval: {interval}",
         f"- hard_fail: {str(receipt['hard_fail']).lower()}",
         f"- gross cost USD: {float(receipt['known_gross_cost_usd']):.6f}",
         f"- complete: {str(receipt['complete']).lower()}",
     ]
+    if receipt["repeats"] != 5:
+        lines.append(
+            f"- note: this pass rate is for {repeat_label} "
+            "and is not a 5-repeat headline comparison"
+        )
+    reason = receipt.get("incomplete_reason")
+    if reason:
+        lines.append(f"- incomplete reason: {reason}")
     unknown = receipt["unknown_cost_reservation_usd"]
     if unknown:
         lines.append(f"- unknown cost reservation USD: {float(unknown):.6f}")

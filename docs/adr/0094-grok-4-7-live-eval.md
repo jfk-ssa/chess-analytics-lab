@@ -1,7 +1,12 @@
-# 0093. grok-4.7 live eval and reasoning-effort sensitivity
+# 0094. grok-4.7 live eval and reasoning-effort sensitivity
 
 - Status: accepted
 - Date: 2026-10-21
+
+Main ends at [ADR 0092](0092-public-aggregate-extract.md). Open pull
+request #43 adds `0093-first-live-eval-receipts.md`. Open pull request
+#44 adds `0093-hosted-read-only-dashboard.md`. Neither adds 0094, so
+this record is 0094.
 
 ## Motivation
 
@@ -9,14 +14,15 @@
 the manual live-eval job. [ADR 0091](0091-manual-live-eval-workflow.md)
 is that job: `gpt-6-luna` and `gpt-6-sol`, `reasoning.effort` of `none`,
 and one OpenAI environment secret. John asked for `grok-4.7` as a third
-comparison, with a $5 per-run cap, and then for three separate 5-repeat
-runs at reasoning efforts low, medium, and high.
+comparison. The per-run cap is $10. The headline dispatch is low at 5
+repeats. Medium and high are a sensitivity check at 1 repeat each.
 
 grok-4.7 cannot disable reasoning. The model page lists `low`, `medium`,
 `high`, and `xhigh`, and the default is `high`. `none` is not an allowed
 effort. Low is the closest setting to the OpenAI quote, which sends
-`none`. This record keeps low as the headline arm and treats medium and
-high as a sensitivity analysis.
+`none`. This record keeps low at 5 repeats as the headline arm. Medium
+and high at 1 repeat are a sensitivity check. Their pass rates are for
+one repeat and are not 5-repeat headline rates.
 
 ## Decision
 
@@ -37,9 +43,12 @@ OpenAI.
 Explicit `none` is rejected for grok-4.7 before any quote. Explicit
 `low`, `medium`, `high`, or `xhigh` is rejected for the OpenAI ids.
 `xhigh` is a valid grok-4.7 effort and is outside the sensitivity
-analysis. The headline comparison against the OpenAI models is low.
-Medium and high are separate dispatches of the same 48-case set. They
-are a sensitivity analysis of reasoning effort, not extra headline arms.
+check. The headline comparison against the OpenAI models is low at 5
+repeats. Medium at 1 repeat and high at 1 repeat are separate
+dispatches of the same 48 cases. The receipt field `repeats` is 5 or 1.
+The job summary names that count on the pass-rate line. A 1-repeat
+summary also says the rate is not a 5-repeat headline comparison.
+Do not compare those rates with the Luna, Sol, or low 5-repeat rates.
 
 The same model at two efforts has to stay distinguishable after the run.
 The receipt field `reasoning_effort` stores the resolved effort. The
@@ -53,7 +62,7 @@ the title, the receipt, and the artifact all name that effort. A
 `model-default` grok run still records `low` on the receipt and the
 artifact. Its title says `model-default`.
 
-The per-run ceiling is $5 for grok-4.7, $0.50 for Luna, and $10 for Sol.
+The per-run ceiling is $10 for grok-4.7, $0.50 for Luna, and $10 for Sol.
 The ceiling is not scaled with repeats. The personal-account
 acknowledgement applies to the xAI key as well as the OpenAI key. The
 new environment secret is `CHESSLAB_XAI_API_KEY` on `live-eval`. John
@@ -108,21 +117,20 @@ was about 12,800 tokens. The long-context tier was not used.
 | medium | $3.734254 | $18.671270 |
 | high | $6.093358 | $30.466790 |
 
-The 5-repeat input ceiling is about $6.14 at the uncached $2 rate
-before any output or reasoning. Adding the 512 visible tokens does not
-bring a 5-repeat run under $5. All three 5-repeat reservations exceed
-the $5 cap, and the 1-repeat high reservation exceeds it as well.
-1-repeat low and 1-repeat medium fit under $5. `check-inputs` accepts
-low, medium, and high at `max_run_usd` of 5. The dry run then exits 1
-with a reservation error, before the live step and before the secret
-step. That is a clean refusal. A 5-repeat grok-4.7 dispatch at the $5
-cap does not send a request. The cap was not raised, and the ceiling
-was not replaced with a bytes-divided-by-4 estimate. That estimate can
-start a run whose bill exceeds the cap.
+John's run plan uses the $10 cap as follows. Low at 5 repeats reserves
+$9.822470 and the dry run proceeds. Medium at 1 repeat reserves
+$3.734254 and proceeds. High at 1 repeat reserves $6.093358 and
+proceeds. Medium at 5 repeats reserves $18.671270 and high at 5 repeats
+reserves $30.466790. Both exceed $10, so those dry runs exit 1 with a
+reservation error before the live step and before the secret step.
+The ceiling was not replaced with a bytes-divided-by-4 estimate.
 
-The three 5-repeat reservations sum to $58.960530. That is above the
-$10 monthly key limit. The monthly limit would also be exceeded by any
-one of the medium or high reservations alone.
+The three planned reservations sum to $19.650082. That is above the
+$10 monthly key limit. The expected spend of the same three runs is
+not. The provider stops the key at the monthly limit if actual usage
+reaches it. This repository still does not enforce that limit. Dispatch
+low at 5 repeats first. Compare that receipt's `known_gross_cost_usd`
+and token usage with this quote before dispatching the 1-repeat checks.
 
 A realistic expected cost is a different number, and it is not what the
 runner enforces. The assumptions are stated here so the two figures
@@ -144,22 +152,20 @@ stay separate.
 - No tool fees. The request sends no tools. The short-context rates
   apply. The global endpoint applies.
 
-Under those assumptions, a 5-repeat run costs about:
+Under those assumptions, the planned runs cost about:
 
-| Effort | Cold prompts | Cached repeats 2–5 | Cold band |
+| Run | Cold | Cached later repeats | Cold band |
 |---|---:|---:|---:|
-| low | $2.11 | $1.26 | $1.67–$2.68 |
-| medium | $3.69 | $2.84 | $2.25–$5.85 |
-| high | $7.29 | $6.44 | $3.69–$13.05 |
+| low, 5 repeats | $2.11 | $1.26 | $1.67–$2.68 |
+| medium, 1 repeat | $0.74 | cold only | $0.45–$1.17 |
+| high, 1 repeat | $1.46 | cold only | $0.74–$2.61 |
 
-The three point estimates together are about $13.08 with cold prompts
-and about $10.54 if repeats 2–5 hit the cache. Both are over the $10
-monthly limit. High alone is over the $5 per-run cap at the 4,000-token
-point. Low and medium point estimates fit under $5, and the runner
-still refuses them, because the reservation is the byte ceiling above.
-If high reasoning stays near 1,500 tokens and the cache hits, the three
-runs can land under $10. That is the optimistic end of the band, not
-the planning point.
+The three planning points together are about $4.31 if every prompt is
+cold, and about $3.46 if repeats 2–5 of the low run hit the cache.
+That is the expected total near $4–5. The top of the three bands
+together is about $6.46, still under the $10 monthly limit. A 5-repeat
+medium or high run is not part of the plan. Those reservations are
+above the $10 per-run cap and the dry run stops them.
 
 `provider.py`, `pricing.py`, `live_runner.py`, and the new
 `model_catalog.py` are in `frozen_file_sha256`. A later receipt will
@@ -170,13 +176,25 @@ The implementation hash includes `src/`, so a later snapshot id can
 change. The gate does not compare that hash.
 
 The workflow still has no `schedule`, no `push`, and no `pull_request`.
-It sets no `timeout-minutes`. A hung grok-4.7 request can sit for 180
-seconds. Two hundred and forty such timeouts are longer than the
-360-minute GitHub-hosted job limit, so a fully hung run can be stopped
-by the platform after spend has started. A shorter workflow timeout was
-not added, because it would cancel a paid run that is still inside the
-platform limit. OpenAI reservations are unchanged: Luna 5-repeat
-$0.443594 and Sol 5-repeat $8.871288.
+The job sets `timeout-minutes: 150`. The runner also stops before the
+next request once 140 minutes have passed in the live loop, writes the
+receipt with `incomplete_reason` `wall_clock`, and leaves the upload
+time inside the job timeout. ADR 0091 left the job at the platform's
+360-minute limit so a paid run would not be cancelled early. A grok
+socket timeout of 180 seconds times 240 requests is 12 hours. The
+platform would stop that hang only after about 120 requests. The new
+bound stops it after about 46.
+
+The bound comes from the two completed OpenAI jobs, not from a grok
+call. The Luna 5-repeat live step was 413 seconds (run 39494372489)
+and the Sol 5-repeat live step was 379 seconds (run 39519293762). The
+slower request average is about 1.7 seconds. One hundred and fifty
+minutes allows about 37 seconds average across 240 requests, about 22
+times that measurement, plus the under-one-minute setup those jobs
+used. A 1-repeat run of 48 requests fits even at two minutes each. It
+does not fit if every call sits on the 180-second socket timeout. That
+is the hang this bound is for. OpenAI reservations are unchanged: Luna
+5-repeat $0.443594 and Sol 5-repeat $8.871288.
 
 No live request was sent, so several provider details are unverified.
 `cost_in_usd_ticks` is not used. Temperature and `top_p` are left unset.
@@ -194,22 +212,24 @@ Checked on this Linux agent on 2026-10-21. No model was called.
 `CHESSLAB_OPENAI_API_KEY` and `CHESSLAB_XAI_API_KEY` were unset.
 
 The dry-run figures in the decision table are the runner's printed
-`reserved_usd` for this fixture. The test pins the three 5-repeat
-strings. A 5-repeat dry run at `max_run_usd` 5 raises `ReservationError`
-for low, medium, and high, and the transport is not called.
+`reserved_usd` for this fixture. The test pins them. At `max_run_usd`
+10, low at 5 repeats and medium and high at 1 repeat pass the dry run.
+Medium and high at 5 repeats raise `ReservationError`. The transport
+is not called. A live loop whose wall clock is already past the limit
+writes `incomplete_reason` `wall_clock` and sends no further request.
 
 - `ruff check .` passed. `ruff format --check .` reported 321 files
   already formatted.
 - basedpyright reported 0 errors, 0 warnings, and 0 notes.
-- `pytest -q` before the dbt extra was installed: 348 passed, 31
-  skipped, 120.66s. That is 37 more passes than the ADR 0091 count of
-  311. The added tests are the grok quote, usage, reservation, and
-  workflow checks.
+- After the $10 cap and the 150-minute job timeout, `pytest -q`
+  reported 349 passed, 31 skipped, 122.82s. That is 38 more passes
+  than the ADR 0091 count of 311. The added tests are the grok quote,
+  usage, reservation, workflow checks, and the wall-clock stop.
 - After `uv sync --locked --no-editable --extra dbt`,
-  `CHESSLAB_REQUIRE_DBT=1 pytest -q`: 360 passed, 19 skipped, 230.53s.
+  `CHESSLAB_REQUIRE_DBT=1 pytest -q`: 361 passed, 19 skipped, 230.61s.
   The skip count matches the ADR 0091 dbt run.
 - `python -m chess_analytics.analyst gate`, with dbt beside the
-  interpreter, printed `ok 89/89` in 11.337s.
+  interpreter, printed `ok 89/89` in 11.343s.
   `evals/baselines/analyst_gate_v1.json` is unchanged. Without dbt the
   mart step is skipped, the same 89 cases score on reviewed SQL, and
   the gate reports eight PATH-CHANGED diffs from `governed` to

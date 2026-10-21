@@ -44,8 +44,17 @@ LIVE_EVAL_DEFAULT_EFFORT = {
 RECOMMENDED_CAP_USD = {
     "gpt-6-luna": 0.50,
     "gpt-6-sol": 10.0,
-    GROK_MODEL_ID: 5.0,
+    GROK_MODEL_ID: 10.0,
 }
+# The live job stops at this wall clock. Measured OpenAI live steps on
+# 2026-10-20 and 2026-10-21 were 413s (Luna) and 379s (Sol) for 240
+# requests. 150 minutes allows about 37s average on that same request
+# count, about 22 times the slower of those two, and it cuts a 180s hang
+# off well before the 360-minute GitHub-hosted limit.
+LIVE_EVAL_JOB_TIMEOUT_MINUTES = 150
+# The runner writes the receipt before the job timeout. One in-flight
+# request can still use the 180s socket timeout after this clock trips.
+LIVE_EVAL_WALL_CLOCK_SECONDS = 140 * 60
 
 
 def grok_short_rates() -> dict:

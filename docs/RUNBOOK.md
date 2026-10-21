@@ -227,8 +227,9 @@ and the required reviewer are already in place.
 [ADR 0089](adr/0089-llm-quality-evaluation.md) is the plan.
 [ADR 0090](adr/0090-live-eval-scorer-runner-stats.md) is the runner.
 [ADR 0091](adr/0091-manual-live-eval-workflow.md) is the manual job.
-[ADR 0093](adr/0093-grok-4-7-live-eval.md) adds `grok-4.7` and the
-reasoning-effort sensitivity analysis.
+[ADR 0094](adr/0094-grok-4-7-live-eval.md) adds `grok-4.7`. The headline
+run is low at 5 repeats. Medium and high are 1-repeat sensitivity
+checks. Their pass rates are not 5-repeat comparisons.
 
 The same commands work on macOS and Linux. They use the repository Python
 and do not depend on a Linux-only flag.
@@ -246,9 +247,10 @@ does not probe the API.
 2. Confirm the reasoning effort on the chosen id. On 2026-10-20 both
    OpenAI ids accepted `reasoning.effort` of `none`, and the OpenAI quote
    sends that value. `grok-4.7` cannot disable reasoning. Its allowed
-   efforts are `low`, `medium`, `high`, and `xhigh`. The headline default
-   is `low`. Medium and high are a sensitivity analysis, each its own
-   dispatch. This command does not probe the API.
+   efforts are `low`, `medium`, `high`, and `xhigh`. The headline run is
+   `low` at 5 repeats. Medium and high are a sensitivity check at 1
+   repeat each. Their pass rates are not 5-repeat comparisons. This
+   command does not probe the API.
 3. Recheck prices. On 2026-10-20 the official OpenAI pages matched the
    recorded rates exactly: Luna $0.10 input, $0.01 cached, $0.125 cache
    write, and $0.50 output; Sol $2, $0.20, $2.50, and $10. On 2026-10-21
@@ -262,15 +264,15 @@ does not probe the API.
    `allow_stale_price_check` is set after this recheck. A dispatch on
    2026-10-21 does not need that override. Credits are not a budget.
 4. Choose `max_run_usd` yourself. The recommended gross caps are Luna
-   $0.50, Sol $10, and grok-4.7 $5. They are the 5-repeat ceilings and
-   they are not an approval to spend. On 2026-10-19 the conservative
-   reservation for these 48 cases, five repeats, 240 requests, was
-   $0.443594 for Luna and $8.871288 for Sol. On 2026-10-21 the same
-   envelope for grok-4.7 reserved $9.822470 at low, $18.671270 at medium,
-   and $30.466790 at high. All three exceed $5, so a 5-repeat grok dry
-   run at that cap exits before any request. The figures and the
-   assumptions behind a lower expected cost are in
-   [ADR 0093](adr/0093-grok-4-7-live-eval.md). A reservation over the cap
+   $0.50, Sol $10, and grok-4.7 $10. They are not an approval to spend.
+   On 2026-10-19 the conservative reservation for these 48 cases, five
+   repeats, 240 requests, was $0.443594 for Luna and $8.871288 for Sol.
+   On 2026-10-21 the same envelope for grok-4.7 reserved $9.822470 at
+   low, $18.671270 at medium, and $30.466790 at high. Low at 5 repeats
+   fits under $10. Medium and high fit at 1 repeat ($3.734254 and
+   $6.093358) and stop at 5 repeats. The expected cost of the three
+   planned runs is about $4–5. The assumptions are in
+   [ADR 0094](adr/0094-grok-4-7-live-eval.md). A reservation over the cap
    refuses before any request is sent.
 5. Acknowledge the personal account on the command line. OpenAI runs
    read `CHESSLAB_OPENAI_API_KEY`. grok-4.7 runs read
@@ -300,10 +302,11 @@ uv run --locked --offline --no-editable python -m chess_analytics.analyst live-e
 
 The dry run prints the model, the reasoning effort, the repeat count,
 the case count, the reserved dollars, and the cap. It does not read the
-API key. A grok-4.7 quote adds `--reasoning-effort low` (or `medium` or
-`high` for a sensitivity run) and `--max-run-usd 5`. At five repeats
-that dry run exits 1 because the reservation is above $5. It still does
-not call xAI.
+API key. A grok-4.7 headline quote adds `--reasoning-effort low`,
+`--max-run-usd 10`, and `--repeats 5`. A sensitivity quote uses
+`--reasoning-effort medium` or `high`, `--repeats 1`, and the same cap.
+Medium or high at five repeats exits 1 because the reservation is above
+$10. The dry run still does not call xAI.
 
 ### Real run
 
@@ -357,14 +360,15 @@ before the first dispatch. The job does not probe the provider.
    `model` is `gpt-6-luna`, `gpt-6-sol`, or `grok-4.7`. Astra is not a
    choice: ADR 0089 leaves its id and its cap unset. `repeats` defaults
    to 5 and accepts an integer from 1 to 20. `max_run_usd` has no
-   default. Type a cap at or under the 5-repeat ceiling: Luna $0.50,
-   Sol $10, or grok-4.7 $5. The ceiling is not scaled when the repeat
-   count changes. `reasoning_effort` defaults to `model-default`, which
-   is `none` on the OpenAI ids and `low` on grok-4.7. Low is the
-   headline comparison. For the sensitivity analysis, dispatch grok-4.7
-   three times and select `low`, then `medium`, then `high`. A 5-repeat
-   grok run at $5 stops in the dry run, before the key is read, because
-   each of those reservations is above $5. Check
+   default. Type a cap at or under the ceiling: Luna $0.50, Sol $10, or
+   grok-4.7 $10. The ceiling is not scaled when the repeat count
+   changes. `reasoning_effort` defaults to `model-default`, which is
+   `none` on the OpenAI ids and `low` on grok-4.7. The grok headline is
+   low at 5 repeats with cap $10. For the sensitivity check, dispatch
+   grok-4.7 twice more with `repeats` 1 and effort `medium`, then
+   `high`. Run low first and compare its receipt cost with the quote
+   before those two. Medium or high at 5 repeats stops in the dry run.
+   The job timeout is 150 minutes. Check
    `acknowledge_personal_account`. The recorded price-check date is
    `2026-10-20` in `preflight.py`. When that date is older than 14 days,
    check `allow_stale_price_check` only after the rechecks above. A
@@ -381,11 +385,12 @@ before the first dispatch. The job does not probe the provider.
    `live-eval-receipt-<model>-<resolved effort>-<run_id>`. `<run_id>`
    is the Actions run id. Retention is 90 days. The run title includes
    the model, the reasoning-effort input, the repeats, and the cap.
-   Select `low`, `medium`, or `high` explicitly when those receipts must
-   match the title. The job summary shows the model, the reasoning
-   effort, the repeats, the headline raw pass rate with its Wilson
-   interval, the repair counts beside that rate, hard fail, the known
-   gross cost, and complete true or false.
+   Select `low` with 5 repeats, or `medium` or `high` with 1 repeat, so
+   the title matches the receipt. The job summary shows the model, the
+   reasoning effort, the repeats, the pass rate labelled with that
+   repeat count, its Wilson interval, the repair counts, hard fail, the
+   known gross cost, and complete true or false. A 1-repeat summary
+   says the rate is not a 5-repeat headline comparison.
 6. Read the receipt and commit the artifact bytes unchanged in a separate
    pull request, as `reports/live-eval-receipt-<run_id>.json`. `<run_id>`
    is the Actions run id from the artifact name. The workflow does not
