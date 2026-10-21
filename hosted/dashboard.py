@@ -5,10 +5,11 @@ Run from the repository root:
     streamlit run hosted/dashboard.py
 
 Streamlit Community Cloud installs ``hosted/requirements.txt`` only. That file
-pins Streamlit and does not install this project. The project package depends
-on DuckDB; this page never opens a warehouse. ``_loader`` adds ``src/`` to the
-import path long enough to import ``chess_analytics.public_extract``, which
-reads the JSON with the standard library.
+pins Streamlit plus the locked pandas and protobuf versions, and does not
+install this project. The project package depends on DuckDB; this page never
+opens a warehouse. ``_loader`` adds ``src/`` to the import path long enough to
+import ``chess_analytics.public_extract``, which reads the JSON with the
+standard library.
 """
 
 from __future__ import annotations
@@ -23,6 +24,7 @@ import streamlit as st  # pyright: ignore[reportMissingImports]
 _BUCKETS = ("under_10", "10_to_29", "30_to_59", "60_plus")
 _FOCAL = ("French Defense", "Sicilian Defense")
 _COHORT = ("color", "rating_min", "rating_max_exclusive", "base_seconds", "increment_seconds")
+_FIGURE_TABLES = ("opening_family_share", "opening_score_cell", "clock_bucket")
 
 
 def _loader():
@@ -39,14 +41,28 @@ def _loader():
             sys.path.remove(src)
 
 
-def _show(rows: list[dict], *, height: int | None = None) -> None:
+def _show(rows: list[dict], *, alt: str, height: int | None = None) -> None:
     if not rows or len(rows[0]) > 3:
         raise ValueError("dashboard table must have 1 to 3 columns")
-    st.table(rows, hide_index=True, height="content" if height is None else height)
+    if not alt.strip():
+        raise ValueError("dashboard table needs alt text")
+    st.table(
+        rows,
+        hide_index=True,
+        height="content" if height is None else height,
+        alt=alt,
+    )
 
 
 def _pct(value: float) -> str:
     return f"{value:.1%}"
+
+
+def _share(value: float, numerator: int) -> str:
+    shown = f"{value:.1%}"
+    if numerator > 0 and shown == "0.0%":
+        return "<0.1%"
+    return shown
 
 
 def _ratio(numerator: int, denominator: int) -> str:
@@ -83,7 +99,7 @@ def _require_count(actual: object, expected: object, label: str) -> None:
         raise ValueError(f"public extract {label} does not match")
 
 
-def _build_rows(extract: dict, mart_id: object, digest: str, analytical_id: str) -> list[dict]:
+def _build_rows(extract: dict, mart_id: object, digest: str) -> list[dict]:
     build = extract.get("build")
     if not isinstance(build, dict) or not isinstance(mart_id, str):
         raise ValueError("public extract build record is missing")
@@ -94,18 +110,38 @@ def _build_rows(extract: dict, mart_id: object, digest: str, analytical_id: str)
         ("Lock sha256", build.get("lock_sha256")),
         ("Semantic manifest sha256", build.get("semantic_manifest_sha256")),
         ("Extract sha256", digest),
-        ("Analytical id", analytical_id),
     )
     if any(not isinstance(value, str) or not value for _, value in fields):
         raise ValueError("public extract build record is incomplete")
     return [{"Field": name, "Value": value} for name, value in fields]
 
 
-def _analytical_id(*groups: list[dict]) -> str:
-    found = {row["analytical_id"] for group in groups for row in group}
-    if len(found) != 1:
+def _figure_publication(extract: dict, *groups: list[dict]) -> dict:
+    build = extract.get("build")
+    snapshot = build.get("source_snapshot_id") if isinstance(build, dict) else None
+    per_group = [{row["analytical_id"] for row in group} for group in groups]
+    found = set().union(*per_group) if per_group else set()
+    if (
+        len(groups) != len(_FIGURE_TABLES)
+        or any(len(ids) != 1 for ids in per_group)
+        or len(found) != 1
+        or not isinstance(snapshot, str)
+        or not snapshot
+    ):
         raise ValueError("public extract analytical ids differ")
-    return next(iter(found))
+    analytical_id = next(iter(found))
+    names = ", ".join(_FIGURE_TABLES)
+    if analytical_id == snapshot:
+        relation = "It matches build.source_snapshot_id."
+    else:
+        relation = (
+            "It is not build.source_snapshot_id. "
+            "Those rows are a different publication from the build snapshot."
+        )
+    return {
+        "rows": [{"Field": "analytical_id", "Value": analytical_id}],
+        "caption": f"This analytical_id is on the committed rows of {names}. {relation}",
+    }
 
 
 def _families(receipts: list[dict], families: list[dict]) -> dict:
@@ -121,7 +157,7 @@ def _families(receipts: list[dict], families: list[dict]) -> dict:
         return {
             "Family": row["family"],
             "Games": f"{row['numerator']:,}",
-            "Share": _pct(row["value"]),
+            "Share": _share(row["value"], row["numerator"]),
         }
 
     return {
@@ -293,8 +329,8 @@ def _view(extract: dict, path: Path, table_rows) -> dict:
             extract,
             draw["mart_id"],
             hashlib.sha256(path.read_bytes()).hexdigest(),
-            _analytical_id(families, cells, buckets),
         ),
+        "figures": _figure_publication(extract, families, cells, buckets),
         "draw": {
             "origin": _origin([draw]),
             "ratio": _ratio(draw["numerator"], draw["denominator"]),
@@ -316,10 +352,21 @@ def _render(view: dict) -> None:
     )
     st.header("Build provenance")
     st.caption(
-        "Mart id, snapshot, and hashes are the extract build record. "
+        "Mart id is the game_draw_rate receipt. Source snapshot, model sha256, "
+        "lock sha256, and semantic manifest sha256 are the extract build record. "
         "Extract sha256 is the hash of that file's bytes."
     )
-    _show(view["provenance"])
+    _show(
+        view["provenance"],
+        alt="Mart id, source snapshot, three build hashes, and extract sha256.",
+    )
+    figures = view["figures"]
+    st.header("Figure analytical id")
+    st.caption(figures["caption"])
+    _show(
+        figures["rows"],
+        alt="analytical_id on opening_family_share, opening_score_cell, and clock_bucket.",
+    )
 
     draw = view["draw"]
     st.header("Game draw rate")
@@ -345,10 +392,11 @@ def _render(view: dict) -> None:
         horizontal=True,
         sort=False,
         height=220,
+        alt="Game counts for French Defense and Sicilian Defense.",
     )
-    _show(view["usage"]["focal"])
+    _show(view["usage"]["focal"], alt="French Defense and Sicilian Defense games and shares.")
     st.caption(f"All {len(usage['catalog']):,} families in opening_family_share, in extract order.")
-    _show(usage["catalog"], height=420)
+    _show(usage["catalog"], alt="Opening family game counts and shares.", height=420)
 
     player = view["player"]
     st.header("Opening player score")
@@ -356,7 +404,7 @@ def _render(view: dict) -> None:
         f"Query origin: {player['origin']}. {player['cohort']} "
         "The half-point score is the receipt numerator: wins plus half the draws."
     )
-    _show(player["rows"])
+    _show(player["rows"], alt="Half-point scores for French Defense and Sicilian Defense.")
 
     adjusted = view["adjusted"]
     st.header("Adjusted score and bootstrap")
@@ -365,7 +413,7 @@ def _render(view: dict) -> None:
         "The interval is adjusted_interval_low to adjusted_interval_high. "
         f"{adjusted['detail']}"
     )
-    _show(adjusted["rows"])
+    _show(adjusted["rows"], alt="Adjusted scores and bootstrap intervals.")
 
     clock = view["clock"]
     st.header("Clock buckets")
@@ -375,7 +423,7 @@ def _render(view: dict) -> None:
         "Evaluation coverage is evaluable_moves / eligible_moves. "
         f"clock_stratum has {clock['strata']:,} rows and is not expanded."
     )
-    _show(clock["rows"])
+    _show(clock["rows"], alt="Clock-bucket error proxy and evaluation coverage.")
 
     lineage = view["lineage"]
     st.header("Lineage")
@@ -385,12 +433,12 @@ def _render(view: dict) -> None:
     )
     st.subheader("Opening corpus")
     st.caption(f"Source report: {lineage['corpus_source']}. A dash is an empty period or cohort.")
-    _show(lineage["corpus"])
+    _show(lineage["corpus"], alt="Opening corpus game counts.")
     for note in lineage["notes"]:
         st.caption(note)
     st.subheader("August prefix")
     st.caption(f"Source reports: {lineage['august_source']}.")
-    _show(lineage["august"])
+    _show(lineage["august"], alt="August prefix game counts.")
 
 
 def _fail(message: str) -> None:

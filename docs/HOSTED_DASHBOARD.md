@@ -3,7 +3,7 @@
 `hosted/dashboard.py` reads `data/public/dashboard_extract.json` through
 `chess_analytics.public_extract`. It does not open a warehouse, take
 uploads, read secrets, or call the network. Figures and lineage come
-from that file. [ADR 0093](adr/0093-hosted-read-only-dashboard.md)
+from that file. [ADR 0094](adr/0094-hosted-read-only-dashboard.md)
 records the deployment choice. The local six-view dashboard is a
 different program and still needs the analytical warehouse.
 
@@ -47,3 +47,11 @@ directory, which is where the reader finds the committed extract.
 Set the requirements path in the app's advanced settings. There is no
 `requirements.txt` at the repository root. Do not add secrets. The
 extract is already in the repository.
+
+Community Cloud installs only the packages named in
+`hosted/requirements.txt`. The file pins `streamlit==1.65.0`. Pandas
+and protobuf are transitive dependencies of that pin. If they stay
+unpinned, pip can install versions that differ from `uv.lock`. The
+requirements file therefore also pins the locked versions,
+`pandas==2.3.3` and `protobuf==6.33.6`. Streamlit 1.65.0 accepts
+`pandas<4,>=1.4.0` and `protobuf<8,>=5.26.1`, so those pins install.

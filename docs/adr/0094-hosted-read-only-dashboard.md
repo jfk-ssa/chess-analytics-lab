@@ -1,4 +1,4 @@
-# 0093. Hosted read-only dashboard
+# 0094. Hosted read-only dashboard
 
 - Status: accepted on merge
 - Date: 2026-10-21
@@ -14,8 +14,8 @@ does not take the DuckDB option.
 
 The dashboard extra in `pyproject.toml` and `uv.lock` pins Streamlit
 1.65.0. [ADR 0008](0008-m4-local-product-and-uncertainty.md) recorded
-1.50.0, and `THIRD_PARTY_NOTICES.md` still repeated that older
-inspection. The hosted requirements file has to follow the lock.
+1.50.0. `THIRD_PARTY_NOTICES.md` repeated that older inspection. This
+change names 1.65.0 there. The hosted requirements file follows the lock.
 
 ## Decision
 
@@ -28,20 +28,29 @@ reader. A missing build record also stops the page: the published
 extract carries mart identity, and a warehouse-less reprint without
 `build` is not a substitute.
 
-`hosted/requirements.txt` pins `streamlit==1.65.0` and nothing else.
-Community Cloud installs that file with pip. It does not install
-`chess-analytics-lab`. That package depends on DuckDB, python-chess,
-and zstandard, and the hosted page does not query SQL. The script
-inserts `src/` on `sys.path` only for the import, then removes it.
-`public_extract` imports `hash_json` from `chess_analytics.common`.
-Both modules use the standard library. DuckDB stays inside `connect`,
-which this page does not call.
+`hosted/requirements.txt` pins `streamlit==1.65.0` and the locked
+`pandas==2.3.3` and `protobuf==6.33.6` that Streamlit imports.
+Community Cloud installs only that file with pip. Leaving pandas and
+protobuf unpinned would let pip choose versions that differ from
+`uv.lock`. Streamlit 1.65.0 accepts `pandas<4,>=1.4.0` and
+`protobuf<8,>=5.26.1`, so the locked versions install. The file does
+not install `chess-analytics-lab`. That package depends on DuckDB,
+python-chess, and zstandard, and the hosted page does not query SQL.
+The script inserts `src/` on `sys.path` only for the import, then
+removes it. `public_extract` imports `hash_json` from
+`chess_analytics.common`. Both modules use the standard library.
+DuckDB stays inside `connect`, which this page does not call.
 
 The page shows the committed figures and labels each one with the
 receipt query origin (`metricflow`, `reviewed_sql`, or
-`committed_report`). Build provenance is on the page: mart id, source
-snapshot, model hash, lock hash, semantic manifest hash, extract
-sha256, and analytical id. Tables have at most three columns. The page
+`committed_report`). Build provenance is the mart id, source snapshot,
+model hash, lock hash, semantic manifest hash, and extract sha256.
+The `analytical_id` on `opening_family_share`, `opening_score_cell`,
+and `clock_bucket` is a separate table. That value is the id on those
+committed figure rows. On the published extract it is not
+`build.source_snapshot_id`, so the caption says those rows are a
+different publication from the build snapshot. The page derives both
+strings from the extract. Tables have at most three columns. The page
 has no uploader and no control that calls another service. The two
 lineages stay in separate tables.
 
