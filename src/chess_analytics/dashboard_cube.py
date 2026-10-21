@@ -10,7 +10,7 @@ from __future__ import annotations
 import os
 import re
 from collections.abc import Iterable, Mapping, Sequence
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -38,6 +38,8 @@ _DIM_LABEL = {
     "opening_family": "opening",
     "color": "color",
 }
+_EMPTY_CUT = "cut"
+_NO_CELLS = "no cells for this cut"
 COLUMNS = (
     "grain",
     "cohort",
@@ -323,6 +325,9 @@ def opening_rows(
         start, end = spans[str(cohort)]
         period = _span_label(start, end)
         for family in _as_list(body.get("opening_families")):
+            games = _num(family["games"])
+            if games < MIN_CELL:
+                continue
             rows.append(
                 _row(
                     grain="opening_family",
@@ -331,7 +336,7 @@ def opening_rows(
                     period_start=start,
                     period_end=end,
                     opening_family=str(family["family"]),
-                    games=_num(family["games"]),
+                    games=games,
                     share=float(family["share"]),
                 )
             )
@@ -349,9 +354,13 @@ def august_family_rows(reference: Mapping[str, object], august: date) -> list[di
     families = reference.get("opening_families")
     if not isinstance(families, Mapping) or not families:
         raise ValueError("august opening families are missing")
-    total = sum(_num(value) for value in families.values())
-    if total <= 0:
+    counted = [(str(name), _num(games)) for name, games in families.items()]
+    if sum(games for _name, games in counted) <= 0:
         raise ValueError("august opening families do not sum")
+    kept = [(name, games) for name, games in counted if games >= MIN_CELL]
+    total = sum(games for _name, games in kept)
+    if total <= 0:
+        return []
     return [
         _row(
             grain="august_family",
@@ -359,11 +368,11 @@ def august_family_rows(reference: Mapping[str, object], august: date) -> list[di
             period=august.isoformat(),
             period_start=august,
             period_end=august,
-            opening_family=str(name),
-            games=_num(games),
-            share=_num(games) / total,
+            opening_family=name,
+            games=games,
+            share=games / total,
         )
-        for name, games in families.items()
+        for name, games in kept
     ]
 
 
@@ -422,6 +431,9 @@ def clock_slice_rows(figures: Mapping[str, object], august: date) -> list[dict[s
         raise ValueError("clock figures are missing")
     rows: list[dict[str, object]] = []
     for item in _as_list(clock.get("strata")):
+        moves = _num(item["eligible_moves"])
+        if moves < MIN_CELL:
+            continue
         evaluable = _num(item["evaluable_moves"])
         errors = _num(item["proxy_errors"])
         rate = None if evaluable == 0 else errors / evaluable
@@ -436,7 +448,7 @@ def clock_slice_rows(figures: Mapping[str, object], august: date) -> list[dict[s
                 rating_band=str(item["rating_band"]),
                 clock_band=str(item["bucket"]),
                 phase=str(item["phase"]),
-                moves=_num(item["eligible_moves"]),
+                moves=moves,
                 evaluable_moves=evaluable,
                 proxy_errors=errors,
                 error_proxy_rate=rate,
@@ -621,20 +633,23 @@ def position_cohort(connection, filters: Filters) -> tuple[str | None, bool]:
 
 
 def clock_bands(connection, filters: Filters) -> list[dict[str, object]]:
-    rows, _ignored = _clock_source_rows(connection, filters)
+    rows, _ignored, _named = _clock_source_rows(connection, filters)
     return _band_rows(rows)
 
 
 def clock_display(connection, filters: Filters) -> tuple[list[dict[str, object]], str | None, str]:
     """Bands, one section caption, and a short tag for the clock KPI."""
-    rows, fell_back = _clock_source_rows(connection, filters)
+    rows, fell_back, named = _clock_source_rows(connection, filters)
     warehouse = _grain_present(connection, "clock_cell")
     grain = "clock_cell" if warehouse else "clock_slice"
     ignored = _unapplied(connection, grain, filters)
     tag_parts = list(ignored)
-    if fell_back and "date" not in tag_parts:
+    for label in named:
+        if label not in tag_parts:
+            tag_parts.append(label)
+    if fell_back and rows and "date" not in tag_parts:
         tag_parts.append("date")
-    caption = _clock_caption(tag_parts, fell_back, bool(rows), warehouse=warehouse)
+    caption = _clock_caption(tag_parts, fell_back and bool(rows), bool(rows), warehouse=warehouse)
     tag = ""
     if tag_parts == ["date"]:
         tag = "warehouse window" if warehouse else "August"
@@ -644,7 +659,7 @@ def clock_display(connection, filters: Filters) -> tuple[list[dict[str, object]]
 
 
 def clock_slices(connection, filters: Filters, band: str) -> list[dict[str, object]]:
-    rows, _fell_back = _clock_source_rows(connection, filters)
+    rows, _fell_back, _named = _clock_source_rows(connection, filters)
     chosen = [row for row in rows if row["clock_band"] == band]
     chosen.sort(key=lambda item: _num(item["evaluable_moves"] or 0), reverse=True)
     return chosen
@@ -851,7 +866,9 @@ def _result_kpis(connection, filters: Filters) -> tuple[Kpi, Kpi, Kpi]:
 
 def _clock_kpi(connection, filters: Filters) -> Kpi:
     _bands, _caption, tag = clock_display(connection, filters)
-    rows, _fell_back = _clock_source_rows(connection, filters)
+    rows, _fell_back, named = _clock_source_rows(connection, filters)
+    if not rows and named:
+        return Kpi("Clock error", "0.0%", _NO_CELLS + " · not by " + ", ".join(named))
     evaluable = sum(_num(row["evaluable_moves"] or 0) for row in rows)
     errors = sum(_num(row["proxy_errors"] or 0) for row in rows)
     if evaluable == 0:
@@ -1061,6 +1078,9 @@ def _line_rows(
 ) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
     for route in _as_list(body.get("routes")):
+        games = _num(route["games"])
+        if games < MIN_CELL:
+            continue
         san = str(route["san"])
         rows.append(
             _row(
@@ -1073,7 +1093,7 @@ def _line_rows(
                 opening_line=san,
                 fen=fen,
                 eco=eco,
-                games=_num(route["games"]),
+                games=games,
                 share=float(route["share"]),
                 ply=len(san.split()),
             )
@@ -1092,6 +1112,9 @@ def _continuation_rows(
 ) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
     for move in _as_list(body.get("continuations")):
+        games = _num(move["games"])
+        if games < MIN_CELL:
+            continue
         rows.append(
             _row(
                 grain="opening_continuation",
@@ -1102,7 +1125,7 @@ def _continuation_rows(
                 opening_family=family,
                 fen=fen,
                 continuation=str(move["san"]),
-                games=_num(move["games"]),
+                games=games,
                 share=float(move["share_of_position_games"]),
             )
         )
@@ -1219,7 +1242,7 @@ def _score_cards(
     scores: Sequence[Mapping[str, object]], notes: Sequence[str]
 ) -> tuple[Kpi, Kpi, Kpi]:
     if not scores:
-        empty = "no scored cells"
+        empty = _NO_CELLS if _EMPTY_CUT in notes else "no scored cells"
         return (
             Kpi("Win rate", "0.0%", empty),
             Kpi("Loss rate", "0.0%", empty),
@@ -1307,17 +1330,22 @@ def _collect(
     if undated:
         notes.append("date")
         return undated, _unique(notes)
-    for column, label in _DIM_LABEL.items():
-        if column == "color" and force_color is not None:
-            continue
-        if getattr(active, column) is None:
-            continue
-        active = replace(active, **{column: None})
-        notes.append(label)
-        found = pull(active, dates=False)
-        if found:
-            return found, _unique(notes)
+    if _requested_carried(connection, grain, active):
+        notes.append(_EMPTY_CUT)
     return [], _unique(notes)
+
+
+def _requested_carried(connection, grain: str, filters: Filters) -> bool:
+    """True when a filter is set on a column this grain actually stores."""
+    for column, value in (
+        ("time_control", filters.time_control),
+        ("color", filters.color),
+        ("rating_band", filters.rating_band),
+        ("opening_family", filters.opening_family),
+    ):
+        if value and _carries(connection, grain, column):
+            return True
+    return False
 
 
 def _unique(items: Sequence[str]) -> list[str]:
@@ -1328,13 +1356,30 @@ def _unique(items: Sequence[str]) -> list[str]:
     return seen
 
 
-def _clock_source_rows(connection, filters: Filters) -> tuple[list[dict[str, object]], bool]:
+def _clock_source_rows(
+    connection, filters: Filters
+) -> tuple[list[dict[str, object]], bool, list[str]]:
+    """Clock rows, whether the date window was widened, and filters that matched nothing.
+
+    A time control or rating the grain does not contain returns no slices. The
+    same is true when the selected range already contains the slice dates and
+    the cut is empty. Widening the dates, and tagging that as August, happens
+    only when the range does not contain those dates and the time and rating
+    values are present. The unfiltered August population is not a stand-in.
+    """
     grain = "clock_cell" if _grain_present(connection, "clock_cell") else "clock_slice"
     if not _grain_present(connection, grain):
-        return [], False
+        return [], False, []
+    absent = _absent_clock_filters(connection, grain, filters)
+    if absent:
+        return [], False, absent
     rows = _inside(connection, grain, filters, dimensional=True, adaptive=True)
     if rows:
-        return rows, False
+        return rows, False, []
+    span = _grain_span(connection, grain)
+    named = _set_clock_labels(connection, grain, filters)
+    if span is not None and filters.start <= span[0] and filters.end >= span[1]:
+        return [], False, named
     wider = _inside(
         connection,
         grain,
@@ -1344,9 +1389,61 @@ def _clock_source_rows(connection, filters: Filters) -> tuple[list[dict[str, obj
         dates=False,
     )
     if wider:
-        return wider, True
-    plain = _inside(connection, grain, Filters(_WIDE[0], _WIDE[1]), dimensional=False, dates=False)
-    return plain, bool(plain)
+        return wider, True, []
+    return [], False, named
+
+
+def _absent_clock_filters(connection, grain: str, filters: Filters) -> list[str]:
+    absent: list[str] = []
+    for column in ("time_control", "rating_band"):
+        value = getattr(filters, column)
+        if (
+            value
+            and _carries(connection, grain, column)
+            and not _value_present(connection, grain, column, value)
+        ):
+            absent.append(_DIM_LABEL[column])
+    return absent
+
+
+def _set_clock_labels(connection, grain: str, filters: Filters) -> list[str]:
+    labels: list[str] = []
+    for column in ("time_control", "rating_band"):
+        value = getattr(filters, column)
+        if value and _carries(connection, grain, column):
+            labels.append(_DIM_LABEL[column])
+    return labels
+
+
+def _value_present(connection, grain: str, column: str, value: str) -> bool:
+    if column not in _DIM_LABEL:
+        raise ValueError("unknown cube dimension")
+    if column == "rating_band":
+        subset = RATING_SUBSET.get(value)
+        if subset is None:
+            sql = 'select count(*) from "cube" where "grain" = ? and "rating_band" = ?'
+            params: list[object] = [grain, value]
+        else:
+            sql = (
+                'select count(*) from "cube" where "grain" = ? '
+                'and ("rating_band" = ? or "rating_band" = ?)'
+            )
+            params = [grain, value, subset]
+    else:
+        sql = f'select count(*) from "cube" where "grain" = ? and "{column}" = ?'
+        params = [grain, value]
+    row = connection.execute(sql, params).fetchone()
+    return row is not None and _num(row[0]) > 0
+
+
+def _grain_span(connection, grain: str) -> tuple[date, date] | None:
+    row = connection.execute(
+        'select min("period_start"), max("period_end") from "cube" where "grain" = ?',
+        [grain],
+    ).fetchone()
+    if row is None or row[0] is None or row[1] is None:
+        return None
+    return row[0], row[1]
 
 
 def _band_rows(rows: Sequence[Mapping[str, object]]) -> list[dict[str, object]]:
@@ -1377,10 +1474,15 @@ def _band_rows(rows: Sequence[Mapping[str, object]]) -> list[dict[str, object]]:
 def _clock_caption(
     parts: Sequence[str], fell_back: bool, has_rows: bool, *, warehouse: bool = False
 ) -> str | None:
+    if not has_rows:
+        named = [item for item in parts if item != "date"]
+        if named:
+            return "No clock slices for this " + _join_or(named) + "."
+        if not parts and not fell_back:
+            return None
+        return "No clock slices are published for this cut."
     if not parts and not fell_back:
         return None
-    if not has_rows:
-        return "No clock slices are published for this cut."
     ignored = [item for item in parts if item != "date"]
     window = "the warehouse window" if warehouse else "the August prefix"
     if fell_back and ignored:
@@ -1462,6 +1564,7 @@ def _pack_transposition(connection, cohort: str, row: Mapping[str, object]) -> d
         "family": family,
         "title": title,
         "games": _num(row["games"]),
+        "kept_games": sum(_num(games) for _san, games, _ply in routes),
         "move_orders": _num(row["ply"]),
         "routes": top,
         "eco": row.get("eco"),
@@ -1481,6 +1584,8 @@ def _warehouse_games_kpi(connection, filters: Filters) -> Kpi:
         rows, notes = _collect(
             connection, "result_cell", filters, force_color=filters.color or "white"
         )
+    if _EMPTY_CUT in notes:
+        return Kpi("Games", "0", _NO_CELLS)
     total = sum(_num(row["games"]) for row in rows)
     if not notes and not _dimensional(filters):
         return Kpi("Games", f"{total:,}", "warehouse")
@@ -1504,22 +1609,30 @@ def _mean_kpis(connection, filters: Filters) -> list[Kpi]:
         rows, notes = _collect(
             connection, "result_cell", filters, force_color=filters.color or "white"
         )
-        diff = _weighted_mean(rows, "rating_diff")
-        if diff is not None:
-            cards.append(Kpi("Rating diff", _signed(diff), _mean_detail(notes)))
-        length = _weighted_mean(rows, "mean_ply")
-        use_player_length = bool(filters.color or filters.rating_band)
-        if not _grain_present(connection, "game_cell"):
-            use_player_length = True
-        if length is not None and use_player_length:
-            cards.append(Kpi("Game length", _tenth(length), _mean_detail(notes, "mean ply")))
+        if _EMPTY_CUT in notes:
+            cards.append(Kpi("Rating diff", "0.0", _NO_CELLS))
+            if filters.color or filters.rating_band or not _grain_present(connection, "game_cell"):
+                cards.append(Kpi("Game length", "0.0", _NO_CELLS))
+        else:
+            diff = _weighted_mean(rows, "rating_diff")
+            if diff is not None:
+                cards.append(Kpi("Rating diff", _signed(diff), _mean_detail(notes)))
+            length = _weighted_mean(rows, "mean_ply")
+            use_player_length = bool(filters.color or filters.rating_band)
+            if not _grain_present(connection, "game_cell"):
+                use_player_length = True
+            if length is not None and use_player_length:
+                cards.append(Kpi("Game length", _tenth(length), _mean_detail(notes, "mean ply")))
     if _grain_present(connection, "game_cell") and not any(
         card.label == "Game length" for card in cards
     ):
         rows, notes = _collect(connection, "game_cell", filters)
-        length = _weighted_mean(rows, "mean_ply")
-        if length is not None:
-            cards.append(Kpi("Game length", _tenth(length), _mean_detail(notes, "mean ply")))
+        if _EMPTY_CUT in notes:
+            cards.append(Kpi("Game length", "0.0", _NO_CELLS))
+        else:
+            length = _weighted_mean(rows, "mean_ply")
+            if length is not None:
+                cards.append(Kpi("Game length", _tenth(length), _mean_detail(notes, "mean ply")))
     return cards
 
 
@@ -1761,6 +1874,8 @@ with "bounds" as (
     min("utc_date") as "period_start",
     max("utc_date") as "period_end"
   from "opening_game"
+  where "result" in ('1-0', '0-1', '1/2-1/2')
+    and "marked_bot" = false
   group by 1, 2
 )
 select
@@ -1789,6 +1904,8 @@ with "bounds" as (
     min("utc_date") as "period_start",
     max("utc_date") as "period_end"
   from "opening_game"
+  where "result" in ('1-0', '0-1', '1/2-1/2')
+    and "marked_bot" = false
   group by 1, 2
 ),
 "played" as (

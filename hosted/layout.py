@@ -1,12 +1,13 @@
 """Equal-width cards for the hosted dashboard.
 
-The track list is ``repeat(auto-fit, minmax(min(100%, 256px), 1fr))``.
+The track list is ``repeat(auto-fill, minmax(min(100%, 256px), 1fr))``.
 256px is 16rem at the CSS reference pixel. Streamlit sets the document
 root to 14px, so a literal 16rem is 224px and three tracks fit in the
 content box at a 768px viewport. 256px does not: one column at 390px,
 two by two for four cards at 768px, and one row at 1280px. Every card
-in a row shares that minimum. A short last row keeps the track width of
-the row above; the leftover card does not grow into the empty cell.
+in a row shares that minimum. ``auto-fill`` keeps the empty track on a
+short last row, so the leftover card stays the same width. The detail
+nowraps the fraction and can break at `` · ``.
 """
 
 from __future__ import annotations
@@ -16,7 +17,7 @@ from html import escape
 
 _MOVE_NUMBER = re.compile(r"\d+\.")
 
-_TRACKS = "repeat(auto-fit,minmax(min(100%,256px),1fr))"
+_TRACKS = "repeat(auto-fill,minmax(min(100%,256px),1fr))"
 
 
 def equal_width_columns(count: int) -> str:
@@ -44,8 +45,8 @@ def equal_width_row(cards: list[tuple[str, str, str]]) -> str:
             "font-variant-numeric:tabular-nums;white-space:nowrap;"
             f'overflow-wrap:normal">{escape(value)}</div>'
             '<div class="cal-d" style="font-size:clamp(0.68rem,4cqi,0.82rem);'
-            "line-height:1.35;color:#3d524c;overflow-wrap:normal;white-space:nowrap;"
-            f'word-break:normal">{escape(detail)}</div>'
+            "line-height:1.35;color:#3d524c;overflow-wrap:normal;"
+            f'word-break:normal">{_detail_html(detail)}</div>'
             "</div>"
         )
     style = (
@@ -58,6 +59,13 @@ def equal_width_row(cards: list[tuple[str, str, str]]) -> str:
         f'<div class="cal-equal" data-equal-width="true" data-cards="{len(cards)}" '
         f'style="{style}">{body}</div>'
     )
+
+
+def _detail_html(detail: str) -> str:
+    """Nowrap each segment. A break is only at the `` · `` separator."""
+    parts = str(detail).split(" · ")
+    spans = [f'<span style="white-space:nowrap">{escape(part)}</span>' for part in parts]
+    return " · ".join(spans)
 
 
 def _split_title(title: str) -> tuple[str, str]:
@@ -146,15 +154,22 @@ def transposition_cards(items: list[dict]) -> str:
     the game count are separate rows. The line reserves two lines so sibling
     cards keep the count on the same row. A route is a ``(san, games)`` pair:
     the count column is the widest count, about six tabular characters, and the
-    SAN wraps inside the second column.
+    SAN wraps inside the second column. The share bar uses ``kept_games`` when
+    that sum of kept routes is present. The headline stays the position total
+    and says so when the two differ.
     """
     columns = equal_width_columns(len(items))
     cells: list[str] = []
     for item in items:
         total = int(item["games"])
         route_pairs = [(str(san), int(games)) for san, games in item["routes"]]
+        if "kept_games" in item:
+            share_total = int(item["kept_games"])
+        else:
+            share_total = sum(games for _san, games in route_pairs)
         track = _count_track([games for _san, games in route_pairs])
-        routes = "".join(_route_row(san, games, total, track) for san, games in route_pairs)
+        routes = "".join(_route_row(san, games, share_total, track) for san, games in route_pairs)
+        game_label = " position games" if share_total != total else " games"
         depth, line = _split_title(str(item["title"]))
         orders = int(item["move_orders"])
         order_label = "1 move order" if orders == 1 else f"{orders} move orders"
@@ -179,7 +194,7 @@ def transposition_cards(items: list[dict]) -> str:
             'font-variant-numeric:tabular-nums;white-space:nowrap">'
             f"{escape(f'{total:,}')}</span>"
             '<span class="cal-games" style="font-size:0.78rem;color:#5c726b;'
-            'white-space:nowrap"> games</span></div>'
+            f'white-space:nowrap">{escape(game_label)}</span></div>'
             '<div class="cal-d" style="font-size:0.78rem;line-height:1.3;color:#3d524c;'
             f'white-space:nowrap">{escape(order_label)}</div></div></div>'
             '<div class="cal-routes" style="display:flex;flex-direction:column;gap:12px;'

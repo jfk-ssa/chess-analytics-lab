@@ -79,13 +79,22 @@ opening, clock, rating, and color:
   games-weighted means on those cells (+0.1 and 72.8 ply on the full
   range). The published `color_score` rows stay in the file. The page
   uses `result_cell` when that grain is present.
-- Clock error stays the August published figure, 2,132 / 22,994.
-  Published positions stay 256 for the rated-public span. August draw
-  rate and clock slices remain the August prefix. When the date range
-  does not contain that day, the clock card still shows the figure and
-  says so. They are not split by opening family or color. Period bars
-  stay `corpus_month` (1,042,346 training games). The Games card does
-  not repeat a prior-period delta once `game_cell` is present.
+- Clock error stays the August published figure, 2,132 / 22,994,
+  when no time control or rating is selected. Published positions stay
+  256 for the rated-public span. August draw rate and clock slices
+  remain the August prefix. When the date range does not contain that
+  day, and the selected time and rating are present in the slice grain,
+  the clock card still shows the figure and says so. A time control or
+  rating the grain does not contain returns no slices and is not
+  labeled August, including when the range already contains that day.
+  `180+2` and `-` are in that set. They are not split by opening family
+  or color. Period bars stay `corpus_month` (1,042,346 training games).
+  The Games card does not repeat a prior-period delta once `game_cell`
+  is present.
+- A filter on a column the grain stores, which matches no cell, returns
+  no rows. The card says `no cells for this cut`. It does not widen to
+  the rest of the population. `Amazon Attack` is that case for games,
+  and `-` is that case for the White win rate.
 
 `scripts/build_warehouse_cube.py` aggregates a local `warehouse.duckdb`.
 An analytical warehouse (`fact_game` and `fact_player_game`) still
@@ -98,8 +107,9 @@ the builder writes `game_cell` and `result_cell` only. Color is one row
 per side, from `white_rating`, `black_rating`, and `result`. Opening
 family is the text before the first colon, the same split as
 `opening_family_expr`. Cohort is `source_cohort` and period is
-`source_period`. The row window is the min and max `utc_date` of that
-source, so it lines up with `corpus_month` (a rated-public prefix stays
+`source_period`. The row window is the min and max `utc_date` of the
+standard, non-bot games in that source, the same filter as the
+aggregated rows, so it lines up with `corpus_month` (a rated-public prefix stays
 one day; the elite month stays 2025-11-01 through 2025-11-30). Cells
 under 10 games are dropped, so the summed games sit under
 1,042,346. The script does not download and does not select
@@ -130,11 +140,34 @@ not added.
 
 ## Consequences
 
-Rebuild the cube with `scripts/build_dashboard_cube.py` when a
-committed source changes. The positions file is an explicit `--positions`
-path because that report is not on the tip. A missing cube fails closed
-with "Dashboard cube unavailable". The JSON extract remains the
-live-eval source and keeps its 256 KiB budget.
+`opening_line`, `opening_continuation`, `opening_family`,
+`august_family`, and `clock_slice` rows under 10 games are omitted by
+the published builders, the same floor `transposition_route` already
+uses. A share bar uses the sum of the kept routes. The headline count
+stays the position total and is labeled that way when the two differ.
+The committed parquet is still the file rebuilt at 580,528 bytes. The
+floor and the period-bounds filter land on the next rebuild. Run the
+published builder first, because it replaces the file, then the
+warehouse command so `game_cell` comes back:
+
+```sh
+uv run --locked --no-editable --extra dashboard \
+  python scripts/build_dashboard_cube.py \
+  --positions /path/to/opening-positions.json
+uv run --locked --no-editable --extra dashboard \
+  python scripts/build_warehouse_cube.py \
+  --warehouse data/openings/published/00e7a73fbf67c401e23b4b4b/warehouse.duckdb
+```
+
+The warehouse command alone applies the period-bounds filter and keeps
+the published rows already in the file. Rebuild the cube with
+`scripts/build_dashboard_cube.py` when a committed source changes. The
+positions file is an explicit `--positions` path because that report is
+not on the tip. A missing cube, or a DuckDB error while opening it,
+fails closed with "Dashboard cube unavailable". An extract that fails
+validation does not stop the cube; the live-eval section shows the
+closed error. A table the reader does not know is ignored. The JSON
+extract remains the live-eval source and keeps its 256 KiB budget.
 
 On the machine that has the openings warehouse, from the repository
 root, without `--offline`:

@@ -900,7 +900,12 @@ def _lineage_tables(stages: list[dict]) -> None:
 def _table_index(extract: dict, rows) -> list[dict]:
     table = []
     for name in extract["tables"]:
-        body = rows(extract, name)
+        try:
+            body = rows(extract, name)
+        except ValueError as exc:
+            if "unknown public extract table" not in str(exc):
+                raise
+            continue
         sources = sorted({row["source_report"] for row in body if row.get("source_report")})
         if sources:
             source = ", ".join(sources)
@@ -916,7 +921,17 @@ def _table_index(extract: dict, rows) -> list[dict]:
     return table
 
 
-def _render(layout, charts, bi, extract: dict, path: Path, rows, connection, cube_bounds) -> None:
+def _render(
+    layout,
+    charts,
+    bi,
+    extract: dict,
+    path: Path,
+    rows,
+    connection,
+    cube_bounds,
+    extract_error: str | None = None,
+) -> None:
     charts.install_theme()
     stylesheet = Path(__file__).resolve().parent / "static" / "dashboard.css"
     if stylesheet.is_file():
@@ -924,6 +939,9 @@ def _render(layout, charts, bi, extract: dict, path: Path, rows, connection, cub
     st.title("Chess Analytics Lab")
     bi.render(layout, charts, connection, cube_bounds)
     st.subheader("Live eval")
+    if extract_error is not None:
+        st.error(extract_error)
+        return
     _eval_tab(layout, charts, extract, rows)
     with st.expander("Provenance"):
         _about(extract, path, rows)
@@ -950,6 +968,12 @@ def _cube():
 
 
 def main() -> None:
+    extract_error: str | None = None
+    layout = None
+    charts = None
+    extract = None
+    path = None
+    table_rows = None
     try:
         layout = _load_local("layout")
         charts = _load_local("charts")
@@ -958,24 +982,45 @@ def main() -> None:
         extract = load_extract(path)
         _validate(extract, table_rows)
     except json.JSONDecodeError as exc:
-        _fail(f"Public extract is not valid JSON: {exc}")
+        extract_error = f"Public extract is not valid JSON: {exc}"
     except ValueError as exc:
-        _fail(f"Public extract failed validation: {exc}")
+        extract_error = f"Public extract failed validation: {exc}"
     except OSError as exc:
-        _fail(f"Public extract unavailable: {exc}")
+        extract_error = f"Public extract unavailable: {exc}"
     except ModuleNotFoundError as exc:
-        _fail(f"Public extract reader could not be imported: {exc}")
+        extract_error = f"Public extract reader could not be imported: {exc}"
+    if layout is None or charts is None:
+        _fail(extract_error or "Dashboard view could not be imported")
     try:
         bounds, connect, cube_path = _cube()
         source = cube_path()
         connection = connect(source)
         cube_bounds = bounds(connection)
         bi = _load_local("bi")
-        _render(layout, charts, bi, extract, path, table_rows, connection, cube_bounds)
     except FileNotFoundError as exc:
+        if extract_error is not None:
+            _fail(extract_error)
         _fail(f"Dashboard cube unavailable: {exc}")
     except ModuleNotFoundError as exc:
         _fail(f"Dashboard cube could not be imported: {exc}")
+    except Exception as exc:
+        if type(exc).__module__.split(".")[0] == "duckdb":
+            _fail(f"Dashboard cube unavailable: {exc}")
+        raise
+    if extract_error is not None or extract is None or path is None or table_rows is None:
+        _render(
+            layout,
+            charts,
+            bi,
+            {},
+            Path(),
+            table_rows if table_rows is not None else (lambda *_args: []),
+            connection,
+            cube_bounds,
+            extract_error or "Public extract unavailable",
+        )
+        return
+    _render(layout, charts, bi, extract, path, table_rows, connection, cube_bounds)
 
 
 st.set_page_config(page_title="Chess Analytics Lab", layout="wide")

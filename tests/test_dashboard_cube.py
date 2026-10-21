@@ -14,6 +14,7 @@ from chess_analytics.dashboard_cube import (
     breadcrumb,
     build_rows,
     climb,
+    clock_display,
     clock_slices,
     connect,
     cube_path,
@@ -66,7 +67,10 @@ def _sources() -> tuple[dict, dict, dict, dict, dict]:
     positions = {
         "cohorts": {
             "rated_public": {
-                "opening_families": [{"family": "French Defense", "games": 3, "share": 0.5}],
+                "opening_families": [
+                    {"family": "French Defense", "games": 12, "share": 0.5},
+                    {"family": "Amazon Attack", "games": 4, "share": 0.1},
+                ],
                 "views": {
                     "French Defense": {
                         "family": "French Defense",
@@ -75,9 +79,13 @@ def _sources() -> tuple[dict, dict, dict, dict, dict]:
                                 "position_key": fen,
                                 "games": 3,
                                 "opening_labels": [{"eco": "C00", "games": 3}],
-                                "routes": [{"san": "1.e4 e6", "games": 3, "share": 1.0}],
+                                "routes": [
+                                    {"san": "1.e4 e6", "games": 12, "share": 1.0},
+                                    {"san": "1.e4 e6 2.d4", "games": 4, "share": 0.2},
+                                ],
                                 "continuations": [
-                                    {"san": "d4", "games": 2, "share_of_position_games": 0.66}
+                                    {"san": "d4", "games": 12, "share_of_position_games": 0.66},
+                                    {"san": "Nf3", "games": 3, "share_of_position_games": 0.1},
                                 ],
                             }
                         },
@@ -88,7 +96,7 @@ def _sources() -> tuple[dict, dict, dict, dict, dict]:
         }
     }
     reference = {
-        "opening_families": {"French Defense": 2},
+        "opening_families": {"French Defense": 12, "Amazon Attack": 4},
         "opening_player_cohorts": {
             "French Defense|black|rating_1400_1599|60+0": {
                 "wins": 1,
@@ -108,7 +116,7 @@ def _sources() -> tuple[dict, dict, dict, dict, dict]:
                     "rating_band": "1200_1599",
                     "bucket": "under_10",
                     "phase": "early_ply",
-                    "eligible_moves": 5,
+                    "eligible_moves": 12,
                     "evaluable_moves": 4,
                     "proxy_errors": 1,
                 },
@@ -117,9 +125,18 @@ def _sources() -> tuple[dict, dict, dict, dict, dict]:
                     "rating_band": "2000_plus",
                     "bucket": "60_plus",
                     "phase": "late_ply",
-                    "eligible_moves": 8,
+                    "eligible_moves": 11,
                     "evaluable_moves": 0,
                     "proxy_errors": 0,
+                },
+                {
+                    "time_control": "15+0",
+                    "rating_band": "under_1200",
+                    "bucket": "under_10",
+                    "phase": "early_ply",
+                    "eligible_moves": 4,
+                    "evaluable_moves": 4,
+                    "proxy_errors": 1,
                 },
             ]
         }
@@ -151,6 +168,15 @@ def test_builder_rows_are_public_and_skip_unlabeled_views() -> None:
         "clock_slice",
     }
     assert all(row["opening_family"] != "all" for row in rows)
+    assert all(row["opening_family"] != "Amazon Attack" for row in rows)
+    for grain in ("opening_line", "opening_continuation", "opening_family", "august_family"):
+        small = [row for row in rows if row["grain"] == grain and int(row["games"]) < MIN_CELL]
+        assert small == []
+    short_clock = [
+        row for row in rows if row["grain"] == "clock_slice" and int(row["moves"]) < MIN_CELL
+    ]
+    assert short_clock == []
+    assert not any(row["time_control"] == "15+0" for row in rows if row["grain"] == "clock_slice")
     leaked = build_rows(*_sources())
     leaked[0]["opening_family"] = "player_key"
     assert public_issues(leaked)
@@ -297,6 +323,46 @@ def test_committed_cube_matches_the_warehouse_and_published_totals() -> None:
     assert issues is not None and int(issues[0]) > 0
 
 
+def test_missing_time_and_opening_do_not_widen_the_population() -> None:
+    connection = connect(cube_path(ROOT))
+    wide = Filters(date(2025, 11, 1), date(2026, 8, 1))
+    for control in ("180+2", "-"):
+        chosen = Filters(wide.start, wide.end, control)
+        cards = {item.label: item for item in kpis(connection, chosen)}
+        clock = cards["Clock error"]
+        assert "2,132" not in clock.detail
+        assert "22,994" not in clock.detail
+        assert "August" not in clock.detail
+        assert clock.detail == "no cells for this cut · not by time"
+        bands, note, tag = clock_display(connection, chosen)
+        assert bands == []
+        assert tag == "not by time"
+        assert note == "No clock slices for this time."
+        assert clock_slices(connection, chosen, "under_10") == []
+    dash = {item.label: item for item in kpis(connection, Filters(wide.start, wide.end, "-"))}
+    assert dash["Games"].value != "1,009,445"
+    assert dash["Win rate"].detail == "no cells for this cut"
+    assert "476,741" not in dash["Win rate"].detail
+    amazon = Filters(wide.start, wide.end, None, None, None, "Amazon Attack")
+    empty = {item.label: item for item in kpis(connection, amazon)}
+    assert empty["Games"].value == "0"
+    assert empty["Games"].detail == "no cells for this cut"
+    assert empty["Win rate"].detail == "no cells for this cut"
+    assert "1,009,445" not in empty["Games"].value
+    kept = Filters(wide.start, wide.end, "180+0")
+    kept_bands, _kept_note, kept_tag = clock_display(connection, kept)
+    assert kept_bands
+    assert kept_tag != "August"
+    assert (
+        "no cells for this cut"
+        not in {item.label: item for item in kpis(connection, kept)}["Clock error"].detail
+    )
+    november = Filters(date(2025, 11, 1), date(2025, 11, 30), "180+2")
+    november_clock = {item.label: item for item in kpis(connection, november)}["Clock error"]
+    assert "2,132" not in november_clock.detail
+    assert "August" not in november_clock.detail
+
+
 def test_transposition_rows_drop_routes_under_ten_games(tmp_path: Path) -> None:
     corpus, positions, reference, figures, analytical = _sources()
     fen = "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq -"
@@ -328,6 +394,8 @@ def test_transposition_rows_drop_routes_under_ten_games(tmp_path: Path) -> None:
     )
     assert len(found) == 1
     assert found[0]["move_orders"] == 2
+    assert found[0]["games"] == 40
+    assert found[0]["kept_games"] == 23
     assert [item[0] for item in found[0]["routes"]] == ["1.e4 e6 2.d4 d5", "1.e4 e6 2.d4"]
     assert found[0]["title"] == "After Black's move 2 · 1.e4 e6 2.d4 d5"
     assert "color" in caption
@@ -430,6 +498,16 @@ def test_opening_game_warehouse_matches_corpus_windows(tmp_path: Path) -> None:
         marked_bot=True,
     )
     _insert_opening(connection, 32, "French Defense: Advance", "*", 40, date(2026, 8, 1))
+    _insert_opening(
+        connection,
+        33,
+        "French Defense: Advance",
+        "1-0",
+        40,
+        date(2026, 8, 2),
+        marked_bot=True,
+    )
+    _insert_opening(connection, 34, "French Defense: Advance", "*", 40, date(2026, 8, 3))
     for index, played in enumerate((date(2025, 11, 1),) * 6 + (date(2025, 11, 30),) * 4, start=40):
         _insert_opening(
             connection,

@@ -21,7 +21,12 @@ diff, and game length. Each card shows a value. Games is the
 and 45.7% (442,862 / 968,874). Rating diff is +0.1 and game length is
 72.8 ply. A color or rating filter counts one side. Clock error stays
 2,132 / 22,994, and positions stay 256. A filter the grain cannot
-split is named on the card instead of leaving the value blank. Period
+split is named on the card instead of leaving the value blank. A filter
+on a column the grain stores, which matches nothing, says `no cells for
+this cut` and does not widen the population. Clock error stays
+2,132 / 22,994 when time and rating are All. A time control the August
+slices do not contain, such as `180+2` or `-`, shows no slices and is
+not labeled August. Period
 bars stay the published months (1,042,346 training games).
 
 Openings drill from a family bar to lines, then to one published FEN
@@ -35,7 +40,8 @@ cards keep that form. The depth, the line, and the game count are
 separate rows. The line reserves two lines so the counts line up across
 a row. Each move order is a count column sized to the widest count, about six
 tabular characters, and a SAN column, and a
-thin bar shows that order's share of the card's games. Each move
+thin bar shows that order's share of the kept routes. The headline
+count stays the position total when that total is larger. Each move
 number stays with its reply, as in `4.Nxd4 Nf6` or `5.Nc3 a6`. A
 trailing White move such as `3.Bc4` is its own unit. A line breaks only
 between those units. The same grouping is on the line labels and the
@@ -48,8 +54,9 @@ short caption. Provenance stays in a collapsed expander.
 Charts are Altair, with the `chesslab` theme (Inter and the page palette).
 
 Card rows use an inline grid,
-`repeat(auto-fit, minmax(min(100%, 256px), 1fr))`. The label, value,
-and detail use `white-space: nowrap`. 256px is 16rem at the CSS
+`repeat(auto-fill, minmax(min(100%, 256px), 1fr))`. The label and value
+use `white-space: nowrap`. The detail nowraps the fraction and can
+break at ` · `. 256px is 16rem at the CSS
 reference pixel. With 256px, a 390px viewport is one column and a
 1280px viewport holds several tracks. The eight KPI cards and the six
 eval cards share that track. The grok sweep is three cards.

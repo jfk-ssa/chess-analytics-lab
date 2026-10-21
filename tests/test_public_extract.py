@@ -676,6 +676,21 @@ def test_loader_rejects_extract_version_one(project, tmp_path):
         load_extract(path)
 
 
+def test_loader_ignores_an_unknown_table_and_rejects_a_missing_one(project, tmp_path):
+    payload = json.loads(extract_path(project).read_text())
+    payload["tables"]["future_metric"] = [{"value": 1}]
+    extra = tmp_path / "extra.json"
+    extra.write_text(json.dumps(payload))
+    loaded = load_extract(extra)
+    assert "future_metric" in loaded["tables"]
+    assert "lineage_stage" in loaded["tables"]
+    del payload["tables"]["lineage_stage"]
+    missing = tmp_path / "missing.json"
+    missing.write_text(json.dumps(payload))
+    with pytest.raises(ValueError, match="public extract tables do not match the reader"):
+        load_extract(missing)
+
+
 def test_opening_color_scores_match_the_published_window(project):
     extract = load_extract(extract_path(project))
     cells = table_rows(extract, "opening_color_score")

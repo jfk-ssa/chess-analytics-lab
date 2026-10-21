@@ -118,7 +118,7 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
     assert labels["Color"] == ["All", "White", "Black"]
     assert "French Defense" in labels["Opening family"]
     assert "Sicilian Defense" in labels["Opening family"]
-    text = _visible(app)
+    text = re.sub(r"<[^>]+>", "", _visible(app))
     assert "1 over-abstentions" not in text
     extract = load_extract(extract_path(project))
     receipts = {row["receipt_id"]: row for row in table_rows(extract, "metric_receipt")}
@@ -308,7 +308,7 @@ def _assert_alt_text(app) -> None:
     assert alts == list(expected)
 
 
-_TRACKS = "repeat(auto-fit,minmax(min(100%,256px),1fr))"
+_TRACKS = "repeat(auto-fill,minmax(min(100%,256px),1fr))"
 
 
 def _assert_equal_width_markup(app) -> None:
@@ -407,6 +407,9 @@ def test_equal_width_rows_share_one_track_definition(project):
         assert html.count('class="cal-card"') == count
         assert html.count('class="cal-v"') == count
         assert html.count("white-space:nowrap") == 3 * count
+        assert 'class="cal-d"' in html
+        detail_style = html.split('class="cal-d"', 1)[1].split(">", 1)[0]
+        assert "white-space:nowrap" not in detail_style
         assert "overflow-wrap:anywhere" not in html
         assert "minmax(min(100%,256px),1fr)" in html
     with pytest.raises(ValueError, match="at least one card"):
@@ -452,9 +455,28 @@ def test_equal_width_rows_share_one_track_definition(project):
     assert escape("After Black's move 2") in board
     assert escape("After Black's move 5") in board
     assert " games" in board and "2 move orders" in board
+    assert "position games" in board
     assert "width:58.3%" in board
-    assert "width:89.1%" in board
+    assert "width:100.0%" in board
+    assert "width:89.1%" not in board
     assert board.index("After Black") < board.index("1,200")
+    wrapped = module.equal_width_row([("Win rate", "49.2%", "476,741 / 968,874 · White")])
+    assert 'white-space:nowrap">476,741 / 968,874<' in wrapped
+    assert 'white-space:nowrap">476,741 / 968,874 · White<' not in wrapped
+    marked = module.transposition_cards(
+        [
+            {
+                "title": "After Black's move 2 · 1.e4 e6 2.d4 d5",
+                "games": 40,
+                "kept_games": 23,
+                "move_orders": 2,
+                "routes": [("1.e4 e6 2.d4 d5", 12), ("1.e4 e6 2.d4", 11)],
+            }
+        ]
+    )
+    assert "width:52.2%" in marked
+    assert "width:47.8%" in marked
+    assert "position games" in marked
 
 
 def _chart_spec(node) -> dict:
@@ -668,7 +690,9 @@ def test_hosted_dashboard_fails_closed_when_the_extract_is_missing(project, tmp_
     assert "public extract not found" in message
 
 
-def test_hosted_dashboard_fails_closed_when_the_extract_is_invalid(project, tmp_path, monkeypatch):
+def test_hosted_dashboard_renders_the_cube_when_the_extract_is_invalid(
+    project, tmp_path, monkeypatch
+):
     pytest.importorskip("streamlit")
     from streamlit.testing.v1 import AppTest
 
@@ -677,11 +701,27 @@ def test_hosted_dashboard_fails_closed_when_the_extract_is_invalid(project, tmp_
     monkeypatch.setenv("CHESSLAB_PUBLIC_EXTRACT", str(invalid))
     app = AppTest.from_file(str(project / "hosted" / "dashboard.py"), default_timeout=60).run()
     assert not app.exception, [item.message for item in app.exception]
-    assert not app.table
-    assert not app.metric
-    message = " ".join(item.value for item in app.error)
-    assert "Public extract failed validation" in message
-    assert "unsupported public extract version" in message
+    text = _visible(app)
+    assert "Public extract failed validation" in text
+    assert "unsupported public extract version" in text
+    assert "1,009,445" in text
+
+
+def test_hosted_dashboard_renders_the_cube_when_the_extract_has_an_extra_table(
+    project, tmp_path, monkeypatch
+):
+    pytest.importorskip("streamlit")
+    from streamlit.testing.v1 import AppTest
+
+    payload = json.loads((project / "data" / "public" / "dashboard_extract.json").read_text())
+    payload["tables"]["future_metric"] = [{"value": 1}]
+    extra = tmp_path / "dashboard_extract.json"
+    extra.write_text(json.dumps(payload))
+    monkeypatch.setenv("CHESSLAB_PUBLIC_EXTRACT", str(extra))
+    app = AppTest.from_file(str(project / "hosted" / "dashboard.py"), default_timeout=60).run()
+    assert not app.exception, [item.message for item in app.exception]
+    assert not app.error
+    assert "1,009,445" in _visible(app)
 
 
 def test_hosted_dashboard_fails_closed_when_the_cube_is_missing(project, tmp_path, monkeypatch):
@@ -698,6 +738,24 @@ def test_hosted_dashboard_fails_closed_when_the_cube_is_missing(project, tmp_pat
     message = " ".join(item.value for item in app.error)
     assert "Dashboard cube unavailable" in message
     assert "dashboard cube not found" in message
+
+
+def test_hosted_dashboard_fails_closed_when_the_cube_is_not_parquet(project, tmp_path, monkeypatch):
+    pytest.importorskip("streamlit")
+    from streamlit.testing.v1 import AppTest
+
+    bad = tmp_path / "cube.parquet"
+    bad.write_bytes(b"not a parquet file")
+    monkeypatch.setenv(
+        "CHESSLAB_PUBLIC_EXTRACT",
+        str(project / "data" / "public" / "dashboard_extract.json"),
+    )
+    monkeypatch.setenv("CHESSLAB_DASHBOARD_CUBE", str(bad))
+    app = AppTest.from_file(str(project / "hosted" / "dashboard.py"), default_timeout=60).run()
+    assert not app.exception, [item.message for item in app.exception]
+    message = " ".join(item.value for item in app.error)
+    assert "Dashboard cube unavailable" in message
+    assert "1,009,445" not in _visible(app)
 
 
 def test_color_filter_hides_positions_and_shows_the_french_cell(project, monkeypatch):

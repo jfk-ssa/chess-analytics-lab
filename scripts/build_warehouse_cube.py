@@ -3,6 +3,7 @@
 The script reads a local ``warehouse.duckdb``. It does not download. Cells
 under 10 games are dropped, and player or game identifiers are not written.
 ``opening_game`` is the training selection. ``retained_game`` is not read.
+The period window is the min and max ``utc_date`` of standard, non-bot games.
 A ``fact_game`` warehouse still builds the analytical grains, including
 clock cells when ``fact_move`` has them. The committed cube was rebuilt
 with the command below: 580,528 bytes, 34,798 rows, and 1,009,445
