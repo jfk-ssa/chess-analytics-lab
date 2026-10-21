@@ -196,10 +196,12 @@ publishes [the live-eval page](https://jfk-ssa.github.io/chess-analytics-lab/liv
 The headline there is the raw pass rate, with repair counts beside it.
 Sol's hard fail is the five `boundary_budget` rows described above.
 The instruction-hash note on that page uses this explanation for the
-two committed hashes. A later receipt gets the same claim only when it
-records a differing `dataset_id` and the other frozen inputs still
-match. Otherwise the page says the cause is not recorded and does not
-call the runs comparable. See
+two committed hashes, judged as a pair. A later pair gets the same claim
+only when both receipts record `dataset_id`, those ids correspond one
+to one with the hashes, and the other frozen inputs still match.
+Otherwise that pair says the cause is not recorded and is not called
+comparable. An extra receipt does not change another pair's explanation.
+See
 [ADR 0096](adr/0096-published-live-eval-report.md).
 
 `grok-4.7` is a third manual model. The headline comparison with the

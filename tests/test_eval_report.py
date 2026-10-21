@@ -85,6 +85,7 @@ def test_committed_page_matches_receipt_numbers_and_every_case():
     assert "needs_clarification" in page.callouts_html
     assert "unsupported" in page.callouts_html
     assert "5 of 5" in page.callouts_html
+    assert "240 requests" in page.callouts_html
     combined = " ".join(
         (
             page.caveat_html,
@@ -151,7 +152,11 @@ def test_page_builds_for_one_receipt_and_for_an_extra_effort(tmp_path):
     three = build_page([*committed, extra], cases, strict=True)
     assert "gpt-6-sol · high" in three.scorecards_html
     assert "gpt-6-luna" in three.scorecards_html
-    assert three.receipt_files[-1] == extra.name
+    assert three.receipt_files == (
+        extra.name,
+        committed[0].name,
+        committed[1].name,
+    )
     sol["headline_passed"] = 0
     broken = tmp_path / "live-eval-receipt-8.json"
     broken.write_text(json.dumps(sol), encoding="utf-8")
@@ -180,6 +185,23 @@ def test_model_effort_artifact_names_sort_by_the_trailing_run_id(tmp_path):
         "live-eval-receipt-grok-4.7-low-r5-20.json",
         "live-eval-receipt-gpt-6-sol-none-r1-100.json",
         "live-eval-receipt-notes.json",
+    ]
+
+
+def test_plain_and_effort_names_sort_by_trailing_run_id(tmp_path):
+    names = [
+        "live-eval-receipt-20.json",
+        "live-eval-receipt-grok-4.7-high-r5-10.json",
+        "live-eval-receipt-grok-4.7-high-r5-900.json",
+        "live-eval-receipt-grok-4.7-low-r1-100.json",
+    ]
+    for name in names:
+        (tmp_path / name).write_text("{}", encoding="utf-8")
+    assert [path.name for path in discover_receipts(tmp_path)] == [
+        "live-eval-receipt-grok-4.7-high-r5-10.json",
+        "live-eval-receipt-20.json",
+        "live-eval-receipt-grok-4.7-low-r1-100.json",
+        "live-eval-receipt-grok-4.7-high-r5-900.json",
     ]
 
 
@@ -215,6 +237,24 @@ def test_one_repeat_receipt_stays_out_of_the_headline_comparison(tmp_path):
     assert "grok-4.7 · high 1 time" in page.description
     assert "Not in this ratio" in page.cost_take_html
     assert "48 requests" in page.cost_take_html
+    assert "headline sign test" in page.sensitivity_intro
+    assert "equal repeats" not in page.sensitivity_intro
+    items = page.caveat_html.split("</li>")
+    luna_sol = next(item for item in items if "gpt-6-luna" in item and "gpt-6-sol" in item)
+    assert "prompts differ only by dataset id" in luna_sol
+    assert "prompts differ only by dataset id" in page.pairwise_html
+    assert "This pair is comparable." in luna_sol
+    grok_items = [item for item in items if "grok-4.7 · high" in item]
+    assert grok_items
+    assert all(
+        "cause is not recorded" in item and "differ only by" not in item for item in grok_items
+    )
+    assert "grok-4.7 · high (48)" in page.status_svg
+    assert "gpt-6-luna (240)" in page.status_svg
+    assert "grok-4.7 · high (48)" in page.failure_svg
+    assert "grok-4.7 · high (48)" in page.request_svg
+    assert "out of 48 requests" in page.fail_take_html
+    assert "out of 240 requests" in page.fail_take_html
 
 
 def test_unknown_instruction_hash_is_not_called_comparable(tmp_path):
@@ -229,7 +269,8 @@ def test_unknown_instruction_hash_is_not_called_comparable(tmp_path):
     assert "prompts differ only by dataset id" not in page.caveat_html
     assert "differ only by that id" not in page.caveat_html
     assert "prompts differ only by dataset id" not in page.notes_html
-    assert "does not treat the runs as comparable" in page.caveat_html
+    assert "does not treat this pair as comparable" in page.caveat_html
+    assert "This pair is comparable." not in page.caveat_html
     assert "The runs are comparable." not in page.caveat_html
     assert "cause is not recorded" in page.caveat_html
     assert "cause is not recorded" in page.pairwise_html
@@ -252,7 +293,59 @@ def test_recorded_dataset_ids_can_establish_the_hash_claim(tmp_path):
     assert "prompts differ only by that id" in page.caveat_html
     assert "dataset-luna" in page.caveat_html
     assert "dataset-sol" in page.caveat_html
-    assert "The runs are comparable." in page.caveat_html
+    assert "This pair is comparable." in page.caveat_html
+    assert "The runs are comparable." not in page.caveat_html
+
+
+def test_shared_dataset_id_does_not_explain_different_hashes(tmp_path):
+    committed = _committed()
+    cases = _cases()
+    luna = json.loads(committed[0].read_text(encoding="utf-8"))
+    specs = (
+        ("aa", "id-a", "model-a", "live-eval-receipt-15.json"),
+        ("bb", "id-a", "model-b", "live-eval-receipt-16.json"),
+        ("cc", "id-c", "model-c", "live-eval-receipt-17.json"),
+    )
+    paths = []
+    for digest, dataset_id, model, name in specs:
+        data = json.loads(json.dumps(luna))
+        data["instructions_sha256"] = digest * 32
+        data["dataset_id"] = dataset_id
+        data["model"] = model
+        data["run_id"] = model
+        path = tmp_path / name
+        path.write_text(json.dumps(data), encoding="utf-8")
+        paths.append(path)
+    page = build_page(paths, cases, strict=True)
+    items = page.caveat_html.split("</li>")
+    same = next(item for item in items if "model-a" in item and "model-b" in item)
+    crossed = next(item for item in items if "model-a" in item and "model-c" in item)
+    assert "cause is not recorded" in same
+    assert "differ only by" not in same
+    assert "does not treat this pair as comparable" in same
+    assert "differ only by that id" in crossed
+    assert "This pair is comparable." in crossed
+    assert "The runs are comparable." not in page.caveat_html
+
+
+def test_known_pair_with_the_same_dataset_id_is_not_explained(tmp_path):
+    committed = _committed()
+    cases = _cases()
+    luna = json.loads(committed[0].read_text(encoding="utf-8"))
+    sol = json.loads(committed[1].read_text(encoding="utf-8"))
+    luna["dataset_id"] = "same-snapshot"
+    sol["dataset_id"] = "same-snapshot"
+    left = tmp_path / "live-eval-receipt-18.json"
+    right = tmp_path / "live-eval-receipt-19.json"
+    left.write_text(json.dumps(luna), encoding="utf-8")
+    right.write_text(json.dumps(sol), encoding="utf-8")
+    page = build_page([left, right], cases, strict=True)
+    assert "prompts differ only by dataset id" not in page.caveat_html
+    assert "differ only by that id" not in page.caveat_html
+    assert "prompts differ only by dataset id" not in page.pairwise_html
+    assert "cause is not recorded" in page.caveat_html
+    assert "cause is not recorded" in page.pairwise_html
+    assert "This pair is comparable." not in page.caveat_html
 
 
 def _one_repeat(source):

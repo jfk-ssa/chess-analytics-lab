@@ -269,6 +269,14 @@ class ReportView:
     requests_per_run: int
 
 
+def _receipt_sort_key(path: Path) -> tuple[int, str]:
+    """Sort by the trailing GitHub run id, not by ``r<repeats>``."""
+    match = _RUN_ID.fullmatch(path.name)
+    digits = (match.group(1) or match.group(2)) if match else None
+    run_id = int(digits) if digits is not None else 10**18
+    return run_id, path.name
+
+
 def discover_receipts(directory: Path) -> list[Path]:
     """Return receipt paths sorted by the GitHub run id in the filename.
 
@@ -277,16 +285,8 @@ def discover_receipts(directory: Path) -> list[Path]:
     ``live-eval-receipt-<model>-<effort>-r<repeats>-<github run id>.json``.
     The runner's own ``run_id`` is a different uuid and stays inside the JSON.
     """
-
     paths = [path for path in directory.glob(RECEIPT_GLOB) if path.is_file()]
-
-    def key(path: Path) -> tuple[int, str]:
-        match = _RUN_ID.fullmatch(path.name)
-        digits = match.group(1) or match.group(2) if match else None
-        run_id = int(digits) if digits is not None else 10**18
-        return run_id, path.name
-
-    return sorted(paths, key=key)
+    return sorted(paths, key=_receipt_sort_key)
 
 
 def load_cases(path: Path) -> dict[str, Case]:
@@ -421,14 +421,15 @@ def _misses(count: int) -> str:
 def split_cohorts(receipts: list[Receipt]) -> tuple[list[Receipt], list[Receipt]]:
     """Split off runs whose repeat count or case ids differ from the headline.
 
-    The headline cohort is the highest repeat count, and within that the
-    largest case-id set. A 1-repeat receipt stays in the sensitivity section.
+    The headline cohort is the highest repeat count, then the largest
+    case-id set, then the most receipts in that set. A 1-repeat receipt
+    stays in the sensitivity section.
     """
     groups: dict[tuple[int, frozenset[str]], list[Receipt]] = defaultdict(list)
     for receipt in receipts:
         key = (receipt.repeats, frozenset(receipt.passes_by_case()))
         groups[key].append(receipt)
-    headline_key = max(groups, key=lambda item: (item[0], len(groups[item])))
+    headline_key = max(groups, key=lambda item: (item[0], len(item[1]), len(groups[item])))
     headline_ids = {id(item) for item in groups[headline_key]}
     headline = [receipt for receipt in receipts if id(receipt) in headline_ids]
     extra = [receipt for receipt in receipts if id(receipt) not in headline_ids]
@@ -694,10 +695,6 @@ def _shared_field(receipts: list[Receipt], key: str) -> bool:
     return len({json.dumps(receipt.raw.get(key), sort_keys=True) for receipt in receipts}) == 1
 
 
-def instruction_hash_differs(receipts: list[Receipt]) -> bool:
-    return len({receipt.raw.get("instructions_sha256") for receipt in receipts}) > 1
-
-
 def _frozen_inputs_match(receipts: list[Receipt]) -> bool:
     return all(
         _shared_field(receipts, key)
@@ -705,70 +702,90 @@ def _frozen_inputs_match(receipts: list[Receipt]) -> bool:
     )
 
 
-def prompts_differ_only_by_dataset_id(receipts: list[Receipt]) -> bool:
-    """True only when that claim is established for this exact set of receipts.
+def _recorded_dataset_id(receipt: Receipt) -> str | None:
+    value = receipt.raw.get("dataset_id")
+    if isinstance(value, str) and value:
+        return value
+    return None
 
-    The two committed instruction hashes are the known pair. A later receipt
-    establishes the same claim when every receipt records ``dataset_id``, those
-    ids differ, and the other frozen inputs match. Anything else is unrecorded.
+
+def pair_explained_by_dataset_id(left: Receipt, right: Receipt) -> bool:
+    """True only for this pair, never for a larger set that contains it.
+
+    Frozen inputs must match. The pair is then explained when its hashes are
+    exactly the two committed hashes and neither receipt records ``dataset_id``,
+    or when both record ``dataset_id`` and those ids stand in one-to-one
+    correspondence with the hashes. The same id on two hashes is not explained.
     """
-    if not instruction_hash_differs(receipts):
+    left_hash = str(left.raw.get("instructions_sha256"))
+    right_hash = str(right.raw.get("instructions_sha256"))
+    if left_hash == right_hash or not _frozen_inputs_match([left, right]):
         return False
-    hashes = {str(receipt.raw.get("instructions_sha256")) for receipt in receipts}
-    if hashes <= _DATASET_ONLY_INSTRUCTION_HASHES:
-        return _frozen_inputs_match(receipts)
-    dataset_ids = [receipt.raw.get("dataset_id") for receipt in receipts]
-    recorded = [str(item) for item in dataset_ids if isinstance(item, str) and item]
-    if len(recorded) != len(receipts) or len(set(recorded)) < 2:
-        return False
-    return _frozen_inputs_match(receipts)
+    hashes = {left_hash, right_hash}
+    left_id = _recorded_dataset_id(left)
+    right_id = _recorded_dataset_id(right)
+    known = hashes == _DATASET_ONLY_INSTRUCTION_HASHES
+    if known and left_id is None and right_id is None:
+        return True
+    return left_id is not None and right_id is not None and left_id != right_id
+
+
+def _hash_pairs(receipts: list[Receipt]) -> list[tuple[Receipt, Receipt]]:
+    pairs = []
+    for left_index in range(len(receipts)):
+        for right_index in range(left_index + 1, len(receipts)):
+            left, right = receipts[left_index], receipts[right_index]
+            if left.raw.get("instructions_sha256") != right.raw.get("instructions_sha256"):
+                pairs.append((left, right))
+    return pairs
+
+
+def _known_hash_explanation() -> str:
+    return (
+        "prompts differ only by dataset id. The prompt embeds "
+        "<code>Dataset: {dataset_id}</code>, the 24-character snapshot id. That id comes "
+        "from <code>implementation_hash</code> over <code>src/**/*.py</code>, "
+        "<code>src/**/*.sql</code> and <code>contracts/*.json</code>. Adding "
+        "<code>public_extract.py</code> in #42 changed the hash. This pair is comparable. "
+        "Future receipts should record <code>dataset_id</code> and "
+        "<code>implementation_sha256</code>."
+    )
+
+
+def _pair_explanation(left: Receipt, right: Receipt) -> str:
+    names = f"<b>{esc(left.label)}</b> vs <b>{esc(right.label)}</b>"
+    if not pair_explained_by_dataset_id(left, right):
+        return (
+            f"{names}: <code>instructions_sha256</code> differs and the cause is not recorded. "
+            "This report does not treat this pair as comparable."
+        )
+    hashes = {
+        str(left.raw.get("instructions_sha256")),
+        str(right.raw.get("instructions_sha256")),
+    }
+    known = hashes == _DATASET_ONLY_INSTRUCTION_HASHES
+    if known and _recorded_dataset_id(left) is None and _recorded_dataset_id(right) is None:
+        return f"{names}: {_known_hash_explanation()}"
+    left_id = _recorded_dataset_id(left)
+    right_id = _recorded_dataset_id(right)
+    assert left_id is not None and right_id is not None
+    listed = " and ".join(f"<code>{esc(item)}</code>" for item in sorted((left_id, right_id)))
+    return (
+        f"{names}: recorded dataset ids {listed} correspond one to one with the instruction "
+        "hashes, and the other frozen inputs match, so the prompts differ only by that id. "
+        "This pair is comparable."
+    )
 
 
 def caveat_html(receipts: list[Receipt]) -> str:
-    """Explain a differing instructions hash without inventing a cause."""
-    if not instruction_hash_differs(receipts):
+    """Explain each differing instruction-hash pair. One extra receipt does not cover the rest."""
+    pairs = _hash_pairs(receipts)
+    if not pairs:
         return ""
-    distinct = len({receipt.raw.get("instructions_sha256") for receipt in receipts})
-    if not prompts_differ_only_by_dataset_id(receipts):
-        return (
-            '<div class="ev-caveat"><b>Comparability caveat.</b> '
-            f"<code>instructions_sha256</code> differs ({distinct} distinct values "
-            f"across {len(receipts)} runs). The cause is not recorded on these receipts. "
-            "This report does not treat the runs as comparable. A later receipt can "
-            "record <code>dataset_id</code> and <code>implementation_sha256</code>.</div>"
-        )
-    hashes = {str(receipt.raw.get("instructions_sha256")) for receipt in receipts}
-    dataset_ids = sorted(
-        {
-            str(receipt.raw.get("dataset_id"))
-            for receipt in receipts
-            if isinstance(receipt.raw.get("dataset_id"), str) and receipt.raw.get("dataset_id")
-        }
-    )
-    if hashes <= _DATASET_ONLY_INSTRUCTION_HASHES:
-        recorded = ""
-        if len(dataset_ids) > 1:
-            listed = ", ".join(f"<code>{esc(item)}</code>" for item in dataset_ids)
-            recorded = f" Recorded dataset ids: {listed}."
-        return (
-            '<div class="ev-caveat"><b>Comparability caveat.</b> The runs share the case set, '
-            "fixture, rubric and frozen source files, but their "
-            f"<code>instructions_sha256</code> differs ({distinct} distinct values across "
-            f"{len(receipts)} runs). The prompt embeds <code>Dataset: {{dataset_id}}</code>, "
-            "the 24-character snapshot id. That id comes from <code>implementation_hash</code> "
-            "over <code>src/**/*.py</code>, <code>src/**/*.sql</code> and "
-            "<code>contracts/*.json</code>. Adding <code>public_extract.py</code> in #42 "
-            "changed the hash, so these prompts differ only by that id. The runs are comparable."
-            f"{recorded} Future receipts should record <code>dataset_id</code> and "
-            "<code>implementation_sha256</code>.</div>"
-        )
-    listed = ", ".join(f"<code>{esc(item)}</code>" for item in dataset_ids)
+    items = "".join(f"<li>{_pair_explanation(left, right)}</li>" for left, right in pairs)
     return (
         '<div class="ev-caveat"><b>Comparability caveat.</b> '
-        f"<code>instructions_sha256</code> differs ({distinct} distinct values across "
-        f"{len(receipts)} runs). Recorded dataset ids differ ({listed}) and the case set, "
-        "fixture, rubric and frozen source files match, so these prompts differ only by "
-        "that id. The runs are comparable.</div>"
+        f"Each pair is judged on its own.<ul>{items}</ul></div>"
     )
 
 
@@ -1257,7 +1274,7 @@ def _status_block(
     parts = [
         f'<rect x="{origin_x}" y="{origin_y + 5}" width="9" height="9" rx="2" '
         f'fill="{receipt.colour}"/>',
-        _text(origin_x + 15, origin_y + 14, receipt.label, 13, INK, weight=650),
+        _text(origin_x + 15, origin_y + 14, f"{receipt.label} ({receipt.n})", 13, INK, weight=650),
         _text(origin_x + left, origin_y + 36, "emitted →", 10.5, INK_3),
     ]
     for index, status in enumerate(columns):
@@ -1373,7 +1390,10 @@ def chart_status_matrix(receipts: list[Receipt], cases: dict[str, Case]) -> str:
             (cases[row.case_id].expected_status, row.emitted_status) for row in receipt.rows
         )
         off = sum(count for (expected, emitted), count in counts.items() if expected != emitted)
-        summary.append(f"{receipt.label} has {off} rows whose emitted status differs from expected")
+        summary.append(
+            f"{receipt.label} has {off} of {receipt.n} rows whose emitted status differs "
+            "from expected"
+        )
     parts = [
         _svg_open(
             width,
@@ -1396,8 +1416,15 @@ def chart_status_matrix(receipts: list[Receipt], cases: dict[str, Case]) -> str:
     return "".join(parts)
 
 
+def _run_count_label(receipt: Receipt) -> str:
+    return f"{receipt.label} ({receipt.n})"
+
+
 def chart_failure_modes(receipts: list[Receipt], cases: dict[str, Case]) -> str:
-    width, left, right, bar_height, gap, top = 1040, 200, 90, 30, 22, 8
+    right, bar_height, gap, top = 90, 30, 22, 8
+    name_width = max(_text_width(_run_count_label(receipt), 13.5) for receipt in receipts)
+    left = max(200, int(name_width) + 28)
+    width = max(1040, left + 840)
     counts = [failure_mode_counts(receipt, cases) for receipt in receipts]
     maximum = max([sum(counter.values()) for counter in counts] + [1])
     height = top + len(receipts) * (bar_height + gap) + 4
@@ -1422,7 +1449,17 @@ def chart_failure_modes(receipts: list[Receipt], cases: dict[str, Case]) -> str:
     ]
     for index, (receipt, counter) in enumerate(zip(receipts, counts, strict=True)):
         y = top + index * (bar_height + gap)
-        parts.append(_text(left - 18, y + bar_height / 2 + 5, receipt.label, 13.5, INK, "end", 650))
+        parts.append(
+            _text(
+                left - 18,
+                y + bar_height / 2 + 5,
+                _run_count_label(receipt),
+                13.5,
+                INK,
+                "end",
+                650,
+            )
+        )
         x = float(left)
         for key, mode_label, colour in FAILURE_MODES:
             count = counter.get(key, 0)
@@ -1772,8 +1809,10 @@ def _cost_labels(receipts: list[Receipt], sx: Any, sy: Any, width: int, right: i
 
 
 def chart_request_cost(receipts: list[Receipt]) -> str:
-    width = 520
-    left, right, top, row_height = 104, 20, 20, 92
+    right, top, row_height = 20, 20, 92
+    name_width = max(_text_width(_run_count_label(receipt), 12.5) for receipt in receipts)
+    left = max(104, int(name_width) + 18)
+    width = max(520, left + 360)
     height = top + row_height * len(receipts) + 40
     costs = [
         row.gross_cost_usd for receipt in receipts for row in receipt.rows if row.gross_cost_usd > 0
@@ -1824,7 +1863,7 @@ def chart_request_cost(receipts: list[Receipt]) -> str:
     )
     for index, receipt in enumerate(receipts):
         cy = top + row_height * index + row_height / 2
-        parts.append(_text(left - 12, cy + 4, receipt.label, 12.5, INK, "end", 650))
+        parts.append(_text(left - 12, cy + 4, _run_count_label(receipt), 12.5, INK, "end", 650))
         ordered = sorted(receipt.rows, key=lambda row: (row.case_id, row.repeat))
         for dot, row in enumerate(ordered):
             if row.gross_cost_usd <= 0:
@@ -2038,7 +2077,7 @@ def _one_callout(
     repeat_word = "repeat" if detail["repeats"] == 1 else "repeats"
     return (
         '<div class="ev-callout"><div>'
-        f"<h3>{esc(receipt.label)} · <code>{esc(case.id)}</code> · "
+        f"<h3>{esc(receipt.label)} · {receipt.n} requests · <code>{esc(case.id)}</code> · "
         f"{esc(case.category)} · {esc(case.severity)} severity</h3>"
         f'<div class="ev-q">“{esc(case.question)}”</div>'
         f"<p>The frozen case expects <b>{esc(case.expected_status)}</b>. "
@@ -2099,7 +2138,7 @@ def hard_intro(receipts: list[Receipt], cases: dict[str, Case]) -> str:
 def _pair_caveat(left: Receipt, right: Receipt) -> str:
     if left.raw.get("instructions_sha256") == right.raw.get("instructions_sha256"):
         return ""
-    if prompts_differ_only_by_dataset_id([left, right]):
+    if pair_explained_by_dataset_id(left, right):
         return " (prompts differ only by dataset id, see caveat)"
     return " (instruction hashes differ and the cause is not recorded, see caveat)"
 
@@ -2228,37 +2267,10 @@ def provenance_html(receipts: list[Receipt]) -> str:
 
 
 def _hash_note(receipts: list[Receipt]) -> str | None:
-    if not instruction_hash_differs(receipts):
+    pairs = _hash_pairs(receipts)
+    if not pairs:
         return None
-    if not prompts_differ_only_by_dataset_id(receipts):
-        return (
-            "<code>instructions_sha256</code> differs between runs. The cause is not recorded "
-            "on these receipts, so this report does not treat the runs as comparable. "
-            "A later receipt can record <code>dataset_id</code> and "
-            "<code>implementation_sha256</code>."
-        )
-    hashes = {str(receipt.raw.get("instructions_sha256")) for receipt in receipts}
-    if hashes <= _DATASET_ONLY_INSTRUCTION_HASHES:
-        return (
-            "<code>instructions_sha256</code> differs between runs even though the case set, "
-            "fixture, rubric and frozen source-file hashes are identical. The prompt embeds "
-            "<code>Dataset: {dataset_id}</code>, the snapshot id. That id comes from "
-            "<code>implementation_hash</code> over <code>src/**/*.py</code>, "
-            "<code>src/**/*.sql</code> and <code>contracts/*.json</code>. Adding "
-            "<code>public_extract.py</code> in #42 changed it. "
-            "The prompts differ only by that 24-character id, so the runs are comparable. "
-            "Future receipts should record <code>dataset_id</code> and "
-            "<code>implementation_sha256</code>."
-        )
-    listed = ", ".join(
-        f"<code>{esc(item)}</code>"
-        for item in sorted({str(receipt.raw["dataset_id"]) for receipt in receipts})
-    )
-    return (
-        "<code>instructions_sha256</code> differs. Recorded dataset ids differ "
-        f"({listed}) and the other frozen inputs match, so the prompts differ only by "
-        "that id and the runs are comparable."
-    )
+    return " ".join(_pair_explanation(left, right) for left, right in pairs)
 
 
 def _receipt_notes(receipt: Receipt) -> list[str]:
@@ -2551,7 +2563,9 @@ def _fail_take(receipts: list[Receipt], cases: dict[str, Case]) -> str:
             _mode_phrase(key, counts[key]) for key, _label, _colour in FAILURE_MODES if counts[key]
         )
         verb = "row is" if total == 1 else "rows are"
-        sentences.append(f"{esc(receipt.label)}: {total} failed {verb} {listed}.")
+        sentences.append(
+            f"{esc(receipt.label)}: {total} failed {verb} {listed}, out of {receipt.n} requests."
+        )
     if any_fail and all_cautious:
         sentences.append("Every failed row is a refusal, in the cautious direction.")
     return " ".join(sentences)
@@ -2567,7 +2581,8 @@ def _sensitivity_copy(extra: list[Receipt], headline: list[Receipt]) -> tuple[st
             f"{receipt.label} asked each question {_times(receipt.repeats)} ({receipt.n} requests)."
             for receipt in extra
         )
-        + " A sign test needs equal repeats and the same case ids, so these runs are omitted."
+        + " They are left out of the headline sign test because their repeat count "
+        "differs from that headline."
     )
     return intro, "".join(scorecard(receipt) for receipt in extra)
 
@@ -2600,7 +2615,7 @@ def build_page(
         raise ValueError("No live-eval receipts matched reports/live-eval-receipt-*.json")
     if not cases:
         raise ValueError("The case file has no cases")
-    receipts = load_receipts(list(paths))
+    receipts = load_receipts(sorted(paths, key=_receipt_sort_key))
     integrity = verify(receipts, cases)
     blocked = any((not ok) and "case ids" in label for label, ok, _ in integrity.checks)
     if blocked or (strict and not integrity.all_ok):

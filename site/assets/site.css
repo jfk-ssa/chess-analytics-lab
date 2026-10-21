@@ -1718,8 +1718,7 @@ figure .full-size {
     padding: 0;
   }
   .live-eval .ev-card,
-  .live-eval .ev-callout,
-  .live-eval .ev-figure {
+  .live-eval .ev-callout {
     break-inside: avoid;
   }
   .live-eval .scroll,

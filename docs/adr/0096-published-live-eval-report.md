@@ -53,12 +53,14 @@ dataset id. The prompt embeds `Dataset: {dataset_id}`. That id comes
 from `implementation_hash` over `src/**/*.py`, `src/**/*.sql`, and
 `contracts/*.json`. Adding `public_extract.py` in #42 changed the hash.
 Those two runs share the case set, the fixture, the rubric, and the
-frozen planner files, so they are comparable. The page says that only
-for that known hash pair, or when every receipt records a differing
-`dataset_id` and the other frozen inputs still match. Any other hash
-difference is reported as unrecorded, and those runs are not called
-comparable. A later receipt should record `dataset_id` and
-`implementation_sha256`.
+frozen planner files, so that pair is comparable. The page judges each
+pair on its own. The known-hash explanation applies only when the two
+hashes are exactly that pair and neither receipt records `dataset_id`.
+A recorded `dataset_id` explains a pair only when both receipts record
+one and the hashes correspond one to one with those ids. An extra
+receipt does not withdraw an explained pair, and it does not make an
+unexplained pair comparable. A later receipt should record `dataset_id`
+and `implementation_sha256`.
 
 Runs with a different repeat count are not sign-tested against the
 headline cohort and are not described as the same number of requests.
