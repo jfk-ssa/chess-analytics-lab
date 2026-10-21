@@ -6,7 +6,7 @@ under 10 games are dropped, and player or game identifiers are not written.
 The period window is the min and max ``utc_date`` of standard, non-bot games.
 A ``fact_game`` warehouse still builds the analytical grains, including
 clock cells when ``fact_move`` has them. The committed cube was rebuilt
-with the command below: 580,528 bytes, 34,798 rows, and 1,009,445
+with the command below: 569,634 bytes, 34,084 rows, and 1,009,445
 ``game_cell`` games after the 10-game floor. The file stays under 10 MB
 or the write fails.
 

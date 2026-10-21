@@ -136,7 +136,7 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
         "45.7%",
         "442,862 / 968,874 · White",
         "9.3%",
-        "2,132 / 22,994",
+        "2,128 / 22,978",
         "+0.1",
         "72.8",
         "warehouse cells of at least 10 games",

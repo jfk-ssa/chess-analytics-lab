@@ -246,11 +246,11 @@ def test_drill_climbs_from_position_to_family_and_clock() -> None:
 
 def test_committed_cube_matches_the_warehouse_and_published_totals() -> None:
     path = cube_path(ROOT)
-    assert path.stat().st_size == 580_528
+    assert path.stat().st_size == 569_634
     assert path.stat().st_size < SIZE_BUDGET_BYTES
     connection = connect(path)
     counted = connection.execute('select count(*) from "cube"').fetchone()
-    assert counted is not None and int(counted[0]) == 34_798
+    assert counted is not None and int(counted[0]) == 34_084
     covered = connection.execute(
         'select coalesce(sum("games"), 0) from "cube" where "grain" = ?',
         ["game_cell"],
@@ -266,7 +266,7 @@ def test_committed_cube_matches_the_warehouse_and_published_totals() -> None:
     assert cards["Loss rate"].detail == "442,862 / 968,874 · White"
     assert cards["Draw rate"].value == "5.1%"
     assert cards["Draw rate"].detail == "49,271 / 968,874 · White"
-    assert cards["Clock error"].detail == "2,132 / 22,994"
+    assert cards["Clock error"].detail == "2,128 / 22,978"
     assert cards["Positions"].value == "256"
     assert cards["Rating diff"].value == "+0.1"
     assert cards["Rating diff"].detail == "White · mean"
@@ -295,6 +295,12 @@ def test_committed_cube_matches_the_warehouse_and_published_totals() -> None:
         ["transposition_route", MIN_CELL],
     ).fetchone()
     assert routes is not None and int(routes[0]) == 0
+    floor = connection.execute(
+        'select count(*) from "cube" where ("games" is not null and "games" < ?) '
+        'or ("moves" is not null and "moves" < ?)',
+        [MIN_CELL, MIN_CELL],
+    ).fetchone()
+    assert floor is not None and int(floor[0]) == 0
     short = connection.execute(
         'select count(*) from "cube" where "grain" = ? and "ply" < 2',
         ["transposition"],
@@ -330,8 +336,8 @@ def test_missing_time_and_opening_do_not_widen_the_population() -> None:
         chosen = Filters(wide.start, wide.end, control)
         cards = {item.label: item for item in kpis(connection, chosen)}
         clock = cards["Clock error"]
-        assert "2,132" not in clock.detail
-        assert "22,994" not in clock.detail
+        assert "2,128" not in clock.detail
+        assert "22,978" not in clock.detail
         assert "August" not in clock.detail
         assert clock.detail == "no cells for this cut · not by time"
         bands, note, tag = clock_display(connection, chosen)
@@ -359,7 +365,7 @@ def test_missing_time_and_opening_do_not_widen_the_population() -> None:
     )
     november = Filters(date(2025, 11, 1), date(2025, 11, 30), "180+2")
     november_clock = {item.label: item for item in kpis(connection, november)}["Clock error"]
-    assert "2,132" not in november_clock.detail
+    assert "2,128" not in november_clock.detail
     assert "August" not in november_clock.detail
 
 

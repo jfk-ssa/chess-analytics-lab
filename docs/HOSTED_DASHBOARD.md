@@ -20,11 +20,11 @@ diff, and game length. Each card shows a value. Games is the
 `result_cell` rows: 49.2% (476,741 / 968,874), 5.1% (49,271 / 968,874),
 and 45.7% (442,862 / 968,874). Rating diff is +0.1 and game length is
 72.8 ply. A color or rating filter counts one side. Clock error stays
-2,132 / 22,994, and positions stay 256. A filter the grain cannot
+2,128 / 22,978, and positions stay 256. A filter the grain cannot
 split is named on the card instead of leaving the value blank. A filter
 on a column the grain stores, which matches nothing, says `no cells for
 this cut` and does not widen the population. Clock error stays
-2,132 / 22,994 when time and rating are All. A time control the August
+2,128 / 22,978 when time and rating are All. A time control the August
 slices do not contain, such as `180+2` or `-`, shows no slices and is
 not labeled August. Period
 bars stay the published months (1,042,346 training games).
@@ -103,7 +103,7 @@ uv run --locked --offline --no-editable --extra dashboard \
 ```
 
 The positions report is not on the tip. The script does not download it.
-The committed cube is 580,528 bytes and 34,798 rows. `game_cell` covers
+The committed cube is 569,634 bytes and 34,084 rows. `game_cell` covers
 1,009,445 games.
 
 The openings warehouse was appended with this command, from the

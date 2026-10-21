@@ -27,13 +27,14 @@ download. The hosted page queries that file with DuckDB 1.5.6 and does
 not open a warehouse. The JSON extract stays. Live eval still reads it.
 `src/chess_analytics/analyst/` is unchanged.
 
-The measured file is 580,528 bytes and 34,798 rows, under the 10 MB
+The measured file is 569,634 bytes and 34,084 rows, under the 10 MB
 budget. Every row uses one column set. The grain column is one of
-`corpus_month` (10), `opening_family` (275), `opening_line` (1,416),
-`opening_position` (508), `opening_continuation` (2,410),
-`august_family` (138), `color_score` (4), `august_draw` (1),
-`clock_slice` (275), `transposition` (422), `transposition_route`
-(1,164), `game_cell` (5,867), and `result_cell` (22,308).
+`corpus_month` (10), `opening_family` (258), `opening_line` (1,250),
+`opening_position` (508), `opening_continuation` (1,939),
+`august_family` (123), `color_score` (4), `august_draw` (1),
+`clock_slice` (230), `transposition` (422), `transposition_route`
+(1,164), `game_cell` (5,867), and `result_cell` (22,308). Every stored
+`games` or `moves` value is at least 10.
 `game_cell` sums to 1,009,445 games after the 10-game floor, from the
 1,042,346-game `opening_game` selection. `result_cell` sums to
 1,937,960 because each game is stored once per color. `rating_diff`
@@ -79,7 +80,7 @@ opening, clock, rating, and color:
   games-weighted means on those cells (+0.1 and 72.8 ply on the full
   range). The published `color_score` rows stay in the file. The page
   uses `result_cell` when that grain is present.
-- Clock error stays the August published figure, 2,132 / 22,994,
+- Clock error stays the August published figure, 2,128 / 22,978,
   when no time control or rating is selected. Published positions stay
   256 for the rated-public span. August draw rate and clock slices
   remain the August prefix. When the date range does not contain that
@@ -145,9 +146,10 @@ not added.
 the published builders, the same floor `transposition_route` already
 uses. A share bar uses the sum of the kept routes. The headline count
 stays the position total and is labeled that way when the two differ.
-The committed parquet is still the file rebuilt at 580,528 bytes. The
-floor and the period-bounds filter land on the next rebuild. Run the
-published builder first, because it replaces the file, then the
+The committed parquet is the rebuild at 569,634 bytes and 34,084 rows.
+The 10-game floor and the period-bounds filter are in that file.
+`game_cell` still covers 1,009,445 games. Run the published builder
+first on a later rebuild, because it replaces the file, then the
 warehouse command so `game_cell` comes back:
 
 ```sh
