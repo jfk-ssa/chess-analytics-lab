@@ -42,6 +42,41 @@ after the merge. Both settings are already enabled.
 
 Name branches `type/short-topic`, for example `docs/commit-conventions`.
 
+## Offline integrity
+
+`.github/workflows/offline.yml` runs on every pull request, on pushes to
+`main`, on `workflow_dispatch`, and on `merge_group`. The jobs `offline` and
+`portfolio` always report a conclusion. The workflow has no `paths` or
+`paths-ignore` filter, because a skipped required check stays pending.
+
+A `changes` job reads the pull request diff and
+`scripts/ci_offline_changes.py` chooses steps. That script is the filter
+config. Pushes to `main`, manual runs, merge-group runs, and a schedule, if
+one is added later, run every step. A pull request also runs every step when
+the diff cannot be read, a file matches no category, or the diff touches any
+of:
+
+- `.github/**`
+- `pyproject.toml`
+- `uv.lock`
+- `scripts/ci_offline_changes.py`
+- `tests/test_ci_offline_changes.py`
+
+Docs-only, site, and hosted diffs skip the long pytest jobs. Changes under
+`src/chess_analytics/analyst/`, `evals/`, `reports/live-eval-receipt-*`, the
+live-eval fixture, and the public extract still run the checks that guard
+them. The full `pytest` step covers `tests/test_public_extract.py` and
+`tests/test_game_import.py`, so those narrower steps stay off when it runs.
+Other pytest paths stay in the full run; test ownership outside those two
+files is not narrow enough to select.
+
+`python3 scripts/ci_offline_changes.py --audit` checks that every workflow
+step and every tracked path stays mapped. The offline job runs that audit on
+every pull request. Pytest covers the same map. A new tracked path needs a
+category pattern or a `FAIL_OPEN_PATHS` entry. Fail-open paths run the full
+suite. The measured step times and the per-category savings are in
+[ADR 0099](docs/adr/0099-change-aware-offline-integrity.md).
+
 ## Decisions
 
 New decisions go only into [docs/adr](docs/adr/). Add the next number and a row
