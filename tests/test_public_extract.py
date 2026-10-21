@@ -2,6 +2,7 @@
 
 import importlib.util
 import json
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -50,7 +51,10 @@ _REPORTS = (
     "M3-source-manifest.json",
     "M4-figures.json",
     "opening-corpus.json",
+    "opening-positions-checkpoint.json",
+    "opening-positions-dashboard.json",
 )
+_POSITIONS_SHA = "31a395044203532224cbb387475ef0bb790c8e88faac98bc9b2a12f5d500c46e"
 
 
 def _reports_project(tmp_path: Path, project: Path) -> Path:
@@ -60,6 +64,14 @@ def _reports_project(tmp_path: Path, project: Path) -> Path:
     destination.mkdir(parents=True)
     for name in _REPORTS:
         shutil.copy(project / "reports" / name, destination / name)
+    for path in sorted((project / "reports").glob("live-eval-receipt-*.json")):
+        shutil.copy(path, destination / path.name)
+    cases = root / "evals" / "cases"
+    cases.mkdir(parents=True)
+    shutil.copy(
+        project / "evals" / "cases" / "analyst_live_v1.json",
+        cases / "analyst_live_v1.json",
+    )
     return root
 
 
@@ -648,6 +660,167 @@ def test_elite_lineage_names_the_curator(project):
         "Inside the opening corpus, not the August prefix."
     )
     assert "://" not in elite[0]["note"]
+
+
+def test_loader_rejects_extract_version_one(project, tmp_path):
+    payload = json.loads(extract_path(project).read_text())
+    assert payload["extract_version"] == "2"
+    payload["extract_version"] = "1"
+    path = tmp_path / "extract.json"
+    path.write_text(json.dumps(payload))
+    with pytest.raises(ValueError, match="unsupported public extract version"):
+        load_extract(path)
+
+
+def test_opening_color_scores_match_the_published_window(project):
+    extract = load_extract(extract_path(project))
+    cells = table_rows(extract, "opening_color_score")
+    assert len(cells) == 4
+    assert {(row["family"], row["color"]) for row in cells} == {
+        ("French Defense", "white"),
+        ("French Defense", "black"),
+        ("Sicilian Defense", "white"),
+        ("Sicilian Defense", "black"),
+    }
+    figures = json.loads((project / "reports/M4-figures.json").read_text())
+    published = figures["opening"]["families"]
+    for cell in cells:
+        games = cell["games"]
+        assert games >= 100
+        assert cell["low_support"] is False
+        assert cell["rating_min"] == 1400
+        assert cell["rating_max_exclusive"] == 1600
+        assert cell["base_seconds"] == 60
+        assert cell["increment_seconds"] == 0
+        assert cell["score_rate"] == pytest.approx((cell["wins"] + cell["draws"] / 2) / games)
+        if cell["color"] == "white":
+            assert cell["adjusted_score_rate"] is None
+            assert cell["adjusted_interval_low"] is None
+            assert cell["adjusted_interval_high"] is None
+            continue
+        family = published[cell["family"]]
+        low, high = family["adjusted_95pct_cluster_bootstrap_interval"]
+        assert cell["adjusted_score_rate"] == family["adjusted_score_rate"]
+        assert cell["adjusted_interval_low"] == low
+        assert cell["adjusted_interval_high"] == high
+        assert cell["games"] == family["raw"]["eligible_player_games"]
+
+
+def test_low_support_threshold_matches_the_corpus_rule(project):
+    builder = load_script()
+    assert builder.LOW_SUPPORT_PLAYER_GAMES == 100
+    source = (project / "src/chess_analytics/corpus/metrics.py").read_text()
+    assert "total < 100" in source
+
+
+def test_clock_pressure_bands_pool_the_buckets(project):
+    extract = load_extract(extract_path(project))
+    bands = table_rows(extract, "clock_pressure_band")
+    buckets = table_rows(extract, "clock_bucket")
+    assert len(bands) == 52
+    assert len({(row["rating_band"], row["time_control"]) for row in bands}) == 52
+    for field in ("proxy_errors", "evaluable_moves", "eligible_moves"):
+        assert sum(row[field] for row in bands) == sum(row[field] for row in buckets)
+    for row in bands:
+        if row["evaluable_moves"] == 0:
+            assert row["error_proxy_rate"] is None
+        else:
+            assert row["error_proxy_rate"] == pytest.approx(
+                row["proxy_errors"] / row["evaluable_moves"]
+            )
+
+
+def test_transposition_reduction_matches_the_checkpoint(project):
+    extract = load_extract(extract_path(project))
+    scope = table_rows(extract, "transposition_scope")
+    assert len(scope) == 1
+    assert scope[0]["positions_sha256"] == _POSITIONS_SHA
+    assert scope[0]["games"] == 1_042_346
+    assert scope[0]["visits"] == 8_338_768
+    views = table_rows(extract, "transposition_view")
+    lenses = {
+        ("elite_reference", "d4-g3"): 16_647,
+        ("elite_reference", "d4-g3-catalan"): 6_850,
+        ("elite_reference", "d4-g3-kings-indian"): 2_867,
+        ("rated_public", "d4-g3"): 20_745,
+        ("rated_public", "d4-g3-catalan"): 5_429,
+        ("rated_public", "d4-g3-kings-indian"): 1_647,
+    }
+    for key, games in lenses.items():
+        matches = [row for row in views if (row["cohort"], row["view"]) == key]
+        assert len(matches) == 1
+        assert matches[0]["denominator_games"] == games
+    all_views = [row for row in views if row["view"] == "all"]
+    assert sum(row["denominator_games"] for row in all_views) == 1_042_346
+    summary = json.loads((project / "reports/opening-positions-dashboard.json").read_text())
+    assert summary["source_sha256"] == _POSITIONS_SHA
+    assert len(table_rows(extract, "transposition_limitation")) == len(summary["limitations"])
+    hex24 = re.compile(r"^[0-9a-f]{24}$")
+    for name in (
+        "transposition_view",
+        "transposition_compression",
+        "transposition_coverage",
+        "transposition_scope",
+        "transposition_limitation",
+    ):
+        for row in table_rows(extract, name):
+            for value in row.values():
+                if isinstance(value, str):
+                    assert hex24.fullmatch(value) is None
+
+
+def test_dashboard_reduction_matches_the_pinned_blob(project):
+    probe = subprocess.run(
+        ["git", "cat-file", "-e", f"{_POSITIONS_SHA}^{{blob}}"],
+        cwd=project,
+        capture_output=True,
+        check=False,
+    )
+    if probe.returncode != 0:
+        pytest.skip("opening-positions blob is not in this checkout")
+    raw = subprocess.check_output(["git", "cat-file", "-p", _POSITIONS_SHA], cwd=project)
+    reduced = load_script().reduce_opening_positions(json.loads(raw))
+    committed = json.loads((project / "reports/opening-positions-dashboard.json").read_text())
+    for key in ("compression", "coverage", "views", "limitations", "plan_min_ply", "plan_max_ply"):
+        assert reduced[key] == committed[key]
+
+
+def test_live_eval_rows_match_the_committed_receipts(project):
+    extract = load_extract(extract_path(project))
+    runs = {row["model"]: row for row in table_rows(extract, "live_eval_run")}
+    assert set(runs) == {"gpt-6-luna", "gpt-6-sol"}
+    receipts = sorted((project / "reports").glob("live-eval-receipt-*.json"))
+    assert len(receipts) == 2
+    for path in receipts:
+        receipt = json.loads(path.read_text())
+        row = runs[receipt["model"]]
+        assert row["effort"] == receipt["reasoning_effort"]
+        assert row["passed"] == receipt["headline_passed"]
+        assert row["trials"] == receipt["planned_requests"]
+        assert row["pass_rate"] == receipt["headline_pass_rate"]
+        assert row["hard_fail"] is receipt["hard_fail"]
+        assert row["repeats"] == receipt["repeats"]
+        assert row["headline"] is True
+        assert row["wilson_low"] == receipt["stats"]["wilson"]["lower"]
+        assert row["wilson_high"] == receipt["stats"]["wilson"]["upper"]
+        assert row["known_gross_cost_usd"] == receipt["known_gross_cost_usd"]
+        assert row["source_report"] == path.name
+    assert runs["gpt-6-sol"]["wilson_low"] > runs["gpt-6-luna"]["wilson_high"]
+    assert runs["gpt-6-sol"]["hard_fail"] is True
+    assert runs["gpt-6-luna"]["hard_fail"] is False
+    assert runs["gpt-6-sol"]["passed"] == 234
+    assert runs["gpt-6-luna"]["passed"] == 207
+    cases = table_rows(extract, "live_eval_case")
+    assert len(cases) == 96
+
+    def passed(model: str, case_id: str) -> int:
+        matches = [row for row in cases if row["model"] == model and row["case_id"] == case_id]
+        assert len(matches) == 1
+        return matches[0]["passed"]
+
+    assert passed("gpt-6-sol", "boundary_budget") == 0
+    assert passed("gpt-6-luna", "boundary_budget") == 5
+    assert len(table_rows(extract, "live_eval_category")) == 20
 
 
 def test_builder_help_matches_the_readme_mac_command(project, capsys):

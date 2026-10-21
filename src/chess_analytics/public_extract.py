@@ -15,14 +15,24 @@ from pathlib import Path
 
 from chess_analytics.common import hash_json
 
-EXTRACT_VERSION = "1"
+EXTRACT_VERSION = "2"
 EXTRACT_FILENAME = "dashboard_extract.json"
 TABLES = (
     "lineage_stage",
     "opening_family_share",
     "opening_score_cell",
+    "opening_color_score",
     "clock_bucket",
     "clock_stratum",
+    "clock_pressure_band",
+    "transposition_view",
+    "transposition_compression",
+    "transposition_coverage",
+    "transposition_scope",
+    "transposition_limitation",
+    "live_eval_run",
+    "live_eval_category",
+    "live_eval_case",
     "metric_receipt",
 )
 QUERY_ORIGINS = frozenset({"metricflow", "reviewed_sql", "committed_report"})
@@ -74,19 +84,25 @@ _SOURCE_REPORTS = frozenset(
         "M3-source-manifest.json",
         "M4-figures.json",
         "opening-corpus.json",
+        "opening-positions-checkpoint.json",
+        "opening-positions-dashboard.json",
     }
 )
 _METRICS = frozenset(
     {
+        "clock_pressure_by_band",
         "clock_pressure_error_proxy",
         "game_draw_rate",
         "known_opening_games",
+        "live_eval_pass_rate",
         "m3_august_prefix_accepted",
         "opening_adjusted_score",
         "opening_adjusted_score_bootstrap",
+        "opening_color_score",
         "opening_corpus_training_games",
         "opening_player_score",
         "opening_usage",
+        "transposition_visits",
     }
 )
 _SCORE_METRICS = frozenset(
@@ -102,6 +118,27 @@ _PERIOD = re.compile(r"^\d{4}-\d{2}$")
 _TIME_CONTROL = re.compile(r"^\d+\+\d+$")
 _HEX_24 = re.compile(r"^[0-9a-f]{24}$")
 _HEX_64 = re.compile(r"^[0-9a-f]{64}$")
+_CASE_ID = re.compile(r"^[a-z][a-z0-9_]{0,63}$")
+_VIEW_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 '.\-]{0,79}$")
+_LIVE_RECEIPT = re.compile(r"^live-eval-receipt-(?:\d+|[a-z0-9.]+(?:-[a-z0-9.]+)*-r\d+-\d+)\.json$")
+_MODELS = frozenset({"gpt-6-luna", "gpt-6-sol", "grok-4.7"})
+_EFFORTS = frozenset({"none", "low", "medium", "high", "xhigh"})
+_CATEGORIES = frozenset(
+    {
+        "boundary",
+        "clarification",
+        "clock",
+        "clock_compare",
+        "compare_openings",
+        "coverage",
+        "draw_rate",
+        "opening_score",
+        "opening_usage",
+        "unsupported",
+    }
+)
+_SEVERITIES = frozenset({"high", "normal"})
+_COVERAGE_MODES = frozenset({"recurring", "transposing"})
 
 
 def extract_path(project: Path | None = None) -> Path:
@@ -264,6 +301,10 @@ def _check_build_record(payload: dict) -> None:
 def _allowed_value(table: str, column: str, row: dict, value: object) -> bool:
     if table == "lineage_stage" and column == "note":
         return isinstance(value, str)
+    if table == "transposition_scope" and column == "scope":
+        return isinstance(value, str) and bool(value.strip())
+    if table == "transposition_limitation" and column == "text":
+        return isinstance(value, str) and bool(value.strip())
     rule = _COLUMN_RULES.get(column)
     if rule is None:
         return not isinstance(value, str)
@@ -342,38 +383,83 @@ def _receipt_id(row: dict, value: object) -> bool:
     return isinstance(subject, str) and value == f"{metric}:{subject}"
 
 
+def _color_subject(value: object) -> bool:
+    if not isinstance(value, str) or " " not in value:
+        return False
+    family, color = value.rsplit(" ", 1)
+    return color in _COLORS and _family_text(family)
+
+
+def _eval_subject(value: object) -> bool:
+    if not isinstance(value, str) or " " not in value:
+        return False
+    model, effort = value.rsplit(" ", 1)
+    return model in _MODELS and effort in _EFFORTS
+
+
 def _subject(row: dict, value: object) -> bool:
     metric = row.get("metric")
     if metric in _SCORE_METRICS:
         return isinstance(value, str) and _family_text(value)
+    if metric == "opening_color_score":
+        return _color_subject(value)
+    if metric == "live_eval_pass_rate":
+        return _eval_subject(value)
     if metric == "clock_pressure_error_proxy":
         return isinstance(value, str) and value in _BUCKETS
     return value is None
 
 
+def _source_report(_row: dict, value: object) -> bool:
+    return isinstance(value, str) and (
+        value in _SOURCE_REPORTS or _LIVE_RECEIPT.fullmatch(value) is not None
+    )
+
+
+def _optional_source(_row: dict, value: object) -> bool:
+    return value is None or _source_report(_row, value)
+
+
+def _view_name(_row: dict, value: object) -> bool:
+    return isinstance(value, str) and _VIEW_NAME.fullmatch(value) is not None
+
+
+def _case_id(_row: dict, value: object) -> bool:
+    return isinstance(value, str) and _CASE_ID.fullmatch(value) is not None
+
+
 _COLUMN_RULES = {
     "analytical_id": _hex(_HEX_24, optional=False),
     "bucket": _one_of(_BUCKETS),
+    "case_id": _case_id,
+    "category": _one_of(_CATEGORIES),
     "cohort": _optional_one_of(_COHORTS),
     "color": _one_of(_COLORS),
+    "effort": _one_of(_EFFORTS),
     "family": _family,
+    "interval_source_report": _optional_source,
     "lineage": _one_of(_LINEAGES),
     "mart_id": _hex(_HEX_24, optional=True),
     "metric": _one_of(_METRICS),
+    "mode": _one_of(_COVERAGE_MODES),
+    "model": _one_of(_MODELS),
     "model_sha256": _hex(_HEX_64, optional=True),
     "period": _period,
     "phase": _one_of(_PHASES),
     "population": _one_of(_POPULATIONS),
+    "positions_sha256": _hex(_HEX_64, optional=False),
     "query_origin": _one_of(QUERY_ORIGINS),
     "rating_band": _one_of(_RATING_BANDS),
     "receipt_id": _receipt_id,
     "rolls_up_to": _rolls_up,
     "semantic_manifest_sha256": _hex(_HEX_64, optional=True),
-    "source_report": _one_of(_SOURCE_REPORTS),
+    "severity": _one_of(_SEVERITIES),
+    "source_report": _source_report,
     "stage_id": _stage_id,
     "subject": _subject,
     "time_control": _time_control,
     "unit": _one_of(frozenset({"games"})),
+    "view": _view_name,
 }
 
 

@@ -73,6 +73,8 @@ def test_hosted_streamlit_pin_matches_the_lock(project):
     ]
     assert requirements == [
         "streamlit==1.65.0",
+        "altair==5.5.0",
+        "narwhals==2.26.0",
         "pandas==2.3.3",
         "protobuf==6.33.6",
     ]
@@ -135,6 +137,7 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
     _assert_build_table_omits_the_figure_id(app, extract)
     _assert_small_shares_are_below_a_tenth(app, extract)
     _assert_alt_text(app)
+    _assert_equal_width_markup(app)
     for table in app.table:
         assert len(table.value.columns) <= 3
 
@@ -230,8 +233,54 @@ def _assert_alt_text(app) -> None:
     for table in app.table:
         assert isinstance(table.proto.alt, str) and table.proto.alt.strip()
     charts = [node for node in app if getattr(node, "type", None) == "vega_lite_chart"]
-    assert len(charts) == 1
-    assert isinstance(charts[0].proto.alt, str) and charts[0].proto.alt.strip()
+    alts = [node.proto.alt for node in charts]
+    assert all(isinstance(item, str) and item.strip() for item in alts)
+    expected = (
+        "Funnel of seen, accepted, and eligible August games.",
+        "Twelve largest opening families by games.",
+        "Opening family game counts for the families selected above.",
+        "Raw score by color and the Black adjusted score with its bootstrap interval.",
+        "Endpoint compression by ply for the elite month and the rated public prefixes.",
+        "Share of games covered by the top N recurring positions.",
+        "Share of distinct positions that can be reached by more than one route.",
+        "Heatmap of the clock-pressure error proxy by rating band and time control.",
+        "Error proxy for the four clock buckets.",
+        "Headline pass rate for each model with its Wilson 95 percent interval.",
+        "Pass rate by case category and model.",
+        "Grid of cases by model, colored by how many repeats passed.",
+    )
+    assert alts == list(expected)
+
+
+def _assert_equal_width_markup(app) -> None:
+    markup = "\n".join(item.value for item in app.markdown)
+    for count in (3, 4):
+        assert f'data-cards="{count}"' in markup
+        assert f"repeat({count},minmax(0,1fr))" in markup
+        assert "min-width:0" in markup
+
+
+def test_equal_width_rows_share_one_track_definition(project):
+    import importlib.util
+
+    path = project / "hosted" / "layout.py"
+    spec = importlib.util.spec_from_file_location("hosted_layout_contract", path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+    for count in range(1, 8):
+        template = module.equal_width_columns(count)
+        assert template == f"repeat({count},minmax(0,1fr))"
+        cards = [(f"Label {index}", f"Value {index}", f"Detail {index}") for index in range(count)]
+        html = module.equal_width_row(cards)
+        assert f'data-cards="{count}"' in html
+        assert f"grid-template-columns:{template}" in html
+        assert html.count('class="cal-card"') == count
+        assert html.count("min-width:0") == count
+    with pytest.raises(ValueError, match="at least one card"):
+        module.equal_width_columns(0)
+    with pytest.raises(ValueError, match="at least one card"):
+        module.equal_width_columns(True)
 
 
 def test_hosted_dashboard_fails_closed_when_the_extract_is_missing(project, tmp_path, monkeypatch):

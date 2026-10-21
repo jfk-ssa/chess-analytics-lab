@@ -4,8 +4,32 @@
 `chess_analytics.public_extract`. It does not open a warehouse, take
 uploads, read secrets, or call the network. Figures and lineage come
 from that file. [ADR 0094](adr/0094-hosted-read-only-dashboard.md)
-records the deployment choice. The local six-view dashboard is a
-different program and still needs the analytical warehouse.
+records the deployment choice, and
+[ADR 0098](adr/0098-hosted-dashboard-analysis.md) records extract
+version 2 and the page that sits on it. The local six-view dashboard
+is a different program and still needs the analytical warehouse.
+
+The page opens with three equal-width cards: opening-corpus training
+games, the August draw rate, and the highest 5-repeat live-eval pass
+rate. Tabs are Overview, Openings, Clock pressure, AI analyst eval,
+and About the data. Filters cover opening family, color, rating band,
+time control, phase, transposition cohort, and eval category. Charts
+are Altair, with the `chesslab` theme (Inter and the page palette).
+Provenance hashes are on About the data.
+
+Card rows use an inline grid,
+`repeat(N, minmax(0, 1fr))`, with `min-width: 0` on each card. `N` is
+the number of cards in that row, so a row of three and a row of four
+are both equal at desktop and phone widths. The shared
+`.streamlit/config.toml` is unchanged.
+
+Version 2 adds `opening_color_score` (French and Sicilian, both colors,
+1400–1599, 60+0, with Black bootstrap intervals), `clock_pressure_band`,
+the transposition reduction (`transposition_view`,
+`transposition_compression`, `transposition_coverage`,
+`transposition_scope`, `transposition_limitation`), and the live-eval
+summary (`live_eval_run`, `live_eval_category`, `live_eval_case`).
+Those receipts are `committed_report`. The file is 246,655 bytes.
 
 ## Run locally
 
@@ -49,9 +73,11 @@ Set the requirements path in the app's advanced settings. There is no
 extract is already in the repository.
 
 Community Cloud installs only the packages named in
-`hosted/requirements.txt`. The file pins `streamlit==1.65.0`. Pandas
-and protobuf are transitive dependencies of that pin. If they stay
-unpinned, pip can install versions that differ from `uv.lock`. The
-requirements file therefore also pins the locked versions,
-`pandas==2.3.3` and `protobuf==6.33.6`. Streamlit 1.65.0 accepts
-`pandas<4,>=1.4.0` and `protobuf<8,>=5.26.1`, so those pins install.
+`hosted/requirements.txt`. The file pins `streamlit==1.65.0`. Pandas,
+protobuf, Altair, and narwhals are transitive dependencies of that pin.
+If they stay unpinned, pip can install versions that differ from
+`uv.lock`. The requirements file therefore also pins the locked
+versions, `altair==5.5.0`, `narwhals==2.26.0`, `pandas==2.3.3`, and
+`protobuf==6.33.6`. Streamlit 1.65.0 accepts `pandas<4,>=1.4.0` and
+`protobuf<8,>=5.26.1`, so those pins install. Narwhals 2.26.0 has no
+dependencies of its own.

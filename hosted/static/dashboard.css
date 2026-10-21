@@ -1,0 +1,11 @@
+/* Hosted dashboard. Inter is the theme font; these rules only tune the cards. */
+
+.cal-equal {
+  font-family: Inter, sans-serif;
+}
+
+.cal-k,
+.cal-v,
+.cal-d {
+  font-family: Inter, sans-serif;
+}
