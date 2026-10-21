@@ -212,7 +212,11 @@ the job summary carry `repeats: 1`. Their pass rates are not 5-repeat
 headline rates and are not compared with Luna, Sol, or the low 5-repeat
 rate. The published page keeps one label per effort and places those
 1-repeat runs in the sensitivity section. The per-run cap is $10. See
-[ADR 0095](adr/0095-grok-4-7-live-eval.md).
+[ADR 0095](adr/0095-grok-4-7-live-eval.md). The first low x5 dispatch
+stopped on the first request with HTTP 400 and no scored row. The
+receipt text was `unavailable` because the error body was not an
+OpenAI object. That failure is retained in
+[ADR 0097](adr/0097-grok-http-error-detail.md). It is not a pass rate.
 
 For offline replay, first run `chesslab demo --scope all`, then use the command
 in [DEMO.md](DEMO.md). Historical fixture harness checks are available with

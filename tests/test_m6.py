@@ -26,19 +26,77 @@ from chess_analytics.analyst.provider import (
 PROJECT = Path(__file__).resolve().parents[1]
 
 
-def test_provider_http_error_records_bounded_reason_without_key(monkeypatch):
-    body = io.BytesIO(b'{"error":{"type":"invalid_request_error","message":"temporary issue"}}')
-
+def _fail_http(monkeypatch, body: bytes, url: str = "https://api.x.ai/v1/responses") -> None:
     def fail(*_args, **_kwargs):
-        raise urllib.error.HTTPError(
-            "https://api.openai.com/v1/responses", 400, "Bad Request", {}, body
-        )
+        raise urllib.error.HTTPError(url, 400, "Bad Request", {}, io.BytesIO(body))
 
     monkeypatch.setattr("chess_analytics.analyst.provider.urllib.request.urlopen", fail)
+
+
+def test_provider_http_error_records_bounded_reason_without_key(monkeypatch):
+    _fail_http(
+        monkeypatch,
+        b'{"error":{"type":"invalid_request_error","message":"temporary issue"}}',
+        "https://api.openai.com/v1/responses",
+    )
     with pytest.raises(
         RuntimeError, match="provider HTTP 400: invalid_request_error: temporary issue"
     ):
         _default_transport(b'{"model":"gpt-6-luna"}', "test-personal-key")
+
+
+def test_xai_string_error_keeps_the_code_and_message(monkeypatch):
+    _fail_http(
+        monkeypatch,
+        b'{"code":"invalid-argument","error":"schema was rejected"}',
+    )
+    with pytest.raises(
+        RuntimeError, match="provider HTTP 400: invalid-argument: schema was rejected"
+    ):
+        _default_transport(b'{"model":"grok-4.7"}', "test-personal-key")
+
+
+def test_xai_error_string_without_a_code_is_kept(monkeypatch):
+    _fail_http(monkeypatch, b'{"error":"rejected"}')
+    with pytest.raises(RuntimeError, match=r"provider HTTP 400: rejected$"):
+        _default_transport(b'{"model":"grok-4.7"}', "test-personal-key")
+
+
+def test_top_level_code_and_message_are_kept(monkeypatch):
+    _fail_http(monkeypatch, b'{"code":"bad_request","message":"unknown field"}')
+    with pytest.raises(RuntimeError, match="provider HTTP 400: bad_request: unknown field"):
+        _default_transport(b'{"model":"grok-4.7"}', "test-personal-key")
+
+
+def test_non_json_provider_error_keeps_a_bounded_redacted_snippet(monkeypatch):
+    key = "personal-test-key-0097"
+    monkeypatch.setenv("CHESSLAB_XAI_API_KEY", key)
+    body = (f"not-json Authorization: Bearer {key} " + ("x" * 800)).encode()
+    _fail_http(monkeypatch, body)
+    with pytest.raises(RuntimeError) as caught:
+        _default_transport(b'{"model":"grok-4.7"}', key)
+    message = str(caught.value)
+    detail = message.removeprefix("provider HTTP 400: ")
+    assert message.startswith("provider HTTP 400: ")
+    assert len(detail) == 500
+    assert key not in message
+    assert "Authorization: Bearer [redacted]" in detail
+    assert "unavailable" not in message
+    assert "Bearer " + key not in message
+
+
+def test_openai_error_object_redacts_a_key_and_keeps_its_type(monkeypatch):
+    key = "personal-test-key-0097"
+    monkeypatch.setenv("CHESSLAB_OPENAI_API_KEY", key)
+    body = json.dumps(
+        {"error": {"type": "invalid_request_error", "message": f"saw {key}"}}
+    ).encode()
+    _fail_http(monkeypatch, body, "https://api.openai.com/v1/responses")
+    with pytest.raises(RuntimeError) as caught:
+        _default_transport(b'{"model":"gpt-6-luna"}', key)
+    message = str(caught.value)
+    assert message == "provider HTTP 400: invalid_request_error: saw [redacted]"
+    assert key not in message
 
 
 def _personal_config(tmp_path, cap=1.0):

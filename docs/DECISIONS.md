@@ -101,3 +101,4 @@ short summary of the current checkout, not a log of new decisions.
 | 0093 | 2026-10-21 | [First live-eval receipts](adr/0093-first-live-eval-receipts.md) |
 | 0095 | 2026-10-21 | [grok-4.7 live eval and reasoning-effort sensitivity](adr/0095-grok-4-7-live-eval.md) |
 | 0096 | 2026-10-21 | [Published live-eval report](adr/0096-published-live-eval-report.md) |
+| 0097 | 2026-10-21 | [Keep the grok HTTP error body](adr/0097-grok-http-error-detail.md) |
