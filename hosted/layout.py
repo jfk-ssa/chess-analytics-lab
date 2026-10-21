@@ -18,6 +18,8 @@ from html import escape
 _MOVE_NUMBER = re.compile(r"\d+\.")
 
 _TRACKS = "repeat(auto-fill,minmax(min(100%,256px),1fr))"
+_OTHER_FLOOR = 10
+_OTHER_LABEL = "other orders"
 
 
 def equal_width_columns(count: int) -> str:
@@ -146,32 +148,73 @@ def _route_row(san: str, games: int, total: int, track: str) -> str:
     )
 
 
+def _other_row(games: int, total: int, track: str) -> str:
+    """Muted remainder of kept routes that the card does not list as SAN."""
+    share = _share_percent(games, total)
+    return (
+        f'<div class="cal-route cal-other" style="display:grid;grid-template-columns:{track} '
+        'minmax(0,1fr);column-gap:10px;row-gap:5px;align-items:start;line-height:1.55">'
+        '<div class="cal-n" style="text-align:right;white-space:nowrap;'
+        'font-variant-numeric:tabular-nums;font-weight:600;color:#5c726b">'
+        f"{escape(f'{int(games):,}')}</div>"
+        '<div class="cal-san" style="min-width:0;color:#5c726b;white-space:nowrap">'
+        f"{escape(_OTHER_LABEL)}</div>"
+        '<div class="cal-share" style="grid-column:1 / -1;height:3px;background:#d5e2da;'
+        'border-radius:999px;overflow:hidden">'
+        f'<div style="width:{share}%;height:100%;background:#5c726b;border-radius:999px"></div>'
+        "</div></div>"
+    )
+
+
+def _visible_routes(item: dict) -> tuple[int, list[tuple[str, int]], int]:
+    """Headline, rows, and the move-order count those rows account for.
+
+    The headline is the sum of the rows, and every share bar uses that sum.
+    ``kept_games`` is the routes the cube kept. A remainder at or above 10
+    games is one ``other orders`` row, and the order count is the cube's kept
+    count. A smaller remainder stays off the card, so the order count is only
+    the routes still shown. Without ``kept_games``, the listed routes are the
+    whole set.
+    """
+    shown = [(str(san), int(games)) for san, games in item["routes"]]
+    shown_games = sum(games for _san, games in shown)
+    hidden = int(item["kept_games"]) - shown_games if "kept_games" in item else 0
+    if hidden >= _OTHER_FLOOR:
+        rows = [*shown, (_OTHER_LABEL, hidden)]
+        return shown_games + hidden, rows, int(item["move_orders"])
+    return shown_games, shown, len(shown)
+
+
+def _route_rows(pairs: list[tuple[str, int]], total: int, track: str) -> str:
+    rows: list[str] = []
+    for san, games in pairs:
+        if san == _OTHER_LABEL:
+            rows.append(_other_row(games, total, track))
+        else:
+            rows.append(_route_row(san, games, total, track))
+    return "".join(rows)
+
+
 def transposition_cards(items: list[dict]) -> str:
     """Equal-width cards for transposing positions.
 
     Each item has ``title``, ``games``, ``move_orders``, and ``routes``.
+    ``kept_games`` is the sum of the routes the cube kept for that position.
     ``title`` is ``After Black's move N · <SAN>``. The depth, the line, and
     the game count are separate rows. The line reserves two lines so sibling
     cards keep the count on the same row. A route is a ``(san, games)`` pair:
     the count column is the widest count, about six tabular characters, and the
-    SAN wraps inside the second column. The share bar uses ``kept_games`` when
-    that sum of kept routes is present. The headline stays the position total
-    and says so when the two differ.
+    SAN wraps inside the second column. The headline and the share bars are
+    the routes on the card. Kept routes past the listed SAN are an other-orders
+    row when they add up to at least 10 games.
     """
     columns = equal_width_columns(len(items))
     cells: list[str] = []
     for item in items:
-        total = int(item["games"])
-        route_pairs = [(str(san), int(games)) for san, games in item["routes"]]
-        if "kept_games" in item:
-            share_total = int(item["kept_games"])
-        else:
-            share_total = sum(games for _san, games in route_pairs)
+        total, route_pairs, orders = _visible_routes(item)
         track = _count_track([games for _san, games in route_pairs])
-        routes = "".join(_route_row(san, games, share_total, track) for san, games in route_pairs)
-        game_label = " position games" if share_total != total else " games"
+        routes = _route_rows(route_pairs, total, track)
         depth, line = _split_title(str(item["title"]))
-        orders = int(item["move_orders"])
         order_label = "1 move order" if orders == 1 else f"{orders} move orders"
         cells.append(
             '<div class="cal-card" style="min-width:0;width:100%;height:100%;'
@@ -194,7 +237,7 @@ def transposition_cards(items: list[dict]) -> str:
             'font-variant-numeric:tabular-nums;white-space:nowrap">'
             f"{escape(f'{total:,}')}</span>"
             '<span class="cal-games" style="font-size:0.78rem;color:#5c726b;'
-            f'white-space:nowrap">{escape(game_label)}</span></div>'
+            'white-space:nowrap"> games</span></div>'
             '<div class="cal-d" style="font-size:0.78rem;line-height:1.3;color:#3d524c;'
             f'white-space:nowrap">{escape(order_label)}</div></div></div>'
             '<div class="cal-routes" style="display:flex;flex-direction:column;gap:12px;'

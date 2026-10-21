@@ -396,6 +396,26 @@ def test_time_control_sort_keeps_a_value_without_an_increment(project):
     assert ordered == ["15+0", "60+0", "180+0", "180+2", "-"]
 
 
+def _assert_rows_reconcile(html: str) -> None:
+    """Visible counts sum to the headline, and each bar is that count's share."""
+    cards = html.split('class="cal-card"')[1:]
+    assert cards
+    for card in cards:
+        headline = int(re.search(r'class="cal-v"[^>]*>([^<]+)', card).group(1).replace(",", ""))
+        counts = [
+            int(value.replace(",", "")) for value in re.findall(r'class="cal-n"[^>]*>([^<]+)', card)
+        ]
+        assert counts
+        assert sum(counts) == headline
+        widths = [
+            float(value)
+            for value in re.findall(r'class="cal-share"[^>]*>\s*<div style="width:([0-9.]+)%', card)
+        ]
+        assert len(widths) == len(counts)
+        for count, width in zip(counts, widths, strict=True):
+            assert width == float(f"{100 * count / headline:.1f}")
+
+
 def test_equal_width_rows_share_one_track_definition(project):
     module = _load_hosted(project, "layout")
     for count in range(1, 9):
@@ -455,11 +475,16 @@ def test_equal_width_rows_share_one_track_definition(project):
     assert escape("After Black's move 2") in board
     assert escape("After Black's move 5") in board
     assert " games" in board and "2 move orders" in board
-    assert "position games" in board
+    assert "1 move order" in board
+    assert "2,253" in board
+    assert "2,530" not in board
+    assert "position games" not in board
     assert "width:58.3%" in board
+    assert "width:41.7%" in board
     assert "width:100.0%" in board
     assert "width:89.1%" not in board
     assert board.index("After Black") < board.index("1,200")
+    _assert_rows_reconcile(board)
     wrapped = module.equal_width_row([("Win rate", "49.2%", "476,741 / 968,874 · White")])
     assert 'white-space:nowrap">476,741 / 968,874<' in wrapped
     assert 'white-space:nowrap">476,741 / 968,874 · White<' not in wrapped
@@ -476,7 +501,106 @@ def test_equal_width_rows_share_one_track_definition(project):
     )
     assert "width:52.2%" in marked
     assert "width:47.8%" in marked
-    assert "position games" in marked
+    assert ">23<" in marked
+    assert "40" not in marked
+    assert "position games" not in marked
+    assert "other orders" not in marked
+    assert "2 move orders" in marked
+    _assert_rows_reconcile(marked)
+
+
+def test_visible_transposition_rows_reconcile(project):
+    """Hidden kept routes of 10 or more are an other-orders row. A smaller remainder is not."""
+    module = _load_hosted(project, "layout")
+    folded = {
+        "title": "After Black's move 4 · 1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6",
+        "games": 9000,
+        "kept_games": 7000,
+        "move_orders": 5,
+        "routes": [
+            ("1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6", 4000),
+            ("1.e4 c5 2.Nf3 Nc6 3.d4 cxd4 4.Nxd4 Nf6", 1800),
+            ("1.e4 c5 2.d4 cxd4 3.Nf3 d6 4.Nxd4 Nf6", 700),
+        ],
+    }
+    headline, rows, orders = module._visible_routes(folded)
+    assert (headline, orders) == (7000, 5)
+    assert rows[-1] == ("other orders", 500)
+    assert sum(games for _san, games in rows) == headline
+    html = module.transposition_cards([folded])
+    assert "7,000" in html
+    assert "9,000" not in html
+    assert "other orders" in html
+    assert 'class="cal-route cal-other"' in html
+    assert "background:#5c726b" in html
+    assert "5 move orders" in html
+    assert "position games" not in html
+    assert "width:57.1%" in html
+    assert "width:25.7%" in html
+    assert "width:10.0%" in html
+    assert "width:7.1%" in html
+    for pair in ("1.e4 c5", "2.Nf3 d6", "3.d4 cxd4", "4.Nxd4 Nf6", "2.Nf3 Nc6"):
+        assert f'white-space:nowrap">{pair}<' in html
+    _assert_rows_reconcile(html)
+    boundary = {
+        "title": "After Black's move 2 · 1.e4 e6 2.d4 d5",
+        "games": 200,
+        "kept_games": 110,
+        "move_orders": 2,
+        "routes": [("1.e4 e6 2.d4 d5", 100)],
+    }
+    assert module._visible_routes(boundary)[0] == 110
+    assert module.transposition_cards([boundary]).count("other orders") == 1
+    small = {
+        "title": "After Black's move 2 · 1.e4 e6 2.d4 d5",
+        "games": 40,
+        "kept_games": 199,
+        "move_orders": 3,
+        "routes": [("1.e4 e6 2.d4 d5", 100), ("1.d4 d5 2.e4 e6", 90)],
+    }
+    headline, rows, orders = module._visible_routes(small)
+    assert (headline, rows[-1], orders) == (190, ("1.d4 d5 2.e4 e6", 90), 2)
+    quiet = module.transposition_cards([small])
+    assert "other orders" not in quiet
+    assert "190" in quiet
+    assert "199" not in quiet
+    assert "3 move orders" not in quiet
+    assert "2 move orders" in quiet
+    _assert_rows_reconcile(quiet)
+
+
+def test_committed_transposition_cards_reconcile(project):
+    """Every published board's visible rows sum to the headline on the card."""
+    from datetime import date
+
+    from chess_analytics.dashboard_cube import Filters, connect, cube_path, transpositions
+
+    layout = _load_hosted(project, "layout")
+    connection = connect(cube_path(project))
+    boards, _caption = transpositions(
+        connection, Filters(date(2000, 1, 1), date(2100, 1, 1)), limit=10_000
+    )
+    assert len(boards) == 217
+    _assert_rows_reconcile(layout.transposition_cards(boards))
+    folded = 0
+    below_position = 0
+    for item in boards:
+        headline, rows, orders = layout._visible_routes(item)
+        shown_games = sum(int(games) for _san, games in item["routes"])
+        hidden = int(item["kept_games"]) - shown_games
+        assert sum(games for _label, games in rows) == headline
+        assert orders == int(item["move_orders"])
+        if int(item["games"]) > headline:
+            below_position += 1
+        if hidden >= 10:
+            folded += 1
+            assert rows[-1] == ("other orders", hidden)
+        else:
+            assert all(label != "other orders" for label, _games in rows)
+    # This cube keeps at most three routes per board. The 192 short headlines
+    # are position totals that still include routes under the floor.
+    assert folded == 0
+    assert below_position == 192
 
 
 def _chart_spec(node) -> dict:

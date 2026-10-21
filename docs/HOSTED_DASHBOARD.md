@@ -40,8 +40,10 @@ cards keep that form. The depth, the line, and the game count are
 separate rows. The line reserves two lines so the counts line up across
 a row. Each move order is a count column sized to the widest count, about six
 tabular characters, and a SAN column, and a
-thin bar shows that order's share of the kept routes. The headline
-count stays the position total when that total is larger. Each move
+thin bar shows that order's share of the routes on the card. Kept
+routes past the top three are a muted other-orders row when they add
+up to at least 10 games, and the headline is the sum of the rows
+shown. A smaller remainder stays off the card. Each move
 number stays with its reply, as in `4.Nxd4 Nf6` or `5.Nc3 a6`. A
 trailing White move such as `3.Bc4` is its own unit. A line breaks only
 between those units. The same grouping is on the line labels and the
