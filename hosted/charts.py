@@ -316,57 +316,98 @@ def _run_colors(models: list[str]) -> list[str]:
     return colors
 
 
+# One category row. Six 8px dots at 11px centers fit inside it, centered on the label.
+_ROW_PX = 72
+_DOT_PITCH_PX = 11
+_DOT_SIZE = 64
+
+
 def category_dumbbell(
     rows: list[dict], *, category_order: list[str], model_order: list[str] | None = None
 ) -> _Drawn:
-    """Pass rate by category. Points are runs; the rule joins one category.
+    """Pass rate by category. Each run is a dot centered on that row's label.
 
-    Tied rates share an x position. Each run gets its own yOffset inside the
-    row so a stack at 100% still shows every series. The row is tall enough
-    for that stack.
+    Tied rates share an x position. Offsets are symmetric around the category
+    index, and the row label is drawn at that same index, so the stack sits on
+    the label. A faint band marks the row. The min-to-max line is not drawn.
     """
     models: list[str] = []
-    grouped: dict[str, list[float]] = {}
     for row in rows:
         if row["model"] not in models:
             models.append(row["model"])
-        grouped.setdefault(row["category"], []).append(row["rate"])
     if model_order:
         rank = {name: index for index, name in enumerate(model_order)}
         models.sort(key=lambda name: rank.get(name, len(rank)))
-    spans = [
-        {"category": category, "low": min(rates), "high": max(rates)}
-        for category, rates in grouped.items()
-    ]
+    cat_index = {name: index for index, name in enumerate(category_order)}
+    model_index = {name: index for index, name in enumerate(models)}
+    count = len(models)
+    step = 0.0 if count <= 1 else _DOT_PITCH_PX / _ROW_PX
+    middle = (count - 1) / 2
+    plotted = []
+    for row in rows:
+        if row["category"] not in cat_index or row["model"] not in model_index:
+            continue
+        shift = (model_index[row["model"]] - middle) * step
+        plotted.append({**row, "y": cat_index[row["category"]] + shift})
     domain = pass_rate_domain([row["rate"] for row in rows])
-    scale = {"domain": domain, "nice": False, "zero": False, "clamp": True}
-    y_axis = alt.Axis(
-        labelAngle=0, labelLimit=0, labelFontSize=11, labelOverlap=False, labelPadding=6
-    )
-    # Six dots, about 8px between centers, stay inside the category row.
-    dodge = alt.Scale(domain=models, range=[-20, 20] if len(models) > 1 else [0, 0])
-    rules = (
-        alt.Chart(alt.Data(values=spans))
-        .mark_rule(color="#8aa399", strokeWidth=2)
+    x_scale = alt.Scale(domain=domain, nice=False, zero=False, clamp=True)
+    n_rows = max(len(category_order), 1)
+    y_domain = [-0.5, n_rows - 0.5]
+    # Smaller category indexes stay at the top, matching category_order.
+    y_scale = alt.Scale(domain=y_domain, nice=False, zero=False, reverse=True)
+    bands = [
+        {"y0": index - 0.5, "y1": index + 0.5, "shade": index % 2}
+        for index in range(len(category_order))
+    ]
+    # A y2 rect suppresses the y axis on every layer, so the category name is a
+    # text mark on the same scale. That keeps the label on the stack's center.
+    labels = (
+        alt.Chart(
+            alt.Data(
+                values=[{"y": index, "label": name} for index, name in enumerate(category_order)]
+            )
+        )
+        .mark_text(
+            align="right",
+            baseline="middle",
+            dx=-8,
+            font="Inter",
+            fontSize=11,
+            color="#203433",
+        )
         .encode(
-            y=alt.Y("category:N", sort=category_order, title=None, axis=y_axis),
-            x=alt.X(
-                "low:Q",
-                title="Pass rate",
-                axis=_pass_axis(domain),
-                scale=alt.Scale(**scale),
-                stack=None,
+            y=alt.Y("y:Q", scale=y_scale, axis=None),
+            text="label:N",
+            x=alt.value(0),
+        )
+    )
+    # No x encoding on the band. A rect that ranges on both x and y drops the
+    # axes for the whole layered chart. The rect spans the plot width.
+    band_layer = (
+        alt.Chart(alt.Data(values=bands))
+        .mark_rect()
+        .encode(
+            y=alt.Y("y0:Q", scale=y_scale, axis=None),
+            y2="y1:Q",
+            color=alt.condition(
+                alt.datum.shade == 0,
+                alt.value("#e7eee9"),
+                alt.value("#f7faf8"),
             ),
-            x2="high:Q",
         )
     )
     points = (
-        alt.Chart(alt.Data(values=rows))
-        .mark_point(filled=True, size=28, stroke="#faf9f5", strokeWidth=1)
+        alt.Chart(alt.Data(values=plotted))
+        .mark_point(filled=True, size=_DOT_SIZE, stroke="#faf9f5", strokeWidth=1)
         .encode(
-            y=alt.Y("category:N", sort=category_order, title=None, axis=y_axis),
-            yOffset=alt.YOffset("model:N", sort=models, scale=dodge, title=None),
-            x=alt.X("rate:Q", scale=alt.Scale(**scale), stack=None),
+            y=alt.Y("y:Q", scale=y_scale, axis=None),
+            x=alt.X(
+                "rate:Q",
+                title="Pass rate",
+                axis=_pass_axis(domain),
+                scale=x_scale,
+                stack=None,
+            ),
             color=alt.Color(
                 "model:N",
                 title=None,
@@ -381,11 +422,10 @@ def category_dumbbell(
             ],
         )
     )
-    return _frame(
-        rules + points,
-        max(360, 72 * len(category_order) + 140),
-        padding=_EDGE_PAD,
-    )
+    # The legend and x-axis title sit inside this height, so the rows keep _ROW_PX.
+    # Vega already insets the plot by the label width; the shared edge pad keeps
+    # that label off the frame.
+    return _frame(band_layer + labels + points, n_rows * _ROW_PX + 156, padding=_EDGE_PAD)
 
 
 def case_grid(rows: list[dict], *, case_order: list[str], model_order: list[str]) -> _Drawn:

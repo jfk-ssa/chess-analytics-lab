@@ -845,18 +845,21 @@ def test_category_dumbbell_is_unstacked_on_a_unit_axis(project):
     for layer in layers:
         mark = layer["mark"]
         marks.append(mark["type"] if isinstance(mark, dict) else mark)
-    assert marks == ["rule", "point"]
+    assert marks == ["rect", "text", "point"]
     blob = json.dumps(spec)
     assert "xOffset" not in blob
-    assert "yOffset" in blob
+    assert "yOffset" not in blob
     assert '"stack": "zero"' not in blob
     domains = [
         item
         for item in _scale_domains(spec)
-        if len(item) == 2 and all(isinstance(value, (int, float)) for value in item)
+        if len(item) == 2
+        and all(isinstance(value, (int, float)) for value in item)
+        and item[1] == 1
+        and item[0] < 0.5
     ]
     assert domains
-    assert all(high == 1 and low == pytest.approx(0.15) for low, high in domains)
+    assert all(low == pytest.approx(0.15) for low, _high in domains)
     for layer in layers:
         encoding = layer["encoding"]
         for channel in ("x", "x2"):
@@ -880,8 +883,18 @@ def test_category_dumbbell_is_unstacked_on_a_unit_axis(project):
         category_order=["coverage"],
         model_order=order,
     )
-    six_spec = json.dumps(six.to_dict())
-    assert "yOffset" in six_spec
+    six_dict = six.to_dict()
+    six_spec = json.dumps(six_dict)
+    assert "yOffset" not in six_spec
+    point_layer = next(
+        layer
+        for layer in six_dict["layer"]
+        if (layer["mark"]["type"] if isinstance(layer["mark"], dict) else layer["mark"]) == "point"
+    )
+    ys = sorted(row["y"] for row in point_layer["data"]["values"])
+    assert len(ys) == 6
+    assert ys[0] == pytest.approx(-ys[-1])
+    assert point_layer["mark"]["size"] == 64
     assert six_spec.count('"#116559"') >= 1
     for swatch in ("#1d4ed8", "#a84a1f", "#7c3aed", "#db2777", "#4d7c0f"):
         assert swatch in six_spec

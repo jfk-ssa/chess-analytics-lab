@@ -37,8 +37,9 @@ The chart block scrolls on its own: at a 390px viewport the page scroll width
 stays 390 and the grid's container is 362px wide around an 821px chart.
 Color is the pass fraction from 0 to 1. The cell prints `passed/repeats`.
 The category legend is one column so a label such as `grok-4.7 · medium ×1`
-stays inside a 362px chart. Tied rates share an x position, so each run is
-offset inside the category row. Luna stays `#116559` and Sol stays `#a84a1f`.
+stays inside a 362px chart. Tied rates share an x position. Each run is
+offset symmetrically around the category label, on a faint row band. The
+min-to-max line is not drawn. Luna stays `#116559` and Sol stays `#a84a1f`.
 The other runs are blue `#1d4ed8`, violet `#7c3aed`, pink `#db2777`, and
 yellow-green `#4d7c0f`.
 

@@ -90,8 +90,8 @@ or interval bound, clamped at 0, and end at 100%. The margin is 10
 percentage points, not 10 percent of the minimum. The case grid colors
 the pass fraction and prints `passed/repeats`. Column labels are
 horizontal, and the grid scrolls inside its block on a narrow viewport.
-The category legend is one column. Tied category rates are offset inside
-the row, and the six run colors stay apart (Luna teal, Sol orange, then
+The category legend is one column. Tied category rates are stacked on
+the row label, and the six run colors stay apart (Luna teal, Sol orange, then
 blue, violet, pink, and yellow-green). Sweep cards print the per-repeat
 cost at three decimals. Low ×5 is not strictly comparable with
 Luna and Sol, because the frozen runner files changed. The 1-repeat runs
