@@ -75,6 +75,33 @@ def test_header_layouts_fit_without_a_horizontal_scroller():
     assert "Analyze my games" not in (ROOT / "scripts/build_docs_site.py").read_text()
 
 
+def test_scorecard_rows_use_equal_tracks():
+    """Model cards share fr tracks. A long token cannot widen one column."""
+    css = (ROOT / "site/assets/site.css").read_text()
+    template = (ROOT / "scripts/templates/live_eval.html.j2").read_text()
+    assert template.count('class="ev-cards"') == 2
+    cards = css[css.index(".ev-cards {") : css.index("}", css.index(".ev-cards {"))]
+    assert "--ev-card-columns: 1;" in cards
+    assert "grid-template-columns: repeat(var(--ev-card-columns), minmax(0, 1fr));" in cards
+    for count in (2, 3, 4):
+        marker = f".ev-cards:has(> .ev-card:nth-child({count})) {{"
+        rule = css[css.index(marker) : css.index("}", css.index(marker))]
+        assert f"--ev-card-columns: {count};" in rule
+    phone_at = [match.start() for match in re.finditer(r"@media \(max-width: 600px\) \{", css)]
+    assert len(phone_at) == 2
+    phone = _media_block(css[phone_at[1] :], r"@media \(max-width: 600px\) \{")
+    assert ".ev-cards," in phone
+    assert "--ev-card-columns: 1;" in phone
+    for count in (2, 3, 4):
+        assert f":has(> .ev-card:nth-child({count}))" in phone
+    card = css[css.index(".ev-card {") : css.index("}", css.index(".ev-card {"))]
+    assert "min-width: 0;" in card
+    stat = css[css.index(".ev-stat {") : css.index("}", css.index(".ev-stat {"))]
+    assert "display: block;" in stat and "width: 100%;" in stat
+    assert "min-width: 0;" in stat and "text-wrap: pretty;" in stat
+    assert ".ev-big small" not in css
+
+
 def test_materialized_positions_match_the_publication_checkpoint():
     checkpoint = json.loads((ROOT / "reports/opening-positions-checkpoint.json").read_text())
     target = ROOT / "reports/opening-positions.json"

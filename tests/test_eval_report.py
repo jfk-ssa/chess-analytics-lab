@@ -77,6 +77,9 @@ def test_committed_page_matches_receipt_numbers_and_every_case():
     )
     assert "Hard fail" in page.scorecards_html
     assert "Gate clear" in page.scorecards_html
+    assert page.scorecards_html.count('class="ev-stat"') == 2
+    assert page.scorecards_html.count('class="ev-rate"') == 2
+    assert "<small" not in page.scorecards_html
     assert all(ok for _, ok in page.checks)
     for case_id in cases:
         assert case_id in page.heat_table_html
@@ -144,6 +147,7 @@ def test_page_builds_for_one_receipt_and_for_an_extra_effort(tmp_path):
     assert "gpt-6-sol" not in luna_only.scorecards_html
     assert luna_only.pairwise_html == ""
     assert "86.25%" in luna_only.scorecards_html
+    assert luna_only.scorecards_html.count('class="ev-stat"') == 1
     sol = json.loads(committed[1].read_text(encoding="utf-8"))
     sol["reasoning_effort"] = "high"
     sol["run_id"] = "effort-high-run"
@@ -152,6 +156,8 @@ def test_page_builds_for_one_receipt_and_for_an_extra_effort(tmp_path):
     three = build_page([*committed, extra], cases, strict=True)
     assert "gpt-6-sol · high" in three.scorecards_html
     assert "gpt-6-luna" in three.scorecards_html
+    assert three.scorecards_html.count('class="ev-stat"') == 3
+    assert "<small" not in three.scorecards_html
     assert three.receipt_files == (
         extra.name,
         committed[0].name,

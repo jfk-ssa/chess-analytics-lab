@@ -1921,9 +1921,10 @@ def scorecard(receipt: Receipt) -> str:
         f"{esc(receipt.label)}</div>"
         '<div class="ev-sub">reasoning effort '
         f"<code>{esc(receipt.effort)}</code> · run <code>{run_id}</code></div>"
-        f'<div class="ev-big">{pct(receipt.rate, 2)}<small>'
-        f"{receipt.passed} of {receipt.n} requests passed · {_repair_phrase(receipt)}"
-        "</small></div>"
+        '<div class="ev-rate">'
+        f'<div class="ev-big">{pct(receipt.rate, 2)}</div>'
+        f'<p class="ev-stat">{receipt.passed} of {receipt.n} requests passed · '
+        f"{_repair_phrase(receipt)}</p></div>"
         f'<div class="ev-ci">95% CI · Wilson {pct(wilson_low)}–{pct(wilson_high)}'
         f" · case bootstrap {pct(boot_low)}–{pct(boot_high)}</div>"
         '<div class="ev-kv">'
