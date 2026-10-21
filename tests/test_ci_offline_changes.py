@@ -168,6 +168,21 @@ def test_hosted_runs_the_extract_budget_test_and_skips_dbt_pytest(changes):
     assert source["pytest"] == "true"
     builder = changes.outputs_for("pull_request", ["scripts/build_public_extract.py"])
     assert builder["pytest"] == "true"
+    notices = changes.outputs_for("pull_request", ["THIRD_PARTY_NOTICES.md"])
+    assert notices["run_all"] == "false"
+    assert notices["categories"] == "hosted"
+    assert notices["pytest_extract"] == "true"
+    assert notices["pytest_portfolio"] == "true"
+    assert notices["pytest"] == "false"
+
+
+def test_metrics_contract_keeps_the_analyst_guards(changes):
+    flags = changes.outputs_for("pull_request", ["docs/METRICS.md"])
+    assert flags["run_all"] == "false"
+    assert flags["categories"] == "analyst,docs"
+    assert flags["analyst_gate"] == "true"
+    assert flags["pytest"] == "true"
+    assert flags["pytest_dbt"] == "true"
 
 
 def test_python_runs_the_full_pytest_and_not_the_narrow_files(changes):
@@ -181,7 +196,8 @@ def test_python_runs_the_full_pytest_and_not_the_narrow_files(changes):
     assert flags["basedpyright"] == "true"
     assert flags["dbt_slim"] == "false"
     assert flags["biome"] == "false"
-    assert _skipped(flags, OFFLINE_STEPS) == 26.0
+    assert flags["setup_node"] == "true"
+    assert _skipped(flags, OFFLINE_STEPS) == 25.0
 
 
 def test_dbt_runs_slim_selection_and_both_pytest_steps(changes):
@@ -193,6 +209,8 @@ def test_dbt_runs_slim_selection_and_both_pytest_steps(changes):
     assert flags["analyst_gate"] == "true"
     assert flags["biome"] == "false"
     assert flags["pytest_mcp"] == "false"
+    assert flags["setup_node"] == "true"
+    assert _skipped(flags, OFFLINE_STEPS) == 20.0
     lineage = changes.outputs_for("pull_request", ["docs/DBT_LINEAGE.md"])
     assert lineage["semantic"] == "true"
     assert lineage["pytest_dbt"] == "true"
@@ -214,7 +232,8 @@ def test_analyst_evals_and_receipts_keep_their_guards(changes):
         assert flags["pytest_dbt"] == "true", path
         assert flags["pytest_portfolio"] == "true", path
     pure = changes.outputs_for("pull_request", ["evals/baselines/analyst_gate_v1.json"])
-    assert _skipped(pure, OFFLINE_STEPS) == 35.0
+    assert pure["setup_node"] == "true"
+    assert _skipped(pure, OFFLINE_STEPS) == 34.0
 
 
 def test_force_all_and_unknown_paths_run_every_historical_step(changes):
@@ -236,11 +255,28 @@ def test_force_all_and_unknown_paths_run_every_historical_step(changes):
     assert mixed["pytest_dbt"] == "true"
 
 
-def test_an_empty_diff_does_not_invent_work(changes):
-    flags = changes.outputs_for("pull_request", [])
-    assert flags["run_all"] == "false"
-    assert flags["categories"] == ""
-    assert _skipped(flags) == sum(MEDIAN_SECONDS.values())
+def test_an_empty_diff_fails_open(changes, tmp_path):
+    with pytest.raises(ValueError, match="missing"):
+        changes.outputs_for("pull_request", [])
+    flags = changes.emit_outputs("pull_request", [])
+    assert flags["run_all"] == "true"
+    assert flags["categories"] == "all"
+    assert _skipped(flags) == 0.0
+    listing = tmp_path / "diff.txt"
+    listing.write_text("", encoding="utf-8")
+    output = tmp_path / "github.txt"
+    code = changes.main(
+        [
+            "--event",
+            "pull_request",
+            "--name-status",
+            str(listing),
+            "--github-output",
+            str(output),
+        ]
+    )
+    assert code == 0
+    assert "run_all=true\n" in output.read_text(encoding="utf-8")
 
 
 def test_detection_errors_select_the_full_suite(changes, tmp_path):

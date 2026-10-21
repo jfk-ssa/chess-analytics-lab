@@ -6,10 +6,11 @@ decides which of their steps run. A pull request is the only selective event.
 Every other event, including push, merge_group, workflow_dispatch, and
 schedule, selects every step.
 
-Fail safe: a path that matches no category, a change to the workflow, the
-lockfile, this script, or its test, and any detection error all select every
-step. ``pytest`` covers the narrower pytest steps, so those stay off when the
-full file set already runs.
+Fail safe: an empty diff, a path that matches no category, a change to the
+workflow, the lockfile, this script, or its test, and any detection error all
+select every step. ``pytest`` covers the narrower pytest steps, so those stay
+off when the full file set already runs. The full pytest step shells out to
+Node, so Node setup runs with it.
 
 The categories are docs, site, hosted, python, dbt, and analyst. ``docs``
 selects no extra step. Run ``python3 scripts/ci_offline_changes.py --audit``
@@ -66,7 +67,11 @@ class Step:
 
 
 RULES = (
-    Rule("docs", ("docs/**", "*.md", "LICENSE", "auxiliary-examples/**")),
+    Rule(
+        "docs",
+        ("docs/**", "*.md", "LICENSE", "auxiliary-examples/**"),
+        ("THIRD_PARTY_NOTICES.md",),
+    ),
     Rule(
         "site",
         (
@@ -78,7 +83,16 @@ RULES = (
             "scripts/check_game_import.mjs",
         ),
     ),
-    Rule("hosted", ("hosted/**", "data/public/**", "data/README.md", ".streamlit/**")),
+    Rule(
+        "hosted",
+        (
+            "hosted/**",
+            "data/public/**",
+            "data/README.md",
+            ".streamlit/**",
+            "THIRD_PARTY_NOTICES.md",
+        ),
+    ),
     Rule(
         "python",
         (
@@ -105,6 +119,7 @@ RULES = (
             "reports/live-eval-receipt-*",
             "tests/fixtures/live_eval_100.pgn",
             "tests/fixtures/live_eval_100_expected.json",
+            "docs/METRICS.md",
         ),
     ),
 )
@@ -329,6 +344,7 @@ SUPPORT = (
             "node_check_import",
             "node_parity_authored",
             "node_parity_zero",
+            "pytest",
             "pytest_game_import",
         ),
         uses=_SETUP_NODE,
@@ -415,6 +431,7 @@ SUPPRESS_WHEN = {"pytest_extract": "pytest", "pytest_game_import": "pytest"}
 
 ORDER = (
     ("offline", "setup_node", "biome"),
+    ("offline", "setup_node", "pytest"),
     ("offline", "sync", "ruff"),
     ("offline", "sync", "pytest"),
     ("offline", "sync", "pytest_extract"),
@@ -539,12 +556,13 @@ def _as_outputs(run_all: bool, categories: set[str], flags: dict[str, bool]) -> 
 def outputs_for(event: str, paths: list[str] | None = None) -> dict[str, str]:
     """Return GitHub output values for one event and an optional path list.
 
-    ``paths is None`` on a pull request means the diff could not be read.
+    ``paths is None`` or an empty list on a pull request means the diff is
+    missing. Both raise so callers fail open onto the full suite.
     """
     if event not in SELECTIVE_EVENTS:
         flags = _check_flags(True, set())
         return _as_outputs(True, set(), flags)
-    if paths is None:
+    if not paths:
         raise ValueError("pull request diff is missing")
     categories: set[str] = set()
     run_all = False

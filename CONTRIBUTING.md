@@ -53,8 +53,8 @@ A `changes` job reads the pull request diff and
 `scripts/ci_offline_changes.py` chooses steps. That script is the filter
 config. Pushes to `main`, manual runs, merge-group runs, and a schedule, if
 one is added later, run every step. A pull request also runs every step when
-the diff cannot be read, a file matches no category, or the diff touches any
-of:
+the diff cannot be read, the diff is empty, a file matches no category, or
+the diff touches any of:
 
 - `.github/**`
 - `pyproject.toml`
@@ -62,11 +62,16 @@ of:
 - `scripts/ci_offline_changes.py`
 - `tests/test_ci_offline_changes.py`
 
-Docs-only, site, and hosted diffs skip the long pytest jobs. Changes under
+Docs-only, site, and hosted diffs skip the long pytest jobs.
+`THIRD_PARTY_NOTICES.md` is hosted, because the hosted dashboard test reads
+the Streamlit pin from it. `docs/METRICS.md` is a frozen analyst preflight
+input, so it also runs the analyst guards. Changes under
 `src/chess_analytics/analyst/`, `evals/`, `reports/live-eval-receipt-*`, the
 live-eval fixture, and the public extract still run the checks that guard
 them. The full `pytest` step covers `tests/test_public_extract.py` and
-`tests/test_game_import.py`, so those narrower steps stay off when it runs.
+`tests/test_game_import.py`, and that import test shells out to Node, so
+Node setup runs with the full pytest step. The narrower pytest commands stay
+off when the full file set already runs.
 Other pytest paths stay in the full run; test ownership outside those two
 files is not narrow enough to select.
 
@@ -75,7 +80,7 @@ step and every tracked path stays mapped. The offline job runs that audit on
 every pull request. Pytest covers the same map. A new tracked path needs a
 category pattern or a `FAIL_OPEN_PATHS` entry. Fail-open paths run the full
 suite. The measured step times and the per-category savings are in
-[ADR 0099](docs/adr/0099-change-aware-offline-integrity.md).
+[ADR 0100](docs/adr/0100-change-aware-offline-integrity.md).
 
 ## Decisions
 

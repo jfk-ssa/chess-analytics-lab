@@ -1,4 +1,4 @@
-# 0099. Change-aware offline integrity
+# 0100. Change-aware offline integrity
 
 - Status: accepted on merge
 - Date: 2026-10-21
@@ -38,8 +38,9 @@ Only a `pull_request` event is selective. `push` to `main`,
 no cron. Adding one later still runs the full suite, because any event other
 than `pull_request` does.
 
-A file that matches no category runs every step. So do changes to
-`.github/**`, `pyproject.toml`, `uv.lock`, this classifier, and
+A file that matches no category runs every step. An empty diff does too,
+the same as a diff that could not be read. So do changes to `.github/**`,
+`pyproject.toml`, `uv.lock`, this classifier, and
 `tests/test_ci_offline_changes.py`. `reports/**` other than
 `reports/live-eval-receipt-*` is an explicit fail-open prefix with the same
 effect. The audit fails when a tracked path is neither classified nor listed
@@ -47,26 +48,30 @@ there.
 
 | Category | Paths | Steps a pull request runs |
 |---|---|---|
-| docs | `docs/**`, root `*.md`, `LICENSE`, `auxiliary-examples/**` | Checkout, the map audit, and the selection record |
+| docs | `docs/**`, root `*.md` except `THIRD_PARTY_NOTICES.md`, `LICENSE`, `auxiliary-examples/**` | Checkout, the map audit, and the selection record |
 | site | `site/**`, `scripts/templates/**`, `biome.json`, `tests/js/**`, import fixtures, `scripts/check_game_import.mjs` | Biome, the Node import checks, and `tests/test_game_import.py` |
-| hosted | `hosted/**`, `data/public/**`, `data/README.md`, `.streamlit/**` | Ruff, Ruff format, basedpyright, `tests/test_public_extract.py`, and the portfolio job |
-| python | `src/**`, Python and shell scripts, `tests/**/*.py`, `config/**`, most of `tests/fixtures/**` | Both pytest steps, Ruff, format, basedpyright, the demo, the MCP protocol test, the tiny transform, semantic validation, and the analyst gate |
-| dbt | `dbt/**`, `contracts/**`, `docs/DBT_LINEAGE.md` | Both pytest steps, the tiny transform, semantic validation, the analyst gate, and slim dbt state selection |
-| analyst | `src/chess_analytics/analyst/**`, `evals/**`, `reports/live-eval-receipt-*`, the live-eval fixture | Both pytest steps, the analyst gate, semantic validation, the tiny transform, and the portfolio job |
+| hosted | `hosted/**`, `data/public/**`, `data/README.md`, `.streamlit/**`, `THIRD_PARTY_NOTICES.md` | Ruff, Ruff format, basedpyright, `tests/test_public_extract.py`, and the portfolio job |
+| python | `src/**`, Python and shell scripts, `tests/**/*.py`, `config/**`, most of `tests/fixtures/**` | Node setup, both pytest steps, Ruff, format, basedpyright, the demo, the MCP protocol test, the tiny transform, semantic validation, and the analyst gate |
+| dbt | `dbt/**`, `contracts/**`, `docs/DBT_LINEAGE.md` | Node setup, both pytest steps, the tiny transform, semantic validation, the analyst gate, and slim dbt state selection |
+| analyst | `src/chess_analytics/analyst/**`, `evals/**`, `reports/live-eval-receipt-*`, the live-eval fixture, `docs/METRICS.md` | Node setup, both pytest steps, the analyst gate, semantic validation, the tiny transform, and the portfolio job |
 
 `src/chess_analytics/analyst/**` also matches python, so an analyst code
 change runs the python set. The full pytest step includes
 `tests/test_public_extract.py` and `tests/test_game_import.py`, so those
-narrower commands stay off when it runs. Other tests stay on the full run.
-Ruff, format, and basedpyright run for python and hosted changes. They are
-not the time.
+narrower commands stay off when it runs. The import test shells out to Node,
+so Node setup runs whenever the full pytest step does. Other tests stay on
+the full run. Ruff, format, and basedpyright run for python and hosted
+changes. They are not the time.
 
 The public-extract size budget is `tests/test_public_extract.py`. Hosted and
-`data/public/**` changes run that file. `src/chess_analytics/public_extract.py`
-and `scripts/build_public_extract.py` are python, so they run the full pytest
-step, which includes the same test. Analyst, eval, and live-eval receipt
-changes run the gate, both pytest steps, and the portfolio job. Those guards
-are not skipped.
+`data/public/**` changes run that file. `THIRD_PARTY_NOTICES.md` is hosted
+too, because the hosted dashboard test reads the Streamlit pin from it.
+`src/chess_analytics/public_extract.py` and
+`scripts/build_public_extract.py` are python, so they run the full pytest
+step, which includes the same test. `docs/METRICS.md` is a frozen preflight
+input, so it is analyst as well as docs and runs the gate and both pytest
+steps. Analyst, eval, and live-eval receipt changes run the gate, both pytest
+steps, and the portfolio job. Those guards are not skipped.
 
 `python3 scripts/ci_offline_changes.py --audit` checks the workflow against
 the catalog, and the offline job runs it even when the other steps are
@@ -95,9 +100,9 @@ those runs, so their duration is not a median here.
 | docs | 516 | 8.6 |
 | site | 498 | 8.3, minus `tests/test_game_import.py` |
 | hosted | 348.5 that are not replaced, plus up to 156.5 from the full pytest step | at least 5.8, up to 8.4 |
-| python | 26 | 0.4 |
-| dbt | 21 | 0.4 |
-| analyst, evals, receipts | 35 | 0.6 |
+| python | 25 | 0.4 |
+| dbt | 20 | 0.3 |
+| analyst, evals, receipts | 34 | 0.6 |
 | workflow, lockfile, unknown path, `main`, manual, merge group, schedule | 0 | 0 |
 
 Hosted keeps Ruff, format, basedpyright, and the portfolio job, and it
@@ -105,7 +110,8 @@ replaces the 156.5-second pytest step with `tests/test_public_extract.py`.
 The 5.8 minutes are the dbt pytest step and the other offline steps that
 hosted does not run. Python and dbt keep both full pytest steps because
 those files do not have a narrower owner. Analyst paths keep the gate and
-both pytest steps on purpose.
+both pytest steps on purpose. Node setup is one historical second, so python,
+dbt, and pure analyst skip one second less than a suite that left Node off.
 
 This pull request changes the workflow and the classifier, so its own run
 selects every step. The unit fixtures are the category proof. No live model

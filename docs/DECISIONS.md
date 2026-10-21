@@ -104,4 +104,4 @@ short summary of the current checkout, not a log of new decisions.
 | 0096 | 2026-10-21 | [Published live-eval report](adr/0096-published-live-eval-report.md) |
 | 0097 | 2026-10-21 | [Keep the grok HTTP error body](adr/0097-grok-http-error-detail.md) |
 | 0098 | 2026-10-21 | [Hosted dashboard analysis](adr/0098-hosted-dashboard-analysis.md) |
-| 0099 | 2026-10-21 | [Change-aware offline integrity](adr/0099-change-aware-offline-integrity.md) |
+| 0100 | 2026-10-21 | [Change-aware offline integrity](adr/0100-change-aware-offline-integrity.md) |
