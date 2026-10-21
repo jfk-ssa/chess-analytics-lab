@@ -27,7 +27,9 @@ raises `AttributeError`, and that handler replaced the body with
 ## Decision
 
 HTTP error text is kept. An OpenAI object still formats as
-`type: message`, with the message cut at 500 characters. A string
+`type: message`, with the message cut at 500 characters. A missing or
+blank `type` uses the error object's `code`, then a top-level `code`,
+before `unknown`. A string
 `error` is kept, prefixed with a top-level string or integer `code`
 when that code is present. A body with top-level `code` and `message`
 and no error object uses those fields. Anything else, including
@@ -35,8 +37,10 @@ non-JSON, uses a snippet of the raw body, or `empty body` when the
 read is empty. The read stays 8192 bytes. The snippet is 500
 characters. Every detail passes through `_redact_known_keys`, and the
 transport key is replaced as well. An `Authorization: Bearer` value in
-the body is replaced. The request header is not copied into the
-exception.
+the body is replaced, including the JSON form `"Authorization": "Bearer ..."`.
+The request header is not copied into the exception. Redaction runs
+before the 500-character cut, so a key that starts at character 490
+does not leave a fragment.
 
 The request body is unchanged. Checked on 2026-10-21, the current docs
 do not mark a field this harness sends as unsupported. The pinned

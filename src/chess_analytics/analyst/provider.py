@@ -38,7 +38,10 @@ from chess_analytics.common import write_json
 ENDPOINT = "https://api.openai.com/v1/responses"
 _ERROR_BODY_LIMIT = 8192
 _ERROR_DETAIL_LIMIT = 500
-_AUTHORIZATION = re.compile(r"(?i)authorization\s*:\s*bearer\s+\S+")
+_AUTHORIZATION = re.compile(
+    r'(?i)(?P<json>"authorization"\s*:\s*"bearer\s+)(?P<json_token>[^"]+)"'
+    r"|(?P<header>authorization\s*:\s*bearer\s+)(?P<header_token>\S+)"
+)
 
 
 def _default_transport(body: bytes, key: str) -> dict:
@@ -68,8 +71,7 @@ def _http_error_detail(raw: bytes, key: str) -> str:
     error = payload.get("error")
     if isinstance(error, dict):
         message = _redact_transport_detail(str(error.get("message", "")), key)
-        label = error.get("type", "unknown")
-        detail = f"{label}: {message[:_ERROR_DETAIL_LIMIT]}"
+        detail = f"{_error_object_label(error, payload)}: {message[:_ERROR_DETAIL_LIMIT]}"
         return _redact_transport_detail(detail, key)
     if isinstance(error, str) and error.strip():
         return _labeled_error_detail(payload.get("code"), error, key)
@@ -79,6 +81,13 @@ def _http_error_detail(raw: bytes, key: str) -> str:
         text = message if isinstance(message, str) else ""
         return _labeled_error_detail(code, text, key)
     return _fallback_error_detail(raw, key)
+
+
+def _error_object_label(error: dict, payload: dict) -> str:
+    label = error.get("type")
+    if isinstance(label, str) and label.strip():
+        return label
+    return _error_label(error.get("code")) or _error_label(payload.get("code")) or "unknown"
 
 
 def _error_label(value: object) -> str:
@@ -110,7 +119,13 @@ def _redact_transport_detail(text: str, key: str) -> str:
     redacted = _redact_known_keys(text)
     if key:
         redacted = redacted.replace(key, "[redacted]")
-    return _AUTHORIZATION.sub("Authorization: Bearer [redacted]", redacted)
+    return _AUTHORIZATION.sub(_redact_authorization, redacted)
+
+
+def _redact_authorization(match: re.Match[str]) -> str:
+    if match.group("json") is not None:
+        return f'{match.group("json")}[redacted]"'
+    return f"{match.group('header')}[redacted]"
 
 
 def _model_in_body(body: bytes) -> str:

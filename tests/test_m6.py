@@ -1,7 +1,6 @@
 """M6 budget and process-boundary acceptance without provider calls."""
 
 import importlib.util
-import io
 import json
 import os
 import subprocess
@@ -26,11 +25,27 @@ from chess_analytics.analyst.provider import (
 PROJECT = Path(__file__).resolve().parents[1]
 
 
-def _fail_http(monkeypatch, body: bytes, url: str = "https://api.x.ai/v1/responses") -> None:
+class _ErrorBody:
+    def __init__(self, payload: bytes) -> None:
+        self.payload = payload
+        self.sizes: list[int | None] = []
+
+    def read(self, size: int = -1) -> bytes:
+        self.sizes.append(size)
+        return self.payload
+
+    def close(self) -> None:
+        pass
+
+
+def _fail_http(monkeypatch, body: bytes, url: str = "https://api.x.ai/v1/responses") -> _ErrorBody:
+    captured = _ErrorBody(body)
+
     def fail(*_args, **_kwargs):
-        raise urllib.error.HTTPError(url, 400, "Bad Request", {}, io.BytesIO(body))
+        raise urllib.error.HTTPError(url, 400, "Bad Request", {}, captured)
 
     monkeypatch.setattr("chess_analytics.analyst.provider.urllib.request.urlopen", fail)
+    return captured
 
 
 def test_provider_http_error_records_bounded_reason_without_key(monkeypatch):
@@ -39,10 +54,9 @@ def test_provider_http_error_records_bounded_reason_without_key(monkeypatch):
         b'{"error":{"type":"invalid_request_error","message":"temporary issue"}}',
         "https://api.openai.com/v1/responses",
     )
-    with pytest.raises(
-        RuntimeError, match="provider HTTP 400: invalid_request_error: temporary issue"
-    ):
+    with pytest.raises(RuntimeError) as caught:
         _default_transport(b'{"model":"gpt-6-luna"}', "test-personal-key")
+    assert str(caught.value) == "provider HTTP 400: invalid_request_error: temporary issue"
 
 
 def test_xai_string_error_keeps_the_code_and_message(monkeypatch):
@@ -97,6 +111,88 @@ def test_openai_error_object_redacts_a_key_and_keeps_its_type(monkeypatch):
     message = str(caught.value)
     assert message == "provider HTTP 400: invalid_request_error: saw [redacted]"
     assert key not in message
+
+
+def test_error_object_without_type_uses_code(monkeypatch):
+    _fail_http(
+        monkeypatch,
+        b'{"code":"ignored","error":{"code":"invalid_request_error","message":"temporary issue"}}',
+        "https://api.openai.com/v1/responses",
+    )
+    with pytest.raises(RuntimeError) as caught:
+        _default_transport(b'{"model":"gpt-6-luna"}', "test-personal-key")
+    assert str(caught.value) == "provider HTTP 400: invalid_request_error: temporary issue"
+
+
+def test_error_object_without_type_or_code_uses_the_top_level_code(monkeypatch):
+    _fail_http(
+        monkeypatch,
+        b'{"code":"bad_request","error":{"message":"temporary issue"}}',
+        "https://api.openai.com/v1/responses",
+    )
+    with pytest.raises(RuntimeError) as caught:
+        _default_transport(b'{"model":"gpt-6-luna"}', "test-personal-key")
+    assert str(caught.value) == "provider HTTP 400: bad_request: temporary issue"
+
+
+def test_empty_provider_body_is_named_and_the_read_is_bounded(monkeypatch):
+    captured = _fail_http(monkeypatch, b"")
+    with pytest.raises(RuntimeError) as caught:
+        _default_transport(b'{"model":"grok-4.7"}', "test-personal-key")
+    assert captured.sizes == [8192]
+    assert str(caught.value) == "provider HTTP 400: empty body"
+
+
+def test_each_env_key_straddling_the_detail_cut_is_redacted(monkeypatch):
+    cases = (
+        (
+            "CHESSLAB_OPENAI_API_KEY",
+            "KstraddleOpenAI0097secret",
+            "transport-openai-0097",
+            "gpt-6-luna",
+            "https://api.openai.com/v1/responses",
+            True,
+        ),
+        (
+            "CHESSLAB_XAI_API_KEY",
+            "KstraddleXai0097secret",
+            "transport-xai-0097",
+            "grok-4.7",
+            "https://api.x.ai/v1/responses",
+            False,
+        ),
+    )
+    for env_name, env_key, transport_key, model, url, openai in cases:
+        monkeypatch.setenv(env_name, env_key)
+        filler = "m" * 490
+        if openai:
+            raw = json.dumps(
+                {"error": {"type": "invalid_request_error", "message": filler + env_key}}
+            ).encode()
+            expected = "provider HTTP 400: invalid_request_error: " + filler + "[redacted]"
+        else:
+            raw = (filler + env_key).encode()
+            expected = "provider HTTP 400: " + filler + "[redacted]"
+        captured = _fail_http(monkeypatch, raw, url)
+        with pytest.raises(RuntimeError) as caught:
+            _default_transport(json.dumps({"model": model}).encode(), transport_key)
+        message = str(caught.value)
+        assert captured.sizes == [8192]
+        assert message == expected
+        assert env_key not in message
+        assert transport_key not in message
+        monkeypatch.delenv(env_name)
+
+
+def test_json_quoted_authorization_bearer_is_redacted(monkeypatch):
+    token = "json-bearer-token-0097"
+    body = json.dumps({"error": f'note "Authorization": "Bearer {token}"'}).encode()
+    _fail_http(monkeypatch, body)
+    with pytest.raises(RuntimeError) as caught:
+        _default_transport(b'{"model":"grok-4.7"}', "transport-key-not-the-token")
+    message = str(caught.value)
+    assert message == 'provider HTTP 400: note "Authorization": "Bearer [redacted]"'
+    assert token not in message
 
 
 def _personal_config(tmp_path, cap=1.0):
