@@ -741,7 +741,9 @@ def test_sweep_cards_and_chart_name_the_effort(project, monkeypatch):
     assert "1f45f2" not in cards[0]
     assert 'white-space:nowrap">14,768 reasoning tokens<' in cards[0]
     assert 'white-space:nowrap">$0.22253 per repeat<' not in cards[0]
-    assert 'white-space:nowrap">&#36;0.22253 per repeat<' in cards[0]
+    assert 'white-space:nowrap">&#36;0.223 per repeat<' in cards[0]
+    assert 'white-space:nowrap">&#36;0.322 per repeat<' in cards[0]
+    assert 'white-space:nowrap">&#36;0.409 per repeat<' in cards[0]
     assert 'white-space:nowrap">32,410 reasoning tokens<' in cards[0]
     assert 'white-space:nowrap">46,763 reasoning tokens<' in cards[0]
     charts = [node for node in app if getattr(node, "type", None) == "vega_lite_chart"]
@@ -846,6 +848,7 @@ def test_category_dumbbell_is_unstacked_on_a_unit_axis(project):
     assert marks == ["rule", "point"]
     blob = json.dumps(spec)
     assert "xOffset" not in blob
+    assert "yOffset" in blob
     assert '"stack": "zero"' not in blob
     domains = [
         item
@@ -861,6 +864,27 @@ def test_category_dumbbell_is_unstacked_on_a_unit_axis(project):
                 continue
             stacked = encoding[channel].get("stack")
             assert stacked in (None, "none")
+    order = [
+        "gpt-6-luna",
+        "grok-4.7 · low ×5",
+        "gpt-6-sol",
+        "grok-4.7 · low ×1",
+        "grok-4.7 · medium ×1",
+        "grok-4.7 · high ×1",
+    ]
+    six = charts.category_dumbbell(
+        [
+            {"category": "coverage", "model": name, "rate": 1.0, "passed_label": "1 / 1"}
+            for name in order
+        ],
+        category_order=["coverage"],
+        model_order=order,
+    )
+    six_spec = json.dumps(six.to_dict())
+    assert "yOffset" in six_spec
+    assert six_spec.count('"#116559"') >= 1
+    for swatch in ("#1d4ed8", "#a84a1f", "#7c3aed", "#db2777", "#4d7c0f"):
+        assert swatch in six_spec
 
 
 def test_chart_scales_follow_the_plotted_data(project):

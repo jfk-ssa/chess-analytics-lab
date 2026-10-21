@@ -16,10 +16,12 @@ _SERIES = ("White, raw", "Black, raw", "Black, adjusted")
 _SERIES_COLORS = ("#3d6b8c", "#203433", "#116559")
 _ORANGE = "#a84a1f"
 _TEAL = "#116559"
-# Luna stays teal and Sol stays orange. Later runs take the remaining swatches
-# in the order the caller lists them.
+# Luna stays teal and Sol stays orange. Later runs take hues that stay apart
+# from those two and from each other, in the order the caller lists them.
 _NAMED_RUN_COLORS = {"gpt-6-luna": _TEAL, "gpt-6-sol": _ORANGE}
-_RUN_COLOR_POOL = ("#3d6b8c", "#6b4c7a", "#203433", "#8a6a2f", "#5c726b")
+_RUN_COLOR_POOL = ("#1d4ed8", "#7c3aed", "#db2777", "#4d7c0f", "#0369a1")
+# Space outside the axis so a full label is not flush with the chart edge.
+_EDGE_PAD = {"left": 16, "right": 20, "top": 8, "bottom": 12}
 
 
 def install_theme() -> None:
@@ -62,8 +64,16 @@ def install_theme() -> None:
     _INSTALLED = True
 
 
-def _frame(chart: _Drawn, height: int, *, width: Any = "container") -> _Drawn:
-    return cast(_Drawn, chart.properties(height=height, width=width))
+def _frame(
+    chart: _Drawn,
+    height: int,
+    *,
+    width: Any = "container",
+    padding: dict[str, int] | None = None,
+) -> _Drawn:
+    if padding is None:
+        return cast(_Drawn, chart.properties(height=height, width=width))
+    return cast(_Drawn, chart.properties(height=height, width=width, padding=padding))
 
 
 def pass_rate_domain(values: list[float]) -> list[float]:
@@ -254,7 +264,14 @@ def wilson(rows: list[dict]) -> _Drawn:
     )
     scale = {"domain": domain, "nice": False, "zero": False, "clamp": True}
     color = alt.Scale(domain=["Gate clear", "Hard fail"], range=[_TEAL, _ORANGE])
-    y_axis = alt.Axis(labelAngle=0, labelLimit=0, labelFontSize=11, labelOverlap=False)
+    y_axis = alt.Axis(
+        labelAngle=0,
+        labelLimit=0,
+        labelFontSize=11,
+        labelOverlap=False,
+        labelPadding=6,
+    )
+    gate_legend = alt.Legend(orient="right", title=None, labelLimit=0, padding=4, offset=8)
     rules = (
         alt.Chart(alt.Data(values=rows))
         .mark_rule(strokeWidth=3)
@@ -267,7 +284,7 @@ def wilson(rows: list[dict]) -> _Drawn:
                 scale=alt.Scale(**scale),
             ),
             x2="wilson_high:Q",
-            color=alt.Color("gate:N", scale=color, title=None),
+            color=alt.Color("gate:N", scale=color, title=None, legend=gate_legend),
         )
     )
     points = (
@@ -276,7 +293,7 @@ def wilson(rows: list[dict]) -> _Drawn:
         .encode(
             y=alt.Y("label:N", sort=order, axis=y_axis),
             x=alt.X("pass_rate:Q", scale=alt.Scale(**scale)),
-            color=alt.Color("gate:N", scale=color, title=None),
+            color=alt.Color("gate:N", scale=color, title=None, legend=None),
             tooltip=[
                 alt.Tooltip("label:N", title="Run"),
                 alt.Tooltip("rate_label:N", title="Pass rate"),
@@ -287,7 +304,7 @@ def wilson(rows: list[dict]) -> _Drawn:
         )
     )
     height = max(160, 32 * len(rows) + 48)
-    return _frame(rules + points, height)
+    return _frame(rules + points, height, padding=_EDGE_PAD)
 
 
 def _run_colors(models: list[str]) -> list[str]:
@@ -302,7 +319,12 @@ def _run_colors(models: list[str]) -> list[str]:
 def category_dumbbell(
     rows: list[dict], *, category_order: list[str], model_order: list[str] | None = None
 ) -> _Drawn:
-    """Pass rate by category. Points are runs; the rule joins one category."""
+    """Pass rate by category. Points are runs; the rule joins one category.
+
+    Tied rates share an x position. Each run gets its own yOffset inside the
+    row so a stack at 100% still shows every series. The row is tall enough
+    for that stack.
+    """
     models: list[str] = []
     grouped: dict[str, list[float]] = {}
     for row in rows:
@@ -318,11 +340,16 @@ def category_dumbbell(
     ]
     domain = pass_rate_domain([row["rate"] for row in rows])
     scale = {"domain": domain, "nice": False, "zero": False, "clamp": True}
+    y_axis = alt.Axis(
+        labelAngle=0, labelLimit=0, labelFontSize=11, labelOverlap=False, labelPadding=6
+    )
+    # Six dots, about 8px between centers, stay inside the category row.
+    dodge = alt.Scale(domain=models, range=[-20, 20] if len(models) > 1 else [0, 0])
     rules = (
         alt.Chart(alt.Data(values=spans))
         .mark_rule(color="#8aa399", strokeWidth=2)
         .encode(
-            y=alt.Y("category:N", sort=category_order, title=None),
+            y=alt.Y("category:N", sort=category_order, title=None, axis=y_axis),
             x=alt.X(
                 "low:Q",
                 title="Pass rate",
@@ -335,9 +362,10 @@ def category_dumbbell(
     )
     points = (
         alt.Chart(alt.Data(values=rows))
-        .mark_point(filled=True, size=110)
+        .mark_point(filled=True, size=28, stroke="#faf9f5", strokeWidth=1)
         .encode(
-            y=alt.Y("category:N", sort=category_order, title=None),
+            y=alt.Y("category:N", sort=category_order, title=None, axis=y_axis),
+            yOffset=alt.YOffset("model:N", sort=models, scale=dodge, title=None),
             x=alt.X("rate:Q", scale=alt.Scale(**scale), stack=None),
             color=alt.Color(
                 "model:N",
@@ -353,7 +381,11 @@ def category_dumbbell(
             ],
         )
     )
-    return _frame(rules + points, max(220, 32 * len(category_order) + 36))
+    return _frame(
+        rules + points,
+        max(360, 72 * len(category_order) + 140),
+        padding=_EDGE_PAD,
+    )
 
 
 def case_grid(rows: list[dict], *, case_order: list[str], model_order: list[str]) -> _Drawn:
@@ -392,7 +424,9 @@ def case_grid(rows: list[dict], *, case_order: list[str], model_order: list[str]
             "case_id:N",
             sort=case_order,
             title=None,
-            axis=alt.Axis(labelLimit=220, labelFontSize=11, labelAngle=0),
+            axis=alt.Axis(
+                labelLimit=0, labelFontSize=11, labelAngle=0, labelOverlap=False, labelPadding=6
+            ),
         ),
     )
     rects = base.mark_rect(stroke="#faf9f5", strokeWidth=1).encode(
@@ -415,7 +449,7 @@ def case_grid(rows: list[dict], *, case_order: list[str], model_order: list[str]
         color=alt.condition(alt.datum.fraction >= 0.5, alt.value("#faf9f5"), alt.value("#203433")),
     )
     # 112px per column leaves a 10px label, two lines, inside the band.
-    return _frame(rects + counts, height, width=alt.Step(112))
+    return _frame(rects + counts, height, width=alt.Step(112), padding=_EDGE_PAD)
 
 
 def compression(rows: list[dict]) -> _Drawn:

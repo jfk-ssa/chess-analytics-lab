@@ -78,6 +78,11 @@ def _usd_trim(value: float, digits: int = 6) -> str:
     return f"${rendered}"
 
 
+def _usd_3(value: float) -> str:
+    """Three decimals on every sweep card. 0.22253 prints as $0.223."""
+    return f"${value:,.3f}"
+
+
 def _literal_currency(text: str) -> str:
     """Keep a currency amount literal. Streamlit treats ``$...$`` as LaTeX."""
     return text.replace("$", r"\$")
@@ -712,7 +717,7 @@ def _sweep_card(row: dict) -> tuple[str, str, str]:
     """Detail breaks only at `` · ``, so a token count is not cut mid-value."""
     gate = "Hard fail" if row["hard_fail"] else "Gate clear"
     noun = "repeat" if row["repeats"] == 1 else "repeats"
-    per = _usd_trim(row["known_gross_cost_usd"] / row["repeats"])
+    per = _usd_3(row["known_gross_cost_usd"] / row["repeats"])
     reasoning = _token_count(row["reasoning_tokens"] / row["repeats"])
     return (
         _run_label(row),

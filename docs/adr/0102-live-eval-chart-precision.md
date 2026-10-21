@@ -37,7 +37,17 @@ The chart block scrolls on its own: at a 390px viewport the page scroll width
 stays 390 and the grid's container is 362px wide around an 821px chart.
 Color is the pass fraction from 0 to 1. The cell prints `passed/repeats`.
 The category legend is one column so a label such as `grok-4.7 · medium ×1`
-stays inside a 362px chart.
+stays inside a 362px chart. Tied rates share an x position, so each run is
+offset inside the category row. Luna stays `#116559` and Sol stays `#a84a1f`.
+The other runs are blue `#1d4ed8`, violet `#7c3aed`, pink `#db2777`, and
+yellow-green `#4d7c0f`.
+
+Pass-rate, category, and case-grid charts keep padding around the axes. A
+label such as `grok-4.7 · medium ×1` or `clock_compare_under_10_2`, and the
+`Gate clear` legend, sit inside the frame.
+
+Sweep cards print the per-repeat cost at three decimals (`$0.223`, `$0.322`,
+`$0.409`). The caption under the chart still quotes the receipt figures.
 
 The 1-repeat case and category rows are not in the extract. The page rebuilds
 them from `live_eval_effort_case`: a case missing from that table passed.
