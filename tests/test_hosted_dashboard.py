@@ -125,16 +125,20 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
     path = extract_path(project)
     digest = hashlib.sha256(path.read_bytes()).hexdigest()
     expected = (
-        f"{draw['numerator']:,} / {draw['denominator']:,}",
         "1,042,346",
-        "3.7%",
+        "1,009,445",
+        "warehouse",
+        "49.2%",
+        "476,741 / 968,874 · White",
+        "5.1%",
+        "49,271 / 968,874 · White",
+        "45.7%",
+        "442,862 / 968,874 · White",
         "9.3%",
         "2,132 / 22,994",
-        "no prior period",
-        "42.7%",
-        "253 / 592 · White",
-        "55.6%",
-        "329 / 592 · White",
+        "+0.1",
+        "72.8",
+        "warehouse cells of at least 10 games",
         "Most common transpositions",
         "Distinct acyclic move orders",
         "rated public",
@@ -229,8 +233,9 @@ def _assert_section_origins(app) -> None:
     clock = _caption(app, "not a game")
     assert clock.startswith("Reviewed SQL.")
     assert "metricflow" not in clock
-    periods = _caption(app, "previous N periods")
+    periods = _caption(app, "one published period")
     assert "Query origin:" not in periods
+    assert "warehouse cells of at least 10 games" in periods
     lineage = _caption(app, "lineages separately")
     assert "Query origin: committed_report" in lineage
     assert "metricflow" not in lineage
@@ -307,7 +312,7 @@ _TRACKS = "repeat(auto-fit,minmax(min(100%,256px),1fr))"
 
 def _assert_equal_width_markup(app) -> None:
     markup = "\n".join(item.value for item in app.markdown)
-    for count in (3, 6):
+    for count in (3, 6, 8):
         assert f'data-cards="{count}"' in markup
     assert _TRACKS in markup
     assert "white-space:nowrap" in markup
@@ -344,9 +349,15 @@ def _scale_domains(spec: dict) -> list:
     return found
 
 
+def test_time_control_sort_keeps_a_value_without_an_increment(project):
+    module = _load_hosted(project, "bi")
+    ordered = sorted(["180+2", "-", "60+0", "15+0", "180+0"], key=module._time_sort_key)
+    assert ordered == ["15+0", "60+0", "180+0", "180+2", "-"]
+
+
 def test_equal_width_rows_share_one_track_definition(project):
     module = _load_hosted(project, "layout")
-    for count in range(1, 8):
+    for count in range(1, 9):
         assert module.equal_width_columns(count) == _TRACKS
         cards = [(f"Label {index}", f"Value {index}", f"Detail {index}") for index in range(count)]
         html = module.equal_width_row(cards)
@@ -656,9 +667,9 @@ def test_color_filter_hides_positions_and_shows_the_french_cell(project, monkeyp
     assert "Move orders are not split by color." in text
     assert "Clock pressure is not split by color or opening." in text
     assert "Period totals are not split by color or opening." in text
-    assert "239" in text
-    assert "47.7%" in text
-    assert "114 / 239" in text
+    assert "63,484" in text
+    assert "46.8%" in text
+    assert "29,728 / 63,484" in text
     assert "Opening lines by games. Select a bar to open the position." in _chart_alts(app)
     assert "Training games by published period." in _chart_alts(app)
     clock_alt = "Clock bands by evaluable moves. Select a bar to list the slices in that band."

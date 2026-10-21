@@ -13,13 +13,16 @@ The sidebar filters are date range, time control, color, rating band,
 and opening family, with the active line and a reset. Those filters
 apply to the KPI strip, openings, transpositions, clock, and periods.
 They do not change the live-eval numbers. The KPI strip is games, win
-rate, draw rate, loss rate, clock error, and published positions. Each
-card shows a value. The games delta uses the previous equal count of
-published months when that window exists. With no color selected, win
-rate and loss rate are the White published cells (French and Sicilian,
-1400–1599, 60+0). The unfiltered draw rate stays 3,669/99,117. A filter
-the published grain cannot split is named on the card instead of
-leaving the value blank.
+rate, draw rate, loss rate, clock error, published positions, rating
+diff, and game length. Each card shows a value. Games is the
+`game_cell` total, 1,009,445 on the full range, with detail
+`warehouse`. With no color selected, win, draw, and loss are the White
+`result_cell` rows: 49.2% (476,741 / 968,874), 5.1% (49,271 / 968,874),
+and 45.7% (442,862 / 968,874). Rating diff is +0.1 and game length is
+72.8 ply. A color or rating filter counts one side. Clock error stays
+2,132 / 22,994, and positions stay 256. A filter the grain cannot
+split is named on the card instead of leaving the value blank. Period
+bars stay the published months (1,042,346 training games).
 
 Openings drill from a family bar to lines, then to one published FEN
 and its continuations. The line chart uses the full SAN, does not stack
@@ -44,7 +47,7 @@ Card rows use an inline grid,
 `repeat(auto-fit, minmax(min(100%, 256px), 1fr))`. The label, value,
 and detail use `white-space: nowrap`. 256px is 16rem at the CSS
 reference pixel. With 256px, a 390px viewport is one column and a
-1280px viewport holds several tracks. The six KPI cards and the six
+1280px viewport holds several tracks. The eight KPI cards and the six
 eval cards share that track. The grok sweep is three cards.
 The shared `.streamlit/config.toml` is unchanged.
 
@@ -89,10 +92,11 @@ uv run --locked --offline --no-editable --extra dashboard \
 ```
 
 The positions report is not on the tip. The script does not download it.
-The committed cube is 99,617 bytes and 6,623 rows.
+The committed cube is 580,528 bytes and 34,798 rows. `game_cell` covers
+1,009,445 games.
 
-To append the 1,042,346-game openings warehouse, from the repository
-root on the machine that has the file, without `--offline`:
+The openings warehouse was appended with this command, from the
+repository root on the machine that has the file, without `--offline`:
 
 ```sh
 uv run --locked --no-editable --extra dashboard \
@@ -107,9 +111,8 @@ the opening family before the first colon). It does not write clock
 cells from that file. Cells under 10 games are dropped. The printed
 line includes the byte size and the `game_cell` game total. The write
 refuses a file over 10 MB. A `fact_game` warehouse uses the same script
-and can still add `result_line` and `clock_cell`. This checkout has no
-warehouse, so that command was not used for the committed cube. The
-page reads those grains when they are present.
+and can still add `result_line` and `clock_cell`. The committed cube
+is the result of that openings command. The page reads those grains.
 
 Check the page without a browser:
 

@@ -11,6 +11,7 @@ from chess_analytics.dashboard_cube import (
     RATING_BANDS,
     Drill,
     Filters,
+    _grain_present,
     _join_or,
     active_filter_text,
     clock_display,
@@ -324,7 +325,12 @@ def _months(charts, connection, filters: Filters) -> None:
     if note:
         st.caption(note)
     else:
-        st.caption("Each bar is one published period. The games delta uses the previous N periods.")
+        text = "Each bar is one published period."
+        if _grain_present(connection, "game_cell"):
+            text += " The Games card counts warehouse cells of at least 10 games."
+        else:
+            text += " The games delta uses the previous N periods."
+        st.caption(text)
 
 
 def _transpositions(layout, connection, filters: Filters) -> None:
@@ -451,14 +457,19 @@ def _selection(event, name: str, field: str) -> str | None:
     return None
 
 
+def _time_sort_key(value: str) -> tuple[int, int, int, str]:
+    """Sort ``base+increment`` numerically. Other labels follow, by text."""
+    base, separator, increment = value.partition("+")
+    if separator and base.isdigit() and increment.isdigit():
+        return (0, int(base), int(increment), "")
+    return (1, 0, 0, value)
+
+
 def _ordered(connection, column: str) -> list[str]:
     values = _values(connection, column)
-
-    def key(value: str) -> tuple[int, int]:
-        base, increment = value.split("+")
-        return int(base), int(increment)
-
-    return sorted(values, key=key)
+    if column == "time_control":
+        return sorted(values, key=_time_sort_key)
+    return sorted(values)
 
 
 def _values(connection, column: str) -> list[str]:

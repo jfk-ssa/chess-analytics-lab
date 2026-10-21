@@ -218,38 +218,52 @@ def test_drill_climbs_from_position_to_family_and_clock() -> None:
         select_line(Drill(), "1.e4", ["fen-a"])
 
 
-def test_committed_cube_matches_the_published_totals() -> None:
+def test_committed_cube_matches_the_warehouse_and_published_totals() -> None:
     path = cube_path(ROOT)
+    assert path.stat().st_size == 580_528
     assert path.stat().st_size < SIZE_BUDGET_BYTES
     connection = connect(path)
+    counted = connection.execute('select count(*) from "cube"').fetchone()
+    assert counted is not None and int(counted[0]) == 34_798
+    covered = connection.execute(
+        'select coalesce(sum("games"), 0) from "cube" where "grain" = ?',
+        ["game_cell"],
+    ).fetchone()
+    assert covered is not None and int(covered[0]) == 1_009_445
     wide = Filters(date(2025, 11, 1), date(2026, 8, 1))
     cards = {item.label: item for item in kpis(connection, wide)}
-    assert cards["Games"].value == "1,042,346"
-    assert cards["Games"].detail == "no prior period"
-    assert cards["Win rate"].value == "42.7%"
-    assert cards["Win rate"].detail == "253 / 592 · White"
-    assert cards["Loss rate"].value == "55.6%"
-    assert cards["Loss rate"].detail == "329 / 592 · White"
-    assert cards["Draw rate"].value == "3.7%"
-    assert cards["Draw rate"].detail == "3,669 / 99,117"
+    assert cards["Games"].value == "1,009,445"
+    assert cards["Games"].detail == "warehouse"
+    assert cards["Win rate"].value == "49.2%"
+    assert cards["Win rate"].detail == "476,741 / 968,874 · White"
+    assert cards["Loss rate"].value == "45.7%"
+    assert cards["Loss rate"].detail == "442,862 / 968,874 · White"
+    assert cards["Draw rate"].value == "5.1%"
+    assert cards["Draw rate"].detail == "49,271 / 968,874 · White"
     assert cards["Clock error"].detail == "2,132 / 22,994"
     assert cards["Positions"].value == "256"
+    assert cards["Rating diff"].value == "+0.1"
+    assert cards["Rating diff"].detail == "White · mean"
+    assert cards["Game length"].value == "72.8"
+    assert cards["Game length"].detail == "mean ply"
     june = Filters(date(2026, 6, 1), date(2026, 8, 1))
-    assert kpis(connection, june)[0] == cards["Games"].__class__(
-        "Games", "266,770", "+500 vs prior"
-    )
+    june_cards = {item.label: item for item in kpis(connection, june)}
+    assert june_cards["Games"].value == "256,031"
+    assert june_cards["Games"].detail == "warehouse"
     french = Filters(wide.start, wide.end, None, "black", None, "French Defense")
-    french_cards = kpis(connection, french)
-    assert french_cards[0].value == "239"
-    assert french_cards[1].detail == "114 / 239"
-    assert french_cards[4].value == "9.3%"
-    assert "not by" in french_cards[4].detail
-    assert french_cards[5].value == "21"
+    french_cards = {item.label: item for item in kpis(connection, french)}
+    assert french_cards["Games"].value == "63,484"
+    assert french_cards["Win rate"].value == "46.8%"
+    assert french_cards["Win rate"].detail == "29,728 / 63,484"
+    assert french_cards["Clock error"].value == "9.3%"
+    assert "not by" in french_cards["Clock error"].detail
+    assert french_cards["Positions"].value == "21"
     november = Filters(date(2025, 11, 1), date(2025, 11, 30))
     november_cards = {item.label: item for item in kpis(connection, november)}
+    assert november_cards["Games"].value == "238,819"
     assert november_cards["Clock error"].value == "9.3%"
-    assert november_cards["Draw rate"].value == "3.7%"
-    assert november_cards["Win rate"].value != "—"
+    assert november_cards["Draw rate"].value == "9.4%"
+    assert november_cards["Win rate"].value == "47.9%"
     routes = connection.execute(
         'select count(*) from "cube" where "grain" = ? and "games" < ?',
         ["transposition_route", MIN_CELL],

@@ -27,14 +27,18 @@ download. The hosted page queries that file with DuckDB 1.5.6 and does
 not open a warehouse. The JSON extract stays. Live eval still reads it.
 `src/chess_analytics/analyst/` is unchanged.
 
-The measured file is 99,617 bytes and 6,623 rows, under the 10 MB
+The measured file is 580,528 bytes and 34,798 rows, under the 10 MB
 budget. Every row uses one column set. The grain column is one of
 `corpus_month` (10), `opening_family` (275), `opening_line` (1,416),
 `opening_position` (508), `opening_continuation` (2,410),
 `august_family` (138), `color_score` (4), `august_draw` (1),
-`clock_slice` (275), `transposition` (422), and `transposition_route`
-(1,164). Two doubles, `rating_diff` and `mean_ply`, are null on these
-published rows. They are filled by the warehouse grains below.
+`clock_slice` (275), `transposition` (422), `transposition_route`
+(1,164), `game_cell` (5,867), and `result_cell` (22,308).
+`game_cell` sums to 1,009,445 games after the 10-game floor, from the
+1,042,346-game `opening_game` selection. `result_cell` sums to
+1,937,960 because each game is stored once per color. `rating_diff`
+and `mean_ply` are filled on the warehouse rows and stay null on the
+published rows.
 
 The natural grain is coarser than a game, a day, or a full cross of
 opening, clock, rating, and color:
@@ -64,14 +68,24 @@ opening, clock, rating, and color:
   from the leading arrival, then that arrival's SAN. Sibling cards use
   that same form. Family and date apply. Color, time control, and
   rating do not, unless a later warehouse build fills those columns.
-- White and black color cells are not added. With no color selected,
-  win rate and loss rate use the White published cells (French and
-  Sicilian, 1,400–1,599, 60+0): 253/592 and 329/592. The unfiltered
-  draw rate stays the August eligible-game figure, 3,669/99,117. The
-  1,400–1,599 cell is the published subset of the 1,200–1,599 band.
-- August draw rate and clock slices are the August prefix. When the
-  date range does not contain that day, the card still shows the
-  figure and says so. They are not split by opening family or color.
+- With no color selected, win rate, draw rate, and loss rate use the
+  White `result_cell` rows so the two sides are not added. On the full
+  range that is 476,741 / 968,874 wins (49.2%), 49,271 / 968,874 draws
+  (5.1%), and 442,862 / 968,874 losses (45.7%). The White denominator
+  is under the `game_cell` total because a color cell under 10 games
+  is dropped. The Games card counts `game_cell` (1,009,445, detail
+  `warehouse`) unless a color or rating filter is set, in which case
+  it counts one side. Rating diff and game length are the
+  games-weighted means on those cells (+0.1 and 72.8 ply on the full
+  range). The published `color_score` rows stay in the file. The page
+  uses `result_cell` when that grain is present.
+- Clock error stays the August published figure, 2,132 / 22,994.
+  Published positions stay 256 for the rated-public span. August draw
+  rate and clock slices remain the August prefix. When the date range
+  does not contain that day, the clock card still shows the figure and
+  says so. They are not split by opening family or color. Period bars
+  stay `corpus_month` (1,042,346 training games). The Games card does
+  not repeat a prior-period delta once `game_cell` is present.
 
 `scripts/build_warehouse_cube.py` aggregates a local `warehouse.duckdb`.
 An analytical warehouse (`fact_game` and `fact_player_game`) still
@@ -87,14 +101,14 @@ family is the text before the first colon, the same split as
 `source_period`. The row window is the min and max `utc_date` of that
 source, so it lines up with `corpus_month` (a rated-public prefix stays
 one day; the elite month stays 2025-11-01 through 2025-11-30). Cells
-under 10 games are dropped, so the summed games can sit slightly under
+under 10 games are dropped, so the summed games sit under
 1,042,346. The script does not download and does not select
-identifiers. This environment has no warehouse, so the committed file
-was not rebuilt from it. The hosted page uses those grains when they
-are present, so month, time control, rating band, color, and opening
-family then change the same cards. With no color selected, a rating
-filter counts the White cells so the two sides are not added. Expected
-size stays under the 10 MB budget; the write fails closed above it.
+identifiers. The committed file was rebuilt from that warehouse on
+the machine that holds the snapshot. The hosted page uses those
+grains, so month, time control, rating band, color, and opening
+family change the same cards. With no color selected, a rating
+filter counts the White cells so the two sides are not added. The
+write fails closed above 10 MB.
 
 Sidebar filters are the date range, time control, color, rating band,
 and opening family. A row is included when its period is fully inside
