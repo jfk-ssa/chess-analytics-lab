@@ -6,6 +6,7 @@ constant in preflight.py. pricing.py does not store that date.
 """
 
 import math
+from decimal import Decimal
 
 GROK_MODEL_ID = "grok-4.7"
 XAI_KEY_ENV = "CHESSLAB_XAI_API_KEY"
@@ -55,6 +56,8 @@ LIVE_EVAL_JOB_TIMEOUT_MINUTES = 150
 # The runner writes the receipt before the job timeout. One in-flight
 # request can still use the 180s socket timeout after this clock trips.
 LIVE_EVAL_WALL_CLOCK_SECONDS = 140 * 60
+# xAI cost_in_usd_ticks. One dollar is 10^10 ticks.
+USD_TICKS = 10_000_000_000
 
 
 def grok_short_rates() -> dict:
@@ -145,14 +148,17 @@ def grok_reservation_usd(body: bytes, config: dict, effort: str) -> tuple[float,
 
 
 def price_grok_usage(config: dict, usage: object) -> tuple[float, str]:
-    """Price one grok-4.7 usage object. Reasoning tokens bill as output.
+    """Price one grok-4.7 usage object without going below the reported bill.
 
-    The documented Responses usage split reports reasoning_tokens outside
-    output_tokens: total_tokens = input + output + reasoning. When total_tokens
-    equals input + output, reasoning is already inside output_tokens and is
-    not added again. A missing total adds reasoning_tokens, which matches
-    that documented split and over-bills if a response folds them in without
-    saying so.
+    Billed output is max(output + reasoning, total - input) unless reasoning
+    is contained in output. Contained means reasoning_tokens is at most
+    output_tokens and total_tokens equals input plus output. The documented
+    32 / 9 / 110 / 151 split is not contained, so reasoning is added. A total
+    larger than input plus output plus reasoning bills that gap. A
+    non-negative cost_in_usd_ticks converts at 10^10 ticks per dollar, and
+    the price is the max of that charge and the token reconstruction.
+    num_server_side_tools_used above zero requires ticks. Inconsistent or
+    ambiguous usage raises so the runner charges the quote and stops.
     """
     if (
         not isinstance(usage, dict)
@@ -163,14 +169,23 @@ def price_grok_usage(config: dict, usage: object) -> tuple[float, str]:
     input_tokens = usage["input_tokens"]
     output_tokens = usage["output_tokens"]
     cached, cache_basis = _cached_tokens(usage, input_tokens)
-    extra, reasoning_basis = _reasoning_extra(usage, input_tokens, output_tokens)
+    billed_output, reasoning_basis = _billed_output(usage, input_tokens, output_tokens)
+    ticks = _present_count(usage, "cost_in_usd_ticks")
+    _require_ticks_for_tools(usage, ticks)
     input_rate, cached_rate, output_rate, tier = grok_tier_rates(input_tokens, config)
     regular = input_tokens - cached
-    billed_output = output_tokens + extra
-    cost = (regular * input_rate + cached * cached_rate + billed_output * output_rate) / 1_000_000
-    if not math.isfinite(cost):
+    reconstruction = (
+        regular * input_rate + cached * cached_rate + billed_output * output_rate
+    ) / 1_000_000
+    if not math.isfinite(reconstruction):
         raise ValueError("provider cost cannot be established as a finite amount")
+    cost, reasoning_basis = _with_ticks(reconstruction, ticks, reasoning_basis)
     return cost, f"grok_{cache_basis}_{tier}_{reasoning_basis}"
+
+
+def grok_billed_output(usage: dict) -> int:
+    """Billed output tokens for one grok usage object, using the same rule as pricing."""
+    return _billed_output(usage, usage["input_tokens"], usage["output_tokens"])[0]
 
 
 def _cached_tokens(usage: dict, input_tokens: int) -> tuple[int, str]:
@@ -183,19 +198,77 @@ def _cached_tokens(usage: dict, input_tokens: int) -> tuple[int, str]:
     return cached, "reported_cached"
 
 
-def _reasoning_extra(usage: dict, input_tokens: int, output_tokens: int) -> tuple[int, str]:
-    details = usage.get("output_tokens_details")
-    reasoning = 0
-    if isinstance(details, dict) and "reasoning_tokens" in details:
-        reasoning = details["reasoning_tokens"]
-        if not _count(reasoning):
-            raise ValueError("provider usage absent; cost cannot be established")
-    total = usage.get("total_tokens")
-    if type(total) is int and total == input_tokens + output_tokens:
-        return 0, "reasoning_included"
-    if reasoning:
-        return reasoning, "reasoning_added"
-    return 0, "no_reasoning_detail"
+def _billed_output(usage: dict, input_tokens: int, output_tokens: int) -> tuple[int, str]:
+    """Return billed output tokens and the basis name.
+
+    Contained reasoning is not added. Every other known reading contributes
+    through max(output + reasoning, total - input). A total below the input,
+    or a usage object with neither reasoning nor a total, cannot be priced.
+    """
+    reasoning = _reasoning_count(usage)
+    total = _present_count(usage, "total_tokens")
+    if total is not None and total < input_tokens:
+        raise ValueError("provider usage absent; cost cannot be established")
+    contained = (
+        reasoning is not None
+        and total is not None
+        and reasoning <= output_tokens
+        and total == input_tokens + output_tokens
+    )
+    if contained:
+        return output_tokens, "reasoning_included"
+    if reasoning is None and total is None:
+        raise ValueError("provider usage absent; cost cannot be established")
+    extra = 0 if reasoning is None else reasoning
+    from_parts = output_tokens + extra
+    if total is None:
+        return from_parts, "reasoning_added" if extra else "no_reasoning_detail"
+    from_total = total - input_tokens
+    billed = max(from_parts, from_total)
+    if from_total > from_parts:
+        return billed, "total_gap"
+    if extra:
+        return billed, "reasoning_added"
+    return billed, "no_reasoning_detail"
+
+
+def _reasoning_count(usage: dict) -> int | None:
+    if "output_tokens_details" not in usage:
+        return None
+    details = usage["output_tokens_details"]
+    if not isinstance(details, dict):
+        raise ValueError("provider usage absent; cost cannot be established")
+    return _present_count(details, "reasoning_tokens")
+
+
+def _require_ticks_for_tools(usage: dict, ticks: int | None) -> None:
+    tools = _present_count(usage, "num_server_side_tools_used")
+    if tools and ticks is None:
+        raise ValueError("server-side tool usage needs cost_in_usd_ticks")
+
+
+def _with_ticks(reconstruction: float, ticks: int | None, basis: str) -> tuple[float, str]:
+    """Keep the higher of the token reconstruction and the provider tick charge."""
+    if ticks is None:
+        return reconstruction, basis
+    tick_cost = Decimal(ticks) / Decimal(USD_TICKS)
+    if tick_cost <= Decimal(reconstruction):
+        return reconstruction, basis
+    rendered = float(tick_cost)
+    while Decimal(rendered) < tick_cost:
+        rendered = math.nextafter(rendered, math.inf)
+    if not math.isfinite(rendered):
+        raise ValueError("provider cost cannot be established as a finite amount")
+    return rendered, "provider_ticks"
+
+
+def _present_count(mapping: dict, key: str) -> int | None:
+    if key not in mapping:
+        return None
+    value = mapping[key]
+    if not _count(value):
+        raise ValueError("provider usage absent; cost cannot be established")
+    return value
 
 
 def _count(value: object) -> bool:

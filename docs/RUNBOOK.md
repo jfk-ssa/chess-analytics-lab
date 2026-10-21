@@ -366,8 +366,11 @@ before the first dispatch. The job does not probe the provider.
    `none` on the OpenAI ids and `low` on grok-4.7. The grok headline is
    low at 5 repeats with cap $10. For the sensitivity check, dispatch
    grok-4.7 twice more with `repeats` 1 and effort `medium`, then
-   `high`. Run low first and compare its receipt cost with the quote
-   before those two. Medium or high at 5 repeats stops in the dry run.
+   `high`. Run low first and compare its receipt `known_gross_cost_usd`
+   and `token_usage` with the quote before those two. The token usage
+   sums input, output, reasoning, and billed output. Medium or high at
+   5 repeats stops in the dry run. The dry-run step sets `pipefail`, so
+   that failure does not continue into the secret step.
    The job timeout is 150 minutes. Check
    `acknowledge_personal_account`. The recorded price-check date is
    `2026-10-20` in `preflight.py`. When that date is older than 14 days,
@@ -382,8 +385,8 @@ before the first dispatch. The job does not probe the provider.
    replaces the one that is waiting. The run already in progress is not
    cancelled. This workflow does not set `queue`.
 5. Download the artifact named
-   `live-eval-receipt-<model>-<resolved effort>-<run_id>`. `<run_id>`
-   is the Actions run id. Retention is 90 days. The run title includes
+   `live-eval-receipt-<model>-<resolved effort>-r<repeats>-<run_id>`.
+   `<run_id>` is the Actions run id. Retention is 90 days. The run title includes
    the model, the reasoning-effort input, the repeats, and the cap.
    Select `low` with 5 repeats, or `medium` or `high` with 1 repeat, so
    the title matches the receipt. The job summary shows the model, the

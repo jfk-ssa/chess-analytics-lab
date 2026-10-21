@@ -404,6 +404,10 @@ def test_oracle_transport_scores_48_and_matches_the_receipt_schema(
     assert all(row["recovered_repeated_plan_objects"] == 0 for row in receipt["rows"])
     assert receipt["known_gross_cost_usd"] == pytest.approx(48 * 0.00002)
     assert receipt["token_usage"]["priced_requests"] == 48
+    assert receipt["token_usage"]["input_tokens"] == 48 * 100
+    assert receipt["token_usage"]["output_tokens"] == 48 * 20
+    assert receipt["token_usage"]["reasoning_tokens"] == 0
+    assert receipt["token_usage"]["billed_output_tokens"] == 48 * 20
     assert receipt["stats"]["wilson"]["successes"] == 48
     assert receipt["stats"]["bootstrap"]["seed"] == 20261018
     provider = hashlib_file("src/chess_analytics/analyst/provider.py")

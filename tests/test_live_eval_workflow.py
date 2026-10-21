@@ -31,7 +31,7 @@ _OPENAI_SECRET = "${{ inputs.model != 'grok-4.7' && secrets.CHESSLAB_OPENAI_API_
 _XAI_SECRET = "${{ inputs.model == 'grok-4.7' && secrets.CHESSLAB_XAI_API_KEY || '' }}"
 _ARTIFACT = (
     "live-eval-receipt-${{ inputs.model }}-${{ env.LIVE_EVAL_RESOLVED_EFFORT }}"
-    "-${{ github.run_id }}"
+    "-r${{ inputs.repeats }}-${{ github.run_id }}"
 )
 _EXPR_IN_RUN = re.compile(r"\$\{\{")
 _STEP_ORDER = (
@@ -84,6 +84,7 @@ def workflow_problems(text: str) -> list[str]:
     _check_run_scripts(job, problems)
     _check_always(job, problems)
     _check_ref_guard(job, problems)
+    _check_dry_run_pipefail(job, problems)
     return _unique(problems)
 
 
@@ -199,6 +200,15 @@ def test_each_workflow_assertion_fails_when_mutated():
             1,
         ),
         "timeout": text.replace("    timeout-minutes: 150\n", "", 1),
+        "pipefail": text.replace(
+            "Stage the fixture and print the dry-run reservation\n"
+            "        run: |\n"
+            "          set -euo pipefail\n",
+            "Stage the fixture and print the dry-run reservation\n"
+            "        run: |\n"
+            "          set -eu\n",
+            1,
+        ),
     }
     expected = {
         "trigger": "trigger",
@@ -227,6 +237,7 @@ def test_each_workflow_assertion_fails_when_mutated():
         "always-upload": "always",
         "ref-guard": "ref-guard",
         "timeout": "timeout",
+        "pipefail": "pipefail",
     }
     seen = []
     for name, mutated in cases.items():
@@ -253,6 +264,7 @@ def test_each_workflow_assertion_fails_when_mutated():
         "always",
         "ref-guard",
         "timeout",
+        "pipefail",
     } <= set(seen)
 
 
@@ -595,6 +607,15 @@ def _check_credentials(job: dict, problems: list[str]) -> None:
     payload = {} if checkout is None else checkout.get("with") or {}
     if payload.get("persist-credentials") is not False:
         problems.append("credentials")
+
+
+def _check_dry_run_pipefail(job: dict, problems: list[str]) -> None:
+    """The dry-run quote is piped to tee. pipefail is what fails an over-cap run."""
+    dry = _step(job, "Stage the fixture and print the dry-run reservation")
+    script = "" if dry is None else dry.get("run") or ""
+    tee_at = script.find("| tee ")
+    if tee_at < 0 or not re.search(r"(?m)^\s*set\s+.*\bpipefail\b", script[:tee_at]):
+        problems.append("pipefail")
 
 
 def _check_run_scripts(job: dict, problems: list[str]) -> None:

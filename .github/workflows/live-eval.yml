@@ -153,7 +153,7 @@ jobs:
         if: "always() && hashFiles('work/live-eval-receipt.json') != ''"
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: "live-eval-receipt-${{ inputs.model }}-${{ env.LIVE_EVAL_RESOLVED_EFFORT }}-${{ github.run_id }}"
+          name: "live-eval-receipt-${{ inputs.model }}-${{ env.LIVE_EVAL_RESOLVED_EFFORT }}-r${{ inputs.repeats }}-${{ github.run_id }}"
           path: work/live-eval-receipt.json
           retention-days: 90
           if-no-files-found: error

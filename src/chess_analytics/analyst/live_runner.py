@@ -34,6 +34,7 @@ from chess_analytics.analyst.model_catalog import (
     LIVE_EVAL_WALL_CLOCK_SECONDS,
     RECOMMENDED_CAP_USD,
     XAI_KEY_ENV,
+    grok_billed_output,
     grok_short_rates,
     resolve_effort,
 )
@@ -675,7 +676,7 @@ def _receipt(repo, rows, plan, config, incomplete, **options) -> dict:
         "run_id": options["run_id"],
         "scheduled": False,
         "stats": None if incomplete else _stats(rows, plan, options),
-        "token_usage": _tokens(rows),
+        "token_usage": _tokens(rows, config["model"]),
         "unsafe_answer": sum(bool(row["unsafe_answer"]) for row in rows),
     }
     missing = set(RECEIPT_FIELDS) - set(receipt)
@@ -704,19 +705,62 @@ def _stats(rows, plan, options) -> dict:
     }
 
 
-def _tokens(rows: list[dict]) -> dict:
+def _tokens(rows: list[dict], model: str) -> dict:
+    """Sum input, output, reasoning, and billed output for the receipt check.
+
+    Billed output uses the grok pricing rule so a first receipt can be
+    compared with the quote without adding the rows by hand. A grok row
+    that did not price contributes no billed output.
+    """
     incoming = 0
     outgoing = 0
+    reasoning = 0
+    billed = 0
     counted = 0
     for row in rows:
         usage = row["usage"]
         if not isinstance(usage, dict):
             continue
-        if type(usage.get("input_tokens")) is int and type(usage.get("output_tokens")) is int:
-            incoming += usage["input_tokens"]
-            outgoing += usage["output_tokens"]
-            counted += 1
-    return {"input_tokens": incoming, "output_tokens": outgoing, "priced_requests": counted}
+        input_tokens = usage.get("input_tokens")
+        output_tokens = usage.get("output_tokens")
+        if type(input_tokens) is not int or type(output_tokens) is not int:
+            continue
+        incoming += input_tokens
+        outgoing += output_tokens
+        counted += 1
+        reasoning += _reported_reasoning(usage)
+        billed += _billed_output_for_row(model, usage, row.get("gross_cost_usd"))
+    return {
+        "billed_output_tokens": billed,
+        "input_tokens": incoming,
+        "output_tokens": outgoing,
+        "priced_requests": counted,
+        "reasoning_tokens": reasoning,
+    }
+
+
+def _reported_reasoning(usage: dict) -> int:
+    details = usage.get("output_tokens_details")
+    if not isinstance(details, dict):
+        return 0
+    value = details.get("reasoning_tokens")
+    if type(value) is int and value >= 0:
+        return value
+    return 0
+
+
+def _billed_output_for_row(model: str, usage: dict, cost: object) -> int:
+    if model != GROK_MODEL_ID:
+        output_tokens = usage.get("output_tokens")
+        if type(output_tokens) is int and output_tokens >= 0:
+            return output_tokens
+        return 0
+    if cost is None:
+        return 0
+    try:
+        return grok_billed_output(usage)
+    except ValueError:
+        return 0
 
 
 def _frozen_hashes(repo: Path) -> dict:

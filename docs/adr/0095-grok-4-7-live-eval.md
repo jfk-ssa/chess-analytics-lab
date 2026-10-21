@@ -55,7 +55,8 @@ The receipt field `reasoning_effort` stores the resolved effort. The
 Actions run title is `Live eval <model> effort <input> x<repeats> cap
 <cap>`, using the raw input because GitHub evaluates `run-name` before
 any step. The artifact name is
-`live-eval-receipt-<model>-<resolved effort>-<run_id>`. `check-inputs`
+`live-eval-receipt-<model>-<resolved effort>-r<repeats>-<run_id>`.
+`check-inputs`
 writes the resolved effort to `LIVE_EVAL_RESOLVED_EFFORT`. For the
 sensitivity analysis, select `low`, `medium`, and `high` explicitly so
 the title, the receipt, and the artifact all name that effort. A
@@ -123,6 +124,9 @@ $3.734254 and proceeds. High at 1 repeat reserves $6.093358 and
 proceeds. Medium at 5 repeats reserves $18.671270 and high at 5 repeats
 reserves $30.466790. Both exceed $10, so those dry runs exit 1 with a
 reservation error before the live step and before the secret step.
+The dry-run command is piped to `tee`. That step sets `pipefail`, so
+the reservation failure is the step's status. Without it, `tee` would
+succeed and the secret step would still run.
 The ceiling was not replaced with a bytes-divided-by-4 estimate.
 
 The three planned reservations sum to $19.650082. That is above the
@@ -130,7 +134,10 @@ $10 monthly key limit. The expected spend of the same three runs is
 not. The provider stops the key at the monthly limit if actual usage
 reaches it. This repository still does not enforce that limit. Dispatch
 low at 5 repeats first. Compare that receipt's `known_gross_cost_usd`
-and token usage with this quote before dispatching the 1-repeat checks.
+and `token_usage` with this quote before dispatching the 1-repeat
+checks. `token_usage` sums `input_tokens`, `output_tokens`,
+`reasoning_tokens`, and `billed_output_tokens`, so the check does not
+add the rows by hand.
 
 A realistic expected cost is a different number, and it is not what the
 runner enforces. The assumptions are stated here so the two figures
@@ -197,14 +204,36 @@ is the hang this bound is for. OpenAI reservations are unchanged: Luna
 5-repeat $0.443594 and Sol 5-repeat $8.871288.
 
 No live request was sent, so several provider details are unverified.
-`cost_in_usd_ticks` is not used. Temperature and `top_p` are left unset.
-A usage object whose `total_tokens` exceeds input plus output, and which
-omits `reasoning_tokens`, is billed without that gap. The documented
-Responses example includes `reasoning_tokens` and is priced from those
-fields. Encrypted reasoning items without `content` are skipped. A
-`content` value of null becomes a scored miss. The prompt cache key
-does not guarantee a hit. Server-side tool fees are not priced because
-the request sends no tools.
+Temperature and `top_p` are left unset. Encrypted reasoning items
+without `content` are skipped. A `content` value of null becomes a
+scored miss. The prompt cache key does not guarantee a hit. The
+request sends no tools. Whether `max_output_tokens` includes reasoning
+is still the disagreement recorded above.
+
+Usage pricing does not drop tokens the response already reported.
+Billed output is the max of `output_tokens` plus reasoning, and
+`total_tokens` minus `input_tokens`, except when reasoning is already
+inside the output. That contained case is only when `reasoning_tokens`
+is less than or equal to `output_tokens` and `total_tokens` equals
+input plus output. The documented Responses example is 32 input, 9
+output, 110 reasoning, and 151 total, so reasoning is added. A subset
+with reasoning inside a matching total is not added. An omitted
+`reasoning_tokens` whose total is larger than input plus output is
+billed at `total_tokens - input_tokens`. Reasoning smaller than that
+gap is not the whole bill; the gap is. A total that equals input plus
+output while reasoning is greater than output is not treated as
+contained, so the reasoning tokens are added. A missing total with
+reasoning present adds those reasoning tokens. Pricing raises when
+reasoning and the total are both missing, when `total_tokens` is below
+`input_tokens`, or when a present count is not a non-negative integer.
+The runner then charges that request's quote and does not send another.
+
+`cost_in_usd_ticks` divided by 10^10 is the provider charge for that
+request, including cache discounts and server-side tool fees. When the
+field is a non-negative integer, the price is the max of the token
+reconstruction and the tick charge. A lower tick figure does not reduce
+the reconstruction. `num_server_side_tools_used` above zero requires
+the tick field. Without it, pricing raises and the run stops.
 
 ## Results
 
@@ -221,22 +250,21 @@ writes `incomplete_reason` `wall_clock` and sends no further request.
 - `ruff check .` passed. `ruff format --check .` reported 321 files
   already formatted.
 - basedpyright reported 0 errors, 0 warnings, and 0 notes.
-- After the $10 cap and the 150-minute job timeout, `pytest -q`
-  reported 349 passed, 31 skipped, 122.82s. That is 38 more passes
-  than the ADR 0091 count of 311. The added tests are the grok quote,
-  usage, reservation, workflow checks, and the wall-clock stop.
-- After `uv sync --locked --no-editable --extra dbt`,
-  `CHESSLAB_REQUIRE_DBT=1 pytest -q`: 361 passed, 19 skipped, 230.61s.
-  The skip count matches the ADR 0091 dbt run.
-- `python -m chess_analytics.analyst gate`, with dbt beside the
-  interpreter, printed `ok 89/89` in 11.343s.
-  `evals/baselines/analyst_gate_v1.json` is unchanged. Without dbt the
-  mart step is skipped, the same 89 cases score on reviewed SQL, and
-  the gate reports eight PATH-CHANGED diffs from `governed` to
-  `reviewed_sql`. That is the missing-mart path. The baseline was not
-  updated.
-- actionlint 1.7.12 reported no findings on `live-eval.yml`. `bash -n`
-  on the eight `run` scripts passed.
-  `tests/test_live_eval_workflow.py` passed, including the
-  mutated-workflow failures. The workflow was not dispatched. There is
-  no `live-eval` environment and no key on this agent.
+- After the usage-pricing fix, `pytest -q` reported 364 passed, 31
+  skipped, 118.41s. That is 53 more passes than the ADR 0091 count of
+  311. The added tests cover the grok quote, reservation, workflow
+  checks, the wall-clock stop, and the usage rows that must not price
+  below the reported bill. Those rows are the omitted total gap,
+  reasoning smaller than that gap, reasoning larger than output when
+  the total matches input plus output, tick charges above and below
+  the reconstruction, and server-side tools without ticks.
+- The dbt extra and the gate were not re-run for this pricing change.
+  Before it, on this date, `CHESSLAB_REQUIRE_DBT=1 pytest -q` reported
+  361 passed and 19 skipped, and the gate printed `ok 89/89`.
+  `evals/baselines/analyst_gate_v1.json` is unchanged.
+- actionlint was not re-run. The earlier 1.7.12 check of
+  `live-eval.yml` had no findings, and this change adds the repeat
+  count to the artifact name. `tests/test_live_eval_workflow.py`
+  passed, including the mutated-workflow failures and removal of
+  `pipefail` from the dry-run step. The workflow was not dispatched.
+  There is no `live-eval` environment and no key on this agent.

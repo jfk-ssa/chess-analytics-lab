@@ -98,6 +98,110 @@ def test_total_tokens_equal_to_input_plus_output_does_not_bill_reasoning_twice()
     assert cost == pytest.approx((100 * 2 + 50 * 6) / 1_000_000)
 
 
+def test_omitted_reasoning_bills_the_total_gap():
+    """A total above input plus output is billed even when reasoning_tokens is absent."""
+    usage = {"input_tokens": 100, "output_tokens": 10, "total_tokens": 150}
+    cost, basis = price_grok_usage(_config(), usage)
+    assert basis == "grok_conservative_input_short_total_gap"
+    assert cost == pytest.approx((100 * 2 + 50 * 6) / 1_000_000)
+
+
+def test_reasoning_smaller_than_the_total_gap_bills_the_gap():
+    usage = _usage(
+        input_tokens=100,
+        input_tokens_details={"cached_tokens": 0},
+        output_tokens=10,
+        output_tokens_details={"reasoning_tokens": 5},
+        total_tokens=140,
+    )
+    cost, basis = price_grok_usage(_config(), usage)
+    assert basis == "grok_reported_cached_short_total_gap"
+    assert cost == pytest.approx((100 * 2 + 40 * 6) / 1_000_000)
+
+
+def test_reasoning_above_output_is_not_treated_as_included():
+    """total == input + output does not contain reasoning that is larger than output."""
+    usage = _usage(
+        input_tokens=100,
+        input_tokens_details={"cached_tokens": 0},
+        output_tokens=50,
+        output_tokens_details={"reasoning_tokens": 80},
+        total_tokens=150,
+    )
+    cost, basis = price_grok_usage(_config(), usage)
+    assert basis == "grok_reported_cached_short_reasoning_added"
+    assert cost == pytest.approx((100 * 2 + 130 * 6) / 1_000_000)
+
+
+def test_ticks_raise_the_price_above_the_reconstruction():
+    usage = _usage(cost_in_usd_ticks=20_000_000_000)
+    cost, basis = price_grok_usage(_config(), usage)
+    assert basis == "grok_reported_cached_short_provider_ticks"
+    assert cost == pytest.approx(2.0)
+    assert cost > (24 * 2 + 8 * 0.5 + 119 * 6) / 1_000_000
+
+
+def test_ticks_do_not_discount_below_the_reconstruction():
+    usage = _usage(cost_in_usd_ticks=1)
+    cost, basis = price_grok_usage(_config(), usage)
+    reconstruction = (24 * 2 + 8 * 0.5 + 119 * 6) / 1_000_000
+    assert basis == "grok_reported_cached_short_reasoning_added"
+    assert cost == pytest.approx(reconstruction)
+    assert cost > 1 / 10_000_000_000
+
+
+def test_server_side_tools_without_ticks_are_not_priced():
+    usage = _usage(num_server_side_tools_used=1)
+    with pytest.raises(ValueError, match="cost_in_usd_ticks"):
+        price_grok_usage(_config(), usage)
+
+
+def test_server_side_tools_with_ticks_bill_the_higher_figure():
+    usage = _usage(num_server_side_tools_used=2, cost_in_usd_ticks=50_000_000_000)
+    cost, basis = price_grok_usage(_config(), usage)
+    assert basis == "grok_reported_cached_short_provider_ticks"
+    assert cost == pytest.approx(5.0)
+    lower = _usage(num_server_side_tools_used=1, cost_in_usd_ticks=1)
+    kept, kept_basis = price_grok_usage(_config(), lower)
+    reconstruction = (24 * 2 + 8 * 0.5 + 119 * 6) / 1_000_000
+    assert kept_basis == "grok_reported_cached_short_reasoning_added"
+    assert kept == pytest.approx(reconstruction)
+
+
+def test_zero_server_side_tools_keep_the_documented_add():
+    usage = _usage(num_server_side_tools_used=0)
+    cost, basis = price_grok_usage(_config(), usage)
+    assert basis == "grok_reported_cached_short_reasoning_added"
+    assert cost == pytest.approx((24 * 2 + 8 * 0.5 + 119 * 6) / 1_000_000)
+
+
+def test_missing_reasoning_and_total_is_not_priced():
+    with pytest.raises(ValueError, match="cost cannot be established"):
+        price_grok_usage(_config(), {"input_tokens": 10, "output_tokens": 4})
+
+
+def test_total_below_input_is_not_priced():
+    with pytest.raises(ValueError, match="cost cannot be established"):
+        price_grok_usage(_config(), _usage(total_tokens=10))
+
+
+def test_non_integer_total_is_not_priced():
+    with pytest.raises(ValueError, match="cost cannot be established"):
+        price_grok_usage(_config(), _usage(total_tokens="151"))
+
+
+def test_non_integer_ticks_are_not_priced():
+    for bad in (-1, True, 1.5, "10"):
+        with pytest.raises(ValueError, match="cost cannot be established"):
+            price_grok_usage(_config(), _usage(cost_in_usd_ticks=bad))
+
+
+def test_non_integer_tool_count_is_not_priced():
+    for bad in (-1, True, 1.5, "1"):
+        with pytest.raises(ValueError, match="cost cannot be established"):
+            price_grok_usage(_config(), _usage(num_server_side_tools_used=bad))
+
+
 def test_missing_cached_tokens_uses_the_uncached_input_rate():
     usage = {
         "input_tokens": 1_000,
@@ -345,6 +449,11 @@ def test_runner_reads_only_the_xai_key_and_records_the_effort(live_eval_stage, m
     assert receipt["rows"][0]["cost_basis"] == "grok_reported_cached_short_reasoning_added"
     one_call = (24 * 2 + 8 * 0.5 + 119 * 6) / 1_000_000
     assert receipt["known_gross_cost_usd"] == pytest.approx(48 * one_call)
+    assert receipt["token_usage"]["input_tokens"] == 48 * 32
+    assert receipt["token_usage"]["output_tokens"] == 48 * 9
+    assert receipt["token_usage"]["reasoning_tokens"] == 48 * 110
+    assert receipt["token_usage"]["billed_output_tokens"] == 48 * 119
+    assert receipt["token_usage"]["priced_requests"] == 48
     medium = run(
         _repo(),
         live_eval_stage,
@@ -372,6 +481,72 @@ def test_runner_reads_only_the_xai_key_and_records_the_effort(live_eval_stage, m
         transport=transport,
     )
     assert high["reasoning_effort"] == "high"
+
+
+def test_total_gap_is_charged_and_stops_before_the_case_set_finishes(live_eval_stage, monkeypatch):
+    monkeypatch.setenv(XAI_KEY_ENV, "xai-secret")
+    calls = {"n": 0}
+
+    def transport(_body, _key):
+        calls["n"] += 1
+        return {
+            "id": "resp_gap",
+            "model": GROK_MODEL_ID,
+            "output": [],
+            "usage": {"input_tokens": 1000, "output_tokens": 10, "total_tokens": 1_000_000},
+        }
+
+    receipt = run(
+        _repo(),
+        live_eval_stage,
+        acknowledged=True,
+        max_run_usd=10,
+        model=GROK_MODEL_ID,
+        reasoning_effort="low",
+        repeats=1,
+        run_id="grok-gap",
+        transport=transport,
+    )
+    one = (1000 * 2 + 999_000 * 6) / 1_000_000
+    assert calls["n"] == 2
+    assert receipt["incomplete_reason"] == "budget_exceeded"
+    assert receipt["known_gross_cost_usd"] == pytest.approx(2 * one)
+    assert receipt["token_usage"]["billed_output_tokens"] == 999_000 * 2
+    assert receipt["token_usage"]["reasoning_tokens"] == 0
+    assert receipt["token_usage"]["priced_requests"] == 2
+
+
+def test_ambiguous_usage_charges_the_quote_and_stops(live_eval_stage, monkeypatch):
+    monkeypatch.setenv(XAI_KEY_ENV, "xai-secret")
+    calls = {"n": 0}
+
+    def transport(_body, _key):
+        calls["n"] += 1
+        return {
+            "id": "resp_ambiguous",
+            "model": GROK_MODEL_ID,
+            "output": [],
+            "usage": {"input_tokens": 10, "output_tokens": 4},
+        }
+
+    receipt = run(
+        _repo(),
+        live_eval_stage,
+        acknowledged=True,
+        max_run_usd=10,
+        model=GROK_MODEL_ID,
+        reasoning_effort="low",
+        repeats=5,
+        run_id="grok-ambiguous",
+        transport=transport,
+    )
+    assert calls["n"] == 1
+    assert receipt["incomplete_reason"] == "unknown_usage"
+    assert receipt["known_gross_cost_usd"] == 0
+    assert receipt["unknown_cost_reservation_usd"] > 0
+    assert receipt["rows"][0]["gross_cost_usd"] is None
+    assert receipt["token_usage"]["billed_output_tokens"] == 0
+    assert receipt["token_usage"]["priced_requests"] == 1
 
 
 def test_wall_clock_stops_before_another_request(live_eval_stage, monkeypatch):
