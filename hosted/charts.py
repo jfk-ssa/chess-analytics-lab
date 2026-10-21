@@ -16,6 +16,19 @@ _SERIES = ("White, raw", "Black, raw", "Black, adjusted")
 _SERIES_COLORS = ("#3d6b8c", "#203433", "#116559")
 _ORANGE = "#a84a1f"
 _TEAL = "#116559"
+# Pinned to the full run label, including the repeat suffix. A set's chart
+# shows the short label and passes these colors in explicitly.
+_NAMED_RUN_COLORS = {
+    "gpt-6-luna": _TEAL,
+    "gpt-6-sol": _ORANGE,
+    "grok-4.7 · low ×5": "#1d4ed8",
+    "grok-4.7 · low ×1": "#7c3aed",
+    "grok-4.7 · medium ×1": "#db2777",
+    "grok-4.7 · high ×1": "#4d7c0f",
+}
+_RUN_COLOR_POOL = ("#1d4ed8", "#7c3aed", "#db2777", "#4d7c0f", "#0369a1")
+# Space outside the axis so a full label is not flush with the chart edge.
+_EDGE_PAD = {"left": 16, "right": 20, "top": 8, "bottom": 12}
 
 
 def install_theme() -> None:
@@ -58,8 +71,57 @@ def install_theme() -> None:
     _INSTALLED = True
 
 
-def _frame(chart: _Drawn, height: int) -> _Drawn:
-    return cast(_Drawn, chart.properties(height=height, width="container"))
+def _frame(
+    chart: _Drawn,
+    height: int,
+    *,
+    width: Any = "container",
+    padding: dict[str, int] | None = None,
+) -> _Drawn:
+    if padding is None:
+        return cast(_Drawn, chart.properties(height=height, width=width))
+    return cast(_Drawn, chart.properties(height=height, width=width, padding=padding))
+
+
+def pass_rate_domain(values: list[float]) -> list[float]:
+    """Lower limit is 10 percentage points under the minimum, clamped at 0.
+
+    The margin is 0.10 on the unit interval (10 percentage points), not 10
+    percent of the minimum. Callers include interval lower bounds in
+    ``values``. The upper limit stays 100 percent. ``nice`` stays off so the
+    scale is not rounded back to zero.
+    """
+    finite = [float(value) for value in values if value is not None]
+    if not finite:
+        return [0.0, 1.0]
+    return [max(0.0, min(finite) - 0.10), 1.0]
+
+
+def _pass_axis(domain: list[float]) -> alt.Axis:
+    """Whole-percent ticks. A tight window uses 5-point steps so labels stay readable."""
+    span = domain[1] - domain[0]
+    step = 0.05 if span <= 0.40 else 0.10
+    return alt.Axis(format=".0%", tickMinStep=step, labelFlush=False, labelOverlap=False)
+
+
+# Pixels of plot past the 100% position. A dot centered on that tick stays inside.
+_MARK_INSET_PX = 12
+
+
+def _pass_scale(domain: list[float]) -> alt.Scale:
+    """Pass-rate scale. The domain still ends at 100 percent.
+
+    The range stops ``_MARK_INSET_PX`` short of the plot edge, so a mark
+    centered on the 100 percent tick is fully inside the frame. That tick
+    stays the last labeled tick.
+    """
+    return alt.Scale(
+        domain=domain,
+        nice=False,
+        zero=False,
+        clamp=True,
+        range=[0, {"expr": f"width - {_MARK_INSET_PX}"}],
+    )
 
 
 def funnel(rows: list[dict]) -> _Drawn:
@@ -217,31 +279,48 @@ def bucket_bars(rows: list[dict]) -> _Drawn:
 
 
 def wilson(rows: list[dict]) -> _Drawn:
-    """Pass rate with the receipt's Wilson interval as a horizontal bar."""
+    """Pass rate with the receipt's Wilson interval as a horizontal bar.
+
+    The domain is ``pass_rate_domain`` of the point and the interval's lower
+    bound. A 1-repeat row uses the same encoding: the caller supplies that
+    receipt's Wilson bounds, which are already on 48 trials.
+    """
     order = [row["label"] for row in rows]
+    domain = pass_rate_domain(
+        [row["pass_rate"] for row in rows] + [row["wilson_low"] for row in rows]
+    )
+    scale = _pass_scale(domain)
     color = alt.Scale(domain=["Gate clear", "Hard fail"], range=[_TEAL, _ORANGE])
+    y_axis = alt.Axis(
+        labelAngle=0,
+        labelLimit=0,
+        labelFontSize=11,
+        labelOverlap=False,
+        labelPadding=6,
+    )
+    gate_legend = alt.Legend(orient="right", title=None, labelLimit=0, padding=4, offset=8)
     rules = (
         alt.Chart(alt.Data(values=rows))
         .mark_rule(strokeWidth=3)
         .encode(
-            y=alt.Y("label:N", sort=order, title=None),
+            y=alt.Y("label:N", sort=order, title=None, axis=y_axis),
             x=alt.X(
                 "wilson_low:Q",
                 title="Pass rate",
-                axis=alt.Axis(format="%"),
-                scale=alt.Scale(domain=[0, 1]),
+                axis=_pass_axis(domain),
+                scale=scale,
             ),
             x2="wilson_high:Q",
-            color=alt.Color("gate:N", scale=color, title=None),
+            color=alt.Color("gate:N", scale=color, title=None, legend=gate_legend),
         )
     )
     points = (
         alt.Chart(alt.Data(values=rows))
         .mark_point(filled=True, size=90)
         .encode(
-            y=alt.Y("label:N", sort=order),
-            x=alt.X("pass_rate:Q", scale=alt.Scale(domain=[0, 1])),
-            color=alt.Color("gate:N", scale=color, title=None),
+            y=alt.Y("label:N", sort=order, axis=y_axis),
+            x=alt.X("pass_rate:Q", scale=scale),
+            color=alt.Color("gate:N", scale=color, title=None, legend=None),
             tooltip=[
                 alt.Tooltip("label:N", title="Run"),
                 alt.Tooltip("rate_label:N", title="Pass rate"),
@@ -251,97 +330,212 @@ def wilson(rows: list[dict]) -> _Drawn:
             ],
         )
     )
-    return _frame(rules + points, 160)
+    height = max(160, 32 * len(rows) + 48)
+    return _frame(rules + points, height, padding=_EDGE_PAD)
 
 
-def category_dumbbell(rows: list[dict], *, category_order: list[str]) -> _Drawn:
-    """Pass rate by category. Points are models; the rule joins one category."""
+def _run_colors(models: list[str]) -> list[str]:
+    pool = iter(_RUN_COLOR_POOL)
+    colors: list[str] = []
+    for model in models:
+        named = _NAMED_RUN_COLORS.get(model)
+        colors.append(named if named is not None else next(pool))
+    return colors
+
+
+def pinned_run_color(label: str) -> str:
+    """Swatch for a full run label such as ``grok-4.7 · low ×5``."""
+    named = _NAMED_RUN_COLORS.get(label)
+    if named is not None:
+        return named
+    return _run_colors([label])[0]
+
+
+def _series_colors(models: list[str], colors: dict[str, str] | None) -> list[str]:
+    fallback = _run_colors(models)
+    if colors is None:
+        return fallback
+    return [colors.get(name, fallback[index]) for index, name in enumerate(models)]
+
+
+# One category row. Six 8px dots at 11px centers fit inside it, centered on the label.
+_ROW_PX = 72
+_DOT_PITCH_PX = 11
+_DOT_SIZE = 64
+
+
+def category_dumbbell(
+    rows: list[dict],
+    *,
+    category_order: list[str],
+    model_order: list[str] | None = None,
+    colors: dict[str, str] | None = None,
+) -> _Drawn:
+    """Pass rate by category. Each run is a dot centered on that row's label.
+
+    Tied rates share an x position. Offsets are symmetric around the category
+    index, and the row label is drawn at that same index, so the stack sits on
+    the label. A faint band marks the row. The min-to-max line is not drawn.
+    """
     models: list[str] = []
-    grouped: dict[str, list[float]] = {}
     for row in rows:
         if row["model"] not in models:
             models.append(row["model"])
-        grouped.setdefault(row["category"], []).append(row["rate"])
-    spans = [
-        {"category": category, "low": min(rates), "high": max(rates)}
-        for category, rates in grouped.items()
+    if model_order:
+        rank = {name: index for index, name in enumerate(model_order)}
+        models.sort(key=lambda name: rank.get(name, len(rank)))
+    cat_index = {name: index for index, name in enumerate(category_order)}
+    model_index = {name: index for index, name in enumerate(models)}
+    count = len(models)
+    step = 0.0 if count <= 1 else _DOT_PITCH_PX / _ROW_PX
+    middle = (count - 1) / 2
+    plotted = []
+    for row in rows:
+        if row["category"] not in cat_index or row["model"] not in model_index:
+            continue
+        shift = (model_index[row["model"]] - middle) * step
+        plotted.append({**row, "y": cat_index[row["category"]] + shift})
+    domain = pass_rate_domain([row["rate"] for row in rows])
+    x_scale = _pass_scale(domain)
+    n_rows = max(len(category_order), 1)
+    y_domain = [-0.5, n_rows - 0.5]
+    # Smaller category indexes stay at the top, matching category_order.
+    y_scale = alt.Scale(domain=y_domain, nice=False, zero=False, reverse=True)
+    bands = [
+        {"y0": index - 0.5, "y1": index + 0.5, "shade": index % 2}
+        for index in range(len(category_order))
     ]
-    axis = alt.Scale(domain=[0, 1])
-    rules = (
-        alt.Chart(alt.Data(values=spans))
-        .mark_rule(color="#8aa399", strokeWidth=2)
+    # A y2 rect suppresses the y axis on every layer, so the category name is a
+    # text mark on the same scale. That keeps the label on the stack's center.
+    labels = (
+        alt.Chart(
+            alt.Data(
+                values=[{"y": index, "label": name} for index, name in enumerate(category_order)]
+            )
+        )
+        .mark_text(
+            align="right",
+            baseline="middle",
+            dx=-8,
+            font="Inter",
+            fontSize=11,
+            color="#203433",
+        )
         .encode(
-            y=alt.Y("category:N", sort=category_order, title=None),
-            x=alt.X(
-                "low:Q",
-                title="Pass rate",
-                axis=alt.Axis(format="%"),
-                scale=axis,
-                stack=None,
+            y=alt.Y("y:Q", scale=y_scale, axis=None),
+            text="label:N",
+            x=alt.value(0),
+        )
+    )
+    # No x encoding on the band. A rect that ranges on both x and y drops the
+    # axes for the whole layered chart. The rect spans the plot width.
+    band_layer = (
+        alt.Chart(alt.Data(values=bands))
+        .mark_rect()
+        .encode(
+            y=alt.Y("y0:Q", scale=y_scale, axis=None),
+            y2="y1:Q",
+            color=alt.condition(
+                alt.datum.shade == 0,
+                alt.value("#e7eee9"),
+                alt.value("#f7faf8"),
             ),
-            x2="high:Q",
         )
     )
     points = (
-        alt.Chart(alt.Data(values=rows))
-        .mark_point(filled=True, size=110)
+        alt.Chart(alt.Data(values=plotted))
+        .mark_point(filled=True, size=_DOT_SIZE, stroke="#faf9f5", strokeWidth=1)
         .encode(
-            y=alt.Y("category:N", sort=category_order, title=None),
-            x=alt.X("rate:Q", scale=axis, stack=None),
+            y=alt.Y("y:Q", scale=y_scale, axis=None),
+            x=alt.X(
+                "rate:Q",
+                title="Pass rate",
+                axis=_pass_axis(domain),
+                scale=x_scale,
+                stack=None,
+            ),
             color=alt.Color(
                 "model:N",
                 title=None,
                 sort=models,
-                scale=alt.Scale(
-                    domain=models,
-                    range=[_TEAL, _ORANGE, "#3d6b8c", "#203433"][: len(models)],
-                ),
+                scale=alt.Scale(domain=models, range=_series_colors(models, colors)),
+                legend=alt.Legend(orient="bottom", columns=1, labelLimit=0, labelFontSize=11),
             ),
             tooltip=[
-                alt.Tooltip("model:N", title="Model"),
+                alt.Tooltip("model:N", title="Run"),
                 alt.Tooltip("category:N", title="Category"),
                 alt.Tooltip("passed_label:N", title="Passed"),
             ],
         )
     )
-    return _frame(rules + points, max(220, 32 * len(category_order) + 36))
+    # The legend and x-axis title sit inside this height, so the rows keep _ROW_PX.
+    # Vega already insets the plot by the label width; the shared edge pad keeps
+    # that label off the frame.
+    return _frame(band_layer + labels + points, n_rows * _ROW_PX + 156, padding=_EDGE_PAD)
 
 
 def case_grid(rows: list[dict], *, case_order: list[str], model_order: list[str]) -> _Drawn:
-    """One teal ramp. The printed number is repeats passed, on a fixed 0–5 scale."""
-    height = max(220, 22 * len(case_order) + 40)
-    base = alt.Chart(alt.Data(values=rows)).encode(
-        x=alt.X("model:N", sort=model_order, title=None),
+    """Teal ramp on the pass fraction. The cell prints passed/repeats.
+
+    Column labels stay horizontal. ``width`` is one step per run so a label
+    such as ``grok-4.7`` / ``medium ×1`` fits at 10px without rotation or
+    ellipsis. A narrow viewport scrolls the chart instead of squeezing it.
+    """
+    plotted: list[dict] = []
+    for row in rows:
+        repeats = int(row["repeats"])
+        passed = int(row["passed"])
+        fraction = passed / repeats if repeats else 0.0
+        plotted.append(
+            {
+                **row,
+                "fraction": fraction,
+                "cell_label": f"{passed}/{repeats}",
+                "run": row.get("run") or str(row.get("model", "")).replace("\n", " "),
+            }
+        )
+    height = max(220, 22 * len(case_order) + 56)
+    x_axis = alt.Axis(
+        labelAngle=0,
+        labelAlign="center",
+        labelBaseline="top",
+        labelFontSize=10,
+        labelLimit=0,
+        labelOverlap=False,
+        labelPadding=8,
+    )
+    base = alt.Chart(alt.Data(values=plotted)).encode(
+        x=alt.X("model:N", sort=model_order, title=None, axis=x_axis),
         y=alt.Y(
             "case_id:N",
             sort=case_order,
             title=None,
-            axis=alt.Axis(labelLimit=220, labelFontSize=11),
+            axis=alt.Axis(
+                labelLimit=0, labelFontSize=11, labelAngle=0, labelOverlap=False, labelPadding=6
+            ),
         ),
     )
     rects = base.mark_rect(stroke="#faf9f5", strokeWidth=1).encode(
         color=alt.Color(
-            "passed:O",
-            title="Repeats passed",
-            scale=alt.Scale(
-                domain=[0, 1, 2, 3, 4, 5],
-                range=["#e7f3ef", "#c5e0d6", "#8ec4b0", "#4f9d86", "#1f7a64", "#116559"],
-            ),
+            "fraction:Q",
+            title="Pass fraction",
+            scale=alt.Scale(domain=[0, 1], range=["#e7f3ef", "#116559"], clamp=True),
+            legend=alt.Legend(format=".0%", orient="bottom", direction="horizontal"),
         ),
         tooltip=[
             alt.Tooltip("case_id:N", title="Case"),
             alt.Tooltip("category:N", title="Category"),
-            alt.Tooltip("model:N", title="Model"),
-            alt.Tooltip("passed:Q", title="Repeats passed"),
-            alt.Tooltip("repeats:Q", title="Repeats"),
+            alt.Tooltip("run:N", title="Run"),
+            alt.Tooltip("cell_label:N", title="Passed / repeats"),
             alt.Tooltip("severity:N", title="Severity"),
         ],
     )
-    counts = base.mark_text(font="Inter", fontSize=11).encode(
-        text=alt.Text("passed:Q", format="d"),
-        color=alt.condition(alt.datum.passed >= 3, alt.value("#faf9f5"), alt.value("#203433")),
+    counts = base.mark_text(font="Inter", fontSize=10).encode(
+        text="cell_label:N",
+        color=alt.condition(alt.datum.fraction >= 0.5, alt.value("#faf9f5"), alt.value("#203433")),
     )
-    return _frame(rects + counts, height)
+    # 112px per column leaves a 10px label, two lines, inside the band.
+    return _frame(rects + counts, height, width=alt.Step(112), padding=_EDGE_PAD)
 
 
 def compression(rows: list[dict]) -> _Drawn:

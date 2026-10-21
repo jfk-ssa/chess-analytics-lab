@@ -38,7 +38,7 @@ def equal_width_row(cards: list[tuple[str, str, str]]) -> str:
             '<div class="cal-card" style="min-width:0;width:100%;box-sizing:border-box;'
             "container-type:inline-size;background:#eaf1eb;border:1px solid #c5d5cc;"
             "border-radius:12px;padding:10px 8px;font-family:Inter,sans-serif;"
-            'color:#203433;overflow-wrap:normal;word-break:normal">'
+            'color:#203433;overflow:visible;overflow-wrap:normal;word-break:normal">'
             '<div class="cal-k" style="font-size:0.72rem;font-weight:600;'
             "line-height:1.3;overflow-wrap:normal;white-space:nowrap;"
             f'">{escape(label)}</div>'
@@ -47,14 +47,14 @@ def equal_width_row(cards: list[tuple[str, str, str]]) -> str:
             "font-variant-numeric:tabular-nums;white-space:nowrap;"
             f'overflow-wrap:normal">{escape(value)}</div>'
             '<div class="cal-d" style="font-size:clamp(0.68rem,4cqi,0.82rem);'
-            "line-height:1.35;color:#3d524c;overflow-wrap:normal;"
+            "line-height:1.35;color:#3d524c;overflow:visible;overflow-wrap:normal;"
             f'word-break:normal">{_detail_html(detail)}</div>'
             "</div>"
         )
     style = (
         "display:grid;"
         f"grid-template-columns:{columns};"
-        "column-gap:12px;row-gap:12px;width:100%;align-items:stretch"
+        "column-gap:12px;row-gap:12px;width:100%;align-items:stretch;margin:0 0 16px"
     )
     body = "".join(cells)
     return (
