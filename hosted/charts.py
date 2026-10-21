@@ -16,9 +16,15 @@ _SERIES = ("White, raw", "Black, raw", "Black, adjusted")
 _SERIES_COLORS = ("#3d6b8c", "#203433", "#116559")
 _ORANGE = "#a84a1f"
 _TEAL = "#116559"
-# Luna stays teal and Sol stays orange. Later runs take hues that stay apart
-# from those two and from each other, in the order the caller lists them.
-_NAMED_RUN_COLORS = {"gpt-6-luna": _TEAL, "gpt-6-sol": _ORANGE}
+# Pinned to the run label, so a chart of one set keeps the same swatch.
+_NAMED_RUN_COLORS = {
+    "gpt-6-luna": _TEAL,
+    "gpt-6-sol": _ORANGE,
+    "grok-4.7 · low ×5": "#1d4ed8",
+    "grok-4.7 · low ×1": "#7c3aed",
+    "grok-4.7 · medium ×1": "#db2777",
+    "grok-4.7 · high ×1": "#4d7c0f",
+}
 _RUN_COLOR_POOL = ("#1d4ed8", "#7c3aed", "#db2777", "#4d7c0f", "#0369a1")
 # Space outside the axis so a full label is not flush with the chart edge.
 _EDGE_PAD = {"left": 16, "right": 20, "top": 8, "bottom": 12}

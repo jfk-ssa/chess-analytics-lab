@@ -18,33 +18,41 @@ This is display only. The runner, catalog, pricing, provider, cases, rubric,
 and scoring stay as they are. The extract stays 259,711 bytes. The page does
 not recompute a Wilson interval.
 
-The pass-rate chart, the category chart, and the reasoning-effort chart use
-one axis rule. The lower limit is the smallest plotted value, including
-Wilson lower bounds where the chart has them, minus 10 percentage points,
-clamped at 0. The upper limit is 100%. The margin is 0.10 on the unit
-interval, not 10 percent of the minimum. Ticks are whole percents: 5-point
-steps when the window is 40 points or narrower, otherwise 10-point steps.
+The five-repeat runs and the one-repeat grok runs are separate comparisons.
+Headings are "Five repeats" and "Grok 4.7 effort sweep (one repeat)".
+Five repeats is `gpt-6-luna`, `grok-4.7 · low ×5`, and `gpt-6-sol`. The
+effort sweep is `grok-4.7 · low ×1`, `grok-4.7 · medium ×1`, and
+`grok-4.7 · high ×1`. The pass-rate section draws the five-repeat chart
+only. The one-repeat pass-rate chart is the existing sweep, so that set is
+not drawn a second time. Category charts, case grids, cost and token tables,
+miss lists, and the gate line follow the same split.
+
+Each of those charts uses the axis rule on its own values. The lower limit
+is the smallest plotted value on that chart, including Wilson lower bounds
+where the chart has them, minus 10 percentage points, clamped at 0. The
+upper limit is 100%. The margin is 0.10 on the unit interval, not 10 percent
+of the minimum. Ticks are whole percents: 5-point steps when the window is
+40 points or narrower, otherwise 10-point steps.
 
 A 1-repeat bar is that receipt's Wilson interval on 48 trials (one repeat of
 the 48 cases). It is not drawn as a 5-repeat rate. Those bounds are already
 on the run row.
 
-The case grid adds `grok-4.7 · low ×1`, `grok-4.7 · medium ×1`, and
-`grok-4.7 · high ×1` after `gpt-6-luna`, `grok-4.7 · low ×5`, and
-`gpt-6-sol`. Labels are horizontal, on two lines for an effort run, at 10px,
-with no character limit. The column width is 112px per run so the label fits.
-The chart block scrolls on its own: at a 390px viewport the page scroll width
-stays 390 and the grid's container is 362px wide around an 821px chart.
+Each case grid is one set. Labels are horizontal, on two lines for an effort
+run, at 10px, with no character limit. The column width is 112px per run so
+the label fits. The chart block scrolls on its own. At a 390px viewport the
+page scroll width stays 390, and each grid's scroll container is 346px wide
+around a 525px chart.
 Color is the pass fraction from 0 to 1. The cell prints `passed/repeats`.
 The category legend is one column so a label such as `grok-4.7 · medium ×1`
 stays inside a 362px chart. Tied rates share an x position. Each run is
 offset symmetrically around the category label, on a faint row band. The
 min-to-max line is not drawn. The pass-rate scale still ends at 100%, and
 that tick stays the last label. The scale range stops 12px short of the
-plot edge so a dot centered on 100% is fully inside the frame. Luna stays
-`#116559` and Sol stays `#a84a1f`.
-The other runs are blue `#1d4ed8`, violet `#7c3aed`, pink `#db2777`, and
-yellow-green `#4d7c0f`.
+plot edge so a dot centered on 100% is fully inside the frame. Run colors
+are pinned, so a set keeps the same swatch on every chart that colors by
+run: Luna `#116559`, grok low ×5 `#1d4ed8`, Sol `#a84a1f`, low ×1
+`#7c3aed`, medium ×1 `#db2777`, and high ×1 `#4d7c0f`.
 
 Pass-rate, category, and case-grid charts keep padding around the axes. A
 label such as `grok-4.7 · medium ×1` or `clock_compare_under_10_2`, and the
@@ -64,14 +72,13 @@ Labels are `grok-4.7 · low ×5` and `grok-4.7 · medium ×1`. Luna and Sol stay
 title helper. Sweep detail breaks only at ` · `, so `$0.22253 per repeat`
 and `14,768 reasoning tokens` each stay intact.
 
-The hard-fail line names every shown run. Sol still hard-fails. The four
-grok runs clear. Wilson overlap is stated for Luna versus Sol, and among the
-1-repeat trio. Low ×5 is not compared with Luna or Sol, because the frozen
-runner files changed. It is not compared with the 1-repeat runs either: those
-are like-for-like with each other, and low ×5 differs from them in the
-dataset snapshot id embedded in the instructions.
+The gate line is one sentence per set. On five repeats, Luna and grok low ×5
+clear and Sol hard-fails. The one-repeat runs all clear. Wilson overlap is
+stated for Luna versus Sol. Low ×5 is not compared with Luna or Sol, because
+the frozen runner files changed. The one-repeat runs are like-for-like with
+each other, 48 trials each, and use a different dataset snapshot from low ×5.
 
-Cost and reasoning tokens for all six runs are one table. Headline cost cards
+Cost and reasoning tokens are one table per set. Headline cost cards
 also show the token count. The sweep table of imperfect 1-repeat cases stays.
 
 ## Consequences

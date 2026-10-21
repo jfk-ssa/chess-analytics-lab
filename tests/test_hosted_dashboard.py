@@ -150,10 +150,10 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
         "86.3%",
         "97.5%",
         "97.1%",
-        (
-            "gpt-6-luna, grok-4.7 · low ×5, grok-4.7 · low ×1, "
-            "grok-4.7 · medium ×1, and grok-4.7 · high ×1 clear; gpt-6-sol hard-fails"
-        ),
+        "gpt-6-luna and grok-4.7 · low ×5 clear; gpt-6-sol hard-fails",
+        ("grok-4.7 · low ×1, grok-4.7 · medium ×1, and grok-4.7 · high ×1 clear"),
+        "Five repeats",
+        "Grok 4.7 effort sweep (one repeat)",
         "0/5 for gpt-6-sol",
         "1/1 for grok-4.7 · high ×1",
         "5/5 and 1/1 are both a full pass",
@@ -210,23 +210,25 @@ def _caption(app, fragment: str) -> str:
 
 def test_cost_captions_keep_a_literal_dollar(project, monkeypatch):
     app = _run(project, monkeypatch)
-    caption = _caption(app, "Known cost")
-    visible = caption.replace(r"\$", "$")
-    assert "gpt-6-luna $0.0150, grok-4.7 · low ×5 $1.0033, gpt-6-sol $0.2550" in visible
-    assert "grok-4.7 · low ×1 $0.2225" in visible
-    assert "grok-4.7 · medium ×1 $0.3225" in visible
-    assert "grok-4.7 · high ×1 $0.4087" in visible
-    assert "gpt-6-luna and gpt-6-sol do not overlap" in visible
-    assert "gpt-6-luna and gpt-6-sol share frozen inputs" in visible
-    assert "grok-4.7 · low ×5 does not" in visible
-    assert "frozen runner files changed" in visible
-    assert "its interval is not compared with theirs" in visible
-    assert "like-for-like with each other" in visible
-    assert "dataset snapshot id" in visible
-    assert "grok-4.7 · low ×5 and" not in visible
-    assert "grok-4.7 · low overlap" not in visible
-    assert "grok-4.7 · low do not overlap" not in visible
-    assert "48 trials" in visible
+    five = _caption(app, "gpt-6-luna and gpt-6-sol do not overlap").replace(r"\$", "$")
+    one = _caption(app, "like-for-like with each other").replace(r"\$", "$")
+    assert "gpt-6-luna $0.0150, grok-4.7 · low ×5 $1.0033, gpt-6-sol $0.2550" in five
+    assert "Known cost is" in five
+    assert "gpt-6-luna and gpt-6-sol share frozen inputs" in five
+    assert "grok-4.7 · low ×5 does not" in five
+    assert "frozen runner files changed" in five
+    assert "its interval is not compared with theirs" in five
+    assert "grok-4.7 · low ×1 $0.2225" in one
+    assert "grok-4.7 · medium ×1 $0.3225" in one
+    assert "grok-4.7 · high ×1 $0.4087" in one
+    assert "48 trials" in one
+    assert "different dataset snapshot" in one
+    page = _visible(app)
+    assert "dataset snapshot id" in page
+    for caption in (five, one, page):
+        assert "grok-4.7 · low ×5 and" not in caption
+        assert "grok-4.7 · low overlap" not in caption
+        assert "grok-4.7 · low do not overlap" not in caption
     for item in app.caption:
         assert "$" not in item.value.replace(r"\$", "")
     cards = "\n".join(item.value for item in app.markdown if "cal-card" in item.value)
@@ -311,13 +313,22 @@ def _assert_alt_text(app) -> None:
         "Clock bands by evaluable moves. Select a bar to list the slices in that band.",
         "Training games by published period.",
         (
-            "Pass rate for each committed run with its Wilson 95 percent interval. "
-            "A 1-repeat interval is that receipt's Wilson interval on 48 trials."
+            "Pass rate for the five-repeat runs with Wilson 95 percent intervals. "
+            "gpt-6-luna, grok-4.7 low times five, and gpt-6-sol."
         ),
-        "Dumbbell of pass rate by category. Each point is one run.",
+        ("Dumbbell of pass rate by category for the five-repeat runs. Each point is one run."),
         (
-            "Grid of cases by run, colored by pass fraction. "
+            "Dumbbell of pass rate by category for the grok-4.7 one-repeat effort sweep. "
+            "Each point is one run."
+        ),
+        (
+            "Grid of cases for the five-repeat runs, colored by pass fraction. "
             "Each cell prints passed/repeats. Column labels are horizontal."
+        ),
+        (
+            "Grid of cases for the grok-4.7 one-repeat effort sweep, "
+            "colored by pass fraction. Each cell prints passed/repeats. "
+            "Column labels are horizontal."
         ),
         (
             "Grok reasoning-effort pass rates with Wilson 95 percent intervals. "
@@ -768,62 +779,107 @@ def test_sweep_cards_and_chart_name_the_effort(project, monkeypatch):
     assert "10 percentage points" in caption
 
 
+def _unit_domains(spec: dict) -> list:
+    return [
+        item
+        for item in _scale_domains(spec)
+        if len(item) == 2
+        and all(isinstance(value, (int, float)) for value in item)
+        and item[1] == 1
+    ]
+
+
+def _chart_numbers(spec: dict, field: str) -> list[float]:
+    found: list[float] = []
+
+    def walk(node) -> None:
+        if isinstance(node, dict):
+            values = node.get("values")
+            if isinstance(values, list):
+                for row in values:
+                    if isinstance(row, dict) and isinstance(row.get(field), (int, float)):
+                        found.append(float(row[field]))
+            for value in node.values():
+                walk(value)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item)
+
+    walk(spec)
+    return found
+
+
 def test_every_grok_run_is_on_the_live_eval_charts(project, monkeypatch):
-    """Headline order, then low, medium, high. The heatmap labels stay horizontal."""
+    """Five-repeat runs and the one-repeat grok sweep stay on separate charts."""
     app = _run(project, monkeypatch)
     charts = [node for node in app if getattr(node, "type", None) == "vega_lite_chart"]
-    rate = [node for node in charts if "48 trials" in node.proto.alt]
+    five_order = ["gpt-6-luna", "grok-4.7 · low ×5", "gpt-6-sol"]
+    one_order = ["grok-4.7 · low ×1", "grok-4.7 · medium ×1", "grok-4.7 · high ×1"]
+    rate = [node for node in charts if "five-repeat runs with Wilson" in node.proto.alt]
     assert len(rate) == 1
-    order = [
-        "gpt-6-luna",
-        "grok-4.7 · low ×5",
-        "gpt-6-sol",
-        "grok-4.7 · low ×1",
-        "grok-4.7 · medium ×1",
-        "grok-4.7 · high ×1",
-    ]
-    sorts = _y_sorts(_chart_spec(rate[0]))
+    rate_spec = _chart_spec(rate[0])
+    sorts = _y_sorts(rate_spec)
     assert sorts
-    assert all(item == order for item in sorts)
-    domains = [
-        item
-        for item in _scale_domains(_chart_spec(rate[0]))
-        if len(item) == 2 and all(isinstance(value, (int, float)) for value in item)
-    ]
-    assert domains[0][1] == 1
+    assert all(item == five_order for item in sorts)
+    domains = _unit_domains(rate_spec)
     assert domains[0][0] == pytest.approx(0.8131895522590333 - 0.10)
+    assert "width - 12" in json.dumps(rate_spec)
+    sweep = [node for node in charts if "Low, medium, and high" in node.proto.alt]
+    assert len(sweep) == 1
+    sweep_spec = _chart_spec(sweep[0])
+    sweep_domain = _unit_domains(sweep_spec)[0]
+    sweep_lows = _chart_numbers(sweep_spec, "wilson_low")
+    assert sweep_lows
+    assert sweep_domain[0] == pytest.approx(min(sweep_lows) - 0.10)
+    assert sweep_domain[0] != pytest.approx(domains[0][0])
+    assert "width - 12" in json.dumps(sweep_spec)
+    categories = [node for node in charts if "Dumbbell of pass rate by category" in node.proto.alt]
+    assert len(categories) == 2
+    five_cat, one_cat = categories
+    five_cat_spec = _chart_spec(five_cat)
+    one_cat_spec = _chart_spec(one_cat)
+    assert _unit_domains(five_cat_spec)[0][0] == pytest.approx(0.15)
+    one_rates = _chart_numbers(one_cat_spec, "rate")
+    assert one_rates
+    assert _unit_domains(one_cat_spec)[0][0] == pytest.approx(min(one_rates) - 0.10)
+    assert _unit_domains(one_cat_spec)[0][0] != pytest.approx(0.15)
+    five_colors = json.dumps(five_cat_spec)
+    one_colors = json.dumps(one_cat_spec)
+    for swatch in ("#116559", "#1d4ed8", "#a84a1f"):
+        assert swatch in five_colors
+    for swatch in ("#7c3aed", "#db2777", "#4d7c0f"):
+        assert swatch in one_colors
+        assert swatch not in five_colors
     heat = [node for node in charts if "pass fraction" in node.proto.alt]
-    assert len(heat) == 1
-    heat_spec = _chart_spec(heat[0])
-    x_order = [
-        "gpt-6-luna",
-        "grok-4.7\nlow ×5",
-        "gpt-6-sol",
-        "grok-4.7\nlow ×1",
-        "grok-4.7\nmedium ×1",
-        "grok-4.7\nhigh ×1",
-    ]
-    assert _channel_sorts(heat_spec, "x")
-    assert all(item == x_order for item in _channel_sorts(heat_spec, "x"))
-    assert all(angle == 0 for angle in _axis_values(heat_spec, "labelAngle"))
-    assert "cell_label" in json.dumps(heat_spec)
-    assert '"step": 112' in json.dumps(heat_spec)
+    assert len(heat) == 2
+    five_x = ["gpt-6-luna", "grok-4.7\nlow ×5", "gpt-6-sol"]
+    one_x = ["grok-4.7\nlow ×1", "grok-4.7\nmedium ×1", "grok-4.7\nhigh ×1"]
+    five_heat = _chart_spec(heat[0])
+    one_heat = _chart_spec(heat[1])
+    assert all(item == five_x for item in _channel_sorts(five_heat, "x"))
+    assert all(item == one_x for item in _channel_sorts(one_heat, "x"))
+    for heat_spec in (five_heat, one_heat):
+        assert all(angle == 0 for angle in _axis_values(heat_spec, "labelAngle"))
+        blob = json.dumps(heat_spec)
+        assert "cell_label" in blob
+        assert '"step": 112' in blob
     misses = [
         table for table in app.table if list(table.value.columns) == ["Run", "Case", "Result"]
     ]
-    assert len(misses) == 1
-    runs = set(misses[0].value["Run"])
-    assert runs == set(order)
-    assert "coverage_2" in set(misses[0].value["Case"])
+    assert len(misses) == 2
+    assert set(misses[0].value["Run"]) == set(five_order)
+    assert set(misses[1].value["Run"]) == set(one_order)
+    assert "coverage_2" in set(misses[0].value["Case"]) | set(misses[1].value["Case"])
     costs = [
         table
         for table in app.table
         if list(table.value.columns) == ["Run", "Known cost", "Reasoning tokens"]
     ]
-    assert len(costs) == 1
-    assert list(costs[0].value["Run"]) == order
-    assert "14,768" in set(costs[0].value["Reasoning tokens"])
-    assert "$0.22253" in set(costs[0].value["Known cost"])
+    assert len(costs) == 2
+    assert list(costs[0].value["Run"]) == five_order
+    assert list(costs[1].value["Run"]) == one_order
+    assert "14,768" in set(costs[1].value["Reasoning tokens"])
+    assert "$0.22253" in set(costs[1].value["Known cost"])
     assert "0" in set(costs[0].value["Reasoning tokens"])
 
 

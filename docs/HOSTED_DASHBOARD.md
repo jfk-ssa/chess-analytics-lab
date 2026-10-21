@@ -78,27 +78,32 @@ Those receipts are `committed_report`. Category and case rows omit
 `source_report`; the run row keeps the filename, and model plus effort
 joins a row to that run. Each run row also carries `frozen_group`,
 `instructions_sha256`, and `reasoning_tokens`. Headline cards stay on the 5-repeat runs and name grok as
-`grok-4.7 · low ×5`. The pass-rate chart, the category chart, and the
-case grid also draw the three 1-repeat grok runs, labelled
-`grok-4.7 · low ×1`, `grok-4.7 · medium ×1`, and `grok-4.7 · high ×1`.
-Those 1-repeat case rows are not stored in full: the page fills them from
+`grok-4.7 · low ×5`. Comparisons are two sets. **Five repeats** is
+`gpt-6-luna`, `grok-4.7 · low ×5`, and `gpt-6-sol`. **Grok 4.7 effort sweep
+(one repeat)** is `grok-4.7 · low ×1`, `grok-4.7 · medium ×1`, and
+`grok-4.7 · high ×1`. The pass-rate section draws only the five-repeat
+chart. The one-repeat pass-rate chart is the effort sweep, with its cards,
+so that set is not drawn twice. Category charts, case grids, cost and token
+tables, miss lists, and the gate line are split the same way, each under
+that set's heading. Those 1-repeat case rows are not stored in full: the page fills them from
 `live_eval_effort_case` and treats a missing case as passed, then checks
 the pass total against the run row. A 1-repeat Wilson bar is that
 receipt's interval on 48 trials. The page does not recompute it.
-Pass-rate axes start 10 percentage points below the lowest plotted value
-or interval bound, clamped at 0, and end at 100%. The margin is 10
+Each chart's axis starts 10 percentage points below that chart's own lowest
+plotted value or interval bound, clamped at 0, and ends at 100%. The margin is 10
 percentage points, not 10 percent of the minimum. The scale range stops
 12px short of the plot edge so a dot on the 100% tick is fully inside. The case grid colors
 the pass fraction and prints `passed/repeats`. Column labels are
 horizontal, and the grid scrolls inside its block on a narrow viewport.
 The category legend is one column. Tied category rates are stacked on
-the row label, and the six run colors stay apart (Luna teal, Sol orange, then
-blue, violet, pink, and yellow-green). Sweep cards print the per-repeat
+the row label. Run colors stay pinned: Luna teal `#116559`, grok low ×5
+blue `#1d4ed8`, Sol orange `#a84a1f`, then low ×1 violet `#7c3aed`,
+medium ×1 pink `#db2777`, and high ×1 yellow-green `#4d7c0f`. Sweep cards print the per-repeat
 cost at three decimals. Low ×5 is not strictly comparable with
 Luna and Sol, because the frozen runner files changed. The 1-repeat runs
-are like-for-like with each other. Low ×5 differs from them in the dataset snapshot id
-embedded in the instructions. Wilson intervals are compared only inside
-those two groups. The file is 259,711 bytes.
+are like-for-like with each other, 48 trials each, and use a different
+dataset snapshot from low ×5. Wilson intervals are compared only inside
+a set. The file is 259,711 bytes.
 
 ## Run locally
 
