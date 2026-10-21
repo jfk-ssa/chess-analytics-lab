@@ -859,7 +859,8 @@ def test_category_dumbbell_is_unstacked_on_a_unit_axis(project):
         and item[0] < 0.5
     ]
     assert domains
-    assert all(low == pytest.approx(0.15) for low, _high in domains)
+    assert all(low == pytest.approx(0.15) and high == 1 for low, high in domains)
+    assert "width - 12" in json.dumps(spec)
     for layer in layers:
         encoding = layer["encoding"]
         for channel in ("x", "x2"):
@@ -980,6 +981,7 @@ def test_chart_scales_follow_the_plotted_data(project):
     ]
     assert wilson_domains
     assert all(high == 1 and low == pytest.approx(0.713) for low, high in wilson_domains)
+    assert "width - 12" in json.dumps(wilson.to_dict())
     assert charts.pass_rate_domain([0.04, 0.5]) == [0.0, 1.0]
     grid = charts.case_grid(
         [

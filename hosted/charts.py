@@ -97,6 +97,26 @@ def _pass_axis(domain: list[float]) -> alt.Axis:
     return alt.Axis(format=".0%", tickMinStep=step, labelFlush=False, labelOverlap=False)
 
 
+# Pixels of plot past the 100% position. A dot centered on that tick stays inside.
+_MARK_INSET_PX = 12
+
+
+def _pass_scale(domain: list[float]) -> alt.Scale:
+    """Pass-rate scale. The domain still ends at 100 percent.
+
+    The range stops ``_MARK_INSET_PX`` short of the plot edge, so a mark
+    centered on the 100 percent tick is fully inside the frame. That tick
+    stays the last labeled tick.
+    """
+    return alt.Scale(
+        domain=domain,
+        nice=False,
+        zero=False,
+        clamp=True,
+        range=[0, {"expr": f"width - {_MARK_INSET_PX}"}],
+    )
+
+
 def funnel(rows: list[dict]) -> _Drawn:
     """Games removed. ``rows`` need stage, count, and order."""
     order = alt.EncodingSortField(field="order", order="ascending")
@@ -262,7 +282,7 @@ def wilson(rows: list[dict]) -> _Drawn:
     domain = pass_rate_domain(
         [row["pass_rate"] for row in rows] + [row["wilson_low"] for row in rows]
     )
-    scale = {"domain": domain, "nice": False, "zero": False, "clamp": True}
+    scale = _pass_scale(domain)
     color = alt.Scale(domain=["Gate clear", "Hard fail"], range=[_TEAL, _ORANGE])
     y_axis = alt.Axis(
         labelAngle=0,
@@ -281,7 +301,7 @@ def wilson(rows: list[dict]) -> _Drawn:
                 "wilson_low:Q",
                 title="Pass rate",
                 axis=_pass_axis(domain),
-                scale=alt.Scale(**scale),
+                scale=scale,
             ),
             x2="wilson_high:Q",
             color=alt.Color("gate:N", scale=color, title=None, legend=gate_legend),
@@ -292,7 +312,7 @@ def wilson(rows: list[dict]) -> _Drawn:
         .mark_point(filled=True, size=90)
         .encode(
             y=alt.Y("label:N", sort=order, axis=y_axis),
-            x=alt.X("pass_rate:Q", scale=alt.Scale(**scale)),
+            x=alt.X("pass_rate:Q", scale=scale),
             color=alt.Color("gate:N", scale=color, title=None, legend=None),
             tooltip=[
                 alt.Tooltip("label:N", title="Run"),
@@ -350,7 +370,7 @@ def category_dumbbell(
         shift = (model_index[row["model"]] - middle) * step
         plotted.append({**row, "y": cat_index[row["category"]] + shift})
     domain = pass_rate_domain([row["rate"] for row in rows])
-    x_scale = alt.Scale(domain=domain, nice=False, zero=False, clamp=True)
+    x_scale = _pass_scale(domain)
     n_rows = max(len(category_order), 1)
     y_domain = [-0.5, n_rows - 0.5]
     # Smaller category indexes stay at the top, matching category_order.

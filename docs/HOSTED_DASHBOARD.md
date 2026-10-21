@@ -87,7 +87,8 @@ the pass total against the run row. A 1-repeat Wilson bar is that
 receipt's interval on 48 trials. The page does not recompute it.
 Pass-rate axes start 10 percentage points below the lowest plotted value
 or interval bound, clamped at 0, and end at 100%. The margin is 10
-percentage points, not 10 percent of the minimum. The case grid colors
+percentage points, not 10 percent of the minimum. The scale range stops
+12px short of the plot edge so a dot on the 100% tick is fully inside. The case grid colors
 the pass fraction and prints `passed/repeats`. Column labels are
 horizontal, and the grid scrolls inside its block on a narrow viewport.
 The category legend is one column. Tied category rates are stacked on

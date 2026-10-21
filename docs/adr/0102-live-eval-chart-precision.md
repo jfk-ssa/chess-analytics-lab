@@ -39,7 +39,10 @@ Color is the pass fraction from 0 to 1. The cell prints `passed/repeats`.
 The category legend is one column so a label such as `grok-4.7 · medium ×1`
 stays inside a 362px chart. Tied rates share an x position. Each run is
 offset symmetrically around the category label, on a faint row band. The
-min-to-max line is not drawn. Luna stays `#116559` and Sol stays `#a84a1f`.
+min-to-max line is not drawn. The pass-rate scale still ends at 100%, and
+that tick stays the last label. The scale range stops 12px short of the
+plot edge so a dot centered on 100% is fully inside the frame. Luna stays
+`#116559` and Sol stays `#a84a1f`.
 The other runs are blue `#1d4ed8`, violet `#7c3aed`, pink `#db2777`, and
 yellow-green `#4d7c0f`.
 
