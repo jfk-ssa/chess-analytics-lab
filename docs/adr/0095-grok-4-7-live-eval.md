@@ -270,5 +270,10 @@ writes `incomplete_reason` `wall_clock` and sends no further request.
   `live-eval.yml` had no findings, and this change adds the repeat
   count to the artifact name. `tests/test_live_eval_workflow.py`
   passed, including the mutated-workflow failures and removal of
-  `pipefail` from the dry-run step. The workflow was not dispatched.
-  There is no `live-eval` environment and no key on this agent.
+  `pipefail` from the dry-run step. The workflow was not dispatched
+  from this agent. There is no key on this agent.
+
+After this record merged, John dispatched low at 5 repeats. That run
+stopped on HTTP 400 and the receipt detail was `unavailable`.
+[ADR 0097](0097-grok-http-error-detail.md) keeps the error body and
+leaves this request unchanged.

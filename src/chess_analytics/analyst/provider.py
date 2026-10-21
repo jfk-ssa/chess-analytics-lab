@@ -4,6 +4,7 @@ import hashlib
 import json
 import math
 import os
+import re
 import urllib.error
 import urllib.request
 import uuid
@@ -35,6 +36,12 @@ from chess_analytics.analyst.tools import CheckedTools
 from chess_analytics.common import write_json
 
 ENDPOINT = "https://api.openai.com/v1/responses"
+_ERROR_BODY_LIMIT = 8192
+_ERROR_DETAIL_LIMIT = 500
+_AUTHORIZATION = re.compile(
+    r'(?i)(?P<json>"authorization"\s*:\s*"bearer\s+)(?P<json_token>[^"]+)"'
+    r"|(?P<header>authorization\s*:\s*bearer\s+)(?P<header_token>\S+)"
+)
 
 
 def _default_transport(body: bytes, key: str) -> dict:
@@ -49,13 +56,76 @@ def _default_transport(body: bytes, key: str) -> dict:
         with urllib.request.urlopen(request, timeout=timeout_for(model)) as response:
             return json.load(response)
     except urllib.error.HTTPError as exc:
-        try:
-            payload = json.loads(exc.read(8192))
-            error = payload.get("error", {})
-            detail = f"{error.get('type', 'unknown')}: {str(error.get('message', ''))[:500]}"
-        except (ValueError, AttributeError):
-            detail = "unavailable"
+        detail = _http_error_detail(exc.read(_ERROR_BODY_LIMIT), key)
         raise RuntimeError(f"provider HTTP {exc.code}: {detail}") from exc
+
+
+def _http_error_detail(raw: bytes, key: str) -> str:
+    """Keep an OpenAI error object, and keep an xAI string or code otherwise."""
+    try:
+        payload = json.loads(raw)
+    except ValueError:
+        return _fallback_error_detail(raw, key)
+    if not isinstance(payload, dict):
+        return _fallback_error_detail(raw, key)
+    error = payload.get("error")
+    if isinstance(error, dict):
+        message = _redact_transport_detail(str(error.get("message", "")), key)
+        detail = f"{_error_object_label(error, payload)}: {message[:_ERROR_DETAIL_LIMIT]}"
+        return _redact_transport_detail(detail, key)
+    if isinstance(error, str) and error.strip():
+        return _labeled_error_detail(payload.get("code"), error, key)
+    code = payload.get("code")
+    message = payload.get("message")
+    if _error_label(code) or _error_label(message):
+        text = message if isinstance(message, str) else ""
+        return _labeled_error_detail(code, text, key)
+    return _fallback_error_detail(raw, key)
+
+
+def _error_object_label(error: dict, payload: dict) -> str:
+    label = error.get("type")
+    if isinstance(label, str) and label.strip():
+        return label
+    return _error_label(error.get("code")) or _error_label(payload.get("code")) or "unknown"
+
+
+def _error_label(value: object) -> str:
+    if isinstance(value, str):
+        return value.strip()
+    if isinstance(value, int) and not isinstance(value, bool):
+        return str(value)
+    return ""
+
+
+def _labeled_error_detail(code: object, message: str, key: str) -> str:
+    label = _error_label(code)
+    text = message.strip()
+    if label and text:
+        detail = f"{label}: {text}"
+    elif label:
+        detail = label
+    else:
+        detail = text
+    return _redact_transport_detail(detail, key)[:_ERROR_DETAIL_LIMIT]
+
+
+def _fallback_error_detail(raw: bytes, key: str) -> str:
+    text = raw.decode("utf-8", errors="replace").strip() or "empty body"
+    return _redact_transport_detail(text, key)[:_ERROR_DETAIL_LIMIT]
+
+
+def _redact_transport_detail(text: str, key: str) -> str:
+    redacted = _redact_known_keys(text)
+    if key:
+        redacted = redacted.replace(key, "[redacted]")
+    return _AUTHORIZATION.sub(_redact_authorization, redacted)
+
+
+def _redact_authorization(match: re.Match[str]) -> str:
+    if match.group("json") is not None:
+        return f'{match.group("json")}[redacted]"'
+    return f"{match.group('header')}[redacted]"
 
 
 def _model_in_body(body: bytes) -> str:
