@@ -108,3 +108,4 @@ short summary of the current checkout, not a log of new decisions.
 | 0100 | 2026-10-21 | [Change-aware offline integrity](adr/0100-change-aware-offline-integrity.md) |
 | 0101 | 2026-10-21 | [Hosted dashboard cube](adr/0101-hosted-bi-cube.md) |
 | 0102 | 2026-10-21 | [Live-eval chart precision on the hosted page](adr/0102-live-eval-chart-precision.md) |
+| 0103 | 2026-10-22 | [Security pins for Pillow and certifi](adr/0103-security-pins-for-pillow-and-certifi.md) |
