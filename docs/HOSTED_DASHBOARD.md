@@ -181,14 +181,19 @@ extract is already in the repository.
 
 Community Cloud installs only the packages named in
 `hosted/requirements.txt` with pip. Streamlit does not install those
-pins itself. The file pins `streamlit==1.65.0`. Pandas, protobuf,
-Altair, narwhals, and jsonschema are dependencies of that pin or of
-Altair. If they stay unpinned, pip can install versions that differ
+pins itself. The file pins `streamlit==1.66.1`. Pandas, protobuf,
+Pillow, Altair, narwhals, and jsonschema are dependencies of that pin
+or of Altair. Certifi is a dependency of Requests, which Streamlit
+depends on. If they stay unpinned, pip can install versions that differ
 from `uv.lock`. The requirements file therefore also pins the locked
 versions, `altair==5.5.0`, `narwhals==2.26.0`, `jsonschema==4.26.0`,
-`pandas==2.3.3`, `protobuf==6.33.6`, and `duckdb==1.5.6`. Streamlit
-1.65.0 accepts `pandas<4,>=1.4.0` and `protobuf<8,>=5.26.1`, so those
-pins install. Narwhals 2.26.0 has no dependencies of its own. Altair
-5.5.0 depends on jsonschema and narwhals. DuckDB 1.5.6 has no
-dependencies. The cp312 manylinux x86_64 wheel recorded in `uv.lock`
-is 21,568,087 bytes.
+`pandas==2.3.3`, `protobuf==6.33.6`, `pillow==13.0.0`,
+`certifi==2026.10.19`, and `duckdb==1.5.6`. Streamlit 1.66.1 accepts
+`pandas<4,>=1.5.3`, `protobuf<8,>=5.26.1`, and `pillow<14,>=9.2.0`, so
+those pins install. Pillow 13.0.0 closes the advisories on 11.3.0.
+Streamlit 1.65.0 required `pillow<13`, which is why the dashboard extra
+moved. Requests 2.34.2 accepts `certifi>=2023.5.7`. Certifi 2026.10.19
+removes the compromised emSign intermediates. Narwhals 2.26.0 has no
+dependencies of its own. Altair 5.5.0 depends on jsonschema and
+narwhals. DuckDB 1.5.6 has no dependencies. The cp312 manylinux x86_64
+wheel recorded in `uv.lock` is 21,568,087 bytes.

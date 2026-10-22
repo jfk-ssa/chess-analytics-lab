@@ -1,7 +1,7 @@
 # Data and dependency notices
 
 Inspected installed distribution metadata on 2026-10-03. The Streamlit row
-below is the current lock, 1.65.0, also pinned in `hosted/requirements.txt`.
+below is the current lock, 1.66.1, also pinned in `hosted/requirements.txt`.
 The 2026-10-03 inspection recorded Streamlit 1.50.0; [ADR 0008](docs/adr/0008-m4-local-product-and-uncertainty.md)
 is that earlier pin and is unchanged. Dependencies are installed
 by uv, not vendored in Git; their original license files remain in distributions.
@@ -19,7 +19,7 @@ This is an inventory, not a grant to relicense third-party code.
 | Prefect (optional) | 3.8.7 | Apache-2.0 |
 | dbt-duckdb (optional) | 1.11.0 | Apache-2 (distribution metadata) |
 | dbt-core (transitive optional) | 1.12.5 | Apache-2.0 |
-| Streamlit (optional dashboard; current lock) | 1.65.0 | Apache License 2.0 (distribution metadata) |
+| Streamlit (optional dashboard; current lock) | 1.66.1 | Apache-2.0 (license expression) |
 | PyArrow (transitive dashboard) | 25.0.1 | Apache-2.0 (license expression) |
 
 Build uses pinned Hatchling and its pinned dependencies; uv.lock records runtime and

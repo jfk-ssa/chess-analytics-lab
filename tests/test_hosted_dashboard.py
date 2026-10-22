@@ -74,16 +74,21 @@ def test_hosted_streamlit_pin_matches_the_lock(project):
         if line.strip() and not line.startswith("#")
     ]
     assert requirements == [
-        "streamlit==1.65.0",
+        "streamlit==1.66.1",
         "altair==5.5.0",
         "narwhals==2.26.0",
         "jsonschema==4.26.0",
         "pandas==2.3.3",
         "protobuf==6.33.6",
+        "pillow==13.0.0",
+        "certifi==2026.10.19",
         "duckdb==1.5.6",
     ]
-    assert "streamlit==1.65.0" in (project / "pyproject.toml").read_text()
-    assert "1.65.0" in (project / "THIRD_PARTY_NOTICES.md").read_text()
+    project_text = (project / "pyproject.toml").read_text()
+    assert "streamlit==1.66.1" in project_text
+    assert "pillow==13.0.0" in project_text
+    assert "certifi==2026.10.19" in project_text
+    assert "1.66.1" in (project / "THIRD_PARTY_NOTICES.md").read_text()
     lock_text = (project / "uv.lock").read_text()
     for pin in requirements:
         name, version = pin.split("==")

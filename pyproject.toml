@@ -34,8 +34,13 @@ prefect = [
 dbt = [
     "dbt-duckdb==1.11.0",
 ]
+# Pillow 13.0.0 closes the GHSA set on 11.3.0. Streamlit 1.65.0 required
+# pillow<13, and 1.66.1 accepts pillow<14. Certifi 2026.10.19 removes the
+# compromised emSign intermediates (GHSA-6q48-6c7w-9gw2).
 dashboard = [
-    "streamlit==1.65.0",
+    "streamlit==1.66.1",
+    "pillow==13.0.0",
+    "certifi==2026.10.19",
 ]
 mcp = [
     "mcp==2.3.0",
