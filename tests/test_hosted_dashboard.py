@@ -551,16 +551,20 @@ def test_clock_bars_keep_a_zero_baseline_and_a_horizontal_title(project):
     y_axis = bar["encoding"]["y"]["axis"]
     assert y_axis["labelAngle"] == 0
     assert y_axis["titleAngle"] == 0
+    assert bar["encoding"]["y"]["title"] == "Time remaining"
     domain = bar["encoding"]["x"]["scale"]["domain"]
     assert domain[0] == 0
     assert domain[1] > 12567
     assert bar["encoding"]["x"]["scale"]["zero"] is True
-    assert bar["encoding"]["x"]["axis"]["labelAngle"] == 0
+    assert bar["encoding"]["x"]["axis"] is None
     periods = charts.period_bars([{"label": "2026-08", "games": 10}]).to_dict()
-    period_y = _layer(periods, "bar")["encoding"]["y"]
-    assert period_y.get("axis", {}).get("titleAngle", -90) != 0
-    assert period_y["axis"]["labelAngle"] == 0
+    period_bar = _layer(periods, "bar")
+    period_y = period_bar["encoding"]["y"]
+    assert period_y["axis"] is None
     assert period_y["scale"]["domain"][0] == 0
+    assert period_y["scale"]["zero"] is True
+    assert period_bar["encoding"]["x"]["axis"]["labelAngle"] == 0
+    assert period_bar["data"]["values"][0]["tick"] == "0|Aug 26"
 
 
 def test_bar_charts_label_the_bar_end(project):
@@ -569,6 +573,10 @@ def test_bar_charts_label_the_bar_end(project):
     assert charts.value_label_format("count") == ","
     assert charts.value_label_format("rate") == ".1%"
     assert charts.value_label_format("diff") == "+,.1f"
+    assert charts.compact_count(240086) == "240k"
+    assert charts.compact_count(90000) == "90k"
+    assert charts.compact_count(1500) == "1.5k"
+    assert charts.compact_count(1191) == "1.2k"
     with pytest.raises(ValueError, match="unknown label kind"):
         charts.value_label_format("games")
     clock = charts.selectable_bars(
@@ -596,11 +604,29 @@ def test_bar_charts_label_the_bar_end(project):
     assert _layer(openings, "text")["encoding"]["text"]["format"] == ","
     months = [{"label": f"2026-{index:02d}", "games": 80_000 + index} for index in range(1, 11)]
     periods = charts.period_bars(months).to_dict()
-    period_text = _layer(periods, "text")["encoding"]["text"]
-    assert period_text["condition"]["format"] == ","
-    assert period_text["condition"]["test"] == "width >= 560"
-    assert period_text["value"] == ""
-    assert _layer(periods, "bar")["encoding"]["x"]["axis"]["labelAngle"] == -40
+    period_texts = [
+        layer["encoding"]["text"] for layer in _chart_layers(periods) if _mark_type(layer) == "text"
+    ]
+    wide = next(item for item in period_texts if item.get("condition", {}).get("format") == ",")
+    assert wide["condition"]["test"] == "width >= 560"
+    assert wide["value"] == ""
+    compact = next(
+        item for item in period_texts if item.get("condition", {}).get("field") == "compact"
+    )
+    assert compact["condition"]["test"] == "width < 560"
+    assert compact["value"] == ""
+    period_axis = _layer(periods, "bar")["encoding"]["x"]["axis"]
+    assert period_axis["labelAngle"] == 0
+    assert "split(datum.label, '|')" in period_axis["labelExpr"]
+    assert _layer(periods, "bar")["data"]["values"][0]["tick"] == "0|Jan 26"
+    assert _layer(periods, "bar")["data"]["values"][1]["tick"] == "1|Feb 26"
+    assert _layer(periods, "bar")["data"]["values"][0]["compact"] == "80k"
+    november = charts.period_bars(
+        [{"label": "2025-11", "games": 240086}, {"label": "2025-12", "games": 90000}]
+    ).to_dict()
+    ticks = _layer(november, "bar")["data"]["values"]
+    assert [row["tick"] for row in ticks] == ["0|Nov 25", "1|Dec 25"]
+    assert [row["compact"] for row in ticks] == ["240k", "90k"]
     rates = charts.bucket_bars(
         [
             {"bucket": "Under 10s", "error_proxy_rate": 0.093, "rate_label": "9.3%"},
@@ -659,6 +685,134 @@ def test_bar_charts_label_the_bar_end(project):
         ]
     ).to_dict()
     assert all(_mark_type(layer) != "text" for layer in _chart_layers(grouped))
+
+
+def _assert_category_axis(spec: dict, channel: str) -> None:
+    """The bar's category axis labels the categories, and no layer clears it."""
+    bar_axis = _layer(spec, "bar")["encoding"][channel]["axis"]
+    assert isinstance(bar_axis, dict)
+    assert bar_axis.get("labels", True) is not False
+    assert bar_axis.get("labelAngle", 0) == 0
+    seen = False
+    for layer in _chart_layers(spec):
+        encoding = layer.get("encoding") or {}
+        if channel not in encoding:
+            continue
+        seen = True
+        axis = encoding[channel].get("axis", "absent")
+        assert axis is not None
+        if isinstance(axis, dict):
+            assert axis.get("labels", True) is not False
+            assert axis.get("labelAngle", 0) == 0
+    assert seen
+
+
+def test_labeled_charts_keep_a_category_axis(project):
+    pytest.importorskip("altair")
+    charts = _load_hosted(project, "charts")
+    clock = charts.selectable_bars(
+        [
+            {"label": "Under 10s", "band": "under_10", "games": 1191},
+            {"label": "60s+", "band": "60_plus", "games": 12567},
+        ],
+        name="clock_pick",
+        field="band",
+        value_title="Evaluable moves",
+        label_field="label",
+        category_title="Time remaining",
+        horizontal_category_title=True,
+    ).to_dict()
+    _assert_category_axis(clock, "y")
+    for layer in _chart_layers(clock):
+        assert layer["encoding"]["y"]["title"] == "Time remaining"
+        assert layer["encoding"]["y"]["axis"]["titleAngle"] == 0
+        assert layer["encoding"]["y"]["axis"]["titleAnchor"] == "start"
+        assert layer["encoding"]["x"]["axis"] is None
+        assert layer["encoding"]["x"]["scale"]["domain"][0] == 0
+    openings = charts.selectable_bars(
+        [{"label": "Sicilian Defense", "games": 85724}],
+        name="family_pick",
+        field="label",
+        value_title="Games",
+    ).to_dict()
+    _assert_category_axis(openings, "y")
+    assert _layer(openings, "bar")["encoding"]["y"]["field"] == "label"
+    periods = charts.period_bars(
+        [{"label": "2025-11", "games": 240086}, {"label": "2026-08", "games": 89532}]
+    ).to_dict()
+    _assert_category_axis(periods, "x")
+    assert _layer(periods, "bar")["encoding"]["x"]["field"] == "tick"
+    for layer in _chart_layers(periods):
+        assert layer["encoding"]["y"]["axis"] is None
+        assert layer["encoding"]["y"]["scale"]["zero"] is True
+    buckets = charts.bucket_bars(
+        [{"bucket": "Under 10s", "error_proxy_rate": 0.093, "rate_label": "9.3%"}]
+    ).to_dict()
+    _assert_category_axis(buckets, "x")
+    assert _layer(buckets, "bar")["encoding"]["x"]["title"] == "Seconds left"
+    assert _layer(buckets, "text")["encoding"]["y"]["axis"]["labelAngle"] == 0
+    shares = charts.transposition_bars(
+        [
+            {
+                "view": "French Defense",
+                "share": 0.125,
+                "share_label": "12.5%",
+                "denominator_games": 80,
+            }
+        ]
+    ).to_dict()
+    _assert_category_axis(shares, "y")
+    removed = charts.funnel([{"stage": "Unrated", "count": 12, "order": 1}]).to_dict()
+    _assert_category_axis(removed, "y")
+    families = charts.horizontal_bars(
+        [{"family": "French Defense", "games": 40, "share_label": "10%"}],
+        x_title="Games",
+    ).to_dict()
+    _assert_category_axis(families, "y")
+    single = charts.score_intervals(
+        [
+            {
+                "family": "French Defense",
+                "series": "White, raw",
+                "rate": 0.419,
+                "low": 0.4,
+                "high": 0.44,
+                "rate_label": "41.9%",
+                "interval_label": "40.0%–44.0%",
+                "support_label": "no",
+            }
+        ]
+    ).to_dict()
+    _assert_category_axis(single, "x")
+    for layer in _chart_layers(single):
+        if "y" in layer.get("encoding", {}):
+            assert layer["encoding"]["y"].get("axis", "absent") is None
+    grouped = charts.score_intervals(
+        [
+            {
+                "family": "French Defense",
+                "series": "White, raw",
+                "rate": 0.419,
+                "low": None,
+                "high": None,
+                "rate_label": "41.9%",
+                "interval_label": "not published",
+                "support_label": "no",
+            },
+            {
+                "family": "French Defense",
+                "series": "Black, adjusted",
+                "rate": 0.503,
+                "low": 0.447,
+                "high": 0.561,
+                "rate_label": "50.3%",
+                "interval_label": "44.7%–56.1%",
+                "support_label": "no",
+            },
+        ]
+    ).to_dict()
+    _assert_category_axis(grouped, "x")
+    assert _layer(grouped, "bar")["encoding"]["y"]["axis"]["labelAngle"] == 0
 
 
 def test_count_axis_starts_near_zero_unless_values_are_tight(project):

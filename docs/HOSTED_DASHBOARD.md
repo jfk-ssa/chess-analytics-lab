@@ -81,12 +81,17 @@ Charts are Altair, with the `chesslab` theme (Inter and the page palette).
 Every bar chart prints its value at the end of the bar. Counts use
 thousands separators and rates use one decimal percent. A horizontal
 label sits just past the bar and moves inside the bar, in a light color,
-when that would cross the right edge. A vertical label sits above the bar. Count axes
-start at zero and leave headroom so the label is not cut off. The ten
-period bars drop those numbers when the plot is narrower than 56 pixels
-per month (560 pixels for the published months), which includes a 390px
-page, because a full count does not fit in each slot. Month names on
-that chart stay angled. The other axis labels stay horizontal.
+when that would cross the right edge. A vertical label sits above the bar.
+Count scales start at zero and leave headroom so the label is not cut off. The value
+axis is hidden on those labeled charts, because the bar already shows the
+number; the category axis stays, with horizontal labels and its title.
+Period months use a short horizontal tick such as `Nov 25` (the tooltip
+keeps `2025-11`). On a plot narrower than 56 pixels per month (560 pixels
+for the ten published months, which includes a 390px page) the chart
+labels every other month and prints a compact count such as `240k`.
+Wider plots show every month and the full count. The error-proxy bucket
+chart keeps its percent axis, because that text is omitted when the slot
+is too narrow. The other axis labels stay horizontal.
 
 Card rows use an inline grid,
 `repeat(auto-fill, minmax(min(100%, 256px), 1fr))`. The label and value
