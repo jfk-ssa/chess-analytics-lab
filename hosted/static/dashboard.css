@@ -27,6 +27,33 @@
   font-family: Inter, sans-serif;
 }
 
+/* KPI strip only. Two equal columns until the strip is 600px wide, then
+   four. Eight cards stay 4x2 or 2x4. Auto-fill is what put five cards
+   on the first row and three on the second at 1920px. 600px is wide
+   enough for the longest delta, and it is below the strip width at a
+   1024px page with the sidebar open. */
+.cal-kpi-frame {
+  container-type: inline-size;
+  width: 100%;
+  margin: 0 0 16px;
+}
+
+.cal-kpis {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 12px;
+  row-gap: 12px;
+  width: 100%;
+  align-items: stretch;
+  margin: 0;
+}
+
+@container (min-width: 600px) {
+  .cal-kpis {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 .cal-k,
 .cal-v,
 .cal-d,

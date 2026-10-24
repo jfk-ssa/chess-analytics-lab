@@ -199,9 +199,10 @@ def test_filter_and_query_respect_unpublished_crosses(tmp_path: Path) -> None:
     assert french[0]["label"] == "1.e4 e6"
     black = Filters(wide.start, wide.end, None, "black", None, "French Defense")
     assert explorer_cohort(connection, black) == "rated_public"
-    assert kpis(connection, black)[0].value == "2"
-    assert kpis(connection, black)[5].value == "1"
-    assert "not by color" in kpis(connection, black)[5].detail
+    black_cards = {item.label: item for item in kpis(connection, black)}
+    assert black_cards["Games"].value == "2"
+    assert black_cards["Positions"].value == "1"
+    assert "not by color" in black_cards["Positions"].detail
     rated_only = Filters(date(2025, 12, 1), date(2026, 1, 1))
     bands = clock_slices(connection, wide, "under_10")
     assert len(bands) == 1
@@ -217,11 +218,13 @@ def test_kpi_delta_uses_the_previous_equal_period_count(tmp_path: Path) -> None:
     assert previous_periods(catalog, ["2025-11", "2025-12", "2026-01"]) is None
     assert previous_periods(catalog, ["2026-01"]) == ["2025-12"]
     january = Filters(date(2026, 1, 1), date(2026, 1, 1))
-    games = kpis(connection, january)[0]
+    games = {item.label: item for item in kpis(connection, january)}["Games"]
     assert games.value == "6"
     assert games.detail == "+2 vs prior"
     wide = Filters(date(2025, 11, 1), date(2026, 8, 1))
-    assert kpis(connection, wide)[0].detail == "no prior period"
+    assert {item.label: item for item in kpis(connection, wide)}[
+        "Games"
+    ].detail == "no prior period"
     with pytest.raises(ValueError, match="start is after"):
         Filters(date(2026, 2, 1), date(2026, 1, 1))
 
@@ -632,6 +635,16 @@ def test_committed_cube_deltas_use_the_previous_comparable_periods() -> None:
     connection = connect(cube_path(ROOT))
     wide = Filters(date(2025, 11, 1), date(2026, 8, 1))
     wide_cards = kpis(connection, wide)
+    assert [item.label for item in wide_cards] == [
+        "Win rate",
+        "Draw rate",
+        "Loss rate",
+        "Rating diff",
+        "Games",
+        "Game length",
+        "Positions",
+        "Clock error",
+    ]
     assert all("vs prior" not in item.detail for item in wide_cards)
     november = Filters(date(2025, 11, 1), date(2025, 11, 30))
     december = Filters(date(2025, 12, 1), date(2025, 12, 1))

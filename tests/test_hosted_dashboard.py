@@ -106,6 +106,19 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
     assert [item.label for item in app.button] == ["Reset filters"]
     assert len(app.date_input) == 1
     assert app.date_input[0].label == "Date range"
+    strips = [item.value for item in app.markdown if "cal-kpis" in item.value]
+    assert len(strips) == 1
+    assert re.findall(r'class="cal-k"[^>]*>([^<]+)', strips[0]) == [
+        "Win rate",
+        "Draw rate",
+        "Loss rate",
+        "Rating diff",
+        "Games",
+        "Game length",
+        "Positions",
+        "Clock error",
+    ]
+    assert "minmax(min(100%,256px),1fr)" not in strips[0]
     labels = {item.label: list(item.options) for item in app.selectbox}
     assert set(labels) == {
         "Time control",
@@ -1257,3 +1270,35 @@ def test_opening_drill_lists_lines_and_climbs_back(project, monkeypatch):
     assert not app.exception, [item.message for item in app.exception]
     assert "Opening families by games. Select a bar to drill into lines." in _chart_alts(app)
     assert [item.label for item in app.button] == ["Reset filters"]
+
+
+_KPI_LABELS = [
+    "Win rate",
+    "Draw rate",
+    "Loss rate",
+    "Rating diff",
+    "Games",
+    "Game length",
+    "Positions",
+    "Clock error",
+]
+
+
+def test_kpi_strip_is_two_or_four_columns_in_dom_order(project):
+    module = _load_hosted(project, "layout")
+    strip = module.kpi_strip(
+        [(label, "1", "120,072 / 242,616 · White · -0.3 pp vs prior") for label in _KPI_LABELS]
+    )
+    assert strip.startswith('<div class="cal-kpi-frame"><div class="cal-equal cal-kpis"')
+    assert 'data-cards="8"' in strip
+    assert re.findall(r'class="cal-k"[^>]*>([^<]+)', strip) == _KPI_LABELS
+    assert "auto-fill" not in strip
+    assert "minmax(min(100%,256px),1fr)" not in strip
+    css = (project / "hosted" / "static" / "dashboard.css").read_text()
+    assert ".cal-kpi-frame" in css and "container-type: inline-size" in css
+    assert "grid-template-columns: repeat(2, minmax(0, 1fr));" in css
+    assert "@container (min-width: 600px)" in css
+    assert "grid-template-columns: repeat(4, minmax(0, 1fr));" in css
+    assert "repeat(auto-fill,minmax(min(100%,256px),1fr))" not in css.split(".cal-kpis", 1)[1]
+    with pytest.raises(ValueError, match="at least one card"):
+        module.kpi_strip([])

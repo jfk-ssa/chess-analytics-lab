@@ -1,6 +1,6 @@
 """Equal-width cards for the hosted dashboard.
 
-The track list is ``repeat(auto-fill, minmax(min(100%, 256px), 1fr))``.
+The shared track list is ``repeat(auto-fill, minmax(min(100%, 256px), 1fr))``.
 256px is 16rem at the CSS reference pixel. Streamlit sets the document
 root to 14px, so a literal 16rem is 224px and three tracks fit in the
 content box at a 768px viewport. 256px does not: one column at 390px,
@@ -8,6 +8,14 @@ two by two for four cards at 768px, and one row at 1280px. Every card
 in a row shares that minimum. ``auto-fill`` keeps the empty track on a
 short last row, so the leftover card stays the same width. The detail
 nowraps the fraction and can break at `` · ``.
+
+The KPI strip does not use that track. Eight cards in an auto-fill row
+become five plus three once the page is wide enough, as at 1920px.
+``hosted/static/dashboard.css`` gives the strip two equal columns until
+the strip itself is 600px wide, then four equal columns. That is two
+rows of four on a desktop page and two cards per row on a phone. The
+DOM order is the visual order: Win rate, Draw rate, Loss rate, Rating
+diff, Games, Game length, Positions, Clock error.
 """
 
 from __future__ import annotations
@@ -29,28 +37,30 @@ def equal_width_columns(count: int) -> str:
     return _TRACKS
 
 
+def _card_html(label: str, value: str, detail: str) -> str:
+    return (
+        '<div class="cal-card" style="min-width:0;width:100%;box-sizing:border-box;'
+        "container-type:inline-size;background:#eaf1eb;border:1px solid #c5d5cc;"
+        "border-radius:12px;padding:10px 8px;font-family:Inter,sans-serif;"
+        'color:#203433;overflow:visible;overflow-wrap:normal;word-break:normal">'
+        '<div class="cal-k" style="font-size:0.72rem;font-weight:600;'
+        "line-height:1.3;overflow-wrap:normal;white-space:nowrap;"
+        f'">{escape(label)}</div>'
+        '<div class="cal-v" style="font-size:clamp(0.95rem,5.5cqi,1.45rem);'
+        "font-weight:600;line-height:1.15;color:#116559;"
+        "font-variant-numeric:tabular-nums;white-space:nowrap;"
+        f'overflow-wrap:normal">{escape(value)}</div>'
+        '<div class="cal-d" style="font-size:clamp(0.68rem,4cqi,0.82rem);'
+        "line-height:1.35;color:#3d524c;overflow:visible;overflow-wrap:normal;"
+        f'word-break:normal">{_detail_html(detail)}</div>'
+        "</div>"
+    )
+
+
 def equal_width_row(cards: list[tuple[str, str, str]]) -> str:
     """HTML for one row of cards. Each tuple is label, value, detail."""
     columns = equal_width_columns(len(cards))
-    cells: list[str] = []
-    for label, value, detail in cards:
-        cells.append(
-            '<div class="cal-card" style="min-width:0;width:100%;box-sizing:border-box;'
-            "container-type:inline-size;background:#eaf1eb;border:1px solid #c5d5cc;"
-            "border-radius:12px;padding:10px 8px;font-family:Inter,sans-serif;"
-            'color:#203433;overflow:visible;overflow-wrap:normal;word-break:normal">'
-            '<div class="cal-k" style="font-size:0.72rem;font-weight:600;'
-            "line-height:1.3;overflow-wrap:normal;white-space:nowrap;"
-            f'">{escape(label)}</div>'
-            '<div class="cal-v" style="font-size:clamp(0.95rem,5.5cqi,1.45rem);'
-            "font-weight:600;line-height:1.15;color:#116559;"
-            "font-variant-numeric:tabular-nums;white-space:nowrap;"
-            f'overflow-wrap:normal">{escape(value)}</div>'
-            '<div class="cal-d" style="font-size:clamp(0.68rem,4cqi,0.82rem);'
-            "line-height:1.35;color:#3d524c;overflow:visible;overflow-wrap:normal;"
-            f'word-break:normal">{_detail_html(detail)}</div>'
-            "</div>"
-        )
+    cells = [_card_html(label, value, detail) for label, value, detail in cards]
     style = (
         "display:grid;"
         f"grid-template-columns:{columns};"
@@ -60,6 +70,17 @@ def equal_width_row(cards: list[tuple[str, str, str]]) -> str:
     return (
         f'<div class="cal-equal" data-equal-width="true" data-cards="{len(cards)}" '
         f'style="{style}">{body}</div>'
+    )
+
+
+def kpi_strip(cards: list[tuple[str, str, str]]) -> str:
+    """KPI cards in DOM order. Column count is the strip rule in the stylesheet."""
+    if not cards:
+        raise ValueError("kpi strip needs at least one card")
+    cells = [_card_html(label, value, detail) for label, value, detail in cards]
+    return (
+        '<div class="cal-kpi-frame"><div class="cal-equal cal-kpis" data-equal-width="true" '
+        f'data-cards="{len(cards)}">{"".join(cells)}</div></div>'
     )
 
 
