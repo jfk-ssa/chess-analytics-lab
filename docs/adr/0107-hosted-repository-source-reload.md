@@ -44,17 +44,29 @@ import runs. The previous `sys.path` is restored.
 
 The import is skipped when every cached `chess_analytics` module was
 loaded from that `src/chess_analytics` tree and a SHA-256 of those
-`.py` files still matches the stamp from the last import. Otherwise
-the cached modules are dropped, their `__pycache__` files are removed
-when the process can write them, and the package is imported again.
-The bytecode deletion covers a checkout whose source mtime moves
-backwards. An unchanged rerun keeps the module object.
+`.py` files still matches the stamp from the last import. When those
+modules are already that tree, a later source change reloads them in
+place. `importlib.reload` looks the spec up again, so `src/` is first
+on `sys.path` for that search; otherwise the finder would bind an
+installed copy into the same module object. The module objects stay in
+`sys.modules`, so another session's lazy import (`dimension_values`,
+`exact_sign_test`) does not see a missing module. Each session has its
+own script thread. A cached copy from outside the tree is still
+replaced.
+
+`__pycache__` entries are removed only when the resolved directory is
+still under `src/chess_analytics`. A symlink that points elsewhere is
+left alone. The stamp is updated only when that cleanup could delete
+every in-tree `.pyc` it tried to remove. A file that could not be
+removed leaves the stamp unset, and the next rerun tries again. An
+unchanged rerun keeps the module object.
 
 `RepositoryImportError` is not an `ImportError`. The page prints it.
-An `ImportError` from `hosted/bi.py` is also caught and printed, with
-the loaded cube path. Community Cloud redacts an uncaught import
-failure. A mismatch that remains after the reload is a disagreement
-between the files on disk, and the page says so.
+An `ImportError` from `hosted/bi.py`, and one raised later while the
+page renders, is caught and printed with the loaded cube path.
+Community Cloud redacts an uncaught import failure. A mismatch that
+remains after the reload is a disagreement between the files on disk,
+and the page says so.
 
 `hosted/` modules stay on `_load_local`, which executes the file on
 every run. This record does not add the project to

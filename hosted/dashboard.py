@@ -1393,20 +1393,23 @@ def main() -> None:
         if _duckdb_error(exc):
             _fail(f"Dashboard cube unavailable: {exc}")
         raise
-    if extract_error is not None or extract is None or path is None or table_rows is None:
-        _render(
-            layout,
-            charts,
-            bi,
-            {},
-            Path(),
-            table_rows if table_rows is not None else (lambda *_args: []),
-            connection,
-            cube_bounds,
-            extract_error or "Public extract unavailable",
-        )
-        return
-    _render(layout, charts, bi, extract, path, table_rows, connection, cube_bounds)
+    try:
+        if extract_error is not None or extract is None or path is None or table_rows is None:
+            _render(
+                layout,
+                charts,
+                bi,
+                {},
+                Path(),
+                table_rows if table_rows is not None else (lambda *_args: []),
+                connection,
+                cube_bounds,
+                extract_error or "Public extract unavailable",
+            )
+            return
+        _render(layout, charts, bi, extract, path, table_rows, connection, cube_bounds)
+    except ImportError as exc:
+        _fail(_cube_name_message(exc))
 
 
 st.set_page_config(page_title="Chess Analytics Lab", layout="wide")

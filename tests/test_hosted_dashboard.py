@@ -6,6 +6,8 @@ import importlib.util
 import json
 import re
 import sys
+import threading
+import time
 import types
 from html import escape
 from pathlib import Path
@@ -265,6 +267,137 @@ def test_installed_cube_loses_to_the_repository_copy(project, tmp_path):
     loaded = sys.modules["chess_analytics.dashboard_cube"]
     assert Path(loaded.__file__).resolve() == root / "dashboard_cube.py"
     assert callable(_import_clock_games())
+
+
+def test_src_reload_keeps_the_module_for_another_session(project, monkeypatch):
+    """A second script thread imports the cube while this run refreshes it."""
+    loader = _load_repo_import(project)
+    loader.import_repository_package()
+    cube = sys.modules["chess_analytics.dashboard_cube"]
+    real_reload = loader.importlib.reload
+
+    def slow_reload(module):
+        time.sleep(0.02)
+        return real_reload(module)
+
+    monkeypatch.setattr(loader.importlib, "reload", slow_reload)
+    errors: list[BaseException] = []
+    stop = threading.Event()
+
+    def other_session() -> None:
+        while not stop.is_set():
+            try:
+                from chess_analytics.analyst.live_stats import exact_sign_test
+                from chess_analytics.dashboard_cube import clock_games, dimension_values
+            except ImportError as exc:
+                errors.append(exc)
+                return
+            if not all(map(callable, (dimension_values, clock_games, exact_sign_test))):
+                errors.append(TypeError("reload dropped a cube name"))
+                return
+
+    thread = threading.Thread(target=other_session)
+    thread.start()
+    try:
+        payload = loader._payload()
+        payload["digest"] = "outdated"
+        loader.import_repository_package()
+    finally:
+        stop.set()
+        thread.join(timeout=5)
+    assert not thread.is_alive()
+    assert not errors
+    assert sys.modules["chess_analytics.dashboard_cube"] is cube
+
+
+def test_repository_import_state_is_published_once(project):
+    loader = _load_repo_import(project)
+    sys.modules.pop("_hosted_repository_import_state", None)
+    found: list[object] = []
+
+    def grab() -> None:
+        found.append(loader._payload()["lock"])
+
+    threads = [threading.Thread(target=grab) for _index in range(8)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    assert len({id(lock) for lock in found}) == 1
+
+
+def test_pycache_symlink_outside_the_tree_is_kept(project, tmp_path):
+    loader = _load_repo_import(project)
+    root = tmp_path / "chess_analytics"
+    root.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    marker = outside / "escaped.pyc"
+    marker.write_bytes(b"kept")
+    (root / "__pycache__").symlink_to(outside, target_is_directory=True)
+    assert loader._drop_bytecode(root) is True
+    assert marker.read_bytes() == b"kept"
+    real_cache = root / "pkg" / "__pycache__"
+    real_cache.mkdir(parents=True)
+    link = real_cache / "mod.pyc"
+    link.symlink_to(marker)
+    assert loader._drop_bytecode(root) is True
+    assert marker.read_bytes() == b"kept"
+    assert link.is_symlink()
+
+
+def test_pyc_that_cannot_be_removed_is_reported(project, tmp_path):
+    loader = _load_repo_import(project)
+    root = tmp_path / "chess_analytics"
+    cache = root / "__pycache__"
+    cache.mkdir(parents=True)
+    pyc = cache / "mod.pyc"
+    pyc.write_bytes(b"pyc")
+    cache.chmod(0o555)
+    try:
+        assert loader._drop_bytecode(root) is False
+        assert pyc.is_file()
+    finally:
+        cache.chmod(0o755)
+
+
+def test_digest_is_not_stamped_when_bytecode_remains(project, monkeypatch):
+    loader = _load_repo_import(project)
+    loader.import_repository_package()
+    cube = sys.modules["chess_analytics.dashboard_cube"]
+    payload = loader._payload()
+    monkeypatch.setattr(loader, "_drop_bytecode", lambda _root: False)
+    payload["digest"] = "outdated"
+    loader.import_repository_package()
+    assert payload["digest"] == "outdated"
+    assert sys.modules["chess_analytics.dashboard_cube"] is cube
+    assert callable(_import_clock_games())
+
+
+def test_render_catches_importerror(project):
+    tree = ast.parse((project / "hosted" / "dashboard.py").read_text())
+    main = next(
+        node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "main"
+    )
+    caught = False
+    for node in ast.walk(main):
+        if not isinstance(node, ast.Try):
+            continue
+        renders = any(
+            isinstance(sub, ast.Call)
+            and isinstance(sub.func, ast.Name)
+            and sub.func.id == "_render"
+            for sub in ast.walk(node)
+        )
+        if not renders:
+            continue
+        caught = any(
+            isinstance(handler.type, ast.Name) and handler.type.id == "ImportError"
+            for handler in node.handlers
+        )
+        if caught:
+            break
+    assert caught
 
 
 def test_repository_import_failure_is_not_an_importerror(project, tmp_path):
