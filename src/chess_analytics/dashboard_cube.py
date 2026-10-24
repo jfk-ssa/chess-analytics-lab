@@ -11,7 +11,7 @@ import os
 import re
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 CUBE_FILENAME = "dashboard_cube.parquet"
@@ -1571,36 +1571,216 @@ def _pack_transposition(connection, cohort: str, row: Mapping[str, object]) -> d
     }
 
 
+def _as_date(value: object) -> date | None:
+    if isinstance(value, datetime):
+        return value.date()
+    if isinstance(value, date):
+        return value
+    if isinstance(value, str):
+        try:
+            return date.fromisoformat(value[:10])
+        except ValueError:
+            return None
+    return None
+
+
+def _month_index(period: str) -> int | None:
+    """YYYY-MM as a month count. Other period labels are not a series."""
+    if len(period) != 7 or period[4] != "-":
+        return None
+    year, month = period[:4], period[5:]
+    if not (year.isdigit() and month.isdigit()):
+        return None
+    month_number = int(month)
+    if not 1 <= month_number <= 12:
+        return None
+    return int(year) * 12 + month_number
+
+
+def _contiguous_months(periods: Sequence[str]) -> bool:
+    indexes: list[int] = []
+    for period in sorted(periods):
+        index = _month_index(period)
+        if index is None:
+            return False
+        indexes.append(index)
+    if not indexes:
+        return False
+    return all(indexes[index] + 1 == indexes[index + 1] for index in range(len(indexes) - 1))
+
+
+def _period_signature(rows: Sequence[Mapping[str, object]], period: str) -> tuple[str, int] | None:
+    """Cohort and span, when every row of ``period`` agrees. None when it does not."""
+    matched = [row for row in rows if str(row["period"]) == period]
+    if not matched:
+        return None
+    cohorts = {str(row["cohort"]) for row in matched}
+    spans: set[int] = set()
+    for row in matched:
+        start = _as_date(row["period_start"])
+        end = _as_date(row["period_end"])
+        if start is None or end is None:
+            return None
+        spans.add((end - start).days)
+    if len(cohorts) != 1 or len(spans) != 1:
+        return None
+    return cohorts.pop(), spans.pop()
+
+
+def _prior_period_rows(
+    connection,
+    grain: str,
+    filters: Filters,
+    current: Sequence[Mapping[str, object]],
+    notes: Sequence[str],
+    *,
+    force_color: str | None = None,
+) -> list[dict[str, object]] | None:
+    """Previous equal block of periods, or None when that comparison would mislead.
+
+    The date range has already chosen the periods that sit fully inside it.
+    The prior block is that many periods immediately before, with the same
+    time, color, rating, and opening filters. Both blocks have to be
+    contiguous months, the prior block has to end the month before the
+    current block, and every period has to share one cohort and one span.
+    A missing block, a gap, or a different kind of period returns None.
+    A card that ignored the date range is not compared.
+    """
+    if not current or _EMPTY_CUT in notes or "date" in notes:
+        return None
+    selected = sorted({str(row["period"]) for row in current if row.get("period") is not None})
+    if not selected:
+        return None
+    color = force_color if force_color is not None else filters.color
+    active = Filters(
+        filters.start,
+        filters.end,
+        filters.time_control,
+        color,
+        filters.rating_band,
+        filters.opening_family,
+    )
+    catalog = _inside(connection, grain, active, dimensional=True, adaptive=True, dates=False)
+    ordered = sorted({str(row["period"]) for row in catalog if row.get("period") is not None})
+    if any(period not in ordered for period in selected):
+        return None
+    prior = previous_periods(ordered, selected)
+    if prior is None or not _contiguous_months(selected) or not _contiguous_months(prior):
+        return None
+    last = _month_index(max(prior))
+    first = _month_index(min(selected))
+    if last is None or first is None or last + 1 != first:
+        return None
+    current_signature = {_period_signature(catalog, period) for period in selected}
+    prior_signature = {_period_signature(catalog, period) for period in prior}
+    if len(current_signature) != 1 or current_signature != prior_signature:
+        return None
+    if None in current_signature:
+        return None
+    chosen = set(prior)
+    found = [row for row in catalog if str(row["period"]) in chosen]
+    if not found or sum(_num(row["games"]) for row in found) <= 0:
+        return None
+    return found
+
+
+def _signed_text(value: object) -> str:
+    text = format(value, "f")
+    if text.startswith("-"):
+        return text
+    return f"+{text}"
+
+
+def _with_count_delta(
+    detail: str, current: int, prior_rows: Sequence[Mapping[str, object]] | None
+) -> str:
+    if not prior_rows:
+        return detail
+    prior = sum(_num(row["games"]) for row in prior_rows)
+    if prior <= 0:
+        return detail
+    return f"{detail} · {current - prior:+,} vs prior"
+
+
+def _with_pp_delta(
+    detail: str,
+    current_count: int,
+    current_games: int,
+    prior_count: int,
+    prior_games: int,
+) -> str:
+    from decimal import Decimal
+
+    if current_games <= 0 or prior_games <= 0:
+        return detail
+    current_points = Decimal(_percent(current_count / current_games).removesuffix("%"))
+    prior_points = Decimal(_percent(prior_count / prior_games).removesuffix("%"))
+    return f"{detail} · {_signed_text(current_points - prior_points)} pp vs prior"
+
+
+def _with_mean_delta(detail: str, current: float, prior: float | None) -> str:
+    from decimal import Decimal
+
+    if prior is None:
+        return detail
+    delta = Decimal(_tenth(current)) - Decimal(_tenth(prior))
+    return f"{detail} · {_signed_text(delta)} vs prior"
+
+
 def _warehouse_games_kpi(connection, filters: Filters) -> Kpi:
     """Count each game once. A rating filter with no color uses the White cells."""
     player = bool(filters.color or filters.rating_band)
     if player and _grain_present(connection, "result_cell"):
-        rows, notes = _collect(
-            connection, "result_cell", filters, force_color=filters.color or "white"
-        )
+        grain, force = "result_cell", filters.color or "white"
     elif _grain_present(connection, "game_cell"):
-        rows, notes = _collect(connection, "game_cell", filters)
+        grain, force = "game_cell", None
     else:
-        rows, notes = _collect(
-            connection, "result_cell", filters, force_color=filters.color or "white"
-        )
+        grain, force = "result_cell", filters.color or "white"
+    rows, notes = _collect(connection, grain, filters, force_color=force)
     if _EMPTY_CUT in notes:
         return Kpi("Games", "0", _NO_CELLS)
     total = sum(_num(row["games"]) for row in rows)
     if not notes and not _dimensional(filters):
-        return Kpi("Games", f"{total:,}", "warehouse")
-    detail = "warehouse"
-    if "White" in notes:
-        detail += " · White"
-    ignored = [item for item in notes if item != "White"]
-    if ignored:
-        detail = _with_note(detail, ignored)
-    return Kpi("Games", f"{total:,}", detail)
+        detail = "warehouse"
+    else:
+        detail = "warehouse"
+        if "White" in notes:
+            detail += " · White"
+        ignored = [item for item in notes if item != "White"]
+        if ignored:
+            detail = _with_note(detail, ignored)
+    prior = _prior_period_rows(connection, grain, filters, rows, notes, force_color=force)
+    return Kpi("Games", f"{total:,}", _with_count_delta(detail, total, prior))
 
 
 def _warehouse_result_kpis(connection, filters: Filters) -> tuple[Kpi, Kpi, Kpi]:
-    rows, notes = _collect(connection, "result_cell", filters, force_color=filters.color or "white")
-    return _score_cards(rows, notes)
+    force = filters.color or "white"
+    rows, notes = _collect(connection, "result_cell", filters, force_color=force)
+    win, loss, draw = _score_cards(rows, notes)
+    prior = _prior_period_rows(connection, "result_cell", filters, rows, notes, force_color=force)
+    if prior is None or not rows:
+        return win, loss, draw
+    current_wins, current_draws, current_losses, current_games = _tally(rows)
+    prior_wins, prior_draws, prior_losses, prior_games = _tally(prior)
+    if current_games <= 0 or prior_games <= 0:
+        return win, loss, draw
+    return (
+        Kpi(
+            win.label,
+            win.value,
+            _with_pp_delta(win.detail, current_wins, current_games, prior_wins, prior_games),
+        ),
+        Kpi(
+            loss.label,
+            loss.value,
+            _with_pp_delta(loss.detail, current_losses, current_games, prior_losses, prior_games),
+        ),
+        Kpi(
+            draw.label,
+            draw.value,
+            _with_pp_delta(draw.detail, current_draws, current_games, prior_draws, prior_games),
+        ),
+    )
 
 
 def _mean_kpis(connection, filters: Filters) -> list[Kpi]:
@@ -1614,15 +1794,37 @@ def _mean_kpis(connection, filters: Filters) -> list[Kpi]:
             if filters.color or filters.rating_band or not _grain_present(connection, "game_cell"):
                 cards.append(Kpi("Game length", "0.0", _NO_CELLS))
         else:
+            prior = _prior_period_rows(
+                connection,
+                "result_cell",
+                filters,
+                rows,
+                notes,
+                force_color=filters.color or "white",
+            )
             diff = _weighted_mean(rows, "rating_diff")
             if diff is not None:
-                cards.append(Kpi("Rating diff", _signed(diff), _mean_detail(notes)))
+                prior_diff = None if prior is None else _weighted_mean(prior, "rating_diff")
+                cards.append(
+                    Kpi(
+                        "Rating diff",
+                        _signed(diff),
+                        _with_mean_delta(_mean_detail(notes), diff, prior_diff),
+                    )
+                )
             length = _weighted_mean(rows, "mean_ply")
             use_player_length = bool(filters.color or filters.rating_band)
             if not _grain_present(connection, "game_cell"):
                 use_player_length = True
             if length is not None and use_player_length:
-                cards.append(Kpi("Game length", _tenth(length), _mean_detail(notes, "mean ply")))
+                prior_length = None if prior is None else _weighted_mean(prior, "mean_ply")
+                cards.append(
+                    Kpi(
+                        "Game length",
+                        _tenth(length),
+                        _with_mean_delta(_mean_detail(notes, "mean ply"), length, prior_length),
+                    )
+                )
     if _grain_present(connection, "game_cell") and not any(
         card.label == "Game length" for card in cards
     ):
@@ -1632,7 +1834,15 @@ def _mean_kpis(connection, filters: Filters) -> list[Kpi]:
         else:
             length = _weighted_mean(rows, "mean_ply")
             if length is not None:
-                cards.append(Kpi("Game length", _tenth(length), _mean_detail(notes, "mean ply")))
+                prior = _prior_period_rows(connection, "game_cell", filters, rows, notes)
+                prior_length = None if prior is None else _weighted_mean(prior, "mean_ply")
+                cards.append(
+                    Kpi(
+                        "Game length",
+                        _tenth(length),
+                        _with_mean_delta(_mean_detail(notes, "mean ply"), length, prior_length),
+                    )
+                )
     return cards
 
 

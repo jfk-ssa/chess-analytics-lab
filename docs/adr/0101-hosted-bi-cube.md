@@ -91,7 +91,7 @@ opening, clock, rating, and color:
   `180+2` and `-` are in that set. They are not split by opening family
   or color. Period bars stay `corpus_month` (1,042,346 training games).
   The Games card does not repeat a prior-period delta once `game_cell`
-  is present.
+  is present. [ADR 0105](0105-kpi-period-deltas.md) supersedes this bullet.
 - A filter on a column the grain stores, which matches no cell, returns
   no rows. The card says `no cells for this cut`. It does not widen to
   the rest of the population. `Amazon Attack` is that case for games,

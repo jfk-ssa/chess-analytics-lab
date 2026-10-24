@@ -535,6 +535,12 @@ def test_equal_width_rows_share_one_track_definition(project):
     wrapped = module.equal_width_row([("Win rate", "49.2%", "476,741 / 968,874 · White")])
     assert 'white-space:nowrap">476,741 / 968,874<' in wrapped
     assert 'white-space:nowrap">476,741 / 968,874 · White<' not in wrapped
+    delta = module.equal_width_row(
+        [("Win rate", "49.5%", "120,072 / 242,616 · White · -0.3 pp vs prior")]
+    )
+    assert 'white-space:nowrap">-0.3 pp vs prior<' in delta
+    assert 'white-space:nowrap">120,072 / 242,616 · White · -0.3 pp vs prior<' not in delta
+    assert 'class="cal-k"' in delta and "Win rate" in delta
     marked = module.transposition_cards(
         [
             {
