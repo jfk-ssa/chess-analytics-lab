@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from chess_analytics.dashboard_cube import (
+    COLUMNS,
     CUBE_FILENAME,
     MIN_CELL,
     SIZE_BUDGET_BYTES,
@@ -275,7 +276,7 @@ def test_committed_cube_matches_the_warehouse_and_published_totals() -> None:
     june = Filters(date(2026, 6, 1), date(2026, 8, 1))
     june_cards = {item.label: item for item in kpis(connection, june)}
     assert june_cards["Games"].value == "256,031"
-    assert june_cards["Games"].detail == "warehouse"
+    assert june_cards["Games"].detail == "warehouse · +90 vs prior"
     french = Filters(wide.start, wide.end, None, "black", None, "French Defense")
     french_cards = {item.label: item for item in kpis(connection, french)}
     assert french_cards["Games"].value == "63,484"
@@ -623,6 +624,175 @@ def _insert_opening(
         "'rated blitz', 'fingerprint-secret', 1500, 1400, 'snapshot', ?, "
         "'data/raw/secret.pgn', ?)",
         ["lichess", f"{index:08d}", result, played, opening, marked_bot, ply, period, cohort],
+    )
+
+
+def test_committed_cube_deltas_use_the_previous_comparable_periods() -> None:
+    """Equal published periods, not a calendar shift that would catch fewer prefix days."""
+    connection = connect(cube_path(ROOT))
+    wide = Filters(date(2025, 11, 1), date(2026, 8, 1))
+    wide_cards = kpis(connection, wide)
+    assert all("vs prior" not in item.detail for item in wide_cards)
+    november = Filters(date(2025, 11, 1), date(2025, 11, 30))
+    december = Filters(date(2025, 12, 1), date(2025, 12, 1))
+    for chosen in (november, december):
+        cards = {item.label: item for item in kpis(connection, chosen)}
+        assert "vs prior" not in cards["Games"].detail
+        assert cards["Games"].detail == "warehouse"
+    june = Filters(date(2026, 6, 1), date(2026, 8, 1))
+    cards = {item.label: item for item in kpis(connection, june)}
+    assert cards["Games"].detail == "warehouse · +90 vs prior"
+    assert cards["Win rate"].value == "49.5%"
+    assert cards["Win rate"].detail == "120,072 / 242,616 · White · -0.3 pp vs prior"
+    assert cards["Draw rate"].detail == "9,005 / 242,616 · White · +0.0 pp vs prior"
+    assert cards["Loss rate"].detail == "113,539 / 242,616 · White · +0.3 pp vs prior"
+    assert cards["Rating diff"].value == "+0.3"
+    assert cards["Rating diff"].detail == "White · mean · +0.1 vs prior"
+    assert cards["Game length"].value == "69.5"
+    assert cards["Game length"].detail == "mean ply · +0.2 vs prior"
+    assert "vs prior" not in cards["Clock error"].detail
+    assert "vs prior" not in cards["Positions"].detail
+    august = Filters(date(2026, 8, 1), date(2026, 8, 1))
+    august_cards = {item.label: item for item in kpis(connection, august)}
+    assert august_cards["Games"].value == "85,343"
+    assert august_cards["Games"].detail == "warehouse · +194 vs prior"
+    assert august_cards["Win rate"].detail == "40,221 / 81,033 · White · +0.2 pp vs prior"
+    blitz = Filters(date(2026, 6, 1), date(2026, 8, 1), "60+0")
+    blitz_cards = {item.label: item for item in kpis(connection, blitz)}
+    assert blitz_cards["Games"].value == "88,973"
+    assert blitz_cards["Games"].detail == "warehouse · +7,303 vs prior"
+    french = Filters(june.start, june.end, None, "black", None, "French Defense")
+    french_cards = {item.label: item for item in kpis(connection, french)}
+    assert french_cards["Games"].value == "16,345"
+    assert french_cards["Games"].detail == "warehouse · +430 vs prior"
+    assert french_cards["Win rate"].detail == "7,854 / 16,345 · +0.4 pp vs prior"
+    assert french_cards["Rating diff"].detail == "mean · +2.2 vs prior"
+    assert french_cards["Game length"].detail == "mean ply · -0.1 vs prior"
+    empty = Filters(june.start, june.end, None, None, None, "Amazon Attack")
+    empty_cards = {item.label: item for item in kpis(connection, empty)}
+    assert empty_cards["Games"].detail == "no cells for this cut"
+    assert "vs prior" not in empty_cards["Win rate"].detail
+
+
+def test_kpi_deltas_skip_gaps_mismatched_periods_and_ignored_dates(tmp_path: Path) -> None:
+    rows = [
+        _period_cell("game_cell", "2026-06", date(2026, 6, 1), 100, "60+0", mean_ply=40),
+        _period_cell("game_cell", "2026-06", date(2026, 6, 1), 50, "180+0", mean_ply=40),
+        _period_cell("game_cell", "2026-07", date(2026, 7, 1), 40, "60+0", mean_ply=50),
+        _period_cell("game_cell", "2026-07", date(2026, 7, 1), 70, "180+0", mean_ply=50),
+        _period_cell("game_cell", "2026-09", date(2026, 9, 1), 80, "60+0", mean_ply=40),
+        _period_cell(
+            "game_cell",
+            "2025-11",
+            date(2025, 11, 1),
+            30,
+            "60+0",
+            end=date(2025, 11, 30),
+            cohort="elite_reference",
+            mean_ply=40,
+        ),
+        _period_cell("game_cell", "2025-12", date(2025, 12, 1), 90, "60+0", mean_ply=40),
+        _result_cell("2026-06", date(2026, 6, 1), "white", 100, 60, 10, 30, 1.0, 40),
+        _result_cell("2026-07", date(2026, 7, 1), "white", 100, 50, 20, 30, 3.0, 50),
+        _result_cell("2026-06", date(2026, 6, 1), "black", 100, 40, 10, 50, -1.0, 40),
+        _result_cell("2026-07", date(2026, 7, 1), "black", 80, 55, 10, 15, -2.0, 45),
+    ]
+    connection = connect(_write(tmp_path, rows))
+    july = Filters(date(2026, 7, 1), date(2026, 7, 1))
+    cards = {item.label: item for item in kpis(connection, july)}
+    assert cards["Games"].value == "110"
+    assert cards["Games"].detail == "warehouse · -40 vs prior"
+    assert cards["Win rate"].detail == "50 / 100 · White · -10.0 pp vs prior"
+    assert cards["Draw rate"].detail == "20 / 100 · White · +10.0 pp vs prior"
+    assert cards["Loss rate"].detail == "30 / 100 · White · +0.0 pp vs prior"
+    assert cards["Rating diff"].detail == "White · mean · +2.0 vs prior"
+    assert cards["Game length"].detail == "mean ply · +10.0 vs prior"
+    blitz = Filters(date(2026, 7, 1), date(2026, 7, 1), "60+0")
+    blitz_cards = {item.label: item for item in kpis(connection, blitz)}
+    assert blitz_cards["Games"].value == "40"
+    assert blitz_cards["Games"].detail == "warehouse · -60 vs prior"
+    black = Filters(date(2026, 7, 1), date(2026, 7, 1), None, "black")
+    black_cards = {item.label: item for item in kpis(connection, black)}
+    assert black_cards["Games"].detail == "warehouse · -20 vs prior"
+    assert black_cards["Win rate"].detail == "55 / 80 · +28.8 pp vs prior"
+    assert black_cards["Game length"].detail == "mean ply · +5.0 vs prior"
+    september = {
+        item.label: item for item in kpis(connection, Filters(date(2026, 9, 1), date(2026, 9, 1)))
+    }
+    assert september["Games"].value == "80"
+    assert september["Games"].detail == "warehouse"
+    december = {
+        item.label: item for item in kpis(connection, Filters(date(2025, 12, 1), date(2025, 12, 1)))
+    }
+    assert december["Games"].value == "90"
+    assert december["Games"].detail == "warehouse"
+    missed = Filters(date(2026, 6, 2), date(2026, 6, 20))
+    missed_cards = {item.label: item for item in kpis(connection, missed)}
+    assert missed_cards["Games"].detail == "warehouse · not by date"
+    assert "vs prior" not in missed_cards["Games"].detail
+    assert "vs prior" not in missed_cards["Win rate"].detail
+
+
+def _write(tmp_path: Path, rows: list[dict[str, object]]) -> Path:
+    path = tmp_path / CUBE_FILENAME
+    write_cube(rows, path)
+    return path
+
+
+def _blank_cell(**values: object) -> dict[str, object]:
+    row = {column: None for column in COLUMNS}
+    row.update(values)
+    return row
+
+
+def _period_cell(
+    grain: str,
+    period: str,
+    start: date,
+    games: int,
+    time_control: str,
+    *,
+    end: date | None = None,
+    cohort: str = "rated_public",
+    mean_ply: float = 40,
+) -> dict[str, object]:
+    return _blank_cell(
+        grain=grain,
+        cohort=cohort,
+        period=period,
+        period_start=start,
+        period_end=start if end is None else end,
+        time_control=time_control,
+        games=games,
+        mean_ply=mean_ply,
+    )
+
+
+def _result_cell(
+    period: str,
+    start: date,
+    color: str,
+    games: int,
+    wins: int,
+    draws: int,
+    losses: int,
+    rating_diff: float,
+    mean_ply: float,
+) -> dict[str, object]:
+    return _blank_cell(
+        grain="result_cell",
+        cohort="rated_public",
+        period=period,
+        period_start=start,
+        period_end=start,
+        time_control="60+0",
+        color=color,
+        games=games,
+        wins=wins,
+        draws=draws,
+        losses=losses,
+        rating_diff=rating_diff,
+        mean_ply=mean_ply,
     )
 
 

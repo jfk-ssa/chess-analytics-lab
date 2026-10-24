@@ -19,8 +19,18 @@ diff, and game length. Each card shows a value. Games is the
 `warehouse`. With no color selected, win, draw, and loss are the White
 `result_cell` rows: 49.2% (476,741 / 968,874), 5.1% (49,271 / 968,874),
 and 45.7% (442,862 / 968,874). Rating diff is +0.1 and game length is
-72.8 ply. A color or rating filter counts one side. Clock error stays
-2,128 / 22,978, and positions stay 256. A filter the grain cannot
+72.8 ply. Games, the three rates, rating diff, and game length also
+compare the periods fully inside the date range with the immediately
+preceding block of the same number of periods. Time control, color,
+rating, and opening apply to both blocks. The card shows that delta
+only when both blocks are contiguous months of the same cohort and the
+same span; otherwise it shows no delta text. The full range mixes the
+November elite month with the one-day rated-public prefixes, so it has
+no delta. December does not compare with November. Clock error and
+published positions are one snapshot each, so they have no delta. From
+2026-06-01 through 2026-08-01, Games is 256,031 with `+90 vs prior`
+against March, April, and May. A color or rating filter counts one side.
+Clock error stays 2,128 / 22,978, and positions stay 256. A filter the grain cannot
 split is named on the card instead of leaving the value blank. A filter
 on a column the grain stores, which matches nothing, says `no cells for
 this cut` and does not widen the population. Clock error stays

@@ -110,3 +110,4 @@ short summary of the current checkout, not a log of new decisions.
 | 0102 | 2026-10-21 | [Live-eval chart precision on the hosted page](adr/0102-live-eval-chart-precision.md) |
 | 0103 | 2026-10-22 | [Security pins for Pillow and certifi](adr/0103-security-pins-for-pillow-and-certifi.md) |
 | 0104 | 2026-10-24 | [Hosted Altair 6 and pandas 3 pins](adr/0104-hosted-altair-6-and-pandas-3-pins.md) |
+| 0105 | 2026-10-24 | [KPI deltas on the hosted strip](adr/0105-kpi-period-deltas.md) |
