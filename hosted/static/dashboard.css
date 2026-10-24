@@ -30,8 +30,8 @@
 /* The frame is the container. Two columns until the strip is 600px wide,
    then four. 600px is under the ~622px strip in a 1024px window with the
    sidebar open, so that window is four columns. DOM order is the row
-   order: Games, Win rate, Loss rate, Draw rate, then Rating diff,
-   Game length, Clock error, Positions. */
+   order: Games, Win rate, Loss rate, Draw rate, then Positions,
+   Rating diff, Game length, Clock error. Positions sits under Games. */
 .cal-kpi-frame {
   container-type: inline-size;
   width: 100%;
@@ -77,7 +77,8 @@
 }
 
 /* Clock-band games. The row is a grid, not a scrolling table. Opening and
-   date hide at phone width so the remaining columns stay inside the screen. */
+   date hide by 640px so the desktop tracks, including Side, do not scroll
+   sideways. The remaining columns are ratings, time, result, side, and link. */
 .cal-games {
   width: 100%;
   max-width: 100%;
@@ -89,7 +90,7 @@
 
 .cal-games-row {
   display: grid;
-  grid-template-columns: 4.2rem 4.2rem 4.8rem 4.4rem minmax(0, 1fr) 6.4rem 3.4rem;
+  grid-template-columns: 4.2rem 4.2rem 4.8rem 4.4rem 3.6rem minmax(0, 1fr) 6.4rem 3.4rem;
   column-gap: 10px;
   align-items: start;
   padding: 6px 0;
@@ -124,13 +125,13 @@
   white-space: nowrap;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 640px) {
   .cal-games {
     font-size: 13px;
   }
 
   .cal-games-row {
-    grid-template-columns: 3.2rem 3.2rem minmax(0, 1fr) 3.2rem 2.8rem;
+    grid-template-columns: 3.1rem 3.1rem minmax(0, 1fr) 2.8rem 3.2rem 2.6rem;
     column-gap: 6px;
   }
 

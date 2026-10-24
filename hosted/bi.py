@@ -290,7 +290,7 @@ def _clock(layout, charts, connection, filters: Filters, drill: Drill) -> None:
                 category_title="Time remaining",
                 tooltip_field="label",
                 tooltip_title="Time remaining",
-                domain=charts.count_axis_domain([float(row["games"]) for row in plotted]),
+                horizontal_category_title=True,
             ),
             alt=(
                 "Time remaining on the clock before the move, by evaluable moves. "
@@ -321,6 +321,7 @@ def _games(layout, connection, filters: Filters, drill: Drill) -> None:
                         "black_rating": row["black_rating"],
                         "time_control": row["time_control"],
                         "result": row["result"],
+                        "side": row["side"],
                         "opening": row["opening_line"],
                         "played_on": row["played_on"],
                         "lichess_id": row["lichess_id"],

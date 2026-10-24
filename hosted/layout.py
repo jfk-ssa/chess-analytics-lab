@@ -10,12 +10,12 @@ short last row, so the leftover card stays the same width. The detail
 nowraps the fraction and can break at `` · ``.
 
 The KPI strip does not use that track. Its DOM order is Games, Win rate,
-Loss rate, Draw rate, Rating diff, Game length, Clock error, Positions.
+Loss rate, Draw rate, Positions, Rating diff, Game length, Clock error.
 ``hosted/static/dashboard.css`` lays that list out as four equal columns
 once the strip is at least 600px wide, and two equal columns below that.
 A 1024px page with the sidebar open is about 622px of strip, so it is
-four then four, as is a 1280px page. A 390px page is two per row, in
-the same order.
+four then four, as is a 1280px page. Positions is then directly under
+Games. A 390px page is two per row, in the same order.
 """
 
 from __future__ import annotations
@@ -315,9 +315,10 @@ _RESULT = {"1-0": "1–0", "0-1": "0–1", "1/2-1/2": "½–½"}
 def clock_game_table(games: list[dict]) -> str:
     """Games in one time-remaining band.
 
-    Desktop shows ratings, time control, result, opening, date, and a Lichess
-    link. A viewport at most 480px wide hides opening and date so the row
-    stays inside the screen. A move number in an opening stays with its reply.
+    Desktop shows ratings, time control, result, the mover side, opening,
+    date, and a Lichess link. Side is White, Black, or Both. A viewport at
+    most 640px wide hides opening and date so the row stays inside the
+    screen. A move number in an opening stays with its reply.
     """
     if not games:
         raise ValueError("clock game table needs a game")
@@ -327,6 +328,7 @@ def clock_game_table(games: list[dict]) -> str:
             _game_cell("Black", "num"),
             _game_cell("Time", "text"),
             _game_cell("Result", "text"),
+            _game_cell("Side", "text"),
             _game_cell("Opening", "open", wide=True),
             _game_cell("Date", "text", wide=True),
             _game_cell("Game", "text"),
@@ -349,6 +351,7 @@ def _game_values(game: dict) -> list[str]:
         _game_cell(_rating_text(game.get("black_rating")), "num"),
         _game_cell("" if game.get("time_control") is None else str(game["time_control"]), "text"),
         _game_cell(_RESULT.get(str(game.get("result")), str(game.get("result") or "")), "text"),
+        _game_cell(_side_text(game.get("side")), "text"),
         _game_cell(opening_html, "open", wide=True, html=True),
         _game_cell(_day_text(game.get("played_on")), "text", wide=True),
         _game_cell(_lichess_link(game.get("lichess_id")), "text", html=True),
@@ -364,6 +367,13 @@ def _game_cell(value: str, kind: str, *, wide: bool = False, html: bool = False)
     wide_class = " cal-wide" if wide else ""
     body = value if html else escape(value)
     return f'<div class="cal-g cal-g-{kind}{wide_class}">{body}</div>'
+
+
+def _side_text(value: object) -> str:
+    text = "" if value is None else str(value)
+    if text in {"White", "Black", "Both"}:
+        return text
+    return ""
 
 
 def _rating_text(value: object) -> str:

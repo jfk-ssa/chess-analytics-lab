@@ -35,10 +35,13 @@ hash again, because `fact_move` is already that sample.
 
 Each cell is a clock band, a time control, a rating band, and a color.
 The cell keeps at most six games, from the six opening families with
-the most qualifying games in that cell. Ties break on the family name,
-then the lowest Lichess id. The page shows at most twelve of the games
-that match the sidebar. Color, rating, time control, and opening apply
-to the list. The date window follows the bars, including the August
+the most qualifying games in that cell. Ties on the family count break
+on the family name. Inside a family, and again when the page orders the
+list, the key is the SHA-256 of the Lichess id. The lower digest wins.
+The page shows at most twelve matching games, the twelve with the lowest
+digest, not the twelve lowest id strings. The list names the mover side:
+White, Black, or Both when each color had a move in the band. Color,
+rating, time control, and opening apply to the list. The date window follows the bars, including the August
 fallback when the selected range does not contain that day. Sidebar
 choices still come from the aggregate grains, so the sample does not
 add filters.
@@ -70,12 +73,12 @@ Run `build_clock_games.py` after it. `build_warehouse_cube.py` keeps
 | | Bytes | Rows |
 |---|---:|---:|
 | Before | 569,634 | 34,084 |
-| After | 593,422 | 35,100 |
+| After | 593,637 | 35,100 |
 
-The added grain is 1,016 rows and 414 distinct games. By band, the rows
+The added grain is 1,016 rows and 409 distinct games. By band, the rows
 are under 10s 234, 10–29s 258, 30–59s 243, and 60s+ 281. Distinct games
-in those bands are 192, 203, 189, and 170. The file is under the 10 MB
-budget. All 414 ids pass the mod-20 check. No opening family and no
+in those bands are 191, 202, 183, and 168. The file is under the 10 MB
+budget. All 409 ids pass the mod-20 check. No opening family and no
 time control appears only on `clock_game`. `game_cell` still covers
 1,009,445 games. The full-range KPI strip is unchanged: 1,009,445 games,
 White win rate 49.2%, draw rate 5.1%, loss rate 45.7%, clock error
@@ -84,7 +87,8 @@ White win rate 49.2%, draw rate 5.1%, loss rate 45.7%, clock error
 ## Consequences
 
 A rare opening inside a cell can be absent from the list. The caption
-says the list is a capped sample, not every game in the band. Rebuilding
+names the August prefix, the six-opening cell rule, and the SHA-256
+order of the rows on the page. Rebuilding
 from the prefix needs the local 40 MB archive prefix; the script does
 not fetch it. A later `fact_move` warehouse can refresh the same grain
 with `build_clock_games.py --warehouse`.

@@ -12,14 +12,15 @@ and still needs the analytical warehouse.
 The sidebar filters are date range, time control, color, rating band,
 and opening family, with the active line and a reset. Those filters
 apply to the KPI strip, openings, transpositions, clock, and periods.
-They do not change the live-eval numbers. The KPI strip order is Games, Win rate, Loss rate, Draw rate, Rating
-diff, Game length, Clock error, and Positions. The strip is four equal
+They do not change the live-eval numbers. The KPI strip order is Games, Win rate, Loss rate, Draw rate, Positions, Rating
+diff, Game length, and Clock error. The strip is four equal
 columns once it is 600px wide, two rows of four on a 1024px page
-with the sidebar open and on a 1280px page, and
+with the sidebar open and on a 1280px page, so Positions sits directly
+under Games, and
 two equal columns on a 390px page, in that same order. Each card shows
 a value. Games is the
 `game_cell` total, 1,009,445 on the full range, with detail
-`warehouse`. With no color selected, win, draw, and loss are the White
+`games in range`. With no color selected, win, draw, and loss are the White
 `result_cell` rows: 49.2% (476,741 / 968,874), 5.1% (49,271 / 968,874),
 and 45.7% (442,862 / 968,874). Rating diff is +0.1 and game length is
 72.8 ply. Games, the three rates, rating diff, and game length also
@@ -31,7 +32,8 @@ same span; otherwise it shows no delta text. The full range mixes the
 November elite month with the one-day rated-public prefixes, so it has
 no delta. December does not compare with November. Clock error and
 published positions are one snapshot each, so they have no delta. From
-2026-06-01 through 2026-08-01, Games is 256,031 with `+90 vs prior`
+2026-06-01 through 2026-08-01, Games is 256,031 with
+`games in range · +90 vs prior`
 against March, April, and May. A color or rating filter counts one side.
 Clock error stays 2,128 / 22,978, and positions stay 256. A filter the grain cannot
 split is named on the card instead of leaving the value blank. A filter
@@ -64,13 +66,27 @@ between those units. The same grouping is on the line labels and the
 Board control. Routes under 10 games are
 omitted. Family
 and date apply. Color, time control, and rating do not, and the caption
-says so. Clock drills from a band to a capped sample of games that have
-a move at that time remaining. The band is seconds left on the clock.
-The bar counts evaluable moves, not games. White and Black in the list
-are ratings. A Lichess link uses the public site id. Opening and date
-hide on a narrow screen. Each section has one
+says so. Clock drills from a band to a sample of games that have a move
+at that time remaining. The band is seconds left on the clock. The bar
+counts evaluable moves, not games, and the value axis starts at zero.
+The y-axis title, Time remaining, is horizontal. The sample is the
+August prefix. Each time control, rating band, and color keeps one game
+from each of the six most common openings, chosen by the lowest SHA-256
+of the Lichess id, and the page lists at most twelve in that order.
+Side is the mover whose clock was in the band: White, Black, or Both.
+White and Black ratings are the two players. A Lichess link uses the
+public site id. Opening and date hide from 640px down. Each section has one
 short caption. Provenance stays in a collapsed expander.
 Charts are Altair, with the `chesslab` theme (Inter and the page palette).
+Every bar chart prints its value at the end of the bar. Counts use
+thousands separators and rates use one decimal percent. A horizontal
+label sits just past the bar and moves inside the bar, in a light color,
+when that would cross the right edge. A vertical label sits above the bar. Count axes
+start at zero and leave headroom so the label is not cut off. The ten
+period bars drop those numbers when the plot is narrower than 56 pixels
+per month (560 pixels for the published months), which includes a 390px
+page, because a full count does not fit in each slot. Month names on
+that chart stay angled. The other axis labels stay horizontal.
 
 Card rows use an inline grid,
 `repeat(auto-fill, minmax(min(100%, 256px), 1fr))`. The label and value
@@ -147,8 +163,8 @@ uv run --locked --offline --no-editable --extra dashboard \
 ```
 
 The positions report is not on the tip. The script does not download it.
-The committed cube is 593,422 bytes and 35,100 rows. `game_cell` covers
-1,009,445 games. `clock_game` is 1,016 rows and 414 distinct games
+The committed cube is 593,637 bytes and 35,100 rows. `game_cell` covers
+1,009,445 games. `clock_game` is 1,016 rows and 409 distinct games
 ([ADR 0106](adr/0106-clock-band-game-sample.md)).
 
 The openings warehouse was appended with this command, from the
