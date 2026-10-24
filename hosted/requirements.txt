@@ -1,23 +1,28 @@
 # Community Cloud installs this file with pip. It does not install
 # chess-analytics-lab, and Streamlit does not install these pins itself.
 # The app imports the extract reader from src/.
-# Streamlit 1.66.1 depends on Altair and Pillow. Altair 5.5.0 depends on
+# Streamlit 1.66.1 depends on Altair and Pillow. Altair 6.3.0 depends on
 # narwhals and jsonschema. Pandas and protobuf are Streamlit dependencies.
 # Requests, which Streamlit depends on, depends on certifi.
 # Each pin matches uv.lock so pip cannot resolve a different release.
-# Streamlit 1.66.1 accepts pandas<4,>=1.5.3, protobuf<8,>=5.26.1,
-# and pillow<14,>=9.2.0. Pillow 13.0.0 is inside that range. Streamlit
-# 1.65.0 required pillow<13, so the dashboard extra moved to 1.66.1.
+# The locked Streamlit 1.66.1 wheel accepts
+# altair!=5.4.0,!=5.4.1,<7,>=5.0.0, pandas<4,>=1.5.3,
+# protobuf<8,>=5.26.1, and pillow<14,>=9.2.0. Pillow 13.0.0 is inside
+# that range. Streamlit 1.65.0 required pillow<13, so the dashboard extra
+# moved to 1.66.1.
 # Requests 2.34.2 accepts certifi>=2023.5.7. Certifi 2026.10.19 removes
 # the compromised emSign intermediates.
-# Narwhals 2.26.0 has no dependencies of its own.
+# Narwhals 2.27.1 has no dependencies of its own.
+# Protobuf stays 6.33.6. Dagster 1.13.25, dbt-common 1.39.0, and
+# dbt-adapters 1.24.5 require protobuf<7, so 7.36.2 cannot enter uv.lock.
+# See ADR 0104.
 # DuckDB 1.5.6 has no dependencies. The cp312 manylinux x86_64 wheel is
 # 21,568,087 bytes in uv.lock. The app uses it to query the cube.
 streamlit==1.66.1
-altair==5.5.0
-narwhals==2.26.0
+altair==6.3.0
+narwhals==2.27.1
 jsonschema==4.26.0
-pandas==2.3.3
+pandas==3.0.6
 protobuf==6.33.6
 pillow==13.0.0
 certifi==2026.10.19

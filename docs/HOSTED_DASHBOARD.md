@@ -186,14 +186,18 @@ Pillow, Altair, narwhals, and jsonschema are dependencies of that pin
 or of Altair. Certifi is a dependency of Requests, which Streamlit
 depends on. If they stay unpinned, pip can install versions that differ
 from `uv.lock`. The requirements file therefore also pins the locked
-versions, `altair==5.5.0`, `narwhals==2.26.0`, `jsonschema==4.26.0`,
-`pandas==2.3.3`, `protobuf==6.33.6`, `pillow==13.0.0`,
-`certifi==2026.10.19`, and `duckdb==1.5.6`. Streamlit 1.66.1 accepts
-`pandas<4,>=1.5.3`, `protobuf<8,>=5.26.1`, and `pillow<14,>=9.2.0`, so
-those pins install. Pillow 13.0.0 closes the advisories on 11.3.0.
-Streamlit 1.65.0 required `pillow<13`, which is why the dashboard extra
-moved. Requests 2.34.2 accepts `certifi>=2023.5.7`. Certifi 2026.10.19
-removes the compromised emSign intermediates. Narwhals 2.26.0 has no
-dependencies of its own. Altair 5.5.0 depends on jsonschema and
-narwhals. DuckDB 1.5.6 has no dependencies. The cp312 manylinux x86_64
-wheel recorded in `uv.lock` is 21,568,087 bytes.
+versions, `altair==6.3.0`, `narwhals==2.27.1`, `jsonschema==4.26.0`,
+`pandas==3.0.6`, `protobuf==6.33.6`, `pillow==13.0.0`,
+`certifi==2026.10.19`, and `duckdb==1.5.6`. The locked Streamlit 1.66.1
+wheel accepts `altair!=5.4.0,!=5.4.1,<7,>=5.0.0`, `pandas<4,>=1.5.3`,
+`protobuf<8,>=5.26.1`, and `pillow<14,>=9.2.0`, so those pins install.
+Pillow 13.0.0 closes the advisories on 11.3.0. Streamlit 1.65.0 required
+`pillow<13`, which is why the dashboard extra moved. Requests 2.34.2
+accepts `certifi>=2023.5.7`. Certifi 2026.10.19 removes the compromised
+emSign intermediates. Narwhals 2.27.1 has no dependencies of its own.
+Altair 6.3.0 depends on jsonschema and narwhals. Protobuf stays on
+6.33.6. Dagster 1.13.25, dbt-common 1.39.0, and dbt-adapters 1.24.5
+require `protobuf<7`, so 7.36.2 cannot enter the universal lock
+([ADR 0104](adr/0104-hosted-altair-6-and-pandas-3-pins.md)). DuckDB
+1.5.6 has no dependencies. The cp312 manylinux x86_64 wheel recorded in
+`uv.lock` is 21,568,087 bytes.
