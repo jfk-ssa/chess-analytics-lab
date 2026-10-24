@@ -12,9 +12,10 @@ nowraps the fraction and can break at `` · ``.
 The KPI strip does not use that track. Its DOM order is Games, Win rate,
 Loss rate, Draw rate, Rating diff, Game length, Clock error, Positions.
 ``hosted/static/dashboard.css`` lays that list out as four equal columns
-once the strip is at least 640px wide, and two equal columns below that.
-A 1280px page is four then four. A 390px page is two per row, in the
-same order.
+once the strip is at least 600px wide, and two equal columns below that.
+A 1024px page with the sidebar open is about 622px of strip, so it is
+four then four, as is a 1280px page. A 390px page is two per row, in
+the same order.
 """
 
 from __future__ import annotations

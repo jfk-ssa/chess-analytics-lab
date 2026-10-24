@@ -574,7 +574,7 @@ def test_equal_width_rows_share_one_track_definition(project):
     css = (project / "hosted" / "static" / "dashboard.css").read_text()
     assert ".cal-kpi-frame" in css and "container-type: inline-size" in css
     assert "grid-template-columns: repeat(2, minmax(0, 1fr));" in css
-    assert "@container (min-width: 640px)" in css
+    assert "@container (min-width: 600px)" in css
     assert "grid-template-columns: repeat(4, minmax(0, 1fr));" in css
     with pytest.raises(ValueError, match="at least one card"):
         module.kpi_strip([])
