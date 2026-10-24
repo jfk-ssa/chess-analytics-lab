@@ -127,10 +127,11 @@ Caption dollars stay a backslash escape. Amounts inside the card HTML
 use `&#36;`, so the rendered value is a dollar sign and the markdown
 source still has no `$`. A backslash inside that HTML would show in
 the value.
-Card tracks stay `repeat(auto-fit, minmax(min(100%, 256px), 1fr))`
-with `white-space: nowrap` on the value. Six eval cards wrap when the
-row cannot hold six 256px tracks. A leftover card keeps that track
-width because the columns are shared with the row above.
+Card values keep `white-space: nowrap`. The six headline eval cards
+are one equal column per model: pass rate on the first row, that
+model's cost directly under it. The column count is the number of
+models. A frame narrower than 200px per model stacks the cards, and
+each pass rate stays with its cost.
 
 ### Run title
 

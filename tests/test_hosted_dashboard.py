@@ -373,6 +373,21 @@ def _assert_equal_width_markup(app) -> None:
     assert "white-space:nowrap" in markup
     assert "overflow-wrap:anywhere" not in markup
     assert "auto-fit,minmax(0,1fr)" not in markup
+    grid = next(item.value for item in app.markdown if "cal-model-grid" in item.value)
+    assert 'data-models="3"' in grid
+    assert "--cal-models:3" in grid
+    assert "repeat(3,minmax(0,1fr))" in grid
+    assert "grid-auto-flow:column" in grid
+    assert "@container calmodels (min-width:624px)" in grid
+    assert "auto-fill" not in grid
+    assert re.findall(r'class="cal-k"[^>]*>([^<]+)', grid) == [
+        "gpt-6-luna",
+        "gpt-6-luna cost",
+        "grok-4.7 · low",
+        "grok-4.7 · low cost",
+        "gpt-6-sol",
+        "gpt-6-sol cost",
+    ]
 
 
 def _load_hosted(project, name: str):
@@ -931,6 +946,32 @@ def test_equal_width_rows_share_one_track_definition(project):
     assert "grid-template-columns: repeat(4, minmax(0, 1fr));" in css
     with pytest.raises(ValueError, match="at least one card"):
         module.kpi_strip([])
+    pairs = [
+        (("gpt-6-luna", "86.3%", "207 of 240 · Gate clear"), ("gpt-6-luna cost", "$0.0150", "Cap")),
+        (
+            ("grok-4.7 · low", "97.1%", "233 of 240 · Gate clear"),
+            ("grok-4.7 · low cost", "$1.0033", "Cap"),
+        ),
+        (("gpt-6-sol", "97.5%", "234 of 240 · Hard fail"), ("gpt-6-sol cost", "$0.2550", "Cap")),
+    ]
+    models = module.model_columns(pairs)
+    assert 'data-models="3"' in models
+    assert 'data-cards="6"' in models
+    assert "repeat(auto-fill" not in models
+    assert re.findall(r'class="cal-k"[^>]*>([^<]+)', models) == [
+        "gpt-6-luna",
+        "gpt-6-luna cost",
+        "grok-4.7 · low",
+        "grok-4.7 · low cost",
+        "gpt-6-sol",
+        "gpt-6-sol cost",
+    ]
+    two = module.model_columns(pairs[:2])
+    assert 'data-models="2"' in two
+    assert "repeat(2,minmax(0,1fr))" in two
+    assert "@container calmodels (min-width:412px)" in two
+    with pytest.raises(ValueError, match="at least one model"):
+        module.model_columns([])
     wrapped = module.equal_width_row([("Win rate", "49.2%", "476,741 / 968,874 · White")])
     assert 'white-space:nowrap">476,741 / 968,874<' in wrapped
     assert 'white-space:nowrap">476,741 / 968,874 · White<' not in wrapped

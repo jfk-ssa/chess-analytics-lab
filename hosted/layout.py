@@ -16,6 +16,12 @@ once the strip is at least 600px wide, and two equal columns below that.
 A 1024px page with the sidebar open is about 622px of strip, so it is
 four then four, as is a 1280px page. Positions is then directly under
 Games. A 390px page is two per row, in the same order.
+
+Headline live-eval cards do not use that track either. ``model_columns``
+is one equal column per model: the pass-rate card, then that model's
+cost card under it. The column count is the number of models. A frame
+narrower than 200px per model stacks the cards, and each pass rate
+stays with its cost.
 """
 
 from __future__ import annotations
@@ -26,6 +32,8 @@ from html import escape
 _MOVE_NUMBER = re.compile(r"\d+\.")
 
 _TRACKS = "repeat(auto-fill,minmax(min(100%,256px),1fr))"
+_MODEL_COLUMN_PX = 200
+_MODEL_GAP_PX = 12
 _OTHER_FLOOR = 10
 _OTHER_LABEL = "other orders"
 
@@ -70,6 +78,42 @@ def equal_width_row(cards: list[tuple[str, str, str]]) -> str:
     return (
         f'<div class="cal-equal" data-equal-width="true" data-cards="{len(cards)}" '
         f'style="{style}">{body}</div>'
+    )
+
+
+def model_columns(
+    pairs: list[tuple[tuple[str, str, str], tuple[str, str, str]]],
+) -> str:
+    """One equal column per model.
+
+    Each pair is the pass-rate card, then that model's cost card. The DOM
+    order is that reading order, so a narrow frame keeps the pair together.
+    When the frame is at least 200px per model, the grid fills by column:
+    pass rates on the first row, costs on the second, in the same order.
+    """
+    if not pairs:
+        raise ValueError("model columns need at least one model")
+    count = len(pairs)
+    cards = [card for pair in pairs for card in pair]
+    cells = [_card_html(label, value, detail) for label, value, detail in cards]
+    threshold = count * _MODEL_COLUMN_PX + max(count - 1, 0) * _MODEL_GAP_PX
+    style = (
+        "<style>"
+        ".cal-model-frame{container-type:inline-size;container-name:calmodels;"
+        "width:100%;margin:0 0 16px}"
+        ".cal-model-grid{display:grid;grid-template-columns:minmax(0,1fr);"
+        "grid-auto-flow:row;column-gap:12px;row-gap:12px;width:100%;"
+        "align-items:stretch;margin:0}"
+        f"@container calmodels (min-width:{threshold}px){{"
+        f".cal-model-grid{{grid-template-columns:repeat({count},minmax(0,1fr));"
+        "grid-template-rows:auto auto;grid-auto-flow:column}}"
+        "</style>"
+    )
+    body = "".join(cells)
+    return (
+        style + '<div class="cal-model-frame"><div class="cal-equal cal-model-grid" '
+        f'data-equal-width="true" data-cards="{len(cards)}" data-models="{count}" '
+        f'style="--cal-models:{count}">{body}</div></div>'
     )
 
 

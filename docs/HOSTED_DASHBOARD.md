@@ -98,10 +98,15 @@ Card rows use an inline grid,
 use `white-space: nowrap`. The detail nowraps the fraction and can
 break at ` · `. 256px is 16rem at the CSS
 reference pixel. With 256px, a 390px viewport is one column and a
-1280px viewport holds several tracks. The eight KPI cards and the six
-eval cards share that track. The grok sweep is three cards. Sweep detail breaks only at ` · `, so a
+1280px viewport holds several tracks. The grok sweep is three cards on
+that track. Sweep detail breaks only at ` · `, so a
 cost or a token count stays on one line. The three cards share one track
-width.
+width. The six headline live-eval cards are a separate grid, one equal
+column per model. The first row is each model's pass rate (gpt-6-luna,
+grok-4.7 · low, gpt-6-sol) and the second row is that model's cost, in
+the same order. The column count is the number of models. Below 200px
+per model, which includes a 390px page, the cards stack and each pass
+rate stays with its cost.
 The shared `.streamlit/config.toml` is unchanged.
 
 Version 2 adds `opening_color_score` (French and Sicilian, both colors,

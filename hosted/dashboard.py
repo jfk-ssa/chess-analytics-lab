@@ -936,28 +936,28 @@ def _miss_table(case_rows: list[dict]) -> list[dict]:
 
 
 def _eval_cards(layout, runs: list[dict]) -> None:
-    cards: list[tuple[str, str, str]] = []
+    pairs: list[tuple[tuple[str, str, str], tuple[str, str, str]]] = []
     for row in _by_gate(_headline_runs(runs)):
         gate = "Hard fail" if row["hard_fail"] else "Gate clear"
-        cards.append(
+        pairs.append(
             (
-                _run_label(row),
-                _pct(row["pass_rate"]),
-                f"{row['passed']:,} of {row['trials']:,} · {gate}",
-            )
-        )
-        cards.append(
-            (
-                f"{_run_label(row)} cost",
-                _usd(row["known_gross_cost_usd"]),
                 (
-                    f"Cap {_usd(row['max_run_usd'])} · "
-                    f"{_token_count(float(row['reasoning_tokens']))} reasoning tokens"
+                    _run_label(row),
+                    _pct(row["pass_rate"]),
+                    f"{row['passed']:,} of {row['trials']:,} · {gate}",
+                ),
+                (
+                    f"{_run_label(row)} cost",
+                    _usd(row["known_gross_cost_usd"]),
+                    (
+                        f"Cap {_usd(row['max_run_usd'])} · "
+                        f"{_token_count(float(row['reasoning_tokens']))} reasoning tokens"
+                    ),
                 ),
             )
         )
     st.markdown(
-        _html_currency(layout.equal_width_row(cards)),
+        _html_currency(layout.model_columns(pairs)),
         unsafe_allow_html=True,
     )
 
