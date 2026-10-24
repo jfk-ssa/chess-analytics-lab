@@ -161,9 +161,9 @@ uv run --locked --offline --no-editable --extra dashboard \
   streamlit run hosted/dashboard.py
 ```
 
-The script adds `src/` to the import path for the extract reader and
-the cube module. You do not install the project package to run this
-page. The page queries the cube with DuckDB, which Community Cloud
+The script imports `chess_analytics` from `src/` on every run and does
+not keep a cached copy from a previous run. You do not install the
+project package to run this page. The page queries the cube with DuckDB, which Community Cloud
 installs from `hosted/requirements.txt`. Rebuild the cube, when a
 committed source changes, with:
 
@@ -226,8 +226,14 @@ Set the requirements path in the app's advanced settings. There is no
 extract is already in the repository.
 
 Community Cloud installs only the packages named in
-`hosted/requirements.txt` with pip. Streamlit does not install those
-pins itself. The file pins `streamlit==1.66.1`. Pandas, protobuf,
+`hosted/requirements.txt` with pip. A push that changes that file
+reinstalls the environment. A push that changes `src/chess_analytics`
+or `hosted/` and leaves the file unchanged reruns the app in the same
+process. The entrypoint imports the repository copy of
+`chess_analytics` on that rerun, so the page does not keep the previous
+import ([ADR 0107](adr/0107-hosted-repository-source-reload.md)).
+Streamlit does not install those pins itself. The file pins
+`streamlit==1.66.1`. Pandas, protobuf,
 Pillow, Altair, narwhals, and jsonschema are dependencies of that pin
 or of Altair. Certifi is a dependency of Requests, which Streamlit
 depends on. If they stay unpinned, pip can install versions that differ

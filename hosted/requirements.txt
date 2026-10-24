@@ -1,6 +1,8 @@
 # Community Cloud installs this file with pip. It does not install
 # chess-analytics-lab, and Streamlit does not install these pins itself.
-# The app imports the extract reader from src/.
+# A push that changes this file reinstalls the environment. Any other
+# push reruns hosted/dashboard.py in the same process. That rerun imports
+# chess_analytics from src/ again. See ADR 0107.
 # Streamlit 1.66.1 depends on Altair and Pillow. Altair 6.3.0 depends on
 # narwhals and jsonschema. Pandas and protobuf are Streamlit dependencies.
 # Requests, which Streamlit depends on, depends on certifi.
