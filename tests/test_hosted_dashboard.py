@@ -4,6 +4,7 @@ import hashlib
 import json
 import re
 from html import escape
+from urllib.parse import urlsplit
 
 import pytest
 
@@ -508,6 +509,7 @@ def test_clock_game_table_hides_opening_and_date_on_a_phone(project):
 
 
 def test_count_axis_starts_near_zero_unless_values_are_tight(project):
+    pytest.importorskip("altair")
     charts = _load_hosted(project, "charts")
     assert charts.count_axis_domain([1191, 3183, 6053, 12567]) is None
     assert charts.count_axis_domain([0, 10]) is None
@@ -1330,7 +1332,13 @@ def test_clock_band_drill_lists_games(project, monkeypatch):
     assert "Showing 12 of 192 published games" in text
     assert "evaluable moves, not games" in text
     games = "\n".join(item.value for item in app.markdown if "cal-games" in item.value)
-    assert "https://lichess.org/" in games
+    hrefs = re.findall(r'href="([^"]+)"', games)
+    assert hrefs
+    for href in hrefs:
+        parsed = urlsplit(href)
+        assert parsed.scheme == "https"
+        assert parsed.hostname == "lichess.org"
+        assert re.fullmatch(r"/[A-Za-z0-9]{8}", parsed.path)
     assert "cal-wide" in games
     assert "overflow-x" not in games
 
