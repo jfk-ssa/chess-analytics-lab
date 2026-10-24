@@ -17,6 +17,13 @@ is skipped once `game_cell` is present
 The cube schema is unchanged. The file stays 569,634 bytes and 34,084
 rows. `game_cell` still covers 1,009,445 games. No rebuild is required.
 
+The strip order is Games, Win rate, Loss rate, Draw rate, Rating diff,
+Game length, Clock error, Positions. From 600px of strip width that is
+two rows of four equal cards. A 1024px window with the sidebar open
+leaves about 622px of strip, so it is four columns. Below 600px,
+including a 390px page, it is two equal cards per row in the same
+order. The other card rows keep the 256px track.
+
 The date range selects the periods that sit fully inside it, the same
 rule the card value already uses. The delta compares that block with
 the immediately preceding block of the same number of periods. Time

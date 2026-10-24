@@ -106,6 +106,20 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
     assert [item.label for item in app.button] == ["Reset filters"]
     assert len(app.date_input) == 1
     assert app.date_input[0].label == "Date range"
+    strips = [item.value for item in app.markdown if "cal-kpis" in item.value]
+    assert len(strips) == 1
+    assert re.findall(r'class="cal-k"[^>]*>([^<]+)', strips[0]) == [
+        "Games",
+        "Win rate",
+        "Loss rate",
+        "Draw rate",
+        "Rating diff",
+        "Game length",
+        "Clock error",
+        "Positions",
+    ]
+    assert "cal-kpi-frame" in strips[0]
+    assert "minmax(min(100%,256px),1fr)" not in strips[0]
     labels = {item.label: list(item.options) for item in app.selectbox}
     assert set(labels) == {
         "Time control",
@@ -532,6 +546,38 @@ def test_equal_width_rows_share_one_track_definition(project):
     assert "width:100.0%" not in board
     assert board.index("After Black") < board.index("1,200")
     _assert_rows_reconcile(board)
+    strip = module.kpi_strip(
+        [
+            ("Games", "1,009,445", "warehouse"),
+            ("Win rate", "49.2%", "476,741 / 968,874 · White"),
+            ("Loss rate", "45.7%", "442,862 / 968,874 · White"),
+            ("Draw rate", "5.1%", "49,271 / 968,874 · White"),
+            ("Rating diff", "+0.1", "White · mean"),
+            ("Game length", "72.8", "mean ply"),
+            ("Clock error", "9.3%", "2,128 / 22,978"),
+            ("Positions", "256", "rated public"),
+        ]
+    )
+    assert strip.startswith('<div class="cal-kpi-frame"><div class="cal-equal cal-kpis"')
+    assert 'data-cards="8"' in strip
+    assert re.findall(r'class="cal-k"[^>]*>([^<]+)', strip) == [
+        "Games",
+        "Win rate",
+        "Loss rate",
+        "Draw rate",
+        "Rating diff",
+        "Game length",
+        "Clock error",
+        "Positions",
+    ]
+    assert "minmax(min(100%,256px),1fr)" not in strip
+    css = (project / "hosted" / "static" / "dashboard.css").read_text()
+    assert ".cal-kpi-frame" in css and "container-type: inline-size" in css
+    assert "grid-template-columns: repeat(2, minmax(0, 1fr));" in css
+    assert "@container (min-width: 600px)" in css
+    assert "grid-template-columns: repeat(4, minmax(0, 1fr));" in css
+    with pytest.raises(ValueError, match="at least one card"):
+        module.kpi_strip([])
     wrapped = module.equal_width_row([("Win rate", "49.2%", "476,741 / 968,874 · White")])
     assert 'white-space:nowrap">476,741 / 968,874<' in wrapped
     assert 'white-space:nowrap">476,741 / 968,874 · White<' not in wrapped

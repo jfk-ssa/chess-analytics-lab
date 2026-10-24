@@ -27,6 +27,33 @@
   font-family: Inter, sans-serif;
 }
 
+/* The frame is the container. Two columns until the strip is 600px wide,
+   then four. 600px is under the ~622px strip in a 1024px window with the
+   sidebar open, so that window is four columns. DOM order is the row
+   order: Games, Win rate, Loss rate, Draw rate, then Rating diff,
+   Game length, Clock error, Positions. */
+.cal-kpi-frame {
+  container-type: inline-size;
+  width: 100%;
+  margin: 0 0 16px;
+}
+
+.cal-kpis {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 12px;
+  row-gap: 12px;
+  width: 100%;
+  align-items: stretch;
+  margin: 0;
+}
+
+@container (min-width: 600px) {
+  .cal-kpis {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 .cal-k,
 .cal-v,
 .cal-d,

@@ -12,9 +12,12 @@ and still needs the analytical warehouse.
 The sidebar filters are date range, time control, color, rating band,
 and opening family, with the active line and a reset. Those filters
 apply to the KPI strip, openings, transpositions, clock, and periods.
-They do not change the live-eval numbers. The KPI strip is games, win
-rate, draw rate, loss rate, clock error, published positions, rating
-diff, and game length. Each card shows a value. Games is the
+They do not change the live-eval numbers. The KPI strip order is Games, Win rate, Loss rate, Draw rate, Rating
+diff, Game length, Clock error, and Positions. The strip is four equal
+columns once it is 600px wide, two rows of four on a 1024px page
+with the sidebar open and on a 1280px page, and
+two equal columns on a 390px page, in that same order. Each card shows
+a value. Games is the
 `game_cell` total, 1,009,445 on the full range, with detail
 `warehouse`. With no color selected, win, draw, and loss are the White
 `result_cell` rows: 49.2% (476,741 / 968,874), 5.1% (49,271 / 968,874),

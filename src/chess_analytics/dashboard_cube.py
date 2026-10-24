@@ -176,6 +176,19 @@ class Kpi:
     detail: str
 
 
+# Wide strip: four then four. A two-column phone wrap keeps this order.
+_KPI_ORDER = (
+    "Games",
+    "Win rate",
+    "Loss rate",
+    "Draw rate",
+    "Rating diff",
+    "Game length",
+    "Clock error",
+    "Positions",
+)
+
+
 @dataclass(frozen=True)
 class Drill:
     family: str | None = None
@@ -518,7 +531,14 @@ def kpis(connection, filters: Filters) -> list[Kpi]:
         win, loss, draw = _result_kpis(connection, filters)
     clock = _clock_kpi(connection, filters)
     positions = _position_kpi(connection, filters)
-    return [games, win, draw, loss, clock, positions, *_mean_kpis(connection, filters)]
+    return _in_strip_order(
+        [games, win, loss, draw, clock, positions, *_mean_kpis(connection, filters)]
+    )
+
+
+def _in_strip_order(cards: Sequence[Kpi]) -> list[Kpi]:
+    rank = {label: index for index, label in enumerate(_KPI_ORDER)}
+    return sorted(cards, key=lambda card: (rank.get(card.label, len(rank)), card.label))
 
 
 def opening_families(

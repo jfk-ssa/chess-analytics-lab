@@ -50,7 +50,7 @@ def render(layout, charts, connection, date_bounds: tuple[date, date]) -> None:
     filters = _sidebar(connection, date_bounds)
     drill = _drill_for(filters)
     cards = [(item.label, item.value, item.detail) for item in kpis(connection, filters)]
-    st.markdown(layout.equal_width_row(cards), unsafe_allow_html=True)
+    st.markdown(layout.kpi_strip(cards), unsafe_allow_html=True)
     _openings(layout, charts, connection, filters, drill)
     _transpositions(layout, connection, filters)
     _clock(charts, connection, filters, drill)
