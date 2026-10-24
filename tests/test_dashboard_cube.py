@@ -632,6 +632,16 @@ def test_committed_cube_deltas_use_the_previous_comparable_periods() -> None:
     connection = connect(cube_path(ROOT))
     wide = Filters(date(2025, 11, 1), date(2026, 8, 1))
     wide_cards = kpis(connection, wide)
+    assert [item.label for item in wide_cards] == [
+        "Games",
+        "Win rate",
+        "Loss rate",
+        "Draw rate",
+        "Rating diff",
+        "Game length",
+        "Clock error",
+        "Positions",
+    ]
     assert all("vs prior" not in item.detail for item in wide_cards)
     november = Filters(date(2025, 11, 1), date(2025, 11, 30))
     december = Filters(date(2025, 12, 1), date(2025, 12, 1))
