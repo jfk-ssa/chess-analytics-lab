@@ -8,6 +8,11 @@ updates:
       uv-dependencies:
         patterns:
           - "*"
+    # ADR 0104. Protobuf 7 does not resolve next to the locked Dagster and dbt extras.
+    ignore:
+      - dependency-name: "protobuf"
+        update-types:
+          - "version-update:semver-major"
   - package-ecosystem: github-actions
     directory: /
     schedule:
