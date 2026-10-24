@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling==1.32.4", "packaging==26.3", "pathspec==1.1.1", "pluggy==1.6.0", "trove-classifiers==2026.9.21.13"]
+requires = ["hatchling==1.32.4", "packaging==26.3", "pathspec==1.1.1", "pluggy==1.7.0", "trove-classifiers==2026.9.21.13"]
 build-backend = "hatchling.build"
 
 [tool.hatch.metadata]
@@ -29,7 +29,7 @@ dagster = [
     "dagster-webserver==1.13.25",
 ]
 prefect = [
-    "prefect==3.8.8",
+    "prefect==3.9.0",
 ]
 dbt = [
     "dbt-duckdb==1.11.0",
@@ -57,7 +57,7 @@ maia = [
 dev = [
     "basedpyright==1.40.2",
     "pytest==9.1.1",
-    "ruff==0.17.0",
+    "ruff==0.17.1",
 ]
 
 [[tool.uv.index]]
