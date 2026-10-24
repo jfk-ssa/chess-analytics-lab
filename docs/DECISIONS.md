@@ -112,3 +112,4 @@ short summary of the current checkout, not a log of new decisions.
 | 0104 | 2026-10-24 | [Hosted Altair 6 and pandas 3 pins](adr/0104-hosted-altair-6-and-pandas-3-pins.md) |
 | 0105 | 2026-10-24 | [KPI deltas on the hosted strip](adr/0105-kpi-period-deltas.md) |
 | 0106 | 2026-10-24 | [Clock-band game sample](adr/0106-clock-band-game-sample.md) |
+| 0107 | 2026-10-24 | [Hosted repository source reload](adr/0107-hosted-repository-source-reload.md) |

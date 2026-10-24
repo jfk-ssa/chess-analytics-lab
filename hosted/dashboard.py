@@ -6,8 +6,11 @@ Run from the repository root:
 
 Streamlit Community Cloud installs ``hosted/requirements.txt`` only. That file
 pins Streamlit, Altair, DuckDB, narwhals, pandas, and protobuf. It does not
-install this project. The page reads ``data/public/dashboard_cube.parquet``
-and ``data/public/dashboard_extract.json``. It does not open a warehouse.
+install this project. A push that leaves the requirements file unchanged
+reruns this process without reinstalling. ``hosted/repo_import.py`` then
+imports ``chess_analytics`` from ``src/`` again, before ``hosted/bi.py``
+loads the cube. The page reads ``data/public/dashboard_cube.parquet`` and
+``data/public/dashboard_extract.json``. It does not open a warehouse.
 """
 
 from __future__ import annotations
@@ -19,6 +22,7 @@ import sys
 from collections import defaultdict
 from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
+from typing import NoReturn
 
 import streamlit as st  # pyright: ignore[reportMissingImports]
 
@@ -46,20 +50,6 @@ def _load_local(name: str):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
-
-
-def _loader():
-    src = str(Path(__file__).resolve().parents[1] / "src")
-    inserted = src not in sys.path
-    if inserted:
-        sys.path.insert(0, src)
-    try:
-        from chess_analytics.public_extract import extract_path, load_extract, table_rows
-
-        return extract_path, load_extract, table_rows
-    finally:
-        if inserted:
-            sys.path.remove(src)
 
 
 def _pct(value: float, digits: int = 1) -> str:
@@ -1319,24 +1309,30 @@ def _duckdb_error(exc: BaseException) -> bool:
     return isinstance(exc, duckdb.Error)
 
 
-def _fail(message: str) -> None:
+def _fail(message: str) -> NoReturn:
     st.title("Chess Analytics Lab")
     st.error(message)
     st.stop()
+    raise RuntimeError(message)
 
 
-def _cube():
-    src = str(Path(__file__).resolve().parents[1] / "src")
-    inserted = src not in sys.path
-    if inserted:
-        sys.path.insert(0, src)
+def _import_repository_package():
+    repo_import = _load_local("repo_import")
     try:
-        from chess_analytics.dashboard_cube import bounds, connect, cube_path
+        return repo_import.import_repository_package()
+    except repo_import.RepositoryImportError as exc:
+        _fail(str(exc))
 
-        return bounds, connect, cube_path
-    finally:
-        if inserted:
-            sys.path.remove(src)
+
+def _cube_name_message(exc: BaseException) -> str:
+    module = sys.modules.get("chess_analytics.dashboard_cube")
+    location = getattr(module, "__file__", None) or "the cached module"
+    return (
+        "hosted/bi.py imports names from chess_analytics.dashboard_cube, "
+        f"and the copy loaded from {location} does not provide them. "
+        "The page reloads src/chess_analytics before that import. "
+        f"The checkout itself is inconsistent: {exc}"
+    )
 
 
 def main() -> None:
@@ -1346,10 +1342,20 @@ def main() -> None:
     extract = None
     path = None
     table_rows = None
+    bounds = None
+    connect = None
+    cube_path = None
     try:
         layout = _load_local("layout")
         charts = _load_local("charts")
-        extract_path, load_extract, table_rows = _loader()
+        (
+            extract_path,
+            load_extract,
+            table_rows,
+            bounds,
+            connect,
+            cube_path,
+        ) = _import_repository_package()
         path = extract_path()
         extract = load_extract(path)
         _validate(extract, table_rows)
@@ -1361,10 +1367,16 @@ def main() -> None:
         extract_error = f"Public extract unavailable: {exc}"
     except ModuleNotFoundError as exc:
         extract_error = f"Public extract reader could not be imported: {exc}"
-    if layout is None or charts is None:
+    if (
+        layout is None
+        or charts is None
+        or bounds is None
+        or connect is None
+        or cube_path is None
+        or table_rows is None
+    ):
         _fail(extract_error or "Dashboard view could not be imported")
     try:
-        bounds, connect, cube_path = _cube()
         source = cube_path()
         connection = connect(source)
         cube_bounds = bounds(connection)
@@ -1375,6 +1387,8 @@ def main() -> None:
         _fail(f"Dashboard cube unavailable: {exc}")
     except ModuleNotFoundError as exc:
         _fail(f"Dashboard cube could not be imported: {exc}")
+    except ImportError as exc:
+        _fail(_cube_name_message(exc))
     except Exception as exc:
         if _duckdb_error(exc):
             _fail(f"Dashboard cube unavailable: {exc}")
