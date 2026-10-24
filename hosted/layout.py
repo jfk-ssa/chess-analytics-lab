@@ -306,3 +306,87 @@ def transposition_cards(items: list[dict]) -> str:
         f'<div class="cal-equal" data-equal-width="true" data-cards="{len(items)}" '
         f'style="{style}">{body}</div>'
     )
+
+
+_LICHESS_ID = re.compile(r"^[A-Za-z0-9]{8}$")
+_RESULT = {"1-0": "1–0", "0-1": "0–1", "1/2-1/2": "½–½"}
+
+
+def clock_game_table(games: list[dict]) -> str:
+    """Games in one time-remaining band.
+
+    Desktop shows ratings, time control, result, opening, date, and a Lichess
+    link. A viewport at most 480px wide hides opening and date so the row
+    stays inside the screen. A move number in an opening stays with its reply.
+    """
+    if not games:
+        raise ValueError("clock game table needs a game")
+    head = _game_line(
+        [
+            _game_cell("White", "num"),
+            _game_cell("Black", "num"),
+            _game_cell("Time", "text"),
+            _game_cell("Result", "text"),
+            _game_cell("Opening", "open", wide=True),
+            _game_cell("Date", "text", wide=True),
+            _game_cell("Game", "text"),
+        ],
+        head=True,
+    )
+    body = "".join(_game_line(_game_values(game)) for game in games)
+    return (
+        '<div class="cal-games" role="region" '
+        'aria-label="Games with a move at this time remaining.">'
+        f"{head}{body}</div>"
+    )
+
+
+def _game_values(game: dict) -> list[str]:
+    opening = game.get("opening")
+    opening_html = _san_html(str(opening)) if isinstance(opening, str) and opening else ""
+    return [
+        _game_cell(_rating_text(game.get("white_rating")), "num"),
+        _game_cell(_rating_text(game.get("black_rating")), "num"),
+        _game_cell("" if game.get("time_control") is None else str(game["time_control"]), "text"),
+        _game_cell(_RESULT.get(str(game.get("result")), str(game.get("result") or "")), "text"),
+        _game_cell(opening_html, "open", wide=True, html=True),
+        _game_cell(_day_text(game.get("played_on")), "text", wide=True),
+        _game_cell(_lichess_link(game.get("lichess_id")), "text", html=True),
+    ]
+
+
+def _game_line(cells: list[str], *, head: bool = False) -> str:
+    kind = "cal-games-row cal-games-head" if head else "cal-games-row"
+    return f'<div class="{kind}">{"".join(cells)}</div>'
+
+
+def _game_cell(value: str, kind: str, *, wide: bool = False, html: bool = False) -> str:
+    wide_class = " cal-wide" if wide else ""
+    body = value if html else escape(value)
+    return f'<div class="cal-g cal-g-{kind}{wide_class}">{body}</div>'
+
+
+def _rating_text(value: object) -> str:
+    if isinstance(value, bool) or not isinstance(value, int | float):
+        return ""
+    return str(int(value))
+
+
+def _day_text(value: object) -> str:
+    isoformat = getattr(value, "isoformat", None)
+    if callable(isoformat):
+        return str(isoformat())
+    if value is None:
+        return ""
+    return str(value)
+
+
+def _lichess_link(game_id: object) -> str:
+    text = str(game_id or "")
+    if _LICHESS_ID.fullmatch(text) is None:
+        return ""
+    href = escape(f"https://lichess.org/{text}")
+    return (
+        f'<a href="{href}" target="_blank" rel="noopener noreferrer" '
+        'aria-label="Open on Lichess">Open</a>'
+    )

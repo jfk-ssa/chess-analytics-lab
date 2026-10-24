@@ -266,8 +266,8 @@ def _assert_live_eval_link(app) -> None:
 def _assert_section_origins(app) -> None:
     openings = _caption(app, "Published positions only")
     assert "Query origin:" not in openings
-    clock = _caption(app, "not a game")
-    assert clock.startswith("Reviewed SQL.")
+    clock = _caption(app, "evaluable moves, not games")
+    assert clock.startswith("Each band is time remaining")
     assert "metricflow" not in clock
     periods = _caption(app, "one published period")
     assert "Query origin:" not in periods
@@ -330,7 +330,10 @@ def _assert_alt_text(app) -> None:
     assert all(isinstance(item, str) and item.strip() for item in alts)
     expected = (
         "Opening families by games. Select a bar to drill into lines.",
-        "Clock bands by evaluable moves. Select a bar to list the slices in that band.",
+        (
+            "Time remaining on the clock before the move, by evaluable moves. "
+            "Select a band to list games with a move in that band."
+        ),
         "Training games by published period.",
         (
             "Pass rate for the five-repeat runs with Wilson 95 percent intervals. "
@@ -471,6 +474,47 @@ def _assert_rows_reconcile(html: str) -> None:
             assert 1 <= headline - sum(counts) <= 9
         else:
             assert sum(counts) == headline
+
+
+def test_clock_game_table_hides_opening_and_date_on_a_phone(project):
+    module = _load_hosted(project, "layout")
+    html = module.clock_game_table(
+        [
+            {
+                "white_rating": 1834,
+                "black_rating": 1790,
+                "time_control": "180+0",
+                "result": "1/2-1/2",
+                "opening": "Sicilian Defense: 1.e4 c5 2.Nf3 d6",
+                "played_on": "2026-08-01",
+                "lichess_id": "00000013",
+            }
+        ]
+    )
+    assert "cal-wide" in html
+    assert "overflow-x" not in html
+    assert "https://lichess.org/00000013" in html
+    assert 'white-space:nowrap">1.e4 c5' in html
+    assert 'white-space:nowrap">2.Nf3 d6' in html
+    assert "½–½" in html
+    assert (
+        module.clock_game_table(
+            [{"white_rating": 1, "black_rating": 2, "result": "1-0", "lichess_id": "not a url"}]
+        ).count("https://lichess.org")
+        == 0
+    )
+    with pytest.raises(ValueError, match="needs a game"):
+        module.clock_game_table([])
+
+
+def test_count_axis_starts_near_zero_unless_values_are_tight(project):
+    charts = _load_hosted(project, "charts")
+    assert charts.count_axis_domain([1191, 3183, 6053, 12567]) is None
+    assert charts.count_axis_domain([0, 10]) is None
+    tight = charts.count_axis_domain([100, 110])
+    assert tight is not None
+    assert tight[0] == pytest.approx(90)
+    assert tight[1] > 110
 
 
 def test_equal_width_rows_share_one_track_definition(project):
@@ -1264,11 +1308,31 @@ def test_color_filter_hides_positions_and_shows_the_french_cell(project, monkeyp
     assert "29,728 / 63,484" in text
     assert "Opening lines by games. Select a bar to open the position." in _chart_alts(app)
     assert "Training games by published period." in _chart_alts(app)
-    clock_alt = "Clock bands by evaluable moves. Select a bar to list the slices in that band."
+    clock_alt = (
+        "Time remaining on the clock before the move, by evaluable moves. "
+        "Select a band to list games with a move in that band."
+    )
     assert clock_alt in _chart_alts(app)
     sidebar = " ".join(item.value for item in app.sidebar.caption)
     assert "Color Black" in sidebar
     assert "Opening French Defense" in sidebar
+
+
+def test_clock_band_drill_lists_games(project, monkeypatch):
+    from chess_analytics.dashboard_cube import Drill
+
+    app = _run(project, monkeypatch)
+    app.session_state["drill"] = Drill(clock_band="under_10")
+    app.run()
+    assert not app.exception, [item.message for item in app.exception]
+    text = _visible(app)
+    assert "Under 10s left on the clock" in text
+    assert "Showing 12 of 192 published games" in text
+    assert "evaluable moves, not games" in text
+    games = "\n".join(item.value for item in app.markdown if "cal-games" in item.value)
+    assert "https://lichess.org/" in games
+    assert "cal-wide" in games
+    assert "overflow-x" not in games
 
 
 def test_opening_drill_lists_lines_and_climbs_back(project, monkeypatch):

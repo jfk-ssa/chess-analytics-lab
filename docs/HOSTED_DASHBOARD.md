@@ -64,8 +64,11 @@ between those units. The same grouping is on the line labels and the
 Board control. Routes under 10 games are
 omitted. Family
 and date apply. Color, time control, and rating do not, and the caption
-says so. Clock drills from a band to the largest slices in that band.
-A slice is a rating, a time control, and a phase. Each section has one
+says so. Clock drills from a band to a capped sample of games that have
+a move at that time remaining. The band is seconds left on the clock.
+The bar counts evaluable moves, not games. White and Black in the list
+are ratings. A Lichess link uses the public site id. Opening and date
+hide on a narrow screen. Each section has one
 short caption. Provenance stays in a collapsed expander.
 Charts are Altair, with the `chesslab` theme (Inter and the page palette).
 
@@ -144,8 +147,9 @@ uv run --locked --offline --no-editable --extra dashboard \
 ```
 
 The positions report is not on the tip. The script does not download it.
-The committed cube is 569,634 bytes and 34,084 rows. `game_cell` covers
-1,009,445 games.
+The committed cube is 593,422 bytes and 35,100 rows. `game_cell` covers
+1,009,445 games. `clock_game` is 1,016 rows and 414 distinct games
+([ADR 0106](adr/0106-clock-band-game-sample.md)).
 
 The openings warehouse was appended with this command, from the
 repository root on the machine that has the file, without `--offline`:
@@ -165,6 +169,9 @@ line includes the byte size and the `game_cell` game total. The write
 refuses a file over 10 MB. A `fact_game` warehouse uses the same script
 and can still add `result_line` and `clock_cell`. The committed cube
 is the result of that openings command. The page reads those grains.
+`scripts/build_clock_games.py` replaces only the `clock_game` rows.
+The published builder replaces the whole file, so run the clock script
+again after it. The warehouse command keeps `clock_game` rows.
 
 Check the page without a browser:
 

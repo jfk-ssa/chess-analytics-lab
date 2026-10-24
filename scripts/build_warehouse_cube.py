@@ -7,8 +7,9 @@ The period window is the min and max ``utc_date`` of standard, non-bot games.
 A ``fact_game`` warehouse still builds the analytical grains, including
 clock cells when ``fact_move`` has them. The committed cube was rebuilt
 with the command below: 569,634 bytes, 34,084 rows, and 1,009,445
-``game_cell`` games after the 10-game floor. The file stays under 10 MB
-or the write fails.
+``game_cell`` games after the 10-game floor. ``scripts/build_clock_games.py``
+then added the clock-game sample. The committed file is 593,422 bytes
+and 35,100 rows. The file stays under 10 MB or the write fails.
 
 From the repository root on the machine that has the openings warehouse:
 

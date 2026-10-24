@@ -589,6 +589,26 @@ def coverage(rows: list[dict]) -> _Drawn:
     return _frame(chart, 260)
 
 
+def count_axis_domain(values: list[float]) -> list[float] | None:
+    """Ten percent under the minimum when every value sits in a tight band.
+
+    A spread of 25 percent or more, or a non-positive minimum, keeps the
+    automatic scale so a count of moves or games still starts at zero. The
+    upper end sits two percent above the maximum so the longest bar is not
+    flush with the plot edge.
+    """
+    finite = [float(value) for value in values if value is not None]
+    if len(finite) < 2:
+        return None
+    low = min(finite)
+    high = max(finite)
+    if low <= 0 or high >= low * 1.25:
+        return None
+    floor = low * 0.9
+    span = max(high - floor, low * 0.02)
+    return [floor, high + span * 0.02]
+
+
 def selectable_bars(
     rows: list[dict],
     *,
@@ -596,11 +616,18 @@ def selectable_bars(
     field: str,
     value_title: str,
     label_field: str | None = None,
+    category_title: str | None = None,
+    tooltip_field: str | None = None,
+    tooltip_title: str | None = None,
+    domain: list[float] | None = None,
 ) -> _Drawn:
     """Horizontal bars with a point selection named ``name`` on ``field``."""
     shown = label_field or field
     height = max(180, 28 * max(len(rows), 1) + 24)
     pick = alt.selection_point(name=name, fields=[field])
+    tip_field = tooltip_field or field
+    tip_title = tooltip_title or ("Line" if field == "line" else shown)
+    x_scale = alt.Scale(domain=domain, nice=False, zero=False) if domain else alt.Undefined
     chart = (
         alt.Chart(alt.Data(values=rows))
         .mark_bar(color=_TEAL, cornerRadius=2, cursor="pointer")
@@ -608,18 +635,25 @@ def selectable_bars(
             y=alt.Y(
                 f"{shown}:N",
                 sort="-x",
-                title=None,
-                axis=alt.Axis(labelLimit=480, labelFont="Inter", labelOverlap=False),
+                title=category_title,
+                axis=alt.Axis(
+                    labelLimit=480,
+                    labelFont="Inter",
+                    labelOverlap=False,
+                    labelAngle=0,
+                    labelPadding=4,
+                ),
             ),
             x=alt.X(
                 "games:Q",
                 title=value_title,
                 stack=None,
-                axis=alt.Axis(labelFont="Inter"),
+                scale=x_scale,
+                axis=alt.Axis(labelFont="Inter", labelAngle=0),
             ),
             opacity=alt.condition(pick, alt.value(1), alt.value(0.4)),
             tooltip=[
-                alt.Tooltip(f"{field}:N", title="Line" if field == "line" else shown),
+                alt.Tooltip(f"{tip_field}:N", title=tip_title),
                 alt.Tooltip("games:Q", title=value_title, format=","),
             ],
         )
