@@ -46,6 +46,7 @@ opening, clock, rating, and color:
 
 - There is no game list. A clock band opens the largest slices in that
   band. A slice is a rating band, a time control, and a phase.
+  [ADR 0106](0106-clock-band-game-sample.md) supersedes this bullet.
 - Corpus months are the published periods. The games delta compares the
   selected months with the previous N published months. The full range
   has no prior window. There is no invented daily series inside a
@@ -75,7 +76,7 @@ opening, clock, rating, and color:
   (5.1%), and 442,862 / 968,874 losses (45.7%). The White denominator
   is under the `game_cell` total because a color cell under 10 games
   is dropped. The Games card counts `game_cell` (1,009,445, detail
-  `warehouse`) unless a color or rating filter is set, in which case
+  `games in range`) unless a color or rating filter is set, in which case
   it counts one side. Rating diff and game length are the
   games-weighted means on those cells (+0.1 and 72.8 ply on the full
   range). The published `color_score` rows stay in the file. The page

@@ -4,6 +4,7 @@ import hashlib
 import json
 import re
 from html import escape
+from urllib.parse import urlsplit
 
 import pytest
 
@@ -113,10 +114,10 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
         "Win rate",
         "Loss rate",
         "Draw rate",
+        "Positions",
         "Rating diff",
         "Game length",
         "Clock error",
-        "Positions",
     ]
     assert "cal-kpi-frame" in strips[0]
     assert "minmax(min(100%,256px),1fr)" not in strips[0]
@@ -147,7 +148,7 @@ def test_hosted_dashboard_renders_the_committed_extract(project, monkeypatch):
     expected = (
         "1,042,346",
         "1,009,445",
-        "warehouse",
+        "games in range",
         "49.2%",
         "476,741 / 968,874 · White",
         "5.1%",
@@ -266,8 +267,8 @@ def _assert_live_eval_link(app) -> None:
 def _assert_section_origins(app) -> None:
     openings = _caption(app, "Published positions only")
     assert "Query origin:" not in openings
-    clock = _caption(app, "not a game")
-    assert clock.startswith("Reviewed SQL.")
+    clock = _caption(app, "evaluable moves, not games")
+    assert clock.startswith("Each band is time remaining")
     assert "metricflow" not in clock
     periods = _caption(app, "one published period")
     assert "Query origin:" not in periods
@@ -330,7 +331,10 @@ def _assert_alt_text(app) -> None:
     assert all(isinstance(item, str) and item.strip() for item in alts)
     expected = (
         "Opening families by games. Select a bar to drill into lines.",
-        "Clock bands by evaluable moves. Select a bar to list the slices in that band.",
+        (
+            "Time remaining on the clock before the move, by evaluable moves. "
+            "Select a band to list games with a move in that band."
+        ),
         "Training games by published period.",
         (
             "Pass rate for the five-repeat runs with Wilson 95 percent intervals. "
@@ -369,6 +373,21 @@ def _assert_equal_width_markup(app) -> None:
     assert "white-space:nowrap" in markup
     assert "overflow-wrap:anywhere" not in markup
     assert "auto-fit,minmax(0,1fr)" not in markup
+    grid = next(item.value for item in app.markdown if "cal-model-grid" in item.value)
+    assert 'data-models="3"' in grid
+    assert "--cal-models:3" in grid
+    assert "repeat(3,minmax(0,1fr))" in grid
+    assert "grid-auto-flow:column" in grid
+    assert "@container calmodels (min-width:624px)" in grid
+    assert "auto-fill" not in grid
+    assert re.findall(r'class="cal-k"[^>]*>([^<]+)', grid) == [
+        "gpt-6-luna",
+        "gpt-6-luna cost",
+        "grok-4.7 · low",
+        "grok-4.7 · low cost",
+        "gpt-6-sol",
+        "gpt-6-sol cost",
+    ]
 
 
 def _load_hosted(project, name: str):
@@ -473,6 +492,355 @@ def _assert_rows_reconcile(html: str) -> None:
             assert sum(counts) == headline
 
 
+def test_clock_game_table_hides_opening_and_date_on_a_phone(project):
+    module = _load_hosted(project, "layout")
+    html = module.clock_game_table(
+        [
+            {
+                "white_rating": 1834,
+                "black_rating": 1790,
+                "time_control": "180+0",
+                "result": "1/2-1/2",
+                "side": "Both",
+                "opening": "Sicilian Defense: 1.e4 c5 2.Nf3 d6",
+                "played_on": "2026-08-01",
+                "lichess_id": "00000013",
+            }
+        ]
+    )
+    assert "cal-wide" in html
+    assert "overflow-x" not in html
+    assert "https://lichess.org/00000013" in html
+    assert 'white-space:nowrap">1.e4 c5' in html
+    assert 'white-space:nowrap">2.Nf3 d6' in html
+    assert "½–½" in html
+    assert ">Side<" in html
+    assert ">Both<" in html
+    css = (project / "hosted/static/dashboard.css").read_text()
+    assert "@media (max-width: 640px)" in css
+    assert "max-width: 480px" not in css
+    assert (
+        module.clock_game_table(
+            [{"white_rating": 1, "black_rating": 2, "result": "1-0", "lichess_id": "not a url"}]
+        ).count("https://lichess.org")
+        == 0
+    )
+    with pytest.raises(ValueError, match="needs a game"):
+        module.clock_game_table([])
+
+
+def _chart_layers(spec: dict) -> list[dict]:
+    return spec.get("layer", [spec])
+
+
+def _mark_type(layer: dict) -> str:
+    mark = layer["mark"]
+    return mark["type"] if isinstance(mark, dict) else mark
+
+
+def _layer(spec: dict, mark: str) -> dict:
+    return next(layer for layer in _chart_layers(spec) if _mark_type(layer) == mark)
+
+
+def test_clock_bars_keep_a_zero_baseline_and_a_horizontal_title(project):
+    pytest.importorskip("altair")
+    charts = _load_hosted(project, "charts")
+    clock_source = (project / "hosted/bi.py").read_text().split("def _clock", 1)[1]
+    clock_source = clock_source.split("def _games", 1)[0]
+    assert "count_axis_domain" not in clock_source
+    assert "horizontal_category_title=True" in clock_source
+    drawn = charts.selectable_bars(
+        [
+            {"label": "Under 10s", "band": "under_10", "games": 1191},
+            {"label": "60s+", "band": "60_plus", "games": 12567},
+        ],
+        name="clock_pick",
+        field="band",
+        value_title="Evaluable moves",
+        label_field="label",
+        category_title="Time remaining",
+        horizontal_category_title=True,
+    )
+    spec = drawn.to_dict()
+    bar = _layer(spec, "bar")
+    y_axis = bar["encoding"]["y"]["axis"]
+    assert y_axis["labelAngle"] == 0
+    assert y_axis["titleAngle"] == 0
+    assert bar["encoding"]["y"]["title"] == "Time remaining"
+    domain = bar["encoding"]["x"]["scale"]["domain"]
+    assert domain[0] == 0
+    assert domain[1] > 12567
+    assert bar["encoding"]["x"]["scale"]["zero"] is True
+    assert bar["encoding"]["x"]["axis"] is None
+    periods = charts.period_bars([{"label": "2026-08", "games": 10}]).to_dict()
+    period_bar = _layer(periods, "bar")
+    period_y = period_bar["encoding"]["y"]
+    assert period_y["axis"] is None
+    assert period_y["scale"]["domain"][0] == 0
+    assert period_y["scale"]["zero"] is True
+    assert period_bar["encoding"]["x"]["axis"]["labelAngle"] == 0
+    assert period_bar["data"]["values"][0]["tick"] == "0|Aug 26"
+
+
+def test_bar_charts_label_the_bar_end(project):
+    pytest.importorskip("altair")
+    charts = _load_hosted(project, "charts")
+    assert charts.value_label_format("count") == ","
+    assert charts.value_label_format("rate") == ".1%"
+    assert charts.value_label_format("diff") == "+,.1f"
+    assert charts.compact_count(240086) == "240k"
+    assert charts.compact_count(90000) == "90k"
+    assert charts.compact_count(1500) == "1.5k"
+    assert charts.compact_count(1191) == "1.2k"
+    with pytest.raises(ValueError, match="unknown label kind"):
+        charts.value_label_format("games")
+    clock = charts.selectable_bars(
+        [
+            {"label": "Under 10s", "band": "under_10", "games": 1191},
+            {"label": "60s+", "band": "60_plus", "games": 12567},
+        ],
+        name="clock_pick",
+        field="band",
+        value_title="Evaluable moves",
+        label_field="label",
+    ).to_dict()
+    text = _layer(clock, "text")
+    assert text["encoding"]["text"]["format"] == ","
+    assert "right" in text["mark"]["align"]["expr"]
+    assert "left" in text["mark"]["align"]["expr"]
+    assert "#f7f4ea" in text["mark"]["color"]["expr"]
+    assert text["encoding"]["x"]["scale"]["domain"][0] == 0
+    openings = charts.selectable_bars(
+        [{"label": "Sicilian Defense", "games": 12000}],
+        name="family_pick",
+        field="label",
+        value_title="Games",
+    ).to_dict()
+    assert _layer(openings, "text")["encoding"]["text"]["format"] == ","
+    months = [{"label": f"2026-{index:02d}", "games": 80_000 + index} for index in range(1, 11)]
+    periods = charts.period_bars(months).to_dict()
+    period_texts = [
+        layer["encoding"]["text"] for layer in _chart_layers(periods) if _mark_type(layer) == "text"
+    ]
+    wide = next(item for item in period_texts if item.get("condition", {}).get("format") == ",")
+    assert wide["condition"]["test"] == "width >= 560"
+    assert wide["value"] == ""
+    compact = next(
+        item for item in period_texts if item.get("condition", {}).get("field") == "compact"
+    )
+    assert compact["condition"]["test"] == "width < 560"
+    assert compact["value"] == ""
+    period_axis = _layer(periods, "bar")["encoding"]["x"]["axis"]
+    assert period_axis["labelAngle"] == 0
+    assert "split(datum.label, '|')" in period_axis["labelExpr"]
+    assert _layer(periods, "bar")["data"]["values"][0]["tick"] == "0|Jan 26"
+    assert _layer(periods, "bar")["data"]["values"][1]["tick"] == "1|Feb 26"
+    assert _layer(periods, "bar")["data"]["values"][0]["compact"] == "80k"
+    november = charts.period_bars(
+        [{"label": "2025-11", "games": 240086}, {"label": "2025-12", "games": 90000}]
+    ).to_dict()
+    ticks = _layer(november, "bar")["data"]["values"]
+    assert [row["tick"] for row in ticks] == ["0|Nov 25", "1|Dec 25"]
+    assert [row["compact"] for row in ticks] == ["240k", "90k"]
+    rates = charts.bucket_bars(
+        [
+            {"bucket": "Under 10s", "error_proxy_rate": 0.093, "rate_label": "9.3%"},
+            {"bucket": "60s+", "error_proxy_rate": 0.041, "rate_label": "4.1%"},
+        ]
+    ).to_dict()
+    assert _layer(rates, "text")["encoding"]["text"]["condition"]["format"] == ".1%"
+    shares = charts.transposition_bars(
+        [
+            {
+                "view": "French Defense",
+                "share": 0.125,
+                "share_label": "12.5%",
+                "denominator_games": 80,
+            }
+        ]
+    ).to_dict()
+    assert _layer(shares, "text")["encoding"]["text"]["format"] == ".1%"
+    single = charts.score_intervals(
+        [
+            {
+                "family": "French Defense",
+                "series": "White, raw",
+                "rate": 0.419,
+                "low": None,
+                "high": None,
+                "rate_label": "41.9%",
+                "interval_label": "not published",
+                "support_label": "no",
+            }
+        ]
+    ).to_dict()
+    assert _layer(single, "text")["encoding"]["text"]["format"] == ".1%"
+    grouped = charts.score_intervals(
+        [
+            {
+                "family": "French Defense",
+                "series": "White, raw",
+                "rate": 0.419,
+                "low": None,
+                "high": None,
+                "rate_label": "41.9%",
+                "interval_label": "not published",
+                "support_label": "no",
+            },
+            {
+                "family": "French Defense",
+                "series": "Black, adjusted",
+                "rate": 0.503,
+                "low": 0.447,
+                "high": 0.561,
+                "rate_label": "50.3%",
+                "interval_label": "44.7%–56.1%",
+                "support_label": "no",
+            },
+        ]
+    ).to_dict()
+    assert all(_mark_type(layer) != "text" for layer in _chart_layers(grouped))
+
+
+def _assert_category_axis(spec: dict, channel: str) -> None:
+    """The bar's category axis labels the categories, and no layer clears it."""
+    bar_axis = _layer(spec, "bar")["encoding"][channel]["axis"]
+    assert isinstance(bar_axis, dict)
+    assert bar_axis.get("labels", True) is not False
+    assert bar_axis.get("labelAngle", 0) == 0
+    seen = False
+    for layer in _chart_layers(spec):
+        encoding = layer.get("encoding") or {}
+        if channel not in encoding:
+            continue
+        seen = True
+        axis = encoding[channel].get("axis", "absent")
+        assert axis is not None
+        if isinstance(axis, dict):
+            assert axis.get("labels", True) is not False
+            assert axis.get("labelAngle", 0) == 0
+    assert seen
+
+
+def test_labeled_charts_keep_a_category_axis(project):
+    pytest.importorskip("altair")
+    charts = _load_hosted(project, "charts")
+    clock = charts.selectable_bars(
+        [
+            {"label": "Under 10s", "band": "under_10", "games": 1191},
+            {"label": "60s+", "band": "60_plus", "games": 12567},
+        ],
+        name="clock_pick",
+        field="band",
+        value_title="Evaluable moves",
+        label_field="label",
+        category_title="Time remaining",
+        horizontal_category_title=True,
+    ).to_dict()
+    _assert_category_axis(clock, "y")
+    for layer in _chart_layers(clock):
+        assert layer["encoding"]["y"]["title"] == "Time remaining"
+        assert layer["encoding"]["y"]["axis"]["titleAngle"] == 0
+        assert layer["encoding"]["y"]["axis"]["titleAnchor"] == "start"
+        assert layer["encoding"]["x"]["axis"] is None
+        assert layer["encoding"]["x"]["scale"]["domain"][0] == 0
+    openings = charts.selectable_bars(
+        [{"label": "Sicilian Defense", "games": 85724}],
+        name="family_pick",
+        field="label",
+        value_title="Games",
+    ).to_dict()
+    _assert_category_axis(openings, "y")
+    assert _layer(openings, "bar")["encoding"]["y"]["field"] == "label"
+    periods = charts.period_bars(
+        [{"label": "2025-11", "games": 240086}, {"label": "2026-08", "games": 89532}]
+    ).to_dict()
+    _assert_category_axis(periods, "x")
+    assert _layer(periods, "bar")["encoding"]["x"]["field"] == "tick"
+    for layer in _chart_layers(periods):
+        assert layer["encoding"]["y"]["axis"] is None
+        assert layer["encoding"]["y"]["scale"]["zero"] is True
+    buckets = charts.bucket_bars(
+        [{"bucket": "Under 10s", "error_proxy_rate": 0.093, "rate_label": "9.3%"}]
+    ).to_dict()
+    _assert_category_axis(buckets, "x")
+    assert _layer(buckets, "bar")["encoding"]["x"]["title"] == "Seconds left"
+    assert _layer(buckets, "text")["encoding"]["y"]["axis"]["labelAngle"] == 0
+    shares = charts.transposition_bars(
+        [
+            {
+                "view": "French Defense",
+                "share": 0.125,
+                "share_label": "12.5%",
+                "denominator_games": 80,
+            }
+        ]
+    ).to_dict()
+    _assert_category_axis(shares, "y")
+    removed = charts.funnel([{"stage": "Unrated", "count": 12, "order": 1}]).to_dict()
+    _assert_category_axis(removed, "y")
+    families = charts.horizontal_bars(
+        [{"family": "French Defense", "games": 40, "share_label": "10%"}],
+        x_title="Games",
+    ).to_dict()
+    _assert_category_axis(families, "y")
+    single = charts.score_intervals(
+        [
+            {
+                "family": "French Defense",
+                "series": "White, raw",
+                "rate": 0.419,
+                "low": 0.4,
+                "high": 0.44,
+                "rate_label": "41.9%",
+                "interval_label": "40.0%–44.0%",
+                "support_label": "no",
+            }
+        ]
+    ).to_dict()
+    _assert_category_axis(single, "x")
+    for layer in _chart_layers(single):
+        if "y" in layer.get("encoding", {}):
+            assert layer["encoding"]["y"].get("axis", "absent") is None
+    grouped = charts.score_intervals(
+        [
+            {
+                "family": "French Defense",
+                "series": "White, raw",
+                "rate": 0.419,
+                "low": None,
+                "high": None,
+                "rate_label": "41.9%",
+                "interval_label": "not published",
+                "support_label": "no",
+            },
+            {
+                "family": "French Defense",
+                "series": "Black, adjusted",
+                "rate": 0.503,
+                "low": 0.447,
+                "high": 0.561,
+                "rate_label": "50.3%",
+                "interval_label": "44.7%–56.1%",
+                "support_label": "no",
+            },
+        ]
+    ).to_dict()
+    _assert_category_axis(grouped, "x")
+    assert _layer(grouped, "bar")["encoding"]["y"]["axis"]["labelAngle"] == 0
+
+
+def test_count_axis_starts_near_zero_unless_values_are_tight(project):
+    pytest.importorskip("altair")
+    charts = _load_hosted(project, "charts")
+    assert charts.count_axis_domain([1191, 3183, 6053, 12567]) is None
+    assert charts.count_axis_domain([0, 10]) is None
+    tight = charts.count_axis_domain([100, 110])
+    assert tight is not None
+    assert tight[0] == pytest.approx(90)
+    assert tight[1] > 110
+
+
 def test_equal_width_rows_share_one_track_definition(project):
     module = _load_hosted(project, "layout")
     for count in range(1, 9):
@@ -548,14 +916,14 @@ def test_equal_width_rows_share_one_track_definition(project):
     _assert_rows_reconcile(board)
     strip = module.kpi_strip(
         [
-            ("Games", "1,009,445", "warehouse"),
+            ("Games", "1,009,445", "games in range"),
             ("Win rate", "49.2%", "476,741 / 968,874 · White"),
             ("Loss rate", "45.7%", "442,862 / 968,874 · White"),
             ("Draw rate", "5.1%", "49,271 / 968,874 · White"),
+            ("Positions", "256", "rated public"),
             ("Rating diff", "+0.1", "White · mean"),
             ("Game length", "72.8", "mean ply"),
             ("Clock error", "9.3%", "2,128 / 22,978"),
-            ("Positions", "256", "rated public"),
         ]
     )
     assert strip.startswith('<div class="cal-kpi-frame"><div class="cal-equal cal-kpis"')
@@ -565,10 +933,10 @@ def test_equal_width_rows_share_one_track_definition(project):
         "Win rate",
         "Loss rate",
         "Draw rate",
+        "Positions",
         "Rating diff",
         "Game length",
         "Clock error",
-        "Positions",
     ]
     assert "minmax(min(100%,256px),1fr)" not in strip
     css = (project / "hosted" / "static" / "dashboard.css").read_text()
@@ -578,6 +946,32 @@ def test_equal_width_rows_share_one_track_definition(project):
     assert "grid-template-columns: repeat(4, minmax(0, 1fr));" in css
     with pytest.raises(ValueError, match="at least one card"):
         module.kpi_strip([])
+    pairs = [
+        (("gpt-6-luna", "86.3%", "207 of 240 · Gate clear"), ("gpt-6-luna cost", "$0.0150", "Cap")),
+        (
+            ("grok-4.7 · low", "97.1%", "233 of 240 · Gate clear"),
+            ("grok-4.7 · low cost", "$1.0033", "Cap"),
+        ),
+        (("gpt-6-sol", "97.5%", "234 of 240 · Hard fail"), ("gpt-6-sol cost", "$0.2550", "Cap")),
+    ]
+    models = module.model_columns(pairs)
+    assert 'data-models="3"' in models
+    assert 'data-cards="6"' in models
+    assert "repeat(auto-fill" not in models
+    assert re.findall(r'class="cal-k"[^>]*>([^<]+)', models) == [
+        "gpt-6-luna",
+        "gpt-6-luna cost",
+        "grok-4.7 · low",
+        "grok-4.7 · low cost",
+        "gpt-6-sol",
+        "gpt-6-sol cost",
+    ]
+    two = module.model_columns(pairs[:2])
+    assert 'data-models="2"' in two
+    assert "repeat(2,minmax(0,1fr))" in two
+    assert "@container calmodels (min-width:412px)" in two
+    with pytest.raises(ValueError, match="at least one model"):
+        module.model_columns([])
     wrapped = module.equal_width_row([("Win rate", "49.2%", "476,741 / 968,874 · White")])
     assert 'white-space:nowrap">476,741 / 968,874<' in wrapped
     assert 'white-space:nowrap">476,741 / 968,874 · White<' not in wrapped
@@ -1264,11 +1658,40 @@ def test_color_filter_hides_positions_and_shows_the_french_cell(project, monkeyp
     assert "29,728 / 63,484" in text
     assert "Opening lines by games. Select a bar to open the position." in _chart_alts(app)
     assert "Training games by published period." in _chart_alts(app)
-    clock_alt = "Clock bands by evaluable moves. Select a bar to list the slices in that band."
+    clock_alt = (
+        "Time remaining on the clock before the move, by evaluable moves. "
+        "Select a band to list games with a move in that band."
+    )
     assert clock_alt in _chart_alts(app)
     sidebar = " ".join(item.value for item in app.sidebar.caption)
     assert "Color Black" in sidebar
     assert "Opening French Defense" in sidebar
+
+
+def test_clock_band_drill_lists_games(project, monkeypatch):
+    from chess_analytics.dashboard_cube import Drill
+
+    app = _run(project, monkeypatch)
+    app.session_state["drill"] = Drill(clock_band="under_10")
+    app.run()
+    assert not app.exception, [item.message for item in app.exception]
+    text = _visible(app)
+    assert "Under 10s left on the clock" in text
+    assert "Showing 12 of 191 published games" in text
+    assert "The sample is the August prefix." in text
+    assert "lowest SHA-256" in text
+    assert "evaluable moves, not games" in text
+    assert "Side" in text
+    games = "\n".join(item.value for item in app.markdown if "cal-games" in item.value)
+    hrefs = re.findall(r'href="([^"]+)"', games)
+    assert hrefs
+    for href in hrefs:
+        parsed = urlsplit(href)
+        assert parsed.scheme == "https"
+        assert parsed.hostname == "lichess.org"
+        assert re.fullmatch(r"/[A-Za-z0-9]{8}", parsed.path)
+    assert "cal-wide" in games
+    assert "overflow-x" not in games
 
 
 def test_opening_drill_lists_lines_and_climbs_back(project, monkeypatch):

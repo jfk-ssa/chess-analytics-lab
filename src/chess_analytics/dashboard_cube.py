@@ -2,14 +2,17 @@
 
 The hosted app queries the committed Parquet file with DuckDB. The builder
 reads the same published reports as the public extract. It does not open the
-analytical warehouse and it does not copy player or game identifiers.
+analytical warehouse. Aggregate rows do not copy player or game identifiers.
+A clock-band game row may carry the public Lichess site id and the two
+ratings. It does not carry a player name, a player key, or header JSON.
 """
 
 from __future__ import annotations
 
+import hashlib
 import os
 import re
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -20,6 +23,14 @@ AUGUST_DAY = date(2026, 8, 1)
 RATING_BANDS = ("under_1200", "1200_1599", "1600_1999", "2000_plus")
 RATING_SUBSET = {"1200_1599": "1400_1599"}
 CLOCK_BANDS = ("under_10", "10_to_29", "30_to_59", "60_plus")
+CLOCK_GAME_GRAIN = "clock_game"
+GAMES_PER_CLOCK_CELL = 6
+CLOCK_GAME_LIST_LIMIT = 12
+AUGUST_PREFIX_GAMES = 100_000
+_LICHESS_ID = re.compile(r"^[A-Za-z0-9]{8}$")
+_SITE_HEADER = re.compile(r"https?://lichess\.org/([A-Za-z0-9]{8})")
+_TIME_CONTROL = re.compile(r"(\d+)\+(\d+)")
+_FINISHED = {"1-0", "0-1", "1/2-1/2"}
 _COLOR_LABEL = {"white": "White", "black": "Black"}
 _RATING_LABEL = {
     "under_1200": "Under 1200",
@@ -68,6 +79,10 @@ COLUMNS = (
     "ply",
     "rating_diff",
     "mean_ply",
+    "result",
+    "white_rating",
+    "black_rating",
+    "lichess_id",
 )
 INTEGER_COLUMNS = (
     "games",
@@ -78,6 +93,8 @@ INTEGER_COLUMNS = (
     "evaluable_moves",
     "proxy_errors",
     "ply",
+    "white_rating",
+    "black_rating",
 )
 FORBIDDEN_PARTS = (
     "player_key",
@@ -117,7 +134,11 @@ select
   "error_proxy_rate",
   "ply",
   "rating_diff",
-  "mean_ply"
+  "mean_ply",
+  "result",
+  "white_rating",
+  "black_rating",
+  "lichess_id"
 from "cube"
 """.strip()
 _CREATE = """
@@ -148,7 +169,11 @@ create table "cube" (
   "error_proxy_rate" double,
   "ply" integer,
   "rating_diff" double,
-  "mean_ply" double
+  "mean_ply" double,
+  "result" varchar,
+  "white_rating" bigint,
+  "black_rating" bigint,
+  "lichess_id" varchar
 )
 """.strip()
 
@@ -176,16 +201,17 @@ class Kpi:
     detail: str
 
 
-# Wide strip: four then four. A two-column phone wrap keeps this order.
+# Wide strip: four then four, so Positions sits under Games.
+# A two-column phone wrap keeps this same order, two cards per row.
 _KPI_ORDER = (
     "Games",
     "Win rate",
     "Loss rate",
     "Draw rate",
+    "Positions",
     "Rating diff",
     "Game length",
     "Clock error",
-    "Positions",
 )
 
 
@@ -478,10 +504,14 @@ def bounds(connection) -> tuple[date, date]:
 
 
 def dimension_values(connection, column: str) -> list[str]:
+    """Sidebar values. Clock-game rows do not add filters of their own."""
     if column not in {"time_control", "rating_band", "opening_family", "clock_band"}:
         raise ValueError("unknown cube dimension")
-    sql = f'select distinct "{column}" from "cube" where "{column}" is not null order by "{column}"'
-    return [str(item[0]) for item in connection.execute(sql).fetchall()]
+    sql = (
+        f'select distinct "{column}" from "cube" '
+        f'where "{column}" is not null and "grain" <> ? order by "{column}"'
+    )
+    return [str(item[0]) for item in connection.execute(sql, [CLOCK_GAME_GRAIN]).fetchall()]
 
 
 def active_filter_text(filters: Filters) -> str:
@@ -685,6 +715,62 @@ def clock_slices(connection, filters: Filters, band: str) -> list[dict[str, obje
     return chosen
 
 
+def clock_games(
+    connection, filters: Filters, band: str, *, limit: int = CLOCK_GAME_LIST_LIMIT
+) -> tuple[list[dict[str, object]], int, str]:
+    """Published games for one time-remaining band, the match count, and a caption.
+
+    The date window follows the move bars. When those bars fall back to the
+    August prefix, the games do too. Color, rating, time control, and opening
+    apply when the row stores them. ``side`` is White, Black, or Both: the
+    mover whose clock was in the band. The list is the matching games with
+    the lowest SHA-256 of the Lichess id, at most ``limit`` of them.
+    """
+    if band not in CLOCK_BANDS:
+        raise ValueError("unknown clock band")
+    if isinstance(limit, bool) or not isinstance(limit, int) or limit < 1:
+        raise ValueError("clock game list limit must be a positive integer")
+    slices, fell_back, named = _clock_source_rows(connection, filters)
+    if not any(row["clock_band"] == band for row in slices):
+        return [], 0, _clock_game_caption(0, 0, cohorts=set(), empty=_clock_games_absent(named))
+    clauses = ['"grain" = ?', '"clock_band" = ?']
+    params: list[object] = [CLOCK_GAME_GRAIN, band]
+    if not fell_back:
+        clauses.extend(['"period_start" >= ?', '"period_end" <= ?'])
+        params.extend((filters.start, filters.end))
+    if filters.time_control:
+        _append_dimension(clauses, params, '"time_control"', filters.time_control)
+    if filters.color:
+        _append_dimension(clauses, params, '"color"', filters.color)
+    if filters.rating_band:
+        _append_rating(clauses, params, filters.rating_band)
+    if filters.opening_family:
+        _append_dimension(clauses, params, '"opening_family"', filters.opening_family)
+    where = " and ".join(clauses)
+    count_row = connection.execute(
+        f'select count(distinct "lichess_id") from "cube" where {where}',
+        params,
+    ).fetchone()
+    total = 0 if count_row is None else _num(count_row[0])
+    cohort_rows = connection.execute(
+        f'select distinct "cohort" from "cube" where {where}',
+        params,
+    ).fetchall()
+    cohorts = {str(row[0]) for row in cohort_rows if row[0] is not None}
+    listed = _CLOCK_GAME_LIST_SQL.replace("/* where */", where)
+    found = _records(connection.execute(listed, params))
+    for row in found:
+        row["side"] = _clock_side(row.pop("mover_colors", None))
+    found.sort(key=lambda row: clock_game_rank(str(row["lichess_id"])))
+    empty = None if total else _clock_games_miss(filters)
+    shown = min(limit, len(found), total)
+    return (
+        found[:limit],
+        total,
+        _clock_game_caption(shown, total, cohorts=cohorts, empty=empty),
+    )
+
+
 def month_display(connection, filters: Filters) -> tuple[list[dict[str, object]], str | None]:
     """Period bars, plus one caption when a filter cannot split them."""
     rows = month_bars(connection, filters)
@@ -814,8 +900,10 @@ def sql_text() -> list[str]:
         'select min("period_start"), max("period_end") from "cube"',
         (
             'select distinct "time_control" from "cube" '
-            'where "time_control" is not null order by "time_control"'
+            'where "time_control" is not null and "grain" <> ? order by "time_control"'
         ),
+        _CLOCK_GAME_LIST_SQL,
+        _CLOCK_GAME_MOVE_SQL,
         (
             'select count(distinct "fen") from "cube" '
             'where "grain" = ? and "cohort" = ? '
@@ -1491,6 +1579,83 @@ def _band_rows(rows: Sequence[Mapping[str, object]]) -> list[dict[str, object]]:
     return bands
 
 
+def clock_game_rank(lichess_id: str) -> tuple[bytes, str]:
+    """Order key for a published clock game. Lower SHA-256 sorts first.
+
+    The digest is SHA-256 of the eight-character Lichess id, not the id text.
+    The same key picks the game inside an opening family and orders the page.
+    """
+    text = str(lichess_id)
+    return (hashlib.sha256(text.encode()).digest(), text)
+
+
+def _clock_side(colors: object) -> str:
+    """White, Black, or Both, from the mover colors stored on the sample rows."""
+    if colors is None:
+        return ""
+    if isinstance(colors, str):
+        found = {part.strip() for part in colors.split(",") if part.strip()}
+    elif isinstance(colors, Iterable) and not isinstance(colors, bytes):
+        found = {str(part).strip() for part in colors if str(part).strip()}
+    else:
+        found = {str(colors).strip()}
+    found = {part for part in found if part in _COLOR_LABEL}
+    if found == {"white", "black"}:
+        return "Both"
+    if len(found) == 1:
+        return _COLOR_LABEL[found.pop()]
+    return ""
+
+
+def _clock_sample_source(cohorts: set[str]) -> str:
+    if cohorts == {"m3_august_prefix"}:
+        return "The sample is the August prefix."
+    if cohorts == {"warehouse"}:
+        return "The sample is the warehouse clock extract."
+    return "The sample is the published clock-game extract."
+
+
+def _clock_game_caption(shown: int, total: int, *, cohorts: set[str], empty: str | None) -> str:
+    """One caption. The bar is evaluable moves. The list states its sample rule."""
+    parts: list[str] = []
+    if empty:
+        parts.append(empty)
+    elif total > shown:
+        parts.append(
+            f"Showing {shown} of {total:,} published games with a move at this time remaining. "
+            f"These {shown} are the matching games with the lowest SHA-256 of the Lichess id."
+        )
+    elif total == 1:
+        parts.append("1 published game with a move at this time remaining.")
+    else:
+        parts.append(
+            f"{total:,} published games with a move at this time remaining, "
+            "in lowest-SHA-256 order of the Lichess id."
+        )
+    if total:
+        parts.append(_clock_sample_source(cohorts))
+        parts.append(
+            "Each time control, rating band, and color keeps one game from each of "
+            "the six most common openings, the game with the lowest SHA-256 of its Lichess id."
+        )
+    parts.append("The bar counts evaluable moves, not games.")
+    return " ".join(parts)
+
+
+def _clock_games_absent(named: Sequence[str]) -> str:
+    if named:
+        return "No clock games for this " + _join_or(list(named)) + "."
+    return "No clock games are published for this cut."
+
+
+def _clock_games_miss(filters: Filters) -> str:
+    if filters.opening_family:
+        return "No published game in this band for this opening."
+    if filters.time_control or filters.rating_band or filters.color:
+        return "No published game in this band for this filter."
+    return "No published games in this band."
+
+
 def _clock_caption(
     parts: Sequence[str], fell_back: bool, has_rows: bool, *, warehouse: bool = False
 ) -> str | None:
@@ -1760,10 +1925,8 @@ def _warehouse_games_kpi(connection, filters: Filters) -> Kpi:
     if _EMPTY_CUT in notes:
         return Kpi("Games", "0", _NO_CELLS)
     total = sum(_num(row["games"]) for row in rows)
-    if not notes and not _dimensional(filters):
-        detail = "warehouse"
-    else:
-        detail = "warehouse"
+    detail = "games in range"
+    if notes or _dimensional(filters):
         if "White" in notes:
             detail += " · White"
         ignored = [item for item in notes if item != "White"]
@@ -2207,6 +2370,322 @@ join "bounds"
 group by 1, 2, 3, 4, 5, 6, 7, 8
 having count(*) >= 10
 """.strip()
+
+
+_CLOCK_GAME_LIST_SQL = """
+select
+  "lichess_id",
+  min("period_start") as "played_on",
+  any_value("time_control") as "time_control",
+  any_value("opening_line") as "opening_line",
+  any_value("opening_family") as "opening_family",
+  any_value("result") as "result",
+  max("white_rating") as "white_rating",
+  max("black_rating") as "black_rating",
+  string_agg(distinct "color", ',') as "mover_colors"
+from "cube"
+where /* where */
+group by "lichess_id"
+""".strip()
+_CLOCK_GAME_MOVE_SQL = """
+select
+  g."game_id",
+  g."utc_date",
+  g."time_control",
+  g."result",
+  g."source_opening",
+  g."source_eco",
+  w."rating" as "white_rating",
+  b."rating" as "black_rating",
+  m."color",
+  m."clock_bucket"
+from "fact_move" as m
+join "fact_game" as g using ("provider", "game_id")
+join "fact_player_game" as w
+  on w."provider" = m."provider" and w."game_id" = m."game_id" and w."color" = 'white'
+join "fact_player_game" as b
+  on b."provider" = m."provider" and b."game_id" = m."game_id" and b."color" = 'black'
+where m."clock_bucket" is not null
+  and g."increment_seconds" = 0
+  and g."result" in ('1-0', '0-1', '1/2-1/2')
+  and g."marked_bot" = false
+""".strip()
+
+
+def align_row(record: Mapping[str, object]) -> dict[str, object]:
+    """One cube row with every current column. Unknown keys are ignored."""
+    return _row(**{column: record.get(column) for column in COLUMNS})
+
+
+def opening_family_name(opening: object) -> str | None:
+    """Text before the first colon. A blank family is null."""
+    if not isinstance(opening, str):
+        return None
+    family = opening.split(":", 1)[0].strip()
+    return family or None
+
+
+def sample_clock_games(
+    games: Sequence[Mapping[str, object]], *, cohort: str
+) -> list[dict[str, object]]:
+    """Cap published games for each band, time control, rating band, and color.
+
+    Each cell keeps up to ``GAMES_PER_CLOCK_CELL`` games, from the opening
+    families with the most qualifying games in that cell. Ties on the family
+    count break on the family name. Inside a family the kept game is the one
+    with the lowest SHA-256 of its Lichess id (``clock_game_rank``). Counts
+    stay null: a row is one game, and the ten-game floor still applies to
+    aggregate grains.
+    """
+    qualified: list[dict[str, object]] = []
+    for game in games:
+        qualified.extend(_qualify_clock_game(game, cohort))
+    issues = public_issues(qualified)
+    if issues:
+        raise ValueError(f"clock games failed the public check: {issues[0]}")
+    cells: dict[tuple[object, ...], list[dict[str, object]]] = {}
+    for row in qualified:
+        key = (row["clock_band"], row["time_control"], row["rating_band"], row["color"])
+        cells.setdefault(key, []).append(row)
+    kept: list[dict[str, object]] = []
+    for group in cells.values():
+        kept.extend(_cap_clock_cell(group))
+    kept.sort(key=_sort_key)
+    return kept
+
+
+def clock_game_rows_from_pgn(
+    path: Path,
+    *,
+    max_games: int = AUGUST_PREFIX_GAMES,
+    log: Callable[[str], object] | None = None,
+) -> list[dict[str, object]]:
+    """Hash-selected zero-increment games from a local prefix. No download.
+
+    The hash is the same mod-20 selection ``fact_move`` uses. The scan keeps
+    the first ``max_games`` complete records and drops a trailing partial
+    record, matching the August prefix extract.
+    """
+    games = list(_qualifying_prefix_games(Path(path), max_games=max_games, log=log))
+    return sample_clock_games(games, cohort="m3_august_prefix")
+
+
+def clock_game_rows_from_warehouse(connection) -> list[dict[str, object]]:
+    """Sample ``fact_move`` games that already carry a clock bucket.
+
+    The warehouse is the hash sample, so this path does not apply the mod-20
+    filter again. Player names stay in the warehouse.
+    """
+    if not _clock_columns_ready(connection):
+        raise ValueError("fact_move has no clock columns")
+    grouped: dict[str, dict[str, object]] = {}
+    for record in connection.execute(_CLOCK_GAME_MOVE_SQL).fetchall():
+        game_id, played, control, result, opening, eco = record[:6]
+        white, black, color, band = record[6:]
+        slot = grouped.setdefault(
+            str(game_id),
+            {
+                "lichess_id": str(game_id),
+                "utc_date": played,
+                "time_control": None if control is None else str(control),
+                "result": None if result is None else str(result),
+                "opening": None if opening is None else str(opening),
+                "eco": None if eco is None else str(eco),
+                "white_rating": white,
+                "black_rating": black,
+                "colors": {"white": set(), "black": set()},
+            },
+        )
+        colors = slot["colors"]
+        assert isinstance(colors, dict)
+        if color in colors and band is not None:
+            colors[str(color)].add(str(band))
+    return sample_clock_games(list(grouped.values()), cohort="warehouse")
+
+
+def _cap_clock_cell(rows: Sequence[dict[str, object]]) -> list[dict[str, object]]:
+    by_family: dict[str, list[dict[str, object]]] = {}
+    for row in rows:
+        family = "" if row["opening_family"] is None else str(row["opening_family"])
+        by_family.setdefault(family, []).append(row)
+    names = sorted(by_family, key=lambda name: (-len(by_family[name]), name))
+    chosen: list[dict[str, object]] = []
+    for name in names[:GAMES_PER_CLOCK_CELL]:
+        best = min(by_family[name], key=lambda row: clock_game_rank(str(row["lichess_id"])))
+        chosen.append(best)
+    return chosen
+
+
+def _qualify_clock_game(game: Mapping[str, object], cohort: str) -> list[dict[str, object]]:
+    lichess_id = str(game.get("lichess_id") or "")
+    if _LICHESS_ID.fullmatch(lichess_id) is None:
+        return []
+    result = game.get("result")
+    if result not in _FINISHED:
+        return []
+    if game.get("utc_date") is None:
+        return []
+    played_on = _parse_date(game.get("utc_date"))
+    opening = game.get("opening")
+    opening_text = opening.strip() if isinstance(opening, str) else ""
+    opening_line = opening_text or None
+    family = opening_family_name(opening_line)
+    eco = game.get("eco")
+    eco_text = str(eco).strip() if isinstance(eco, str) and eco.strip() else None
+    white = _optional_rating(game.get("white_rating"))
+    black = _optional_rating(game.get("black_rating"))
+    colors = game.get("colors")
+    if not isinstance(colors, Mapping):
+        return []
+    control = game.get("time_control")
+    time_control = None if control is None else str(control)
+    ratings = {"white": white, "black": black}
+    rows: list[dict[str, object]] = []
+    for color in ("white", "black"):
+        rating = ratings[color]
+        bands = colors.get(color)
+        if rating is None or isinstance(bands, str) or not isinstance(bands, Iterable):
+            continue
+        for band in sorted({str(item) for item in bands}):
+            if band not in CLOCK_BANDS:
+                continue
+            rows.append(
+                _row(
+                    grain=CLOCK_GAME_GRAIN,
+                    cohort=cohort,
+                    period=played_on.isoformat(),
+                    period_start=played_on,
+                    period_end=played_on,
+                    time_control=time_control,
+                    color=color,
+                    rating_band=_rating_band(rating),
+                    opening_family=family,
+                    opening_line=opening_line,
+                    eco=eco_text,
+                    clock_band=band,
+                    result=str(result),
+                    white_rating=white,
+                    black_rating=black,
+                    lichess_id=lichess_id,
+                )
+            )
+    return rows
+
+
+def _optional_rating(value: object) -> int | None:
+    if value is None:
+        return None
+    if isinstance(value, bool) or not isinstance(value, int | float | str):
+        raise TypeError("clock game rating is not a number")
+    if isinstance(value, float) and not value.is_integer():
+        raise TypeError("clock game rating is not a whole number")
+    if isinstance(value, str) and not value.isdigit():
+        raise TypeError("clock game rating is not a whole number")
+    return int(value)
+
+
+def _rating_band(rating: int) -> str:
+    if rating < 1200:
+        return "under_1200"
+    if rating < 1600:
+        return "1200_1599"
+    if rating < 2000:
+        return "1600_1999"
+    return "2000_plus"
+
+
+def _pgn_headers(raw: str) -> dict[str, str]:
+    headers: dict[str, str] = {}
+    for line in raw.splitlines():
+        if not line.startswith("["):
+            if line.strip():
+                break
+            continue
+        match = re.fullmatch(r'\[(\w+) "((?:[^"\\]|\\.)*)"\]', line)
+        if match and match[1] not in headers:
+            headers[match[1]] = match[2]
+    return headers
+
+
+def _prefix_candidate(raw: str) -> str | None:
+    """Lichess id when the record is a hash-selected zero-increment finish."""
+    from chess_analytics.corpus.moves import selected
+
+    headers = _pgn_headers(raw)
+    site = _SITE_HEADER.fullmatch(headers.get("Site", ""))
+    if site is None or not selected(site[1]):
+        return None
+    control = _TIME_CONTROL.fullmatch(headers.get("TimeControl", ""))
+    if control is None or int(control[2]) != 0:
+        return None
+    if headers.get("Result") not in _FINISHED:
+        return None
+    if headers.get("WhiteTitle") == "BOT" or headers.get("BlackTitle") == "BOT":
+        return None
+    return site[1]
+
+
+def _complete_records(path: Path, *, max_games: int):
+    """Yield complete PGN records. Drop a trailing partial record."""
+    from chess_analytics.ingest.pgn import records
+
+    plan = {
+        "max_record_bytes": 1_000_000,
+        "max_decompressed_bytes": 500_000_000,
+        "max_games": max_games + 1,
+    }
+    pending = None
+    count = 0
+    for record in records(path, plan):
+        if pending is not None:
+            count += 1
+            yield pending[0], pending[1]
+            if count == max_games:
+                return
+        pending = record
+
+
+def _qualifying_prefix_games(path: Path, *, max_games: int, log: Callable[[str], object] | None):
+    from chess_analytics.corpus.moves import move_rows
+    from chess_analytics.ingest.pgn import normalize
+
+    scanned = 0
+    for ordinal, raw in _complete_records(path, max_games=max_games):
+        scanned += 1
+        if log is not None and scanned % 20000 == 0:
+            log(f"scanned {scanned} complete games")
+        if _prefix_candidate(raw) is None:
+            continue
+        status, _reason, parsed = normalize(raw, ordinal)
+        if status != "accepted" or parsed is None:
+            continue
+        game, players = parsed
+        moves = move_rows(
+            raw,
+            str(game["game_id"]),
+            None if game["base_seconds"] is None else int(game["base_seconds"]),
+            None if game["increment_seconds"] is None else int(game["increment_seconds"]),
+        )
+        colors: dict[str, set[str]] = {"white": set(), "black": set()}
+        for move in moves:
+            bucket = move["clock_bucket"]
+            color = str(move["color"])
+            if bucket in CLOCK_BANDS and color in colors:
+                colors[color].add(str(bucket))
+        if not any(colors.values()):
+            continue
+        ratings = {str(player["color"]): player["rating"] for player in players}
+        yield {
+            "lichess_id": str(game["game_id"]),
+            "utc_date": game["utc_date"],
+            "time_control": game["time_control"],
+            "result": game["result"],
+            "opening": game["source_opening"],
+            "eco": game["source_eco"],
+            "white_rating": ratings.get("white"),
+            "black_rating": ratings.get("black"),
+            "colors": colors,
+        }
 
 
 def warehouse_source(connection) -> str:

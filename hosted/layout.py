@@ -10,12 +10,18 @@ short last row, so the leftover card stays the same width. The detail
 nowraps the fraction and can break at `` · ``.
 
 The KPI strip does not use that track. Its DOM order is Games, Win rate,
-Loss rate, Draw rate, Rating diff, Game length, Clock error, Positions.
+Loss rate, Draw rate, Positions, Rating diff, Game length, Clock error.
 ``hosted/static/dashboard.css`` lays that list out as four equal columns
 once the strip is at least 600px wide, and two equal columns below that.
 A 1024px page with the sidebar open is about 622px of strip, so it is
-four then four, as is a 1280px page. A 390px page is two per row, in
-the same order.
+four then four, as is a 1280px page. Positions is then directly under
+Games. A 390px page is two per row, in the same order.
+
+Headline live-eval cards do not use that track either. ``model_columns``
+is one equal column per model: the pass-rate card, then that model's
+cost card under it. The column count is the number of models. A frame
+narrower than 200px per model stacks the cards, and each pass rate
+stays with its cost.
 """
 
 from __future__ import annotations
@@ -26,6 +32,8 @@ from html import escape
 _MOVE_NUMBER = re.compile(r"\d+\.")
 
 _TRACKS = "repeat(auto-fill,minmax(min(100%,256px),1fr))"
+_MODEL_COLUMN_PX = 200
+_MODEL_GAP_PX = 12
 _OTHER_FLOOR = 10
 _OTHER_LABEL = "other orders"
 
@@ -70,6 +78,42 @@ def equal_width_row(cards: list[tuple[str, str, str]]) -> str:
     return (
         f'<div class="cal-equal" data-equal-width="true" data-cards="{len(cards)}" '
         f'style="{style}">{body}</div>'
+    )
+
+
+def model_columns(
+    pairs: list[tuple[tuple[str, str, str], tuple[str, str, str]]],
+) -> str:
+    """One equal column per model.
+
+    Each pair is the pass-rate card, then that model's cost card. The DOM
+    order is that reading order, so a narrow frame keeps the pair together.
+    When the frame is at least 200px per model, the grid fills by column:
+    pass rates on the first row, costs on the second, in the same order.
+    """
+    if not pairs:
+        raise ValueError("model columns need at least one model")
+    count = len(pairs)
+    cards = [card for pair in pairs for card in pair]
+    cells = [_card_html(label, value, detail) for label, value, detail in cards]
+    threshold = count * _MODEL_COLUMN_PX + max(count - 1, 0) * _MODEL_GAP_PX
+    style = (
+        "<style>"
+        ".cal-model-frame{container-type:inline-size;container-name:calmodels;"
+        "width:100%;margin:0 0 16px}"
+        ".cal-model-grid{display:grid;grid-template-columns:minmax(0,1fr);"
+        "grid-auto-flow:row;column-gap:12px;row-gap:12px;width:100%;"
+        "align-items:stretch;margin:0}"
+        f"@container calmodels (min-width:{threshold}px){{"
+        f".cal-model-grid{{grid-template-columns:repeat({count},minmax(0,1fr));"
+        "grid-template-rows:auto auto;grid-auto-flow:column}}"
+        "</style>"
+    )
+    body = "".join(cells)
+    return (
+        style + '<div class="cal-model-frame"><div class="cal-equal cal-model-grid" '
+        f'data-equal-width="true" data-cards="{len(cards)}" data-models="{count}" '
+        f'style="--cal-models:{count}">{body}</div></div>'
     )
 
 
@@ -305,4 +349,98 @@ def transposition_cards(items: list[dict]) -> str:
     return (
         f'<div class="cal-equal" data-equal-width="true" data-cards="{len(items)}" '
         f'style="{style}">{body}</div>'
+    )
+
+
+_LICHESS_ID = re.compile(r"^[A-Za-z0-9]{8}$")
+_RESULT = {"1-0": "1–0", "0-1": "0–1", "1/2-1/2": "½–½"}
+
+
+def clock_game_table(games: list[dict]) -> str:
+    """Games in one time-remaining band.
+
+    Desktop shows ratings, time control, result, the mover side, opening,
+    date, and a Lichess link. Side is White, Black, or Both. A viewport at
+    most 640px wide hides opening and date so the row stays inside the
+    screen. A move number in an opening stays with its reply.
+    """
+    if not games:
+        raise ValueError("clock game table needs a game")
+    head = _game_line(
+        [
+            _game_cell("White", "num"),
+            _game_cell("Black", "num"),
+            _game_cell("Time", "text"),
+            _game_cell("Result", "text"),
+            _game_cell("Side", "text"),
+            _game_cell("Opening", "open", wide=True),
+            _game_cell("Date", "text", wide=True),
+            _game_cell("Game", "text"),
+        ],
+        head=True,
+    )
+    body = "".join(_game_line(_game_values(game)) for game in games)
+    return (
+        '<div class="cal-games" role="region" '
+        'aria-label="Games with a move at this time remaining.">'
+        f"{head}{body}</div>"
+    )
+
+
+def _game_values(game: dict) -> list[str]:
+    opening = game.get("opening")
+    opening_html = _san_html(str(opening)) if isinstance(opening, str) and opening else ""
+    return [
+        _game_cell(_rating_text(game.get("white_rating")), "num"),
+        _game_cell(_rating_text(game.get("black_rating")), "num"),
+        _game_cell("" if game.get("time_control") is None else str(game["time_control"]), "text"),
+        _game_cell(_RESULT.get(str(game.get("result")), str(game.get("result") or "")), "text"),
+        _game_cell(_side_text(game.get("side")), "text"),
+        _game_cell(opening_html, "open", wide=True, html=True),
+        _game_cell(_day_text(game.get("played_on")), "text", wide=True),
+        _game_cell(_lichess_link(game.get("lichess_id")), "text", html=True),
+    ]
+
+
+def _game_line(cells: list[str], *, head: bool = False) -> str:
+    kind = "cal-games-row cal-games-head" if head else "cal-games-row"
+    return f'<div class="{kind}">{"".join(cells)}</div>'
+
+
+def _game_cell(value: str, kind: str, *, wide: bool = False, html: bool = False) -> str:
+    wide_class = " cal-wide" if wide else ""
+    body = value if html else escape(value)
+    return f'<div class="cal-g cal-g-{kind}{wide_class}">{body}</div>'
+
+
+def _side_text(value: object) -> str:
+    text = "" if value is None else str(value)
+    if text in {"White", "Black", "Both"}:
+        return text
+    return ""
+
+
+def _rating_text(value: object) -> str:
+    if isinstance(value, bool) or not isinstance(value, int | float):
+        return ""
+    return str(int(value))
+
+
+def _day_text(value: object) -> str:
+    isoformat = getattr(value, "isoformat", None)
+    if callable(isoformat):
+        return str(isoformat())
+    if value is None:
+        return ""
+    return str(value)
+
+
+def _lichess_link(game_id: object) -> str:
+    text = str(game_id or "")
+    if _LICHESS_ID.fullmatch(text) is None:
+        return ""
+    href = escape(f"https://lichess.org/{text}")
+    return (
+        f'<a href="{href}" target="_blank" rel="noopener noreferrer" '
+        'aria-label="Open on Lichess">Open</a>'
     )

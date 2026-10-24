@@ -15,7 +15,7 @@ from chess_analytics.dashboard_cube import (
     _join_or,
     active_filter_text,
     clock_display,
-    clock_slices,
+    clock_games,
     continuations,
     kpis,
     month_display,
@@ -29,7 +29,6 @@ from chess_analytics.dashboard_cube import (
     transpositions,
 )
 
-_PHASE = {"early_ply": "Early", "middle_ply": "Middle", "late_ply": "Late"}
 _BAND = {
     "under_1200": "Under 1200",
     "1200_1599": "1200–1599",
@@ -53,7 +52,7 @@ def render(layout, charts, connection, date_bounds: tuple[date, date]) -> None:
     st.markdown(layout.kpi_strip(cards), unsafe_allow_html=True)
     _openings(layout, charts, connection, filters, drill)
     _transpositions(layout, connection, filters)
-    _clock(charts, connection, filters, drill)
+    _clock(layout, charts, connection, filters, drill)
     _months(charts, connection, filters)
 
 
@@ -266,12 +265,13 @@ def _choose_fen(connection, filters: Filters, cohort: str, drill: Drill, *, date
         _back(drill, filters)
 
 
-def _clock(charts, connection, filters: Filters, drill: Drill) -> None:
+def _clock(layout, charts, connection, filters: Filters, drill: Drill) -> None:
     st.subheader("Clock")
     bands, note, _tag = clock_display(connection, filters)
     if drill.clock_band:
-        _slices(connection, filters, drill)
-    elif bands:
+        _games(layout, connection, filters, drill)
+        return
+    if bands:
         plotted = [
             {
                 "label": _CLOCK.get(str(row["label"]), str(row["label"])),
@@ -287,38 +287,51 @@ def _clock(charts, connection, filters: Filters, drill: Drill) -> None:
                 field="band",
                 value_title="Evaluable moves",
                 label_field="label",
+                category_title="Time remaining",
+                tooltip_field="label",
+                tooltip_title="Time remaining",
+                horizontal_category_title=True,
             ),
-            alt="Clock bands by evaluable moves. Select a bar to list the slices in that band.",
+            alt=(
+                "Time remaining on the clock before the move, by evaluable moves. "
+                "Select a band to list games with a move in that band."
+            ),
             key=_key("clock_bars"),
         )
         _take(event, "clock_pick", "band", drill.clock_band, lambda value: _set_clock(drill, value))
     if note:
         st.caption(note)
-    else:
-        st.caption("Reviewed SQL. A slice is a rating, time control, and phase, not a game.")
+    st.caption(
+        "Each band is time remaining before the move. "
+        "The length of a bar is evaluable moves, not games."
+    )
 
 
-def _slices(connection, filters: Filters, drill: Drill) -> None:
+def _games(layout, connection, filters: Filters, drill: Drill) -> None:
     assert drill.clock_band is not None
-    rows = clock_slices(connection, filters, drill.clock_band)[:12]
-    table = [
-        {
-            "Slice": (
-                f"{_BAND.get(str(row['rating_band']), str(row['rating_band']))} · "
-                f"{row['time_control']} · {_PHASE.get(str(row['phase']), str(row['phase']))}"
+    label = _CLOCK.get(drill.clock_band, drill.clock_band)
+    st.caption(f"{label} left on the clock")
+    rows, _total, caption = clock_games(connection, filters, drill.clock_band)
+    if rows:
+        st.markdown(
+            layout.clock_game_table(
+                [
+                    {
+                        "white_rating": row["white_rating"],
+                        "black_rating": row["black_rating"],
+                        "time_control": row["time_control"],
+                        "result": row["result"],
+                        "side": row["side"],
+                        "opening": row["opening_line"],
+                        "played_on": row["played_on"],
+                        "lichess_id": row["lichess_id"],
+                    }
+                    for row in rows
+                ]
             ),
-            "Moves": f"{_count(row['moves']):,}",
-            "Error": _rate(row),
-        }
-        for row in rows
-    ]
-    if table:
-        st.table(
-            table,
-            hide_index=True,
-            height="content",
-            alt="Largest slices in the selected clock band.",
+            unsafe_allow_html=True,
         )
+    st.caption(caption)
     if st.button("All bands"):
         st.session_state.drill = select_clock(drill, None)
         _bump()
@@ -521,12 +534,3 @@ def _count(value: object) -> int:
     if isinstance(value, bool) or not isinstance(value, int | float):
         return 0
     return int(value)
-
-
-def _rate(row: dict) -> str:
-    evaluable = _count(row.get("evaluable_moves"))
-    if evaluable == 0:
-        return "—"
-    from chess_analytics.dashboard_cube import _percent
-
-    return _percent(_count(row.get("proxy_errors")) / evaluable)

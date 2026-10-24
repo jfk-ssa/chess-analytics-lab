@@ -124,63 +124,336 @@ def _pass_scale(domain: list[float]) -> alt.Scale:
     )
 
 
+_LABEL_FORMATS = {"count": ",", "rate": ".1%", "diff": "+,.1f"}
+# Pixels kept clear of the plot edge so an outside label is not clipped.
+_LABEL_GUTTER = 72
+# A vertical count needs about this much plot width or the numbers collide.
+_VERTICAL_LABEL_SLOT = 56
+_LABEL_COLOR = "#203433"
+_LABEL_ON_BAR = "#f7f4ea"
+_MONTHS = (
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+)
+
+
+def value_label_format(kind: str) -> str:
+    """Format for a bar-end label.
+
+    Counts use thousands separators. Rates use one decimal percent.
+    Diffs keep a sign and one decimal. No hosted bar plots a difference;
+    the signed format is the one a diff bar would use.
+    """
+    try:
+        return _LABEL_FORMATS[kind]
+    except KeyError:
+        raise ValueError(f"unknown label kind: {kind}") from None
+
+
+def _numeric(rows: list[dict], field: str) -> list[float]:
+    return [
+        float(row[field])
+        for row in rows
+        if isinstance(row.get(field), (int, float)) and row[field] is not None
+    ]
+
+
+def _count_scale(rows: list[dict], field: str, passed: list[float] | None = None) -> alt.Scale:
+    """Zero baseline for counts, with room past the longest bar for its label."""
+    if passed is not None:
+        low, high = float(passed[0]), float(passed[1])
+        span = max(high - low, abs(high) * 0.02, 1.0)
+        return alt.Scale(domain=[low, high + span * 0.22], nice=False, zero=low == 0)
+    high = max(_numeric(rows, field), default=1.0)
+    if high <= 0:
+        high = 1.0
+    return alt.Scale(domain=[0.0, high * 1.22], nice=False, zero=True)
+
+
+def _rate_scale() -> alt.Scale:
+    return alt.Scale(domain=[0, 1], nice=False, zero=True)
+
+
+def compact_count(value: float) -> str:
+    """Short count for a narrow slot, such as 240086 -> 240k and 90000 -> 90k."""
+    number = float(value)
+    sign = "-" if number < 0 else ""
+    magnitude = abs(number)
+    for unit, scale in (("M", 1_000_000), ("k", 1_000)):
+        if magnitude < scale:
+            continue
+        scaled = magnitude / scale
+        if scaled >= 10:
+            return f"{sign}{scaled:.0f}{unit}"
+        text = f"{scaled:.1f}".rstrip("0").rstrip(".")
+        return f"{sign}{text}{unit}"
+    return f"{sign}{magnitude:.0f}"
+
+
+def _period_tick(label: object) -> str:
+    """YYYY-MM becomes a horizontal tick such as Nov 25."""
+    text = str(label)
+    if len(text) < 7 or text[4] != "-" or not text[:4].isdigit() or not text[5:7].isdigit():
+        return text
+    month = int(text[5:7])
+    if not 1 <= month <= 12:
+        return text
+    return f"{_MONTHS[month - 1]} {text[2:4]}"
+
+
+def _nominal_axis(**extra: Any) -> alt.Axis:
+    spec = {
+        "labelAngle": 0,
+        "labelFont": "Inter",
+        "labelOverlap": False,
+        "labelPadding": 4,
+    }
+    spec.update(extra)
+    return alt.Axis(**spec)
+
+
+def _join(*parts: Any) -> _Drawn:
+    """One flat layer list. A nested layer would keep its axis out of the merge."""
+    flat: list[Any] = []
+    for part in parts:
+        if part is None:
+            continue
+        if isinstance(part, list):
+            flat.extend(item for item in part if item is not None)
+        else:
+            flat.append(part)
+    drawn = alt.layer(*flat)
+    return drawn.resolve_scale(x="shared", y="shared").resolve_axis(x="shared", y="shared")
+
+
+def _with_labels(
+    bars: _Drawn,
+    labels: _Drawn,
+    height: int,
+    *,
+    padding: dict[str, int] | None = None,
+) -> _Drawn:
+    # Shared axes: a null axis on the text layer would erase the bar's axis.
+    return _frame(_join(bars, labels), height, padding=padding)
+
+
+def _x_value(value: str, scale: alt.Scale, axis: alt.Axis | None, title: str | None) -> alt.X:
+    if axis is None:
+        return alt.X(f"{value}:Q", scale=scale, axis=None)
+    return alt.X(f"{value}:Q", scale=scale, axis=axis, title=title)
+
+
+def _y_value(value: str, scale: alt.Scale, axis: alt.Axis | None, title: str | None) -> alt.Y:
+    if axis is None:
+        return alt.Y(f"{value}:Q", scale=scale, axis=None)
+    return alt.Y(f"{value}:Q", scale=scale, axis=axis, title=title)
+
+
+def _label_texts(
+    value: str,
+    fmt: str,
+    *,
+    drop_below: int | None,
+    compact_below: int | None,
+    compact_field: str | None,
+) -> list[Any]:
+    if compact_below is not None:
+        return [
+            alt.condition(
+                f"width >= {compact_below}",
+                alt.Text(f"{value}:Q", format=fmt),
+                alt.value(""),
+            ),
+            alt.condition(
+                f"width < {compact_below}",
+                alt.Text(f"{compact_field}:N"),
+                alt.value(""),
+            ),
+        ]
+    if drop_below is not None:
+        return [
+            alt.condition(
+                f"width >= {drop_below}",
+                alt.Text(f"{value}:Q", format=fmt),
+                alt.value(""),
+            )
+        ]
+    return [alt.Text(f"{value}:Q", format=fmt)]
+
+
+def _bar_labels(
+    rows: list[dict],
+    *,
+    category: str,
+    value: str,
+    kind: str,
+    scale: alt.Scale,
+    sort: Any,
+    horizontal: bool,
+    category_axis: alt.Axis,
+    category_title: str | None,
+    value_axis: alt.Axis | None = None,
+    value_title: str | None = None,
+    drop_below: int | None = None,
+    compact_below: int | None = None,
+    compact_field: str | None = None,
+) -> _Drawn:
+    """Text at the end of each bar.
+
+    The category axis is the same one the bars use. Leaving it off, or setting
+    it to None, makes Vega-Lite drop that shared axis. The value axis is hidden
+    when ``value_axis`` is None; the scale is unchanged, so a count still
+    starts at zero. A horizontal label that would cross the right edge moves
+    inside the bar.
+    """
+    fmt = value_label_format(kind)
+    texts = _label_texts(
+        value,
+        fmt,
+        drop_below=drop_below,
+        compact_below=compact_below,
+        compact_field=compact_field,
+    )
+    layers: list[Any] = []
+    for text in texts:
+        if horizontal:
+            fits = (
+                f"scale('x', datum.{value}) > width - {_LABEL_GUTTER}"
+                f" && scale('x', datum.{value}) > {_LABEL_GUTTER}"
+            )
+            marks = alt.Chart(alt.Data(values=rows)).mark_text(
+                align={"expr": f"{fits} ? 'right' : 'left'"},
+                dx={"expr": f"{fits} ? -5 : 6"},
+                baseline="middle",
+                color={"expr": f"{fits} ? '{_LABEL_ON_BAR}' : '{_LABEL_COLOR}'"},
+                font="Inter",
+                fontSize=12,
+            )
+            layers.append(
+                marks.encode(
+                    y=alt.Y(
+                        f"{category}:N",
+                        sort=sort,
+                        axis=category_axis,
+                        title=category_title,
+                    ),
+                    x=_x_value(value, scale, value_axis, value_title),
+                    text=text,
+                )
+            )
+            continue
+        near_top = f"scale('y', datum.{value}) < 16"
+        marks = alt.Chart(alt.Data(values=rows)).mark_text(
+            align="center",
+            baseline={"expr": f"{near_top} ? 'top' : 'bottom'"},
+            dy={"expr": f"{near_top} ? 3 : -4"},
+            color={"expr": f"{near_top} ? '{_LABEL_ON_BAR}' : '{_LABEL_COLOR}'"},
+            font="Inter",
+            fontSize=12,
+        )
+        layers.append(
+            marks.encode(
+                x=alt.X(f"{category}:N", sort=sort, axis=category_axis, title=category_title),
+                y=_y_value(value, scale, value_axis, value_title),
+                text=text,
+            )
+        )
+    return layers
+
+
 def funnel(rows: list[dict]) -> _Drawn:
     """Games removed. ``rows`` need stage, count, and order."""
     order = alt.EncodingSortField(field="order", order="ascending")
+    scale = _count_scale(rows, "count")
+    category_axis = _nominal_axis()
     bars = (
         alt.Chart(alt.Data(values=rows))
         .mark_bar(color=_TEAL, cornerRadius=2)
         .encode(
-            y=alt.Y("stage:N", sort=order, title=None),
-            x=alt.X(
-                "count:Q",
-                title="Games removed",
-                scale=alt.Scale(domainMin=0),
-            ),
+            y=alt.Y("stage:N", sort=order, title=None, axis=category_axis),
+            x=alt.X("count:Q", scale=scale, axis=None),
             tooltip=[
                 alt.Tooltip("stage:N", title="Removed"),
-                alt.Tooltip("count:Q", title="Games", format=","),
+                alt.Tooltip("count:Q", title="Games", format=value_label_format("count")),
             ],
         )
     )
-    labels = (
-        alt.Chart(alt.Data(values=rows))
-        .mark_text(align="left", dx=6, color="#203433", font="Inter", fontSize=12)
-        .encode(
-            y=alt.Y("stage:N", sort=order),
-            x="count:Q",
-            text=alt.Text("count:Q", format=","),
-        )
+    labels = _bar_labels(
+        rows,
+        category="stage",
+        value="count",
+        kind="count",
+        scale=scale,
+        sort=order,
+        horizontal=True,
+        category_axis=category_axis,
+        category_title=None,
     )
-    return _frame(bars + labels, 168)
+    return _with_labels(bars, labels, 168)
 
 
 def horizontal_bars(rows: list[dict], *, x_title: str) -> _Drawn:
-    """``rows`` need family and games."""
+    """``rows`` need family and games. ``x_title`` is the tooltip name.
+
+    The value axis is hidden; each bar prints its count.
+    """
     height = max(180, 28 * len(rows) + 24)
-    chart = (
+    scale = _count_scale(rows, "games")
+    category_axis = _nominal_axis()
+    bars = (
         alt.Chart(alt.Data(values=rows))
         .mark_bar(color="#116559", cornerRadius=2)
         .encode(
-            y=alt.Y("family:N", sort="-x", title=None),
-            x=alt.X("games:Q", title=x_title),
+            y=alt.Y("family:N", sort="-x", title=None, axis=category_axis),
+            x=alt.X("games:Q", scale=scale, axis=None),
             tooltip=[
                 alt.Tooltip("family:N", title="Family"),
-                alt.Tooltip("games:Q", title="Games", format=","),
+                alt.Tooltip("games:Q", title=x_title, format=value_label_format("count")),
                 alt.Tooltip("share_label:N", title="Share"),
             ],
         )
     )
-    return _frame(chart, height)
+    labels = _bar_labels(
+        rows,
+        category="family",
+        value="games",
+        kind="count",
+        scale=scale,
+        sort="-x",
+        horizontal=True,
+        category_axis=category_axis,
+        category_title=None,
+    )
+    return _with_labels(bars, labels, height)
 
 
 def score_intervals(rows: list[dict]) -> _Drawn:
-    """Grouped scores. Interval rows also carry low and high."""
+    """Grouped scores. Interval rows also carry low and high.
+
+    A single series prints one-decimal percents. Two or three series omit
+    the labels: the bars are 18 pixels wide and the text would overlap.
+    """
     present = [name for name in _SERIES if any(row["series"] == name for row in rows)]
     offset = alt.Scale(domain=present)
     color = alt.Scale(domain=present, range=list(_SERIES_COLORS[: len(present)]))
+    rate_scale = _rate_scale()
+    category_axis = _nominal_axis()
+    labeled = len(present) == 1
+    # Grouped bars have no text, so they keep the Score axis. One series
+    # prints the percent and hides that axis.
+    value_axis = None if labeled else alt.Axis(format="%", labelAngle=0)
     base = alt.Chart(alt.Data(values=rows)).encode(
-        x=alt.X("family:N", title=None),
+        x=alt.X("family:N", title=None, axis=category_axis),
         xOffset=alt.XOffset("series:N", scale=offset),
         color=alt.Color("series:N", scale=color, title=None),
         tooltip=[
@@ -194,25 +467,43 @@ def score_intervals(rows: list[dict]) -> _Drawn:
     bars = base.mark_bar(size=18, cornerRadius=2).encode(
         y=alt.Y(
             "rate:Q",
-            title="Score",
-            axis=alt.Axis(format="%"),
-            scale=alt.Scale(domain=[0, 1]),
+            title=None if labeled else "Score",
+            axis=value_axis,
+            scale=rate_scale,
         )
     )
+    # Three 18px series in one family leave no room for a percent label.
+    labels = None
+    if labeled:
+        labels = _bar_labels(
+            rows,
+            category="family",
+            value="rate",
+            kind="rate",
+            scale=rate_scale,
+            sort=None,
+            horizontal=False,
+            category_axis=category_axis,
+            category_title=None,
+        )
     intervals = [row for row in rows if row["low"] is not None]
     if not intervals:
-        return _frame(bars, 280)
+        return _frame(_join(bars, labels), 280)
+    if labeled:
+        error_y = alt.Y("low:Q", scale=rate_scale, axis=None)
+    else:
+        error_y = alt.Y("low:Q", scale=rate_scale)
     errors = (
         alt.Chart(alt.Data(values=intervals))
         .mark_errorbar(color=_ORANGE, ticks=True)
         .encode(
-            x=alt.X("family:N"),
+            x=alt.X("family:N", title=None, axis=category_axis),
             xOffset=alt.XOffset("series:N", scale=offset),
-            y=alt.Y("low:Q", scale=alt.Scale(domain=[0, 1])),
+            y=error_y,
             y2="high:Q",
         )
     )
-    return _frame(bars + errors, 300)
+    return _frame(_join(bars, errors, labels), 300)
 
 
 def _rate_domain(rows: list[dict]) -> list[float]:
@@ -262,12 +553,22 @@ def heatmap(rows: list[dict], *, x_order: list[str], y_order: list[str]) -> _Dra
 
 
 def bucket_bars(rows: list[dict]) -> _Drawn:
-    chart = (
+    """Error-proxy rates. The value axis stays, because a narrow plot drops the text."""
+    scale = _rate_scale()
+    order = [row["bucket"] for row in rows]
+    category_axis = _nominal_axis()
+    value_axis = alt.Axis(format="%", labelAngle=0, labelFont="Inter")
+    bars = (
         alt.Chart(alt.Data(values=rows))
         .mark_bar(color="#116559", cornerRadius=2)
         .encode(
-            x=alt.X("bucket:N", sort=[row["bucket"] for row in rows], title="Seconds left"),
-            y=alt.Y("error_proxy_rate:Q", title="Error proxy", axis=alt.Axis(format="%")),
+            x=alt.X("bucket:N", sort=order, title="Seconds left", axis=category_axis),
+            y=alt.Y(
+                "error_proxy_rate:Q",
+                title="Error proxy",
+                axis=value_axis,
+                scale=scale,
+            ),
             tooltip=[
                 alt.Tooltip("bucket:N", title="Bucket"),
                 alt.Tooltip("rate_label:N", title="Error proxy"),
@@ -275,7 +576,21 @@ def bucket_bars(rows: list[dict]) -> _Drawn:
             ],
         )
     )
-    return _frame(chart, 240)
+    labels = _bar_labels(
+        rows,
+        category="bucket",
+        value="error_proxy_rate",
+        kind="rate",
+        scale=scale,
+        sort=order,
+        horizontal=False,
+        category_axis=category_axis,
+        category_title="Seconds left",
+        value_axis=value_axis,
+        value_title="Error proxy",
+        drop_below=max(len(rows), 1) * _VERTICAL_LABEL_SLOT,
+    )
+    return _with_labels(bars, labels, 240)
 
 
 def wilson(rows: list[dict]) -> _Drawn:
@@ -589,6 +904,26 @@ def coverage(rows: list[dict]) -> _Drawn:
     return _frame(chart, 260)
 
 
+def count_axis_domain(values: list[float]) -> list[float] | None:
+    """Ten percent under the minimum when every value sits in a tight band.
+
+    A spread of 25 percent or more, or a non-positive minimum, keeps the
+    automatic scale so a count of moves or games still starts at zero. The
+    upper end sits two percent above the maximum so the longest bar is not
+    flush with the plot edge.
+    """
+    finite = [float(value) for value in values if value is not None]
+    if len(finite) < 2:
+        return None
+    low = min(finite)
+    high = max(finite)
+    if low <= 0 or high >= low * 1.25:
+        return None
+    floor = low * 0.9
+    span = max(high - floor, low * 0.02)
+    return [floor, high + span * 0.02]
+
+
 def selectable_bars(
     rows: list[dict],
     *,
@@ -596,11 +931,46 @@ def selectable_bars(
     field: str,
     value_title: str,
     label_field: str | None = None,
+    category_title: str | None = None,
+    tooltip_field: str | None = None,
+    tooltip_title: str | None = None,
+    domain: list[float] | None = None,
+    horizontal_category_title: bool = False,
 ) -> _Drawn:
-    """Horizontal bars with a point selection named ``name`` on ``field``."""
+    """Horizontal bars with a point selection named ``name`` on ``field``.
+
+    ``horizontal_category_title`` draws the y-axis title left to right above
+    the labels. Counts omit ``domain`` so the scale keeps its zero baseline.
+    The value axis is hidden: each bar prints its count, with headroom so the
+    text is not cut off. A label that would cross the right edge moves inside.
+    """
     shown = label_field or field
     height = max(180, 28 * max(len(rows), 1) + 24)
     pick = alt.selection_point(name=name, fields=[field])
+    tip_field = tooltip_field or field
+    tip_title = tooltip_title or ("Line" if field == "line" else shown)
+    x_scale = _count_scale(rows, "games", domain)
+    y_axis = {
+        "labelLimit": 480,
+        "labelFont": "Inter",
+        "labelOverlap": False,
+        "labelAngle": 0,
+        "labelPadding": 4,
+    }
+    frame_padding = None
+    if horizontal_category_title:
+        # Anchor at the start so the horizontal title sits above the labels.
+        # "end" lands on the last category and covers that label.
+        y_axis.update(
+            titleAngle=0,
+            titleAnchor="start",
+            titleAlign="left",
+            titleBaseline="bottom",
+            titleLimit=160,
+            titlePadding=8,
+        )
+        frame_padding = {"left": 4, "right": 18, "top": 28, "bottom": 4}
+    category_axis = alt.Axis(**y_axis)
     chart = (
         alt.Chart(alt.Data(values=rows))
         .mark_bar(color=_TEAL, cornerRadius=2, cursor="pointer")
@@ -608,65 +978,119 @@ def selectable_bars(
             y=alt.Y(
                 f"{shown}:N",
                 sort="-x",
-                title=None,
-                axis=alt.Axis(labelLimit=480, labelFont="Inter", labelOverlap=False),
+                title=category_title,
+                axis=category_axis,
             ),
-            x=alt.X(
-                "games:Q",
-                title=value_title,
-                stack=None,
-                axis=alt.Axis(labelFont="Inter"),
-            ),
+            x=alt.X("games:Q", stack=None, scale=x_scale, axis=None),
             opacity=alt.condition(pick, alt.value(1), alt.value(0.4)),
             tooltip=[
-                alt.Tooltip(f"{field}:N", title="Line" if field == "line" else shown),
-                alt.Tooltip("games:Q", title=value_title, format=","),
+                alt.Tooltip(f"{tip_field}:N", title=tip_title),
+                alt.Tooltip("games:Q", title=value_title, format=value_label_format("count")),
             ],
         )
         .add_params(pick)
     )
-    return _frame(chart, height)
+    labels = _bar_labels(
+        rows,
+        category=shown,
+        value="games",
+        kind="count",
+        scale=x_scale,
+        sort="-x",
+        horizontal=True,
+        category_axis=category_axis,
+        category_title=category_title,
+    )
+    return _with_labels(chart, labels, height, padding=frame_padding)
 
 
 def period_bars(rows: list[dict]) -> _Drawn:
-    """Training games by published period. No selection."""
+    """Training games by published period. No selection.
+
+    Month ticks are horizontal, shortened from ``2025-11`` to ``Nov 25``.
+    The full period stays in the tooltip. The value axis is hidden and the
+    scale still starts at zero. A wide plot prints the full count above each
+    bar. Below 56 pixels per month the count shortens (``240k``) and every
+    other month is labeled so the ticks do not collide.
+    """
+    plotted = []
+    for index, row in enumerate(rows):
+        # The flag is ours: datum.index on an axis tick is not the month index.
+        flag = "0" if index % 2 == 0 else "1"
+        plotted.append(
+            {
+                **row,
+                "tick": f"{flag}|{_period_tick(row.get('label'))}",
+                "compact": compact_count(float(row["games"])),
+            }
+        )
+    scale = _count_scale(plotted, "games")
+    slot = max(len(plotted), 1) * _VERTICAL_LABEL_SLOT
+    category_axis = _nominal_axis(
+        labelFlush=True,
+        labelExpr=(
+            f"width < {slot} && split(datum.label, '|')[0] == '1' ? null "
+            f": split(datum.label, '|')[1]"
+        ),
+    )
     chart = (
-        alt.Chart(alt.Data(values=rows))
+        alt.Chart(alt.Data(values=plotted))
         .mark_bar(color=_TEAL, cornerRadius=2)
         .encode(
-            x=alt.X(
-                "label:N",
-                sort=None,
-                title=None,
-                axis=alt.Axis(labelAngle=-40, labelFont="Inter"),
-            ),
-            y=alt.Y("games:Q", title="Games"),
+            x=alt.X("tick:N", sort=None, title=None, axis=category_axis),
+            y=alt.Y("games:Q", scale=scale, axis=None),
             tooltip=[
                 alt.Tooltip("label:N", title="Period"),
-                alt.Tooltip("games:Q", title="Games", format=","),
+                alt.Tooltip("games:Q", title="Games", format=value_label_format("count")),
             ],
         )
     )
-    return _frame(chart, 240)
+    labels = _bar_labels(
+        plotted,
+        category="tick",
+        value="games",
+        kind="count",
+        scale=scale,
+        sort=None,
+        horizontal=False,
+        category_axis=category_axis,
+        category_title=None,
+        compact_below=slot,
+        compact_field="compact",
+    )
+    return _with_labels(chart, labels, 240, padding={"left": 8, "right": 8, "top": 16, "bottom": 4})
 
 
 def transposition_bars(rows: list[dict]) -> _Drawn:
     height = max(180, 26 * len(rows) + 24)
-    chart = (
+    scale = _rate_scale()
+    category_axis = _nominal_axis()
+    bars = (
         alt.Chart(alt.Data(values=rows))
         .mark_bar(color="#3d6b8c", cornerRadius=2)
         .encode(
-            y=alt.Y("view:N", sort="-x", title=None),
-            x=alt.X(
-                "share:Q",
-                title="Transposing positions / distinct positions",
-                axis=alt.Axis(format="%"),
-            ),
+            y=alt.Y("view:N", sort="-x", title=None, axis=category_axis),
+            x=alt.X("share:Q", scale=scale, axis=None),
             tooltip=[
                 alt.Tooltip("view:N", title="Opening"),
                 alt.Tooltip("share_label:N", title="Transposing share"),
-                alt.Tooltip("denominator_games:Q", title="Games", format=","),
+                alt.Tooltip(
+                    "denominator_games:Q",
+                    title="Games",
+                    format=value_label_format("count"),
+                ),
             ],
         )
     )
-    return _frame(chart, height)
+    labels = _bar_labels(
+        rows,
+        category="view",
+        value="share",
+        kind="rate",
+        scale=scale,
+        sort="-x",
+        horizontal=True,
+        category_axis=category_axis,
+        category_title=None,
+    )
+    return _with_labels(bars, labels, height)

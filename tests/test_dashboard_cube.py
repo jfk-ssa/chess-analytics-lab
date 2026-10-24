@@ -8,6 +8,7 @@ import pytest
 from chess_analytics.dashboard_cube import (
     COLUMNS,
     CUBE_FILENAME,
+    GAMES_PER_CLOCK_CELL,
     MIN_CELL,
     SIZE_BUDGET_BYTES,
     Drill,
@@ -16,6 +17,10 @@ from chess_analytics.dashboard_cube import (
     build_rows,
     climb,
     clock_display,
+    clock_game_rank,
+    clock_game_rows_from_pgn,
+    clock_game_rows_from_warehouse,
+    clock_games,
     clock_slices,
     connect,
     cube_path,
@@ -25,6 +30,7 @@ from chess_analytics.dashboard_cube import (
     opening_lines,
     previous_periods,
     public_issues,
+    sample_clock_games,
     select_clock,
     select_family,
     select_line,
@@ -199,9 +205,10 @@ def test_filter_and_query_respect_unpublished_crosses(tmp_path: Path) -> None:
     assert french[0]["label"] == "1.e4 e6"
     black = Filters(wide.start, wide.end, None, "black", None, "French Defense")
     assert explorer_cohort(connection, black) == "rated_public"
-    assert kpis(connection, black)[0].value == "2"
-    assert kpis(connection, black)[5].value == "1"
-    assert "not by color" in kpis(connection, black)[5].detail
+    black_cards = {item.label: item for item in kpis(connection, black)}
+    assert black_cards["Games"].value == "2"
+    assert black_cards["Positions"].value == "1"
+    assert "not by color" in black_cards["Positions"].detail
     rated_only = Filters(date(2025, 12, 1), date(2026, 1, 1))
     bands = clock_slices(connection, wide, "under_10")
     assert len(bands) == 1
@@ -247,20 +254,46 @@ def test_drill_climbs_from_position_to_family_and_clock() -> None:
 
 def test_committed_cube_matches_the_warehouse_and_published_totals() -> None:
     path = cube_path(ROOT)
-    assert path.stat().st_size == 569_634
+    assert path.stat().st_size == 593_637
     assert path.stat().st_size < SIZE_BUDGET_BYTES
     connection = connect(path)
     counted = connection.execute('select count(*) from "cube"').fetchone()
-    assert counted is not None and int(counted[0]) == 34_084
+    assert counted is not None and int(counted[0]) == 35_100
+    clock_rows = connection.execute(
+        'select count(*), count(distinct "lichess_id") from "cube" where "grain" = ?',
+        ["clock_game"],
+    ).fetchone()
+    assert clock_rows is not None
+    assert int(clock_rows[0]) == 1_016
+    assert int(clock_rows[1]) == 409
+    wide = Filters(date(2025, 11, 1), date(2026, 8, 1))
+    listed, total, caption = clock_games(connection, wide, "under_10")
+    assert total == 191
+    assert len(listed) == 12
+    assert "evaluable moves, not games" in caption
+    assert "The sample is the August prefix." in caption
+    assert "six most common openings" in caption
+    assert "lowest SHA-256" in caption
+    assert all(len(str(row["lichess_id"])) == 8 for row in listed)
+    assert all(row["side"] in {"White", "Black", "Both"} for row in listed)
+    ranked = connection.execute(
+        """
+        select distinct "lichess_id"
+        from "cube"
+        where "grain" = 'clock_game' and "clock_band" = 'under_10'
+        """
+    ).fetchall()
+    expected = sorted((str(row[0]) for row in ranked), key=clock_game_rank)[:12]
+    assert [row["lichess_id"] for row in listed] == expected
+    assert expected != sorted(expected)[:12]
     covered = connection.execute(
         'select coalesce(sum("games"), 0) from "cube" where "grain" = ?',
         ["game_cell"],
     ).fetchone()
     assert covered is not None and int(covered[0]) == 1_009_445
-    wide = Filters(date(2025, 11, 1), date(2026, 8, 1))
     cards = {item.label: item for item in kpis(connection, wide)}
     assert cards["Games"].value == "1,009,445"
-    assert cards["Games"].detail == "warehouse"
+    assert cards["Games"].detail == "games in range"
     assert cards["Win rate"].value == "49.2%"
     assert cards["Win rate"].detail == "476,741 / 968,874 · White"
     assert cards["Loss rate"].value == "45.7%"
@@ -276,7 +309,7 @@ def test_committed_cube_matches_the_warehouse_and_published_totals() -> None:
     june = Filters(date(2026, 6, 1), date(2026, 8, 1))
     june_cards = {item.label: item for item in kpis(connection, june)}
     assert june_cards["Games"].value == "256,031"
-    assert june_cards["Games"].detail == "warehouse · +90 vs prior"
+    assert june_cards["Games"].detail == "games in range · +90 vs prior"
     french = Filters(wide.start, wide.end, None, "black", None, "French Defense")
     french_cards = {item.label: item for item in kpis(connection, french)}
     assert french_cards["Games"].value == "63,484"
@@ -637,10 +670,10 @@ def test_committed_cube_deltas_use_the_previous_comparable_periods() -> None:
         "Win rate",
         "Loss rate",
         "Draw rate",
+        "Positions",
         "Rating diff",
         "Game length",
         "Clock error",
-        "Positions",
     ]
     assert all("vs prior" not in item.detail for item in wide_cards)
     november = Filters(date(2025, 11, 1), date(2025, 11, 30))
@@ -648,10 +681,10 @@ def test_committed_cube_deltas_use_the_previous_comparable_periods() -> None:
     for chosen in (november, december):
         cards = {item.label: item for item in kpis(connection, chosen)}
         assert "vs prior" not in cards["Games"].detail
-        assert cards["Games"].detail == "warehouse"
+        assert cards["Games"].detail == "games in range"
     june = Filters(date(2026, 6, 1), date(2026, 8, 1))
     cards = {item.label: item for item in kpis(connection, june)}
-    assert cards["Games"].detail == "warehouse · +90 vs prior"
+    assert cards["Games"].detail == "games in range · +90 vs prior"
     assert cards["Win rate"].value == "49.5%"
     assert cards["Win rate"].detail == "120,072 / 242,616 · White · -0.3 pp vs prior"
     assert cards["Draw rate"].detail == "9,005 / 242,616 · White · +0.0 pp vs prior"
@@ -665,16 +698,16 @@ def test_committed_cube_deltas_use_the_previous_comparable_periods() -> None:
     august = Filters(date(2026, 8, 1), date(2026, 8, 1))
     august_cards = {item.label: item for item in kpis(connection, august)}
     assert august_cards["Games"].value == "85,343"
-    assert august_cards["Games"].detail == "warehouse · +194 vs prior"
+    assert august_cards["Games"].detail == "games in range · +194 vs prior"
     assert august_cards["Win rate"].detail == "40,221 / 81,033 · White · +0.2 pp vs prior"
     blitz = Filters(date(2026, 6, 1), date(2026, 8, 1), "60+0")
     blitz_cards = {item.label: item for item in kpis(connection, blitz)}
     assert blitz_cards["Games"].value == "88,973"
-    assert blitz_cards["Games"].detail == "warehouse · +7,303 vs prior"
+    assert blitz_cards["Games"].detail == "games in range · +7,303 vs prior"
     french = Filters(june.start, june.end, None, "black", None, "French Defense")
     french_cards = {item.label: item for item in kpis(connection, french)}
     assert french_cards["Games"].value == "16,345"
-    assert french_cards["Games"].detail == "warehouse · +430 vs prior"
+    assert french_cards["Games"].detail == "games in range · +430 vs prior"
     assert french_cards["Win rate"].detail == "7,854 / 16,345 · +0.4 pp vs prior"
     assert french_cards["Rating diff"].detail == "mean · +2.2 vs prior"
     assert french_cards["Game length"].detail == "mean ply · -0.1 vs prior"
@@ -711,7 +744,7 @@ def test_kpi_deltas_skip_gaps_mismatched_periods_and_ignored_dates(tmp_path: Pat
     july = Filters(date(2026, 7, 1), date(2026, 7, 1))
     cards = {item.label: item for item in kpis(connection, july)}
     assert cards["Games"].value == "110"
-    assert cards["Games"].detail == "warehouse · -40 vs prior"
+    assert cards["Games"].detail == "games in range · -40 vs prior"
     assert cards["Win rate"].detail == "50 / 100 · White · -10.0 pp vs prior"
     assert cards["Draw rate"].detail == "20 / 100 · White · +10.0 pp vs prior"
     assert cards["Loss rate"].detail == "30 / 100 · White · +0.0 pp vs prior"
@@ -720,25 +753,25 @@ def test_kpi_deltas_skip_gaps_mismatched_periods_and_ignored_dates(tmp_path: Pat
     blitz = Filters(date(2026, 7, 1), date(2026, 7, 1), "60+0")
     blitz_cards = {item.label: item for item in kpis(connection, blitz)}
     assert blitz_cards["Games"].value == "40"
-    assert blitz_cards["Games"].detail == "warehouse · -60 vs prior"
+    assert blitz_cards["Games"].detail == "games in range · -60 vs prior"
     black = Filters(date(2026, 7, 1), date(2026, 7, 1), None, "black")
     black_cards = {item.label: item for item in kpis(connection, black)}
-    assert black_cards["Games"].detail == "warehouse · -20 vs prior"
+    assert black_cards["Games"].detail == "games in range · -20 vs prior"
     assert black_cards["Win rate"].detail == "55 / 80 · +28.8 pp vs prior"
     assert black_cards["Game length"].detail == "mean ply · +5.0 vs prior"
     september = {
         item.label: item for item in kpis(connection, Filters(date(2026, 9, 1), date(2026, 9, 1)))
     }
     assert september["Games"].value == "80"
-    assert september["Games"].detail == "warehouse"
+    assert september["Games"].detail == "games in range"
     december = {
         item.label: item for item in kpis(connection, Filters(date(2025, 12, 1), date(2025, 12, 1)))
     }
     assert december["Games"].value == "90"
-    assert december["Games"].detail == "warehouse"
+    assert december["Games"].detail == "games in range"
     missed = Filters(date(2026, 6, 2), date(2026, 6, 20))
     missed_cards = {item.label: item for item in kpis(connection, missed)}
-    assert missed_cards["Games"].detail == "warehouse · not by date"
+    assert missed_cards["Games"].detail == "games in range · not by date"
     assert "vs prior" not in missed_cards["Games"].detail
     assert "vs prior" not in missed_cards["Win rate"].detail
 
@@ -803,6 +836,260 @@ def _result_cell(
         losses=losses,
         rating_diff=rating_diff,
         mean_ply=mean_ply,
+    )
+
+
+def test_clock_game_sample_keeps_six_openings_and_hides_names() -> None:
+    games = []
+    for index in range(8):
+        games.append(
+            {
+                "lichess_id": f"{index:08d}",
+                "utc_date": "2026-08-01",
+                "time_control": "180+0",
+                "result": "1-0",
+                "opening": f"Family {index}: Line",
+                "eco": "C00",
+                "white_rating": 1500,
+                "black_rating": 1400,
+                "colors": {"white": ["under_10"], "black": []},
+            }
+        )
+    games.append(
+        {
+            "lichess_id": "secret99",
+            "utc_date": "2026-08-01",
+            "time_control": "180+0",
+            "result": "1-0",
+            "opening": "player_key defense",
+            "eco": None,
+            "white_rating": 1500,
+            "black_rating": 1400,
+            "colors": {"white": ["under_10"], "black": []},
+        }
+    )
+    with pytest.raises(ValueError, match="public check"):
+        sample_clock_games(games, cohort="m3_august_prefix")
+    games[-1]["opening"] = "French Defense: Advance"
+    games[-1]["lichess_id"] = "zzzzzzz1"
+    rows = sample_clock_games(games, cohort="m3_august_prefix")
+    assert public_issues(rows) == []
+    assert len(rows) == GAMES_PER_CLOCK_CELL
+    assert all(row["games"] is None and row["moves"] is None for row in rows)
+    assert all(row["white_rating"] == 1500 and row["black_rating"] == 1400 for row in rows)
+    blob = " ".join(str(value) for row in rows for value in row.values())
+    assert "player_key" not in blob
+    assert "secret" not in blob
+    both = sample_clock_games(
+        [
+            {
+                "lichess_id": "00000013",
+                "utc_date": date(2026, 8, 1),
+                "time_control": "60+0",
+                "result": "0-1",
+                "opening": "Sicilian Defense: Najdorf",
+                "eco": "B90",
+                "white_rating": 2100,
+                "black_rating": 900,
+                "colors": {"white": ["60_plus"], "black": ["under_10", "60_plus"]},
+            }
+        ],
+        cohort="m3_august_prefix",
+    )
+    bands = {(row["color"], row["clock_band"], row["rating_band"]) for row in both}
+    assert bands == {
+        ("white", "60_plus", "2000_plus"),
+        ("black", "under_10", "under_1200"),
+        ("black", "60_plus", "under_1200"),
+    }
+    assert {row["opening_family"] for row in both} == {"Sicilian Defense"}
+
+
+def test_clock_cell_keeps_the_lowest_sha256_not_the_lowest_id() -> None:
+    rows = sample_clock_games(
+        [
+            _played("00000000", "60+0", "French Defense: A", white=["under_10"]),
+            _played("00000002", "60+0", "French Defense: B", white=["under_10"]),
+        ],
+        cohort="m3_august_prefix",
+    )
+    assert len(rows) == 1
+    assert rows[0]["lichess_id"] == "00000002"
+    assert clock_game_rank("00000002") < clock_game_rank("00000000")
+
+
+def test_clock_games_follow_sidebar_filters_and_the_august_fallback(tmp_path: Path) -> None:
+    base = build_rows(*_sources())
+    under = next(
+        row for row in base if row["grain"] == "clock_slice" and row["clock_band"] == "under_10"
+    )
+    rated_slice = dict(under)
+    rated_slice["rating_band"] = "2000_plus"
+    base.append(rated_slice)
+    extra = sample_clock_games(
+        [
+            _played("00000013", "60+0", "French Defense: Advance", white=["under_10"]),
+            _played("00000042", "180+0", "Sicilian Defense", white=["under_10"]),
+            _played(
+                "00000071",
+                "60+0",
+                "French Defense: Exchange",
+                white=["60_plus"],
+                black=["under_10"],
+                black_rating=2100,
+            ),
+        ],
+        cohort="m3_august_prefix",
+    )
+    path = tmp_path / CUBE_FILENAME
+    write_cube([*base, *extra], path)
+    connection = connect(path)
+    wide = Filters(date(2025, 11, 1), date(2026, 8, 1))
+    rows, total, caption = clock_games(connection, wide, "under_10")
+    assert total == 3
+    assert {row["lichess_id"] for row in rows} == {"00000013", "00000042", "00000071"}
+    assert [row["lichess_id"] for row in rows] == sorted(
+        ["00000013", "00000042", "00000071"], key=clock_game_rank
+    )
+    assert {row["lichess_id"]: row["side"] for row in rows} == {
+        "00000013": "White",
+        "00000042": "White",
+        "00000071": "Black",
+    }
+    assert "evaluable moves, not games" in caption
+    assert "The sample is the August prefix." in caption
+    assert "lowest SHA-256" in caption
+    assert "six most common openings" in caption
+    french = Filters(wide.start, wide.end, None, None, None, "French Defense")
+    french_rows, french_total, _french_caption = clock_games(connection, french, "under_10")
+    assert french_total == 2
+    assert {row["lichess_id"] for row in french_rows} == {"00000013", "00000071"}
+    white = Filters(wide.start, wide.end, None, "white")
+    white_rows, white_total, _white_caption = clock_games(connection, white, "under_10")
+    assert white_total == 2
+    assert "00000071" not in {row["lichess_id"] for row in white_rows}
+    assert clock_games(connection, Filters(wide.start, wide.end, "180+2"), "under_10")[1] == 0
+    november = Filters(date(2025, 11, 1), date(2025, 11, 30))
+    _nov_rows, nov_total, nov_caption = clock_games(connection, november, "under_10")
+    assert nov_total == 3
+    assert "The sample is the August prefix." in nov_caption
+    rated = Filters(wide.start, wide.end, None, None, "2000_plus")
+    rated_rows, rated_total, _rated_caption = clock_games(connection, rated, "under_10")
+    assert rated_total == 1
+    assert rated_rows[0]["lichess_id"] == "00000071"
+    assert rated_rows[0]["white_rating"] == 1500
+    assert rated_rows[0]["black_rating"] == 2100
+
+
+def test_pgn_prefix_keeps_the_hash_selected_game_only(tmp_path: Path) -> None:
+    path = tmp_path / "sample.pgn"
+    path.write_text(_clock_pgn("00000013") + "\n\n" + _clock_pgn("aa000000"), encoding="utf-8")
+    rows = clock_game_rows_from_pgn(path, max_games=10)
+    assert {row["lichess_id"] for row in rows} == {"00000013"}
+    assert "NameW" not in " ".join(str(value) for row in rows for value in row.values())
+    assert any(row["clock_band"] == "under_10" and row["color"] == "white" for row in rows)
+    assert any(row["clock_band"] == "60_plus" and row["color"] == "white" for row in rows)
+
+
+def test_warehouse_clock_games_do_not_copy_the_player_key(tmp_path: Path) -> None:
+    import duckdb
+
+    path = tmp_path / "warehouse.duckdb"
+    connection = duckdb.connect(str(path))
+    connection.execute(
+        """
+        create table fact_game (
+          provider varchar, game_id varchar, result varchar, variant varchar,
+          utc_date date, time_control varchar, source_opening varchar,
+          source_eco varchar, marked_bot boolean, ply_count bigint,
+          increment_seconds bigint
+        )
+        """
+    )
+    connection.execute(
+        """
+        create table fact_player_game (
+          provider varchar, game_id varchar, color varchar, player_key varchar,
+          rating bigint, opponent_rating bigint, score double
+        )
+        """
+    )
+    connection.execute(
+        """
+        create table fact_move (
+          provider varchar, game_id varchar, color varchar, clock_bucket varchar,
+          phase_proxy varchar, centipawn_deterioration bigint, error_proxy boolean
+        )
+        """
+    )
+    connection.execute(
+        "insert into fact_game values "
+        "('lichess', '00000013', '1-0', 'Standard', DATE '2026-08-01', "
+        "'180+0', 'French Defense: Advance', 'C02', false, 4, 0)"
+    )
+    connection.execute(
+        "insert into fact_player_game values "
+        "('lichess', '00000013', 'white', 'secret-user', 1500, 1400, 1)"
+    )
+    connection.execute(
+        "insert into fact_player_game values "
+        "('lichess', '00000013', 'black', 'secret-user', 1400, 1500, 0)"
+    )
+    connection.execute(
+        "insert into fact_move values "
+        "('lichess', '00000013', 'white', 'under_10', 'early_ply', 20, false)"
+    )
+    rows = clock_game_rows_from_warehouse(connection)
+    connection.close()
+    assert len(rows) == 1
+    assert rows[0]["lichess_id"] == "00000013"
+    assert rows[0]["opening_family"] == "French Defense"
+    blob = " ".join(str(value) for row in rows for value in row.values())
+    assert "secret-user" not in blob
+    assert public_issues(rows) == []
+
+
+def _played(
+    lichess_id: str,
+    time_control: str,
+    opening: str,
+    *,
+    white: list[str] | None = None,
+    black: list[str] | None = None,
+    black_rating: int = 1400,
+) -> dict:
+    return {
+        "lichess_id": lichess_id,
+        "utc_date": "2026-08-01",
+        "time_control": time_control,
+        "result": "1-0",
+        "opening": opening,
+        "eco": "C00",
+        "white_rating": 1500,
+        "black_rating": black_rating,
+        "colors": {"white": white or [], "black": black or []},
+    }
+
+
+def _clock_pgn(lichess_id: str) -> str:
+    return "\n".join(
+        [
+            '[Event "Rated Blitz Test"]',
+            f'[Site "https://lichess.org/{lichess_id}"]',
+            '[UTCDate "2026.08.01"]',
+            '[White "NameW"]',
+            '[Black "NameB"]',
+            '[Result "1-0"]',
+            '[WhiteElo "1500"]',
+            '[BlackElo "1400"]',
+            '[TimeControl "180+0"]',
+            '[Opening "French Defense: Advance"]',
+            '[ECO "C02"]',
+            "",
+            "1. e4 {[%clk 0:02:50]} e6 {[%clk 0:02:50]} "
+            "2. d4 {[%clk 0:00:05]} d5 {[%clk 0:02:40]} "
+            "3. e5 {[%clk 0:00:04]} 1-0",
+        ]
     )
 
 

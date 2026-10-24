@@ -14,12 +14,15 @@ is skipped once `game_cell` is present
 
 ## Decision
 
-The cube schema is unchanged. The file stays 569,634 bytes and 34,084
-rows. `game_cell` still covers 1,009,445 games. No rebuild is required.
+The KPI comparison does not change the cube schema and does not require
+a rebuild. The published file's byte size and row count after the
+clock-game sample are in [ADR 0106](0106-clock-band-game-sample.md).
+`game_cell` still covers 1,009,445 games.
 
-The strip order is Games, Win rate, Loss rate, Draw rate, Rating diff,
-Game length, Clock error, Positions. From 600px of strip width that is
-two rows of four equal cards. A 1024px window with the sidebar open
+The strip order is Games, Win rate, Loss rate, Draw rate, Positions,
+Rating diff, Game length, Clock error. From 600px of strip width that is
+two rows of four equal cards, so Positions sits directly under Games.
+A 1024px window with the sidebar open
 leaves about 622px of strip, so it is four columns. Below 600px,
 including a 390px page, it is two equal cards per row in the same
 order. The other card rows keep the 256px track.
