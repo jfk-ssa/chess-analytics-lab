@@ -78,6 +78,9 @@ every run. This record does not add the project to
 A push to `main` that changes `src/chess_analytics` or `hosted/` and
 leaves `hosted/requirements.txt` unchanged is picked up on the next
 rerun. Refresh the page. Reboot app is not required for that case.
+`chess_analytics.build_info.BUILD_LABEL` is the reload proof: the hosted
+footer caption reads that attribute after this import, and a hand bump on a
+code-only push shows up on refresh.
 Changing `hosted/requirements.txt` still causes Community Cloud to
 reinstall dependencies and start a new process.
 

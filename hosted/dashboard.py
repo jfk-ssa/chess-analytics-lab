@@ -1309,6 +1309,18 @@ def _duckdb_error(exc: BaseException) -> bool:
     return isinstance(exc, duckdb.Error)
 
 
+def _show_build_label() -> None:
+    """Footer caption from the package just reloaded for this rerun.
+
+    Attribute access on the module. A ``from chess_analytics.build_info
+    import BUILD_LABEL`` bound before ``importlib.reload`` would keep the
+    previous string, so a code-only push would not show up. ADR 0107.
+    """
+    import chess_analytics.build_info as build_info
+
+    _caption(f"build: {build_info.BUILD_LABEL}")
+
+
 def _fail(message: str) -> NoReturn:
     st.title("Chess Analytics Lab")
     st.error(message)
@@ -1406,8 +1418,9 @@ def main() -> None:
                 cube_bounds,
                 extract_error or "Public extract unavailable",
             )
-            return
-        _render(layout, charts, bi, extract, path, table_rows, connection, cube_bounds)
+        else:
+            _render(layout, charts, bi, extract, path, table_rows, connection, cube_bounds)
+        _show_build_label()
     except ImportError as exc:
         _fail(_cube_name_message(exc))
 
