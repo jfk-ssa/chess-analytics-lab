@@ -24,9 +24,12 @@ chesslab = "chess_analytics.cli:main"
 
 [project.optional-dependencies]
 docs = ["Markdown==3.11", "jinja2==3.1.6"]
+# dagster-webserver==X requires dagster==X. Dependabot upgrades one name per
+# uv lock, so both exact pins cannot move. ~=1.13.26 lets either upgrade
+# carry the other package inside 1.13. See ADR 0108.
 dagster = [
-    "dagster==1.13.25",
-    "dagster-webserver==1.13.25",
+    "dagster~=1.13.26",
+    "dagster-webserver~=1.13.26",
 ]
 prefect = [
     "prefect==3.9.0",

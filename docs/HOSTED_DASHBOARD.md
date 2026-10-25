@@ -248,7 +248,7 @@ Pillow 13.0.0 closes the advisories on 11.3.0. Streamlit 1.65.0 required
 accepts `certifi>=2023.5.7`. Certifi 2026.10.19 removes the compromised
 emSign intermediates. Narwhals 2.27.1 has no dependencies of its own.
 Altair 6.3.0 depends on jsonschema and narwhals. Protobuf stays on
-6.33.6. Dagster 1.13.25, dbt-common 1.39.0, and dbt-adapters 1.24.5
+6.33.6. Dagster 1.13.26, dbt-common 1.39.0, and dbt-adapters 1.24.5
 require `protobuf<7`, so 7.36.2 cannot enter the universal lock
 ([ADR 0104](adr/0104-hosted-altair-6-and-pandas-3-pins.md)). DuckDB
 1.5.6 has no dependencies. The cp312 manylinux x86_64 wheel recorded in

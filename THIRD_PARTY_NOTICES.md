@@ -14,8 +14,8 @@ This is an inventory, not a grant to relicense third-party code.
 | zstandard | 0.25.0 | BSD-3-Clause (also inspect bundled native-library notices) |
 | pytest (development) | 8.4.2 | MIT |
 | Ruff (development) | 0.14.0 | MIT |
-| Dagster (optional) | 1.13.25 | Apache-2.0 |
-| dagster-webserver (optional) | 1.13.25 | Apache-2.0 |
+| Dagster (optional) | 1.13.26 | Apache-2.0 |
+| dagster-webserver (optional) | 1.13.26 | Apache-2.0 |
 | Prefect (optional) | 3.8.7 | Apache-2.0 |
 | dbt-duckdb (optional) | 1.11.0 | Apache-2 (distribution metadata) |
 | dbt-core (transitive optional) | 1.12.5 | Apache-2.0 |
