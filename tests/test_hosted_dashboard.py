@@ -544,6 +544,35 @@ def _caption(app, fragment: str) -> str:
     return matches[0]
 
 
+def _with_build_label(source: str, label: str) -> str:
+    lines: list[str] = []
+    found = False
+    for line in source.splitlines(keepends=True):
+        if line.startswith("BUILD_LABEL"):
+            lines.append(f'BUILD_LABEL = "{label}"\n')
+            found = True
+        else:
+            lines.append(line)
+    assert found
+    return "".join(lines)
+
+
+def test_footer_caption_shows_the_package_build_label(project, monkeypatch):
+    """The footer caption is the package constant on disk for this rerun."""
+    path = project / "src" / "chess_analytics" / "build_info.py"
+    original = path.read_text()
+    probe = "reload probe label"
+    path.write_text(_with_build_label(original, probe))
+    try:
+        app = _run(project, monkeypatch)
+        assert not app.exception, [item.message for item in app.exception]
+        expected = f"build: {probe}"
+        assert _caption(app, "build:") == expected
+        assert all(expected not in item.value for item in app.sidebar.caption)
+    finally:
+        path.write_text(original)
+
+
 def test_cost_captions_keep_a_literal_dollar(project, monkeypatch):
     app = _run(project, monkeypatch)
     five = _caption(app, "gpt-6-luna and gpt-6-sol do not overlap").replace(r"\$", "$")
