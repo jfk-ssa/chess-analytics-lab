@@ -362,8 +362,8 @@ dev = [
 requires-dist = [
     { name = "certifi", marker = "extra == 'dashboard'", specifier = "==2026.10.19" },
     { name = "chess", specifier = "==1.11.2" },
-    { name = "dagster", marker = "extra == 'dagster'", specifier = "~=1.13.26" },
-    { name = "dagster-webserver", marker = "extra == 'dagster'", specifier = "~=1.13.26" },
+    { name = "dagster", marker = "extra == 'dagster'", specifier = ">=1.13.26,<2" },
+    { name = "dagster-webserver", marker = "extra == 'dagster'", specifier = ">=1.13.26,<2" },
     { name = "dbt-duckdb", marker = "extra == 'dbt'", specifier = "==1.11.0" },
     { name = "duckdb", specifier = "==1.5.6" },
     { name = "jinja2", marker = "extra == 'docs'", specifier = "==3.1.6" },
