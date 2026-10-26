@@ -82,6 +82,14 @@ relational API on the same connection, or uses `execute()` for DDL. A
 single-row count may still use `fetchone()` when the next call on that
 connection is `execute()`.
 
+The pinned opening-position publication stays
+`31a395044203532224cbb387475ef0bb790c8e88faac98bc9b2a12f5d500c46e`.
+The docs gate hashes the generator, so
+`reports/opening-positions-checkpoint.json` records the new digest of
+`scripts/summarize_opening_positions.py`. The rankings are not
+regenerated, and the checkpoint's recorded DuckDB 1.5.6 runtime stays
+the runtime that wrote those bytes.
+
 Database files are written in the 2.0 default format. Every local
 `.duckdb` file is rebuilt from committed or recorded sources, and the
 lock digest separates the 1.5 and 2.0 directories. This record does not
