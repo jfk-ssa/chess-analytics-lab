@@ -8,6 +8,7 @@ import importlib.util
 import json
 import os
 import sys
+import types
 from pathlib import Path
 
 import duckdb
@@ -106,11 +107,92 @@ def test_a_recorded_build_error_fails_the_measurement() -> None:
     assert _MODULE.measurement_status(["1000000 0.01"], clean) == 1
 
 
+def _in_process_build_restores_the_environment(root: Path) -> None:
+    """No env leak from load_dotenv or a close() error. Same collected test."""
+    before = os.environ.copy()
+    target = root / "stub-target"
+    target.mkdir()
+    state: dict[str, object] = {"success": True, "raise_close": True}
+
+    class _Result:
+        def __init__(self, success: object) -> None:
+            self.success = success
+            self.exception = None
+
+    class _Runner:
+        def invoke(self, args: list[str]) -> _Result:
+            assert args[0] == "build"
+            assert "--no-partial-parse" in args
+            assert args[-1] == "--quiet"
+            os.environ["CHESSLAB_FROM_INVOKE"] = "from-invoke"
+            return _Result(state["success"])
+
+    class _LeakModule(types.ModuleType):
+        def __getattr__(self, name: str) -> type[_Runner]:
+            if name != "dbtRunner":
+                raise AttributeError(name)
+            os.environ["CHESSLAB_FROM_DOTENV"] = "from-import"
+            return _Runner
+
+    command = [
+        "dbt",
+        "build",
+        "--project-dir",
+        str(root / "dbt"),
+        "--profiles-dir",
+        str(root / "dbt"),
+        "--target-path",
+        str(target),
+        "--log-path",
+        str(root / "logs"),
+        "--no-partial-parse",
+        "--no-use-colors",
+    ]
+    warehouse = root / "warehouse.duckdb"
+    project = root / "dbt"
+
+    def release() -> None:
+        os.environ["CHESSLAB_DBT_PATH"] = "leaked-by-close"
+        if state["raise_close"]:
+            raise RuntimeError("close failed")
+
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setitem(sys.modules, "dbt.cli.main", _LeakModule("dbt.cli.main"))
+        patch.setattr(_MODULE, "_DBT_RUNNER", None)
+        patch.setattr(_MODULE, "_release_duckdb_environment", release)
+        with pytest.raises(RuntimeError, match="close failed"):
+            _MODULE._dbt_build_in_process(command, warehouse, project, target, False)
+        assert os.environ == before
+
+        state["raise_close"] = False
+        payload = {"results": [{"status": "success"}]}
+        (target / "run_results.json").write_text(json.dumps(payload))
+        built = _MODULE._dbt_build_in_process(command, warehouse, project, target, False)
+        assert built["returncode"] == 0
+        assert built["results"] == payload
+        assert os.environ == before
+
+        state["success"] = None
+        with pytest.raises(RuntimeError, match="no success flag"):
+            _MODULE._dbt_build_in_process(command, warehouse, project, target, False)
+        assert os.environ == before
+
+        state["success"] = False
+        failed = _MODULE._dbt_build_in_process(command, warehouse, project, target, True)
+        assert failed["returncode"] == 1
+        assert failed["results"] == payload
+        assert os.environ == before
+
+
 def test_incremental_matches_full_refresh_until_the_key_or_filter_breaks(tmp_path: Path) -> None:
     _require_dbt()
+    before = os.environ.copy()
+    _in_process_build_restores_the_environment(tmp_path)
+    assert os.environ == before
     sql = _MODULE.player_games_sql("anti_join")
     assert 'where p."player_game_key" not in (' in sql
     report = _MODULE.equivalence_report(tmp_path, games=40, in_process=True)
+    assert os.environ == before
     assert report["rows"] == 80
     assert report["base_rows"] == 72
     assert report["incremental_match"] is True

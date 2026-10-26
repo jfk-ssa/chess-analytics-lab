@@ -334,57 +334,77 @@ def _release_duckdb_environment() -> None:
         DuckDBConnectionManager._ENV = None
 
 
+def _restore_environ(saved: dict[str, str]) -> None:
+    """Put back every variable, including keys ``load_dotenv`` added."""
+    os.environ.clear()
+    os.environ.update(saved)
+
+
 def _dbt_build_in_process(
     command: list[str],
     warehouse: Path,
     project: Path,
+    target: Path,
     expect_failure: bool,
 ) -> dict[str, object]:
     """One interpreter for the repeated equivalence builds.
 
     Each subprocess paid about three seconds of startup. The builds stay
-    sequential and use the same flags, including ``--no-partial-parse``.
-    The connection is closed before the caller opens the warehouse.
+    sequential. The arguments match the subprocess command, including
+    ``--no-partial-parse``, and this path adds ``--quiet`` so dbt's logger
+    does not write past the captured streams. ``dbt.cli.main`` calls
+    ``load_dotenv`` on import and again inside ``invoke``. The environment
+    is snapshotted before that import and restored after the adapter file
+    is closed, including when ``close`` raises. Success is
+    ``dbtRunnerResult.success``. ``results`` is ``run_results.json`` when
+    that file was written.
     """
     global _DBT_RUNNER
-    from dbt.cli.main import dbtRunner
-
-    keys = (
-        "CHESSLAB_DBT_PATH",
-        "DBT_PROFILES_DIR",
-        "DBT_SEND_ANONYMOUS_USAGE_STATS",
-        "DO_NOT_TRACK",
-    )
-    saved = {key: os.environ.get(key) for key in keys}
-    os.environ["CHESSLAB_DBT_PATH"] = str(warehouse)
-    os.environ["DBT_PROFILES_DIR"] = str(project)
-    os.environ["DBT_SEND_ANONYMOUS_USAGE_STATS"] = "false"
-    os.environ["DO_NOT_TRACK"] = "1"
+    # Snapshot first. Importing dbt.cli.main runs load_dotenv.
+    saved = os.environ.copy()
     stdout, stderr = io.StringIO(), io.StringIO()
     started = time.perf_counter()
     try:
+        os.environ["CHESSLAB_DBT_PATH"] = str(warehouse)
+        os.environ["DBT_PROFILES_DIR"] = str(project)
+        os.environ["DBT_SEND_ANONYMOUS_USAGE_STATS"] = "false"
+        os.environ["DO_NOT_TRACK"] = "1"
+        from dbt.cli.main import dbtRunner
+
         if _DBT_RUNNER is None:
             _DBT_RUNNER = dbtRunner()
         with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
             # command[0] is the dbt executable. dbtRunner wants the subcommand.
+            # --quiet is extra on this path; the subprocess command is unchanged.
             result = _DBT_RUNNER.invoke([*command[1:], "--quiet"])
     finally:
-        _release_duckdb_environment()
-        for key, value in saved.items():
-            if value is None:
-                os.environ.pop(key, None)
-            else:
-                os.environ[key] = value
-    failed = not bool(result.success)
+        try:
+            _release_duckdb_environment()
+        finally:
+            # Runs when close() raises, and drops keys close() or dotenv added.
+            _restore_environ(saved)
+    success = result.success
+    if success is True:
+        failed = False
+    elif success is False:
+        failed = True
+    else:
+        detail = (
+            "dbtRunner returned no success flag\n"
+            f"{stdout.getvalue()}\n{stderr.getvalue()}\n{result.exception}"
+        )
+        raise RuntimeError(detail[-4000:])
     if failed != expect_failure:
         detail = f"{stdout.getvalue()}\n{stderr.getvalue()}\n{result.exception}"
         raise RuntimeError(detail[-4000:])
+    results_path = target / "run_results.json"
+    payload = json.loads(results_path.read_text()) if results_path.is_file() else None
     return {
         "wall_seconds": time.perf_counter() - started,
         "returncode": 1 if failed else 0,
         "stdout": stdout.getvalue(),
         "stderr": stderr.getvalue(),
-        "results": None,
+        "results": payload,
     }
 
 
@@ -429,7 +449,7 @@ def dbt_build(
     if variables is not None:
         command.extend(["--vars", json.dumps(variables)])
     if in_process:
-        return _dbt_build_in_process(command, warehouse, project, expect_failure)
+        return _dbt_build_in_process(command, warehouse, project, target, expect_failure)
     started = time.perf_counter()
     completed = subprocess.run(
         command,

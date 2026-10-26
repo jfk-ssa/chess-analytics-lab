@@ -54,8 +54,9 @@ Pytest temp directories stay per worker. Two fixed paths were not:
   portfolio parity test. The metrics those tests assert are unchanged.
 
 The incremental equivalence proof accepts `in_process=True` and runs the
-same dbt arguments, including `--no-partial-parse`, in one interpreter.
-It closes the adapter's DuckDB file before the next open or content hash.
+same dbt arguments, including `--no-partial-parse`, plus `--quiet`, in one
+interpreter. It closes the adapter's DuckDB file before the next open or
+content hash and restores the process environment afterwards.
 The timing study in that script still shells out, so its wall-clock
 samples still include process start. The test still asserts the same
 report fields. On this machine that call went from 36.79s to 12.31s.
