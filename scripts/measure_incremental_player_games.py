@@ -11,7 +11,9 @@ scratch directory and rewrites only the scratch player_games model.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
+import io
 import json
 import os
 import platform
@@ -22,6 +24,7 @@ import sys
 import tempfile
 import time
 from datetime import UTC, datetime
+from functools import partial
 from importlib.metadata import version
 from pathlib import Path
 
@@ -318,6 +321,73 @@ def dbt_executable() -> Path:
     return Path(sys.executable).with_name("dbt")
 
 
+_DBT_RUNNER = None
+
+
+def _release_duckdb_environment() -> None:
+    """Close the adapter's file so the next build, or a hash, can reopen it."""
+    from dbt.adapters.duckdb.connections import DuckDBConnectionManager
+
+    environment = DuckDBConnectionManager._ENV
+    if environment is not None:
+        environment.close()
+        DuckDBConnectionManager._ENV = None
+
+
+def _dbt_build_in_process(
+    command: list[str],
+    warehouse: Path,
+    project: Path,
+    expect_failure: bool,
+) -> dict[str, object]:
+    """One interpreter for the repeated equivalence builds.
+
+    Each subprocess paid about three seconds of startup. The builds stay
+    sequential and use the same flags, including ``--no-partial-parse``.
+    The connection is closed before the caller opens the warehouse.
+    """
+    global _DBT_RUNNER
+    from dbt.cli.main import dbtRunner
+
+    keys = (
+        "CHESSLAB_DBT_PATH",
+        "DBT_PROFILES_DIR",
+        "DBT_SEND_ANONYMOUS_USAGE_STATS",
+        "DO_NOT_TRACK",
+    )
+    saved = {key: os.environ.get(key) for key in keys}
+    os.environ["CHESSLAB_DBT_PATH"] = str(warehouse)
+    os.environ["DBT_PROFILES_DIR"] = str(project)
+    os.environ["DBT_SEND_ANONYMOUS_USAGE_STATS"] = "false"
+    os.environ["DO_NOT_TRACK"] = "1"
+    stdout, stderr = io.StringIO(), io.StringIO()
+    started = time.perf_counter()
+    try:
+        if _DBT_RUNNER is None:
+            _DBT_RUNNER = dbtRunner()
+        with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+            # command[0] is the dbt executable. dbtRunner wants the subcommand.
+            result = _DBT_RUNNER.invoke([*command[1:], "--quiet"])
+    finally:
+        _release_duckdb_environment()
+        for key, value in saved.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
+    failed = not bool(result.success)
+    if failed != expect_failure:
+        detail = f"{stdout.getvalue()}\n{stderr.getvalue()}\n{result.exception}"
+        raise RuntimeError(detail[-4000:])
+    return {
+        "wall_seconds": time.perf_counter() - started,
+        "returncode": 1 if failed else 0,
+        "stdout": stdout.getvalue(),
+        "stderr": stderr.getvalue(),
+        "results": None,
+    }
+
+
 def dbt_build(
     project: Path,
     warehouse: Path,
@@ -329,6 +399,7 @@ def dbt_build(
     variables: dict[str, int] | None = None,
     expect_failure: bool = False,
     verb: str = "build",
+    in_process: bool = False,
 ) -> dict[str, object]:
     env = os.environ.copy()
     env.update(
@@ -357,6 +428,8 @@ def dbt_build(
         command.extend(["--exclude", "resource_type:test resource_type:unit_test"])
     if variables is not None:
         command.extend(["--vars", json.dumps(variables)])
+    if in_process:
+        return _dbt_build_in_process(command, warehouse, project, expect_failure)
     started = time.perf_counter()
     completed = subprocess.run(
         command,
@@ -925,27 +998,32 @@ def measure_scale(
     }
 
 
-def equivalence_report(root: Path, games: int = 40) -> dict[str, object]:
-    """Small proof used by tests. Same SQL generator as the measurement."""
+def equivalence_report(
+    root: Path, games: int = 40, *, in_process: bool = False
+) -> dict[str, object]:
+    """Small proof used by tests. Same SQL generator as the measurement.
+
+    ``in_process`` repeats the builds in one interpreter. The timing study
+    keeps the default and still pays a process start per build.
+    """
     profile_settings()
     new_count = 4
     base = games - new_count
     project = root / "dbt"
     copy_project(project)
+    build = partial(dbt_build, in_process=in_process)
     full = root / "full" / "warehouse.duckdb"
     make_warehouse(full, 0, games)
     set_player_games(project, player_games_sql("table"))
-    dbt_build(project, full, "+player_games", root / "t-full", root / "l-full", exclude_tests=True)
+    build(project, full, "+player_games", root / "t-full", root / "l-full", exclude_tests=True)
     full_hash, full_rows = content_sha256(full, "player_games", "player_game_key")
 
     incremental = root / "inc" / "warehouse.duckdb"
     make_warehouse(incremental, 0, base)
     set_player_games(project, player_games_sql("anti_join"))
-    dbt_build(
-        project, incremental, "+player_games", root / "t-inc", root / "l-inc", exclude_tests=True
-    )
+    build(project, incremental, "+player_games", root / "t-inc", root / "l-inc", exclude_tests=True)
     append_games(incremental, base, new_count)
-    dbt_build(
+    build(
         project,
         incremental,
         "player_games",
@@ -955,11 +1033,9 @@ def equivalence_report(root: Path, games: int = 40) -> dict[str, object]:
         verb="compile",
     )
     delta_batch_rows = compiled_batch_rows(incremental, root / "t-inc")
-    dbt_build(
-        project, incremental, "+player_games", root / "t-inc", root / "l-inc", exclude_tests=True
-    )
+    build(project, incremental, "+player_games", root / "t-inc", root / "l-inc", exclude_tests=True)
     delta_hash, delta_rows = content_sha256(incremental, "player_games", "player_game_key")
-    dbt_build(
+    build(
         project,
         incremental,
         "player_games",
@@ -969,32 +1045,24 @@ def equivalence_report(root: Path, games: int = 40) -> dict[str, object]:
         verb="compile",
     )
     rerun_batch_rows = compiled_batch_rows(incremental, root / "t-inc")
-    dbt_build(
-        project, incremental, "+player_games", root / "t-inc", root / "l-inc", exclude_tests=True
-    )
+    build(project, incremental, "+player_games", root / "t-inc", root / "l-inc", exclude_tests=True)
     rerun_hash, rerun_rows = content_sha256(incremental, "player_games", "player_game_key")
     set_player_games(project, player_games_sql("replay", replay_after=base))
-    dbt_build(
-        project, incremental, "player_games", root / "t-inc", root / "l-inc", exclude_tests=True
-    )
+    build(project, incremental, "player_games", root / "t-inc", root / "l-inc", exclude_tests=True)
     replay_hash, replay_rows = content_sha256(incremental, "player_games", "player_game_key")
 
     broken_key = root / "key" / "warehouse.duckdb"
     make_warehouse(broken_key, 0, games)
     set_player_games(project, player_games_sql("replay_without_key", replay_after=base))
-    dbt_build(
-        project, broken_key, "+player_games", root / "t-key", root / "l-key", exclude_tests=True
-    )
+    build(project, broken_key, "+player_games", root / "t-key", root / "l-key", exclude_tests=True)
     before_key, _ = content_sha256(broken_key, "player_games", "player_game_key")
-    dbt_build(
-        project, broken_key, "player_games", root / "t-key", root / "l-key", exclude_tests=True
-    )
+    build(project, broken_key, "player_games", root / "t-key", root / "l-key", exclude_tests=True)
     _, broken_key_rows = content_sha256(broken_key, "player_games", "player_game_key")
 
     broken_filter = root / "filter" / "warehouse.duckdb"
     make_warehouse(broken_filter, 0, base)
     set_player_games(project, player_games_sql("broken_filter"))
-    dbt_build(
+    build(
         project,
         broken_filter,
         "+player_games",
@@ -1003,7 +1071,7 @@ def equivalence_report(root: Path, games: int = 40) -> dict[str, object]:
         exclude_tests=True,
     )
     append_games(broken_filter, base, new_count)
-    dbt_build(
+    build(
         project,
         broken_filter,
         "+player_games",

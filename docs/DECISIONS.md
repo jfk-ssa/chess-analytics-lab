@@ -116,3 +116,4 @@ short summary of the current checkout, not a log of new decisions.
 | 0108 | 2026-10-25 | [Dagster packages update together](adr/0108-dagster-packages-update-together.md) |
 | 0109 | 2026-10-26 | [Pre-render the opening board](adr/0109-prerender-the-opening-board.md) |
 | 0110 | 2026-10-26 | [DuckDB 2.0](adr/0110-duckdb-2.md) |
+| 0111 | 2026-10-26 | [Parallel offline pytest](adr/0111-parallel-offline-pytest.md) |

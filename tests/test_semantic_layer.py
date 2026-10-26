@@ -1,5 +1,6 @@
 """Governed semantic metrics. Unit tests run without dbt; parity tests build a real mart."""
 
+import fcntl
 import json
 import logging
 import os
@@ -194,6 +195,15 @@ def _copy_mart(project: Path, name: str) -> Path:
     dest = project / "data/marts/published" / name
     shutil.copytree(_mart(project), dest)
     return dest
+
+
+def _record_semantic_timings(payload: dict) -> None:
+    """Merge timing notes. Workers share /tmp, so the update holds a lock."""
+    path = Path("/tmp/semantic-timings.json")
+    with Path("/tmp/semantic-timings.json.lock").open("a") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        existing = read_json(path) if path.exists() else {}
+        write_json(path, {**existing, **payload})
 
 
 def _publish_copy(project: Path, directory: Path) -> None:
@@ -516,7 +526,7 @@ def test_tiny_product_draw_rate_uses_the_mart_and_a_poisoned_copy_diverges(
     assert len(calls) == before_calls
     assert fallback == sql_result
 
-    write_json(Path("/tmp/semantic-timings.json"), {"tiny_draw_rate_seconds": round(elapsed, 3)})
+    _record_semantic_timings({"tiny_draw_rate_seconds": round(elapsed, 3)})
 
 
 def test_missing_games_view_falls_back_without_leaking_sql(tiny_product, caplog):
@@ -664,8 +674,4 @@ def test_portfolio_product_metric_parity(portfolio_product, monkeypatch):
     assert answer["status"] == "answered"
     assert answer["result"]["numerator"] == expected["draws"]
     assert answer["result"]["denominator"] == expected["eligible_games"]
-    existing = {}
-    timing_path = Path("/tmp/semantic-timings.json")
-    if timing_path.exists():
-        existing = read_json(timing_path)
-    write_json(timing_path, {**existing, **timings})
+    _record_semantic_timings(timings)

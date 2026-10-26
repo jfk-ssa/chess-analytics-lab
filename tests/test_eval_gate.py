@@ -71,6 +71,28 @@ def staged(tmp_path_factory):
     return stage(ROOT, tmp_path_factory.mktemp("analyst-gate"))
 
 
+_CLEAN_CARDS: dict[int, dict] = {}
+
+
+def _cached_clean(staged: Path) -> dict:
+    """Replay the unmodified stage once per worker.
+
+    Several tests diff a failure against that same card. A module cache keeps
+    those diffs, and a second collect still proves the two runs match.
+    """
+    key = id(staged)
+    card = _CLEAN_CARDS.get(key)
+    if card is None:
+        card = collect(ROOT, staged)
+        _CLEAN_CARDS[key] = card
+    return card
+
+
+@pytest.fixture(scope="module")
+def clean_card(staged):
+    return _cached_clean(staged)
+
+
 def _case_answer():
     case = {
         "id": "reference_probe",
@@ -360,16 +382,16 @@ def test_step_summary_is_a_three_column_table(tmp_path, monkeypatch):
     assert "dataset_id" not in text
 
 
-def test_two_gate_runs_are_byte_identical(staged):
-    first = canonical(collect(ROOT, staged))
+def test_two_gate_runs_are_byte_identical(staged, clean_card):
+    first = canonical(clean_card)
     second = canonical(collect(ROOT, staged))
     assert first == second
     for banned in ("dataset_id", "evidence_id", "elapsed", "nodes"):
         assert banned not in first
 
 
-def test_dropping_a_caveat_fails_and_names_the_case(staged, monkeypatch):
-    clean = collect(ROOT, staged)
+def test_dropping_a_caveat_fails_and_names_the_case(staged, clean_card, monkeypatch):
+    clean = clean_card
 
     def thin(actions):
         return [item for item in answer_caveats(actions) if item != "observed_prefix_only"]
@@ -383,8 +405,8 @@ def test_dropping_a_caveat_fails_and_names_the_case(staged, monkeypatch):
     assert broken["suites"]["gate_v1"]["cases"]["game_draw_rate"]["passed"] is False
 
 
-def test_query_metric_off_by_one_fails_and_names_the_case(staged, monkeypatch):
-    clean = collect(ROOT, staged)
+def test_query_metric_off_by_one_fails_and_names_the_case(staged, clean_card, monkeypatch):
+    clean = clean_card
     original = CheckedTools.query_metric
 
     def off(self, metric_id, filters, group_by=None):
@@ -433,7 +455,7 @@ def test_empty_scorecard_is_not_a_pass(tmp_path, monkeypatch, capsys):
 
 def test_sql_payload_from_the_resolver_is_path_changed(staged, monkeypatch):
     _require_dbt()
-    clean = collect(ROOT, staged)
+    clean = _cached_clean(staged)
     assert clean["suites"]["gate_v1"]["cases"]["game_draw_rate"]["path"] == "governed"
 
     def sql_payload(tools, metric_id, filters, group_by):
@@ -452,7 +474,7 @@ def test_sql_payload_from_the_resolver_is_path_changed(staged, monkeypatch):
 
 def test_replacing_the_governed_path_with_sql_is_path_changed(staged, monkeypatch):
     _require_dbt()
-    clean = collect(ROOT, staged)
+    clean = _cached_clean(staged)
     assert clean["suites"]["gate_v1"]["cases"]["game_draw_rate"]["path"] == "governed"
 
     def fallback(*_args, **_kwargs):
@@ -470,7 +492,7 @@ def test_replacing_the_governed_path_with_sql_is_path_changed(staged, monkeypatc
 
 def test_poisoned_mart_fails_the_draw_rate_case(staged):
     _require_dbt()
-    clean = collect(ROOT, staged)
+    clean = _cached_clean(staged)
     pointer = staged / "data/analytical-mart-current.json"
     saved = pointer.read_text()
     mart_id = json.loads(saved)["mart_id"]
@@ -498,4 +520,4 @@ def test_poisoned_mart_fails_the_draw_rate_case(staged):
 
 def test_live_scorecard_matches_the_committed_baseline(staged):
     _require_dbt()
-    assert canonical(collect(ROOT, staged)) == baseline_path(ROOT).read_text()
+    assert canonical(_cached_clean(staged)) == baseline_path(ROOT).read_text()

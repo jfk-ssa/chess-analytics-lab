@@ -206,7 +206,7 @@ CHECKS = (
         "pytest",
         "check",
         ("python", "analyst", "dbt"),
-        exact="uv run --locked --offline --no-editable pytest -q",
+        exact="uv run --locked --offline --no-editable pytest -q -n 4 --durations=15",
     ),
     Step(
         "offline",
@@ -245,7 +245,8 @@ CHECKS = (
         "check",
         ("python", "analyst", "dbt"),
         exact=(
-            "CHESSLAB_REQUIRE_DBT=1 uv run --locked --offline --no-editable --extra dbt pytest -q"
+            "CHESSLAB_REQUIRE_DBT=1 uv run --locked --offline --no-editable --extra dbt "
+            "pytest -q -n 4 --durations=15"
         ),
     ),
     Step(

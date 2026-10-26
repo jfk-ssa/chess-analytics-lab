@@ -150,7 +150,7 @@ jobs:
       - id: pytest
         name: Pytest
         if: ${{ needs.changes.result != 'success' || needs.changes.outputs.pytest == 'true' }}
-        run: uv run --locked --offline --no-editable pytest -q
+        run: uv run --locked --offline --no-editable pytest -q -n 4 --durations=15
       - id: pytest_extract
         name: Public extract tests
         if: ${{ needs.changes.result != 'success' || needs.changes.outputs.pytest_extract == 'true' }}
@@ -178,7 +178,7 @@ jobs:
       - id: pytest_dbt
         name: Pytest with dbt required
         if: ${{ needs.changes.result != 'success' || needs.changes.outputs.pytest_dbt == 'true' }}
-        run: CHESSLAB_REQUIRE_DBT=1 uv run --locked --offline --no-editable --extra dbt pytest -q
+        run: CHESSLAB_REQUIRE_DBT=1 uv run --locked --offline --no-editable --extra dbt pytest -q -n 4 --durations=15
       - id: transform
         name: Tiny mart transform
         if: ${{ needs.changes.result != 'success' || needs.changes.outputs.transform == 'true' }}

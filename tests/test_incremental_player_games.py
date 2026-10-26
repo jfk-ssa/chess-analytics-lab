@@ -110,7 +110,7 @@ def test_incremental_matches_full_refresh_until_the_key_or_filter_breaks(tmp_pat
     _require_dbt()
     sql = _MODULE.player_games_sql("anti_join")
     assert 'where p."player_game_key" not in (' in sql
-    report = _MODULE.equivalence_report(tmp_path, games=40)
+    report = _MODULE.equivalence_report(tmp_path, games=40, in_process=True)
     assert report["rows"] == 80
     assert report["base_rows"] == 72
     assert report["incremental_match"] is True
