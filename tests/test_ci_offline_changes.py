@@ -104,6 +104,23 @@ def test_a_removed_step_id_fails_the_audit(changes):
     mutated = text.replace("      - id: analyst_gate\n", "      - name: Offline analyst gate\n", 1)
     problems = changes.audit_text(mutated, changes.tracked_files(ROOT))
     assert any("analyst_gate" in problem for problem in problems)
+    renamed = text.replace(
+        "  offline-core:\n    needs: changes\n",
+        "  offline-core:\n    name: Pytest without dbt\n    needs: changes\n",
+        1,
+    )
+    name_problems = changes.audit_text(renamed, changes.tracked_files(ROOT))
+    assert any("display name" in problem for problem in name_problems)
+    gated = text.replace(
+        "  offline-core:\n    needs: changes\n    if: ${{ !cancelled() }}\n",
+        "  offline-core:\n    needs: changes\n"
+        "    if: ${{ !cancelled() && needs.changes.outputs.pytest == 'true' }}\n",
+        1,
+    )
+    gated_problems = changes.audit_text(gated, changes.tracked_files(ROOT))
+    assert any(
+        "offline-core if must be ${{ !cancelled() }}" in problem for problem in gated_problems
+    )
 
 
 def test_a_workflow_path_filter_fails_the_audit(changes):
@@ -139,6 +156,9 @@ def test_docs_skip_the_long_steps(changes):
         assert flags["pytest_dbt"] == "false"
         assert flags["analyst_gate"] == "false"
         assert flags["biome"] == "false"
+        assert flags["core_setup_uv"] == "false"
+        assert flags["core_setup_node"] == "false"
+        assert flags["core_sync"] == "false"
         assert _skipped(flags, OFFLINE_STEPS) == 516.0
 
 
@@ -197,6 +217,9 @@ def test_python_runs_the_full_pytest_and_not_the_narrow_files(changes):
     assert flags["dbt_slim"] == "false"
     assert flags["biome"] == "false"
     assert flags["setup_node"] == "true"
+    assert flags["core_setup_uv"] == "true"
+    assert flags["core_setup_node"] == "true"
+    assert flags["core_sync"] == "true"
     assert _skipped(flags, OFFLINE_STEPS) == 25.0
 
 
@@ -210,10 +233,12 @@ def test_dbt_runs_slim_selection_and_both_pytest_steps(changes):
     assert flags["biome"] == "false"
     assert flags["pytest_mcp"] == "false"
     assert flags["setup_node"] == "true"
+    assert flags["core_setup_node"] == "true"
     assert _skipped(flags, OFFLINE_STEPS) == 20.0
     lineage = changes.outputs_for("pull_request", ["docs/DBT_LINEAGE.md"])
     assert lineage["semantic"] == "true"
     assert lineage["pytest_dbt"] == "true"
+    assert lineage["setup_node"] == "true"
 
 
 def test_analyst_evals_and_receipts_keep_their_guards(changes):
@@ -233,6 +258,8 @@ def test_analyst_evals_and_receipts_keep_their_guards(changes):
         assert flags["pytest_portfolio"] == "true", path
     pure = changes.outputs_for("pull_request", ["evals/baselines/analyst_gate_v1.json"])
     assert pure["setup_node"] == "true"
+    assert pure["core_setup_uv"] == "true"
+    assert pure["core_sync"] == "true"
     assert _skipped(pure, OFFLINE_STEPS) == 34.0
 
 

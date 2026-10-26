@@ -44,6 +44,9 @@ jobs:
       dbt_base_checkout: ${{ steps.filter.outputs.dbt_base_checkout }}
       portfolio_setup_uv: ${{ steps.filter.outputs.portfolio_setup_uv }}
       portfolio_sync: ${{ steps.filter.outputs.portfolio_sync }}
+      core_setup_uv: ${{ steps.filter.outputs.core_setup_uv }}
+      core_setup_node: ${{ steps.filter.outputs.core_setup_node }}
+      core_sync: ${{ steps.filter.outputs.core_sync }}
     steps:
       - id: changes_checkout
         name: Checkout
@@ -147,10 +150,6 @@ jobs:
         name: basedpyright
         if: ${{ needs.changes.result != 'success' || needs.changes.outputs.basedpyright == 'true' }}
         run: uv run --locked --offline --no-editable basedpyright
-      - id: pytest
-        name: Pytest
-        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.pytest == 'true' }}
-        run: uv run --locked --offline --no-editable pytest -q -n 4 --durations=15
       - id: pytest_extract
         name: Public extract tests
         if: ${{ needs.changes.result != 'success' || needs.changes.outputs.pytest_extract == 'true' }}
@@ -241,6 +240,34 @@ jobs:
           uv run --locked --offline --no-editable --extra dbt dbt build --select "state:modified+" --state "${state}" --project-dir dbt --profiles-dir dbt --target-path "$RUNNER_TEMP/dbt-slim" --log-path "$RUNNER_TEMP/dbt-slim-logs" --no-use-colors
           # dbt 1.12 build counts modified unit tests but does not run them when their model is unmodified.
           uv run --locked --offline --no-editable --extra dbt dbt test --select "test_type:unit,state:modified" --state "${state}" --project-dir dbt --profiles-dir dbt --target-path "$RUNNER_TEMP/dbt-slim" --log-path "$RUNNER_TEMP/dbt-slim-logs" --no-use-colors
+  offline-core:
+    needs: changes
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - id: core_checkout
+        name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - id: core_setup_uv
+        name: Set up uv
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.core_setup_uv == 'true' }}
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          version: "0.12.18"
+      - id: core_setup_node
+        name: Set up Node
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.core_setup_node == 'true' }}
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+      - id: core_sync
+        name: Install the locked project
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.core_sync == 'true' }}
+        run: uv sync --locked --no-editable
+      - id: pytest
+        name: Pytest
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.pytest == 'true' }}
+        run: uv run --locked --offline --no-editable pytest -q -n 4 --durations=15
   portfolio:
     needs: changes
     if: ${{ !cancelled() }}
