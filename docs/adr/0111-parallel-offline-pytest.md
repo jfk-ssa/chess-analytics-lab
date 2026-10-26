@@ -85,9 +85,20 @@ split is not in this change. The required check names stay `offline` and
 
 ## Consequences
 
-The hosted after time is the `offline` job on the pull request that
-introduces this record. This section is updated with that duration when
-the run finishes.
+Hosted after time, on the commit that changed the suite (`78fc7f2`,
+Actions run
+[40282291574](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/40282291574)):
+
+| Piece | Main `3b44f2a` | This change |
+|---|---|---|
+| Pytest, dbt extra not installed | 189.25s | 72.33s |
+| Pytest with `CHESSLAB_REQUIRE_DBT=1` | 313.52s | 100.73s |
+| `offline` job | 9m 31s | 3m 50s (06:51:47Z–06:55:37Z) |
+
+Executed totals were unchanged: 454 passed and 53 skipped, then 466
+passed and 41 skipped. `portfolio` passed. The two pytest steps are still
+sequential, so the deferred split would remove most of the remaining
+pytest time from the wall clock.
 
 Rollback is reverting the pull request. The lockfile drops `pytest-xdist`
 and `execnet` with it. This record does not authorize a live model call.
