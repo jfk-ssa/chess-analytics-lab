@@ -95,9 +95,10 @@ Actions run
 | `offline` job | 9m 31s | 3m 50s (06:51:47Z–06:55:37Z) |
 
 Executed totals were unchanged: 454 passed and 53 skipped, then 466
-passed and 41 skipped. `portfolio` passed. The two pytest steps are still
-sequential, so the deferred split would remove most of the remaining
-pytest time from the wall clock.
+passed and 41 skipped. `portfolio` passed. The two pytest steps were
+sequential in this change.
+[ADR 0112](0112-split-offline-pytest-job.md) runs the no-dbt step in its
+own job.
 
 Rollback is reverting the pull request. The lockfile drops `pytest-xdist`
 and `execnet` with it. This record does not authorize a live model call.

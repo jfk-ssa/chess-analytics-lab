@@ -48,9 +48,9 @@ Name branches `type/short-topic`, for example `docs/commit-conventions`.
 `main`, on `workflow_dispatch`, and on `merge_group`. The jobs `offline`,
 `offline-core`, and `portfolio` always report a conclusion. The workflow has
 no `paths` or `paths-ignore` filter, because a skipped required check stays
-pending. The required check names stay `offline` and `portfolio`. The no-dbt
-pytest job does not set a display name, so its check name is
-`Offline integrity / offline-core`.
+pending. The required check names stay `offline` and `portfolio`. The
+ruleset contexts are those short names. The context to add for the no-dbt
+pytest job is `offline-core`.
 
 A `changes` job reads the pull request diff and
 `scripts/ci_offline_changes.py` chooses steps. That script is the filter
@@ -74,9 +74,10 @@ input, so it also runs the analyst guards. Changes under
 live-eval fixture, and the public extract still run the checks that guard
 them. The full no-dbt `pytest` step is the `offline-core` job. It covers
 `tests/test_public_extract.py` and `tests/test_game_import.py`. That import
-test shells out to Node, so `offline-core` sets up Node with the step. The
-narrower pytest commands stay in `offline` and stay off when the full file
-set already runs. The `CHESSLAB_REQUIRE_DBT=1` pytest step stays in `offline`.
+test shells out to Node, so `offline-core` sets up Node 24 with the step.
+The `CHESSLAB_REQUIRE_DBT=1` pytest step stays in `offline` and sets up
+Node 24 with it, for the same import test. The narrower pytest commands
+stay in `offline` and stay off when the full file set already runs.
 Other pytest paths stay in the full run; test ownership outside those two
 files is not narrow enough to select.
 

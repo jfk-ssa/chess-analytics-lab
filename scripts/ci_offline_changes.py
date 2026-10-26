@@ -11,6 +11,8 @@ workflow, the lockfile, this script, or its test, and any detection error all
 select every step. ``pytest`` is the ``offline-core`` job. It covers the
 narrower pytest steps, so those stay off when the full file set already runs.
 That step shells out to Node, so ``offline-core`` sets up Node with it.
+The dbt pytest step shells out to Node too, so ``offline`` sets up Node 24
+when that step runs.
 
 The categories are docs, site, hosted, python, dbt, and analyst. ``docs``
 selects no extra step. Run ``python3 scripts/ci_offline_changes.py --audit``
@@ -345,6 +347,7 @@ SUPPORT = (
             "node_parity_authored",
             "node_parity_zero",
             "pytest_game_import",
+            "pytest_dbt",
         ),
         uses=_SETUP_NODE,
         contains=('node-version: "24"',),
@@ -453,6 +456,7 @@ SUPPRESS_WHEN = {"pytest_extract": "pytest", "pytest_game_import": "pytest"}
 
 ORDER = (
     ("offline", "setup_node", "biome"),
+    ("offline", "setup_node", "pytest_dbt"),
     ("offline", "sync", "ruff"),
     ("offline", "sync", "pytest_extract"),
     ("offline", "setup_node", "pytest_game_import"),
@@ -801,6 +805,19 @@ def _job_header(workflow_text: str, job: str) -> str:
     return body.group("body") if body else ""
 
 
+def _job_level_if(workflow_text: str, job: str) -> str:
+    """Return the job's own ``if``, ignoring step conditions."""
+    for line in _job_header(workflow_text, job).splitlines():
+        if line.startswith("      "):
+            continue
+        stripped = line.strip()
+        if stripped.startswith("steps:"):
+            break
+        if stripped.startswith("if:"):
+            return stripped.split(":", 1)[1].strip()
+    return ""
+
+
 def _required_job_problems(workflow_text: str, jobs: dict[str, dict[str, object]]) -> list[str]:
     problems: list[str] = []
     for job in ("offline", "portfolio"):
@@ -821,8 +838,10 @@ def _offline_core_problems(workflow_text: str, jobs: dict[str, dict[str, object]
     if job["job_name"]:
         problems.append("offline-core must not set a display name")
     header = _job_header(workflow_text, "offline-core")
-    if "needs: changes" not in header or "!cancelled()" not in header:
+    if "needs: changes" not in header:
         problems.append("offline-core must need changes and still run when detection fails")
+    if _job_level_if(workflow_text, "offline-core") != "${{ !cancelled() }}":
+        problems.append("offline-core if must be ${{ !cancelled() }}")
     return problems
 
 
