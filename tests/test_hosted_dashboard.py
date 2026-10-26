@@ -156,11 +156,11 @@ def _calls_in_order(function: ast.FunctionDef) -> list[tuple[str, str | None]]:
 
 @contextmanager
 def _preserved_package_cache():
-    """Put chess_analytics back the way this test found it.
+    """Undo an in-place reload of ``chess_analytics``.
 
     ``importlib.reload`` writes new classes into the existing module object.
-    Restoring ``sys.modules`` keeps that object, so a test that already
-    imported ``ReservationError`` still sees the reloaded class.
+    Putting that same object back into ``sys.modules`` leaves those classes
+    in place. Copy each module dictionary and write it back.
     """
     saved = {
         name: module
