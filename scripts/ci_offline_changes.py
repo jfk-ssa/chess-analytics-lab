@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """Choose Offline integrity steps from a pull request diff.
 
-The workflow jobs ``offline`` and ``portfolio`` always run. This script only
-decides which of their steps run. A pull request is the only selective event.
-Every other event, including push, merge_group, workflow_dispatch, and
-schedule, selects every step.
+The workflow jobs ``offline``, ``offline-core``, and ``portfolio`` always run.
+This script only decides which of their steps run. A pull request is the only
+selective event. Every other event, including push, merge_group,
+workflow_dispatch, and schedule, selects every step.
 
 Fail safe: an empty diff, a path that matches no category, a change to the
 workflow, the lockfile, this script, or its test, and any detection error all
-select every step. ``pytest`` covers the narrower pytest steps, so those stay
-off when the full file set already runs. The full pytest step shells out to
-Node, so Node setup runs with it.
+select every step. ``pytest`` is the ``offline-core`` job. It covers the
+narrower pytest steps, so those stay off when the full file set already runs.
+That step shells out to Node, so ``offline-core`` sets up Node with it.
 
 The categories are docs, site, hosted, python, dbt, and analyst. ``docs``
 selects no extra step. Run ``python3 scripts/ci_offline_changes.py --audit``
@@ -202,7 +202,7 @@ CHECKS = (
         exact="uv run --locked --offline --no-editable basedpyright",
     ),
     Step(
-        "offline",
+        "offline-core",
         "pytest",
         "check",
         ("python", "analyst", "dbt"),
@@ -322,7 +322,6 @@ _UV_STEPS = (
     "ruff",
     "ruff_format",
     "basedpyright",
-    "pytest",
     "pytest_extract",
     "pytest_game_import",
     "pytest_mcp",
@@ -345,7 +344,6 @@ SUPPORT = (
             "node_check_import",
             "node_parity_authored",
             "node_parity_zero",
-            "pytest",
             "pytest_game_import",
         ),
         uses=_SETUP_NODE,
@@ -367,7 +365,6 @@ SUPPORT = (
             "ruff",
             "ruff_format",
             "basedpyright",
-            "pytest",
             "pytest_extract",
             "pytest_game_import",
             "demo",
@@ -412,6 +409,29 @@ SUPPORT = (
         when_any=("pytest_portfolio", "demo_all"),
         exact="uv sync --locked --no-editable --extra dashboard",
     ),
+    Step(
+        "offline-core",
+        "core_setup_uv",
+        "support",
+        when_any=("pytest",),
+        uses=_SETUP_UV,
+        contains=('version: "0.12.18"',),
+    ),
+    Step(
+        "offline-core",
+        "core_setup_node",
+        "support",
+        when_any=("pytest",),
+        uses=_SETUP_NODE,
+        contains=('node-version: "24"',),
+    ),
+    Step(
+        "offline-core",
+        "core_sync",
+        "support",
+        when_any=("pytest",),
+        exact="uv sync --locked --no-editable",
+    ),
 )
 
 ALWAYS_STEPS = (
@@ -425,6 +445,7 @@ ALWAYS_STEPS = (
     Step("offline", "record_selection", "always", contains=("run_all=", "categories=")),
     Step("portfolio", "portfolio_checkout", "always", uses=_CHECKOUT),
     Step("portfolio", "portfolio_record", "always", contains=("run_all=", "categories=")),
+    Step("offline-core", "core_checkout", "always", uses=_CHECKOUT),
 )
 
 # The full pytest step already includes these files.
@@ -432,9 +453,7 @@ SUPPRESS_WHEN = {"pytest_extract": "pytest", "pytest_game_import": "pytest"}
 
 ORDER = (
     ("offline", "setup_node", "biome"),
-    ("offline", "setup_node", "pytest"),
     ("offline", "sync", "ruff"),
-    ("offline", "sync", "pytest"),
     ("offline", "sync", "pytest_extract"),
     ("offline", "setup_node", "pytest_game_import"),
     ("offline", "sync", "pytest_game_import"),
@@ -443,9 +462,14 @@ ORDER = (
     ("offline", "transform", "semantic"),
     ("offline", "semantic", "analyst_gate"),
     ("offline", "dbt_base_checkout", "dbt_slim"),
+    ("offline-core", "core_setup_uv", "core_sync"),
+    ("offline-core", "core_sync", "pytest"),
+    ("offline-core", "core_setup_node", "pytest"),
     ("portfolio", "portfolio_sync", "pytest_portfolio"),
     ("portfolio", "pytest_portfolio", "demo_all"),
 )
+
+MAPPED_JOBS = ("offline", "offline-core", "portfolio")
 
 _PATTERN_CACHE: dict[str, re.Pattern[str]] = {}
 
@@ -772,15 +796,33 @@ def _trigger_problems(workflow_text: str) -> list[str]:
     return problems
 
 
+def _job_header(workflow_text: str, job: str) -> str:
+    body = re.search(rf"\n  {job}:\n(?P<body>(?:    .*\n)*)", workflow_text)
+    return body.group("body") if body else ""
+
+
 def _required_job_problems(workflow_text: str, jobs: dict[str, dict[str, object]]) -> list[str]:
     problems: list[str] = []
     for job in ("offline", "portfolio"):
         if jobs[job]["job_name"]:
             problems.append(f"do not rename required job {job}")
-        body = re.search(rf"\n  {job}:\n(?P<body>(?:    .*\n)*)", workflow_text)
-        header = body.group("body") if body else ""
+        header = _job_header(workflow_text, job)
         if "needs: changes" not in header or "!cancelled()" not in header:
             problems.append(f"{job} must need changes and still run when detection fails")
+    return problems
+
+
+def _offline_core_problems(workflow_text: str, jobs: dict[str, dict[str, object]]) -> list[str]:
+    """Keep the new check name stable and successful when its pytest step is skipped."""
+    job = jobs.get("offline-core")
+    if job is None:
+        return ["job offline-core is missing"]
+    problems: list[str] = []
+    if job["job_name"]:
+        problems.append("offline-core must not set a display name")
+    header = _job_header(workflow_text, "offline-core")
+    if "needs: changes" not in header or "!cancelled()" not in header:
+        problems.append("offline-core must need changes and still run when detection fails")
     return problems
 
 
@@ -788,7 +830,7 @@ def _catalog_problems(jobs: dict[str, dict[str, object]]) -> list[str]:
     problems: list[str] = []
     catalog = {step.step_id: step for step in (*ALWAYS_STEPS, *CHECKS, *SUPPORT)}
     seen: set[str] = set()
-    for job_name in ("offline", "portfolio"):
+    for job_name in MAPPED_JOBS:
         steps = jobs[job_name]["steps"]
         assert isinstance(steps, list)
         for parsed in steps:
@@ -837,12 +879,13 @@ def audit_text(workflow_text: str, tracked: list[str]) -> list[str]:
         jobs = _parse_workflow(workflow_text)
     except ValueError as exc:
         return [*problems, f"workflow parse failed: {exc}"]
-    for job in ("changes", "offline", "portfolio"):
+    for job in ("changes", *MAPPED_JOBS):
         if job not in jobs:
             problems.append(f"job {job} is missing")
     if any(item.endswith("is missing") for item in problems):
         return problems
     problems.extend(_required_job_problems(workflow_text, jobs))
+    problems.extend(_offline_core_problems(workflow_text, jobs))
     problems.extend(_output_problems(jobs))
     problems.extend(_catalog_problems(jobs))
     problems.extend(_changes_job_problems(jobs))

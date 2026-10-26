@@ -117,3 +117,4 @@ short summary of the current checkout, not a log of new decisions.
 | 0109 | 2026-10-26 | [Pre-render the opening board](adr/0109-prerender-the-opening-board.md) |
 | 0110 | 2026-10-26 | [DuckDB 2.0](adr/0110-duckdb-2.md) |
 | 0111 | 2026-10-26 | [Parallel offline pytest](adr/0111-parallel-offline-pytest.md) |
+| 0112 | 2026-10-26 | [Split the no-dbt pytest step into its own job](adr/0112-split-offline-pytest-job.md) |

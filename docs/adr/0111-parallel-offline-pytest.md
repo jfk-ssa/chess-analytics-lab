@@ -78,11 +78,9 @@ dbt extra (the main step was 189.25s serial).
 
 ## Deferred
 
-Run the no-dbt pytest step in its own job so the two pytest runs overlap.
-The wall clock would then be the slower step rather than the sum. That
-split is not in this change. The required check names stay `offline` and
-`portfolio`, and a third job was deferred. Both pytest steps stay inside
-`offline`.
+The no-dbt pytest step moved to its own job in
+[ADR 0112](0112-split-offline-pytest-job.md). This record left that split
+undone. The required check names stayed `offline` and `portfolio`.
 
 ## Consequences
 

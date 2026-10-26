@@ -45,9 +45,12 @@ Name branches `type/short-topic`, for example `docs/commit-conventions`.
 ## Offline integrity
 
 `.github/workflows/offline.yml` runs on every pull request, on pushes to
-`main`, on `workflow_dispatch`, and on `merge_group`. The jobs `offline` and
-`portfolio` always report a conclusion. The workflow has no `paths` or
-`paths-ignore` filter, because a skipped required check stays pending.
+`main`, on `workflow_dispatch`, and on `merge_group`. The jobs `offline`,
+`offline-core`, and `portfolio` always report a conclusion. The workflow has
+no `paths` or `paths-ignore` filter, because a skipped required check stays
+pending. The required check names stay `offline` and `portfolio`. The no-dbt
+pytest job does not set a display name, so its check name is
+`Offline integrity / offline-core`.
 
 A `changes` job reads the pull request diff and
 `scripts/ci_offline_changes.py` chooses steps. That script is the filter
@@ -62,16 +65,18 @@ the diff touches any of:
 - `scripts/ci_offline_changes.py`
 - `tests/test_ci_offline_changes.py`
 
-Docs-only, site, and hosted diffs skip the long pytest jobs.
+Docs-only, site, and hosted diffs skip the long pytest steps. `offline-core`
+still succeeds on those diffs, with its pytest step skipped.
 `THIRD_PARTY_NOTICES.md` is hosted, because the hosted dashboard test reads
 the Streamlit pin from it. `docs/METRICS.md` is a frozen analyst preflight
 input, so it also runs the analyst guards. Changes under
 `src/chess_analytics/analyst/`, `evals/`, `reports/live-eval-receipt-*`, the
 live-eval fixture, and the public extract still run the checks that guard
-them. The full `pytest` step covers `tests/test_public_extract.py` and
-`tests/test_game_import.py`, and that import test shells out to Node, so
-Node setup runs with the full pytest step. The narrower pytest commands stay
-off when the full file set already runs.
+them. The full no-dbt `pytest` step is the `offline-core` job. It covers
+`tests/test_public_extract.py` and `tests/test_game_import.py`. That import
+test shells out to Node, so `offline-core` sets up Node with the step. The
+narrower pytest commands stay in `offline` and stay off when the full file
+set already runs. The `CHESSLAB_REQUIRE_DBT=1` pytest step stays in `offline`.
 Other pytest paths stay in the full run; test ownership outside those two
 files is not narrow enough to select.
 
