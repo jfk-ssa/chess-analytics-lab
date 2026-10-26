@@ -2,6 +2,7 @@
 
 import ast
 import hashlib
+import importlib
 import importlib.util
 import json
 import re
@@ -9,6 +10,7 @@ import sys
 import threading
 import time
 import types
+from contextlib import contextmanager
 from html import escape
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -152,12 +154,23 @@ def _calls_in_order(function: ast.FunctionDef) -> list[tuple[str, str | None]]:
     return found
 
 
-@pytest.fixture(autouse=True)
-def restored_package_cache():
+@contextmanager
+def _preserved_package_cache():
+    """Undo an in-place reload of ``chess_analytics``.
+
+    ``importlib.reload`` writes new classes into the existing module object.
+    Putting that same object back into ``sys.modules`` leaves those classes
+    in place. Copy each module dictionary and write it back.
+    """
     saved = {
-        name: sys.modules[name]
-        for name in list(sys.modules)
+        name: module
+        for name, module in sys.modules.items()
         if name == "chess_analytics" or name.startswith("chess_analytics.")
+    }
+    snapshots = {
+        name: dict(module.__dict__)
+        for name, module in saved.items()
+        if isinstance(module, types.ModuleType)
     }
     state_name = "_hosted_repository_import_state"
     saved_state = sys.modules.get(state_name)
@@ -170,10 +183,22 @@ def restored_package_cache():
             if name == "chess_analytics" or name.startswith("chess_analytics."):
                 del sys.modules[name]
         sys.modules.update(saved)
+        for name, module in saved.items():
+            snapshot = snapshots.get(name)
+            if snapshot is None or not isinstance(module, types.ModuleType):
+                continue
+            module.__dict__.clear()
+            module.__dict__.update(snapshot)
         if saved_state is None:
             sys.modules.pop(state_name, None)
         else:
             sys.modules[state_name] = saved_state
+
+
+@pytest.fixture(autouse=True)
+def restored_package_cache():
+    with _preserved_package_cache():
+        yield
 
 
 def _poison_cube(location: Path) -> None:
@@ -308,6 +333,18 @@ def test_src_reload_keeps_the_module_for_another_session(project, monkeypatch):
     assert not thread.is_alive()
     assert not errors
     assert sys.modules["chess_analytics.dashboard_cube"] is cube
+
+
+def test_in_place_reload_restores_imported_live_runner_classes():
+    """A reload must not leave a second ReservationError for later tests."""
+    import chess_analytics.analyst.live_runner as live_runner
+
+    captured = live_runner.ReservationError
+    with _preserved_package_cache():
+        importlib.reload(live_runner)
+        assert live_runner.ReservationError is not captured
+    assert live_runner.ReservationError is captured
+    assert live_runner.run.__globals__["ReservationError"] is captured
 
 
 def test_repository_import_state_is_published_once(project):
