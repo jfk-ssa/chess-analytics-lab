@@ -56,16 +56,26 @@ and 53 skipped without the dbt extra, and 466 passed and 41 skipped with
 
 ## Consequences
 
-Before is run 40286416617 above. After is the full-suite run of the commit
-that adds this job. The table below is filled from that run.
+After is Actions run
+[40297571854](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/40297571854)
+on `fe5f086` (pull request, 2026-10-26). Both pytest steps ran. The no-dbt
+step reported 454 passed and 53 skipped in 99.65s. The dbt step reported
+466 passed and 41 skipped in 163.30s.
 
-| Piece | Before | After |
+| Piece | Before, run 40286416617 | After, run 40297571854 |
 |---|---|---|
-| Pytest, dbt extra not installed | 91s | pending |
-| Pytest with `CHESSLAB_REQUIRE_DBT=1` | 117s | pending |
-| `offline` job | 4m 32s | pending |
-| `offline-core` job | inside `offline` | pending |
-| Slower of `offline` and `offline-core` | 4m 32s | pending |
+| Pytest, dbt extra not installed | 91s (07:33:09Z–07:34:40Z) | 100s (09:11:16Z–09:12:56Z); 454 passed, 53 skipped in 99.65s |
+| Pytest with `CHESSLAB_REQUIRE_DBT=1` | 117s (07:34:45Z–07:36:42Z) | 164s (09:11:41Z–09:14:25Z); 466 passed, 41 skipped in 163.30s |
+| `offline` job | 4m 32s (07:32:44Z–07:37:16Z) | 4m 4s (09:11:04Z–09:15:08Z) |
+| `offline-core` job | inside `offline` | 1m 56s (09:11:04Z–09:13:00Z) |
+| Wall clock, first job start to last job end | 4m 39s (07:32:37Z–07:37:16Z) | 4m 12s (09:10:56Z–09:15:08Z) |
+
+`changes` started first, at 09:10:56Z. `offline` finished last, at 09:15:08Z.
+`offline-core` finished at 09:13:00Z, while the dbt pytest step was still
+running, so the no-dbt step did not add to the wall clock. On this runner
+the dbt pytest step was slower than the 117s step in the before run, and
+the `offline` job fell from 4m 32s to 4m 4s. The wall clock fell from
+4m 39s to 4m 12s.
 
 Rollback is reverting the pull request. After merge, add
 `Offline integrity / offline-core` to the main-protection ruleset required
