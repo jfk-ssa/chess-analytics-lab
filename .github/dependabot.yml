@@ -5,9 +5,16 @@ updates:
     schedule:
       interval: weekly
     groups:
+      # ADR 0108. First match wins, and the catch-all below would claim these.
+      # dagster-webserver requires the same dagster version, so they move together.
+      dagster:
+        patterns:
+          - "dagster*"
       uv-dependencies:
         patterns:
           - "*"
+        exclude-patterns:
+          - "dagster*"
     # ADR 0104. Protobuf 7 does not resolve next to the locked Dagster and dbt extras.
     ignore:
       - dependency-name: "protobuf"

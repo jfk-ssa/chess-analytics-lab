@@ -24,9 +24,13 @@ chesslab = "chess_analytics.cli:main"
 
 [project.optional-dependencies]
 docs = ["Markdown==3.11", "jinja2==3.1.6"]
+# dagster-webserver==X requires dagster==X. Dependabot upgrades one name
+# per uv lock. >=1.13.26,<2 lets either upgrade carry the other through
+# 1.x, including a floor raised to >=1.14 on only one name. uv.lock is
+# the installed set. See ADR 0108.
 dagster = [
-    "dagster==1.13.25",
-    "dagster-webserver==1.13.25",
+    "dagster>=1.13.26,<2",
+    "dagster-webserver>=1.13.26,<2",
 ]
 prefect = [
     "prefect==3.9.0",
