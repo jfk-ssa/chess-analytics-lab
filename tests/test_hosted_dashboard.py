@@ -92,7 +92,7 @@ def test_hosted_streamlit_pin_matches_the_lock(project):
         "protobuf==6.33.6",
         "pillow==13.0.0",
         "certifi==2026.10.19",
-        "duckdb==1.5.6",
+        "duckdb==2.0.0",
     ]
     project_text = (project / "pyproject.toml").read_text()
     assert "streamlit==1.66.1" in project_text
