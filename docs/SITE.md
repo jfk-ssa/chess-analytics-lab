@@ -169,8 +169,9 @@ responses, `.env` files, numbered cloud-sync copies and credentials are excluded
 
 On Opening learning, choose either move order and step backward or forward. After
 six half-moves both routes share the same normalized opening position, while
-earlier positions diverge. The builder validates the routes with the existing
-pinned chess library. This is an illustrative walkthrough, not a trainer or a
+earlier positions diverge. The builder draws every route and half-move into the
+page; the script only shows the selected board. It validates the routes with the
+existing pinned chess library. This is an illustrative walkthrough, not a trainer or a
 measured improvement in learning. The complete rationale is maintained in
 Markdown and uses the same visual style and navigation as the other guides.
 

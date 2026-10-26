@@ -116,8 +116,10 @@ if (openingRaw) {
     const state = chosen.states[step];
     const matches =
       example.routes[0].states[step].position_key === example.routes[1].states[step].position_key;
-    // SVG comes exclusively from the builder's fixed, legally replayed examples.
-    document.getElementById('opening-board').innerHTML = state.svg;
+    document.querySelectorAll('#opening-board .opening-frame').forEach((frame) => {
+      frame.hidden =
+        Number(frame.dataset.route) !== routeIndex || Number(frame.dataset.ply) !== step;
+    });
     document
       .getElementById('opening-board')
       .setAttribute(

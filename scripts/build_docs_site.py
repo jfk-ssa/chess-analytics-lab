@@ -609,13 +609,64 @@ def transposition_example():
     return {"kind": "illustrative_legal_routes_not_observed_training_results", "routes": routes}
 
 
+def scope_svg_ids(svg, scope):
+    """Prefix fragment ids so each board resolves <use> targets inside itself.
+
+    python-chess repeats the same piece ids on every board. A later board's
+    href="#white-pawn" would otherwise bind to the first board, including one
+    hidden with display:none, and the visible pieces would disappear.
+    """
+    identifiers = sorted(set(re.findall(r'\bid="([^"]+)"', svg)), key=len, reverse=True)
+    for identifier in identifiers:
+        scoped = f"{scope}-{identifier}"
+        svg = svg.replace(f'id="{identifier}"', f'id="{scoped}"')
+        svg = svg.replace(f'href="#{identifier}"', f'href="#{scoped}"')
+        svg = svg.replace(f'xlink:href="#{identifier}"', f'xlink:href="#{scoped}"')
+        svg = svg.replace(f"url(#{identifier})", f"url(#{scoped})")
+    return svg
+
+
+def opening_board_markup(example):
+    """Embed every route and ply. The shared final position of route 0 stays visible."""
+    frames = []
+    for route_index, route in enumerate(example["routes"]):
+        for state in route["states"]:
+            scope = f"opening-{route_index}-{state['ply']}"
+            svg = scope_svg_ids(state["svg"], scope)
+            visible = route_index == 0 and state is route["states"][-1]
+            hidden = "" if visible else " hidden"
+            frames.append(
+                f'<div class="opening-frame" data-route="{route_index}" '
+                f'data-ply="{state["ply"]}"{hidden}>{svg}</div>'
+            )
+    return "".join(frames)
+
+
+def opening_client_data(example):
+    """State the widget still needs, without the SVG markup the page already contains."""
+    payload = {
+        "kind": example["kind"],
+        "routes": [
+            {
+                "name": route["name"],
+                "line": route["line"],
+                "states": [
+                    {key: value for key, value in state.items() if key != "svg"}
+                    for state in route["states"]
+                ],
+            }
+            for route in example["routes"]
+        ],
+    }
+    return json.dumps(payload).replace("<", "\\u003c")
+
+
 def transpositions():
     example = transposition_example()
-    data = json.dumps(example).replace("<", "\\u003c")
     return render(
         "transpositions.html.j2",
-        board=example["routes"][0]["states"][-1]["svg"],
-        data=data,
+        boards=opening_board_markup(example),
+        data=opening_client_data(example),
     )
 
 
