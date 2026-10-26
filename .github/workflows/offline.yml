@@ -102,7 +102,7 @@ jobs:
       - id: setup_uv
         name: Set up uv
         if: ${{ needs.changes.result != 'success' || needs.changes.outputs.setup_uv == 'true' }}
-        uses: astral-sh/setup-uv@18d369b23da25a81e9458561248e1aafff6a70fa # v10.3.1
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
           version: "0.12.18"
       - id: setup_node
@@ -256,7 +256,7 @@ jobs:
       - id: portfolio_setup_uv
         name: Set up uv
         if: ${{ needs.changes.result != 'success' || needs.changes.outputs.portfolio_setup_uv == 'true' }}
-        uses: astral-sh/setup-uv@18d369b23da25a81e9458561248e1aafff6a70fa # v10.3.1
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
           version: "0.12.18"
       - id: portfolio_sync
