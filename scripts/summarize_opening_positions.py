@@ -146,10 +146,11 @@ def coverage_curve(db, positions, denominator):
 
 
 def summarize_view(db, family, denominator, top_n, relation_name="cohort_visits"):
-    relation = db.table(relation_name)
-    if family:
-        relation = relation.filter("opening_family='" + family.replace("'", "''") + "'")
-    relation.create_view("selected_visits", replace=True)
+    # DuckDB 2.0 refuses a relation call while an execute() result is open.
+    # execute() replaces that result on 1.5 and 2.0, so build the view in SQL.
+    where = " where opening_family='" + family.replace("'", "''") + "'" if family else ""
+    relation = '"' + relation_name.replace('"', '""') + '"'
+    db.execute(f"create or replace view selected_visits as select * from {relation}{where}")
     db.execute("""create or replace temporary table position_counts as
       select position_id,any_value(position_key) position_key,count(*) games,
       count(distinct route) filter(where not route_has_repeat) acyclic_routes,

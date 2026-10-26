@@ -17,7 +17,7 @@ version = "0.1.0"
 description = "Local, reproducible chess analytics with explicit evidence"
 license = "GPL-3.0-or-later"
 requires-python = ">=3.12,<3.13"
-dependencies = ["chess==1.11.2", "duckdb==1.5.6", "zstandard==0.25.0"]
+dependencies = ["chess==1.11.2", "duckdb==2.0.0", "zstandard==0.25.0"]
 
 [project.scripts]
 chesslab = "chess_analytics.cli:main"
