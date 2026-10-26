@@ -598,9 +598,9 @@ def test_public_data_ignore_rules_track_only_the_extract(project):
         assert result.returncode == 1, relative
 
 
-def test_extract_path_away_from_the_repo_names_the_environment_variable(monkeypatch):
-    away = Path("/tmp/chesslab-extract-away")
-    away.mkdir(exist_ok=True)
+def test_extract_path_away_from_the_repo_names_the_environment_variable(monkeypatch, tmp_path):
+    away = tmp_path / "away"
+    away.mkdir()
     monkeypatch.chdir(away)
     monkeypatch.delenv("CHESSLAB_PUBLIC_EXTRACT", raising=False)
     with pytest.raises(FileNotFoundError, match="CHESSLAB_PUBLIC_EXTRACT"):
@@ -618,8 +618,8 @@ def test_extract_path_uses_cwd_repo_root_and_environment(project, monkeypatch, t
     target = tmp_path / "dashboard_extract.json"
     target.write_text("{}\n")
     monkeypatch.setenv("CHESSLAB_PUBLIC_EXTRACT", str(target))
-    away = Path("/tmp/chesslab-extract-away")
-    away.mkdir(exist_ok=True)
+    away = tmp_path / "away"
+    away.mkdir()
     monkeypatch.chdir(away)
     assert extract_path() == target
 
