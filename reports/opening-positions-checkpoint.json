@@ -17,7 +17,7 @@
     "config/opening-positions.json": "ac27ab29912ffdbbf7f6c5526caf450eeddf39fb725d9db6cd4cf95df9a43693",
     "contracts/opening_positions.json": "3d74b3aa8cff38eea90c678481387b42725ab28e6563804cf6135a965d5b8517",
     "scripts/build_opening_positions.py": "2b14e5d7ed465915365123802ec32e23e5ba339fa5983684602ac72938226244",
-    "scripts/summarize_opening_positions.py": "de55b35d210fcb3463ddb6ca92c96160f812ef466c95a0dbc3bc8f381d9ec361",
+    "scripts/summarize_opening_positions.py": "bd6e8e13eec459f65961d2ac1c08dc6bfa39a93dd8c0826651af878c6433d69b",
     "uv.lock": "bbdc8c1905a327d2ec23600fe8fa2bb823e7874633c01b8d3cdc701a24c52829",
     "scripts/check_opening_insights.py": "5ba9e2762ee0ce6a03e3e7dda9adb6b94e6ef6b7c22eef46de8db2e5ac4a1586"
   },

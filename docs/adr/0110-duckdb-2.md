@@ -54,7 +54,9 @@ Parquet written by 2.0 is read by 1.5 with the same rows. Rewriting the
 committed cube with 2.0 gave 589,962 bytes, against 593,637 bytes from
 1.5.6, so a rebuild changes the committed bytes without changing rows.
 The committed cube is left as written by 1.5.6. This record does not
-change the byte counts in [ADR 0101](0101-hosted-bi-cube.md).
+change the byte counts in [ADR 0101](0101-hosted-bi-cube.md). The DuckDB
+1.5.6 pin and 21,568,087-byte wheel sentences in that record, around
+lines 26 and 137, are superseded by this ADR.
 
 No `.duckdb` file is committed, and the hosted app opens only the
 committed Parquet cube in memory. Snapshot and mart identities include
