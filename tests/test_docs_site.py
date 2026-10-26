@@ -361,6 +361,46 @@ def test_transposition_routes_share_one_legal_position():
     assert len(routes[0]["states"]) == 7
 
 
+def _without_svg(value):
+    if isinstance(value, dict):
+        assert "svg" not in value
+        for item in value.values():
+            _without_svg(item)
+    elif isinstance(value, list):
+        for item in value:
+            _without_svg(item)
+
+
+def test_opening_boards_are_prerendered_without_an_html_sink():
+    """CodeQL js/xss-through-dom: do not assign builder SVG through innerHTML."""
+    script = (ROOT / "site/assets/site.js").read_text()
+    assert "innerHTML" not in script
+    assert "insertAdjacentHTML" not in script
+    assert "DOMParser" not in script
+    html = site.transpositions()
+    assert 'aria-label="Opening board after six half-moves, White to move"' in html
+    frames = re.findall(r'<div class="opening-frame"[^>]*>', html)
+    assert len(frames) == 14
+    assert frames.count('<div class="opening-frame" data-route="0" data-ply="6">') == 1
+    assert sum(" hidden" in frame for frame in frames) == 13
+    parts = html.split('<div class="opening-frame"')[1:]
+    seen = set()
+    for part in parts:
+        frame, _, _rest = part.partition("</div>")
+        identifiers = set(re.findall(r'\bid="([^"]+)"', frame))
+        hrefs = set(re.findall(r'href="#([^"]+)"', frame))
+        assert hrefs and hrefs <= identifiers
+        assert identifiers.isdisjoint(seen)
+        seen.update(identifiers)
+        assert 'id="white-pawn"' not in frame
+    payload = html.split('id="opening-data">', 1)[1].split("</script>", 1)[0]
+    data = json.loads(payload)
+    _without_svg(data)
+    assert data["routes"][0]["states"][6]["to_move"] == "White"
+    assert data["routes"][0]["states"][6]["san"] == "d5"
+    assert "<svg" not in payload
+
+
 def test_homepage_preview_reads_checked_reports():
     html = site.homepage_preview(ROOT)
     corpus = json.loads((ROOT / "reports/opening-corpus.json").read_text())
