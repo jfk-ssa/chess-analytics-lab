@@ -1316,9 +1316,11 @@ def _show_build_label() -> None:
     import BUILD_LABEL`` bound before ``importlib.reload`` would keep the
     previous string, so a code-only push would not show up. ADR 0107.
     """
+    import duckdb
+
     import chess_analytics.build_info as build_info
 
-    _caption(f"build: {build_info.BUILD_LABEL}")
+    _caption(f"build: {build_info.BUILD_LABEL} · DuckDB {duckdb.__version__}")
 
 
 def _fail(message: str) -> NoReturn:
