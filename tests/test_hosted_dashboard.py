@@ -15,6 +15,7 @@ from html import escape
 from pathlib import Path
 from urllib.parse import urlsplit
 
+import duckdb
 import pytest
 
 from chess_analytics.public_extract import extract_path, load_extract, table_rows
@@ -595,7 +596,7 @@ def _with_build_label(source: str, label: str) -> str:
 
 
 def test_footer_caption_shows_the_package_build_label(project, monkeypatch):
-    """The footer caption is the package constant on disk for this rerun."""
+    """The footer shows the reloaded package label and runtime DuckDB version."""
     path = project / "src" / "chess_analytics" / "build_info.py"
     original = path.read_text()
     probe = "reload probe label"
@@ -603,7 +604,7 @@ def test_footer_caption_shows_the_package_build_label(project, monkeypatch):
     try:
         app = _run(project, monkeypatch)
         assert not app.exception, [item.message for item in app.exception]
-        expected = f"build: {probe}"
+        expected = f"build: {probe} · DuckDB {duckdb.__version__}"
         assert _caption(app, "build:") == expected
         assert all(expected not in item.value for item in app.sidebar.caption)
     finally:
