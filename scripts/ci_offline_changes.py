@@ -33,7 +33,6 @@ FULL_EVENTS = frozenset({"push", "merge_group", "workflow_dispatch", "schedule"}
 CATEGORIES_WITHOUT_CHECKS = frozenset({"docs"})
 
 _CHECKOUT = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
-_SETUP_UV = "astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e"
 _SETUP_NODE = "actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
 _DBT_BASE_IF = (
     "${{ (needs.changes.result != 'success' || "
@@ -357,7 +356,6 @@ SUPPORT = (
         "setup_uv",
         "support",
         when_any=_UV_STEPS,
-        uses=_SETUP_UV,
         contains=('version: "0.12.18"',),
     ),
     Step(
@@ -402,7 +400,6 @@ SUPPORT = (
         "portfolio_setup_uv",
         "support",
         when_any=("pytest_portfolio", "demo_all"),
-        uses=_SETUP_UV,
         contains=('version: "0.12.18"',),
     ),
     Step(
@@ -417,7 +414,6 @@ SUPPORT = (
         "core_setup_uv",
         "support",
         when_any=("pytest",),
-        uses=_SETUP_UV,
         contains=('version: "0.12.18"',),
     ),
     Step(
@@ -738,6 +734,31 @@ def _step_problems(spec: Step, parsed: dict[str, str]) -> list[str]:
     return problems
 
 
+def _setup_uv_pin_problems(jobs: dict[str, dict[str, object]]) -> list[str]:
+    problems: list[str] = []
+    pins: dict[str, str] = {}
+    for job, step_id in (
+        ("offline", "setup_uv"),
+        ("portfolio", "portfolio_setup_uv"),
+        ("offline-core", "core_setup_uv"),
+    ):
+        steps = jobs[job]["steps"]
+        assert isinstance(steps, list)
+        for parsed in steps:
+            if parsed["id"] != step_id:
+                continue
+            label = f"{job}.{step_id}"
+            uses = parsed["uses"].split("#", 1)[0].strip()
+            match = re.fullmatch(r"astral-sh/setup-uv@([0-9a-f]{40})", uses)
+            if match is None:
+                problems.append(f"{label} must pin astral-sh/setup-uv to a full 40-hex SHA")
+            else:
+                pins[label] = match.group(1)
+    if len(set(pins.values())) > 1:
+        problems.append(f"setup-uv SHAs differ across steps: {', '.join(pins)}")
+    return problems
+
+
 def _order_problems(jobs: dict[str, dict[str, object]]) -> list[str]:
     problems: list[str] = []
     for job, earlier, later in ORDER:
@@ -907,6 +928,7 @@ def audit_text(workflow_text: str, tracked: list[str]) -> list[str]:
     problems.extend(_offline_core_problems(workflow_text, jobs))
     problems.extend(_output_problems(jobs))
     problems.extend(_catalog_problems(jobs))
+    problems.extend(_setup_uv_pin_problems(jobs))
     problems.extend(_changes_job_problems(jobs))
     problems.extend(_order_problems(jobs))
     problems.extend(_tracked_problems(tracked))

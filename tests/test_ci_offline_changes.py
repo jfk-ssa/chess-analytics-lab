@@ -1,6 +1,7 @@
 """The offline workflow selects steps from the diff and still reports every job."""
 
 import importlib.util
+import re
 import sys
 from pathlib import Path
 
@@ -97,6 +98,45 @@ def _skipped(flags: dict[str, str], steps: frozenset[str] | None = None) -> floa
 
 def test_repository_map_matches_the_workflow(changes):
     assert changes.audit_repository(ROOT) == []
+
+
+def test_setup_uv_accepts_a_new_shared_full_sha(changes):
+    text = WORKFLOW.read_text(encoding="utf-8")
+    mutated, count = re.subn(r"astral-sh/setup-uv@\S+", "astral-sh/setup-uv@" + "a1" * 20, text)
+    assert count == 3
+    assert changes.audit_text(mutated, changes.tracked_files(ROOT)) == []
+
+
+@pytest.mark.parametrize(
+    "step_id, label",
+    [
+        ("setup_uv", "offline.setup_uv"),
+        ("portfolio_setup_uv", "portfolio.portfolio_setup_uv"),
+        ("core_setup_uv", "offline-core.core_setup_uv"),
+    ],
+)
+@pytest.mark.parametrize("pin", ["v10", "v10.3.3", "a" * 39, "a" * 41, "g" * 40, ""])
+def test_setup_uv_rejects_non_full_sha_pins(changes, step_id, label, pin):
+    text = WORKFLOW.read_text(encoding="utf-8")
+    mutated, count = re.subn(
+        rf"(      - id: {step_id}\n.*?uses: astral-sh/setup-uv@)\S+",
+        rf"\g<1>{pin}",
+        text,
+        count=1,
+        flags=re.DOTALL,
+    )
+    assert count == 1
+    problems = changes.audit_text(mutated, changes.tracked_files(ROOT))
+    assert any(label in problem and "40-hex SHA" in problem for problem in problems)
+
+
+def test_setup_uv_rejects_inconsistent_shas(changes):
+    text = WORKFLOW.read_text(encoding="utf-8")
+    shared, count = re.subn(r"astral-sh/setup-uv@\S+", "astral-sh/setup-uv@" + "a" * 40, text)
+    assert count == 3
+    mutated = shared.replace("astral-sh/setup-uv@" + "a" * 40, "astral-sh/setup-uv@" + "b" * 40, 1)
+    problems = changes.audit_text(mutated, changes.tracked_files(ROOT))
+    assert any("setup-uv SHAs differ across steps" in problem for problem in problems)
 
 
 def test_a_removed_step_id_fails_the_audit(changes):
