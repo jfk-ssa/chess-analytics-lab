@@ -13,6 +13,8 @@ import urllib.request
 from collections import Counter
 from pathlib import Path
 
+from chess_analytics.analyst.provider import _redact_transport_detail
+
 LABELS = (
     "opening_usage",
     "opening_score",
@@ -259,8 +261,13 @@ def _transport(body: bytes, key: str) -> dict:
     return json.loads(payload)
 
 
+def _redact_failure_detail(text: str, key: str) -> str:
+    redacted = _redact_transport_detail(text, key)
+    return re.sub(r"(?i)\bBearer\s+\S+", "Bearer [redacted]", redacted)
+
+
 def _personal_key() -> str:
-    key = os.environ.get(KEY_NAME)
+    key = os.environ.get(KEY_NAME, "").strip()
     if not key:
         raise ValueError(f"missing {KEY_NAME}; use doppler run -- ...")
     return key
@@ -403,7 +410,10 @@ def run_jev(
             else:
                 unknown_reserved += cell["reserved_cost_usd"]
                 record["unknown_cost_reservation_usd"] = cell["reserved_cost_usd"]
-            record["failure"] = {"type": type(exc).__name__, "message": str(exc)[:300]}
+            record["failure"] = {
+                "type": type(exc).__name__,
+                "message": _redact_failure_detail(str(exc), key)[:300],
+            }
             record["elapsed_seconds"] = time.monotonic() - started
             _write(output / f"{row['id']}.json", record)
             break

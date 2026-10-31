@@ -11,14 +11,14 @@ from pathlib import Path
 from chess_analytics.analyst import provider
 from chess_analytics.analyst.experiment import _resolve_config
 from chess_analytics.analyst.tools import CheckedTools
-from chess_analytics.routing_study import _sha, _write, cases, score
+from chess_analytics.routing_study import _redact_failure_detail, _sha, _write, cases, score
 
 KEY_NAME = provider.KEY_ENV
 
 
 def _require_key(key_env: str = KEY_NAME) -> str:
     """Read a named personal API key only from the process environment."""
-    key = os.environ.get(key_env)
+    key = os.environ.get(key_env, "").strip()
     if not key:
         raise ValueError(f"missing {key_env}; use doppler run -- ...")
     return key
@@ -189,7 +189,10 @@ def run(
                 else:
                     known += cost
                     record["gross_cost_usd"] = cost
-                record["failure"] = {"type": type(exc).__name__, "message": str(exc)[:300]}
+                record["failure"] = {
+                    "type": type(exc).__name__,
+                    "message": _redact_failure_detail(str(exc), key)[:300],
+                }
                 record["elapsed_seconds"] = time.monotonic() - started
                 _write(output / f"{row['id']}.json", record)
                 break

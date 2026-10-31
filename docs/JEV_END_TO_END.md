@@ -42,7 +42,7 @@ oracle test needs the ignored, retained December data project.
 ```sh
 UV_CACHE_DIR=.uv-cache uv sync --locked --offline --no-editable \
   --extra dbt --extra dashboard --reinstall-package chess-analytics-lab
-UV_CACHE_DIR=.uv-cache doppler run -- uv run --locked --offline --no-editable \
+UV_CACHE_DIR=.uv-cache uv run --locked --offline --no-editable \
   pytest -q tests/test_jev_e2e.py
 ```
 
@@ -103,7 +103,7 @@ request hashes live in ignored `work/m8-e2e-preflight.json`. Regenerate it
 after a source, holdout, model, or data change:
 
 ```sh
-UV_CACHE_DIR=.uv-cache doppler run -- uv run --locked --offline --no-editable \
+UV_CACHE_DIR=.uv-cache uv run --locked --offline --no-editable \
   python -m chess_analytics.jev_e2e prepare --repo . \
   --data-project work/m7-december-project \
   --preflight work/m8-e2e-preflight.json

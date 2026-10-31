@@ -6,6 +6,7 @@ import shutil
 import pytest
 
 from chess_analytics import decisions_study as study
+from chess_analytics.routing_analyst import _require_key
 from chess_analytics.routing_study import LABELS, cases
 
 
@@ -295,3 +296,19 @@ def test_replay_scores_false_boundary_without_using_labels_to_route(project):
     assert outcome["accepted_boundary"] and not outcome["used_retained_analyst"]
     assert outcome["observed_status"] == "unsupported" and not outcome["passed"]
     assert result["analyst_fallbacks"] == 31
+
+
+@pytest.mark.parametrize("value", [None, "", " \t\r\n"])
+def test_missing_personal_key_is_safe(monkeypatch, value):
+    name = "CHESSLAB_OPENAI_API_KEY"
+    if value is None:
+        monkeypatch.delenv(name, raising=False)
+    else:
+        monkeypatch.setenv(name, value)
+    with pytest.raises(ValueError, match=rf"^missing {name}; use doppler run -- \.\.\.$"):
+        _require_key()
+
+
+def test_personal_key_strips_trailing_newline(monkeypatch):
+    monkeypatch.setenv("CHESSLAB_OPENAI_API_KEY", "offline-placeholder\n")
+    assert _require_key() == "offline-placeholder"
