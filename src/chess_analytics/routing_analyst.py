@@ -10,6 +10,7 @@ from pathlib import Path
 
 from chess_analytics.analyst import provider
 from chess_analytics.analyst.experiment import _resolve_config
+from chess_analytics.analyst.preflight import _require_key
 from chess_analytics.analyst.tools import CheckedTools
 from chess_analytics.routing_study import _sha, _write, cases, score
 
@@ -100,33 +101,10 @@ def preflight(repo: Path, data_project: Path, split: str = "test") -> dict:
     }
 
 
-def _key_from_file(path: Path) -> str:
-    if path.name not in {".env", ".env.openai"}:
-        raise ValueError("use an explicit ignored work/.env or work/.env.openai")
-    matches = []
-    for raw in path.read_text().splitlines():
-        line = raw.strip()
-        if not line or line.startswith("#"):
-            continue
-        if line.startswith("export "):
-            line = line[7:].strip()
-        name, separator, value = line.partition("=")
-        if not separator or name != KEY_NAME or not value.strip():
-            raise ValueError("env file may contain only the named project OpenAI key")
-        token = value.strip().strip("\"'")
-        if not token:
-            raise ValueError("project OpenAI key value is blank")
-        matches.append(token)
-    if len(matches) != 1:
-        raise ValueError("env file must contain exactly one project OpenAI key")
-    return matches[0]
-
-
 def run(
     repo: Path,
     data_project: Path,
     frozen: dict,
-    env_file: Path,
     max_run_usd: float,
     output: Path,
     *,
@@ -144,11 +122,11 @@ def run(
     if frozen["total_reserved_cost_usd"] > max_run_usd:
         raise ValueError("whole structured-analyst run exceeds cap")
     work = (repo / "work").resolve()
-    if not env_file.resolve().is_relative_to(work) or not output.resolve().is_relative_to(work):
-        raise ValueError("key and raw attempts must stay in this project's ignored work/")
+    if not output.resolve().is_relative_to(work):
+        raise ValueError("raw attempts must stay in this project's ignored work/")
     if output.exists() and any(output.iterdir()):
         raise ValueError("use a fresh attempt directory")
-    key = _key_from_file(env_file)
+    key = _require_key()
     output.mkdir(parents=True, exist_ok=True)
     selected, manifest = cases(repo, frozen["split"])
     config = _resolve_config(None, max_run_usd)
@@ -244,7 +222,6 @@ def main(argv=None) -> int:
     parser.add_argument("--data-project", type=Path, required=True)
     parser.add_argument("--split", choices=("dev", "test"), default="test")
     parser.add_argument("--preflight", type=Path, required=True)
-    parser.add_argument("--env-file", type=Path)
     parser.add_argument("--max-run-usd", type=float)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args(argv)
@@ -253,13 +230,12 @@ def main(argv=None) -> int:
             result = preflight(args.repo, args.data_project, args.split)
             _write(args.preflight, result)
         else:
-            if args.env_file is None or args.output is None:
-                raise ValueError("run requires --env-file and --output")
+            if args.output is None:
+                raise ValueError("run requires --output")
             result = run(
                 args.repo,
                 args.data_project,
                 json.loads(args.preflight.read_text()),
-                args.env_file,
                 args.max_run_usd,
                 args.output,
             )

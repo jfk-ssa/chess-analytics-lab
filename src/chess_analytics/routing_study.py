@@ -12,6 +12,8 @@ import urllib.request
 from collections import Counter
 from pathlib import Path
 
+from chess_analytics.analyst.preflight import _require_key
+
 LABELS = (
     "opening_usage",
     "opening_score",
@@ -258,24 +260,8 @@ def _transport(body: bytes, key: str) -> dict:
     return json.loads(payload)
 
 
-def _personal_key(path: Path) -> str:
-    if path.name != ".env.typesafe" or "work" not in path.parts:
-        raise ValueError("use an explicit ignored work/.env.typesafe file")
-    matches = []
-    for line in path.read_text().splitlines():
-        stripped = line.strip()
-        if not stripped or stripped.startswith("#"):
-            continue
-        name, separator, value = stripped.partition("=")
-        if not separator or name.strip() != KEY_NAME or not value.strip():
-            raise ValueError("env file may contain only the named TypeSafe key")
-        token = value.strip().strip("\"'")
-        if not token:
-            raise ValueError("TypeSafe key value is blank")
-        matches.append(token)
-    if len(matches) != 1:
-        raise ValueError("env file must contain exactly one TypeSafe key")
-    return matches[0]
+def _personal_key() -> str:
+    return _require_key(KEY_NAME)
 
 
 def score(selected: list[dict], predictions: list[dict], mode: str) -> dict:
@@ -346,7 +332,6 @@ def rules_report(project: Path, split: str) -> dict:
 def run_jev(
     project: Path,
     frozen: dict,
-    env_file: Path,
     max_run_usd: float,
     output: Path,
     *,
@@ -367,11 +352,9 @@ def run_jev(
     work = (project / "work").resolve()
     if not output.resolve().is_relative_to(work):
         raise ValueError("raw Jev attempts must stay under ignored work/")
-    if not env_file.resolve().is_relative_to(work):
-        raise ValueError("TypeSafe key must come from this project's ignored work/")
     if output.exists() and any(output.iterdir()):
         raise ValueError("use a fresh attempt directory")
-    key = _personal_key(env_file)
+    key = _personal_key()
     output.mkdir(parents=True, exist_ok=True)
     predictions = []
     known = 0.0
@@ -451,7 +434,6 @@ def main(argv=None) -> int:
     parser.add_argument("--project", type=Path, default=Path.cwd())
     parser.add_argument("--split", choices=("dev", "test", "all"), default="test")
     parser.add_argument("--preflight", type=Path)
-    parser.add_argument("--env-file", type=Path)
     parser.add_argument("--max-run-usd", type=float)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args(argv)
@@ -464,12 +446,11 @@ def main(argv=None) -> int:
                 raise ValueError("prepare requires --preflight")
             _write(args.preflight, result)
         else:
-            if args.preflight is None or args.env_file is None or args.output is None:
-                raise ValueError("run requires --preflight, --env-file and --output")
+            if args.preflight is None or args.output is None:
+                raise ValueError("run requires --preflight and --output")
             result = run_jev(
                 args.project,
                 json.loads(args.preflight.read_text()),
-                args.env_file,
                 args.max_run_usd,
                 args.output,
             )

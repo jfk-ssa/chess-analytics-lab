@@ -23,20 +23,23 @@ from chess_analytics.routing_study import (
 )
 
 
+@pytest.fixture(autouse=True)
+def personal_keys(monkeypatch):
+    monkeypatch.setenv("TYPESAFE_API_KEY", "offline-test-placeholder")
+
+
 def _project(tmp_path, repo):
     folder = tmp_path / "study"
     destination = folder / "evals/cases"
     destination.mkdir(parents=True)
     for name in ("jev_routing_v1.tsv", "jev_routing_v1_manifest.json"):
         shutil.copy2(repo / "evals/cases" / name, destination / name)
-    key = folder / "work/.env.typesafe"
-    key.parent.mkdir()
-    key.write_text("TYPESAFE_API_KEY=offline-test-placeholder\n")
-    return folder, key
+    (folder / "work").mkdir()
+    return folder
 
 
 def test_frozen_cases_and_rules_baseline(tmp_path, project):
-    study, _ = _project(tmp_path, project)
+    study = _project(tmp_path, project)
     dev, manifest = cases(study, "dev")
     test, _ = cases(study, "test")
     assert len(dev) == len(test) == 40
@@ -52,7 +55,7 @@ def test_frozen_cases_and_rules_baseline(tmp_path, project):
 
 
 def test_mocked_jev_scoring_and_failed_attempt_retention(tmp_path, project):
-    study, key = _project(tmp_path, project)
+    study = _project(tmp_path, project)
     frozen = preflight(study, "test")
     lookup = {row["question"]: row["label"] for row in cases(study, "test")[0]}
 
@@ -74,8 +77,8 @@ def test_mocked_jev_scoring_and_failed_attempt_retention(tmp_path, project):
 
     cap = frozen["total_reserved_cost_usd"] + 0.01
     with pytest.raises(ValueError, match="cap"):
-        run_jev(study, frozen, key, 0.000001, study / "work/too-small", transport=perfect_mock)
-    result = run_jev(study, frozen, key, cap, study / "work/mock", transport=perfect_mock)
+        run_jev(study, frozen, 0.000001, study / "work/too-small", transport=perfect_mock)
+    result = run_jev(study, frozen, cap, study / "work/mock", transport=perfect_mock)
     assert result["complete"] is True
     assert result["transport_kind"] == "injected_mock"
     assert result["scoring"]["correct"] == 40
@@ -91,13 +94,13 @@ def test_mocked_jev_scoring_and_failed_attempt_retention(tmp_path, project):
         response["answers"]["route"]["probabilities"]["invalid"] = 0.1
         return response
 
-    failed = run_jev(study, frozen, key, cap, study / "work/failed", transport=broken_mock)
+    failed = run_jev(study, frozen, cap, study / "work/failed", transport=broken_mock)
     assert failed["complete"] is False
     assert failed["completed_cases"] == 0
     assert failed["known_gross_cost_usd"] > 0
     assert (study / "work/failed/report.json").exists()
     with pytest.raises(ValueError, match="fresh attempt"):
-        run_jev(study, frozen, key, cap, study / "work/failed", transport=perfect_mock)
+        run_jev(study, frozen, cap, study / "work/failed", transport=perfect_mock)
 
 
 def test_response_rejects_invalid_distribution_and_missing_usage():
@@ -151,14 +154,13 @@ def test_existing_analyst_quote_and_route_mapping_stay_offline(tmp_path, project
             project,
             data_project,
             frozen,
-            project / "work/.env",
             0.000001,
             project / "work/m8-unaffordable",
         )
 
 
 def test_duckdb_replay_and_display_do_not_claim_live_models(tmp_path, project):
-    study, _ = _project(tmp_path, project)
+    study = _project(tmp_path, project)
     replay = offline_replay(study, "test", study / "work/questions.duckdb")
     assert replay["rows"] == 40
     assert replay["scoring"]["correct"] == 35
@@ -173,7 +175,7 @@ def test_duckdb_replay_and_display_do_not_claim_live_models(tmp_path, project):
 
 
 def test_comparison_hybrid_counts_paid_fallback_without_relabeling_harness(tmp_path, project):
-    study, _ = _project(tmp_path, project)
+    study = _project(tmp_path, project)
     rules = rules_report(study, "test")
     selected, manifest = cases(study, "test")
     jev_predictions = [

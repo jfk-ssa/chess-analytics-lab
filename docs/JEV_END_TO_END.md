@@ -42,7 +42,7 @@ oracle test needs the ignored, retained December data project.
 ```sh
 UV_CACHE_DIR=.uv-cache uv sync --locked --offline --no-editable \
   --extra dbt --extra dashboard --reinstall-package chess-analytics-lab
-UV_CACHE_DIR=.uv-cache uv run --locked --offline --no-editable \
+UV_CACHE_DIR=.uv-cache doppler run -- uv run --locked --offline --no-editable \
   pytest -q tests/test_jev_e2e.py
 ```
 
@@ -103,7 +103,7 @@ request hashes live in ignored `work/m8-e2e-preflight.json`. Regenerate it
 after a source, holdout, model, or data change:
 
 ```sh
-UV_CACHE_DIR=.uv-cache uv run --locked --offline --no-editable \
+UV_CACHE_DIR=.uv-cache doppler run -- uv run --locked --offline --no-editable \
   python -m chess_analytics.jev_e2e prepare --repo . \
   --data-project work/m7-december-project \
   --preflight work/m8-e2e-preflight.json
@@ -114,16 +114,20 @@ The executed 32-case reservation was about **$0.008664432 TypeSafe** and
 possible gated fallbacks. Actual spend can be lower. The quote is deliberately
 conservative but is not a contractual tokenizer or billing bound. Credits
 do not set a cap. The approved caps for this one study are $0.03 TypeSafe
-and $0.20 OpenAI cumulative gross for this completed attempt. Only named ignored files
-`work/.env.typesafe` and `work/.env` supply personal keys; no ambient key is
-read. The live command is:
+and $0.20 OpenAI cumulative gross for this completed attempt. Only `TYPESAFE_API_KEY` and `CHESSLAB_OPENAI_API_KEY` from the process
+environment supply personal keys. Provision the optional TypeSafe key separately
+in the personal Doppler config before an authorized routing study.
+Run `doppler setup` once from the repository root in workplace `personal`; it
+reads `doppler.yaml` (project `chess-analytics-lab`, config `dev`). Then use
+`doppler run -- uv run ...` to inject named keys into the process environment.
+
+The live command is:
 
 ```sh
-UV_CACHE_DIR=.uv-cache uv run --locked --no-editable \
+UV_CACHE_DIR=.uv-cache doppler run -- uv run --locked --no-editable \
   python -m chess_analytics.jev_e2e run --repo . \
   --data-project work/m7-december-project \
   --preflight work/m8-e2e-preflight.json \
-  --jev-env work/.env.typesafe --openai-env work/.env \
   --jev-cap 0.03 --openai-cap 0.20 \
   --output work/m8-e2e-attempt-1
 ```

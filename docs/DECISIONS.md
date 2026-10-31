@@ -119,3 +119,4 @@ short summary of the current checkout, not a log of new decisions.
 | 0111 | 2026-10-26 | [Parallel offline pytest](adr/0111-parallel-offline-pytest.md) |
 | 0112 | 2026-10-26 | [Split the no-dbt pytest step into its own job](adr/0112-split-offline-pytest-job.md) |
 | 0113 | 2026-10-31 | [Select dbt tests in the dbt-extra pytest step](adr/0113-select-dbt-pytest.md) |
+| 0114 | 2026-10-31 | [Doppler as the secrets source of truth](adr/0114-doppler-secrets-source-of-truth.md) |

@@ -14,7 +14,6 @@ def main() -> None:
     parser.add_argument("--project", type=Path, default=Path.cwd())
     parser.add_argument("--preflight", type=Path, required=True)
     parser.add_argument("--config", type=Path, help="explicit personal provider configuration")
-    parser.add_argument("--env-file", type=Path, required=True)
     parser.add_argument("--ledger", type=Path, required=True)
     parser.add_argument("--repeats", type=int, default=3)
     parser.add_argument(
@@ -73,7 +72,6 @@ def main() -> None:
             args.config,
             args.preflight,
             max_run_usd=None if args.config else cap,
-            env_file=args.env_file,
             holdout=True,
             holdout_version=args.holdout_version,
             conditions=preflight["conditions"],

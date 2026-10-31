@@ -41,23 +41,12 @@ def _sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _load_named_key(env_file: Path) -> None:
-    """Load only the named key from a local dotenv-style file, without a shell."""
-    if os.environ.get(KEY_ENV):
-        return
-    matches = []
-    for raw in env_file.read_text().splitlines():
-        line = raw.strip()
-        if line.startswith("export "):
-            line = line[7:].strip()
-        if line.startswith(f"{KEY_ENV}="):
-            value = line.split("=", 1)[1].strip()
-            if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
-                value = value[1:-1]
-            matches.append(value)
-    if len(matches) != 1 or not matches[0]:
-        raise ValueError("env file must contain exactly one named personal API key")
-    os.environ[KEY_ENV] = matches[0]
+def _require_key(key_env: str = KEY_ENV) -> str:
+    """Read a named personal API key only from the process environment."""
+    key = os.environ.get(key_env)
+    if not key:
+        raise ValueError(f"missing {key_env}; use doppler run -- ...")
+    return key
 
 
 def _resolve_config(config_path: Path | None, max_run_usd: float | None) -> dict:

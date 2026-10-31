@@ -2,7 +2,6 @@
 
 import importlib.util
 import json
-import os
 import subprocess
 import urllib.error
 from pathlib import Path
@@ -11,7 +10,7 @@ import pytest
 
 from chess_analytics.analyst.core import execute_plan, run_killable_tool
 from chess_analytics.analyst.evaluation import score_case, score_case_m6, score_case_m6_holdout
-from chess_analytics.analyst.experiment import _load_named_key, prepare, run
+from chess_analytics.analyst.experiment import _require_key, prepare, run
 from chess_analytics.analyst.provider import (
     _default_transport,
     _extract_plan,
@@ -289,7 +288,7 @@ def test_no_key_blocks_run_before_attempt_directory(tmp_path, monkeypatch):
     frozen_path.write_text(json.dumps(preflight))
     monkeypatch.delenv("CHESSLAB_OPENAI_API_KEY", raising=False)
     monkeypatch.setenv("CHESSLAB_PERSONAL_OPENAI_API_KEY", "obsolete-test-only")
-    with pytest.raises(ValueError, match="personal API key is absent"):
+    with pytest.raises(ValueError, match=r"CHESSLAB_OPENAI_API_KEY.*doppler run --"):
         run(PROJECT, path, frozen_path)
 
 
@@ -308,20 +307,16 @@ def test_configless_preflight_still_requires_explicit_cap_and_key(tmp_path, monk
     frozen_path = tmp_path / "frozen.json"
     frozen_path.write_text(json.dumps(preflight))
     monkeypatch.delenv("CHESSLAB_OPENAI_API_KEY", raising=False)
-    with pytest.raises(ValueError, match="personal API key is absent"):
+    with pytest.raises(ValueError, match=r"CHESSLAB_OPENAI_API_KEY.*doppler run --"):
         run(PROJECT, None, frozen_path, max_run_usd=0.10)
 
 
-def test_env_file_loader_reads_only_named_key(tmp_path, monkeypatch):
-    path = tmp_path / ".env"
-    path.write_text(
-        "UNRELATED_WORKPLACE_TEST_KEY=do-not-import\nCHESSLAB_OPENAI_API_KEY='test-only'\n"
-    )
+def test_personal_key_requires_named_process_environment(monkeypatch):
     monkeypatch.delenv("CHESSLAB_OPENAI_API_KEY", raising=False)
-    monkeypatch.delenv("UNRELATED_WORKPLACE_TEST_KEY", raising=False)
-    _load_named_key(path)
-    assert os.environ["CHESSLAB_OPENAI_API_KEY"] == "test-only"
-    assert "UNRELATED_WORKPLACE_TEST_KEY" not in os.environ
+    with pytest.raises(ValueError, match=r"CHESSLAB_OPENAI_API_KEY.*doppler run --"):
+        _require_key()
+    monkeypatch.setenv("CHESSLAB_OPENAI_API_KEY", "test-only")
+    assert _require_key() == "test-only"
 
 
 def test_m6_rubric_accepts_only_equivalent_checked_clock_call():
@@ -673,7 +668,7 @@ def test_holdout_reference_and_frozen_preflight_without_model_calls(tmp_path, mo
     frozen_path = tmp_path / "holdout.json"
     frozen_path.write_text(json.dumps(preflight))
     monkeypatch.delenv("CHESSLAB_OPENAI_API_KEY", raising=False)
-    with pytest.raises(ValueError, match="personal API key is absent"):
+    with pytest.raises(ValueError, match=r"CHESSLAB_OPENAI_API_KEY.*doppler run --"):
         run(PROJECT, None, frozen_path, max_run_usd=0.10, holdout=True, holdout_version=version)
 
 

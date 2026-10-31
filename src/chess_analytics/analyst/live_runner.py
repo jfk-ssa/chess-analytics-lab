@@ -216,7 +216,6 @@ def run(
     repeats: int = DEFAULT_REPEATS,
     transport=None,
     dry_run: bool = False,
-    env_file: Path | None = None,
     output: Path | None = None,
     seed: int = DEFAULT_SEED,
     resamples: int = DEFAULT_RESAMPLES,
@@ -254,11 +253,9 @@ def run(
     plan = _dry_plan(config, manifest, cases, repeats, instructions, reserved, effort, quotes)
     if dry_run:
         return plan
-    if env_file is not None:
-        _load_model_key(env_file, config["api_key_env"])
     key = os.environ.get(config["api_key_env"])
     if not key:
-        raise ValueError("explicit personal API key is absent")
+        raise ValueError(f"missing {config['api_key_env']}; use doppler run -- ...")
     send = transport or _default_send
     receipt = _execute(
         repo,
@@ -315,7 +312,6 @@ def add_arguments(parser) -> None:
     parser.add_argument("--acknowledge-personal-account", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--output", type=Path)
-    parser.add_argument("--env-file", type=Path)
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
     parser.add_argument("--baseline-rate", type=float)
     parser.add_argument("--input-usd-per-million", type=float)
@@ -347,7 +343,6 @@ def execute_from_args(repo: Path, args) -> int:
             acknowledged=args.acknowledge_personal_account,
             repeats=args.repeats,
             dry_run=args.dry_run,
-            env_file=args.env_file,
             output=args.output,
             seed=args.seed,
             baseline_rate=args.baseline_rate,
@@ -374,25 +369,6 @@ def main(argv: list[str] | None = None) -> int:
     add_arguments(parser)
     args = parser.parse_args(argv)
     return execute_from_args(args.project.resolve(), args)
-
-
-def _load_model_key(env_file: Path, key_env: str) -> None:
-    """Load one named key. The OpenAI and xAI variables are not interchangeable."""
-    if os.environ.get(key_env):
-        return
-    matches = []
-    for raw in env_file.read_text().splitlines():
-        line = raw.strip()
-        if line.startswith("export "):
-            line = line[7:].strip()
-        if line.startswith(f"{key_env}="):
-            value = line.split("=", 1)[1].strip()
-            if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
-                value = value[1:-1]
-            matches.append(value)
-    if len(matches) != 1 or not matches[0]:
-        raise ValueError("env file must contain exactly one named personal API key")
-    os.environ[key_env] = matches[0]
 
 
 def _default_send(body: bytes, key: str) -> dict:

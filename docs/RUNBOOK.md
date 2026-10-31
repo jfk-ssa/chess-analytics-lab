@@ -199,15 +199,19 @@ case splits and evidence. `eval` needs its matching analytical snapshot.
 The default demo does not read a credential. The live adapter is disabled
 without a personal config or explicitly capped experiment, and reads the
 key named by that config. OpenAI configs name `CHESSLAB_OPENAI_API_KEY`.
-A `grok-4.7` config names `CHESSLAB_XAI_API_KEY`. An ignored `work/.env`
-may hold the named variable; no workplace credential is discovered or
-used. Never commit the key, paste it into a report, or infer spending
+A `grok-4.7` config names `CHESSLAB_XAI_API_KEY`. Keys come only from the
+process environment.
+Run `doppler setup` once from the repository root in workplace `personal`; it
+reads `doppler.yaml` (project `chess-analytics-lab`, config `dev`). Then use
+`doppler run -- uv run ...` to inject named keys into the process environment.
+Never commit the key, paste it into a report, or infer spending
 authorization from credits.
 
 For a future authorized frozen experiment, `python -m chess_analytics.analyst.experiment
 prepare --max-run-usd CAP --preflight work/new-preflight.json` makes a quote
 without loading a key; `run` requires that exact preflight, a separate explicit
-cap and `--env-file work/.env`. [M6.md](M6.md) documents historical usage.
+cap and the named process environment key. [M6.md](M6.md) documents
+historical usage.
 Do not reuse an old approved cap. The runner records actual usage, reserves
 unknown-cost attempts at their bound, stops when a full next request cannot
 fit and retains failures. Inspect the attempt ledger, raw ignored response,
@@ -277,9 +281,10 @@ does not probe the API.
    refuses before any request is sent.
 5. Acknowledge the personal account on the command line. OpenAI runs
    read `CHESSLAB_OPENAI_API_KEY`. grok-4.7 runs read
-   `CHESSLAB_XAI_API_KEY`. An ignored `work/.env` may hold the one
-   variable the selected model names. Do not commit the key or the
-   receipt.
+   `CHESSLAB_XAI_API_KEY`. Inject the selected variable using Doppler.
+   For an authorized xAI run, select `prd` with
+   `doppler run --config prd -- uv run ...`; local `dev` holds only the
+   OpenAI key. Do not commit the key or the receipt.
 
 ### Dry run
 
@@ -317,13 +322,12 @@ Responses API. CI does not run this command. Write the receipt under
 artifact in a separate pull request.
 
 ```sh
-uv run --locked --no-editable python -m chess_analytics.analyst live-eval \
+doppler run -- uv run --locked --no-editable python -m chess_analytics.analyst live-eval \
   --staged work/live-eval/project \
   --model gpt-6-luna \
   --max-run-usd 0.50 \
   --repeats 5 \
   --acknowledge-personal-account \
-  --env-file work/.env \
   --output work/live-eval-receipt.json
 ```
 

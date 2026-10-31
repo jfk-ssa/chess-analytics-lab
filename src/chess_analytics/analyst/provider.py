@@ -305,7 +305,7 @@ def live_answer(
     key_env = config["api_key_env"]
     key = os.environ.get(key_env)
     if not key:
-        raise ValueError("explicit personal API key is absent")
+        raise ValueError(f"missing {key_env}; use doppler run -- ...")
     response = (transport or _default_transport)(quote["body"], key)
     usage = response.get("usage")
     actual_cost, cost_basis = price_usage(config, usage)
