@@ -104,7 +104,7 @@ Live model calls stay disabled until personal configuration and an explicit spen
 syncs those stable names one-way into that environment, mirroring deletes
 and adding `DOPPLER_*` metadata without name transforms. There are no
 repository-level secrets (ADR 0091 shadowing risk cleared). Local runs use
-`doppler setup` once, then `doppler run -- uv run ...`; root `doppler.yaml`
+`doppler setup` once, then `doppler run -- uv run ...` (env vars take precedence); root `doppler.yaml`
 selects `dev` with `CHESSLAB_OPENAI_API_KEY` for the Mac. `prd` holds both
 provider keys. Runtime loading uses process environment only; see
 [ADR 0114](adr/0114-doppler-secrets-source-of-truth.md). This repository does not contain either key. The M7 December Sol gate closed at **$0.35392836** cumulative accounted gross under the approved $6 cap. Earlier failed gates stay in the reports. The M6 caps are closed. Model and pricing defaults were last checked against the official model page on 2026-10-20. The recorded Luna and Sol rates matched that page. `gpt-6.1-sol` does not accept `reasoning.effort` of `none`, so the live-eval id stays `gpt-6-sol`.

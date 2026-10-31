@@ -7,7 +7,7 @@ from pathlib import Path
 
 from chess_analytics.analyst.core import execute_plan
 from chess_analytics.analyst.evaluation import score_case_m7
-from chess_analytics.analyst.experiment import _require_key, _resolve_config
+from chess_analytics.analyst.experiment import _load_named_key, _resolve_config
 from chess_analytics.analyst.provider import (
     KEY_ENV,
     _default_transport,
@@ -31,6 +31,7 @@ DEV_IDS = (
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--project", type=Path, required=True)
+    parser.add_argument("--env-file", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--prior-gross-usd", type=float, required=True)
     args = parser.parse_args()
@@ -75,7 +76,7 @@ def main() -> None:
         "cases": [],
     }
     write_json(args.out, record)
-    _require_key()
+    _load_named_key(args.env_file)
     spent = 0.0
     for case, quote in zip(cases, quotes, strict=True):
         captured = {}

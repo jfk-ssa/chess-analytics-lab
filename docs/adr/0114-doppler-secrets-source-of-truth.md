@@ -31,11 +31,22 @@ Streamlit app remain secret-free.
 
 Locally, run `doppler setup` once from the repository root in workplace
 `personal`. Root `doppler.yaml` names only the project and default config
-`dev`. Run authorized commands with `doppler run -- uv run ...`.
-Application code reads keys only from the process environment; remove the
-`work/.env*` loaders and their CLI arguments. There is no Doppler SDK or
-runtime fetch in the application. `.env.example` documents names only and
-is not loaded.
+`dev`. Run authorized commands with `doppler run -- uv run ...`. Process
+environment is the supported key source; Doppler injects it. There is no
+Doppler SDK or runtime fetch in the application. `.env.example` documents
+names only and is not loaded.
+
+Non-frozen local loaders (`routing_study`, `routing_analyst`,
+`decisions_study`, `jev_e2e`) read keys only from the process environment and
+no longer accept key-file CLI flags. The frozen eval modules listed in
+`live_runner.FROZEN_FILES` (`preflight`, `experiment`, `live_runner`,
+`provider`, and the rest of that set) stay byte-identical to the committed
+frozen set: they keep a dormant `--env-file` / key-file fallback that loads
+only when the named process env var is unset. Env vars therefore take
+precedence under `doppler run`. That fallback is not the recommended path and
+will be removed at the next intentional frozen-set change (a new eval
+version). Historical live-eval receipts and the public dashboard extract are
+never rewritten for a secrets-layout change.
 
 `KEY_ENV`, `XAI_KEY_ENV`, `CHESSLAB_OPENAI_API_KEY`,
 `CHESSLAB_XAI_API_KEY`, and `TYPESAFE_API_KEY` retain their names.
@@ -51,19 +62,21 @@ model calls.
 
 ## Consequences
 
-Local operators use Doppler injection or an explicitly prepared process
-environment. Missing-key errors name the variable and suggest `doppler run`.
-Current runbooks and fixture tests follow that contract. Historical ADR prose
-about local key files remains as history. Frozen preflights that bind changed
-source hashes must be regenerated before a newly authorized run; retained
-failures, replay results, and live receipts are not rewritten.
+Local operators use `doppler run -- uv run ...` (or an explicitly prepared
+process environment). Missing-key errors in the non-frozen loaders name the
+variable and suggest `doppler run`. Current runbooks point at Doppler, not
+`work/.env*`. Historical ADR prose about local key files remains as history.
+
+Frozen eval source hashes, committed live-eval receipts, and
+`data/public/dashboard_extract.json` stay untouched by this secrets move.
+Rewriting historical receipts is not allowed. The dormant `--env-file`
+fallback in frozen modules is temporary compatibility until the next
+intentional frozen-set bump.
 
 The layout above is owner-reported configuration, not a credential-backed
 audit performed during this edit. No secret values are read and no live
 model requests are made to validate this migration. Rollback is disabling
-sync and restoring manual environment secrets; restoring local file loading
-would require reverting the corresponding code changes.
-
+sync and restoring manual environment secrets.
 
 ## Rejected alternatives
 
@@ -73,6 +86,9 @@ would require reverting the corresponding code changes.
 - Manual GitHub copies: creates a second place to maintain rotations.
 - Dated secret names or repository secrets: breaks the stable name contract
   or restores the ADR 0091 shadowing risk.
+- Rewriting committed live-eval receipts to absorb frozen-hash churn from a
+  secrets-layout edit: historical receipts are evidence artifacts and stay
+  byte-stable.
 
 ## References
 

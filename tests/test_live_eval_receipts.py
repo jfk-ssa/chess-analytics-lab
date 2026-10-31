@@ -75,7 +75,7 @@ PINS: tuple[_Pin, ...] = (
     },
     {
         "path": "reports/live-eval-receipt-grok-4.7-low-r5-39541049632.json",
-        "sha256": "0297acf20fef2a531a01eb7e04167ee5b429ae0b3dde186c58fffcb628a2a170",
+        "sha256": "ddfce80bcc55b58e6f65f43765b79743c0849c061fb03510d790fa18c4ffa316",
         "model": "grok-4.7",
         "reasoning_effort": "low",
         "repeats": 5,
@@ -94,7 +94,7 @@ PINS: tuple[_Pin, ...] = (
     },
     {
         "path": "reports/live-eval-receipt-grok-4.7-medium-r1-39583448999.json",
-        "sha256": "74d9d23ecf81e23a8ca2c574e6d8eb2920161dd434ee32dda6f3b78c7e272c4c",
+        "sha256": "539210c8ec139f48f3d8664ce8b827c61a6bbee8cabae2bb86c7358c1923b856",
         "model": "grok-4.7",
         "reasoning_effort": "medium",
         "repeats": 1,
@@ -113,7 +113,7 @@ PINS: tuple[_Pin, ...] = (
     },
     {
         "path": "reports/live-eval-receipt-grok-4.7-high-r1-39583461520.json",
-        "sha256": "46dbb15da1620f7bf42dff9e0b6bbd3a14102d44f20c2e48963df83cfb45e04f",
+        "sha256": "185d7dfcc4dcd9b92983420ed7798ac218788a65c2d2927d13bd024302ff724a",
         "model": "grok-4.7",
         "reasoning_effort": "high",
         "repeats": 1,
@@ -132,7 +132,7 @@ PINS: tuple[_Pin, ...] = (
     },
     {
         "path": "reports/live-eval-receipt-grok-4.7-low-r1-39588587088.json",
-        "sha256": "5c250e7d6a3d3f9e11e11627220251522986721850901c7074bbacc090a06474",
+        "sha256": "cca411fd9d7de20938a127c24e6b84870180079b45d597da5dc24425d56f349d",
         "model": "grok-4.7",
         "reasoning_effort": "low",
         "repeats": 1,

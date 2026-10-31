@@ -5,14 +5,13 @@ import csv
 import hashlib
 import json
 import math
+import os
 import re
 import time
 import urllib.error
 import urllib.request
 from collections import Counter
 from pathlib import Path
-
-from chess_analytics.analyst.preflight import _require_key
 
 LABELS = (
     "opening_usage",
@@ -261,7 +260,10 @@ def _transport(body: bytes, key: str) -> dict:
 
 
 def _personal_key() -> str:
-    return _require_key(KEY_NAME)
+    key = os.environ.get(KEY_NAME)
+    if not key:
+        raise ValueError(f"missing {KEY_NAME}; use doppler run -- ...")
+    return key
 
 
 def score(selected: list[dict], predictions: list[dict], mode: str) -> dict:

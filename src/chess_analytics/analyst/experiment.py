@@ -10,7 +10,7 @@ from pathlib import Path
 from chess_analytics.analyst.evaluation import score_case_m6, score_case_m6_holdout, score_case_m7
 from chess_analytics.analyst.preflight import (
     CONDITIONS,
-    _require_key,
+    _load_named_key,
     _resolve_config,
     prepare,
 )
@@ -29,6 +29,7 @@ def run(
     preflight_path: Path,
     *,
     max_run_usd=None,
+    env_file: Path | None = None,
     transport=None,
     holdout=False,
     holdout_version=1,
@@ -71,7 +72,10 @@ def run(
         raise ValueError("frozen experiment preflight drifted")
     if not current["fits_cap"]:
         raise ValueError("whole experiment exceeds explicit run spending cap")
-    _require_key()
+    if env_file is not None:
+        _load_named_key(env_file)
+    if not os.environ.get(KEY_ENV):
+        raise ValueError("explicit personal API key is absent")
     cases = {c["id"]: c for c in json.loads((project / current["case_file"]).read_text())}
     experiment_id = uuid.uuid4().hex
     directory = project / "data/analyst_attempts" / experiment_id
@@ -225,6 +229,7 @@ def main(argv=None):
     config_group = parser.add_mutually_exclusive_group(required=True)
     config_group.add_argument("--config", type=Path)
     config_group.add_argument("--max-run-usd", type=float)
+    parser.add_argument("--env-file", type=Path, help="run mode only; reads only the named key")
     parser.add_argument("--preflight", type=Path, required=True)
     parser.add_argument("--holdout", action="store_true", help="use frozen M6/M7 family split")
     parser.add_argument(
@@ -236,6 +241,8 @@ def main(argv=None):
     parser.add_argument("--condition", choices=CONDITIONS, action="append")
     args = parser.parse_args(argv)
     if args.mode == "prepare":
+        if args.env_file is not None:
+            parser.error("--env-file applies only to run mode")
         result = prepare(
             args.project,
             args.config,
@@ -251,6 +258,7 @@ def main(argv=None):
             args.config,
             args.preflight,
             max_run_usd=args.max_run_usd,
+            env_file=args.env_file,
             holdout=args.holdout,
             holdout_version=args.holdout_version,
             conditions=args.condition,

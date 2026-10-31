@@ -93,7 +93,7 @@ A mock result is harness evidence, never a model benchmark.
 Only `CHESSLAB_OPENAI_API_KEY` in the process environment is read.
 Run `doppler setup` once from the repository root in workplace `personal`; it
 reads `doppler.yaml` (project `chess-analytics-lab`, config `dev`). Then use
-`doppler run -- uv run ...` to inject named keys into the process environment.
+`doppler run -- uv run ...` to inject named keys into the process environment (recommended; Decisions loaders are process-env only).
  Do not
 put keys in a tracked file, output, chat, or shell command. The run also requires
 an explicit personal-account acknowledgment, frozen quote, campaign directory,

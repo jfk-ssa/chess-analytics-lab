@@ -10,8 +10,8 @@ import urllib.request
 from collections import Counter
 from pathlib import Path
 
-from chess_analytics.analyst.preflight import _require_key
 from chess_analytics.jev_e2e import _durable_write
+from chess_analytics.routing_analyst import _require_key
 from chess_analytics.routing_study import CHOICE_CRITERIA, LABELS, _json, _sha, _write, score
 from chess_analytics.routing_study import cases as historical_cases
 

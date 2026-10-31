@@ -119,7 +119,7 @@ environment supply personal keys. Provision the optional TypeSafe key separately
 in the personal Doppler config before an authorized routing study.
 Run `doppler setup` once from the repository root in workplace `personal`; it
 reads `doppler.yaml` (project `chess-analytics-lab`, config `dev`). Then use
-`doppler run -- uv run ...` to inject named keys into the process environment.
+`doppler run -- uv run ...` to inject named keys into the process environment (recommended; Jev end-to-end loaders are process-env only).
 
 The live command is:
 

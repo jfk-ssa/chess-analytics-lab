@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 
 from chess_analytics.analyst.evaluation import score_case_m7
-from chess_analytics.analyst.experiment import _require_key
+from chess_analytics.analyst.experiment import _load_named_key
 from chess_analytics.analyst.provider import (
     KEY_ENV,
     _default_transport,
@@ -82,14 +82,16 @@ def prepare(project: Path) -> dict:
     }
 
 
-def run(project: Path, frozen_path: Path, out: Path) -> dict:
+def run(project: Path, frozen_path: Path, env_file: Path, out: Path) -> dict:
     if out.exists():
         raise ValueError("existing development attempt must be preserved")
     frozen = json.loads(frozen_path.read_text())
     current = prepare(project)
     if frozen != current or not current["fits_cumulative_cap"]:
         raise ValueError("frozen development request or cap drift")
-    _require_key()
+    _load_named_key(env_file)
+    if not os.environ.get(KEY_ENV):
+        raise ValueError("named personal key absent")
     cases = {c["id"]: c for c in json.loads((project / FROZEN_FILES[4]).read_text())}
     record = {
         "kind": "M7 Sol inspected-case development; actual model calls, not holdout",
@@ -168,17 +170,18 @@ def main() -> None:
     parser.add_argument("mode", choices=("prepare", "run"))
     parser.add_argument("--project", type=Path, default=Path.cwd())
     parser.add_argument("--preflight", type=Path, required=True)
+    parser.add_argument("--env-file", type=Path)
     parser.add_argument("--out", type=Path)
     args = parser.parse_args()
     if args.mode == "prepare":
-        if args.out:
+        if args.env_file or args.out:
             parser.error("prepare only writes the offline preflight")
         result = prepare(args.project)
         write_json(args.preflight, result)
     else:
-        if not args.out:
-            parser.error("run requires --out")
-        result = run(args.project, args.preflight, args.out)
+        if not args.env_file or not args.out:
+            parser.error("run requires a named env file and output")
+        result = run(args.project, args.preflight, args.env_file, args.out)
     print(
         json.dumps(
             {

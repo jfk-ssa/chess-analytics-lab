@@ -240,6 +240,7 @@ def test_dry_run_prints_the_plan_and_does_not_send(live_eval_stage, monkeypatch,
         live_eval_stage,
         acknowledged=True,
         dry_run=True,
+        env_file=Path("/no/such/live-eval.env"),
         max_run_usd=10,
         model="gpt-6-luna",
         repeats=5,
@@ -319,7 +320,7 @@ def test_missing_key_refuses_and_ignores_other_names(live_eval_stage, monkeypatc
         calls.append(body)
         return _wire(_UNSUPPORTED)
 
-    with pytest.raises(ValueError, match=r"CHESSLAB_OPENAI_API_KEY.*doppler run --"):
+    with pytest.raises(ValueError, match="explicit personal API key is absent"):
         run(
             ROOT,
             live_eval_stage,

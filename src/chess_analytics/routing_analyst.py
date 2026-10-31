@@ -10,11 +10,18 @@ from pathlib import Path
 
 from chess_analytics.analyst import provider
 from chess_analytics.analyst.experiment import _resolve_config
-from chess_analytics.analyst.preflight import _require_key
 from chess_analytics.analyst.tools import CheckedTools
 from chess_analytics.routing_study import _sha, _write, cases, score
 
 KEY_NAME = provider.KEY_ENV
+
+
+def _require_key(key_env: str = KEY_NAME) -> str:
+    """Read a named personal API key only from the process environment."""
+    key = os.environ.get(key_env)
+    if not key:
+        raise ValueError(f"missing {key_env}; use doppler run -- ...")
+    return key
 
 
 def route_from_answer(answer: dict) -> str:

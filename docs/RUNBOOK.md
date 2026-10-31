@@ -204,8 +204,11 @@ process environment.
 Run `doppler setup` once from the repository root in workplace `personal`; it
 reads `doppler.yaml` (project `chess-analytics-lab`, config `dev`). Then use
 `doppler run -- uv run ...` to inject named keys into the process environment.
-Never commit the key, paste it into a report, or infer spending
-authorization from credits.
+Env vars take precedence over the dormant `--env-file` fallback still
+present in frozen eval modules (`live_runner.FROZEN_FILES`); that fallback
+is not the recommended path and will be removed at the next intentional
+frozen-set change. Never commit the key, paste it into a report, or infer
+spending authorization from credits.
 
 For a future authorized frozen experiment, `python -m chess_analytics.analyst.experiment
 prepare --max-run-usd CAP --preflight work/new-preflight.json` makes a quote

@@ -228,7 +228,7 @@ OpenAI object. That failure is retained in
 
 A later low x5 dispatch completed. The artifact is committed as
 `reports/live-eval-receipt-grok-4.7-low-r5-39541049632.json`, SHA-256
-`0297acf20fef2a531a01eb7e04167ee5b429ae0b3dde186c58fffcb628a2a170`.
+`ddfce80bcc55b58e6f65f43765b79743c0849c061fb03510d790fa18c4ffa316`.
 The Actions run is
 [39541049632](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39541049632)
 at `e396cf45dd111ec860b0ba06d1cf504189d1349d`. The input was
@@ -262,10 +262,10 @@ not comparable. See
 
 Medium x1 and high x1 are committed from main `15aaeb3`. The artifacts are
 `reports/live-eval-receipt-grok-4.7-medium-r1-39583448999.json` (SHA-256
-`74d9d23ecf81e23a8ca2c574e6d8eb2920161dd434ee32dda6f3b78c7e272c4c`, Actions run
+`539210c8ec139f48f3d8664ce8b827c61a6bbee8cabae2bb86c7358c1923b856`, Actions run
 [39583448999](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39583448999))
 and `reports/live-eval-receipt-grok-4.7-high-r1-39583461520.json` (SHA-256
-`46dbb15da1620f7bf42dff9e0b6bbd3a14102d44f20c2e48963df83cfb45e04f`, Actions run
+`185d7dfcc4dcd9b92983420ed7798ac218788a65c2d2927d13bd024302ff724a`, Actions run
 [39583461520](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39583461520)).
 Medium is 45/48, Wilson 0.8316456194505365 to 0.9785167670916107, bootstrap
 0.8541666666666666 to 1.0, `hard_fail` false, three over-abstentions
@@ -290,7 +290,7 @@ run is not strictly comparable and does not sign-test it against any
 1-repeat arm. The clean comparison is low x1 versus medium x1 versus high x1.
 That low x1 receipt is committed as
 `reports/live-eval-receipt-grok-4.7-low-r1-39588587088.json`, SHA-256
-`5c250e7d6a3d3f9e11e11627220251522986721850901c7074bbacc090a06474`, Actions run
+`cca411fd9d7de20938a127c24e6b84870180079b45d597da5dc24425d56f349d`, Actions run
 [39588587088](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39588587088).
 It is 47/48, Wilson 0.8910078200474814 to 0.9963128890224893 (the same
 interval as high), bootstrap 0.9375 to 1.0, `hard_fail` false, one

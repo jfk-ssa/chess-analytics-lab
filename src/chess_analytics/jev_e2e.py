@@ -12,8 +12,8 @@ from chess_analytics.analyst import provider
 from chess_analytics.analyst.core import _evidence_id, execute_plan
 from chess_analytics.analyst.evaluation import score_case_m7, score_case_portfolio
 from chess_analytics.analyst.experiment import _resolve_config
-from chess_analytics.analyst.preflight import _require_key
 from chess_analytics.analyst.tools import CheckedTools
+from chess_analytics.routing_analyst import _require_key
 from chess_analytics.routing_study import (
     MODEL,
     PRICE_USD_PER_MILLION_INPUT,

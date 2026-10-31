@@ -109,7 +109,7 @@ paste the key. The OpenAI comparator reads `CHESSLAB_OPENAI_API_KEY` from
 the process environment and uses the existing checked analyst and a separate cap.
 Run `doppler setup` once from the repository root in workplace `personal`; it
 reads `doppler.yaml` (project `chess-analytics-lab`, config `dev`). Then use
-`doppler run -- uv run ...` to inject named keys into the process environment.
+`doppler run -- uv run ...` to inject named keys into the process environment (recommended; routing loaders are process-env only).
 Use the synthetic demo snapshot to make the analyst input reproducible:
 
 ```sh
