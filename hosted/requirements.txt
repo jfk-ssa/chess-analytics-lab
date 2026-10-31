@@ -22,9 +22,9 @@
 # 24,371,005 bytes in uv.lock. The app uses it to query the cube. See ADR 0110.
 streamlit==1.66.1
 altair==6.3.0
-narwhals==2.28.0
+narwhals==2.27.1
 jsonschema==4.26.0
-pandas==3.1.0
+pandas==3.0.6
 protobuf==6.33.6
 pillow==13.0.0
 certifi==2026.10.23
