@@ -100,9 +100,12 @@ def test_repository_map_matches_the_workflow(changes):
     assert changes.audit_repository(ROOT) == []
 
 
-def test_setup_uv_accepts_a_new_shared_full_sha(changes):
+@pytest.mark.parametrize("quote", ["", "'", '"'])
+def test_setup_uv_accepts_a_new_shared_full_sha(changes, quote):
     text = WORKFLOW.read_text(encoding="utf-8")
-    mutated, count = re.subn(r"astral-sh/setup-uv@\S+", "astral-sh/setup-uv@" + "a1" * 20, text)
+    mutated, count = re.subn(
+        r"astral-sh/setup-uv@\S+", quote + "astral-sh/setup-uv@" + "a1" * 20 + quote, text
+    )
     assert count == 3
     assert changes.audit_text(mutated, changes.tracked_files(ROOT)) == []
 
@@ -115,7 +118,9 @@ def test_setup_uv_accepts_a_new_shared_full_sha(changes):
         ("core_setup_uv", "offline-core.core_setup_uv"),
     ],
 )
-@pytest.mark.parametrize("pin", ["v10", "v10.3.3", "a" * 39, "a" * 41, "g" * 40, ""])
+@pytest.mark.parametrize(
+    "pin", ["v10", "v10.3.3", "a" * 39, "a" * 41, "g" * 40, "", "a" * 40 + "#invalid-ref"]
+)
 def test_setup_uv_rejects_non_full_sha_pins(changes, step_id, label, pin):
     text = WORKFLOW.read_text(encoding="utf-8")
     mutated, count = re.subn(

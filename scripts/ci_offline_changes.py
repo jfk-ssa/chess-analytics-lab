@@ -748,7 +748,9 @@ def _setup_uv_pin_problems(jobs: dict[str, dict[str, object]]) -> list[str]:
             if parsed["id"] != step_id:
                 continue
             label = f"{job}.{step_id}"
-            uses = parsed["uses"].split("#", 1)[0].strip()
+            uses = re.split(r"\s+#", parsed["uses"], maxsplit=1)[0].strip()
+            if len(uses) >= 2 and uses[0] == uses[-1] and uses[0] in "\"'":
+                uses = uses[1:-1]
             match = re.fullmatch(r"astral-sh/setup-uv@([0-9a-f]{40})", uses)
             if match is None:
                 problems.append(f"{label} must pin astral-sh/setup-uv to a full 40-hex SHA")
