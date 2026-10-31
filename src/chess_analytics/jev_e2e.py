@@ -13,7 +13,7 @@ from chess_analytics.analyst.core import _evidence_id, execute_plan
 from chess_analytics.analyst.evaluation import score_case_m7, score_case_portfolio
 from chess_analytics.analyst.experiment import _resolve_config
 from chess_analytics.analyst.tools import CheckedTools
-from chess_analytics.routing_analyst import _key_from_file
+from chess_analytics.routing_analyst import _require_key
 from chess_analytics.routing_study import (
     MODEL,
     PRICE_USD_PER_MILLION_INPUT,
@@ -356,8 +356,6 @@ def run(
     repo: Path,
     data_project: Path,
     frozen: dict,
-    jev_env: Path,
-    openai_env: Path,
     jev_cap: float,
     openai_cap: float,
     output: Path,
@@ -390,12 +388,12 @@ def run(
         prior_openai_usd + frozen["openai_whole_run_reservation_usd"] > openai_cap
     ):
         raise ValueError("whole paired run does not fit remaining provider caps")
-    if not all(path.resolve().is_relative_to(work) for path in (jev_env, openai_env, output)):
-        raise ValueError("keys and raw attempts must stay in ignored project work/")
+    if not output.resolve().is_relative_to(work):
+        raise ValueError("raw attempts must stay in ignored project work/")
     if output.exists() and any(output.iterdir()):
         raise ValueError("use a fresh end-to-end attempt directory")
-    jev_key = _personal_key(jev_env)
-    openai_key = _key_from_file(openai_env)
+    jev_key = _personal_key()
+    openai_key = _require_key()
     selected, manifest = cases(repo, data_project)
     config = _resolve_config(None, openai_cap - prior_openai_usd)
     output.mkdir(parents=True, exist_ok=True)
@@ -545,8 +543,6 @@ def main(argv=None) -> int:
     parser.add_argument("--repo", type=Path, default=Path.cwd())
     parser.add_argument("--data-project", type=Path, required=True)
     parser.add_argument("--preflight", type=Path, required=True)
-    parser.add_argument("--jev-env", type=Path)
-    parser.add_argument("--openai-env", type=Path)
     parser.add_argument("--jev-cap", type=float)
     parser.add_argument("--openai-cap", type=float)
     parser.add_argument("--prior-jev-usd", type=float, default=0.0)
@@ -559,14 +555,12 @@ def main(argv=None) -> int:
             result = preflight(args.repo, args.data_project)
             _write(args.preflight, result)
         else:
-            if args.jev_env is None or args.openai_env is None or args.output is None:
-                raise ValueError("run requires both env files and a fresh output directory")
+            if args.output is None:
+                raise ValueError("run requires a fresh output directory")
             result = run(
                 args.repo,
                 args.data_project,
                 json.loads(args.preflight.read_text()),
-                args.jev_env,
-                args.openai_env,
                 args.jev_cap,
                 args.openai_cap,
                 args.output,

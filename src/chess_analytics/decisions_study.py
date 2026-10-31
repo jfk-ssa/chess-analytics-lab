@@ -11,7 +11,7 @@ from collections import Counter
 from pathlib import Path
 
 from chess_analytics.jev_e2e import _durable_write
-from chess_analytics.routing_analyst import _key_from_file
+from chess_analytics.routing_analyst import _require_key
 from chess_analytics.routing_study import CHOICE_CRITERIA, LABELS, _json, _sha, _write, score
 from chess_analytics.routing_study import cases as historical_cases
 
@@ -127,7 +127,7 @@ def preflight(repo, suite="historical", split="dev"):
         "code_sha256": _sha(Path(__file__).read_bytes()),
         "shared_helper_hashes": {
             fn.__name__: _sha(inspect.getsource(fn).encode())
-            for fn in (_durable_write, _key_from_file, score)
+            for fn in (_durable_write, _require_key, score)
         },
         "cells": cells,
         "total_reserved_cost_usd": sum(cell["reserved_cost_usd"] for cell in cells),
@@ -294,15 +294,13 @@ def campaign_cost(campaign):
     return {"accounted_gross_usd": total, "unknown_reserved_usd": unknown}
 
 
-def run(
-    repo, frozen, env_file, campaign, cap, *, personal_account_acknowledged=False, transport=None
-):
+def run(repo, frozen, campaign, cap, *, personal_account_acknowledged=False, transport=None):
     cap = finite(cap, "cumulative cap", positive=True)
     if personal_account_acknowledged is not True:
         raise ValueError("explicit personal-account acknowledgment required")
     work = (repo / "work").resolve()
-    if not campaign.resolve().is_relative_to(work) or not env_file.resolve().is_relative_to(work):
-        raise ValueError("campaign and personal key must be under this project's ignored work/")
+    if not campaign.resolve().is_relative_to(work):
+        raise ValueError("campaign must be under this project's ignored work/")
     if frozen != preflight(repo, frozen["suite"], frozen["split"]):
         raise ValueError("frozen Decisions preflight drifted")
     rows, manifest = load_cases(repo, frozen["suite"], frozen["split"])
@@ -328,7 +326,7 @@ def run(
         previous = campaign_cost(campaign)
         if previous["accounted_gross_usd"] + frozen["total_reserved_cost_usd"] > cap:
             raise ValueError("whole run does not fit remaining cumulative cap")
-        key = _key_from_file(env_file)
+        key = _require_key()
         _durable_write(config_path, authorization)
         attempt = campaign / f"attempt-{len(list(campaign.glob('attempt-*'))) + 1:04d}"
         attempt.mkdir()
@@ -421,7 +419,6 @@ def main(argv=None):
     )
     parser.add_argument("--split", choices=("dev", "test"), default="dev")
     parser.add_argument("--preflight", type=Path)
-    parser.add_argument("--env-file", type=Path)
     parser.add_argument("--campaign", type=Path)
     parser.add_argument("--cap-usd", type=float)
     parser.add_argument("--personal-account-acknowledged", action="store_true")
@@ -446,14 +443,11 @@ def main(argv=None):
         elif args.mode == "calibrate":
             report = calibrate(json.loads(args.report.read_text()))
         else:
-            if None in (args.preflight, args.env_file, args.campaign, args.cap_usd):
-                raise ValueError(
-                    "run requires frozen preflight, personal env file, campaign and cap"
-                )
+            if None in (args.preflight, args.campaign, args.cap_usd):
+                raise ValueError("run requires frozen preflight, campaign and cap")
             report = run(
                 args.project,
                 json.loads(args.preflight.read_text()),
-                args.env_file,
                 args.campaign,
                 args.cap_usd,
                 personal_account_acknowledged=args.personal_account_acknowledged,

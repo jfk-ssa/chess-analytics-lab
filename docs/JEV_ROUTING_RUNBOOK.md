@@ -103,12 +103,14 @@ scoring behavior only; they never count as model accuracy.
 The direct adapter sends only the bounded question and a compact catalog to
 TypeSafe. It pins `jev-1.13.0`, validates the Choice distribution and usage,
 logs raw responses and failures, and refuses a changed preflight. It reads
-only `work/.env.typesafe`, containing exactly `TYPESAFE_API_KEY=...`; never
-commit or paste the key. The OpenAI comparator reads only the explicitly
-named `work/.env` or `work/.env.openai` with
-`CHESSLAB_OPENAI_API_KEY=...`; it uses the existing checked analyst and a
-separate cap. No ambient workplace credential is discovered. Use the
-synthetic demo snapshot to make the analyst input reproducible:
+`TYPESAFE_API_KEY` from the process environment; provision it separately in
+the personal Doppler config for authorized routing studies. Never commit or
+paste the key. The OpenAI comparator reads `CHESSLAB_OPENAI_API_KEY` from
+the process environment and uses the existing checked analyst and a separate cap.
+Run `doppler setup` once from the repository root in workplace `personal`; it
+reads `doppler.yaml` (project `chess-analytics-lab`, config `dev`). Then use
+`doppler run -- uv run ...` to inject named keys into the process environment (recommended; routing loaders are process-env only).
+Use the synthetic demo snapshot to make the analyst input reproducible:
 
 ```sh
 uv run --locked --offline --no-editable --extra dashboard chesslab demo --scope all
@@ -139,13 +141,13 @@ fresh ignored output directories. Replace the example cap with the approved
 value; these commands are not standing spending authorization:
 
 ```sh
-uv run --locked --no-editable python -m chess_analytics.routing_study \
+doppler run -- uv run --locked --no-editable python -m chess_analytics.routing_study \
   run --project . --preflight work/m8-jev-test-preflight.json \
-  --env-file work/.env.typesafe --max-run-usd APPROVED_TYPESAFE_CAP \
+  --max-run-usd APPROVED_TYPESAFE_CAP \
   --output work/m8-jev-test-attempt-1
-uv run --locked --no-editable python -m chess_analytics.routing_analyst \
+doppler run -- uv run --locked --no-editable python -m chess_analytics.routing_analyst \
   run --repo . --data-project work/portfolio-demo/project \
-  --preflight work/m8-analyst-test-preflight.json --env-file work/.env \
+  --preflight work/m8-analyst-test-preflight.json \
   --max-run-usd APPROVED_OPENAI_CAP --output work/m8-analyst-test-attempt-1
 uv run --locked --offline --no-editable python -m chess_analytics.routing_report \
   --rules reports/M8-routing-rules-test.json \

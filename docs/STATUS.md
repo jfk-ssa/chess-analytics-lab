@@ -100,7 +100,15 @@ email addresses, customer identifiers, and internal ticket links.
 
 ## Limits
 
-Live model calls stay disabled until personal configuration and an explicit spending cap exist for that run. The manual live-eval workflow reads `CHESSLAB_OPENAI_API_KEY` or `CHESSLAB_XAI_API_KEY` from the `live-eval` environment, and only the secret for the selected provider. John adds the xAI secret. This repository does not contain either key. The M7 December Sol gate closed at **$0.35392836** cumulative accounted gross under the approved $6 cap. Earlier failed gates stay in the reports. The M6 caps are closed. Model and pricing defaults were last checked against the official model page on 2026-10-20. The recorded Luna and Sol rates matched that page. `gpt-6.1-sol` does not accept `reasoning.effort` of `none`, so the live-eval id stays `gpt-6-sol`.
+Live model calls stay disabled until personal configuration and an explicit spending cap exist for that run. The manual live-eval workflow reads `CHESSLAB_OPENAI_API_KEY` or `CHESSLAB_XAI_API_KEY` from the `live-eval` environment, and only the secret for the selected provider. Doppler workplace `personal`, project `chess-analytics-lab`, config `prd`
+syncs those stable names one-way into that environment, mirroring deletes
+and adding `DOPPLER_*` metadata without name transforms. There are no
+repository-level secrets (ADR 0091 shadowing risk cleared). Local runs use
+`doppler setup` once, then `doppler run -- uv run ...` (env vars take precedence); root `doppler.yaml`
+selects `dev` with `CHESSLAB_OPENAI_API_KEY` for the Mac. `prd` holds both
+provider keys. Non-frozen loaders use only the process environment; frozen eval
+modules retain a dormant `--env-file` fallback until the next frozen-set bump; see
+[ADR 0114](adr/0114-doppler-secrets-source-of-truth.md). This repository does not contain either key. The M7 December Sol gate closed at **$0.35392836** cumulative accounted gross under the approved $6 cap. Earlier failed gates stay in the reports. The M6 caps are closed. Model and pricing defaults were last checked against the official model page on 2026-10-20. The recorded Luna and Sol rates matched that page. `gpt-6.1-sol` does not accept `reasoning.effort` of `none`, so the live-eval id stays `gpt-6-sol`.
 
 Install with a non-editable wheel. The environment pin and the macOS editable-path failure are in [ADR 0002](adr/0002-environment.md). Offline reproduction uses installed or cached dependencies.
 

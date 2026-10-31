@@ -5,6 +5,7 @@ import shutil
 
 import pytest
 
+from chess_analytics import routing_analyst
 from chess_analytics.analyst.tools import CheckedTools
 from chess_analytics.portfolio_demo import run as build_demo
 from chess_analytics.routing_analyst import preflight as analyst_preflight
@@ -14,6 +15,7 @@ from chess_analytics.routing_duckdb import offline_replay
 from chess_analytics.routing_report import render
 from chess_analytics.routing_study import (
     LABELS,
+    _personal_key,
     cases,
     parse_jev_response,
     preflight,
@@ -23,20 +25,23 @@ from chess_analytics.routing_study import (
 )
 
 
+@pytest.fixture(autouse=True)
+def personal_keys(monkeypatch):
+    monkeypatch.setenv("TYPESAFE_API_KEY", "offline-test-placeholder")
+
+
 def _project(tmp_path, repo):
     folder = tmp_path / "study"
     destination = folder / "evals/cases"
     destination.mkdir(parents=True)
     for name in ("jev_routing_v1.tsv", "jev_routing_v1_manifest.json"):
         shutil.copy2(repo / "evals/cases" / name, destination / name)
-    key = folder / "work/.env.typesafe"
-    key.parent.mkdir()
-    key.write_text("TYPESAFE_API_KEY=offline-test-placeholder\n")
-    return folder, key
+    (folder / "work").mkdir()
+    return folder
 
 
 def test_frozen_cases_and_rules_baseline(tmp_path, project):
-    study, _ = _project(tmp_path, project)
+    study = _project(tmp_path, project)
     dev, manifest = cases(study, "dev")
     test, _ = cases(study, "test")
     assert len(dev) == len(test) == 40
@@ -52,7 +57,7 @@ def test_frozen_cases_and_rules_baseline(tmp_path, project):
 
 
 def test_mocked_jev_scoring_and_failed_attempt_retention(tmp_path, project):
-    study, key = _project(tmp_path, project)
+    study = _project(tmp_path, project)
     frozen = preflight(study, "test")
     lookup = {row["question"]: row["label"] for row in cases(study, "test")[0]}
 
@@ -74,8 +79,8 @@ def test_mocked_jev_scoring_and_failed_attempt_retention(tmp_path, project):
 
     cap = frozen["total_reserved_cost_usd"] + 0.01
     with pytest.raises(ValueError, match="cap"):
-        run_jev(study, frozen, key, 0.000001, study / "work/too-small", transport=perfect_mock)
-    result = run_jev(study, frozen, key, cap, study / "work/mock", transport=perfect_mock)
+        run_jev(study, frozen, 0.000001, study / "work/too-small", transport=perfect_mock)
+    result = run_jev(study, frozen, cap, study / "work/mock", transport=perfect_mock)
     assert result["complete"] is True
     assert result["transport_kind"] == "injected_mock"
     assert result["scoring"]["correct"] == 40
@@ -91,13 +96,13 @@ def test_mocked_jev_scoring_and_failed_attempt_retention(tmp_path, project):
         response["answers"]["route"]["probabilities"]["invalid"] = 0.1
         return response
 
-    failed = run_jev(study, frozen, key, cap, study / "work/failed", transport=broken_mock)
+    failed = run_jev(study, frozen, cap, study / "work/failed", transport=broken_mock)
     assert failed["complete"] is False
     assert failed["completed_cases"] == 0
     assert failed["known_gross_cost_usd"] > 0
     assert (study / "work/failed/report.json").exists()
     with pytest.raises(ValueError, match="fresh attempt"):
-        run_jev(study, frozen, key, cap, study / "work/failed", transport=perfect_mock)
+        run_jev(study, frozen, cap, study / "work/failed", transport=perfect_mock)
 
 
 def test_response_rejects_invalid_distribution_and_missing_usage():
@@ -151,14 +156,13 @@ def test_existing_analyst_quote_and_route_mapping_stay_offline(tmp_path, project
             project,
             data_project,
             frozen,
-            project / "work/.env",
             0.000001,
             project / "work/m8-unaffordable",
         )
 
 
 def test_duckdb_replay_and_display_do_not_claim_live_models(tmp_path, project):
-    study, _ = _project(tmp_path, project)
+    study = _project(tmp_path, project)
     replay = offline_replay(study, "test", study / "work/questions.duckdb")
     assert replay["rows"] == 40
     assert replay["scoring"]["correct"] == 35
@@ -173,7 +177,7 @@ def test_duckdb_replay_and_display_do_not_claim_live_models(tmp_path, project):
 
 
 def test_comparison_hybrid_counts_paid_fallback_without_relabeling_harness(tmp_path, project):
-    study, _ = _project(tmp_path, project)
+    study = _project(tmp_path, project)
     rules = rules_report(study, "test")
     selected, manifest = cases(study, "test")
     jev_predictions = [
@@ -215,3 +219,69 @@ def test_comparison_hybrid_counts_paid_fallback_without_relabeling_harness(tmp_p
     assert "$0.120000" in document  # All 40 analyst calls at threshold 0.95.
     jev["transport_kind"] = "injected_mock"
     assert "Pass 1 with analyst fallback" not in render(rules, jev, analyst)
+
+
+@pytest.mark.parametrize("value", [None, "", " \t\r\n"])
+def test_missing_typesafe_key_is_safe(monkeypatch, value):
+    name = "TYPESAFE_API_KEY"
+    if value is None:
+        monkeypatch.delenv(name, raising=False)
+    else:
+        monkeypatch.setenv(name, value)
+    with pytest.raises(ValueError, match=rf"^missing {name}; use doppler run -- \.\.\.$"):
+        _personal_key()
+
+
+def test_typesafe_key_strips_trailing_newline(monkeypatch):
+    monkeypatch.setenv("TYPESAFE_API_KEY", "offline-test-placeholder\n")
+    assert _personal_key() == "offline-test-placeholder"
+
+
+@pytest.mark.parametrize("runner", ["jev", "analyst"])
+def test_failure_records_redact_before_truncation(tmp_path, project, monkeypatch, runner):
+    study = _project(tmp_path, project)
+    key = "synthetic-routing-key-" + "x" * 320
+    monkeypatch.setenv("TYPESAFE_API_KEY", key + "\n")
+    monkeypatch.setenv("CHESSLAB_OPENAI_API_KEY", key + "\n")
+
+    def fail(*args, **kwargs):
+        raise ValueError(
+            f"key={key}; Authorization: Bearer synthetic-other-token; "
+            "Bearer synthetic-bare-token " + "z" * 400
+        )
+
+    output = study / "work/redacted"
+    if runner == "jev":
+        frozen = preflight(study, "test")
+        result = run_jev(study, frozen, 1, output, transport=fail)
+    else:
+        selected, _ = cases(study, "test")
+        frozen = {
+            "split": "test",
+            "model": "offline-model",
+            "dataset_id": "offline-dataset",
+            "total_reserved_cost_usd": 0.04,
+            "cells": [
+                {"id": row["id"], "request_sha256": "mock-request", "reserved_cost_usd": 0.001}
+                for row in selected
+            ],
+        }
+        monkeypatch.setattr(routing_analyst, "preflight", lambda *args: frozen)
+        monkeypatch.setattr(
+            routing_analyst.provider,
+            "quote_request",
+            lambda *args: {"request_sha256": "mock-request"},
+        )
+        monkeypatch.setattr(routing_analyst.provider, "live_answer", fail)
+        result = run_analyst(study, study, frozen, 1, output, transport=fail)
+    assert not result["complete"]
+    assert result["unknown_cost_reservation_usd"] > 0
+    record = json.loads((output / f"{frozen['cells'][0]['id']}.json").read_text())
+    message = record["failure"]["message"]
+    assert record["failure"]["type"] == "ValueError"
+    assert len(message) == 300
+    assert message.startswith("key=[redacted]; Authorization: Bearer [redacted] Bearer [redacted]")
+    assert key not in message
+    assert "synthetic-other-token" not in message
+    assert "synthetic-bare-token" not in message
+    assert message.count("[redacted]") >= 3

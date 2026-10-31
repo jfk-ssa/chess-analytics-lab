@@ -11,6 +11,12 @@ from chess_analytics.portfolio_demo import run as build_demo
 from chess_analytics.routing_study import LABELS
 
 
+@pytest.fixture(autouse=True)
+def personal_keys(monkeypatch):
+    monkeypatch.setenv("CHESSLAB_OPENAI_API_KEY", "offline-test")
+    monkeypatch.setenv("TYPESAFE_API_KEY", "offline-test")
+
+
 def _prepared(tmp_path, project, monkeypatch):
     demo = tmp_path / "demo"
     build_demo(project, demo)
@@ -28,8 +34,6 @@ def _prepared(tmp_path, project, monkeypatch):
         shutil.copy2(project / name, destination)
     work = study / "work"
     work.mkdir()
-    (work / ".env.typesafe").write_text("TYPESAFE_API_KEY=offline-test\n")
-    (work / ".env").write_text("CHESSLAB_OPENAI_API_KEY=offline-test\n")
     template = {
         "split": "test",
         "category": "opening_usage",
@@ -142,8 +146,6 @@ def test_paired_mock_uses_analyst_only_when_gate_does_not_decide(tmp_path, proje
             study,
             data_project,
             frozen,
-            study / "work/.env.typesafe",
-            study / "work/.env",
             0.00001,
             0.001,
             study / "work/too-small",
@@ -154,8 +156,6 @@ def test_paired_mock_uses_analyst_only_when_gate_does_not_decide(tmp_path, proje
         study,
         data_project,
         frozen,
-        study / "work/.env.typesafe",
-        study / "work/.env",
         0.03,
         0.2,
         study / "work/mock",
@@ -200,8 +200,6 @@ def test_transport_failure_is_retained_and_reserved(tmp_path, project, monkeypat
         study,
         data_project,
         frozen,
-        study / "work/.env.typesafe",
-        study / "work/.env",
         0.03,
         0.20,
         output,
@@ -249,8 +247,6 @@ def test_interrupted_openai_request_keeps_pending_reservation(tmp_path, project,
         study,
         data_project,
         frozen,
-        study / "work/.env.typesafe",
-        study / "work/.env",
         0.03,
         0.20,
         output,
@@ -269,8 +265,6 @@ def test_interrupted_openai_request_keeps_pending_reservation(tmp_path, project,
             study,
             data_project,
             frozen,
-            study / "work/.env.typesafe",
-            study / "work/.env",
             0.03,
             frozen["openai_whole_run_reservation_usd"],
             study / "work/retry",
@@ -312,8 +306,6 @@ def test_interrupted_jev_request_keeps_pending_reservation(tmp_path, project, mo
         study,
         data_project,
         frozen,
-        study / "work/.env.typesafe",
-        study / "work/.env",
         0.03,
         0.20,
         output,
@@ -341,8 +333,6 @@ def test_pretransport_failure_has_zero_reservation(tmp_path, project, monkeypatc
         study,
         data_project,
         frozen,
-        study / "work/.env.typesafe",
-        study / "work/.env",
         0.03,
         0.20,
         output,
@@ -365,10 +355,6 @@ def test_cli_exit_distinguishes_complete_and_stopped_attempts(tmp_path, monkeypa
         str(tmp_path),
         "--preflight",
         str(preflight),
-        "--jev-env",
-        str(tmp_path / "jev"),
-        "--openai-env",
-        str(tmp_path / "openai"),
         "--output",
         str(tmp_path / "output"),
     ]

@@ -143,6 +143,7 @@ FAIL_OPEN_PATHS = (
     ".python-version",
     ".pre-commit-config.yaml",
     ".env.example",
+    "doppler.yaml",
 )
 
 CHECKS = (

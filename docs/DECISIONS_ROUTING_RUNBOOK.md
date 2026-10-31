@@ -90,8 +90,11 @@ A mock result is harness evidence, never a model benchmark.
 
 ## Personal live configuration and spending
 
-Only an explicitly supplied ignored `work/.env` (or `work/.env.openai`) containing
-`CHESSLAB_OPENAI_API_KEY` is read. There is no ambient credential fallback. Do not
+Only `CHESSLAB_OPENAI_API_KEY` in the process environment is read.
+Run `doppler setup` once from the repository root in workplace `personal`; it
+reads `doppler.yaml` (project `chess-analytics-lab`, config `dev`). Then use
+`doppler run -- uv run ...` to inject named keys into the process environment (recommended; Decisions loaders are process-env only).
+ Do not
 put keys in a tracked file, output, chat, or shell command. The run also requires
 an explicit personal-account acknowledgment, frozen quote, campaign directory,
 and positive spending cap. Importing the module, preparing a quote, running
@@ -107,9 +110,9 @@ recommended limit. TypeSafe and Responses analyst calls need separate approvals.
 For an authorized run only, the invocation shape is:
 
 ```bash
-.venv/bin/python -m chess_analytics.decisions_study run \
+doppler run -- uv run --locked --no-editable python -m chess_analytics.decisions_study run \
   --preflight work/decisions-fresh-preflight.json \
-  --env-file work/.env --personal-account-acknowledged \
+  --personal-account-acknowledged \
   --campaign work/decisions-routing-campaign-v1 --cap-usd 0.05 \
   --output work/decisions-fresh-live.json
 ```
