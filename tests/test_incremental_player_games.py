@@ -184,6 +184,7 @@ def _in_process_build_restores_the_environment(root: Path) -> None:
         assert os.environ == before
 
 
+@pytest.mark.dbt
 def test_incremental_matches_full_refresh_until_the_key_or_filter_breaks(tmp_path: Path) -> None:
     _require_dbt()
     before = os.environ.copy()

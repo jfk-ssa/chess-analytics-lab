@@ -15,7 +15,10 @@ from chess_analytics.marts.pipeline import (
 from chess_analytics.warehouse.snapshots import build, current
 
 DBT = Path(sys.executable).with_name("dbt")
-pytestmark = pytest.mark.skipif(not DBT.exists(), reason="install the optional dbt extra")
+pytestmark = [
+    pytest.mark.dbt,
+    pytest.mark.skipif(not DBT.exists(), reason="install the optional dbt extra"),
+]
 
 
 def test_dbt_recovery_backfill_and_drift(project, tmp_path):

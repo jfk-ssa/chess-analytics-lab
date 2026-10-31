@@ -453,6 +453,7 @@ def test_empty_scorecard_is_not_a_pass(tmp_path, monkeypatch, capsys):
     assert "coverage:" in output
 
 
+@pytest.mark.dbt
 def test_sql_payload_from_the_resolver_is_path_changed(staged, monkeypatch):
     _require_dbt()
     clean = _cached_clean(staged)
@@ -472,6 +473,7 @@ def test_sql_payload_from_the_resolver_is_path_changed(staged, monkeypatch):
     )
 
 
+@pytest.mark.dbt
 def test_replacing_the_governed_path_with_sql_is_path_changed(staged, monkeypatch):
     _require_dbt()
     clean = _cached_clean(staged)
@@ -490,6 +492,7 @@ def test_replacing_the_governed_path_with_sql_is_path_changed(staged, monkeypatc
     assert "PATH-CHANGED gate_v1/game_draw_rate governed->reviewed_sql" in text
 
 
+@pytest.mark.dbt
 def test_poisoned_mart_fails_the_draw_rate_case(staged):
     _require_dbt()
     clean = _cached_clean(staged)
@@ -518,6 +521,7 @@ def test_poisoned_mart_fails_the_draw_rate_case(staged):
     assert "REGRESSION gate_v1/game_draw_rate" in text
 
 
+@pytest.mark.dbt
 def test_live_scorecard_matches_the_committed_baseline(staged):
     _require_dbt()
     assert canonical(_cached_clean(staged)) == baseline_path(ROOT).read_text()

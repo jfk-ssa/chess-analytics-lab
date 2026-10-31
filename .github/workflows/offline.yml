@@ -177,7 +177,7 @@ jobs:
       - id: pytest_dbt
         name: Pytest with dbt required
         if: ${{ needs.changes.result != 'success' || needs.changes.outputs.pytest_dbt == 'true' }}
-        run: CHESSLAB_REQUIRE_DBT=1 uv run --locked --offline --no-editable --extra dbt pytest -q -n 4 --durations=15
+        run: CHESSLAB_REQUIRE_DBT=1 uv run --locked --offline --no-editable --extra dbt pytest -m dbt -q -n 4 --durations=15
       - id: transform
         name: Tiny mart transform
         if: ${{ needs.changes.result != 'success' || needs.changes.outputs.transform == 'true' }}

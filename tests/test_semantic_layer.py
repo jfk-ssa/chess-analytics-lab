@@ -430,6 +430,7 @@ def test_semantic_failures_fall_back(tmp_path, monkeypatch):
     assert semantic.resolve_governed(tools, "game_draw_rate", {}, []) is None
 
 
+@pytest.mark.dbt
 def test_tiny_product_draw_rate_uses_the_mart_and_a_poisoned_copy_diverges(
     tiny_product, monkeypatch
 ):
@@ -529,6 +530,7 @@ def test_tiny_product_draw_rate_uses_the_mart_and_a_poisoned_copy_diverges(
     _record_semantic_timings({"tiny_draw_rate_seconds": round(elapsed, 3)})
 
 
+@pytest.mark.dbt
 def test_missing_games_view_falls_back_without_leaking_sql(tiny_product, caplog):
     tools = CheckedTools(tiny_product)
     sql_result = _sql_draw(tools)
@@ -552,6 +554,7 @@ def test_missing_games_view_falls_back_without_leaking_sql(tiny_product, caplog)
     assert messages == ["semantic query failed; using reviewed SQL"]
 
 
+@pytest.mark.dbt
 def test_rewritten_semantic_manifest_falls_back_to_sql(tiny_product, monkeypatch):
     tools = CheckedTools(tiny_product)
     sql_result = _sql_draw(tools)
@@ -582,6 +585,7 @@ def test_rewritten_semantic_manifest_falls_back_to_sql(tiny_product, monkeypatch
     )
 
 
+@pytest.mark.dbt
 def test_portfolio_product_metric_parity(portfolio_product, monkeypatch):
     tools = CheckedTools(portfolio_product)
     expected = read_json(PROJECT / "tests/fixtures/portfolio_expected.json")
