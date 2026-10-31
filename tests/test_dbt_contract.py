@@ -32,6 +32,7 @@ def _empty_sources(warehouse: Path) -> None:
             connection.execute(f'create table "{table}" ({definitions})')
 
 
+@pytest.mark.dbt
 def test_enforced_contract_rejects_a_dropped_column(tmp_path):
     _require_dbt()
     warehouse = tmp_path / "warehouse.duckdb"

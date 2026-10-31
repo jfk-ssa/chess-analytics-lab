@@ -11,8 +11,8 @@ workflow, the lockfile, this script, or its test, and any detection error all
 select every step. ``pytest`` is the ``offline-core`` job. It covers the
 narrower pytest steps, so those stay off when the full file set already runs.
 That step shells out to Node, so ``offline-core`` sets up Node with it.
-The dbt pytest step shells out to Node too, so ``offline`` sets up Node 24
-when that step runs.
+The dbt pytest step selects only tests marked ``dbt``. The existing Node 24
+setup selection in ``offline`` stays unchanged.
 
 The categories are docs, site, hosted, python, dbt, and analyst. ``docs``
 selects no extra step. Run ``python3 scripts/ci_offline_changes.py --audit``
@@ -247,7 +247,7 @@ CHECKS = (
         ("python", "analyst", "dbt"),
         exact=(
             "CHESSLAB_REQUIRE_DBT=1 uv run --locked --offline --no-editable --extra dbt "
-            "pytest -q -n 4 --durations=15"
+            "pytest -m dbt -q -n 4 --durations=15"
         ),
     ),
     Step(

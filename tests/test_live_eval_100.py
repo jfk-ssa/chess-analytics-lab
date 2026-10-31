@@ -173,6 +173,7 @@ def test_changed_result_fails_the_hand_tally():
         module.references_for(mutated)
 
 
+@pytest.mark.dbt
 def test_tools_match_the_independent_oracle(references):
     expected = json.loads(EXPECTED.read_text())
     assert reference_mismatches(references["values"], expected) == []

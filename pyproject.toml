@@ -84,6 +84,8 @@ venv = ".venv"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+addopts = "--strict-markers"
+markers = ["dbt: needs the dbt extra or checks the governed mart path"]
 
 [tool.ruff]
 target-version = "py312"
