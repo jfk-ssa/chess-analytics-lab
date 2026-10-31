@@ -49,7 +49,9 @@ CHESSLAB_REQUIRE_DBT=1 uv run --locked --offline --no-editable --extra dbt pytes
 `offline-core` still runs the full collection without the extra. Job ids,
 path selection, the `pytest_dbt` output, Node setup, and rulesets stay as
 before. The step catalog audits the new exact command. Python, analyst,
-and dbt diffs select it; docs, site, and hosted diffs skip it.
+and dbt diffs select it. Docs-only changes outside the existing analyst/dbt
+exceptions (`docs/METRICS.md` / `docs/DBT_LINEAGE.md`), site, and hosted diffs
+skip it.
 
 `tests/test_dbt_marker.py` starts a fresh full `--collect-only` process.
 For every unmarked item it inspects skip markers, test/helper source, and
@@ -58,10 +60,19 @@ dbt-executable branches require `dbt`. Module-level optional imports are
 checked even when they prevent collection. Explicit exceptions cover
 other optional extras, ignored datasets, local runtimes/configuration,
 and the Maia scorer's dynamic skip reason. Collection executes no test
-bodies or fixture setup and needs no dbt installation. A new unexplained
-skip fails the guard rather than silently losing coverage.
+bodies or fixture setup and needs no dbt installation. The guard rejects
+unexplained module-level skip/importorskip Call sites it can see, including
+assignments and nested `if` statements; it does not seal every possible skip shape.
 
 ## Consequences
+
+Skip/importorskip and dbt-executable checks cover only `tests/`, including
+helpers reachable from unmarked items' fixture closures that live under `tests/`.
+Silent dual-path staging in `src/` (such as `_maybe_mart` or `with_name("dbt")`)
+is invisible to the guard. Governed-path preservation there is covered only by
+the marked baseline byte-match (`test_live_scorecard_matches_the_committed_baseline`),
+path-changed / poisoned-mart cases, and oracle path check
+(`test_tools_match_the_independent_oracle`).
 
 The expensive dbt builds and mart parity assertions remain in `offline`;
 the unrelated evaluation machinery runs once in `offline-core`. The oracle

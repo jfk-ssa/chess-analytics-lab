@@ -1,7 +1,11 @@
-"""Collect the whole suite and require dbt selection for every unexplained skip.
+"""Collect the whole suite and require dbt selection for visible unexplained skips.
 
 No fixtures or test bodies run in the child collection. Inspect test helpers and
-the resolved fixture closure too, so a skip in a shared fixture cannot hide.
+the resolved fixture closure too. Skip/importorskip and dbt-executable checks
+cover only tests/, including helpers reached from unmarked items' fixture
+closures. Silent dual-path staging in src/ (_maybe_mart, with_name("dbt")) is
+invisible; governed-path preservation relies on the marked baseline byte-match,
+path-changed / poisoned-mart cases, and independent-oracle path check.
 """
 
 import ast
@@ -92,6 +96,26 @@ def _function_problems(function, seen):
     return problems
 
 
+def _module_level_selection_problems(source: str) -> list[str]:
+    """Flag module-level skip/importorskip Calls; skip function/class bodies."""
+    problems = []
+    pending = list(ast.parse(source).body)
+    while pending:
+        node = pending.pop()
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            continue
+        if (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and node.func.attr in {"skip", "importorskip"}
+        ):
+            problem = _selection_problem(node)
+            if problem:
+                problems.append(problem)
+        pending.extend(ast.iter_child_nodes(node))
+    return problems
+
+
 class _CoverageGuard:
     def pytest_collection_finish(self, session):
         problems = []
@@ -113,13 +137,29 @@ class _CoverageGuard:
                 problems.append(f"{item.nodeid} needs @pytest.mark.dbt: {skips}")
         # Module-level importorskip can prevent items from being collected at all.
         for path in (ROOT / "tests").rglob("test_*.py"):
-            for node in ast.parse(path.read_text()).body:
-                if isinstance(node, ast.Expr):
-                    problem = _selection_problem(node.value)
-                    if problem:
-                        problems.append(f"{path.name}: unexplained collection skip: {problem}")
+            for problem in _module_level_selection_problems(path.read_text()):
+                problems.append(f"{path.name}: unexplained collection skip: {problem}")
         if problems:
             raise pytest.UsageError("\n".join(problems))
+
+
+@pytest.mark.parametrize(
+    ("source", "expected"),
+    [
+        ('dbt = pytest.importorskip("dbt")', ["pytest.importorskip('dbt')"]),
+        (
+            'if True:\n    pytest.skip("no dbt", allow_module_level=True)',
+            ["pytest.skip('no dbt', allow_module_level=True)"],
+        ),
+        ('pytest.importorskip("dbt")', ["pytest.importorskip('dbt')"]),
+        ('pytest.importorskip("mcp")', []),
+        ('def helper():\n    pytest.importorskip("dbt")', []),
+        ('async def helper():\n    pytest.importorskip("dbt")', []),
+        ('class Helper:\n    pytest.importorskip("dbt")', []),
+    ],
+)
+def test_module_level_selection_problems(source, expected):
+    assert _module_level_selection_problems(source) == expected
 
 
 def test_no_dbt_skips_are_covered_by_the_dbt_selection():
