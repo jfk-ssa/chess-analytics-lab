@@ -159,3 +159,38 @@ questions. Does not depend on 0116.
 1. Judge = `gpt-6-luna` (fixed); exact checks primary; judge scores
    explanation only.
 2. First live run = Grok 4.7 under a $5 USD cap in `live-eval`.
+
+### First implementation slice
+
+Slice 1 ships the separate `chess_analytics.coach` payload facade, a strict
+Python case validator, and two hand-authored synthetic example cases in
+`tests/fixtures/coach_offline.json`. Its local metric allowlist includes
+`mean_centipawn_loss` without changing the analyst catalog or frozen files.
+Accuracy takes empty filters in this slice; opening-score evidence carries
+the literal ADR 0085 family and exact cohort. No SQL is generated.
+
+The intentional small expansion beyond item 1 is an offline explanation
+rubric/heuristic, a thin exact-tool check, and configuration constants for
+Grok 4.7's first $5 run and the fixed Luna judge. Exact and explanation
+weights are 0.8 and 0.2, respectively. The heuristic checks citation ids and
+numeric membership in cited evidence, including percent notation; it does
+not establish semantic entailment or detect every unsupported causal claim.
+It is labeled `offline_heuristic`, not a Luna result.
+
+The deterministic `fixture_fake` path uses example tool arguments as an
+oracle plan, obtains all explanation numbers from recorded tool results,
+and records the hash of the literal UTF-8 coach instructions. It is harness
+validation, not a model evaluation or a frozen question set. Future
+comparisons require identical instruction and coach frozen-file hashes.
+Frozen cases and warehouse references remain slice 2; live runner,
+receipts and dispatch wiring remain slice 3; authorized live calls remain
+slice 4. The proposed receipt prefix stays
+`reports/live-eval-receipt-coach-*.json`. No workflow or receipt is added.
+Future live execution still requires the manual `live-eval` environment,
+personal-account acknowledgement, an explicit cap, and Doppler runtime
+secrets from project `chess-analytics-lab`. These constants enable no calls.
+
+Offline validation: 30 synthetic fixture tests passed; Ruff lint/format,
+basedpyright on the new package, and the offline step-map audit passed.
+Implementation is 232 nonblank lines and tests are 156 (388 total, including
+docstrings; the 79-line fixture is excluded). No live calls were made.
