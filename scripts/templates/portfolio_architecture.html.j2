@@ -1,0 +1,7 @@
+<ol class="portfolio-arch" aria-label="Architecture stages and upstream connections">
+{% for stage in stages %}<li id="portfolio-stage-{{ stage.key }}">
+<span class="portfolio-stage-number" aria-hidden="true">{{ stage.number }}</span>
+<strong>{{ stage.label }}</strong>
+<small>{% if stage.incoming %}From {% for node in stage.incoming %}<a href="#portfolio-stage-{{ node.key }}">{{ node.label }}</a>{% if not loop.last %} + {% endif %}{% endfor %}{% else %}Source records{% endif %}</small>
+</li>{% endfor %}
+</ol>

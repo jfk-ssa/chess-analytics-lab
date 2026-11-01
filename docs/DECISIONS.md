@@ -123,3 +123,4 @@ short summary of the current checkout, not a log of new decisions.
 | 0115 | 2026-10-31 | [Metrics layer for Streamlit KPIs and Pages cards](adr/0115-metrics-layer.md) |
 | 0116 | 2026-10-31 | [Mistake classifier and risky-positions view](adr/0116-mistake-classifier.md) |
 | 0117 | 2026-10-31 | [Coach agent and live-eval grading](adr/0117-coach-agent-evals.md) |
+| 0118 | 2026-11-01 | [Portfolio presentation from maintained Markdown](adr/0118-portfolio-page-presentation.md) |
