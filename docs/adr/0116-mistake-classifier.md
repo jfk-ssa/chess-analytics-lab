@@ -136,3 +136,17 @@ source-eval proxies. Offline only; no API keys; no committed scored sample.
 
 Classifier artifacts are a small CI fixture only; rebuild the model locally;
 do not commit trained weights or scored samples.
+
+### First implementation slice — 2026-10-31
+
+The owner combined the frame builder and baseline trainer in the first PR.
+Frame v1 uses White-minus-Black material before each move (pawn 1, knight/bishop
+3, rook 5, queen 9). Sorted game IDs receive seeded disjoint training,
+sigmoid-calibration and holdout splits; the encoding fits training games only.
+The trainer prints metrics without persisting weights. The fixture has six
+synthetic games and 36 labeled rows, with replay and leakage tests.
+
+Fixture training at seed 20261031 reports Brier ≈ 0.0159 on 12 holdout rows
+(synthetic labels only; not a real-corpus claim). See the
+[baseline card and commands](../MISTAKE_CLASSIFIER.md). The product view stays
+in slice 3.
