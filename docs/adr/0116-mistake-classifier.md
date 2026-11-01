@@ -150,6 +150,9 @@ headers are excluded so the features stay strictly pre-move. Evaluable labels
 must agree with deterioration ≥ 200. Sorted game IDs receive seeded disjoint
 training, sigmoid-calibration and holdout splits; the encoding fits training
 games only.
+`OPENING_PREFIXES` is a minimal fixture-scope map covering only Scandinavian
+Defense and Queen's Gambit. On real games, `opening_family` will mostly be
+`__missing__` in the feature matrix; a real prefix/ECO table is a later slice.
 The trainer prints metrics without persisting weights. The fixture has six
 synthetic games and 36 labeled rows, with replay and leakage tests.
 The offline workflow installs the `ml` extra for a focused trainer test step

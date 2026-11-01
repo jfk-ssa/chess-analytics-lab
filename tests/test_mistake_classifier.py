@@ -14,7 +14,6 @@ from chess_analytics.mistake_training import (
     build_frame,
     feature_matrix,
     grouped_split,
-    opening_family,
     prefix_opening_family,
 )
 
@@ -93,6 +92,13 @@ def test_builder_replays_unevaluable_captures_before_filtering(warehouse):
     assert by_ply["syn00003", 6]["material_balance"] == 1  # Prior en passant capture.
 
 
+def test_feature_matrix_rejects_missing_required_feature():
+    row = TrainingRow(**ROWS[0])
+    row["phase_proxy"] = None
+    with pytest.raises(ValueError, match="missing feature: phase_proxy"):
+        feature_matrix([row])
+
+
 def test_shared_prefix_opening_features_ignore_game_headers(warehouse):
     frame = build_frame(warehouse)
     games = {
@@ -133,24 +139,6 @@ def test_prefix_opening_family_uses_longest_match(monkeypatch):
     assert prefix_opening_family(("e2e4",)) is None
     assert prefix_opening_family(("d2d4", "d7d5")) == "Queen's Pawn Game"
     assert prefix_opening_family(("d2d4", "d7d5", "c2c4", "d5c4")) == "Queen's Gambit"
-
-
-@pytest.mark.parametrize(
-    "source, expected",
-    [
-        (None, None),
-        ("", None),
-        (" : line", None),
-        (" French Defense : A:B", "French Defense"),
-    ],
-)
-def test_opening_family_matches_dbt(source, expected):
-    with duckdb.connect() as connection:
-        result = connection.execute(
-            "select nullif(trim(split_part(?, ':', 1)), '')", [source]
-        ).fetchone()
-    assert result is not None
-    assert opening_family(source) == expected == result[0]
 
 
 @pytest.mark.parametrize(

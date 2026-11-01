@@ -15,9 +15,12 @@ unevaluable recapture and en passant. This is harness evidence only.
 The builder joins on provider and game ID and legally replays every ply from
 the standard initial board before filtering evaluable moves. Opening family
 uses only moves already on the board before the candidate move: the longest
-matching UCI prefix in the small static `OPENING_PREFIXES` map. The map covers
+matching UCI prefix in the minimal fixture-scope `OPENING_PREFIXES` map in
+`src/chess_analytics/mistake_training.py`. The map covers only
 `e2e4 d7d5` (Scandinavian Defense) and `d2d4 d7d5 c2c4` (Queen's Gambit);
 unknown prefixes are None. Completed-game PGN Opening headers are not features.
+On real games, `opening_family` will mostly be `__missing__` in the feature
+matrix. A real prefix/ECO table is a later slice.
 It fails on missing or duplicate plies, orphan moves, illegal UCI, nonstandard
 variants, missing evaluable labels, and labels inconsistent with deterioration ≥ 200.
 It expects the accepted ingestion contract, which excludes custom starting

@@ -45,11 +45,6 @@ class TrainingRow(TypedDict):
     material_balance: int
 
 
-def opening_family(source_opening: str | None) -> str | None:
-    """Match dbt nullif(trim(split_part(source_opening, ':', 1)), '')."""
-    return (source_opening.split(":", 1)[0].strip() or None) if source_opening else None
-
-
 def prefix_opening_family(prefix: tuple[str, ...]) -> str | None:
     """Longest known UCI prefix already played; unknown openings stay missing."""
     for known in sorted(OPENING_PREFIXES, key=len, reverse=True):
@@ -140,7 +135,8 @@ def feature_matrix(rows: list[TrainingRow]) -> list[dict[str, str | float | int]
                 value = math.nan
             elif key == "opening_family":
                 value = value or "__missing__"
-            assert value is not None
+            if value is None:
+                raise ValueError(f"missing feature: {key}")
             features[key] = value
         matrix.append(features)
     return matrix
