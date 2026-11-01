@@ -159,3 +159,56 @@ questions. Does not depend on 0116.
 1. Judge = `gpt-6-luna` (fixed); exact checks primary; judge scores
    explanation only.
 2. First live run = Grok 4.7 under a $5 USD cap in `live-eval`.
+
+### First implementation slice
+
+Slice 1 ships the separate `chess_analytics.coach` payload facade, a strict
+Python case validator, and two hand-authored synthetic example cases in
+`tests/fixtures/coach_offline.json`. Its local metric allowlist includes
+`mean_centipawn_loss` without changing the analyst catalog or frozen files.
+Accuracy takes empty filters in this slice; opening-score evidence carries
+the literal ADR 0085 family and exact cohort. No SQL is generated.
+
+The intentional small expansion beyond item 1 is an offline explanation
+rubric/heuristic, a thin exact-tool check, and configuration constants for
+Grok 4.7's first $5 run and the fixed Luna judge. Exact and explanation
+weights are 0.8 and 0.2, respectively, reserved for a future combiner; the
+offline heuristic does not consume them. The heuristic checks citation ids
+and numeric support in cited evidence; it does not establish semantic
+entailment or detect every unsupported causal claim.
+It is labeled `offline_heuristic`, not a Luna result.
+
+Prose numbers match evidence quantized to the prose token's displayed
+decimal precision (integers: 0), explicitly using `ROUND_HALF_EVEN`.
+Percent claims quantize evidence multiplied by 100 at the percent's display
+precision; both `52%` and `52 %` can support 0.5217. Grouped thousands and
+Unicode minus signs are parsed as complete numbers; invalid grouping and
+oversized/extreme tokens fail as unsupported numbers.
+Numeric support includes cited values and nested args/filters, bucket-label
+integers, and integer `rating_max_exclusive - 1` as the inclusive upper
+display endpoint (1600 exclusive may display as 1599). Raw filter numbers
+remain supported. The explicit governed constant allowlist reads only
+`clamp_centipawns` from `contracts/mean_centipawn_loss.json` (repo path,
+with the same file force-included beside the coach package for
+non-editable installs). It applies when citing `mean_centipawn_loss`
+evidence, so unrelated game counts do not inherit the clamp. Uncited args
+and free numbers such as 2024 remain unsupported. Equal duplicate
+`evidence_id` payloads dedupe; conflicting payloads raise `ValueError`.
+
+The deterministic `fixture_fake` path uses example tool arguments as an
+oracle plan, obtains all explanation numbers from recorded tool results,
+and records the hash of the literal UTF-8 coach instructions. It is harness
+validation, not a model evaluation or a frozen question set. Future
+comparisons require identical instruction and coach frozen-file hashes.
+Frozen cases and warehouse references remain slice 2; live runner,
+receipts and dispatch wiring remain slice 3; authorized live calls remain
+slice 4. The proposed receipt prefix stays
+`reports/live-eval-receipt-coach-*.json`. No workflow or receipt is added.
+Future live execution still requires the manual `live-eval` environment,
+personal-account acknowledgement, an explicit cap, and Doppler runtime
+secrets from project `chess-analytics-lab`. These constants enable no calls.
+
+Offline validation: synthetic fixture tests for the facade, exact check,
+and hardened offline judge (tokenizer, presentation rounding, cited args,
+contract-constant allowlist, duplicate evidence_id) passed; Ruff lint/format
+and basedpyright on the CI tree passed. No live calls were made.

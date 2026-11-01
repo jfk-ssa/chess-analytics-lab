@@ -1,0 +1,79 @@
+{
+  "source_kind": "synthetic_recorded_tool_payloads",
+  "provenance": "Hand-authored ADR 0117 harness examples; no warehouse or model results.",
+  "recordings": [
+    {
+      "tool": "query_metric",
+      "args": {"metric_id": "opening_player_score", "filters": {"family": "Caro-Kann Defense", "color": "black", "rating_min": 1400, "rating_max_exclusive": 1600, "base_seconds": 300, "increment_seconds": 0}},
+      "result": {"evidence_id": "caro_score_1", "values": {"games": 20, "score_rate": 0.35}}
+    },
+    {
+      "tool": "query_metric",
+      "args": {"metric_id": "mean_centipawn_loss", "filters": {}},
+      "result": {"evidence_id": "accuracy_1", "values": {"evaluable_moves": 40, "mean_centipawn_loss": 42.5}}
+    },
+    {
+      "tool": "compare_openings",
+      "args": {"filters": {"families": ["Caro-Kann Defense", "French Defense"], "color": "black", "rating_min": 1400, "rating_max_exclusive": 1600, "base_seconds": 300, "increment_seconds": 0}},
+      "result": {"evidence_id": "comparison_1", "values": {"caro_score_rate": 0.35, "french_score_rate": 0.5}}
+    },
+    {
+      "tool": "analyze_clock_pressure",
+      "args": {"bucket": "under_10"},
+      "result": {"evidence_id": "clock_1", "values": {"evaluable_moves": 10, "error_proxy_rate": 0.2}}
+    },
+    {
+      "tool": "query_metric",
+      "args": {"metric_id": "clock_pressure_error_proxy", "filters": {"bucket": "under_10"}},
+      "result": {"evidence_id": "clock_1", "values": {"evaluable_moves": 10, "error_proxy_rate": 0.2}}
+    },
+    {
+      "tool": "query_metric",
+      "args": {"metric_id": "game_draw_rate", "filters": {}},
+      "result": {"evidence_id": "draw_1", "values": {"denominator": 100, "value": 0.3}}
+    },
+    {
+      "tool": "query_metric",
+      "args": {"metric_id": "opening_usage", "filters": {"family": "Caro-Kann Defense"}},
+      "result": {"evidence_id": "usage_1", "values": {"denominator": 100, "value": 0.2}}
+    }
+  ],
+  "cases": [
+    {
+      "id": "caro_loss_example",
+      "question": "Why do I lose in the Caro-Kann? Show Black's score at ratings 1400–1599, 300+0, and global source-eval accuracy; neither establishes a personal cause.",
+      "expected_calls": [
+        {
+          "tool": "query_metric",
+          "args": {"metric_id": "opening_player_score", "filters": {"family": "Caro-Kann Defense", "color": "black", "rating_min": 1400, "rating_max_exclusive": 1600, "base_seconds": 300, "increment_seconds": 0}},
+          "values": {"games": 20, "score_rate": 0.35},
+          "tolerance": 0
+        },
+        {
+          "tool": "query_metric",
+          "args": {"metric_id": "mean_centipawn_loss", "filters": {}},
+          "values": {"evaluable_moves": 40, "mean_centipawn_loss": 42.5},
+          "tolerance": 0.000001
+        }
+      ]
+    },
+    {
+      "id": "compare_example",
+      "question": "Compare Caro-Kann and French score rates for Black at ratings 1400–1599, 300+0, and show the global under-10-second source-eval proxy.",
+      "expected_calls": [
+        {
+          "tool": "compare_openings",
+          "args": {"filters": {"families": ["Caro-Kann Defense", "French Defense"], "color": "black", "rating_min": 1400, "rating_max_exclusive": 1600, "base_seconds": 300, "increment_seconds": 0}},
+          "values": {"caro_score_rate": 0.35, "french_score_rate": 0.5},
+          "tolerance": 0.000001
+        },
+        {
+          "tool": "analyze_clock_pressure",
+          "args": {"bucket": "under_10"},
+          "values": {"evaluable_moves": 10, "error_proxy_rate": 0.2},
+          "tolerance": 0
+        }
+      ]
+    }
+  ]
+}
