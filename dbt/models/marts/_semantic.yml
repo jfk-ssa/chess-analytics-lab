@@ -234,39 +234,62 @@ models:
         denominator: opening_score_games
   - name: move_evals
     description: Sampled moves with comparable source centipawn scores; no clock eligibility filter.
+    config:
+      contract:
+        enforced: true
     semantic_model:
       enabled: true
     agg_time_dimension: utc_date
     columns:
       - name: move_key
+        data_type: varchar
         description: One provider/game_id/ply.
         data_tests: [not_null, unique]
         entity:
           type: primary
           name: move
       - name: game_key
+        data_type: varchar
         entity:
           type: foreign
           name: game
       - name: utc_date
+        data_type: date
         granularity: day
         dimension:
           type: time
       - name: provider
+        data_type: varchar
         dimension:
           type: categorical
       - name: color
+        data_type: varchar
         dimension:
           type: categorical
       - name: opening_family
+        data_type: varchar
         dimension:
           type: categorical
       - name: clock_bucket
+        data_type: varchar
         dimension:
           type: categorical
       - name: phase_proxy
+        data_type: varchar
         dimension:
           type: categorical
+      - name: game_id
+        data_type: varchar
+      - name: ply
+        data_type: bigint
+      - name: centipawn_deterioration
+        data_type: bigint
+      - name: evaluable
+        data_type: boolean
+      - name: error_proxy
+        data_type: boolean
+      - name: clamped_deterioration
+        data_type: bigint
     metrics:
       - name: clamped_centipawn_loss
         description: Sum of evaluable per-move deterioration, capped at 1000 cp before summing.

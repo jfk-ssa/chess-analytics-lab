@@ -1,3 +1,5 @@
+-- Passes vacuously on empty move_evals (tiny/foundation stage empty fact_move).
+-- Pytest covers behavior with non-empty fixtures.
 -- Missing deterioration on an evaluable source row is a publication failure.
 select *
 from {{ ref('move_evals') }}

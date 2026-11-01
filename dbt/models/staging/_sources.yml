@@ -21,12 +21,16 @@ sources:
         columns:
           - name: provider
             data_type: varchar
+            data_tests: [not_null]
           - name: game_id
             data_type: varchar
+            data_tests: [not_null]
           - name: ply
             data_type: bigint
+            data_tests: [not_null]
           - name: color
             data_type: varchar
+            data_tests: [not_null]
           - name: uci
             data_type: varchar
           - name: clock_after_seconds

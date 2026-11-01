@@ -208,3 +208,24 @@ move fixture and dbt-marker guard passed 10 tests, including a real selected
 dbt build and MetricFlow query: 1600 cp clamps to 1000, mate transitions
 are excluded, and all-non-evaluable/empty cohorts return null. These are
 synthetic fixture results, with no live calls or corpus accuracy claim.
+
+### Cold-review hardening
+
+`move_evals` now enforces all 14 selected columns and their DuckDB types,
+matching ADR 0086. The four `fact_move` grain fields have source `not_null`
+tests. The denominator wording explicitly requires non-null deterioration;
+the three semantic metrics stay unchanged because publication and the
+singular test already reject evaluable rows with missing deterioration.
+The singular documents its vacuous pass on empty tiny/foundation moves.
+
+Offline synthetic checks: `tests/test_move_evals.py` and
+`tests/test_dbt_contract.py` passed all 4 cases. A dropped `error_proxy`
+column fails the enforced contract even on empty M3 sources; the existing
+`drawn_games` regression still passes. Exactly 1000 cp stays 1000, the
+1600 cp clamp still holds, and isolated mate-only, mixed missing/mate, and
+empty cohorts return null means through MetricFlow. Ruff check/format and
+basedpyright on touched Python passed. No live calls or historical receipt
+changes.
+
+The two `tests/test_m2.py` recovery checks also passed with the expected
+dbt pass count updated from 45 to 49 for the four new source tests.

@@ -9,7 +9,7 @@
   "deterioration": "max(0, mover-perspective cp_before minus cp_after); fact_move already inverts White-perspective scores for Black",
   "clamp_centipawns": 1000,
   "numerator": "sum of least(centipawn_deterioration, 1000) for evaluable moves with non-null deterioration",
-  "denominator": "count of evaluable moves",
+  "denominator": "count of evaluable moves with non-null deterioration (required by publication)",
   "aggregation": "sum(clamped_deterioration) / nullif(evaluable_moves, 0)",
   "null_rules": "missing evaluations and mate transitions have null contribution and are excluded, never zero; zero denominator returns null; mate transitions remain separate coverage counts",
   "units": "centipawns per evaluable move",
