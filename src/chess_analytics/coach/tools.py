@@ -62,8 +62,10 @@ def validate_call(name: str, args: dict) -> None:
     families = filters.get("families", [filters["family"]] if "family" in filters else [])
     if not isinstance(families, list) or ("families" in filters and len(families) != 2):
         raise ValueError("two opening families required")
-    if any(not isinstance(f, str) or not f.strip() or len(f) > 80 for f in families):
+    if any(not isinstance(f, str) or not f or f != f.strip() or len(f) > 80 for f in families):
         raise ValueError("invalid opening family")
+    if "families" in filters and families[0] == families[1]:
+        raise ValueError("distinct opening families required")
     if "bucket" in filters and (
         not isinstance(filters["bucket"], str) or filters["bucket"] not in _BUCKETS
     ):
