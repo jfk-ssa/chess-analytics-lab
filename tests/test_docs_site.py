@@ -64,11 +64,13 @@ def test_header_layouts_fit_without_a_horizontal_scroller():
     )
     assert "position: static" in wide and "overflow-x: clip" in wide
     assert ".nav-primary" in wide and "display: none" in wide
-    assert "flex-direction: column" in phone
-    assert "min-height: 44px" in phone and "min-height: 24px" in phone
-    assert "flex-wrap: wrap" in phone and "display: contents" in phone
+    assert "overflow-x: auto" in phone
+    assert "scroll-snap-type: x proximity" in phone
+    assert "min-height: 44px" in phone
+    assert "scrollbar-width: none" in phone
+    assert "flex-wrap: nowrap" in phone
     assert "repeat(5, minmax(0, 1fr))" in tablet
-    assert "repeat(6, minmax(0, 1fr))" in tablet
+    assert "repeat(7, minmax(0, 1fr))" in tablet
     assert ".cards.preview-cards" in css
     assert "grid-template-columns: minmax(0, 1fr);" in css
     assert "Analyze games" in (ROOT / "scripts/build_docs_site.py").read_text()
@@ -182,7 +184,9 @@ def test_materialized_positions_match_the_publication_checkpoint():
 def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     before = (ROOT / "reports/decisions-routing-comparison.html").read_bytes()
     result = site.build(ROOT, tmp_path / "output")
-    assert len(result["pages"]) == 9
+    assert len(result["pages"]) == 10
+    assert "portfolio.html" in result["pages"]
+    assert result["sources"]["PORTFOLIO.md"] == site.digest((ROOT / "PORTFOLIO.md").read_bytes())
     assert result["local_links_checked"] > 50
     assert result["live_requests"] == result["data_downloads"] == 0
     output = tmp_path / "output"
@@ -217,6 +221,7 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
         ("AI comparison", "comparison.html"),
         ("Opening learning", "opening-learning.html"),
         ("Live eval", "live-eval.html"),
+        ("Portfolio", "portfolio.html"),
     )
     descriptions = set()
     for name in result["pages"]:
@@ -274,6 +279,40 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     assert "opening_positions.json" in metrics
     assert "Alternative-route share" in metrics
     index = (output / "index.html").read_text()
+    assert 'href="portfolio.html">Portfolio overview</a>' in index.split("</header>", 1)[1]
+    portfolio = (output / "portfolio.html").read_text()
+    assert "Portfolio overview · Chess Analytics Lab" in portfolio
+    assert '<article class="article">' in portfolio
+    assert f'href="{site.REPO_URL}src/chess_analytics/ingest/pipeline.py"' in portfolio
+    assert f'href="{site.REPO_URL}src/chess_analytics/ingest"' in portfolio
+    assert 'href="architecture.html"' in portfolio
+    assert '<body class="page-portfolio">' in portfolio
+    assert 'class="portfolio-intro"' in portfolio
+    assert 'class="portfolio-lead"' in portfolio
+    assert portfolio.count('class="portfolio-live-pill"') == 3
+    assert portfolio.count('class="portfolio-card') == 9
+    assert 'class="portfolio-sources"' in portfolio
+    assert 'class="portfolio-source"' in portfolio
+    assert 'class="portfolio-next"' in portfolio
+    assert 'class="portfolio-arch"' in portfolio
+    assert 'id="portfolio-stage-src"' in portfolio
+    stages = portfolio.split('<ol class="portfolio-arch"', 1)[1].split("</ol>", 1)[0]
+    assert "<a " not in stages and "From " not in stages
+    for title, description in site.PORTFOLIO_STAGES.values():
+        assert f"<strong>{title}</strong>" in stages
+        assert f"<small>{description}</small>" in stages
+    assert "Inputs: warehouse: immutable DuckDB / Parquet." in stages
+    assert "Inputs: dbt marts + MetricFlow, corpus: sampled moves, openings, clock." in stages
+    assert stages.count("data-connect-next") == 5
+    hero = portfolio.split('<div class="hero">', 1)[1].split("</div>", 2)[2]
+    assert '<p class="lead">' not in hero
+    assert 'class="source-note"' not in portfolio
+    assert "Generated from maintained Markdown" in architecture
+    assert portfolio.count("Chess Analytics Lab turns chess game records") == 1
+    assert 'href="https://github.com/jfk-ssa">John (jfk-ssa)</a>' in portfolio
+    assert '<code class="language-sh">' in portfolio
+    for forbidden in ("```mermaid", "language-mermaid", "mermaid.initialize", "cdn.jsdelivr"):
+        assert forbidden not in portfolio
     assert 'class="cards preview-cards"' in index
     assert "Drop in a PGN" in index
     report = (output / "live-eval.html").read_text()
@@ -350,6 +389,49 @@ def test_publication_rejects_changed_frozen_run(tmp_path):
     frozen.write_text(json.dumps(obj))
     with pytest.raises(ValueError, match="Frozen comparison report hash changed"):
         site.routing(tmp_path)
+
+
+def test_portfolio_reads_root_source_and_rewrites_links(tmp_path):
+    (tmp_path / "docs").mkdir()
+    (tmp_path / "docs/PORTFOLIO.md").write_text("Unmaintained duplicate")
+    (tmp_path / "docs/ARCHITECTURE.md").write_text("# Pipeline")
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src/pipeline.py").write_text("# Source")
+    (tmp_path / "PORTFOLIO.md").write_text(
+        "# Root portfolio\n\n"
+        "[Guide](docs/ARCHITECTURE.md#pipeline)\n"
+        "[Source](src/pipeline.py#L1)\n"
+        "[Directory](src/)\n"
+        "[Web](https://example.com/path?q=1#section)\n"
+        "[HTTP](http://example.com/)\n"
+        "[Section](#root-portfolio)\n\n"
+        "```mermaid\nflowchart LR\n  source --> ingest\n```\n"
+    )
+    content = site.md(tmp_path, "PORTFOLIO.md")
+    assert "Root portfolio" in content and "Unmaintained duplicate" not in content
+    for url in (
+        "architecture.html#pipeline",
+        site.REPO_URL + "src/pipeline.py#L1",
+        site.REPO_URL + "src",
+        "https://example.com/path?q=1#section",
+        "http://example.com/",
+        "#root-portfolio",
+    ):
+        assert f'href="{url}"' in content
+    assert "mermaid" not in content and "flowchart LR" not in content
+    assert 'class="portfolio-arch"' in content
+    assert 'id="portfolio-stage-source"' in content
+    assert "<strong>source</strong>" in content
+    assert "Inputs: source." in content
+    assert 'id="portfolio-stage-source" data-connect-next' in content
+    assert 'href="#portfolio-stage-source"' not in content
+
+
+@pytest.mark.parametrize("target", ["missing.md", "missing/", "../outside.md"])
+def test_portfolio_rejects_missing_or_outside_relative_targets(tmp_path, target):
+    (tmp_path / "PORTFOLIO.md").write_text(f"[Invalid]({target})")
+    with pytest.raises(ValueError, match="Missing or outside-repository Markdown target"):
+        site.md(tmp_path, "PORTFOLIO.md")
 
 
 def test_transposition_routes_share_one_legal_position():

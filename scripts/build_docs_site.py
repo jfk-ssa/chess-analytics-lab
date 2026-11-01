@@ -10,6 +10,7 @@ import shutil
 import subprocess
 from decimal import Decimal
 from html.parser import HTMLParser
+from itertools import pairwise
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
@@ -94,7 +95,145 @@ LAB_NAV = (
     ("AI comparison", "comparison.html"),
     ("Opening learning", "opening-learning.html"),
     ("Live eval", "live-eval.html"),
+    ("Portfolio", "portfolio.html"),
 )
+
+
+# Presentation aliases keyed by the full source label so changed Mermaid copy
+# falls back to that copy instead of silently retaining an obsolete description.
+PORTFOLIO_STAGES = {
+    "Lichess archive / synthetic PGN": ("Source PGN", "Lichess archives or synthetic games"),
+    "ingest: caps, parse, dedup, quarantine": ("Ingest", "Cap, parse, deduplicate, quarantine"),
+    "warehouse: immutable DuckDB / Parquet": (
+        "Warehouse snapshots",
+        "Immutable DuckDB + Parquet",
+    ),
+    "dbt marts + MetricFlow": ("dbt marts + MetricFlow", "Contracts and governed metrics"),
+    "corpus: sampled moves, openings, clock": ("Corpus", "Sampled moves, openings, clocks"),
+    "Streamlit / Pages extract": ("Streamlit + Pages", "Dashboards and static extracts"),
+    "analyst + coach tools": ("Analyst + coach tools", "Checked analytics and coach tools"),
+    "offline gate + live-eval receipts": (
+        "Evals + receipts",
+        "Offline gate and live-eval evidence",
+    ),
+}
+
+
+def portfolio_architecture(match):
+    """Render source nodes and edges as compact, responsive stages."""
+    source = html.unescape(match[1])
+    labels = dict(re.findall(r"^\s*(\w+)\[([^\]]+)\]", source, re.MULTILINE))
+    edges = []
+    for line in source.splitlines():
+        if "-->" in line:
+            chain = [node.strip() for node in line.split("-->")]
+            edges.extend(pairwise(chain))
+    for start, end in edges:
+        labels.setdefault(start, start)
+        labels.setdefault(end, end)
+    stages = []
+    for index, (key, label) in enumerate(labels.items(), 1):
+        incoming = [start for start, end in edges if end == key]
+        title, description = PORTFOLIO_STAGES.get(label, (label, label))
+        next_key = list(labels)[index] if index < len(labels) else None
+        stages.append(
+            {
+                "key": html.escape(key, quote=True),
+                "label": html.escape(title),
+                "description": html.escape(description),
+                "number": f"{index:02}",
+                "incoming": html.escape(", ".join(labels[node] for node in incoming)),
+                "connect_next": (key, next_key) in edges,
+            }
+        )
+    return render("portfolio_architecture.html.j2", stages=stages)
+
+
+def portfolio_page(content):
+    """Add presentation to converted root Markdown without duplicating its copy."""
+    content = re.sub(
+        r'<pre><code class="language-mermaid">(.*?)</code></pre>',
+        portfolio_architecture,
+        content,
+        flags=re.DOTALL,
+    )
+
+    def sources(match):
+        # Keep punctuation and parenthetical notes attached to their source chip.
+        chips = re.sub(
+            r'(<a href="[^"]+">.*?</a>)(.*?)(?=,\s*<a |$)',
+            r'<span class="portfolio-source">\1\2</span>',
+            match[1].rstrip("."),
+            flags=re.DOTALL,
+        )
+        chips = re.sub(r"</span>,\s*", "</span> ", chips)
+        return (
+            '<div class="portfolio-sources"><span class="portfolio-source-label">Where:</span>'
+            + chips
+            + "</div>"
+        )
+
+    content = re.sub(r"<p>Where:\s*(.*?)</p>", sources, content, flags=re.DOTALL)
+    content = re.sub(
+        r"<p>(<strong>Next\b.*?)</p>",
+        r'<p class="portfolio-next">\1</p>',
+        content,
+        flags=re.DOTALL,
+    )
+    content = re.sub(
+        r"<li>(<strong>Next\b.*?)</li>",
+        r'<li class="portfolio-next">\1</li>',
+        content,
+        flags=re.DOTALL,
+    )
+    # The shell owns the title; keep the source title's anchor for incoming links.
+    content = re.sub(
+        r"<h2([^>]*)>(.*?)</h2>",
+        r'<div class="portfolio-source-title"\1>\2</div>',
+        content,
+        count=1,
+    )
+    parts = re.split(r"(<h2\b[^>]*>.*?</h2>)", content, flags=re.DOTALL)
+    intro = re.sub(r"<p>", '<p class="portfolio-lead">', parts[0], count=1)
+    # Give the first sentence the lead role; preserve the rest, including the credit.
+    intro = re.sub(
+        r'(<p class="portfolio-lead">.*?\.)(\s+)(.*?)</p>',
+        r'\1</p><p class="portfolio-summary">\3</p>',
+        intro,
+        count=1,
+        flags=re.DOTALL,
+    )
+    cards = []
+    architecture = ""
+    for heading, body in zip(parts[1::2], parts[2::2], strict=True):
+        title = re.sub(r"<[^>]+>", "", heading)
+        if title == "Live":
+            links = []
+            for item in re.findall(r"<li>(.*?)</li>", body, re.DOTALL):
+                label, url = item.rsplit(": ", 1)
+                short_label = label.split(" (")[0]
+                links.append(
+                    '<a class="portfolio-live-pill" '
+                    f'href="{html.escape(html.unescape(url.strip()), quote=True)}" '
+                    f'title="{html.escape(label, quote=True)}">{short_label}'
+                    '<span aria-hidden="true"> ↗</span></a>'
+                )
+            intro += (
+                '<nav id="live" class="portfolio-live" aria-label="Live project links">'
+                + "".join(links)
+                + "</nav>"
+            )
+        elif title == "Architecture":
+            architecture = (
+                '<section class="portfolio-card portfolio-architecture">'
+                + heading
+                + body
+                + "</section>"
+            )
+        else:
+            wide = " portfolio-card-wide" if title in {"Decisions", "Run it locally"} else ""
+            cards.append(f'<section class="portfolio-card{wide}">{heading}{body}</section>')
+    return render("portfolio.html.j2", intro=intro, architecture=architecture, cards="".join(cards))
 
 
 def digest(data):
@@ -180,7 +319,8 @@ def research_cards(content):
 
 
 def md(repo, name):
-    source = repo / "docs" / name
+    # The portfolio is maintained at the repository root, not duplicated in docs.
+    source = repo / name if name == "PORTFOLIO.md" else repo / "docs" / name
     text = source.read_text()
     text = re.sub(r"^\*\*HTML version:\*\*.*\n", "", text, flags=re.MULTILINE)
 
@@ -212,6 +352,8 @@ def md(repo, name):
 
     content = re.sub(r"<table>.*?</table>", table_layout, content, flags=re.DOTALL)
     content = re.sub(r"<(/?)h1([ >])", r"<\1h2\2", content)
+    if name == "PORTFOLIO.md":
+        return portfolio_page(content)
     toc = re.sub(r'^<div class="toc">\s*|\s*</div>\s*$', "", engine.toc)
     contents = (
         render("toc.html.j2", toc=toc)
@@ -1155,6 +1297,11 @@ def build(repo, output):
             + md(repo, "TRANSPOSITION_LEARNING.md"),
         ),
         "live-eval.html": (live_title, live_description, live_body),
+        "portfolio.html": (
+            "Portfolio overview",
+            "The lab's data and analytics engineering surfaces, tools, and evaluation evidence.",
+            md(repo, "PORTFOLIO.md"),
+        ),
     }
     # Keep previously published learning-guide fragments useful after the page split.
     legacy = SiteLinks()
@@ -1192,6 +1339,7 @@ def build(repo, output):
         output / "reports/decisions-routing-comparison.html",
     )
     source_files = {
+        repo / "PORTFOLIO.md",
         repo / "scripts/build_docs_site.py",
         repo / "pyproject.toml",
         repo / "uv.lock",

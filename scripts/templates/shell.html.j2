@@ -23,7 +23,7 @@
 <link rel="preload" href="assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/site.css?v={{ commit }}">
 <script defer src="assets/site.js?v={{ commit }}"></script></head>
-<body{% if active == "live-eval.html" %} class="page-live-eval"{% endif %}><a class="skip" href="#main">Skip to content</a><header class="topbar" id="site-navigation"><div class="nav-inner">
+<body{% if active == "live-eval.html" %} class="page-live-eval"{% elif active == "portfolio.html" %} class="page-portfolio"{% endif %}><a class="skip" href="#main">Skip to content</a><header class="topbar" id="site-navigation"><div class="nav-inner">
 <a class="brand" href="index.html">Chess Analytics Lab <span class="badge">Learning lab</span></a>
 <nav class="nav-primary" aria-label="Primary">{% for name, path in primary_nav %}
 <a href="{{ path }}"{% if path == active %} aria-current="page"{% endif %}>{{ name | e }}</a>{% endfor %}
@@ -39,7 +39,7 @@
 </div></div></nav></header><main id="main">
 <div class="hero"><div class="eyebrow">Data • Analytics • Evaluated AI</div>
 <h1>{{ heading }}</h1>
-<p class="lead">{{ intro }}</p>{% if active == "live-eval.html" %}<p class="source-note">Generated from committed live-eval receipts during the static site build. No model calls. <a href="{{ repo_url }}docs/adr/0096-published-live-eval-report.md">ADR 0096</a> <a href="{{ repo_url }}docs/EVALUATION.md">Evaluation guide</a></p>{% elif active != "index.html" %}<p class="source-note">Generated from maintained Markdown, contracts and recorded evidence. <a href="{{ repo_url }}docs/README.md">Repository guides</a></p>{% endif %}</div>{{ body }}</main>
+{% if active != "portfolio.html" %}<p class="lead">{{ intro }}</p>{% if active == "live-eval.html" %}<p class="source-note">Generated from committed live-eval receipts during the static site build. No model calls. <a href="{{ repo_url }}docs/adr/0096-published-live-eval-report.md">ADR 0096</a> <a href="{{ repo_url }}docs/EVALUATION.md">Evaluation guide</a></p>{% elif active != "index.html" %}<p class="source-note">Generated from maintained Markdown, contracts and recorded evidence. <a href="{{ repo_url }}docs/README.md">Repository guides</a></p>{% endif %}{% endif %}</div>{{ body }}</main>
 <footer>Source revision {% if commit == "local export" %}{{ commit }}{% else %}<a href="https://github.com/jfk-ssa/chess-analytics-lab/commit/{{ commit }}">{{ commit }}</a>{% endif %} · Static documentation ·
 No runtime model calls or account downloads.
 <a href="{{ repo_url }}docs/SITE.md">Build and publishing runbook</a></footer></body></html>

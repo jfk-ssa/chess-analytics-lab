@@ -1,0 +1,8 @@
+<ol class="portfolio-arch" aria-label="Architecture stages and upstream connections">
+{% for stage in stages %}<li id="portfolio-stage-{{ stage.key }}"{% if stage.connect_next %} data-connect-next{% endif %}>
+<span class="portfolio-stage-number" aria-hidden="true">{{ stage.number }}</span>
+<strong>{{ stage.label }}</strong>
+<small>{{ stage.description }}</small>
+{% if stage.incoming %}<span class="portfolio-stage-inputs">Inputs: {{ stage.incoming }}.</span>{% endif %}
+</li>{% endfor %}
+</ol>

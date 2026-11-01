@@ -14,6 +14,14 @@ With the dashboard and docs extras installed, the locked offline suite passed **
 
 ## Current state
 
+The portfolio page presents root `PORTFOLIO.md` with an intro strip,
+live-link pills, topic cards, wrapping source chips and a source-derived
+architecture stage list. Desktop and mobile are separate layouts (2-column
+cards / 4-up architecture vs single-column timeline). Dark palette is scoped
+to this page. Offline docs suite: 24 passed; ten-page build has no live
+requests. Headless Chrome at 1280 and 390 (light/dark) showed no horizontal
+overflow. See [ADR 0118](adr/0118-portfolio-page-presentation.md).
+
 ADR 0116's first slice adds an offline mistake-training frame and a seeded
 baseline trainer with a separate game-grouped calibration fold. Synthetic
 fixture holdout Brier ≈ 0.0159 (seed 20261031), remeasured after replacing
