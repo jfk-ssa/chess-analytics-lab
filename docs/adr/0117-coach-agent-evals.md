@@ -188,9 +188,10 @@ Numeric support includes cited values and nested args/filters, bucket-label
 integers, and integer `rating_max_exclusive - 1` as the inclusive upper
 display endpoint (1600 exclusive may display as 1599). Raw filter numbers
 remain supported. The explicit governed constant allowlist reads only
-`clamp_centipawns` from `contracts/mean_centipawn_loss.json`. It applies
-when citing `mean_centipawn_loss` evidence, so unrelated game counts do
-not inherit the clamp. Uncited args
+`clamp_centipawns` from `contracts/mean_centipawn_loss.json` (repo path,
+with the same file force-included beside the coach package for
+non-editable installs). It applies when citing `mean_centipawn_loss`
+evidence, so unrelated game counts do not inherit the clamp. Uncited args
 and free numbers such as 2024 remain unsupported. Equal duplicate
 `evidence_id` payloads dedupe; conflicting payloads raise `ValueError`.
 

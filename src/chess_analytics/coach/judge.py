@@ -28,9 +28,17 @@ _NUMERIC_TOKEN = re.compile(
 
 
 def _governed_constants() -> frozenset[Decimal]:
-    path = Path(__file__).resolve().parents[3] / "contracts/mean_centipawn_loss.json"
-    contract = json.loads(path.read_text())
-    return frozenset({Decimal(str(contract["clamp_centipawns"]))})
+    here = Path(__file__).resolve()
+    candidates = (
+        here.parent / "contracts/mean_centipawn_loss.json",
+        here.parents[3] / "contracts/mean_centipawn_loss.json",
+        Path.cwd() / "contracts/mean_centipawn_loss.json",
+    )
+    for path in candidates:
+        if path.is_file():
+            contract = json.loads(path.read_text())
+            return frozenset({Decimal(str(contract["clamp_centipawns"]))})
+    raise FileNotFoundError("mean_centipawn_loss contract not found")
 
 
 GOVERNED_NUMERIC_CONSTANTS = _governed_constants()
