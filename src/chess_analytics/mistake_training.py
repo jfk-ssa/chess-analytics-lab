@@ -19,6 +19,10 @@ FEATURES = (
     "material_balance",
 )
 SEED = 20261031
+OPENING_PREFIXES = {
+    ("e2e4", "d7d5"): "Scandinavian Defense",
+    ("d2d4", "d7d5", "c2c4"): "Queen's Gambit",
+}
 PIECE_VALUES = {
     chess.PAWN: 1,
     chess.KNIGHT: 3,
@@ -46,6 +50,14 @@ def opening_family(source_opening: str | None) -> str | None:
     return (source_opening.split(":", 1)[0].strip() or None) if source_opening else None
 
 
+def prefix_opening_family(prefix: tuple[str, ...]) -> str | None:
+    """Longest known UCI prefix already played; unknown openings stay missing."""
+    for known in sorted(OPENING_PREFIXES, key=len, reverse=True):
+        if prefix[: len(known)] == known:
+            return OPENING_PREFIXES[known]
+    return None
+
+
 def material_balance(board: chess.Board) -> int:
     """White minus Black in pawn units, before the candidate move."""
     return sum(
@@ -65,7 +77,7 @@ def build_frame(warehouse: Path) -> list[TrainingRow]:
             select m.provider, m.game_id, m.ply, m.color, m.uci,
                    m.clock_before_seconds, m.phase_proxy,
                    m.centipawn_deterioration, m.error_proxy,
-                   g.source_opening, g.ply_count, g.variant
+                   g.ply_count, g.variant
             from fact_move m left join fact_game g using (provider, game_id)
             order by m.provider, m.game_id, m.ply
         """).fetchall()
@@ -75,7 +87,7 @@ def build_frame(warehouse: Path) -> list[TrainingRow]:
     expected_count = 0
     for row in moves:
         provider, game_id, ply, color, uci = row[:5]
-        clock, phase, deterioration, label, opening, ply_count, variant = row[5:]
+        clock, phase, deterioration, label, ply_count, variant = row[5:]
         key = (provider, game_id)
         if key != previous:
             if previous is not None and board.ply() != expected_count:
@@ -94,6 +106,8 @@ def build_frame(warehouse: Path) -> list[TrainingRow]:
         if deterioration is not None:
             if type(label) is not bool:
                 raise ValueError(f"missing error_proxy on evaluable move: {key}, ply {ply}")
+            if label is not (deterioration >= 200):
+                raise ValueError(f"error_proxy disagrees with deterioration: {key}, ply {ply}")
             frame.append(
                 TrainingRow(
                     provider=provider,
@@ -103,7 +117,7 @@ def build_frame(warehouse: Path) -> list[TrainingRow]:
                     phase_proxy=phase,
                     ply=ply,
                     color=color,
-                    opening_family=opening_family(opening),
+                    opening_family=prefix_opening_family(tuple(m.uci() for m in board.move_stack)),
                     material_balance=material_balance(board),
                 )
             )
@@ -117,19 +131,19 @@ def build_frame(warehouse: Path) -> list[TrainingRow]:
 
 def feature_matrix(rows: list[TrainingRow]) -> list[dict[str, str | float | int]]:
     """Allowlist only; identifiers, labels, UCI and annotations cannot enter X."""
-    return [
-        {
-            "clock_before_seconds": row["clock_before_seconds"]
-            if row["clock_before_seconds"] is not None
-            else math.nan,
-            "phase_proxy": row["phase_proxy"],
-            "ply": row["ply"],
-            "color": row["color"],
-            "opening_family": row["opening_family"] or "__missing__",
-            "material_balance": row["material_balance"],
-        }
-        for row in rows
-    ]
+    matrix: list[dict[str, str | float | int]] = []
+    for row in rows:
+        features: dict[str, str | float | int] = {}
+        for key in FEATURES:
+            value = row[key]
+            if key == "clock_before_seconds" and value is None:
+                value = math.nan
+            elif key == "opening_family":
+                value = value or "__missing__"
+            assert value is not None
+            features[key] = value
+        matrix.append(features)
+    return matrix
 
 
 def grouped_split(

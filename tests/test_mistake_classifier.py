@@ -15,6 +15,7 @@ from chess_analytics.mistake_training import (
     feature_matrix,
     grouped_split,
     opening_family,
+    prefix_opening_family,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -92,6 +93,48 @@ def test_builder_replays_unevaluable_captures_before_filtering(warehouse):
     assert by_ply["syn00003", 6]["material_balance"] == 1  # Prior en passant capture.
 
 
+def test_shared_prefix_opening_features_ignore_game_headers(warehouse):
+    frame = build_frame(warehouse)
+    games = {
+        game: {row["ply"]: row for row in frame if row["game_id"] == game}
+        for game in ("syn00002", "syn00005")
+    }
+    prefixes = {
+        game: {
+            row["ply"]: tuple(
+                move["uci"]
+                for move in FIXTURE["fact_move"]
+                if move["game_id"] == game and move["ply"] < row["ply"]
+            )
+            for row in rows.values()
+        }
+        for game, rows in games.items()
+    }
+    assert games["syn00002"].keys() == games["syn00005"].keys()
+    for ply, first in games["syn00002"].items():
+        assert prefixes["syn00002"][ply] == prefixes["syn00005"][ply]
+        second = games["syn00005"][ply]
+        expected = None if ply <= 3 else "Queen's Gambit"
+        assert first["opening_family"] == second["opening_family"] == expected
+        assert (
+            feature_matrix([first])[0]["opening_family"]
+            == feature_matrix([second])[0]["opening_family"]
+        )
+    with duckdb.connect(str(warehouse)) as connection:
+        connection.execute("update fact_game set source_opening = 'Unrelated header'")
+    assert build_frame(warehouse) == frame
+
+
+def test_prefix_opening_family_uses_longest_match(monkeypatch):
+    from chess_analytics.mistake_training import OPENING_PREFIXES
+
+    monkeypatch.setitem(OPENING_PREFIXES, ("d2d4",), "Queen's Pawn Game")
+    assert prefix_opening_family(()) is None
+    assert prefix_opening_family(("e2e4",)) is None
+    assert prefix_opening_family(("d2d4", "d7d5")) == "Queen's Pawn Game"
+    assert prefix_opening_family(("d2d4", "d7d5", "c2c4", "d5c4")) == "Queen's Gambit"
+
+
 @pytest.mark.parametrize(
     "source, expected",
     [
@@ -128,6 +171,16 @@ def test_builder_rejects_invalid_sources(warehouse, mutation):
     with duckdb.connect(str(warehouse)) as connection:
         connection.execute(mutation)
     with pytest.raises(ValueError):
+        build_frame(warehouse)
+
+
+@pytest.mark.parametrize("ply", [2, 3])
+def test_builder_rejects_error_proxy_inconsistent_with_deterioration(warehouse, ply):
+    with duckdb.connect(str(warehouse)) as connection:
+        connection.execute(
+            "update fact_move set error_proxy = not error_proxy where ply = ?", [ply]
+        )
+    with pytest.raises(ValueError, match="error_proxy disagrees with deterioration"):
         build_frame(warehouse)
 
 

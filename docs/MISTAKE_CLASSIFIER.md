@@ -12,18 +12,22 @@ synthetic Standard games, 48 source plies and 36 evaluable rows. Clocks and
 labels are fabricated. Pre-move material was hand-tallied, including an
 unevaluable recapture and en passant. This is harness evidence only.
 
-The builder joins on provider and game ID, derives opening family as
-`nullif(trim(split_part(source_opening, ':', 1)), '')`, and legally replays every
-ply from the standard initial board before filtering evaluable moves. It fails
-on missing or duplicate plies, orphan moves, illegal UCI, nonstandard variants,
-and missing evaluable labels. It expects the accepted ingestion contract,
-which excludes custom starting positions. It reads the warehouse without
-modifying it and materializes the frame in memory.
+The builder joins on provider and game ID and legally replays every ply from
+the standard initial board before filtering evaluable moves. Opening family
+uses only moves already on the board before the candidate move: the longest
+matching UCI prefix in the small static `OPENING_PREFIXES` map. The map covers
+`e2e4 d7d5` (Scandinavian Defense) and `d2d4 d7d5 c2c4` (Queen's Gambit);
+unknown prefixes are None. Completed-game PGN Opening headers are not features.
+It fails on missing or duplicate plies, orphan moves, illegal UCI, nonstandard
+variants, missing evaluable labels, and labels inconsistent with deterioration ≥ 200.
+It expects the accepted ingestion contract, which excludes custom starting
+positions. It reads the warehouse without modifying it and materializes the
+frame in memory.
 
 Features are `clock_before_seconds`, `phase_proxy`, `ply`, `color`,
-`opening_family`, and proposed `material_balance`. Material is **White minus
-Black before the move**, in pawn units: pawn 1, knight/bishop 3, rook 5, queen 9,
-king 0. Missing clocks remain NaN for the estimator; missing opening families
+`opening_family`, and `material_balance`; all are strictly pre-move. Material is
+**White minus Black before the move**, in pawn units: pawn 1, knight/bishop 3,
+rook 5, queen 9, king 0. Missing clocks remain NaN for the estimator; missing opening families
 have an explicit category. Identifiers, UCI, labels, deterioration, evaluations
 and post-move clocks cannot enter the feature matrix.
 
@@ -58,14 +62,16 @@ uv run --locked --offline --no-editable --extra ml python scripts/train_mistake_
 
 `work/` is already gitignored. There is no model artifact path in this slice.
 Core CI exercises schema, replay, feature leakage, splitting and reliability
-arithmetic without the optional extra. The deterministic training, holdout-label
-isolation and Brier checks run when `ml` is installed.
+arithmetic without the optional extra. A separate CI step installs `ml` and runs
+the deterministic training, holdout-label isolation and Brier checks for Python
+changes and full-suite events.
 
 ## Verification and limits
 
 With the `ml` extra installed, the fixture trainer is deterministic at seed
 20261031. Holdout games are `syn00005` and `syn00006` (12 rows). Measured
-fixture metrics: **Brier score ≈ 0.0159**. Reliability (5 equal-width bins):
+fixture metrics after the prefix-only opening fix: **Brier score ≈ 0.0159**.
+Reliability (5 equal-width bins):
 bin 0 (n=8) mean predicted ≈ 0.10 / empirical 0.00; bins 1–3 empty; bin 4
 (n=4) mean predicted ≈ 0.833 / empirical 1.00. These numbers are harness
 evidence on synthetic labels only; they do not measure chess-playing

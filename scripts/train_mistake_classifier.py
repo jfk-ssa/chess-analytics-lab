@@ -81,7 +81,7 @@ def train_evaluate(rows: list[TrainingRow], seed: int = SEED) -> Evaluation:
             DictVectorizer(sparse=False),
             HistGradientBoostingClassifier(
                 random_state=seed,
-                early_stopping=False,
+                early_stopping=False,  # pyright: ignore[reportArgumentType] -- stubs accept only str.
                 max_iter=40,
                 min_samples_leaf=2,
             ),

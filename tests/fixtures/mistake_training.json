@@ -632,7 +632,7 @@
       "phase_proxy": "early_ply",
       "ply": 2,
       "color": "black",
-      "opening_family": "Scandinavian Defense",
+      "opening_family": null,
       "material_balance": 0
     },
     {
@@ -698,7 +698,7 @@
       "phase_proxy": "early_ply",
       "ply": 2,
       "color": "black",
-      "opening_family": "Queen's Gambit",
+      "opening_family": null,
       "material_balance": 0
     },
     {
@@ -709,7 +709,7 @@
       "phase_proxy": "early_ply",
       "ply": 3,
       "color": "white",
-      "opening_family": "Queen's Gambit",
+      "opening_family": null,
       "material_balance": 0
     },
     {
@@ -830,7 +830,7 @@
       "phase_proxy": "early_ply",
       "ply": 2,
       "color": "black",
-      "opening_family": "Scandinavian Defense",
+      "opening_family": null,
       "material_balance": 0
     },
     {
@@ -918,7 +918,7 @@
       "phase_proxy": "early_ply",
       "ply": 5,
       "color": "white",
-      "opening_family": null,
+      "opening_family": "Queen's Gambit",
       "material_balance": -1
     },
     {
@@ -929,7 +929,7 @@
       "phase_proxy": "early_ply",
       "ply": 6,
       "color": "black",
-      "opening_family": null,
+      "opening_family": "Queen's Gambit",
       "material_balance": -1
     },
     {
@@ -940,7 +940,7 @@
       "phase_proxy": "early_ply",
       "ply": 7,
       "color": "white",
-      "opening_family": null,
+      "opening_family": "Queen's Gambit",
       "material_balance": -1
     },
     {
@@ -951,7 +951,7 @@
       "phase_proxy": "early_ply",
       "ply": 8,
       "color": "black",
-      "opening_family": null,
+      "opening_family": "Queen's Gambit",
       "material_balance": -1
     },
     {

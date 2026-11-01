@@ -28,6 +28,7 @@ jobs:
       pytest_extract: ${{ steps.filter.outputs.pytest_extract }}
       pytest_game_import: ${{ steps.filter.outputs.pytest_game_import }}
       pytest_mcp: ${{ steps.filter.outputs.pytest_mcp }}
+      pytest_ml: ${{ steps.filter.outputs.pytest_ml }}
       demo: ${{ steps.filter.outputs.demo }}
       pytest_dbt: ${{ steps.filter.outputs.pytest_dbt }}
       transform: ${{ steps.filter.outputs.transform }}
@@ -40,6 +41,7 @@ jobs:
       setup_uv: ${{ steps.filter.outputs.setup_uv }}
       sync: ${{ steps.filter.outputs.sync }}
       sync_mcp: ${{ steps.filter.outputs.sync_mcp }}
+      sync_ml: ${{ steps.filter.outputs.sync_ml }}
       sync_dbt: ${{ steps.filter.outputs.sync_dbt }}
       dbt_base_checkout: ${{ steps.filter.outputs.dbt_base_checkout }}
       portfolio_setup_uv: ${{ steps.filter.outputs.portfolio_setup_uv }}
@@ -166,6 +168,14 @@ jobs:
         name: MCP protocol tests
         if: ${{ needs.changes.result != 'success' || needs.changes.outputs.pytest_mcp == 'true' }}
         run: uv run --locked --offline --no-editable --extra mcp pytest -q tests/test_mcp_protocol.py
+      - id: sync_ml
+        name: Install the ml extra
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.sync_ml == 'true' }}
+        run: uv sync --locked --no-editable --extra ml
+      - id: pytest_ml
+        name: Mistake classifier tests
+        if: ${{ needs.changes.result != 'success' || needs.changes.outputs.pytest_ml == 'true' }}
+        run: uv run --locked --offline --no-editable --extra ml pytest -q tests/test_mistake_classifier.py
       - id: demo
         name: Offline demo
         if: ${{ needs.changes.result != 'success' || needs.changes.outputs.demo == 'true' }}

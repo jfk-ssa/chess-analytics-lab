@@ -236,6 +236,16 @@ CHECKS = (
     ),
     Step(
         "offline",
+        "pytest_ml",
+        "check",
+        ("python",),
+        exact=(
+            "uv run --locked --offline --no-editable --extra ml "
+            "pytest -q tests/test_mistake_classifier.py"
+        ),
+    ),
+    Step(
+        "offline",
         "demo",
         "check",
         ("python", "analyst", "dbt"),
@@ -327,6 +337,7 @@ _UV_STEPS = (
     "pytest_extract",
     "pytest_game_import",
     "pytest_mcp",
+    "pytest_ml",
     "demo",
     "pytest_dbt",
     "transform",
@@ -379,6 +390,13 @@ SUPPORT = (
         "support",
         when_any=("pytest_mcp",),
         exact="uv sync --locked --no-editable --extra mcp",
+    ),
+    Step(
+        "offline",
+        "sync_ml",
+        "support",
+        when_any=("pytest_ml",),
+        exact="uv sync --locked --no-editable --extra ml",
     ),
     Step(
         "offline",
@@ -459,6 +477,7 @@ ORDER = (
     ("offline", "setup_node", "pytest_game_import"),
     ("offline", "sync", "pytest_game_import"),
     ("offline", "sync_mcp", "pytest_mcp"),
+    ("offline", "sync_ml", "pytest_ml"),
     ("offline", "sync_dbt", "pytest_dbt"),
     ("offline", "transform", "semantic"),
     ("offline", "semantic", "analyst_gate"),
