@@ -440,6 +440,11 @@ def test_tiny_product_draw_rate_uses_the_mart_and_a_poisoned_copy_diverges(
     analytical = tools.snapshot / "warehouse.duckdb"
     before = digest(warehouse)
     analytical_before = digest(analytical)
+    with duckdb.connect(str(warehouse), read_only=True) as con:
+        mart_moves = con.execute("select count(*) from fact_move").fetchone()
+    with duckdb.connect(str(analytical), read_only=True) as con:
+        source_moves = con.execute("select count(*) from fact_move").fetchone()
+    assert mart_moves == source_moves and source_moves is not None and source_moves[0] > 0
     calls = _spy(monkeypatch)
     sql_result = _sql_draw(tools)
     assert calls == []

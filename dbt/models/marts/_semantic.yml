@@ -232,3 +232,57 @@ models:
         type: ratio
         numerator: opening_wins
         denominator: opening_score_games
+  - name: move_evals
+    description: Sampled moves with comparable source centipawn scores; no clock eligibility filter.
+    semantic_model:
+      enabled: true
+    agg_time_dimension: utc_date
+    columns:
+      - name: move_key
+        description: One provider/game_id/ply.
+        data_tests: [not_null, unique]
+        entity:
+          type: primary
+          name: move
+      - name: game_key
+        entity:
+          type: foreign
+          name: game
+      - name: utc_date
+        granularity: day
+        dimension:
+          type: time
+      - name: provider
+        dimension:
+          type: categorical
+      - name: color
+        dimension:
+          type: categorical
+      - name: opening_family
+        dimension:
+          type: categorical
+      - name: clock_bucket
+        dimension:
+          type: categorical
+      - name: phase_proxy
+        dimension:
+          type: categorical
+    metrics:
+      - name: clamped_centipawn_loss
+        description: Sum of evaluable per-move deterioration, capped at 1000 cp before summing.
+        label: Clamped centipawn loss
+        type: simple
+        agg: sum
+        expr: clamped_deterioration
+      - name: evaluable_moves
+        description: Moves with both before and after centipawn scores; excludes mate transitions.
+        label: Evaluable moves
+        type: simple
+        agg: sum
+        expr: 'case when evaluable then 1 else 0 end'
+      - name: mean_centipawn_loss
+        description: Clamped centipawn loss per evaluable move. A zero denominator is null.
+        label: Mean centipawn loss
+        type: ratio
+        numerator: clamped_centipawn_loss
+        denominator: evaluable_moves

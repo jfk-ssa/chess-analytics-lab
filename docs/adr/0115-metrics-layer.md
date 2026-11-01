@@ -187,3 +187,24 @@ Stacked drafts; one theme per PR ([CONTRIBUTING.md](../../CONTRIBUTING.md)).
    transitions excluded (null deterioration, not zero).
 2. Thin dbt `move_evals` from published `fact_move` is in scope so MetricFlow
    governs clock and accuracy.
+
+## First slice implementation
+
+The first slice also includes the accuracy contract and semantic ratio so
+`mean_centipawn_loss` can be queried directly with MetricFlow. Consumer
+allowlists, exposures, Streamlit and Pages remain later slices.
+
+The mart builder stages `fact_move` from the validated analytical snapshot
+resolved by source id and current analytical implementation hash. An
+analytical transform therefore requires that matching move publication first;
+it never substitutes moves from the current pointer for another source.
+Tiny/foundation M1 marts receive an empty table with the M3 contract schema.
+`model_hash` now includes the analytical implementation hash so a changed
+move definition cannot reuse an older mart. The mart-id formula is unchanged.
+
+Offline fixture validation: dbt parse and semantic `validate-configs` passed;
+the focused semantic/contract/lineage/M2 suite passed 21 tests. The new
+move fixture and dbt-marker guard passed 10 tests, including a real selected
+dbt build and MetricFlow query: 1600 cp clamps to 1000, mate transitions
+are excluded, and all-non-evaluable/empty cohorts return null. These are
+synthetic fixture results, with no live calls or corpus accuracy claim.

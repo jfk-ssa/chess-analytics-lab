@@ -16,3 +16,36 @@ sources:
             data_tests: [not_null]
           - name: color
             data_tests: [not_null]
+      - name: fact_move
+        description: Published deterministic M3 move sample with source evaluations.
+        columns:
+          - name: provider
+            data_type: varchar
+          - name: game_id
+            data_type: varchar
+          - name: ply
+            data_type: bigint
+          - name: color
+            data_type: varchar
+          - name: uci
+            data_type: varchar
+          - name: clock_after_seconds
+            data_type: double
+          - name: clock_before_seconds
+            data_type: double
+          - name: clock_bucket
+            data_type: varchar
+          - name: eval_before_cp_white
+            data_type: bigint
+          - name: eval_after_cp_white
+            data_type: bigint
+          - name: eval_before_mate_white
+            data_type: bigint
+          - name: eval_after_mate_white
+            data_type: bigint
+          - name: centipawn_deterioration
+            data_type: bigint
+          - name: error_proxy
+            data_type: boolean
+          - name: phase_proxy
+            data_type: varchar

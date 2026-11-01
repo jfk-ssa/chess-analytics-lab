@@ -1,0 +1,17 @@
+{
+  "id": "mean_centipawn_loss",
+  "version": "1.0.0",
+  "grain": "one provider/game_id/ply in move_evals, from the M3 fact_move sample",
+  "inputs": ["fact_move", "fact_game"],
+  "sampling": "game ID SHA256 first eight bytes modulo 20 equals zero; deterministic 5% selection from the bounded prefix, independent of annotations",
+  "eligible": "all sampled moves; no additional clock, phase, or opening filter",
+  "evaluable": "both eval_before_cp_white and eval_after_cp_white are non-null",
+  "deterioration": "max(0, mover-perspective cp_before minus cp_after); fact_move already inverts White-perspective scores for Black",
+  "clamp_centipawns": 1000,
+  "numerator": "sum of least(centipawn_deterioration, 1000) for evaluable moves with non-null deterioration",
+  "denominator": "count of evaluable moves",
+  "aggregation": "sum(clamped_deterioration) / nullif(evaluable_moves, 0)",
+  "null_rules": "missing evaluations and mate transitions have null contribution and are excluded, never zero; zero denominator returns null; mate transitions remain separate coverage counts",
+  "units": "centipawns per evaluable move",
+  "caveats": ["Exploratory source-annotation proxy, not official Lichess accuracy or an engine strength ranking.", "The 1000 cp cap is a contract constant, not an official Lichess rule.", "Evaluation coverage is selected and source quality varies; the bounded prefix and deterministic game sample do not represent all games."]
+}

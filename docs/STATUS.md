@@ -50,7 +50,7 @@ Holdout periods and game counts are the opening-corpus training index in
 [opening-corpus.json](../reports/opening-corpus.json). No played-move log-loss
 has been computed from those games.
 
-Core draw-rate, opening-usage, and opening-score metrics read a matching published mart and otherwise keep the reviewed SQL ([ADR 0085](adr/0085-governed-semantic-layer-metricflow.md)).
+Core draw-rate, opening-usage, and opening-score metrics read a matching published mart and otherwise keep the reviewed SQL ([ADR 0085](adr/0085-governed-semantic-layer-metricflow.md)). The first [ADR 0115](adr/0115-metrics-layer.md) slice adds sampled move evaluations and a directly queryable mean-centipawn-loss metric; surface wiring remains pending.
 Unit tests, enforced mart contracts, exposures, a committed lineage diagram, and slim state selection are in [ADR 0086](adr/0086-dbt-engineering-depth.md).
 An incremental `player_games` was measured on synthetic scale and not adopted; publication stays a from-scratch rebuild ([ADR 0087](adr/0087-incremental-player-games.md)).
 An offline gate replays the deterministic analyst stack and fails when the scorecard differs from the committed baseline; it does not measure LLM quality ([ADR 0088](adr/0088-offline-analyst-eval-regression-gate.md)).
