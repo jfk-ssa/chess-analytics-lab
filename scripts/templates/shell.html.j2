@@ -39,7 +39,7 @@
 </div></div></nav></header><main id="main">
 <div class="hero"><div class="eyebrow">Data • Analytics • Evaluated AI</div>
 <h1>{{ heading }}</h1>
-<p class="lead">{{ intro }}</p>{% if active == "live-eval.html" %}<p class="source-note">Generated from committed live-eval receipts during the static site build. No model calls. <a href="{{ repo_url }}docs/adr/0096-published-live-eval-report.md">ADR 0096</a> <a href="{{ repo_url }}docs/EVALUATION.md">Evaluation guide</a></p>{% elif active != "index.html" %}<p class="source-note">Generated from maintained Markdown, contracts and recorded evidence. <a href="{{ repo_url }}docs/README.md">Repository guides</a></p>{% endif %}</div>{{ body }}</main>
+{% if active != "portfolio.html" %}<p class="lead">{{ intro }}</p>{% if active == "live-eval.html" %}<p class="source-note">Generated from committed live-eval receipts during the static site build. No model calls. <a href="{{ repo_url }}docs/adr/0096-published-live-eval-report.md">ADR 0096</a> <a href="{{ repo_url }}docs/EVALUATION.md">Evaluation guide</a></p>{% elif active != "index.html" %}<p class="source-note">Generated from maintained Markdown, contracts and recorded evidence. <a href="{{ repo_url }}docs/README.md">Repository guides</a></p>{% endif %}{% endif %}</div>{{ body }}</main>
 <footer>Source revision {% if commit == "local export" %}{{ commit }}{% else %}<a href="https://github.com/jfk-ssa/chess-analytics-lab/commit/{{ commit }}">{{ commit }}</a>{% endif %} · Static documentation ·
 No runtime model calls or account downloads.
 <a href="{{ repo_url }}docs/SITE.md">Build and publishing runbook</a></footer></body></html>

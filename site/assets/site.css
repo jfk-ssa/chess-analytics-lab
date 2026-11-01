@@ -192,11 +192,14 @@ summary:focus-visible,
     padding: 14px 0 8px;
   }
 }
+/* Phones keep both navigation groups in one swipeable row each. */
 @media (max-width: 600px) {
   .nav-inner {
-    padding: 0 14px;
+    padding: 10px 14px 4px;
   }
   .nav-inner .brand {
+    display: inline-flex;
+    align-items: center;
     font-size: 15px;
     line-height: 1.2;
     white-space: nowrap;
@@ -206,56 +209,78 @@ summary:focus-visible,
     line-height: 1.2;
     padding: 0 6px;
     margin-left: 6px;
-    vertical-align: 1px;
   }
   .nav-compact {
-    padding: 2px 14px;
+    padding: 0 0 4px;
   }
-  .nav-stack {
-    display: flex;
-    flex-direction: column;
-  }
-  .nav-stack a {
-    min-height: 44px;
-    padding: 0 12px;
-    border-radius: 6px;
-  }
-  .nav-lab-line {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    column-gap: 10px;
-    row-gap: 2px;
-    margin-top: 2px;
-  }
-  .nav-compact .nav-lab-label {
-    display: inline;
-    margin: 0;
-    padding: 0;
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    line-height: 24px;
-  }
+  .nav-stack,
   .nav-lab-links {
-    display: contents;
+    display: flex;
+    flex-wrap: nowrap;
+    min-width: 0;
+    gap: 18px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 14px;
+    scrollbar-width: none;
+    padding: 0 14px;
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 10px,
+      black calc(100% - 10px),
+      transparent
+    );
   }
+  .nav-stack::-webkit-scrollbar,
+  .nav-lab-links::-webkit-scrollbar {
+    display: none;
+  }
+  .nav-stack a,
   .nav-lab-links a {
+    flex: 0 0 auto;
     display: inline-flex;
-    min-height: 24px;
+    align-items: center;
+    min-height: 44px;
     margin: 0;
-    padding: 0;
+    padding: 8px 0;
     border: 0;
     border-radius: 0;
     background: transparent;
     box-shadow: none;
     color: var(--muted);
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
     line-height: 1.2;
+    white-space: nowrap;
+    scroll-snap-align: start;
   }
+  .nav-stack a[aria-current="page"],
   .nav-lab-links a[aria-current="page"] {
+    background: transparent;
+    box-shadow: none;
     color: var(--teal);
     font-weight: 650;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+  }
+  .nav-stack a:focus-visible,
+  .nav-lab-links a:focus-visible {
+    outline-offset: -3px;
+  }
+  .nav-lab-line {
+    display: flex;
+    align-items: center;
+    border-top: 1px solid var(--line);
+  }
+  .nav-compact .nav-lab-label {
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0 0 0 14px;
+    font-size: 10px;
+    letter-spacing: 0.12em;
   }
 }
 @media (min-width: 601px) and (max-width: 960px) {
@@ -1820,10 +1845,11 @@ body.page-portfolio {
   --reading-width: 70ch;
 }
 .page-portfolio .hero {
-  padding-bottom: 20px;
+  padding-bottom: 0;
+  border-bottom: 0;
 }
-.page-portfolio .hero .lead {
-  max-width: 62ch;
+.page-portfolio .hero h1 {
+  margin-bottom: 16px;
 }
 .portfolio {
   display: grid;
@@ -1856,7 +1882,8 @@ body.page-portfolio {
   line-height: 1.45;
   letter-spacing: -0.02em;
 }
-.portfolio-summary {
+.portfolio .portfolio-summary {
+  max-width: 68ch;
   color: var(--muted);
   margin: 0;
 }
@@ -1995,6 +2022,7 @@ body.page-portfolio {
   list-style: none;
 }
 .portfolio-arch li {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -2025,6 +2053,17 @@ body.page-portfolio {
   line-height: 1.5;
 }
 
+/* Preserve parsed branch inputs for assistive technology without card backlinks. */
+.portfolio-stage-inputs {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 /* Desktop-specific: use width with balanced 2-col cards and 4-up architecture. */
 @media (min-width: 961px) {
   .page-portfolio main {
@@ -2034,7 +2073,28 @@ body.page-portfolio {
     gap: 28px;
   }
   .portfolio-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(14rem, 18rem);
+    gap: 28px 36px;
+    align-items: start;
     padding: 32px 36px;
+  }
+  .portfolio-intro .portfolio-lead,
+  .portfolio-intro .portfolio-summary {
+    grid-column: 1;
+    max-width: 68ch;
+  }
+  .portfolio-intro .portfolio-live {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    flex-direction: column;
+    align-items: stretch;
+    margin-top: 0;
+    gap: 10px;
+  }
+  .portfolio-intro .portfolio-live-pill {
+    width: 100%;
+    min-width: 0;
   }
   .portfolio-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2042,7 +2102,19 @@ body.page-portfolio {
   }
   .portfolio-arch {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 14px;
+    gap: 24px;
+  }
+  /* Only connect adjacent cards when the Mermaid has that edge. Never
+     imply a sequential link between the corpus, surfaces and agent branches. */
+  .portfolio-arch li[data-connect-next]:not(:nth-child(4n))::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    width: 24px;
+    height: 6px;
+    background: var(--teal);
+    clip-path: polygon(0 42%, 78% 42%, 78% 0, 100% 50%, 78% 100%, 78% 58%, 0 58%);
   }
   .portfolio-live-pill {
     min-width: 12rem;
@@ -2068,9 +2140,6 @@ body.page-portfolio {
 @media (max-width: 600px) {
   .page-portfolio main {
     padding: 28px 16px 56px;
-  }
-  .page-portfolio .hero {
-    padding-bottom: 12px;
   }
   .page-portfolio .hero h1 {
     font-size: 28px;
@@ -2166,13 +2235,6 @@ body.page-portfolio {
   .portfolio .portfolio-next {
     margin: 14px 0;
     padding: 12px 14px;
-  }
-  /* Portfolio page: keep Lab destinations tappable on phones. */
-  .page-portfolio .nav-lab-links a {
-    min-height: 44px;
-    align-items: center;
-    padding: 10px 0;
-    font-size: 14px;
   }
 }
 

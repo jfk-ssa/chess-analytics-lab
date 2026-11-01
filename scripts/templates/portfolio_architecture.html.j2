@@ -1,7 +1,8 @@
 <ol class="portfolio-arch" aria-label="Architecture stages and upstream connections">
-{% for stage in stages %}<li id="portfolio-stage-{{ stage.key }}">
+{% for stage in stages %}<li id="portfolio-stage-{{ stage.key }}"{% if stage.connect_next %} data-connect-next{% endif %}>
 <span class="portfolio-stage-number" aria-hidden="true">{{ stage.number }}</span>
 <strong>{{ stage.label }}</strong>
-<small>{% if stage.incoming %}From {% for node in stage.incoming %}<a href="#portfolio-stage-{{ node.key }}">{{ node.label }}</a>{% if not loop.last %} + {% endif %}{% endfor %}{% else %}Source records{% endif %}</small>
+<small>{{ stage.description }}</small>
+{% if stage.incoming %}<span class="portfolio-stage-inputs">Inputs: {{ stage.incoming }}.</span>{% endif %}
 </li>{% endfor %}
 </ol>

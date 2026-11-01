@@ -99,8 +99,28 @@ LAB_NAV = (
 )
 
 
+# Presentation aliases keyed by the full source label so changed Mermaid copy
+# falls back to that copy instead of silently retaining an obsolete description.
+PORTFOLIO_STAGES = {
+    "Lichess archive / synthetic PGN": ("Source PGN", "Lichess archives or synthetic games"),
+    "ingest: caps, parse, dedup, quarantine": ("Ingest", "Cap, parse, deduplicate, quarantine"),
+    "warehouse: immutable DuckDB / Parquet": (
+        "Warehouse snapshots",
+        "Immutable DuckDB + Parquet",
+    ),
+    "dbt marts + MetricFlow": ("dbt marts + MetricFlow", "Contracts and governed metrics"),
+    "corpus: sampled moves, openings, clock": ("Corpus", "Sampled moves, openings, clocks"),
+    "Streamlit / Pages extract": ("Streamlit + Pages", "Dashboards and static extracts"),
+    "analyst + coach tools": ("Analyst + coach tools", "Checked analytics and coach tools"),
+    "offline gate + live-eval receipts": (
+        "Evals + receipts",
+        "Offline gate and live-eval evidence",
+    ),
+}
+
+
 def portfolio_architecture(match):
-    """Render the maintained Mermaid subset as linked, responsive stages."""
+    """Render source nodes and edges as compact, responsive stages."""
     source = html.unescape(match[1])
     labels = dict(re.findall(r"^\s*(\w+)\[([^\]]+)\]", source, re.MULTILINE))
     edges = []
@@ -114,15 +134,16 @@ def portfolio_architecture(match):
     stages = []
     for index, (key, label) in enumerate(labels.items(), 1):
         incoming = [start for start, end in edges if end == key]
+        title, description = PORTFOLIO_STAGES.get(label, (label, label))
+        next_key = list(labels)[index] if index < len(labels) else None
         stages.append(
             {
                 "key": html.escape(key, quote=True),
-                "label": html.escape(label),
+                "label": html.escape(title),
+                "description": html.escape(description),
                 "number": f"{index:02}",
-                "incoming": [
-                    {"key": html.escape(node, quote=True), "label": html.escape(labels[node])}
-                    for node in incoming
-                ],
+                "incoming": html.escape(", ".join(labels[node] for node in incoming)),
+                "connect_next": (key, next_key) in edges,
             }
         )
     return render("portfolio_architecture.html.j2", stages=stages)

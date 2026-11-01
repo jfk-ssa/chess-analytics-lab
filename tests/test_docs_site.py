@@ -64,9 +64,11 @@ def test_header_layouts_fit_without_a_horizontal_scroller():
     )
     assert "position: static" in wide and "overflow-x: clip" in wide
     assert ".nav-primary" in wide and "display: none" in wide
-    assert "flex-direction: column" in phone
-    assert "min-height: 44px" in phone and "min-height: 24px" in phone
-    assert "flex-wrap: wrap" in phone and "display: contents" in phone
+    assert "overflow-x: auto" in phone
+    assert "scroll-snap-type: x proximity" in phone
+    assert "min-height: 44px" in phone
+    assert "scrollbar-width: none" in phone
+    assert "flex-wrap: nowrap" in phone
     assert "repeat(5, minmax(0, 1fr))" in tablet
     assert "repeat(7, minmax(0, 1fr))" in tablet
     assert ".cards.preview-cards" in css
@@ -294,8 +296,19 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     assert 'class="portfolio-next"' in portfolio
     assert 'class="portfolio-arch"' in portfolio
     assert 'id="portfolio-stage-src"' in portfolio
-    assert 'href="#portfolio-stage-snap">warehouse: immutable DuckDB / Parquet</a>' in portfolio
-    assert "offline gate + live-eval receipts" in portfolio
+    stages = portfolio.split('<ol class="portfolio-arch"', 1)[1].split("</ol>", 1)[0]
+    assert "<a " not in stages and "From " not in stages
+    for title, description in site.PORTFOLIO_STAGES.values():
+        assert f"<strong>{title}</strong>" in stages
+        assert f"<small>{description}</small>" in stages
+    assert "Inputs: warehouse: immutable DuckDB / Parquet." in stages
+    assert "Inputs: dbt marts + MetricFlow, corpus: sampled moves, openings, clock." in stages
+    assert stages.count("data-connect-next") == 5
+    hero = portfolio.split('<div class="hero">', 1)[1].split("</div>", 2)[2]
+    assert '<p class="lead">' not in hero
+    assert 'class="source-note"' not in portfolio
+    assert "Generated from maintained Markdown" in architecture
+    assert portfolio.count("Chess Analytics Lab turns chess game records") == 1
     assert 'href="https://github.com/jfk-ssa">John (jfk-ssa)</a>' in portfolio
     assert '<code class="language-sh">' in portfolio
     for forbidden in ("```mermaid", "language-mermaid", "mermaid.initialize", "cdn.jsdelivr"):
@@ -408,7 +421,10 @@ def test_portfolio_reads_root_source_and_rewrites_links(tmp_path):
     assert "mermaid" not in content and "flowchart LR" not in content
     assert 'class="portfolio-arch"' in content
     assert 'id="portfolio-stage-source"' in content
-    assert 'href="#portfolio-stage-source">source</a>' in content
+    assert "<strong>source</strong>" in content
+    assert "Inputs: source." in content
+    assert 'id="portfolio-stage-source" data-connect-next' in content
+    assert 'href="#portfolio-stage-source"' not in content
 
 
 @pytest.mark.parametrize("target", ["missing.md", "missing/", "../outside.md"])
