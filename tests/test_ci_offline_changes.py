@@ -28,6 +28,8 @@ MEDIAN_SECONDS = {
     "pytest": 156.5,
     "sync_mcp": 0.0,
     "pytest_mcp": 4.0,
+    "sync_ml": 0.0,
+    "pytest_ml": 4.0,
     "demo": 0.0,
     "sync_dbt": 1.0,
     "pytest_dbt": 294.5,
@@ -57,6 +59,8 @@ OFFLINE_STEPS = frozenset(
         "pytest",
         "sync_mcp",
         "pytest_mcp",
+        "sync_ml",
+        "pytest_ml",
         "demo",
         "sync_dbt",
         "pytest_dbt",
@@ -182,6 +186,8 @@ def test_only_pull_requests_select_steps(changes):
         assert flags["run_all"] == "true"
         assert flags["pytest"] == "true"
         assert flags["pytest_dbt"] == "true"
+        assert flags["pytest_ml"] == "true"
+        assert flags["sync_ml"] == "true"
         assert flags["analyst_gate"] == "true"
 
 
@@ -204,7 +210,9 @@ def test_docs_skip_the_long_steps(changes):
         assert flags["core_setup_uv"] == "false"
         assert flags["core_setup_node"] == "false"
         assert flags["core_sync"] == "false"
-        assert _skipped(flags, OFFLINE_STEPS) == 516.0
+        assert flags["pytest_ml"] == "false"
+        assert flags["sync_ml"] == "false"
+        assert _skipped(flags, OFFLINE_STEPS) == 520.0
 
 
 def test_site_runs_biome_node_and_the_import_test(changes):
@@ -214,7 +222,9 @@ def test_site_runs_biome_node_and_the_import_test(changes):
     assert flags["pytest_game_import"] == "true"
     assert flags["pytest"] == "false"
     assert flags["pytest_dbt"] == "false"
-    assert _skipped(flags, OFFLINE_STEPS) == 498.0
+    assert flags["pytest_ml"] == "false"
+    assert flags["sync_ml"] == "false"
+    assert _skipped(flags, OFFLINE_STEPS) == 502.0
     templates = changes.outputs_for("pull_request", ["scripts/templates/shell.html.j2"])
     assert templates["biome"] == "true"
     assert templates["pytest"] == "false"
@@ -228,7 +238,7 @@ def test_hosted_runs_the_extract_budget_test_and_skips_dbt_pytest(changes):
     assert flags["pytest_portfolio"] == "true"
     assert flags["basedpyright"] == "true"
     replaced = _skipped(flags, OFFLINE_STEPS) - MEDIAN_SECONDS["pytest"]
-    assert replaced == 348.5
+    assert replaced == 352.5
     source = changes.outputs_for("pull_request", ["src/chess_analytics/public_extract.py"])
     assert source["pytest"] == "true"
     builder = changes.outputs_for("pull_request", ["scripts/build_public_extract.py"])
@@ -254,6 +264,9 @@ def test_python_runs_the_full_pytest_and_not_the_narrow_files(changes):
     flags = changes.outputs_for("pull_request", ["src/chess_analytics/cli.py"])
     assert flags["pytest"] == "true"
     assert flags["pytest_dbt"] == "true"
+    assert flags["pytest_mcp"] == "true"
+    assert flags["pytest_ml"] == "true"
+    assert flags["sync_ml"] == "true"
     assert flags["pytest_extract"] == "false"
     assert flags["pytest_game_import"] == "false"
     assert flags["ruff"] == "true"
@@ -277,9 +290,11 @@ def test_dbt_runs_slim_selection_and_both_pytest_steps(changes):
     assert flags["analyst_gate"] == "true"
     assert flags["biome"] == "false"
     assert flags["pytest_mcp"] == "false"
+    assert flags["pytest_ml"] == "false"
+    assert flags["sync_ml"] == "false"
     assert flags["setup_node"] == "true"
     assert flags["core_setup_node"] == "true"
-    assert _skipped(flags, OFFLINE_STEPS) == 20.0
+    assert _skipped(flags, OFFLINE_STEPS) == 24.0
     lineage = changes.outputs_for("pull_request", ["docs/DBT_LINEAGE.md"])
     assert lineage["semantic"] == "true"
     assert lineage["pytest_dbt"] == "true"
@@ -305,7 +320,9 @@ def test_analyst_evals_and_receipts_keep_their_guards(changes):
     assert pure["setup_node"] == "true"
     assert pure["core_setup_uv"] == "true"
     assert pure["core_sync"] == "true"
-    assert _skipped(pure, OFFLINE_STEPS) == 34.0
+    assert pure["pytest_ml"] == "false"
+    assert pure["sync_ml"] == "false"
+    assert _skipped(pure, OFFLINE_STEPS) == 38.0
 
 
 def test_force_all_and_unknown_paths_run_every_historical_step(changes):

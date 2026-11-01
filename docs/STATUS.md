@@ -14,6 +14,14 @@ With the dashboard and docs extras installed, the locked offline suite passed **
 
 ## Current state
 
+ADR 0116's first slice adds an offline mistake-training frame and a seeded
+baseline trainer with a separate game-grouped calibration fold. Synthetic
+fixture holdout Brier ≈ 0.0159 (seed 20261031), remeasured after replacing
+game-header opening features with pre-move UCI prefixes. Focused offline CI
+installs the `ml` extra to exercise training. No corpus model result or
+product view is delivered yet. See the [baseline card](MISTAKE_CLASSIFIER.md)
+and [ADR 0116](adr/0116-mistake-classifier.md).
+
 The documentation site is [public](https://jfk-ssa.github.io/chess-analytics-lab/).
 Guides and the dashboard use Inter Medium; see [the visual guide](DESIGN.md)
 and [the website runbook](SITE.md). Opening rankings, transposition views, the

@@ -23,6 +23,7 @@ dependencies = ["chess==1.11.2", "duckdb==2.0.0", "zstandard==0.25.0"]
 chesslab = "chess_analytics.cli:main"
 
 [project.optional-dependencies]
+ml = ["scikit-learn==1.9.1"]
 docs = ["Markdown==3.11", "jinja2==3.1.6"]
 # dagster-webserver==X requires dagster==X. Dependabot upgrades one name
 # per uv lock. >=1.13.26,<2 lets either upgrade carry the other through

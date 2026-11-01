@@ -21,7 +21,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 
 # These conditions are independent of dbt and remain optional in both jobs.
-OPTIONAL_EXTRAS = {"mcp", "markdown", "streamlit", "altair"}
+OPTIONAL_EXTRAS = {"mcp", "markdown", "streamlit", "altair", "sklearn"}
 JUSTIFIED_REASONS = {
     # Ignored real datasets and historical workspaces are absent in CI.
     "optional real analytical snapshot not in clean checkout",
@@ -153,6 +153,7 @@ class _CoverageGuard:
         ),
         ('pytest.importorskip("dbt")', ["pytest.importorskip('dbt')"]),
         ('pytest.importorskip("mcp")', []),
+        ('pytest.importorskip("sklearn")', []),
         ('def helper():\n    pytest.importorskip("dbt")', []),
         ('async def helper():\n    pytest.importorskip("dbt")', []),
         ('class Helper:\n    pytest.importorskip("dbt")', []),

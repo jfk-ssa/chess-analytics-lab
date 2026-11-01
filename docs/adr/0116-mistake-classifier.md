@@ -48,9 +48,11 @@ trained model weights and no scored sample parquet are committed.
 **First PR:** do **not** invent a second eval pipeline. Add a **proposed**
 training-frame builder, e.g. `scripts/build_mistake_training_frame.py`, that
 joins `fact_move` (label = `error_proxy`; features exclude deterioration and
-post-move eval), `fact_game` opening family via the same expression as dbt
-`games.opening_family`, and **proposed** `material_balance` from legal UCI
-replay. CI keeps only a tiny fixture frame. If 0115's `move_evals` already
+post-move eval) with `fact_game` replay metadata. Derive opening family from
+the longest matching already-played UCI prefix in a small static map, with
+unknown prefixes left None, and **proposed** `material_balance` from legal UCI
+replay. Completed-game PGN Opening headers cannot supply pre-move features.
+CI keeps only a tiny fixture frame. If 0115's `move_evals` already
 exists, the builder may read that mart instead; 0116 does not depend on 0115.
 
 ### Model
@@ -60,8 +62,8 @@ exists, the builder may read that mart instead; 0116 does not depend on 0115.
   `pyproject.toml` / `uv.lock`—not present in the lock today).
 - Label: `error_proxy` boolean on evaluable moves (non-null deterioration).
 - Features (v1): `clock_bucket` or `clock_before_seconds`, `phase_proxy`,
-  `ply`, `color`, opening family, **proposed** material balance. Do not feed
-  `centipawn_deterioration` or post-move eval as features (label leakage).
+  `ply`, `color`, prefix-only opening family, **proposed** material balance.
+  Do not feed `centipawn_deterioration` or post-move eval as features (label leakage).
 - Split: game-id grouped holdout (same game never in train and test).
 - Calibration: isotonic or sigmoid on a validation fold; report Brier /
   reliability in the model card.
@@ -136,3 +138,28 @@ source-eval proxies. Offline only; no API keys; no committed scored sample.
 
 Classifier artifacts are a small CI fixture only; rebuild the model locally;
 do not commit trained weights or scored samples.
+
+### First implementation slice — 2026-10-31
+
+The owner combined the frame builder and baseline trainer in the first PR.
+Frame v1 uses White-minus-Black material before each move (pawn 1, knight/bishop
+3, rook 5, queen 9). Opening family is the longest matching pre-move UCI prefix
+in `OPENING_PREFIXES`, covering Scandinavian Defense (`e2e4 d7d5`) and Queen's
+Gambit (`d2d4 d7d5 c2c4`); unknown prefixes are None. Game-level PGN Opening
+headers are excluded so the features stay strictly pre-move. Evaluable labels
+must agree with deterioration ≥ 200. Sorted game IDs receive seeded disjoint
+training, sigmoid-calibration and holdout splits; the encoding fits training
+games only.
+`OPENING_PREFIXES` is a minimal fixture-scope map covering only Scandinavian
+Defense and Queen's Gambit. On real games, `opening_family` will mostly be
+`__missing__` in the feature matrix; a real prefix/ECO table is a later slice.
+The trainer prints metrics without persisting weights. The fixture has six
+synthetic games and 36 labeled rows, with replay and leakage tests.
+The offline workflow installs the `ml` extra for a focused trainer test step
+on Python changes and full-suite events.
+
+Fixture training remeasured with prefix-only openings at seed 20261031 reports
+Brier ≈ 0.0159 on 12 holdout rows
+(synthetic labels only; not a real-corpus claim). See the
+[baseline card and commands](../MISTAKE_CLASSIFIER.md). The product view stays
+in slice 3.

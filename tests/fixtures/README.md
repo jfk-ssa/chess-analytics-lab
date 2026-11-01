@@ -23,3 +23,10 @@ One missing rating stays null. All UTC times are absent: dates must not become
 invented midnight timestamps. Record 1 contains a clock, record 2 a mate annotation;
 M1 preserves the source but does not materialize or interpret these move features.
 Duplicate/conflict/truncation scenarios are derived in tests and remain synthetic.
+
+`mistake_training.json` is a separate ADR 0116 v1 fixture: six authored Standard
+games, 48 source plies and 36 expected training rows. Its clocks and labels are
+fabricated; pre-move material is hand-tallied. It includes captures, an
+unevaluable recapture, en passant, missing clocks and null/empty opening names.
+The source facts and expected rows are kept together for offline contract and
+replay checks. No model weights or scored sample is included.
