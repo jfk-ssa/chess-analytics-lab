@@ -24,6 +24,7 @@ def _require_dbt():
 
 def _empty_sources(warehouse: Path) -> None:
     schema = json.loads((ROOT / "contracts/tables.json").read_text())
+    schema["fact_move"] = json.loads((ROOT / "contracts/m3_tables.json").read_text())["fact_move"]
     with duckdb.connect(str(warehouse)) as connection:
         for table, columns in schema.items():
             if not isinstance(columns, dict):
@@ -33,7 +34,18 @@ def _empty_sources(warehouse: Path) -> None:
 
 
 @pytest.mark.dbt
-def test_enforced_contract_rejects_a_dropped_column(tmp_path):
+@pytest.mark.parametrize(
+    ("model", "column", "removed"),
+    [
+        (
+            "mart_game_outcomes",
+            "drawn_games",
+            "    count(*) filter (where metric_eligible and drawn) as drawn_games,\n",
+        ),
+        ("move_evals", "error_proxy", '    m."error_proxy",\n'),
+    ],
+)
+def test_enforced_contract_rejects_a_dropped_column(tmp_path, model, column, removed):
     _require_dbt()
     warehouse = tmp_path / "warehouse.duckdb"
     _empty_sources(warehouse)
@@ -43,9 +55,8 @@ def test_enforced_contract_rejects_a_dropped_column(tmp_path):
         project,
         ignore=shutil.ignore_patterns("target", "logs", "dbt_packages"),
     )
-    sql_path = project / "models/marts/mart_game_outcomes.sql"
+    sql_path = project / f"models/marts/{model}.sql"
     sql = sql_path.read_text()
-    removed = "    count(*) filter (where metric_eligible and drawn) as drawn_games,\n"
     assert removed in sql
     sql_path.write_text(sql.replace(removed, "", 1))
     env = os.environ.copy()
@@ -60,7 +71,7 @@ def test_enforced_contract_rejects_a_dropped_column(tmp_path):
             str(DBT),
             "build",
             "--select",
-            "+mart_game_outcomes",
+            f"+{model}",
             "--project-dir",
             str(project),
             "--profiles-dir",
@@ -80,4 +91,4 @@ def test_enforced_contract_rejects_a_dropped_column(tmp_path):
     output = completed.stdout + completed.stderr
     assert completed.returncode != 0, output[-2000:]
     assert "contract" in output.lower()
-    assert "drawn_games" in output
+    assert column in output

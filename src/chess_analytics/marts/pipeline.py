@@ -20,6 +20,7 @@ from chess_analytics.common import (
     read_json,
     write_json,
 )
+from chess_analytics.corpus.publish import analytics_hash, snapshot_identity, validate_analytical
 from chess_analytics.warehouse.snapshots import current, report
 
 
@@ -33,7 +34,7 @@ _GENERATED_DBT = frozenset({"target", "logs", "dbt_packages"})
 
 
 def model_hash(project: Path) -> str:
-    """Hash project SQL and YAML. Skip generated target, logs, and packages."""
+    """Hash dbt definitions and the move-input implementation; skip generated dbt files."""
     root = project / "dbt"
     paths = []
     for pattern in ("*.sql", "*.yml"):
@@ -42,7 +43,12 @@ def model_hash(project: Path) -> str:
             if not path.is_file() or (relative.parts and relative.parts[0] in _GENERATED_DBT):
                 continue
             paths.append(path)
-    return hash_json({str(path.relative_to(project)): digest(path) for path in paths})
+    return hash_json(
+        {
+            **{str(path.relative_to(project)): digest(path) for path in paths},
+            "move_inputs": analytics_hash(project),
+        }
+    )
 
 
 def mart_id(project: Path, source_id: str) -> str:
@@ -137,6 +143,18 @@ def build_mart(
     try:
         # dbt only writes a copy. The M1 source remains immutable and queryable.
         shutil.copy2(source / "warehouse.duckdb", attempt / "warehouse.duckdb")
+        with duckdb.connect(str(attempt / "warehouse.duckdb")) as con:
+            if dataset == "analytical":
+                # Resolve the immutable input, never whichever snapshot a pointer names.
+                moves_id = snapshot_identity(project, selected, source_report["source_sha256"])
+                moves = root / "analytical/published" / moves_id
+                validate_analytical(moves)
+                con.read_parquet(str(moves / "fact_move.parquet")).create("fact_move")
+            else:
+                # M1 tiny/foundation snapshots predate move sampling.
+                schema = read_json(project / "contracts/m3_tables.json")["fact_move"]
+                columns = ", ".join(f'"{name}" {kind}' for name, kind in schema.items())
+                con.execute(f"create table fact_move ({columns})")
         env = os.environ.copy()
         env.update(
             CHESSLAB_DBT_PATH=str(attempt / "warehouse.duckdb"),
