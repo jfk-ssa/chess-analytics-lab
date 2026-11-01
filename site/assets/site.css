@@ -2257,6 +2257,9 @@ body.page-portfolio {
     background: var(--paper);
     color: var(--ink);
   }
+  .page-portfolio button {
+    background: var(--soft);
+  }
   .page-portfolio .topbar {
     background: #152321f5;
   }
