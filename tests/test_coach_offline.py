@@ -21,6 +21,7 @@ from chess_analytics.coach.judge import (
     EXACT_WEIGHT,
     EXPLANATION_WEIGHT,
     GOVERNED_NUMERIC_CONSTANTS,
+    _governed_constants,
     exact_tool_check,
     score_explanation_offline,
 )
@@ -244,6 +245,18 @@ def test_cited_cohort_and_contract_constants():
         assert score_explanation_offline(claim, evidence)["reasons"] == ["unsupported_number"]
     contract = json.loads((ROOT / "contracts/mean_centipawn_loss.json").read_text())
     assert frozenset({Decimal(contract["clamp_centipawns"])}) == GOVERNED_NUMERIC_CONSTANTS
+
+
+def test_governed_constants_ignore_unrelated_cwd(monkeypatch, tmp_path):
+    monkeypatch.chdir(tmp_path)
+    contract_path = tmp_path / "contracts/mean_centipawn_loss.json"
+    contract_path.parent.mkdir()
+    contract_path.write_text(json.dumps({"clamp_centipawns": 9999}))
+    contract = json.loads((ROOT / "contracts/mean_centipawn_loss.json").read_text())
+    constants = _governed_constants()
+    assert constants == frozenset({Decimal(contract["clamp_centipawns"])})
+    assert constants == GOVERNED_NUMERIC_CONSTANTS
+    assert Decimal(9999) not in constants
 
 
 @pytest.mark.parametrize(

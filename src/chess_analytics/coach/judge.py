@@ -32,7 +32,6 @@ def _governed_constants() -> frozenset[Decimal]:
     candidates = (
         here.parent / "contracts/mean_centipawn_loss.json",
         here.parents[3] / "contracts/mean_centipawn_loss.json",
-        Path.cwd() / "contracts/mean_centipawn_loss.json",
     )
     for path in candidates:
         if path.is_file():
