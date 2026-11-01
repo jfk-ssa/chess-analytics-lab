@@ -120,3 +120,6 @@ short summary of the current checkout, not a log of new decisions.
 | 0112 | 2026-10-26 | [Split the no-dbt pytest step into its own job](adr/0112-split-offline-pytest-job.md) |
 | 0113 | 2026-10-31 | [Select dbt tests in the dbt-extra pytest step](adr/0113-select-dbt-pytest.md) |
 | 0114 | 2026-10-31 | [Doppler as the secrets source of truth](adr/0114-doppler-secrets-source-of-truth.md) |
+| 0115 | 2026-10-31 | [Metrics layer for Streamlit KPIs and Pages cards](adr/0115-metrics-layer.md) |
+| 0116 | 2026-10-31 | [Mistake classifier and risky-positions view](adr/0116-mistake-classifier.md) |
+| 0117 | 2026-10-31 | [Coach agent and live-eval grading](adr/0117-coach-agent-evals.md) |
