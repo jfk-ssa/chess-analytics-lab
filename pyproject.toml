@@ -37,7 +37,7 @@ dagster = [
     "dagster-webserver>=1.13.26,<2",
 ]
 prefect = [
-    "prefect==3.9.0",
+    "prefect==3.9.1",
 ]
 dbt = [
     "dbt-duckdb==1.11.1",
@@ -47,6 +47,9 @@ dbt = [
 # compromised emSign intermediates (GHSA-6q48-6c7w-9gw2).
 dashboard = [
     "streamlit==1.66.1",
+    # Keep hosted pip installs and the shared dashboard lock on the same releases.
+    "pandas==3.1.0",
+    "narwhals==2.28.0",
     "pillow==13.0.0",
     "certifi==2026.10.23",
 ]
@@ -56,8 +59,8 @@ mcp = [
 # Linux PyPI torch 2.14.1 depends on CUDA libraries. The CPU index build is
 # the one this tool runs. macOS keeps the PyPI arm64 wheel.
 maia = [
-    "torch==2.14.1 ; sys_platform != 'linux'",
-    "torch==2.14.1+cpu ; sys_platform == 'linux'",
+    "torch==2.15.0 ; sys_platform != 'linux'",
+    "torch==2.15.0 ; sys_platform == 'linux'",
     "maia3 @ git+https://github.com/CSSLab/maia3.git@1e13597c42d4858b7cfd7cfdae01e297263364b2",
 ]
 
