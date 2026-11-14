@@ -37,7 +37,7 @@ dagster = [
     "dagster-webserver>=1.13.26,<2",
 ]
 prefect = [
-    "prefect==3.9.1",
+    "prefect==3.9.2",
 ]
 dbt = [
     "dbt-duckdb==1.11.1",
@@ -46,9 +46,9 @@ dbt = [
 # pillow<13, and 1.66.1 accepts pillow<14. Certifi 2026.10.19 removes the
 # compromised emSign intermediates (GHSA-6q48-6c7w-9gw2).
 dashboard = [
-    "streamlit==1.66.1",
+    "streamlit==1.67.0",
     # Keep hosted pip installs and the shared dashboard lock on the same releases.
-    "pandas==3.1.0",
+    "pandas==3.1.1",
     "narwhals==2.28.0",
     "pillow==13.0.0",
     "certifi==2026.10.23",
@@ -69,7 +69,7 @@ dev = [
     "basedpyright==1.40.2",
     "pytest==9.2.0",
     "pytest-xdist==3.8.0",
-    "ruff==0.17.3",
+    "ruff==0.17.4",
 ]
 
 [[tool.uv.index]]
