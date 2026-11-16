@@ -3,11 +3,11 @@
 # A push that changes this file reinstalls the environment. Any other
 # push reruns hosted/dashboard.py in the same process. That rerun imports
 # chess_analytics from src/ again. See ADR 0107.
-# Streamlit 1.66.1 depends on Altair and Pillow. Altair 6.3.0 depends on
+# Streamlit 1.67.0 depends on Altair and Pillow. Altair 6.3.0 depends on
 # narwhals and jsonschema. Pandas and protobuf are Streamlit dependencies.
 # Requests, which Streamlit depends on, depends on certifi.
 # Each pin matches uv.lock so pip cannot resolve a different release.
-# The locked Streamlit 1.66.1 wheel accepts
+# The locked Streamlit 1.67.0 wheel accepts
 # altair!=5.4.0,!=5.4.1,<7,>=5.0.0, pandas<4,>=1.5.3,
 # protobuf<8,>=5.26.1, and pillow<14,>=9.2.0. Pillow 13.0.0 is inside
 # that range. Streamlit 1.65.0 required pillow<13, so the dashboard extra
