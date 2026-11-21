@@ -87,7 +87,7 @@ def test_hosted_streamlit_pin_matches_the_lock(project):
     assert requirements == [
         "streamlit==1.67.0",
         "altair==6.3.0",
-        "narwhals==2.28.0",
+        "narwhals==2.29.0",
         "jsonschema==4.26.0",
         "pandas==3.1.1",
         "protobuf==6.33.6",
