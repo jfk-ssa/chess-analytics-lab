@@ -4,6 +4,11 @@ Each accepted choice is a short record in [docs/adr/](adr/). Add the next number
 when a choice should outlive the chat that made it. [Status](STATUS.md) is a
 short summary of the current checkout, not a log of new decisions.
 
+ADRs 0119–0121 propose four implementation PRs in order: 1 CI cleanup
+and pruning (0119), 2 static dashboard publish (0120), 3 retire hosted
+Streamlit (0120), 4 scoped hash (0121). PRs 2 and 3 merge separately;
+PR 3 requires recorded acceptance of the deployed Pages dashboard.
+
 | Number | Date | Record |
 |---|---|---|
 | 0001 | 2026-10-03 | [Scope and repository](adr/0001-scope-and-repository.md) |
@@ -124,3 +129,6 @@ short summary of the current checkout, not a log of new decisions.
 | 0116 | 2026-10-31 | [Mistake classifier and risky-positions view](adr/0116-mistake-classifier.md) |
 | 0117 | 2026-10-31 | [Coach agent and live-eval grading](adr/0117-coach-agent-evals.md) |
 | 0118 | 2026-11-01 | [Portfolio presentation from maintained Markdown](adr/0118-portfolio-page-presentation.md) |
+| 0119 | 2026-11-22 | [Deduplicate offline CI and prune stale extras](adr/0119-deduplicate-workflows-and-prune-stale-extras.md) |
+| 0120 | 2026-11-22 | [Replace the hosted Streamlit app with a static Pages dashboard](adr/0120-replace-hosted-streamlit-with-static-dashboard.md) |
+| 0121 | 2026-11-22 | [Scope implementation_hash to pipeline and contract modules](adr/0121-scoped-implementation-hash.md) |
