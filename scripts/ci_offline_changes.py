@@ -25,471 +25,28 @@ import argparse
 import re
 import subprocess
 import sys
-from dataclasses import dataclass
 from pathlib import Path
+
+from ci_offline_catalog import (
+    _CHECKOUT,
+    ALWAYS_STEPS,
+    CATEGORIES_WITHOUT_CHECKS,
+    CHECKS,
+    FAIL_OPEN_PATHS,
+    FORCE_ALL_PATTERNS,
+    MAPPED_JOBS,
+    ORDER,
+    RULES,
+    SUPPORT,
+    Step,
+    default_if,
+    github_output_names,
+    selection_flags,
+)
+from ci_offline_generate import check_generated
 
 SELECTIVE_EVENTS = frozenset({"pull_request"})
 FULL_EVENTS = frozenset({"push", "merge_group", "workflow_dispatch", "schedule"})
-CATEGORIES_WITHOUT_CHECKS = frozenset({"docs"})
-
-_CHECKOUT = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
-_SETUP_NODE = "actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
-_DBT_BASE_IF = (
-    "${{ (needs.changes.result != 'success' || "
-    "needs.changes.outputs.dbt_base_checkout == 'true') && "
-    "(github.event_name == 'pull_request' || "
-    "(github.event.before != '0000000000000000000000000000000000000000' && "
-    "github.event.before != '')) }}"
-)
-
-
-@dataclass(frozen=True)
-class Rule:
-    category: str
-    patterns: tuple[str, ...]
-    excludes: tuple[str, ...] = ()
-
-
-@dataclass(frozen=True)
-class Step:
-    job: str
-    step_id: str
-    kind: str
-    categories: tuple[str, ...] = ()
-    when_any: tuple[str, ...] = ()
-    exact: str = ""
-    contains: tuple[str, ...] = ()
-    uses: str = ""
-    if_expr: str = ""
-
-    @property
-    def emits(self) -> bool:
-        return self.kind in {"check", "support"}
-
-
-RULES = (
-    Rule(
-        "docs",
-        ("docs/**", "*.md", "LICENSE", "auxiliary-examples/**"),
-        ("THIRD_PARTY_NOTICES.md",),
-    ),
-    Rule(
-        "site",
-        (
-            "site/**",
-            "scripts/templates/**",
-            "biome.json",
-            "tests/js/**",
-            "tests/fixtures/imports/**",
-            "scripts/check_game_import.mjs",
-        ),
-    ),
-    Rule(
-        "hosted",
-        (
-            "hosted/**",
-            "data/public/**",
-            "data/README.md",
-            ".streamlit/**",
-            "THIRD_PARTY_NOTICES.md",
-        ),
-    ),
-    Rule(
-        "python",
-        (
-            "src/**",
-            "scripts/*.py",
-            "scripts/*.sh",
-            "tests/*.py",
-            "tests/**/*.py",
-            "tests/fixtures/**",
-            "config/**",
-        ),
-        (
-            "tests/fixtures/imports/**",
-            "tests/fixtures/live_eval_100.pgn",
-            "tests/fixtures/live_eval_100_expected.json",
-        ),
-    ),
-    Rule("dbt", ("dbt/**", "contracts/**", "docs/DBT_LINEAGE.md")),
-    Rule(
-        "analyst",
-        (
-            "src/chess_analytics/analyst/**",
-            "evals/**",
-            "reports/live-eval-receipt-*",
-            "tests/fixtures/live_eval_100.pgn",
-            "tests/fixtures/live_eval_100_expected.json",
-            "docs/METRICS.md",
-        ),
-    ),
-)
-
-# These paths select every step. They are not a narrow category.
-FORCE_ALL_PATTERNS = (
-    ".github/**",
-    "pyproject.toml",
-    "uv.lock",
-    "scripts/ci_offline_changes.py",
-    "tests/test_ci_offline_changes.py",
-)
-
-# Tracked paths that intentionally match no narrow category. At runtime they
-# select every step. The audit requires new tracked paths to be listed here
-# or matched by a rule, so a forgotten directory cannot hide.
-FAIL_OPEN_PATHS = (
-    "reports/",
-    ".gitignore",
-    ".python-version",
-    ".pre-commit-config.yaml",
-    ".env.example",
-    "doppler.yaml",
-)
-
-CHECKS = (
-    Step(
-        "offline",
-        "biome",
-        "check",
-        ("site",),
-        exact="npx --yes @biomejs/biome@2.5.15 check",
-    ),
-    Step(
-        "offline",
-        "node_test",
-        "check",
-        ("site",),
-        exact="node --test tests/js/game_import.test.mjs",
-    ),
-    Step(
-        "offline",
-        "node_check_import",
-        "check",
-        ("site",),
-        exact="node scripts/check_game_import.mjs",
-    ),
-    Step(
-        "offline",
-        "node_parity_authored",
-        "check",
-        ("site",),
-        exact="node tests/js/import_parity.mjs tests/fixtures/imports/authored-games.pgn",
-    ),
-    Step(
-        "offline",
-        "node_parity_zero",
-        "check",
-        ("site",),
-        exact="node tests/js/import_parity.mjs tests/fixtures/imports/zero-castling.pgn",
-    ),
-    Step(
-        "offline",
-        "ruff",
-        "check",
-        ("python", "hosted"),
-        exact="uv run --locked --offline --no-editable ruff check .",
-    ),
-    Step(
-        "offline",
-        "ruff_format",
-        "check",
-        ("python", "hosted"),
-        exact="uv run --locked --offline --no-editable ruff format --check .",
-    ),
-    Step(
-        "offline",
-        "basedpyright",
-        "check",
-        ("python", "hosted"),
-        exact="uv run --locked --offline --no-editable basedpyright",
-    ),
-    Step(
-        "offline-core",
-        "pytest",
-        "check",
-        ("python", "analyst", "dbt"),
-        exact="uv run --locked --offline --no-editable pytest -q -n 4 --durations=15",
-    ),
-    Step(
-        "offline",
-        "pytest_extract",
-        "check",
-        ("hosted",),
-        exact="uv run --locked --offline --no-editable pytest -q tests/test_public_extract.py",
-    ),
-    Step(
-        "offline",
-        "pytest_game_import",
-        "check",
-        ("site",),
-        exact="uv run --locked --offline --no-editable pytest -q tests/test_game_import.py",
-    ),
-    Step(
-        "offline",
-        "pytest_mcp",
-        "check",
-        ("python",),
-        exact=(
-            "uv run --locked --offline --no-editable --extra mcp "
-            "pytest -q tests/test_mcp_protocol.py"
-        ),
-    ),
-    Step(
-        "offline",
-        "pytest_ml",
-        "check",
-        ("python",),
-        exact=(
-            "uv run --locked --offline --no-editable --extra ml "
-            "pytest -q tests/test_mistake_classifier.py"
-        ),
-    ),
-    Step(
-        "offline",
-        "demo",
-        "check",
-        ("python", "analyst", "dbt"),
-        exact="uv run --locked --offline --no-editable chesslab demo",
-    ),
-    Step(
-        "offline",
-        "pytest_dbt",
-        "check",
-        ("python", "analyst", "dbt"),
-        exact=(
-            "CHESSLAB_REQUIRE_DBT=1 uv run --locked --offline --no-editable --extra dbt "
-            "pytest -m dbt -q -n 4 --durations=15"
-        ),
-    ),
-    Step(
-        "offline",
-        "transform",
-        "check",
-        ("python", "analyst", "dbt"),
-        exact=(
-            "uv run --locked --offline --no-editable --extra dbt "
-            "python -m chess_analytics.marts transform --dataset tiny"
-        ),
-    ),
-    Step(
-        "offline",
-        "semantic",
-        "check",
-        ("python", "analyst", "dbt"),
-        contains=(
-            "set -euo pipefail",
-            "tiny-mart-current.json",
-            "dbt parse",
-            "validate-configs",
-            "smoke-draw-rate",
-            "render_dbt_dag.py",
-            "docs/DBT_LINEAGE.md",
-            "--check",
-        ),
-    ),
-    Step(
-        "offline",
-        "analyst_gate",
-        "check",
-        ("python", "analyst", "dbt"),
-        exact=(
-            "uv run --locked --offline --no-editable --extra dbt "
-            "python -m chess_analytics.analyst gate"
-        ),
-    ),
-    Step(
-        "offline",
-        "dbt_slim",
-        "check",
-        ("dbt",),
-        contains=(
-            "base-checkout/dbt/dbt_project.yml",
-            "state:modified+",
-            "dbt ls",
-            "dbt build",
-            "test_type:unit,state:modified",
-        ),
-    ),
-    Step(
-        "portfolio",
-        "pytest_portfolio",
-        "check",
-        ("python", "analyst", "dbt", "hosted"),
-        exact=(
-            "uv run --locked --offline --no-editable --extra dashboard pytest -q "
-            "tests/test_portfolio_integrity.py tests/test_portfolio_demo.py "
-            "tests/test_hosted_dashboard.py"
-        ),
-    ),
-    Step(
-        "portfolio",
-        "demo_all",
-        "check",
-        ("python", "analyst", "dbt", "hosted"),
-        exact="uv run --locked --offline --no-editable --extra dashboard chesslab demo --scope all",
-    ),
-)
-
-_UV_STEPS = (
-    "ruff",
-    "ruff_format",
-    "basedpyright",
-    "pytest_extract",
-    "pytest_game_import",
-    "pytest_mcp",
-    "pytest_ml",
-    "demo",
-    "pytest_dbt",
-    "transform",
-    "semantic",
-    "analyst_gate",
-    "dbt_slim",
-)
-
-SUPPORT = (
-    Step(
-        "offline",
-        "setup_node",
-        "support",
-        when_any=(
-            "biome",
-            "node_test",
-            "node_check_import",
-            "node_parity_authored",
-            "node_parity_zero",
-            "pytest_game_import",
-            "pytest_dbt",
-        ),
-        uses=_SETUP_NODE,
-        contains=('node-version: "24"',),
-    ),
-    Step(
-        "offline",
-        "setup_uv",
-        "support",
-        when_any=_UV_STEPS,
-        contains=('version: "0.12.18"',),
-    ),
-    Step(
-        "offline",
-        "sync",
-        "support",
-        when_any=(
-            "ruff",
-            "ruff_format",
-            "basedpyright",
-            "pytest_extract",
-            "pytest_game_import",
-            "demo",
-        ),
-        exact="uv sync --locked --no-editable",
-    ),
-    Step(
-        "offline",
-        "sync_mcp",
-        "support",
-        when_any=("pytest_mcp",),
-        exact="uv sync --locked --no-editable --extra mcp",
-    ),
-    Step(
-        "offline",
-        "sync_ml",
-        "support",
-        when_any=("pytest_ml",),
-        exact="uv sync --locked --no-editable --extra ml",
-    ),
-    Step(
-        "offline",
-        "sync_dbt",
-        "support",
-        when_any=("pytest_dbt", "transform", "semantic", "analyst_gate", "dbt_slim"),
-        exact="uv sync --locked --no-editable --extra dbt",
-    ),
-    Step(
-        "offline",
-        "dbt_base_checkout",
-        "support",
-        when_any=("dbt_slim",),
-        uses=_CHECKOUT,
-        contains=("sparse-checkout: dbt", "persist-credentials: false"),
-        if_expr=_DBT_BASE_IF,
-    ),
-    Step(
-        "portfolio",
-        "portfolio_setup_uv",
-        "support",
-        when_any=("pytest_portfolio", "demo_all"),
-        contains=('version: "0.12.18"',),
-    ),
-    Step(
-        "portfolio",
-        "portfolio_sync",
-        "support",
-        when_any=("pytest_portfolio", "demo_all"),
-        exact="uv sync --locked --no-editable --extra dashboard",
-    ),
-    Step(
-        "offline-core",
-        "core_setup_uv",
-        "support",
-        when_any=("pytest",),
-        contains=('version: "0.12.18"',),
-    ),
-    Step(
-        "offline-core",
-        "core_setup_node",
-        "support",
-        when_any=("pytest",),
-        uses=_SETUP_NODE,
-        contains=('node-version: "24"',),
-    ),
-    Step(
-        "offline-core",
-        "core_sync",
-        "support",
-        when_any=("pytest",),
-        exact="uv sync --locked --no-editable",
-    ),
-)
-
-ALWAYS_STEPS = (
-    Step("offline", "checkout", "always", uses=_CHECKOUT),
-    Step(
-        "offline",
-        "audit_map",
-        "always",
-        exact="python3 scripts/ci_offline_changes.py --audit",
-    ),
-    Step("offline", "record_selection", "always", contains=("run_all=", "categories=")),
-    Step("portfolio", "portfolio_checkout", "always", uses=_CHECKOUT),
-    Step("portfolio", "portfolio_record", "always", contains=("run_all=", "categories=")),
-    Step("offline-core", "core_checkout", "always", uses=_CHECKOUT),
-)
-
-# The full pytest step already includes these files.
-SUPPRESS_WHEN = {"pytest_extract": "pytest", "pytest_game_import": "pytest"}
-
-ORDER = (
-    ("offline", "setup_node", "biome"),
-    ("offline", "setup_node", "pytest_dbt"),
-    ("offline", "sync", "ruff"),
-    ("offline", "sync", "pytest_extract"),
-    ("offline", "setup_node", "pytest_game_import"),
-    ("offline", "sync", "pytest_game_import"),
-    ("offline", "sync_mcp", "pytest_mcp"),
-    ("offline", "sync_ml", "pytest_ml"),
-    ("offline", "sync_dbt", "pytest_dbt"),
-    ("offline", "transform", "semantic"),
-    ("offline", "semantic", "analyst_gate"),
-    ("offline", "dbt_base_checkout", "dbt_slim"),
-    ("offline-core", "core_setup_uv", "core_sync"),
-    ("offline-core", "core_sync", "pytest"),
-    ("offline-core", "core_setup_node", "pytest"),
-    ("portfolio", "portfolio_sync", "pytest_portfolio"),
-    ("portfolio", "pytest_portfolio", "demo_all"),
-)
-
-MAPPED_JOBS = ("offline", "offline-core", "portfolio")
 
 _PATTERN_CACHE: dict[str, re.Pattern[str]] = {}
 
@@ -579,16 +136,6 @@ def paths_from_name_status(text: str) -> list[str]:
     return paths
 
 
-def _check_flags(run_all: bool, categories: set[str]) -> dict[str, bool]:
-    flags = {step.step_id: run_all or bool(set(step.categories) & categories) for step in CHECKS}
-    for narrow, broad in SUPPRESS_WHEN.items():
-        if flags[broad]:
-            flags[narrow] = False
-    for step in SUPPORT:
-        flags[step.step_id] = any(flags[name] for name in step.when_any)
-    return flags
-
-
 def _as_outputs(run_all: bool, categories: set[str], flags: dict[str, bool]) -> dict[str, str]:
     values = {
         "run_all": "true" if run_all else "false",
@@ -605,7 +152,7 @@ def outputs_for(event: str, paths: list[str] | None = None) -> dict[str, str]:
     missing. Both raise so callers fail open onto the full suite.
     """
     if event not in SELECTIVE_EVENTS:
-        flags = _check_flags(True, set())
+        flags = selection_flags(True, set())
         return _as_outputs(True, set(), flags)
     if not paths:
         raise ValueError("pull request diff is missing")
@@ -617,7 +164,7 @@ def outputs_for(event: str, paths: list[str] | None = None) -> dict[str, str]:
         if is_force_all(normalized) or not matched:
             run_all = True
         categories |= matched
-    return _as_outputs(run_all, categories, _check_flags(run_all, categories))
+    return _as_outputs(run_all, categories, selection_flags(run_all, categories))
 
 
 def emit_outputs(event: str, paths: list[str] | None) -> dict[str, str]:
@@ -627,18 +174,6 @@ def emit_outputs(event: str, paths: list[str] | None) -> dict[str, str]:
     except Exception as exc:
         print(f"change detection failed ({exc}); running the full suite", file=sys.stderr)
         return outputs_for("full", None)
-
-
-def github_output_names() -> list[str]:
-    names = ["run_all", "categories"]
-    names.extend(step.step_id for step in (*CHECKS, *SUPPORT))
-    return names
-
-
-def _default_if(step_id: str) -> str:
-    return (
-        f"${{{{ needs.changes.result != 'success' || needs.changes.outputs.{step_id} == 'true' }}}}"
-    )
 
 
 def _blank_step(line: str) -> dict[str, str]:
@@ -740,17 +275,19 @@ def _step_problems(spec: Step, parsed: dict[str, str]) -> list[str]:
         if parsed["if"]:
             problems.append(f"{label} must always run")
     else:
-        expected_if = spec.if_expr or _default_if(spec.step_id)
+        expected_if = spec.if_expr or default_if(spec.step_id, spec.job)
         if parsed["if"] != expected_if:
             problems.append(f"{label} if-expression drifted")
-    if spec.exact and parsed["run"].strip() != spec.exact:
+    if spec.exact and parsed["run"].strip() != "\n".join(
+        line.strip() for line in spec.exact.splitlines()
+    ):
         problems.append(f"{label} command drifted")
-    haystack = parsed["run"] + "\n" + parsed["uses"] + "\n" + parsed["blob"]
-    if spec.uses and spec.uses not in parsed["uses"]:
+    if (
+        spec.uses
+        and not spec.uses.startswith("astral-sh/setup-uv@")
+        and spec.uses not in parsed["uses"]
+    ):
         problems.append(f"{label} is not pinned to {spec.uses}")
-    for phrase in spec.contains:
-        if phrase not in haystack:
-            problems.append(f"{label} is missing {phrase!r}")
     return problems
 
 
@@ -936,7 +473,7 @@ def _changes_job_problems(jobs: dict[str, dict[str, object]]) -> list[str]:
 
 def audit_text(workflow_text: str, tracked: list[str]) -> list[str]:
     """Return mapping problems. An empty list means the workflow matches the catalog."""
-    problems = _trigger_problems(workflow_text)
+    problems = [*_trigger_problems(workflow_text), *check_generated(workflow_text)]
     try:
         jobs = _parse_workflow(workflow_text)
     except ValueError as exc:

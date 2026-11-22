@@ -6,6 +6,10 @@ The 2026-10-03 inspection recorded Streamlit 1.50.0; [ADR 0008](docs/adr/0008-m4
 is that earlier pin and is unchanged. Dependencies are installed
 by uv, not vendored in Git; their original license files remain in distributions.
 This is an inventory, not a grant to relicense third-party code.
+The Dagster and Prefect rows retain the historical inspection; their optional
+extras and adapters were retired by
+[ADR 0119](docs/adr/0119-deduplicate-workflows-and-prune-stale-extras.md)
+and are absent from the current lock.
 
 | Component | Version | License reported by distribution |
 |---|---|---|
@@ -23,7 +27,7 @@ This is an inventory, not a grant to relicense third-party code.
 | PyArrow (transitive dashboard) | 25.0.1 | Apache-2.0 (license expression) |
 
 Build uses pinned Hatchling and its pinned dependencies; uv.lock records runtime and
-development and optional-orchestrator resolution with hashes. Source PGN data comes from the standard rated
+development and optional-dependency resolution with hashes. Source PGN data comes from the standard rated
 Lichess open database, released under CC0: https://database.lichess.org/.
 The exact source URL/checksum/listing date are in config/datasets.json. No broadcast
 data or engine binary is included. Tiny fixture games were authored for tests.

@@ -19,7 +19,6 @@ jobs:
           version: "0.12.18"
       - run: uv sync --locked --no-editable --extra docs --extra dbt
       - run: uv run --locked --offline --no-editable --extra docs --extra dbt python scripts/materialize_opening_positions.py
-      - run: uv run --locked --offline --no-editable --extra docs --extra dbt ruff check .
       - run: uv run --locked --offline --no-editable --extra docs --extra dbt pytest -q tests/test_docs_site.py
       - run: uv run --locked --offline --no-editable --extra docs --extra dbt python scripts/build_docs_site.py
       - name: Publish dbt docs from the tiny fixture

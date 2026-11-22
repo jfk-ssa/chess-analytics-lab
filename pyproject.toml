@@ -12,7 +12,7 @@ packages = ["src/chess_analytics"]
 "contracts/mean_centipawn_loss.json" = "chess_analytics/coach/contracts/mean_centipawn_loss.json"
 
 [tool.hatch.build.targets.sdist]
-exclude = ["/work/**", "/.uv-cache/**", "/.venv/**", "/auxiliary-examples/**"]
+exclude = ["/work/**", "/.uv-cache/**", "/.venv/**"]
 
 [project]
 name = "chess-analytics-lab"
@@ -28,17 +28,6 @@ chesslab = "chess_analytics.cli:main"
 [project.optional-dependencies]
 ml = ["scikit-learn==1.9.1"]
 docs = ["Markdown==3.11", "jinja2==3.1.6"]
-# dagster-webserver==X requires dagster==X. Dependabot upgrades one name
-# per uv lock. >=1.13.26,<2 lets either upgrade carry the other through
-# 1.x, including a floor raised to >=1.14 on only one name. uv.lock is
-# the installed set. See ADR 0108.
-dagster = [
-    "dagster>=1.13.26,<2",
-    "dagster-webserver>=1.13.26,<2",
-]
-prefect = [
-    "prefect==3.9.3",
-]
 dbt = [
     "dbt-duckdb==1.11.1",
 ]
@@ -56,7 +45,7 @@ dashboard = [
 mcp = [
     "mcp==2.3.0",
 ]
-# Linux PyPI torch 2.14.1 depends on CUDA libraries. The CPU index build is
+# Linux PyPI torch 2.15.0 depends on CUDA libraries. The CPU index build is
 # the one this tool runs. macOS keeps the PyPI arm64 wheel.
 maia = [
     "torch==2.15.0 ; sys_platform != 'linux'",

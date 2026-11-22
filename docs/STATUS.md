@@ -6,13 +6,19 @@ Decision records are indexed in [DECISIONS.md](DECISIONS.md). Milestone counts a
 
 ## Checkout structure — 2026-10-10
 
-Milestone packages live under `src/chess_analytics/` as `marts`, `corpus`, `dashboard`, `analyst`, and `orchestration`. Plan recovery, pricing, and frozen preflight sit beside the Responses adapter. `provider` and `experiment` still re-export the functions tests and scripts import. The twelve copied month and holdout builders are one `chesslab m7 --campaign` command. Historical preflight JSON still names the old scripts. Offline CI runs on pushes to `main` and on pull requests. A pull request runs the steps its diff selects; `main`, a manual run, and a merge queue run the full suite ([ADR 0100](adr/0100-change-aware-offline-integrity.md)). The required check names stay `offline` and `portfolio`. The no-dbt pytest step runs in parallel as `offline-core` ([ADR 0112](adr/0112-split-offline-pytest-job.md)). The dbt-extra pytest step selects the 13 `dbt`-marked tests, with a collection guard for skipped coverage ([ADR 0113](adr/0113-select-dbt-pytest.md)). Ruff format checking, basedpyright on `src/`, and Actions pinned to commit SHAs stay in that suite.
+Milestone packages live under `src/chess_analytics/` as `marts`, `corpus`, `dashboard`, and `analyst`. Plan recovery, pricing, and frozen preflight sit beside the Responses adapter. `provider` and `experiment` still re-export the functions tests and scripts import. The twelve copied month and holdout builders are one `chesslab m7 --campaign` command. Historical preflight JSON still names the old scripts. Offline CI runs on pushes to `main` and on pull requests. A pull request runs the steps its diff selects; `main`, a manual run, and a merge queue run the full suite ([ADR 0100](adr/0100-change-aware-offline-integrity.md)). The required check names stay `offline` and `portfolio`. The no-dbt pytest step runs in parallel as `offline-core` ([ADR 0112](adr/0112-split-offline-pytest-job.md)). The dbt-extra pytest step selects the 13 `dbt`-marked tests, with a collection guard for skipped coverage ([ADR 0113](adr/0113-select-dbt-pytest.md)). Ruff format checking, basedpyright on `src/`, and Actions pinned to commit SHAs stay in that suite.
 
 With the dashboard and docs extras installed, the locked offline suite passed **121 tests** and skipped 15. Ruff check, Ruff format, and basedpyright passed. The tiny source hash stayed `130df65e85d18e78bbafd89daf6696c2596e03abf939adf47f2dcbdc4d33e75b` and the draw rate stayed 0.2. The snapshot id is `bcdba5157163d9fd032a50fa` because the implementation hash includes the moved modules. No live calls.
 
 101 report files that nothing in the checkout names were removed. They remain on tag `archive/reports-before-main-prune-2026-10-10` at `2fa1fbb`. December Sol runs, the M6 v2 run and audit triples, and every eval case file stay.
 
 ## Current state
+
+PR 1 of [ADR 0119](adr/0119-deduplicate-workflows-and-prune-stale-extras.md)
+uses a generated offline step catalog and one selected-extra sync, and removes
+the duplicate Pages lint check, unused orchestration adapters, and auxiliary
+examples. Offline checks: 679 passed, 18 skipped; 63 classifier tests passed.
+Frozen evidence and dated measurements stay unchanged. PRs 2–4 remain proposed.
 
 The portfolio page presents root `PORTFOLIO.md` with an intro strip,
 live-link pills, topic cards, wrapping source chips and a source-derived
@@ -94,12 +100,6 @@ measurement logs here. Earlier verification logs remain in Git history.
 | Portfolio readiness | Integrity, offline demo, docs, clean export and license verified locally; hosted CI passed; repository public | [Implementation evidence](EVIDENCE_INDEX.md), [final review](FINAL_RELEASE_REVIEW.md) and [handoff record](PORTFOLIO_HANDOFF.md). |
 | Documentation website | Published; deployment and integrity CI passed | Homepage + four guides; original report preserved; [runbook](SITE.md), [checkpoint](../reports/docs-site-checkpoint.json). |
 | Personalized recommender | Backlog | Outside first-release scope |
-
-An [auxiliary examples folder](../auxiliary-examples/README.md) holds a
-publicly adapted executive metric communication example and a data
-observability screenshot. The examples are separate from Chess Analytics Lab.
-The metric document uses synthetic financial cases and omits named people,
-email addresses, customer identifiers, and internal ticket links.
 
 ## Current dataset versions
 

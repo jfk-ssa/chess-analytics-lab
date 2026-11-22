@@ -8,7 +8,7 @@ while reproducing real corpus metrics requires ignored downloaded bytes.
 |---|---|---|
 | Locked environment, tiny fixture, reference draw rate | [M0–M1 record](../reports/M0-M1.md); `chesslab demo`; [independent expected tally](../tests/fixtures/expected.json) | Synthetic counts only |
 | Complete foundation ingest and publisher hash | [M1 acceptance](../reports/M0-M1.md), [dataset pin](../config/datasets.json), `chesslab report --dataset foundation`, [header reference script](../scripts/reference_draw_rate.py) | Requires local January 2013 archive |
-| dbt marts, recovery, optional orchestration | [M2](M2.md), [local adapter comparison](../reports/orchestrator-comparison.json), [orchestration commands](ORCHESTRATION.md) | Optional extras; no scheduler/cloud run |
+| dbt marts, recovery, optional orchestration | [M2](M2.md), [local adapter comparison](../reports/orchestrator-comparison.json), [historical orchestration guide](ORCHESTRATION.md) | Adapters retired; historical fixture parity, no scheduler/cloud run |
 | Ordered-prefix analytical coverage and opening/clock references | [M3](M3.md), [coverage report](../reports/M3-coverage.json), [raw-PGN reference check](../reports/M3-reference-check.json) | August 1 only; selected move annotations |
 | Dashboard views and two analytical memos | [M4–M5](M4-M5.md), [dashboard smoke](../reports/M4-dashboard-smoke.json), [fixture UI test](../tests/test_portfolio_demo.py) | Historical smoke needs ignored real snapshot; fixture test runs in clean checkout |
 | Checked tools and fixture harness | [M5 report](../reports/M5-both-harness.json), [tool module](../src/chess_analytics/analyst/tools.py), `python -m chess_analytics.analyst eval --split both` | Replay is not a model result |

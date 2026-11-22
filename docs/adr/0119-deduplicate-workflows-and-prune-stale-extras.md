@@ -1,6 +1,6 @@
 # 0119. Deduplicate offline CI and prune stale extras
 
-- Status: Proposed
+- Status: Accepted for PR 1; PRs 2–4 remain proposed
 - Date: 2026-11-22
 
 ## Context
@@ -185,3 +185,28 @@ All commits below belong to PR 1 of the four-PR sequence.
 3. `build: remove untested Prefect and Dagster extras`
 4. `chore: remove auxiliary-examples from the repository`
 5. `docs: correct current pins and counts without editing frozen evidence`
+
+## PR 1 implementation evidence — 2026-11-22
+
+The offline step catalog now generates managed workflow blocks, output names,
+and prerequisite ordering. One locked sync installs the selected union of
+`mcp`, `ml`, and `dbt`; later offline commands use `--no-sync`. Validation
+rejects missing, malformed, and inconsistent selection outputs before step
+conditions run. Install-argument tests cover detection errors, failed changes
+jobs, and invalid outputs, while valid full runs retain narrow-test suppression.
+Pages retains its tiny dbt-docs fixture and drops the duplicate lint command.
+
+The unused adapters/extras and auxiliary examples are removed. ADRs 0005,
+0050, and 0108 and the comparison receipt remain historical evidence.
+The current torch wheel name and size were checked against `uv.lock`.
+The DuckDB community Jev compatibility matrix was read as HTML: the 2.0.0
+column has unavailable markers on every listed platform. No extension was
+installed or loaded. Historical 1.4.1/macOS and Linux torch measurements,
+frozen analyst files, case sets, and receipts remain unchanged.
+
+Local offline validation with `dbt`, `dashboard`, `mcp`, and `ml` installed:
+679 passed, 18 skipped; the classifier suite separately passed 63 tests.
+Ruff lint/format, basedpyright, the offline map audit (including generator
+check mode), and all configured pre-commit file hooks passed before each
+commit. These are fixture/offline checks, not live evaluations or hosted
+CI timings. PRs 2–4 have not started.

@@ -38,10 +38,10 @@ Where: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), [src/chess_analytics/ingest
 
 - Bounded ingestion with source hashes, quarantine, and immutable snapshot pointers before publishing any mart or metric.
 - Analytical move publication writes `fact_move` from source `%eval` / clock annotations; dbt `move_evals` stages that table for MetricFlow.
-- Optional local Dagster and Prefect adapters call the same stage/publish/verify functions. Airflow is a later option, not built here.
+- Dagster and Prefect adapters were compared once and retired ([history](docs/ORCHESTRATION.md)); the pipeline runs as plain stage/publish/verify functions. Airflow is a later option, not built here.
 - Hosted BI uses a committed Parquet cube rebuilt from warehouse extracts so Streamlit Cloud never opens DuckDB.
 
-Where: [src/chess_analytics/ingest/pipeline.py](src/chess_analytics/ingest/pipeline.py), [src/chess_analytics/warehouse/snapshots.py](src/chess_analytics/warehouse/snapshots.py), [src/chess_analytics/corpus/moves.py](src/chess_analytics/corpus/moves.py), [src/chess_analytics/corpus/publish.py](src/chess_analytics/corpus/publish.py), [dbt/models/marts/move_evals.sql](dbt/models/marts/move_evals.sql), [src/chess_analytics/orchestration/](src/chess_analytics/orchestration/), [docs/ORCHESTRATION.md](docs/ORCHESTRATION.md), [hosted/dashboard.py](hosted/dashboard.py), [docs/HOSTED_DASHBOARD.md](docs/HOSTED_DASHBOARD.md).
+Where: [src/chess_analytics/ingest/pipeline.py](src/chess_analytics/ingest/pipeline.py), [src/chess_analytics/warehouse/snapshots.py](src/chess_analytics/warehouse/snapshots.py), [src/chess_analytics/corpus/moves.py](src/chess_analytics/corpus/moves.py), [src/chess_analytics/corpus/publish.py](src/chess_analytics/corpus/publish.py), [dbt/models/marts/move_evals.sql](dbt/models/marts/move_evals.sql), [docs/ORCHESTRATION.md](docs/ORCHESTRATION.md), [hosted/dashboard.py](hosted/dashboard.py), [docs/HOSTED_DASHBOARD.md](docs/HOSTED_DASHBOARD.md).
 
 ## Analytics engineering / semantic layer
 
