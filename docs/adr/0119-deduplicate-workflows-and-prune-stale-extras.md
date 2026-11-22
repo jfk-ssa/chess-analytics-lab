@@ -12,10 +12,11 @@ below were checked against this checkout. This record does not change
 code, workflows, or frozen files.
 
 The `offline` job in `.github/workflows/offline.yml` runs `uv sync
---locked --no-editable` four times on a full python or dbt pull request:
+--locked --no-editable` four times on a python pull request or full run:
 the base install, then `--extra mcp`, `--extra ml`, and `--extra dbt`.
-Each sync precedes the step that needs that extra. The `portfolio` job
-syncs twice more, once base and once with `--extra dashboard`.
+Each sync precedes the step that needs that extra. A pure dbt diff
+selects two offline syncs: base and dbt. `offline-core` has a separate
+base sync; `portfolio` already syncs once with `--extra dashboard`.
 
 `.github/workflows/pages.yml` runs `ruff check .`, `chesslab demo`, and
 `python -m chess_analytics.marts transform --dataset tiny`. Offline
@@ -29,9 +30,12 @@ same demo and transform feed `dbt docs generate`. The extra `ruff check
 from [ADR 0100](0100-change-aware-offline-integrity.md). The script
 parses `.github/workflows/offline.yml` with a hand-rolled YAML subset
 and requires an exact command match for catalogued steps. A workflow
-edit, action SHA bump, or new tracked path needs a paired classifier
-change. Required check names stay `offline` and `portfolio`, so a
-workflow-level `paths` filter is still not available: a skipped
+command or catalogued step edit needs a paired catalog change.
+Coordinated full-SHA `setup-uv` bumps are accepted without a classifier
+edit; new paths covered by existing rules need none either. Unmapped
+tracked paths need a rule or an explicit fail-open entry. Required
+check names stay `offline` and `portfolio`, so a workflow-level
+`paths` filter is still not available: a skipped
 required check stays pending.
 
 The `dagster` and `prefect` extras in `pyproject.toml` are the optional
@@ -67,11 +71,14 @@ Documented pins and counts that no longer match this checkout:
   ([ADR 0110](0110-duckdb-2.md)). The 1.4.1/macOS HTTP 404 note is a
   dated measurement and stays. The "currently pins" sentence and the
   Jev-binary comment need a current check against 2.0.0.
-- `src/chess_analytics/analyst/live_eval.py` and
-  `tests/test_live_eval_100.py` still say "40-case set".
+- `tests/test_live_eval_100.py` still says "40-case set".
   `evals/cases/analyst_live_v1.json` has 48 cases, and
-  `docs/RUNBOOK.md` already uses 48. `docs/JEV_ROUTING_RUNBOOK.md`
-  also says "40-case test".
+  `docs/RUNBOOK.md` already uses 48. Correct the unfrozen test
+  docstring and current documentation only. `live_eval.py` has the
+  same stale docstring but is in `live_runner.FROZEN_FILES`: leave it
+  byte-for-byte unchanged, per [ADR 0117](0117-coach-agent-evals.md).
+  Keep the Jev runbook's "40-case test": `jev_routing_v1_manifest.json`
+  records 40 development and 40 test cases, a separate historical run.
 - `docs/SITE.md` says "The nine current pages".
   `scripts/build_docs_site.py` writes ten top-level HTML pages:
   `index.html`, `architecture.html`, `metrics.html`, `demo.html`,
@@ -83,20 +90,39 @@ Documented pins and counts that no longer match this checkout:
 
 ## Decision
 
-Land the cleanup as one later implementation pull request, with one
-Conventional Commit per change below. Do not start that work from this
-record alone.
+Use four implementation PRs in order: 1 CI cleanup and pruning (this
+record), 2 static dashboard publish, 3 retire hosted Streamlit
+([ADR 0120](0120-replace-hosted-streamlit-with-static-dashboard.md)),
+4 scoped hash ([ADR 0121](0121-scoped-implementation-hash.md)). PRs 2
+and 3 merge separately; PR 3 requires recorded acceptance of the
+deployed page. Do not start implementation from this record alone.
 
-1. In the `offline` job, replace the four sequential `uv sync` steps
+1. In the `offline` job, replace the selected sequential `uv sync` steps
    with one locked sync that installs the union of extras required by
    the selected later steps (`mcp`, `ml`, and/or `dbt`). A docs-only
    pull request still skips extras it does not run. The `portfolio` job
-   keeps its own `--extra dashboard` sync.
+   keeps its own `--extra dashboard` sync; `offline-core` keeps its
+   separate base sync. Later commands must reuse the installed union
+   rather than resyncing away another selected extra.
 2. Keep the change-aware step selection from ADR 0100. Reduce
    classifier drift by making the step catalog the single source of
-   truth for `offline.yml` and `scripts/ci_offline_changes.py`, so a
-   workflow edit cannot silently diverge from the audit. New tracked
-   paths still need a category pattern or a `FAIL_OPEN_PATHS` entry.
+   truth: a stdlib-only `scripts/ci_offline_catalog.py` defines steps,
+   commands, categories, required extras, and prerequisites. The
+   classifier and install helper import it; a generator renders managed
+   workflow step/output blocks, with a check mode in the map audit.
+   Migrate `offline.yml`, the catalog, classifier, install helper,
+   outputs, ordering checks, and tests in one atomic commit. Replace
+   the old `sync_mcp`/`sync_ml`/`sync_dbt` outputs and ordering edges
+   together. Catalog/helper/generator changes must select the full suite.
+   New tracked paths need a category pattern or `FAIL_OPEN_PATHS` entry
+   only when existing rules do not cover them.
+   On detection errors, a failed changes job, or missing/invalid
+   selection outputs, install all offline extras (`mcp`, `ml`, `dbt`)
+   before running the full suite. Test the actual install arguments
+   for each failure, not just emitted booleans. Keep ADR 0100 tests for
+   docs-only skips, selective category unions, narrow-test suppression,
+   unknown/empty diffs, full events, required job names, and no workflow
+   path filters. Audit tests must reject command/output/order drift.
 3. Remove `ruff check .` from `pages.yml`. Keep `chesslab demo` and
    the tiny mart transform there only as the fixture for
    `dbt docs generate`, not as a second integrity gate. A later change
@@ -112,20 +138,20 @@ record alone.
    decision. Drop the README links. Public URLs into that folder will
    404 after the deletion; that is accepted.
 6. Correct the current pin and count sentences listed above. Do not
-   rewrite dated measurements. Verify the DuckDB Jev-binary sentence
-   against 2.0.0 before changing it from a packaging fact into a
-   current claim.
+   rewrite dated measurements, frozen modules, or historical receipt
+   hashes. Verify the DuckDB Jev-binary sentence against 2.0.0 before
+   changing it from a packaging fact into a current claim.
 
 `docs/review/`, font-trial ADRs, and the local Streamlit app are
-outside this pull request. The local dashboard decision is
+outside this pull request. The hosted dashboard decision is
 [ADR 0120](0120-replace-hosted-streamlit-with-static-dashboard.md).
 
 ## Consequences
 
 Full offline runs install the needed extras once. Pages builds stop
 linting the tree a second time, and still build dbt docs from a tiny
-mart. Classifier edits stay required, but the catalog and workflow
-cannot disagree by accident.
+mart. Step changes update the shared catalog; its generated workflow
+and classifier cannot disagree unnoticed by the audit.
 
 Dependabot no longer opens Prefect or Dagster bumps for unused
 adapters. Local `UV_PROJECT_ENVIRONMENT` recipes in the orchestration
@@ -152,9 +178,10 @@ chain, and this record only removes it from this repository.
 
 ## Planned commits
 
-1. `ci: install the union of selected extras in one offline sync`
-2. `ci: share one offline step catalog with the change classifier`
-3. `ci: drop the extra ruff check from the Pages workflow`
-4. `build: remove untested Prefect and Dagster extras`
-5. `chore: remove auxiliary-examples from the repository`
-6. `docs: correct torch, DuckDB, live-eval case, and Pages counts`
+All commits below belong to PR 1 of the four-PR sequence.
+
+1. `ci: atomically migrate catalog, workflow, outputs, ordering, union sync, and tests`
+2. `ci: drop the extra ruff check from the Pages workflow`
+3. `build: remove untested Prefect and Dagster extras`
+4. `chore: remove auxiliary-examples from the repository`
+5. `docs: correct current pins and counts without editing frozen evidence`

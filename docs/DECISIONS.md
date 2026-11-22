@@ -4,6 +4,11 @@ Each accepted choice is a short record in [docs/adr/](adr/). Add the next number
 when a choice should outlive the chat that made it. [Status](STATUS.md) is a
 short summary of the current checkout, not a log of new decisions.
 
+ADRs 0119–0121 propose four implementation PRs in order: 1 CI cleanup
+and pruning (0119), 2 static dashboard publish (0120), 3 retire hosted
+Streamlit (0120), 4 scoped hash (0121). PRs 2 and 3 merge separately;
+PR 3 requires recorded acceptance of the deployed Pages dashboard.
+
 | Number | Date | Record |
 |---|---|---|
 | 0001 | 2026-10-03 | [Scope and repository](adr/0001-scope-and-repository.md) |

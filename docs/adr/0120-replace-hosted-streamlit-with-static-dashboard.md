@@ -11,7 +11,7 @@ The repository now ships three overlapping presentation layers:
   `data/public/dashboard_cube.parquet` and still reads extract version 2
   for live eval ([ADR 0094](0094-hosted-read-only-dashboard.md),
   [ADR 0101](0101-hosted-bi-cube.md),
-  [ADR 0107](0107-hosted-repository-source-reload.md)). The live URL is
+  [ADR 0107](0107-hosted-repository-source-reload.md)). The configured URL is
   https://chess-analytics-lab.streamlit.app/.
 - The local Streamlit app at
   `src/chess_analytics/dashboard/dashboard.py`, which opens the local
@@ -39,10 +39,15 @@ exercised by
 `tests/test_portfolio_demo.py::test_six_dashboard_views_and_empty_buckets`
 and by `scripts/check_m4_dashboard.py`.
 
-The committed cube is already a warehouse-less, identifier-free extract
-suitable for a static page: 593,637 bytes and 35,100 rows at this
-checkout, under the 10 MB budget from ADR 0101. Pages already serves
-interactive charts with Inter, paper, teal, and the shared site tokens
+The committed cube is warehouse-less: 593,637 bytes and 35,100 rows at
+this checkout, under the 10 MB budget from ADR 0101. Aggregate grains
+omit game identifiers; `clock_game` permits the public eight-character
+`lichess_id`, `white_rating`, and `black_rating`, plus the public game
+fields allowed by [ADR 0106](0106-clock-band-game-sample.md). Player
+names, `player_key`, header JSON, and fingerprints remain excluded.
+JSON export must preserve that boundary, the ten-game count floor,
+and the capped game sample. Pages already serves interactive charts
+with Inter, paper, teal, and the shared site tokens
 in `site/assets/site.css` ([ADR 0060](0060-inter-medium-selected-for-current-guides-and-dashboard.md),
 [ADR 0065](0065-shared-outer-canvas-and-semantic-table-columns.md),
 [ADR 0118](0118-portfolio-page-presentation.md)).
@@ -53,7 +58,13 @@ Build a static, interactive `dashboard.html` on GitHub Pages from
 `data/public/dashboard_cube.parquet`, then retire the Community Cloud
 app once that page is live and reviewed. Keep the local Streamlit
 dashboard as an optional warehouse tool. This record is the plan; the
-implementation is a later pull request.
+implementation uses two separately merged pull requests.
+
+The four-PR sequence is: 1 CI cleanup and pruning
+([ADR 0119](0119-deduplicate-workflows-and-prune-stale-extras.md)),
+2 static dashboard publish, 3 retire hosted Streamlit (both here),
+4 scoped hash ([ADR 0121](0121-scoped-implementation-hash.md)).
+PR 3 requires recorded acceptance of PR 2's deployed page.
 
 The Pages dashboard is a CI artifact of the documentation workflow. The
 build reads the committed cube, or a JSON view produced from it at
@@ -61,11 +72,29 @@ build time, and emits `dashboard.html` plus any small assets it needs.
 It does not open a warehouse, call MetricFlow, or download. Filters and
 charts follow the existing hosted cuts where the cube already supports
 them: date, time control, color, rating band, and opening family on the
-KPI strip, openings, transpositions, clock, and periods, with the same
-fail-closed captions when a grain cannot carry a filter. Live-eval
+KPI strip, openings, transpositions, clock, and periods. Keep captions
+for filters a grain cannot carry; never widen a carried filter's empty
+cut to the full population. Live-eval
 figures stay on `live-eval.html` and keep ignoring those dashboard
-filters, as they do today. Provenance (mart id, source snapshot, hashes)
-stays visible.
+filters, as they do today. That page reads `reports/live-eval-receipt-*.json`
+and the case set directly through `build_docs_site.live_eval`; it does
+not read `dashboard_extract.json`.
+
+Provenance has two distinct inputs. The cube supplies chart rows and
+has no mart id, source snapshot, or build hashes in its columns.
+Validate `data/public/dashboard_extract.json` and read its `build`
+record (source snapshot, model, lock, semantic-manifest hashes) and
+the `game_draw_rate` metric receipt's mart id for a labelled **extract
+provenance** panel. These do not establish the origin of every cube
+grain. Cube provenance records the committed Parquet path, byte
+SHA-256, row count, grain counts, and site source revision; name its mixed
+published populations and do not invent a cube-wide mart id. Record
+both input paths and byte hashes in `site-build.json.sources`, and
+their separate provenance scopes and extract build fields in that
+manifest. Record generated JSON hashes in `site-build.json.outputs`.
+Tests must detect either input changing and prevent extract metadata
+being presented as cube-wide lineage. Keep the extract after retirement
+for this provenance panel, independently of the live-eval page.
 
 Charts and layout reuse the Pages visual system: Inter, `--paper`,
 `--ink`, `--teal`, `--accent`, `--line`, the 1120px canvas, and the
@@ -84,34 +113,65 @@ app is retired, the dashboard extra no longer has to satisfy the
 Community Cloud pin contract; leftover hosted-only pins can shrink in
 the retirement commit.
 
-Rollout:
+Rollout uses separate merge gates:
 
-1. Add `dashboard.html` to the Pages build and navigation. Link it from
-   the homepage, `PORTFOLIO.md`, and `docs/HOSTED_DASHBOARD.md`. Ship
-   this first and review it on the deployed Pages site.
-2. After that page is accepted, retire the Community Cloud deployment.
-   https://chess-analytics-lab.streamlit.app/ goes away. Streamlit
-   Community Cloud does not offer a durable HTTP redirect off that
-   host, so the retirement commit takes the app down and, if the
-   platform still serves a page, leaves a short notice that points to
-   `https://jfk-ssa.github.io/chess-analytics-lab/dashboard.html`.
-   Every in-repo link to the Streamlit URL is updated or removed in
-   the same commit.
-3. Delete `hosted/`, `hosted/requirements.txt`,
-   `hosted/repo_import.py`, `src/chess_analytics/build_info.py`, and
-   `tests/test_hosted_dashboard.py` (including the pin contract). Keep
-   `data/public/dashboard_cube.parquet`, the cube builder, and the
-   public extract that live eval still reads. Update
-   `docs/HOSTED_DASHBOARD.md` to describe the Pages dashboard, or
-   replace that guide with a short current page and leave the ADR
-   trail in place.
+1. **PR 2 — publish.** Add `dashboard.html`, its assets, provenance,
+   navigation, and current guide links. Keep hosted code and coverage.
+   Ship Python build/export tests and JavaScript tests in this PR,
+   wired into `.github/workflows/pages.yml`, `offline.yml`, and the
+   shared classifier catalog from PR 1. The existing Node command
+   names only `tests/js/game_import.test.mjs`; extend the catalogued
+   command to include the dashboard tests. Select Node setup and those
+   tests for dashboard assets/templates/tests, builder/analysis changes,
+   and either public input (`dashboard_cube.parquet` or
+   `dashboard_extract.json`), including cube-only diffs. Select the
+   Python cube/export tests on those diffs too. Update outputs,
+   support dependencies, ordering checks, and classifier tests atomically.
+   Test filter parity against `dashboard_cube.py` for all supported
+   cuts, unsupported-grain captions, empty cuts without population
+   widening, KPI prior-period deltas, opening family/line/position
+   drills and breadcrumbs, and clock-band game sample filters/caps.
+   Keep the August fallback and eligible/evaluable labels explicit.
+   Cover missing/invalid inputs and the public-field boundary.
+   Verify docs-only skips and full/failure selections still follow
+   ADR 0100. Run build tests in Pages CI and the selected Node tests
+   in offline CI; adding test files alone is insufficient.
+   Upload a downloadable PR-time artifact of `work/docs-site`,
+   including `site-build.json`, with local HTTP preview instructions.
+   Keep the Pages deploy guard: PR builds preview as artifacts; only
+   the existing main/non-PR path deploys. After merge and successful
+   deployment, John reviews the public page on desktop and mobile,
+   including filters, empty cuts, drills, and provenance. Record his
+   acceptance, deployed URL, source revision, and build/run link in
+   PR 3 before merging retirement; the PR preview is not this gate.
+2. **PR 3 — retire.** After that recorded acceptance, delete `hosted/`,
+   `src/chess_analytics/build_info.py`, and
+   `tests/test_hosted_dashboard.py` (including the pin contract).
+   In the same commit, remove that test from `offline.yml`'s explicit
+   `pytest_portfolio` command and the shared catalog, and update audit
+   fixtures. Keep local portfolio/demo tests and the new static
+   coverage selected, including cube-only changes. Keep the cube,
+   builders, and extract. Shrink hosted-only pins after checking local
+   app needs. Update current links in README, portfolio, site sources,
+   status, and guides to
+   `https://jfk-ssa.github.io/chess-analytics-lab/dashboard.html`;
+   preserve historical ADR URLs and receipts. Make
+   `docs/HOSTED_DASHBOARD.md` the current Pages guide with the ADR trail.
+   Before the deletion merges, John manually removes the deployment
+   from his Community Cloud workspace: open the app's overflow menu,
+   choose Delete, enter the required confirmation string, and confirm.
+   Record completion in PR 3. Repository deletion does not perform
+   this operation. Follow the official
+   [delete-your-app instructions](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app/delete-your-app).
+   The old URL ceases to serve the dashboard; do not promise a redirect
+   or a residual notice after deletion.
 
-Rollback: revert the retirement commit and restore the Community Cloud
-settings (main file `hosted/dashboard.py`, Python 3.12,
-`hosted/requirements.txt`) from git. The cube and extract will still be
-on the tip. Reverting only the Pages dashboard commit leaves the
-Streamlit app in place if retirement has not landed. No warehouse and
-no secrets are involved.
+Rollback: revert PR 3's repository changes, including workflow/catalog
+edits. John must manually redeploy in Community Cloud from `main`,
+entrypoint `hosted/dashboard.py`, Python 3.12, using the restored
+`hosted/requirements.txt`; select the old subdomain if available and
+verify the page. A git revert alone does not recreate the deleted app.
+If PR 3 has not landed, reverting PR 2 leaves hosted Streamlit intact.
 
 ## Consequences
 
@@ -121,14 +181,14 @@ dashboard becomes a static Pages artifact next to the rest of the lab
 site, reviewed with the existing documentation suite.
 
 The Streamlit URL stops resolving as a dashboard. Anyone with an old
-link depends on the notice, if any page is still served, or on the
-updated repository links. The local six-view app remains, so the
-dashboard extra and some Streamlit tests stay until a later decision
+link depends on the updated repository links to find Pages. Historical
+ADRs retain the old URL as evidence. The local six-view app remains,
+so the dashboard extra and some Streamlit tests stay until a later decision
 retires that optional tool.
 
-This change will likely exceed the 400-line guideline, mostly in the
-new page, tests, and the later hosted deletion. Generated site output
-stays outside that count.
+PR 2 may exceed the 400-line guideline for the page and its tests;
+PR 3 contains the later hosted deletion. Generated output stays outside
+that count. Retirement cannot be bundled into the publication merge.
 
 ## Alternatives considered
 
@@ -150,6 +210,16 @@ reviewed.
 
 ## Planned commits
 
-1. `feat(pages): add a CI-built static dashboard from the public cube`
-2. `docs: link the Pages dashboard and describe Streamlit retirement`
-3. `chore(hosted): retire the Community Cloud app and pin contract`
+PR 2 (merge and deploy before acceptance):
+
+1. `feat(pages): publish the cube dashboard with scoped provenance and CI tests`
+2. `ci(pages): upload a downloadable PR preview build`
+3. `docs: link the Pages dashboard and record the acceptance procedure`
+
+PR 3 (only after recorded deployed-page acceptance):
+
+1. `docs: record deployed acceptance and John's manual Cloud deletion`
+2. `chore(hosted): retire app and pins with workflow and catalog updates`
+3. `docs: replace current hosted links and preserve historical ADR URLs`
+
+PR 1 is CI cleanup and pruning; PR 4 is the scoped hash change.
