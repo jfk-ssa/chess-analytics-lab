@@ -97,7 +97,7 @@ reliable ingestion, not contemporary chess behavior. See [data sources](docs/DAT
 | Call checked tools from another client | [MCP guide](docs/MCP.md): optional stdio server; per-call evidence; planner scores do not transfer |
 | Estimate what a rating would play | [Maia guide](docs/MAIA.md): local Maia-3 probabilities; not an engine score |
 | Compare rules, Jev and Decisions | [GitHub-readable results](docs/CLASSIFIER_COMPARISON.md) |
-| Run optional components or acquire data | [Runbook](docs/RUNBOOK.md), [orchestration](docs/ORCHESTRATION.md), [sources](docs/DATA_SOURCES.md) |
+| Run optional components or acquire data | [Runbook](docs/RUNBOOK.md), [sources](docs/DATA_SOURCES.md) |
 
 HTML comparison reports under `reports/` are local browser artifacts; GitHub
 shows their source. The Markdown results above are readable directly on GitHub.
@@ -137,7 +137,7 @@ See [demo troubleshooting](docs/DEMO.md#if-a-step-fails) for cache and snapshot 
 
 - [Architecture](docs/ARCHITECTURE.md) and [evidence index](docs/EVIDENCE_INDEX.md)
 - [Local runbook](docs/RUNBOOK.md), [decision records](docs/DECISIONS.md), and [project brief](docs/PROJECT_SPEC.md)
-- [Dagster and Prefect local adapters](docs/ORCHESTRATION.md); Airflow is a follow-up
+- [Historical Dagster and Prefect comparison](docs/ORCHESTRATION.md); adapters retired
 - [First-visit documentation review](docs/DOCUMENTATION_REVIEW.md); [historical repository review](docs/REPOSITORY_REVIEW.md) and [hardening plan](docs/PORTFOLIO_HANDOFF.md)
 - [Jev question-routing learning lab](docs/JEV_ROUTING_RUNBOOK.md), [measured comparison](reports/M8-routing-comparison.html), and [paired final-answer lab](docs/JEV_END_TO_END.md)
 - [OpenAI Decisions classifier lab](docs/DECISIONS_ROUTING_RUNBOOK.md), [comparison](reports/decisions-routing-comparison.html), and [measured checkpoint](reports/decisions-checkpoint.json)

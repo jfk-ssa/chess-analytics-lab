@@ -63,9 +63,9 @@ pressure caused a mistake.
 To check repeatability, run the same demo command again. `source_snapshot_id`,
 `analytical_id`, counts and metric values should match the first run. The command
 keeps its output in `work/portfolio-demo`, separate from real `data/` pointers.
-The complete demo does not run the optional dbt, Dagster or Prefect adapters;
-their local commands are in the [runbook](RUNBOOK.md) and
-[orchestration guide](ORCHESTRATION.md).
+The complete demo does not run the optional dbt transform; its local commands
+are in the [runbook](RUNBOOK.md). The retired Dagster/Prefect comparison is
+preserved in the [historical orchestration guide](ORCHESTRATION.md).
 
 ## 3. Explore the six dashboard views
 

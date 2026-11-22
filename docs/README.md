@@ -25,7 +25,7 @@ live evaluations are recorded separately.
 | Score a position locally | [Engine checks](ENGINE.md) | Configured local engine and opening continuations; not a new accuracy claim |
 | Compare rules, Jev and Decisions | [Classifier comparison](CLASSIFIER_COMPARISON.md) | Shared-case scores, cost and conclusions readable directly on GitHub |
 | Reproduce optional classifier exercises | [Jev routing](JEV_ROUTING_RUNBOOK.md), [paired answers](JEV_END_TO_END.md), [Decisions](DECISIONS_ROUTING_RUNBOOK.md) | Offline harness/replay commands and separate live spending gates |
-| Operate or extend the pipeline | [Runbook](RUNBOOK.md) → [sources](DATA_SOURCES.md) → [orchestration](ORCHESTRATION.md) | Bounded acquisition, recovery, optional dbt/Dagster/Prefect |
+| Operate or extend the pipeline | [Runbook](RUNBOOK.md) → [sources](DATA_SOURCES.md) | Bounded acquisition, recovery, optional dbt |
 | Continue development | [Contributing](../CONTRIBUTING.md) → [current status](STATUS.md) → [decision records](DECISIONS.md) | Completed phases, next gates and choices; new decisions are ADRs only |
 
 ## Repository map
@@ -40,7 +40,6 @@ live evaluations are recorded separately.
 | `docs/MCP.md` | How to run the optional stdio MCP server from Claude Desktop or Cursor |
 | `docs/MCP_EXAMPLE.md` | Recorded MCP calls on the real August prefix, with evidence IDs and local reproduction limits |
 | `docs/ENGINE.md` | Local engine checks and opening continuations; what was verified |
-| `src/chess_analytics/orchestration/` | Optional local Dagster/Prefect wrappers over the same pipeline |
 | `contracts/`, `config/`, `evals/` | Definitions, bounded source plans, frozen questions and reference manifests |
 | `evals/baselines/analyst_gate_v1.json` | Committed offline analyst scorecard. CI fails when replay differs. Not an LLM-quality score |
 | `evals/cases/analyst_live_v1.json` | Frozen 48 questions for a manual live analyst eval. The offline runner does not call a model |

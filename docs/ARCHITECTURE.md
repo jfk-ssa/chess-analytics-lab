@@ -27,10 +27,10 @@ Source order, sampling selection, coverage and exclusions are in manifests.
 The partial compressed prefix is hashed as retained bytes; it is never marked
 as a fully verified publisher archive.
 
-The optional Dagster assets and Prefect tasks call the same stage/publish/verify
-functions and optional dbt mart transform. Neither is a production scheduler or
-cloud dependency; [the orchestration guide](ORCHESTRATION.md) gives the exact
-local commands and comparison evidence. Airflow remains a later option.
+The Python CLI runs stage/publish/verify and the optional dbt mart transform
+without a scheduler. The [historical orchestration comparison](ORCHESTRATION.md)
+retains the Dagster/Prefect evidence; those adapters and extras were retired
+by [ADR 0119](adr/0119-deduplicate-workflows-and-prune-stale-extras.md).
 
 The analyst can list definitions, read coverage, query named metrics, compare
 openings and inspect clock buckets. `query_metric` reads the governed
