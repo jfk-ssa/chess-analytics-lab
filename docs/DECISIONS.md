@@ -126,3 +126,4 @@ short summary of the current checkout, not a log of new decisions.
 | 0118 | 2026-11-01 | [Portfolio presentation from maintained Markdown](adr/0118-portfolio-page-presentation.md) |
 | 0119 | 2026-11-22 | [Deduplicate offline CI and prune stale extras](adr/0119-deduplicate-workflows-and-prune-stale-extras.md) |
 | 0120 | 2026-11-22 | [Replace the hosted Streamlit app with a static Pages dashboard](adr/0120-replace-hosted-streamlit-with-static-dashboard.md) |
+| 0121 | 2026-11-22 | [Scope implementation_hash to pipeline and contract modules](adr/0121-scoped-implementation-hash.md) |
