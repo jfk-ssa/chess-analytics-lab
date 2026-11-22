@@ -78,6 +78,7 @@ def _load():
     cached = sys.modules.get(name)
     if cached is not None:
         return cached
+    sys.path.insert(0, str(ROOT / "scripts"))
     spec = importlib.util.spec_from_file_location(name, ROOT / "scripts" / "ci_offline_changes.py")
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
@@ -96,7 +97,13 @@ def _skipped(flags: dict[str, str], steps: frozenset[str] | None = None) -> floa
     return sum(
         seconds
         for step, seconds in MEDIAN_SECONDS.items()
-        if step in chosen and flags.get(step) != "true"
+        if step in chosen
+        and flags.get(
+            {"sync_mcp": "pytest_mcp", "sync_ml": "pytest_ml", "sync_dbt": "pytest_dbt"}.get(
+                step, step
+            )
+        )
+        != "true"
     )
 
 
@@ -187,7 +194,6 @@ def test_only_pull_requests_select_steps(changes):
         assert flags["pytest"] == "true"
         assert flags["pytest_dbt"] == "true"
         assert flags["pytest_ml"] == "true"
-        assert flags["sync_ml"] == "true"
         assert flags["analyst_gate"] == "true"
 
 
@@ -211,7 +217,6 @@ def test_docs_skip_the_long_steps(changes):
         assert flags["core_setup_node"] == "false"
         assert flags["core_sync"] == "false"
         assert flags["pytest_ml"] == "false"
-        assert flags["sync_ml"] == "false"
         assert _skipped(flags, OFFLINE_STEPS) == 520.0
 
 
@@ -223,7 +228,6 @@ def test_site_runs_biome_node_and_the_import_test(changes):
     assert flags["pytest"] == "false"
     assert flags["pytest_dbt"] == "false"
     assert flags["pytest_ml"] == "false"
-    assert flags["sync_ml"] == "false"
     assert _skipped(flags, OFFLINE_STEPS) == 502.0
     templates = changes.outputs_for("pull_request", ["scripts/templates/shell.html.j2"])
     assert templates["biome"] == "true"
@@ -266,7 +270,6 @@ def test_python_runs_the_full_pytest_and_not_the_narrow_files(changes):
     assert flags["pytest_dbt"] == "true"
     assert flags["pytest_mcp"] == "true"
     assert flags["pytest_ml"] == "true"
-    assert flags["sync_ml"] == "true"
     assert flags["pytest_extract"] == "false"
     assert flags["pytest_game_import"] == "false"
     assert flags["ruff"] == "true"
@@ -291,7 +294,6 @@ def test_dbt_runs_slim_selection_and_both_pytest_steps(changes):
     assert flags["biome"] == "false"
     assert flags["pytest_mcp"] == "false"
     assert flags["pytest_ml"] == "false"
-    assert flags["sync_ml"] == "false"
     assert flags["setup_node"] == "true"
     assert flags["core_setup_node"] == "true"
     assert _skipped(flags, OFFLINE_STEPS) == 24.0
@@ -321,7 +323,6 @@ def test_analyst_evals_and_receipts_keep_their_guards(changes):
     assert pure["core_setup_uv"] == "true"
     assert pure["core_sync"] == "true"
     assert pure["pytest_ml"] == "false"
-    assert pure["sync_ml"] == "false"
     assert _skipped(pure, OFFLINE_STEPS) == 38.0
 
 
@@ -332,6 +333,9 @@ def test_force_all_and_unknown_paths_run_every_historical_step(changes):
         "pyproject.toml",
         "uv.lock",
         "scripts/ci_offline_changes.py",
+        "scripts/ci_offline_catalog.py",
+        "scripts/ci_offline_install.py",
+        "scripts/ci_offline_generate.py",
         "tests/test_ci_offline_changes.py",
         "mystery.bin",
         "reports/M3-independent-reference.json",
@@ -398,3 +402,150 @@ def test_every_check_category_has_a_pattern(changes):
     used = {category for step in changes.CHECKS for category in step.categories}
     assert categories - used == changes.CATEGORIES_WITHOUT_CHECKS
     assert used <= categories
+
+
+@pytest.mark.parametrize(
+    "paths, extras",
+    [
+        (["docs/STATUS.md"], []),
+        (["site/assets/site.css"], []),
+        (["hosted/dashboard.py"], []),
+        (["dbt/models/marts/games.sql"], ["dbt"]),
+        (["evals/cases/analyst_live_v1.json"], ["dbt"]),
+        (["site/assets/site.css", "dbt/models/marts/games.sql"], ["dbt"]),
+        (["src/chess_analytics/cli.py"], ["mcp", "ml", "dbt"]),
+    ],
+)
+def test_installed_union_matches_selected_steps(changes, monkeypatch, paths, extras):
+    import ci_offline_install as install
+
+    outputs = changes.outputs_for("pull_request", paths)
+    calls, _ = _run_install(install, monkeypatch, outputs)
+    assert calls == [
+        [
+            "uv",
+            "sync",
+            "--locked",
+            "--no-editable",
+            *(arg for extra in extras for arg in ("--extra", extra)),
+        ]
+    ]
+    assert outputs["sync"] == str(bool(extras) or outputs["setup_uv"] == "true").lower()
+
+
+def _run_install(install, monkeypatch, outputs, result="success", raw=None):
+    import json
+    from types import SimpleNamespace
+
+    calls = []
+    monkeypatch.setenv("CHANGES_RESULT", result)
+    monkeypatch.setenv("SELECTION", json.dumps(outputs) if raw is None else raw)
+    monkeypatch.setattr(
+        install.subprocess,
+        "run",
+        lambda argv, **kwargs: calls.append(argv) or SimpleNamespace(returncode=0),
+    )
+    assert install.main([]) == 0
+    return calls, install
+
+
+@pytest.mark.parametrize(
+    "failure",
+    ["detection", "failed", "missing", "invalid", "json", "type", "inconsistent", "category"],
+)
+def test_failures_install_all_extras_before_the_full_suite(changes, monkeypatch, tmp_path, failure):
+    import ci_offline_install as install
+
+    outputs = changes.outputs_for("pull_request", ["docs/STATUS.md"])
+    result, raw = "success", None
+    if failure == "detection":
+        outputs = changes.emit_outputs("pull_request", None)
+    elif failure == "failed":
+        result = "failure"
+    elif failure == "missing":
+        del outputs["pytest_mcp"]
+    elif failure == "invalid":
+        outputs["pytest_ml"] = "maybe"
+    elif failure == "inconsistent":
+        outputs["pytest_mcp"] = "true"
+    elif failure == "category":
+        outputs["categories"] = "all,docs"
+    elif failure == "type":
+        outputs["pytest_ml"] = []
+    else:
+        raw = "{broken"
+    calls, _ = _run_install(install, monkeypatch, outputs, result, raw)
+    assert calls == [
+        [
+            "uv",
+            "sync",
+            "--locked",
+            "--no-editable",
+            "--extra",
+            "mcp",
+            "--extra",
+            "ml",
+            "--extra",
+            "dbt",
+        ]
+    ]
+    output_file = tmp_path / "outputs"
+    monkeypatch.setenv("GITHUB_OUTPUT", str(output_file))
+    assert install.main(["--validate-only"]) == 0
+    assert output_file.read_text() == f"fallback={str(failure != 'detection').lower()}\n"
+    # Every selected step in every job consults the validated fallback.
+    for step in (*changes.CHECKS, *changes.SUPPORT):
+        from ci_offline_catalog import SELECTION_IDS
+
+        condition = step.if_expr or changes.default_if(step.step_id, step.job)
+        assert f"steps.{SELECTION_IDS[step.job]}.outputs.fallback != 'false'" in condition
+
+
+@pytest.mark.parametrize("drift", ["command", "output", "order"])
+def test_generated_audit_rejects_drift(changes, drift):
+    text = WORKFLOW.read_text()
+    if drift == "command":
+        text = text.replace("ruff check .", "ruff check src")
+    elif drift == "output":
+        text = text.replace("      sync: ${{ steps.filter.outputs.sync }}\n", "")
+    else:
+        start = text.index("      - id: sync\n")
+        end = text.index("      - id: ruff\n", start)
+        block = text[start:end]
+        text = text[:start] + text[end:]
+        start = text.index("      - id: transform\n")
+        text = text[:start] + block + text[start:]
+    problems = changes.audit_text(text, changes.tracked_files(ROOT))
+    assert any("generated workflow blocks drifted" in problem for problem in problems)
+    if drift == "order":
+        assert any("sync must run before" in problem for problem in problems)
+
+
+@pytest.mark.parametrize("job", ["offline", "portfolio"])
+def test_required_job_names_stay_stable(changes, job):
+    text = WORKFLOW.read_text().replace(f"  {job}:\n", f"  {job}:\n    name: Renamed\n", 1)
+    assert any(f"do not rename required job {job}" in p for p in changes.audit_text(text, []))
+
+
+@pytest.mark.parametrize(
+    "event, path",
+    [
+        ("push", "README.md"),
+        ("pull_request", "README.md"),
+        ("pull_request", "src/chess_analytics/cli.py"),
+    ],
+)
+def test_valid_selection_keeps_skips_and_narrow_suppression(
+    changes, monkeypatch, tmp_path, event, path
+):
+    import ci_offline_install as install
+
+    flags = changes.outputs_for(event, [path])
+    _run_install(install, monkeypatch, flags)
+    output = tmp_path / "outputs"
+    monkeypatch.setenv("GITHUB_OUTPUT", str(output))
+    assert install.main(["--validate-only"]) == 0
+    assert output.read_text() == "fallback=false\n"
+    assert flags["pytest_extract"] == flags["pytest_game_import"] == "false"
+    if event == "pull_request" and path == "README.md":
+        assert all(flags[step.step_id] == "false" for step in (*changes.CHECKS, *changes.SUPPORT))
