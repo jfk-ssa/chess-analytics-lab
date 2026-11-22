@@ -48,6 +48,7 @@ RULES = (
         ("docs/**", "*.md", "LICENSE", "auxiliary-examples/**"),
         ("THIRD_PARTY_NOTICES.md",),
     ),
+    Rule("lint", ("docs/*.py", "docs/**/*.py")),
     Rule(
         "site",
         (
@@ -210,7 +211,7 @@ STEPS = (
         "offline",
         "ruff",
         "check",
-        categories=("python", "hosted"),
+        categories=("python", "hosted", "lint"),
         exact="uv run --locked --offline --no-editable --no-sync ruff check .",
         requires=("sync", "record_selection", "setup_uv"),
     ),
@@ -218,7 +219,7 @@ STEPS = (
         "offline",
         "ruff_format",
         "check",
-        categories=("python", "hosted"),
+        categories=("python", "hosted", "lint"),
         exact="uv run --locked --offline --no-editable --no-sync ruff format --check .",
         requires=("sync", "record_selection", "setup_uv"),
     ),

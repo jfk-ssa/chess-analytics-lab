@@ -220,6 +220,33 @@ def test_docs_skip_the_long_steps(changes):
         assert _skipped(flags, OFFLINE_STEPS) == 520.0
 
 
+@pytest.mark.parametrize(
+    "path",
+    [
+        "docs/review/reproduce_findings.py",
+        "docs/review/reproduce_dashboard_empty_bucket.py",
+        "docs/example.py",
+    ],
+)
+def test_docs_python_runs_lint_without_pytest(changes, path):
+    flags = changes.outputs_for("pull_request", [path])
+    assert flags["run_all"] == "false"
+    assert flags["ruff"] == flags["ruff_format"] == "true"
+    assert flags["sync"] == flags["setup_uv"] == "true"
+    assert all(
+        flags[step.step_id] == "false" for step in changes.CHECKS if "pytest" in step.step_id
+    )
+
+
+def test_markdown_only_skips_lint_and_pytest(changes):
+    flags = changes.outputs_for("pull_request", ["README.md", "docs/review/findings.md"])
+    assert flags["run_all"] == "false"
+    assert flags["ruff"] == flags["ruff_format"] == flags["sync"] == "false"
+    assert all(
+        flags[step.step_id] == "false" for step in changes.CHECKS if "pytest" in step.step_id
+    )
+
+
 def test_site_runs_biome_node_and_the_import_test(changes):
     flags = changes.outputs_for("pull_request", ["site/assets/site.css"])
     assert flags["biome"] == "true"
