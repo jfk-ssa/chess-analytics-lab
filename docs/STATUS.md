@@ -95,12 +95,6 @@ measurement logs here. Earlier verification logs remain in Git history.
 | Documentation website | Published; deployment and integrity CI passed | Homepage + four guides; original report preserved; [runbook](SITE.md), [checkpoint](../reports/docs-site-checkpoint.json). |
 | Personalized recommender | Backlog | Outside first-release scope |
 
-An [auxiliary examples folder](../auxiliary-examples/README.md) holds a
-publicly adapted executive metric communication example and a data
-observability screenshot. The examples are separate from Chess Analytics Lab.
-The metric document uses synthetic financial cases and omits named people,
-email addresses, customer identifiers, and internal ticket links.
-
 ## Current dataset versions
 
 - Current tiny demo on this checkout: snapshot `f2541bd7776d980764465e4b`, source SHA-256 `130df65e85d18e78bbafd89daf6696c2596e03abf939adf47f2dcbdc4d33e75b`, draw rate 0.2. `chesslab demo` on 2026-10-18 printed this id. The source checksum is unchanged. Snapshot ids include the implementation hash, and `gate.py` is part of that hash.

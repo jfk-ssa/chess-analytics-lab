@@ -141,7 +141,6 @@ See [demo troubleshooting](docs/DEMO.md#if-a-step-fails) for cache and snapshot 
 - [First-visit documentation review](docs/DOCUMENTATION_REVIEW.md); [historical repository review](docs/REPOSITORY_REVIEW.md) and [hardening plan](docs/PORTFOLIO_HANDOFF.md)
 - [Jev question-routing learning lab](docs/JEV_ROUTING_RUNBOOK.md), [measured comparison](reports/M8-routing-comparison.html), and [paired final-answer lab](docs/JEV_END_TO_END.md)
 - [OpenAI Decisions classifier lab](docs/DECISIONS_ROUTING_RUNBOOK.md), [comparison](reports/decisions-routing-comparison.html), and [measured checkpoint](reports/decisions-checkpoint.json)
-- [Separate business communication and data observability examples](auxiliary-examples/README.md)
 
 The default analyst path is offline typed-tool execution or fixture replay. A
 personal provider key, explicit model/prices and run cap are required for any

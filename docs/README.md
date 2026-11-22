@@ -48,7 +48,6 @@ live evaluations are recorded separately.
 | `reports/` | Compact historical evidence and the original comparison report |
 | `site/`, `scripts/build_docs_site.py` | Static website assets and generation from maintained guides |
 | `work/`, `data/` | Ignored local outputs and bulk warehouses. `data/public/dashboard_extract.json` is the committed extract the hosted dashboard reads |
-| `auxiliary-examples/` | Separate business communication and observability examples, outside the chess application |
 
 Paths with `m2`–`m5` identify where components were introduced; `M0`–`M8` files
 record development milestones. They are not instructions to rerun all milestones
