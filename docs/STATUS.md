@@ -14,6 +14,12 @@ With the dashboard and docs extras installed, the locked offline suite passed **
 
 ## Current state
 
+PR 1 of [ADR 0119](adr/0119-deduplicate-workflows-and-prune-stale-extras.md)
+uses a generated offline step catalog and one selected-extra sync, and removes
+the duplicate Pages lint check, unused orchestration adapters, and auxiliary
+examples. Offline checks: 679 passed, 18 skipped; 63 classifier tests passed.
+Frozen evidence and dated measurements stay unchanged. PRs 2–4 remain proposed.
+
 The portfolio page presents root `PORTFOLIO.md` with an intro strip,
 live-link pills, topic cards, wrapping source chips and a source-derived
 architecture stage list. Desktop and mobile are separate layouts (2-column

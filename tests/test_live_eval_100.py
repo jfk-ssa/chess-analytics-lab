@@ -1,4 +1,4 @@
-"""The 100-game live-eval fixture, its oracle, and the 40-case set.
+"""The 100-game live-eval fixture, its oracle, and the 48-case set.
 
 These tests do not call a model. They check that the generator is byte-stable,
 that checked tools match the independent PGN reference, and that an oracle plan

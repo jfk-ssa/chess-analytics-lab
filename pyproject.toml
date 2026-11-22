@@ -45,7 +45,7 @@ dashboard = [
 mcp = [
     "mcp==2.3.0",
 ]
-# Linux PyPI torch 2.14.1 depends on CUDA libraries. The CPU index build is
+# Linux PyPI torch 2.15.0 depends on CUDA libraries. The CPU index build is
 # the one this tool runs. macOS keeps the PyPI arm64 wheel.
 maia = [
     "torch==2.15.0 ; sys_platform != 'linux'",

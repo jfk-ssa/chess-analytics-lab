@@ -82,10 +82,10 @@ uv sync --locked --extra maia --extra dbt
 
 That extra installs torch and Maia-3 at the pinned commit. The default
 `uv sync --locked` does not install torch. On Linux the pin is
-`torch==2.14.1+cpu` from the PyTorch CPU index, because the PyPI Linux wheel
+`torch==2.15.0+cpu` from the PyTorch CPU index, because the PyPI Linux wheel
 depends on CUDA libraries and this tool refuses every device except CPU. On
 macOS the pin is the PyPI wheel
-`torch-2.14.1-cp312-cp312-macosx_14_0_arm64` (127,307,099 bytes). The running
+`torch-2.15.0-cp312-cp312-macosx_14_0_arm64` (138,558,517 bytes). The running
 tool sets `HF_HUB_OFFLINE=1` and reads the local path only.
 
 Checked fields: alias, family `maia3`, absolute `weights_path`, sha256, byte
