@@ -1,6 +1,6 @@
 # Rules, Jev and Decisions: measured comparison
 
-**HTML version:** [Read this guide on the documentation site](https://jfk-ssa.github.io/chess-analytics-lab/comparison.html).
+**HTML version:** [Read this guide on the documentation site](https://jfkbot.github.io/chess-analytics-lab/comparison.html).
 
 **Keep both classifiers optional.** Decisions matched the better Jev routing run
 on the shared historical questions. Neither classifier has demonstrated better
@@ -72,8 +72,8 @@ No new Jev or analyst call was made for the Decisions comparison.
 ## Explore or reproduce
 
 For confusion matrices, latency and coverage/error plots, open the
-[published report](https://jfk-ssa.github.io/chess-analytics-lab/reports/decisions-routing-comparison.html).
-The [interactive guide](https://jfk-ssa.github.io/chess-analytics-lab/comparison.html)
+[published report](https://jfkbot.github.io/chess-analytics-lab/reports/decisions-routing-comparison.html).
+The [interactive guide](https://jfkbot.github.io/chess-analytics-lab/comparison.html)
 lets you inspect saved question-level routes and change a descriptive threshold.
 Alternatively clone and open [the tracked HTML report](../reports/decisions-routing-comparison.html)
 locally; GitHub shows its source rather than running it. The [Decisions runbook](DECISIONS_ROUTING_RUNBOOK.md)

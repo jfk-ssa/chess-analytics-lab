@@ -1,12 +1,12 @@
 # Chess Analytics Lab
 
-Chess Analytics Lab turns chess game records into reproducible opening, clock-pressure, and move-evaluation analytics. It connects bounded ingestion and immutable DuckDB/Parquet snapshots to dbt contracts, MetricFlow metrics, dashboards, an offline mistake classifier, and tool-calling AI agents. The data and analytics engineering work spans source provenance, metric definitions, publication checks, and evaluations that separate fixture behavior from measured model results. Created by [John (jfk-ssa)](https://github.com/jfk-ssa).
+Chess Analytics Lab turns chess game records into reproducible opening, clock-pressure, and move-evaluation analytics. It connects bounded ingestion and immutable DuckDB/Parquet snapshots to dbt contracts, MetricFlow metrics, dashboards, an offline mistake classifier, and tool-calling AI agents. The data and analytics engineering work spans source provenance, metric definitions, publication checks, and evaluations that separate fixture behavior from measured model results. Created by [John (jfkbot)](https://github.com/jfkbot).
 
 ## Live
 
 - Hosted Streamlit dashboard (reads a committed Parquet cube without opening a warehouse): https://chess-analytics-lab.streamlit.app/
-- Documentation site: https://jfk-ssa.github.io/chess-analytics-lab/
-- Repository: https://github.com/jfk-ssa/chess-analytics-lab
+- Documentation site: https://jfkbot.github.io/chess-analytics-lab/
+- Repository: https://github.com/jfkbot/chess-analytics-lab
 
 ## Architecture
 
@@ -95,7 +95,7 @@ Numbered ADRs record accepted choices. Index: [docs/DECISIONS.md](docs/DECISIONS
 Prerequisites: Git and [uv](https://docs.astral.sh/uv/). From the repository root (commands from [README.md](README.md)):
 
 ```sh
-git clone https://github.com/jfk-ssa/chess-analytics-lab.git
+git clone https://github.com/jfkbot/chess-analytics-lab.git
 cd chess-analytics-lab
 uv sync --locked --no-editable --extra dashboard
 uv run --locked --offline --no-editable --extra dashboard chesslab demo --scope all

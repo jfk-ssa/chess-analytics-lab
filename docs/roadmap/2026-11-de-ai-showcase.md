@@ -12,7 +12,7 @@ demo. The lab already has dbt-duckdb marts, a MetricFlow semantic path
 ([ADR 0085](../adr/0085-governed-semantic-layer-metricflow.md)), a Parquet
 hosted cube (`data/public/dashboard_cube.parquet`), Streamlit at
 https://chess-analytics-lab.streamlit.app/, Pages at
-https://jfk-ssa.github.io/chess-analytics-lab/, and a manual `live-eval`
+https://jfkbot.github.io/chess-analytics-lab/, and a manual `live-eval`
 environment with budget caps, receipts, and frozen-file hashes. Three
 features turn that stack into resume evidence: one source of truth for KPIs,
 a supervised mistake model with calibration, and a tool-calling coach graded

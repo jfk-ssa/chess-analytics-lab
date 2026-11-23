@@ -30,8 +30,8 @@ def render(template_name: str, **context: object) -> str:
     return text[:-1] if text.endswith("\n") else text
 
 
-REPO_URL = "https://github.com/jfk-ssa/chess-analytics-lab/blob/main/"
-SITE_URL = "https://jfk-ssa.github.io/chess-analytics-lab/"
+REPO_URL = "https://github.com/jfkbot/chess-analytics-lab/blob/main/"
+SITE_URL = "https://jfkbot.github.io/chess-analytics-lab/"
 PAGES = {
     "HOME.md": "index.html",
     "CLASSIFIER_COMPARISON.md": "comparison.html",

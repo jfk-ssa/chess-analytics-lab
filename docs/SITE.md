@@ -1,7 +1,7 @@
 # Documentation website runbook
 
 The public documentation homepage is
-[Chess Analytics Lab](https://jfk-ssa.github.io/chess-analytics-lab/).
+[Chess Analytics Lab](https://jfkbot.github.io/chess-analytics-lab/).
 Markdown stays the maintained source; HTML adds navigation, interactive learning
 examples and a browser-rendered version of the existing comparison report.
 The site is static: it cannot run the analyst, contact a model or download games.
@@ -10,18 +10,18 @@ The site is static: it cannot run the analyst, contact a model or download games
 
 | Published page | Maintained sources | What HTML adds |
 | --- | --- | --- |
-| [Homepage](https://jfk-ssa.github.io/chess-analytics-lab/) | [Portfolio introduction](HOME.md), corpus, Elite position, and Decisions routing reports | Preview cards for the pipeline, transpositions, analyst routes, and local PGN import, plus the earlier outcome grid |
-| [Comparison](https://jfk-ssa.github.io/chess-analytics-lab/comparison.html) | [Classifier summary](CLASSIFIER_COMPARISON.md), frozen reports and cases | Question-level routing and threshold exploration |
-| [Architecture](https://jfk-ssa.github.io/chess-analytics-lab/architecture.html) | [Architecture guide](ARCHITECTURE.md), stage descriptions in the builder | Clickable pipeline stages and implementation links |
-| [Metrics and data](https://jfk-ssa.github.io/chess-analytics-lab/metrics.html) | [Metrics](METRICS.md), [dictionary](DATA_DICTIONARY.md), versioned contracts | Searchable contracts/schemas and a denominator illustration |
-| [Demo](https://jfk-ssa.github.io/chess-analytics-lab/demo.html) | [Demo walkthrough](DEMO.md), synthetic dashboard screenshots | Actual example screens and copyable commands |
-| [Transpositions](https://jfk-ssa.github.io/chess-analytics-lab/transpositions.html) | [Analysis guide](TRANSPOSITIONS.md), checked corpus and position reports | Rankings, route balance, coverage/depth/scatter charts, public fianchetto lenses and route comparisons |
-| [Opening learning](https://jfk-ssa.github.io/chess-analytics-lab/opening-learning.html) | [Transposition learning](TRANSPOSITION_LEARNING.md) | Illustrative board, lesson design and evaluation proposal |
-| [Live eval](https://jfk-ssa.github.io/chess-analytics-lab/live-eval.html) | Committed `reports/live-eval-receipt-*.json` files and [analyst_live_v1.json](../evals/cases/analyst_live_v1.json) | Scorecard, intervals, hard-fail panel, and per-case chart. Generated in the Pages build. |
+| [Homepage](https://jfkbot.github.io/chess-analytics-lab/) | [Portfolio introduction](HOME.md), corpus, Elite position, and Decisions routing reports | Preview cards for the pipeline, transpositions, analyst routes, and local PGN import, plus the earlier outcome grid |
+| [Comparison](https://jfkbot.github.io/chess-analytics-lab/comparison.html) | [Classifier summary](CLASSIFIER_COMPARISON.md), frozen reports and cases | Question-level routing and threshold exploration |
+| [Architecture](https://jfkbot.github.io/chess-analytics-lab/architecture.html) | [Architecture guide](ARCHITECTURE.md), stage descriptions in the builder | Clickable pipeline stages and implementation links |
+| [Metrics and data](https://jfkbot.github.io/chess-analytics-lab/metrics.html) | [Metrics](METRICS.md), [dictionary](DATA_DICTIONARY.md), versioned contracts | Searchable contracts/schemas and a denominator illustration |
+| [Demo](https://jfkbot.github.io/chess-analytics-lab/demo.html) | [Demo walkthrough](DEMO.md), synthetic dashboard screenshots | Actual example screens and copyable commands |
+| [Transpositions](https://jfkbot.github.io/chess-analytics-lab/transpositions.html) | [Analysis guide](TRANSPOSITIONS.md), checked corpus and position reports | Rankings, route balance, coverage/depth/scatter charts, public fianchetto lenses and route comparisons |
+| [Opening learning](https://jfkbot.github.io/chess-analytics-lab/opening-learning.html) | [Transposition learning](TRANSPOSITION_LEARNING.md) | Illustrative board, lesson design and evaluation proposal |
+| [Live eval](https://jfkbot.github.io/chess-analytics-lab/live-eval.html) | Committed `reports/live-eval-receipt-*.json` files and [analyst_live_v1.json](../evals/cases/analyst_live_v1.json) | Scorecard, intervals, hard-fail panel, and per-case chart. Generated in the Pages build. |
 
-| [Analyze games](https://jfk-ssa.github.io/chess-analytics-lab/import-games.html) | [Local PGN guide](GAME_IMPORT.md), [import contract](../contracts/imported_games.json), authored fixtures | Local worker replay, explicit provider/player selection, bounded reference coverage and summary download |
+| [Analyze games](https://jfkbot.github.io/chess-analytics-lab/import-games.html) | [Local PGN guide](GAME_IMPORT.md), [import contract](../contracts/imported_games.json), authored fixtures | Local worker replay, explicit provider/player selection, bounded reference coverage and summary download |
 
-The [original full comparison report](https://jfk-ssa.github.io/chess-analytics-lab/reports/decisions-routing-comparison.html)
+The [original full comparison report](https://jfkbot.github.io/chess-analytics-lab/reports/decisions-routing-comparison.html)
 is copied byte-for-byte from its tracked report, rather than rewritten. Historical
 Jev repetitions remain separate runs. Fresh Decisions questions have no matching
 Jev measurement; the explorer explicitly shows **Not measured** for those cells.

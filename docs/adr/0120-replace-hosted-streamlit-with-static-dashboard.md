@@ -154,7 +154,7 @@ Rollout uses separate merge gates:
    builders, and extract. Shrink hosted-only pins after checking local
    app needs. Update current links in README, portfolio, site sources,
    status, and guides to
-   `https://jfk-ssa.github.io/chess-analytics-lab/dashboard.html`;
+   `https://jfkbot.github.io/chess-analytics-lab/dashboard.html`;
    preserve historical ADR URLs and receipts. Make
    `docs/HOSTED_DASHBOARD.md` the current Pages guide with the ADR trail.
    Before the deletion merges, John manually removes the deployment

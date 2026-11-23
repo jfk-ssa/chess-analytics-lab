@@ -203,7 +203,7 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     )
     assert "uv sync --locked" in (output / "demo.html").read_text()
     architecture = (output / "architecture.html").read_text()
-    assert 'href="https://jfk-ssa.github.io/chess-analytics-lab/dbt-docs/"' in architecture
+    assert 'href="https://jfkbot.github.io/chess-analytics-lab/dbt-docs/"' in architecture
     assert "tiny fixture" in architecture
     placeholder = (output / "dbt-docs" / "index.html").read_text()
     assert "dbt docs generate" in placeholder
@@ -309,7 +309,7 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     assert 'class="source-note"' not in portfolio
     assert "Generated from maintained Markdown" in architecture
     assert portfolio.count("Chess Analytics Lab turns chess game records") == 1
-    assert 'href="https://github.com/jfk-ssa">John (jfk-ssa)</a>' in portfolio
+    assert 'href="https://github.com/jfkbot">John (jfkbot)</a>' in portfolio
     assert '<code class="language-sh">' in portfolio
     for forbidden in ("```mermaid", "language-mermaid", "mermaid.initialize", "cdn.jsdelivr"):
         assert forbidden not in portfolio

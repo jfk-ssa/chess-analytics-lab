@@ -102,9 +102,9 @@ byte for byte, under `reports/`:
 Every score below is a field on those receipts. The grok-4.7 receipt is
 in the section after this one. The commit is the Actions
 head SHA of the dispatch. It is not a receipt field. Luna's dispatch is
-[run 39494372489](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39494372489)
+[run 39494372489](https://github.com/jfkbot/chess-analytics-lab/actions/runs/39494372489)
 at `04c757dc0ee7159db38420cbf2e2b681870b8029`. Sol's dispatch is
-[run 39519293762](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39519293762)
+[run 39519293762](https://github.com/jfkbot/chess-analytics-lab/actions/runs/39519293762)
 at `462118b705a8e7278843a0ee0d59cc6f3f5083cc`. The runner `run_id` values
 inside the files are `cb0d2515bee44675abe1b423f8b6900d` and
 `4962a99b326b4d76b28792a839c54a9c`.
@@ -122,7 +122,7 @@ objects. Wilson records z `1.959963984540054`. The bootstrap method is
 
 | Measure | Luna | Sol |
 |---|---|---|
-| GitHub run | [39494372489](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39494372489) | [39519293762](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39519293762) |
+| GitHub run | [39494372489](https://github.com/jfkbot/chess-analytics-lab/actions/runs/39494372489) | [39519293762](https://github.com/jfkbot/chess-analytics-lab/actions/runs/39519293762) |
 | Commit | `04c757dc0ee7159db38420cbf2e2b681870b8029` | `462118b705a8e7278843a0ee0d59cc6f3f5083cc` |
 | Model | `gpt-6-luna` | `gpt-6-sol` |
 | Headline | 207/240 (0.8625) | 234/240 (0.975) |
@@ -193,7 +193,7 @@ stays `live-eval-1.0`. The gate stays advisory, and this checkout adds
 no schedule.
 
 The documentation build reads `reports/live-eval-receipt-*.json` and
-publishes [the live-eval page](https://jfk-ssa.github.io/chess-analytics-lab/live-eval.html).
+publishes [the live-eval page](https://jfkbot.github.io/chess-analytics-lab/live-eval.html).
 The headline there is the raw pass rate, with repair counts beside it.
 Sol's hard fail is the five `boundary_budget` rows described above.
 The instruction-hash note on that page uses this explanation for the
@@ -230,7 +230,7 @@ A later low x5 dispatch completed. The artifact is committed as
 `reports/live-eval-receipt-grok-4.7-low-r5-39541049632.json`, SHA-256
 `ddfce80bcc55b58e6f65f43765b79743c0849c061fb03510d790fa18c4ffa316`.
 The Actions run is
-[39541049632](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39541049632)
+[39541049632](https://github.com/jfkbot/chess-analytics-lab/actions/runs/39541049632)
 at `e396cf45dd111ec860b0ba06d1cf504189d1349d`. The input was
 `model-default`. The receipt records `reasoning_effort` `low`. The
 headline is 233/240 (0.9708333333333333). Wilson 95% is
@@ -263,10 +263,10 @@ not comparable. See
 Medium x1 and high x1 are committed from main `15aaeb3`. The artifacts are
 `reports/live-eval-receipt-grok-4.7-medium-r1-39583448999.json` (SHA-256
 `539210c8ec139f48f3d8664ce8b827c61a6bbee8cabae2bb86c7358c1923b856`, Actions run
-[39583448999](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39583448999))
+[39583448999](https://github.com/jfkbot/chess-analytics-lab/actions/runs/39583448999))
 and `reports/live-eval-receipt-grok-4.7-high-r1-39583461520.json` (SHA-256
 `185d7dfcc4dcd9b92983420ed7798ac218788a65c2d2927d13bd024302ff724a`, Actions run
-[39583461520](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39583461520)).
+[39583461520](https://github.com/jfkbot/chess-analytics-lab/actions/runs/39583461520)).
 Medium is 45/48, Wilson 0.8316456194505365 to 0.9785167670916107, bootstrap
 0.8541666666666666 to 1.0, `hard_fail` false, three over-abstentions
 (`coverage_1`, `coverage_2`, `indirect_opening_1`), known gross cost $0.322454,
@@ -291,7 +291,7 @@ run is not strictly comparable and does not sign-test it against any
 That low x1 receipt is committed as
 `reports/live-eval-receipt-grok-4.7-low-r1-39588587088.json`, SHA-256
 `cca411fd9d7de20938a127c24e6b84870180079b45d597da5dc24425d56f349d`, Actions run
-[39588587088](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/39588587088).
+[39588587088](https://github.com/jfkbot/chess-analytics-lab/actions/runs/39588587088).
 It is 47/48, Wilson 0.8910078200474814 to 0.9963128890224893 (the same
 interval as high), bootstrap 0.9375 to 1.0, `hard_fail` false, one
 over-abstention (`coverage_2`, `unsupported`, empty actions), known gross

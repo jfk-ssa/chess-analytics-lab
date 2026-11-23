@@ -1065,7 +1065,7 @@ def _eval_tab(layout, charts, extract: dict, rows) -> None:
     _eval_cards(layout, runs)
     _caption(
         "Published live-eval report: "
-        "[live-eval.html](https://jfk-ssa.github.io/chess-analytics-lab/live-eval.html)."
+        "[live-eval.html](https://jfkbot.github.io/chess-analytics-lab/live-eval.html)."
     )
     st.subheader("Pass rate")
     _set_heading(_SET_FIVE)

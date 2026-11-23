@@ -1,6 +1,6 @@
 # Metric registry
 
-**HTML version:** [Read this guide on the documentation site](https://jfk-ssa.github.io/chess-analytics-lab/metrics.html).
+**HTML version:** [Read this guide on the documentation site](https://jfkbot.github.io/chess-analytics-lab/metrics.html).
 
 `contracts/game_draw_rate.json` is the versioned definition and result schema.
 `src/chess_analytics/metrics/draw_rate.sql` is the reviewed SQL implementation.

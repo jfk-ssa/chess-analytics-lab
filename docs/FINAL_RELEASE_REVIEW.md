@@ -3,7 +3,7 @@
 The four bounded findings below were fixed offline after this review. The
 historical findings and the original M8 evidence remain preserved. A fresh
 release candidate was committed as `07c1344` and pushed to a private GitHub
-repository. GitHub Actions run [37371042615](https://github.com/jfk-ssa/chess-analytics-lab/actions/runs/37371042615)
+repository. GitHub Actions run [37371042615](https://github.com/jfkbot/chess-analytics-lab/actions/runs/37371042615)
 subsequently passed both jobs on `73b6dfc`; the owner approved public visibility,
 and GitHub reports the repository as public.
 
