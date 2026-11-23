@@ -20,6 +20,16 @@ the duplicate Pages lint check, unused orchestration adapters, and auxiliary
 examples. Offline checks: 679 passed, 18 skipped; 63 classifier tests passed.
 Frozen evidence and dated measurements stay unchanged. PRs 2–4 remain proposed.
 
+PR 2 of [ADR 0120](adr/0120-replace-hosted-streamlit-with-static-dashboard.md)
+adds the [Pages dashboard](https://jfkbot.github.io/chess-analytics-lab/dashboard.html)
+from the committed public cube, with browser filters/drills, KPI comparisons,
+capped clock samples, separately scoped cube/extract provenance and a downloadable
+PR preview. The JSON view contains 35,100 rows in 14 grains. The site build makes
+no live requests. Hosted code/tests and the local dashboard remain. Deployed-page
+acceptance and browser review at 1280px/390px are still pending; local sockets and
+Chromium are unavailable in this implementation sandbox. Follow the
+[acceptance procedure](SITE.md#dashboard-acceptance-before-pr-3) before PR 3.
+
 The portfolio page presents root `PORTFOLIO.md` with an intro strip,
 live-link pills, topic cards, wrapping source chips and a source-derived
 architecture stage list. Desktop and mobile are separate layouts (2-column

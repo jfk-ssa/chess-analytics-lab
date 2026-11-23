@@ -4,9 +4,11 @@ Each accepted choice is a short record in [docs/adr/](adr/). Add the next number
 when a choice should outlive the chat that made it. [Status](STATUS.md) is a
 short summary of the current checkout, not a log of new decisions.
 
-PR 1 implements CI cleanup and pruning in ADR 0119. ADRs 0120–0121
-still propose the remaining PRs in order: 2 static dashboard publish (0120),
-3 retire hosted Streamlit (0120), 4 scoped hash (0121).
+PR 1 implements CI cleanup and pruning in ADR 0119. PR 2 implements the static
+dashboard publication, separately scoped provenance, CI tests and PR previews
+from ADR 0120. The [acceptance procedure](SITE.md#dashboard-acceptance-before-pr-3)
+records the remaining deployed-page review gate. PR 3 hosted Streamlit retirement
+(0120) and PR 4 scoped hashing (0121) remain proposed.
 PRs 2 and 3 merge separately;
 PR 3 requires recorded acceptance of the deployed Pages dashboard.
 

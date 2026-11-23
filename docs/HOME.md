@@ -6,7 +6,10 @@ analyst whose answers carry snapshot-bound evidence. Local DuckDB and Parquet
 keep the system reproducible; dbt models and recovery checks demonstrate how
 the data is validated before publication.
 
-The dashboard runs locally. The website lets you inspect recorded results,
+The [Pages dashboard](https://jfkbot.github.io/chess-analytics-lab/dashboard.html) filters the
+published cube with opening drills, clock samples and separate cube/extract
+provenance. The local six-view dashboard remains available.
+The website also lets you inspect recorded results,
 explore measured opening positions and move orders, try illustrative controls,
 and follow the offline demo.
 

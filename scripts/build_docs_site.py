@@ -93,6 +93,7 @@ PRIMARY_NAV = (
     ("AI analyst", "comparison.html"),
 )
 LAB_NAV = (
+    ("Dashboard", "dashboard.html"),
     ("Metrics & data", "metrics.html"),
     ("Architecture", "architecture.html"),
     ("Run the demo", "demo.html"),

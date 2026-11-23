@@ -4,6 +4,7 @@ Chess Analytics Lab turns chess game records into reproducible opening, clock-pr
 
 ## Live
 
+- Pages dashboard (committed cube, browser filters and scoped provenance): https://jfkbot.github.io/chess-analytics-lab/dashboard.html
 - Hosted Streamlit dashboard (reads a committed Parquet cube without opening a warehouse): https://chess-analytics-lab.streamlit.app/
 - Documentation site: https://jfkbot.github.io/chess-analytics-lab/
 - Repository: https://github.com/jfkbot/chess-analytics-lab

@@ -69,6 +69,10 @@ preserved in the [historical orchestration guide](ORCHESTRATION.md).
 
 ## 3. Explore the six dashboard views
 
+For the public aggregates, use the [Pages dashboard](https://jfkbot.github.io/chess-analytics-lab/dashboard.html).
+Its cube filters and opening drills are separate from the warehouse-backed
+six-view local app below.
+
 Start Streamlit from the same repository root:
 
 ```sh

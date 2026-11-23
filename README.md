@@ -58,6 +58,9 @@ proxy; 8 moves are eligible. These are fixture arithmetic, not player behavior.
 The dashboard flags the source as synthetic. See the [demo guide](docs/DEMO.md)
 for replay and verification commands.
 
+Explore the [Pages dashboard](https://jfkbot.github.io/chess-analytics-lab/dashboard.html) for filters,
+opening drills, clock samples and scoped provenance; see the
+[preview and acceptance runbook](docs/SITE.md#dashboard-acceptance-before-pr-3).
 The hosted page is separate from the six-view dashboard above. It reads only
 the committed aggregate extract and does not open a warehouse. See
 [the hosted dashboard](docs/HOSTED_DASHBOARD.md).

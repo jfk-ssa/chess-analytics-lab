@@ -70,7 +70,7 @@ def test_header_layouts_fit_without_a_horizontal_scroller():
     assert "scrollbar-width: none" in phone
     assert "flex-wrap: nowrap" in phone
     assert "repeat(5, minmax(0, 1fr))" in tablet
-    assert "repeat(7, minmax(0, 1fr))" in tablet
+    assert "repeat(8, minmax(0, 1fr))" in tablet
     assert ".cards.preview-cards" in css
     assert "grid-template-columns: minmax(0, 1fr);" in css
     assert "Analyze games" in (ROOT / "scripts/build_docs_site.py").read_text()
@@ -229,6 +229,7 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
         ("AI analyst", "comparison.html"),
     )
     assert site.LAB_NAV == (
+        ("Dashboard", "dashboard.html"),
         ("Metrics & data", "metrics.html"),
         ("Architecture", "architecture.html"),
         ("Run the demo", "demo.html"),
@@ -247,7 +248,7 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
         destinations = [link["href"] for link in navigation.links]
         expected = [path for _, path in site.PRIMARY_NAV + site.LAB_NAV]
         assert destinations == expected + expected
-        assert set(destinations) == set(result["pages"]) - {"dashboard.html"}
+        assert set(destinations) == set(result["pages"])
         current = [link["href"] for link in navigation.links if link.get("aria-current") == "page"]
         assert current == [href for href in destinations if href == name]
         assert "nav-toggle" not in text and "js-class.js" not in text and "nav-group" not in text
@@ -303,7 +304,7 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     assert '<body class="page-portfolio">' in portfolio
     assert 'class="portfolio-intro"' in portfolio
     assert 'class="portfolio-lead"' in portfolio
-    assert portfolio.count('class="portfolio-live-pill"') == 3
+    assert portfolio.count('class="portfolio-live-pill"') == 4
     assert portfolio.count('class="portfolio-card') == 9
     assert 'class="portfolio-sources"' in portfolio
     assert 'class="portfolio-source"' in portfolio
