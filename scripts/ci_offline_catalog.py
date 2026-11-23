@@ -322,7 +322,7 @@ STEPS = (
         categories=("python", "analyst", "dbt"),
         exact=(
             "CHESSLAB_REQUIRE_DBT=1 uv run --locked --offline --no-editable "
-            "--no-sync pytest -m dbt -q -n 4 --durations=15"
+            "--no-sync pytest -m dbt -q -n 4 --dist loadscope --durations=15"
         ),
         extras=("dbt",),
         requires=("sync", "record_selection", "setup_uv"),

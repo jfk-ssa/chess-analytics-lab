@@ -189,7 +189,7 @@ jobs:
       - id: pytest_dbt
         name: Pytest dbt
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.pytest_dbt == 'true' }}
-        run: CHESSLAB_REQUIRE_DBT=1 uv run --locked --offline --no-editable --no-sync pytest -m dbt -q -n 4 --durations=15
+        run: CHESSLAB_REQUIRE_DBT=1 uv run --locked --offline --no-editable --no-sync pytest -m dbt -q -n 4 --dist loadscope --durations=15
       - id: transform
         name: Transform
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.transform == 'true' }}

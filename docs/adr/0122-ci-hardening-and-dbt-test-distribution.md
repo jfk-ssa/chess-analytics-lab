@@ -1,6 +1,6 @@
 # 0122. Harden CI workflows and trial module-scoped dbt test distribution
 
-- Status: Accepted for PR A; PR B remains proposed
+- Status: Accepted for PR A; PR B implemented, pending hosted timing gate
 - Date: 2026-11-22
 
 ## Context
@@ -75,6 +75,18 @@ identical passed and skipped counts. Otherwise revert it, record the
 numbers here, and don't build cross-worker file locks without a new
 decision. Expected result is about 45–50s, because the two long test
 bodies set a floor near 40s.
+
+### PR B results
+
+The catalog command and generated workflow now use `--dist loadscope` for
+`pytest_dbt` only. The hosted keep/drop gate is pending: keep only if the
+median of three hosted `pytest_dbt` step durations falls by at least 10s
+versus the #105-era baseline, with identical passed and skipped counts.
+Otherwise revert the change.
+
+- #105-era baseline runs, step durations, median, passed/skipped counts: **pending**.
+- PR B three hosted runs, step durations, median, passed/skipped counts: **pending**.
+- Median reduction and keep/drop decision: **pending hosted runs**.
 
 ## Consequences
 

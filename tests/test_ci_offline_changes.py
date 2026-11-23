@@ -322,6 +322,9 @@ def test_python_runs_the_full_pytest_and_not_the_narrow_files(changes):
 def test_dbt_runs_slim_selection_and_both_pytest_steps(changes):
     dbt_step = next(step for step in changes.CHECKS if step.step_id == "pytest_dbt")
     assert "setup_node" not in dbt_step.requires
+    assert "--dist loadscope" in dbt_step.exact
+    core_step = next(step for step in changes.CHECKS if step.step_id == "pytest")
+    assert "--dist loadscope" not in core_step.exact
     flags = changes.outputs_for("pull_request", ["dbt/models/marts/games.sql"])
     assert flags["dbt_slim"] == "true"
     assert flags["pytest"] == "true"
