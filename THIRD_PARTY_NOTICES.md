@@ -14,7 +14,7 @@ and are absent from the current lock.
 | Component | Version | License reported by distribution |
 |---|---|---|
 | chess (python-chess) | 1.11.2 | GPL-3.0-or-later |
-| DuckDB | 2.0.0 | MIT |
+| DuckDB | 2.0.1 | MIT |
 | zstandard | 0.25.0 | BSD-3-Clause (also inspect bundled native-library notices) |
 | pytest (development) | 8.4.2 | MIT |
 | Ruff (development) | 0.14.0 | MIT |

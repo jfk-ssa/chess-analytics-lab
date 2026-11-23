@@ -20,7 +20,7 @@ def sql_preview() -> str:
     return (
         "-- Run only with an explicit key and gross cap in an isolated DuckDB version.\n"
         "-- INSTALL/LOAD are intentionally omitted: "
-        "pinned DuckDB 2.0.0 has no packaged Jev binary.\n"
+        "pinned DuckDB 2.0.1 has no packaged Jev binary.\n"
         "SET jev_model = 'jev-1.13.0';\n"
         "SET jev_batch_size = 20;\n"
         "SET jev_concurrency = 1;\n"

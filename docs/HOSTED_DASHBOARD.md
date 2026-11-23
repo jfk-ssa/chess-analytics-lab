@@ -246,7 +246,7 @@ depends on. If they stay unpinned, pip can install versions that differ
 from `uv.lock`. The requirements file therefore also pins the locked
 versions, `altair==6.3.0`, `narwhals==2.29.0`, `jsonschema==4.26.0`,
 `pandas==3.1.1`, `protobuf==6.33.6`, `pillow==13.0.0`,
-`certifi==2026.10.23`, and `duckdb==2.0.0`. The locked Streamlit 1.67.0
+`certifi==2026.10.23`, and `duckdb==2.0.1`. The locked Streamlit 1.67.0
 wheel accepts `altair!=5.4.0,!=5.4.1,<7,>=5.0.0`, `pandas<4,>=1.5.3`,
 `protobuf<8,>=5.26.1`, and `pillow<14,>=9.2.0`, so those pins install.
 Pillow 13.0.0 closes the advisories on 11.3.0. Streamlit 1.65.0 required
@@ -257,6 +257,6 @@ Altair 6.3.0 depends on jsonschema and narwhals. Protobuf stays on
 6.33.6. Dagster 1.13.x, dbt-common 1.39.0, and dbt-adapters 1.24.5
 require `protobuf<7`, so 7.36.2 cannot enter the universal lock
 ([ADR 0104](adr/0104-hosted-altair-6-and-pandas-3-pins.md)). DuckDB
-2.0.0 has no dependencies. The cp312-abi3 manylinux x86_64 wheel recorded in
-`uv.lock` is 24,371,005 bytes
+2.0.1 has no dependencies. The cp312-abi3 manylinux x86_64 wheel recorded in
+`uv.lock` is 24,944,619 bytes
 ([ADR 0110](adr/0110-duckdb-2.md)).
