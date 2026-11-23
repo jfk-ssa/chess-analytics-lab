@@ -662,3 +662,17 @@ def test_import_publication_rejects_changed_vendor(tmp_path):
     (vendor / "chess-1.4.0.mjs").write_text("modified dependency")
     with pytest.raises(ValueError, match="Vendored chess library hash changed"):
         site.game_import(tmp_path, tmp_path / "output")
+
+
+def test_pages_pr_preview_keeps_the_deploy_guard():
+    workflow = (ROOT / ".github/workflows/pages.yml").read_text()
+    preview = workflow.split("      - name: Downloadable PR preview\n", 1)[1]
+    preview = preview.split("      - uses: actions/upload-pages-artifact@", 1)[0]
+    assert "if: github.event_name == 'pull_request'" in preview
+    assert "uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9" in preview
+    assert "path: work/docs-site" in preview
+    assert "include-hidden-files: true" in preview
+    assert "if-no-files-found: error" in preview
+    assert "if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'" in workflow
+    assert "tests/test_dashboard_cube.py tests/test_dashboard_export.py" in workflow
+    assert "actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1" in workflow

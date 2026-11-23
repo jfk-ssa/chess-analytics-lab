@@ -71,6 +71,27 @@ that HTML. Page markup lives in `scripts/templates`. Edit the Markdown, contract
 templates, or `site/assets/site.css` and `site/assets/site.js`, then rebuild. The
 optional `docs` extra pins Markdown and Jinja2; the application does not need them.
 
+## Download a pull-request preview
+
+On the pull request's **Documentation website** run, download the
+`docs-site-pr-<number>` artifact and unzip it into a fresh directory. It contains
+the complete `work/docs-site` build, including `dashboard.html`, its local assets,
+and `site-build.json` with input/output hashes and separate provenance scopes.
+The artifact expires after seven days. Serve the unzipped directory over HTTP:
+
+```sh
+python3 -m http.server 8767 --bind 127.0.0.1 --directory /path/to/unzipped-preview
+```
+
+Open `http://127.0.0.1:8767/dashboard.html`. HTTP serves the JavaScript modules
+and JSON view; opening the HTML directly as a file does not provide that module
+loading environment. The same command previews a local build by substituting
+`work/docs-site` for the directory. Stop the server with Ctrl-C.
+
+PR runs upload this downloadable preview and never deploy Pages. The existing
+main/non-PR deploy guard remains the publication gate. A preview review does
+not count as the deployed-page acceptance required before PR 3.
+
 ## Navigation
 
 Every generated page shows the same links. No group is behind a dropdown or a

@@ -46,6 +46,15 @@ jobs:
             echo "dbt docs output is still the local placeholder" >&2
             exit 1
           fi
+      - name: Downloadable PR preview
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: docs-site-pr-${{ github.event.number }}
+          path: work/docs-site
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: work/docs-site
