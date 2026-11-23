@@ -111,6 +111,8 @@ jobs:
         uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d
         with:
           version: "0.12.18"
+          enable-cache: true
+          cache-suffix: offline
       - id: setup_node
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.setup_node == 'true' }}
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
@@ -244,6 +246,8 @@ jobs:
         uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d
         with:
           version: "0.12.18"
+          enable-cache: true
+          cache-suffix: offline-core
       - id: core_setup_node
         if: ${{ needs.changes.result != 'success' || steps.core_selection.outputs.fallback != 'false' || needs.changes.outputs.core_setup_node == 'true' }}
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
@@ -254,7 +258,7 @@ jobs:
         run: uv sync --locked --no-editable
       - id: pytest
         if: ${{ needs.changes.result != 'success' || steps.core_selection.outputs.fallback != 'false' || needs.changes.outputs.pytest == 'true' }}
-        run: uv run --locked --offline --no-editable pytest -q -n 4 --durations=15
+        run: uv run --locked --offline --no-editable --no-sync pytest -q -n 4 --durations=15
       # END managed offline-core
   portfolio:
     needs: changes
@@ -275,13 +279,15 @@ jobs:
         uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d
         with:
           version: "0.12.18"
+          enable-cache: true
+          cache-suffix: portfolio
       - id: portfolio_sync
         if: ${{ needs.changes.result != 'success' || steps.portfolio_record.outputs.fallback != 'false' || needs.changes.outputs.portfolio_sync == 'true' }}
         run: uv sync --locked --no-editable --extra dashboard
       - id: pytest_portfolio
         if: ${{ needs.changes.result != 'success' || steps.portfolio_record.outputs.fallback != 'false' || needs.changes.outputs.pytest_portfolio == 'true' }}
-        run: uv run --locked --offline --no-editable --extra dashboard pytest -q tests/test_portfolio_integrity.py tests/test_portfolio_demo.py tests/test_hosted_dashboard.py
+        run: uv run --locked --offline --no-editable --no-sync --extra dashboard pytest -q tests/test_portfolio_integrity.py tests/test_portfolio_demo.py tests/test_hosted_dashboard.py
       - id: demo_all
         if: ${{ needs.changes.result != 'success' || steps.portfolio_record.outputs.fallback != 'false' || needs.changes.outputs.demo_all == 'true' }}
-        run: uv run --locked --offline --no-editable --extra dashboard chesslab demo --scope all
+        run: uv run --locked --offline --no-editable --no-sync --extra dashboard chesslab demo --scope all
       # END managed portfolio

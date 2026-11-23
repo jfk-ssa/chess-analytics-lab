@@ -164,7 +164,7 @@ STEPS = (
         "support",
         uses="astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2",
         requires=("record_selection",),
-        details='with:\n  version: "0.12.18"',
+        details='with:\n  version: "0.12.18"\n  enable-cache: true\n  cache-suffix: offline',
     ),
     Step(
         "offline",
@@ -469,7 +469,7 @@ STEPS = (
         "support",
         uses="astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2",
         requires=("core_selection",),
-        details='with:\n  version: "0.12.18"',
+        details='with:\n  version: "0.12.18"\n  enable-cache: true\n  cache-suffix: offline-core',
     ),
     Step(
         "offline-core",
@@ -491,7 +491,7 @@ STEPS = (
         "pytest",
         "check",
         categories=("python", "analyst", "dbt"),
-        exact="uv run --locked --offline --no-editable pytest -q -n 4 --durations=15",
+        exact="uv run --locked --offline --no-editable --no-sync pytest -q -n 4 --durations=15",
         requires=("core_sync", "core_setup_node", "core_selection", "core_setup_uv"),
     ),
     Step(
@@ -516,7 +516,7 @@ STEPS = (
         "support",
         uses="astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2",
         requires=("portfolio_record",),
-        details='with:\n  version: "0.12.18"',
+        details='with:\n  version: "0.12.18"\n  enable-cache: true\n  cache-suffix: portfolio',
     ),
     Step(
         "portfolio",
@@ -531,7 +531,7 @@ STEPS = (
         "check",
         categories=("python", "analyst", "dbt", "hosted"),
         exact=(
-            "uv run --locked --offline --no-editable --extra dashboard "
+            "uv run --locked --offline --no-editable --no-sync --extra dashboard "
             "pytest -q tests/test_portfolio_integrity.py "
             "tests/test_portfolio_demo.py tests/test_hosted_dashboard.py"
         ),
@@ -543,7 +543,8 @@ STEPS = (
         "check",
         categories=("python", "analyst", "dbt", "hosted"),
         exact=(
-            "uv run --locked --offline --no-editable --extra dashboard chesslab demo --scope all"
+            "uv run --locked --offline --no-editable --no-sync --extra dashboard "
+            "chesslab demo --scope all"
         ),
         requires=("pytest_portfolio", "portfolio_record", "portfolio_setup_uv", "portfolio_sync"),
     ),
