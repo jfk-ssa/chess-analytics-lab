@@ -85,9 +85,9 @@ PR 2's cohort correction scopes Games, results, opening views and periods to
 dates use that cohort's bounds; expanding the range never adds `elite_reference`.
 Clock slices and samples retain their separate `m3_august_prefix` population.
 All-color result rates explicitly name White perspective. Count bars start at
-zero; rate bars start at 90% of the displayed minimum and end at 100%, with
-both bounds in the caption. Offline regression tests cover synthetic mixed
-cohorts and the committed cube's 770,626 Games and nine rated-public periods.
+zero; rate bars start at 90% of the displayed minimum and end at the highest
+displayed rate, with both bounds in the caption. Offline regression tests cover
+synthetic mixed cohorts and the committed cube's 770,626 Games and nine rated-public periods.
 
 Provenance has two distinct inputs. The cube supplies chart rows and
 has no mart id, source snapshot, or build hashes in its columns.

@@ -82,11 +82,17 @@ test('August clock fallback is explicit and absent controls never reuse it', () 
   assert.throws(() => cube.clockGames(f, 'invalid'));
   assert.throws(() => cube.clockGames(f, 'under_10', 0));
 });
-test('count axes use zero and rate axes start ten percent below the minimum', () => {
+test('count axes use zero and rate axes span ten percent below the minimum to the maximum', () => {
   assert.deepEqual(barDomain([30, 40]), [0, 40]);
-  assert.deepEqual(barDomain([0.8, 0.9], false), [0.9 * 0.8, 1]);
-  assert.deepEqual(barDomain([0.077, 0.193], false), [0.9 * 0.077, 1]);
+  assert.deepEqual(barDomain([0, 0]), [0, 1]);
+  assert.deepEqual(barDomain([0.8, 0.9], false), [0.9 * 0.8, 0.9]);
+  assert.deepEqual(barDomain([0.193, 0.121, 0.077, 0.083], false), [0.9 * 0.077, 0.193]);
+  assert.deepEqual(barDomain([0.8, 0.8], false), [0.9 * 0.8, 0.8]);
+  assert.deepEqual(barDomain([0.8], false), [0.9 * 0.8, 0.8]);
+  assert.deepEqual(barDomain([-0.1, 0.2], false), [0, 0.2]);
   assert.deepEqual(barDomain([0, 0], false), [0, 1]);
+  assert.deepEqual(barDomain([0], false), [0, 1]);
+  assert.deepEqual(barDomain([], false), [0, 1]);
 });
 test('invalid exported JSON fails visibly', () => {
   assert.throws(() => new Cube({ version: 2, grains: {} }));
@@ -121,7 +127,7 @@ test('UI renders the shared query results, drills, reset, empty cut and invalid 
   try {
     await import('../../site/assets/dashboard-ui.mjs?ui-test');
     assert.match(view.innerHTML, /dash-kpis/);
-    assert.match(view.innerHTML, /Rate axis: 9.0%–100.0%/);
+    assert.match(view.innerHTML, /Rate axis: 9.0%–10.0%/);
     assert.match(view.innerHTML, /White perspective/);
     assert.match(view.innerHTML, /200 eligible moves/);
     assert.match(view.innerHTML, /100 evaluable moves/);

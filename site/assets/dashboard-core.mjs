@@ -456,7 +456,10 @@ export class Cube {
     return cards;
   }
 }
-// Rates start 10% below the displayed minimum; count bars always start at zero.
+// Rates span 10% below the displayed minimum to the maximum; count bars start at zero.
 export function barDomain(values, count = true) {
-  return [count ? 0 : Math.max(0, 0.9 * Math.min(...values)), count ? Math.max(1, ...values) : 1];
+  if (count || !values.length) return [0, Math.max(1, ...values)];
+  const low = Math.max(0, 0.9 * Math.min(...values));
+  const high = Math.max(...values);
+  return [low, high > low ? high : low + 1];
 }

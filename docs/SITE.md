@@ -285,8 +285,8 @@ model, or download. String dictionaries and per-grain columns keep the generated
 JSON compact. Inter, the shared site tokens and the 1120px outer canvas remain.
 The Lab navigation includes Dashboard. Layout uses four equal tracks on desktop
 and two on phones; SAN full moves wrap as units. Count axes start at zero;
-clock error rates start 10% below the lowest displayed rate and end at 100%,
-with the actual domain shown in the axis caption.
+clock error rates start 10% below the lowest displayed rate and end at the highest
+displayed rate, with the actual domain shown in the axis caption.
 
 Games, results, periods, positions and transpositions use only `rated_public`,
 even when the date range includes the elite reference month. The default range

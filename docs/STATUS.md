@@ -28,7 +28,9 @@ capped clock samples, separately scoped cube/extract provenance and a downloadab
 PR preview. The JSON view contains 35,100 rows in 14 grains. The site build makes
 no live requests. Pages now keeps games/results/openings/periods in `rated_public`
 (770,626 Games; nine period bars totaling 802,260), with August clock data
-separate. Cohort, rate-axis and perspective regressions pass: 22 Node tests and
+separate. Pages rate bars start at 90% of the displayed minimum and end at the
+highest displayed rate, with both bounds in the caption.
+Cohort, rate-axis and perspective regressions pass: 22 Node tests and
 59 focused Python tests offline. Hosted code/tests and the local dashboard remain. Deployed-page
 acceptance and browser review at 1280px/390px are still pending; local sockets and
 Chromium are unavailable in this implementation sandbox. Follow the
