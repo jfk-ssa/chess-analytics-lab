@@ -111,6 +111,12 @@ def test_repository_map_matches_the_workflow(changes):
     assert changes.audit_repository(ROOT) == []
 
 
+def test_generated_steps_have_names(changes):
+    text = WORKFLOW.read_text(encoding="utf-8")
+    for step in (*changes.ALWAYS_STEPS, *changes.SUPPORT, *changes.CHECKS):
+        assert re.search(rf"      - id: {step.step_id}\n        name: \S[^\n]*\n", text)
+
+
 @pytest.mark.parametrize("quote", ["", "'", '"'])
 def test_setup_uv_accepts_a_new_shared_full_sha(changes, quote):
     text = WORKFLOW.read_text(encoding="utf-8")
@@ -193,6 +199,7 @@ def test_only_pull_requests_select_steps(changes):
         assert flags["run_all"] == "true"
         assert flags["pytest"] == "true"
         assert flags["pytest_dbt"] == "true"
+        assert flags["setup_node"] == flags["core_setup_node"] == "true"
         assert flags["pytest_ml"] == "true"
         assert flags["analyst_gate"] == "true"
 
@@ -252,6 +259,7 @@ def test_site_runs_biome_node_and_the_import_test(changes):
     assert flags["biome"] == "true"
     assert flags["node_check_import"] == "true"
     assert flags["pytest_game_import"] == "true"
+    assert flags["setup_node"] == "true"
     assert flags["pytest"] == "false"
     assert flags["pytest_dbt"] == "false"
     assert flags["pytest_ml"] == "false"
@@ -304,14 +312,16 @@ def test_python_runs_the_full_pytest_and_not_the_narrow_files(changes):
     assert flags["basedpyright"] == "true"
     assert flags["dbt_slim"] == "false"
     assert flags["biome"] == "false"
-    assert flags["setup_node"] == "true"
+    assert flags["setup_node"] == "false"
     assert flags["core_setup_uv"] == "true"
     assert flags["core_setup_node"] == "true"
     assert flags["core_sync"] == "true"
-    assert _skipped(flags, OFFLINE_STEPS) == 25.0
+    assert _skipped(flags, OFFLINE_STEPS) == 26.0
 
 
 def test_dbt_runs_slim_selection_and_both_pytest_steps(changes):
+    dbt_step = next(step for step in changes.CHECKS if step.step_id == "pytest_dbt")
+    assert "setup_node" not in dbt_step.requires
     flags = changes.outputs_for("pull_request", ["dbt/models/marts/games.sql"])
     assert flags["dbt_slim"] == "true"
     assert flags["pytest"] == "true"
@@ -321,13 +331,13 @@ def test_dbt_runs_slim_selection_and_both_pytest_steps(changes):
     assert flags["biome"] == "false"
     assert flags["pytest_mcp"] == "false"
     assert flags["pytest_ml"] == "false"
-    assert flags["setup_node"] == "true"
+    assert flags["setup_node"] == "false"
     assert flags["core_setup_node"] == "true"
-    assert _skipped(flags, OFFLINE_STEPS) == 24.0
+    assert _skipped(flags, OFFLINE_STEPS) == 25.0
     lineage = changes.outputs_for("pull_request", ["docs/DBT_LINEAGE.md"])
     assert lineage["semantic"] == "true"
     assert lineage["pytest_dbt"] == "true"
-    assert lineage["setup_node"] == "true"
+    assert lineage["setup_node"] == "false"
 
 
 def test_analyst_evals_and_receipts_keep_their_guards(changes):
@@ -346,11 +356,12 @@ def test_analyst_evals_and_receipts_keep_their_guards(changes):
         assert flags["pytest_dbt"] == "true", path
         assert flags["pytest_portfolio"] == "true", path
     pure = changes.outputs_for("pull_request", ["evals/baselines/analyst_gate_v1.json"])
-    assert pure["setup_node"] == "true"
+    assert pure["setup_node"] == "false"
     assert pure["core_setup_uv"] == "true"
+    assert pure["core_setup_node"] == "true"
     assert pure["core_sync"] == "true"
     assert pure["pytest_ml"] == "false"
-    assert _skipped(pure, OFFLINE_STEPS) == 38.0
+    assert _skipped(pure, OFFLINE_STEPS) == 39.0
 
 
 def test_force_all_and_unknown_paths_run_every_historical_step(changes):

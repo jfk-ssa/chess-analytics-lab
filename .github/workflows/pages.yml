@@ -8,40 +8,43 @@ permissions:
   contents: read
 concurrency:
   group: documentation-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
         with:
           version: "0.12.18"
+          enable-cache: true
+          cache-suffix: pages-build
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v6.5.0
         with:
           node-version: "24"
       - run: uv sync --locked --no-editable --extra docs --extra dbt
-      - run: uv run --locked --offline --no-editable --extra docs --extra dbt python scripts/materialize_opening_positions.py
-      - run: uv run --locked --offline --no-editable --extra docs --extra dbt pytest -q tests/test_docs_site.py tests/test_dashboard_cube.py tests/test_dashboard_export.py
-      - run: uv run --locked --offline --no-editable --extra docs --extra dbt python scripts/build_docs_site.py
+      - run: uv run --locked --offline --no-editable --no-sync --extra docs --extra dbt python scripts/materialize_opening_positions.py
+      - run: uv run --locked --offline --no-editable --no-sync --extra docs --extra dbt pytest -q tests/test_docs_site.py tests/test_dashboard_cube.py tests/test_dashboard_export.py
+      - run: uv run --locked --offline --no-editable --no-sync --extra docs --extra dbt python scripts/build_docs_site.py
       - name: Publish dbt docs from the tiny fixture
         run: |
           set -euo pipefail
-          uv run --locked --offline --no-editable --extra docs --extra dbt chesslab demo
-          uv run --locked --offline --no-editable --extra docs --extra dbt python -m chess_analytics.marts transform --dataset tiny
-          mart="$(uv run --locked --offline --no-editable --extra docs --extra dbt python -c 'import json; print(json.load(open("data/tiny-mart-current.json"))["mart_id"])')"
+          uv run --locked --offline --no-editable --no-sync --extra docs --extra dbt chesslab demo
+          uv run --locked --offline --no-editable --no-sync --extra docs --extra dbt python -m chess_analytics.marts transform --dataset tiny
+          mart="$(uv run --locked --offline --no-editable --no-sync --extra docs --extra dbt python -c 'import json; print(json.load(open("data/tiny-mart-current.json"))["mart_id"])')"
           cp "$PWD/data/marts/published/${mart}/warehouse.duckdb" "$RUNNER_TEMP/warehouse.duckdb"
           export CHESSLAB_DBT_PATH="$RUNNER_TEMP/warehouse.duckdb"
           export DBT_PROFILES_DIR="$PWD/dbt"
           export DBT_SEND_ANONYMOUS_USAGE_STATS=false
           export DO_NOT_TRACK=1
           # A relative target path is stored as target/compiled/... An absolute path is stored as that absolute path.
-          uv run --locked --offline --no-editable --extra docs --extra dbt dbt docs generate --project-dir dbt --profiles-dir dbt --target-path target --log-path dbt/target/logs --no-use-colors
+          uv run --locked --offline --no-editable --no-sync --extra docs --extra dbt dbt docs generate --project-dir dbt --profiles-dir dbt --target-path target --log-path dbt/target/logs --no-use-colors
           rm -rf work/docs-site/dbt-docs
           mkdir -p work/docs-site/dbt-docs
           cp dbt/target/index.html dbt/target/manifest.json dbt/target/catalog.json work/docs-site/dbt-docs/
           test -s work/docs-site/dbt-docs/catalog.json
-          uv run --locked --offline --no-editable --extra docs --extra dbt python -c 'import json; path=json.load(open("work/docs-site/dbt-docs/manifest.json"))["nodes"]["model.chess_analytics.games"]["compiled_path"]; assert path.startswith("target/"), path'
+          uv run --locked --offline --no-editable --no-sync --extra docs --extra dbt python -c 'import json; path=json.load(open("work/docs-site/dbt-docs/manifest.json"))["nodes"]["model.chess_analytics.games"]["compiled_path"]; assert path.startswith("target/"), path'
           if grep -q "has not generated the dbt catalog" work/docs-site/dbt-docs/index.html; then
             echo "dbt docs output is still the local placeholder" >&2
             exit 1
@@ -62,6 +65,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       pages: write
       id-token: write

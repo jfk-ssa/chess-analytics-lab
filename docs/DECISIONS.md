@@ -135,3 +135,4 @@ PR 3 requires recorded acceptance of the deployed Pages dashboard.
 | 0119 | 2026-11-22 | [Deduplicate offline CI and prune stale extras](adr/0119-deduplicate-workflows-and-prune-stale-extras.md) |
 | 0120 | 2026-11-22 | [Replace the hosted Streamlit app with a static Pages dashboard](adr/0120-replace-hosted-streamlit-with-static-dashboard.md) |
 | 0121 | 2026-11-22 | [Scope implementation_hash to pipeline and contract modules](adr/0121-scoped-implementation-hash.md) |
+| 0122 | 2026-11-22 | [Harden CI workflows and trial module-scoped dbt test distribution](adr/0122-ci-hardening-and-dbt-test-distribution.md) |

@@ -14,6 +14,9 @@ With the dashboard and docs extras installed, the locked offline suite passed **
 
 ## Current state
 
+CI jobs have explicit timeouts, and offline/Pages runs on `main` keep running
+when a newer push arrives ([ADR 0122](adr/0122-ci-hardening-and-dbt-test-distribution.md)).
+
 PR 1 of [ADR 0119](adr/0119-deduplicate-workflows-and-prune-stale-extras.md)
 uses a generated offline step catalog and one selected-extra sync, and removes
 the duplicate Pages lint check, unused orchestration adapters, and auxiliary
