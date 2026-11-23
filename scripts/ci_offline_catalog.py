@@ -48,6 +48,24 @@ RULES = (
         ("docs/**", "*.md", "LICENSE", "auxiliary-examples/**"),
         ("THIRD_PARTY_NOTICES.md",),
     ),
+    Rule(
+        "dashboard",
+        (
+            "site/assets/dashboard*",
+            "scripts/templates/**",
+            "tests/js/dashboard*",
+            "tests/test_dashboard*.py",
+            "scripts/build_docs_site.py",
+            "scripts/build_*cube.py",
+            "src/chess_analytics/dashboard_cube.py",
+            "src/chess_analytics/dashboard_export.py",
+            "src/chess_analytics/dashboard/analysis.py",
+            "src/chess_analytics/public_extract.py",
+            "scripts/build_public_extract.py",
+            "data/public/dashboard_cube.parquet",
+            "data/public/dashboard_extract.json",
+        ),
+    ),
     Rule("lint", ("docs/*.py", "docs/**/*.py")),
     Rule(
         "site",
@@ -168,8 +186,11 @@ STEPS = (
         "offline",
         "node_test",
         "check",
-        categories=("site",),
-        exact="node --test tests/js/game_import.test.mjs",
+        categories=("site", "dashboard"),
+        exact=(
+            "node --test --test-isolation=none tests/js/game_import.test.mjs "
+            "tests/js/dashboard.test.mjs"
+        ),
         requires=("record_selection", "setup_node"),
     ),
     Step(
@@ -241,6 +262,17 @@ STEPS = (
             "tests/test_public_extract.py"
         ),
         requires=("sync", "record_selection", "setup_uv"),
+    ),
+    Step(
+        "offline",
+        "pytest_dashboard",
+        "check",
+        categories=("dashboard",),
+        exact=(
+            "uv run --locked --offline --no-editable --no-sync pytest -q "
+            "tests/test_dashboard_cube.py tests/test_dashboard_export.py"
+        ),
+        requires=("setup_node", "sync", "record_selection", "setup_uv"),
     ),
     Step(
         "offline",
@@ -520,7 +552,11 @@ CHECKS = tuple(step for step in STEPS if step.kind == "check")
 SUPPORT = tuple(step for step in STEPS if step.kind == "support")
 ALWAYS_STEPS = tuple(step for step in STEPS if step.kind == "always")
 ORDER = tuple((step.job, earlier, step.step_id) for step in STEPS for earlier in step.requires)
-SUPPRESS_WHEN = {"pytest_extract": "pytest", "pytest_game_import": "pytest"}
+SUPPRESS_WHEN = {
+    "pytest_dashboard": "pytest",
+    "pytest_extract": "pytest",
+    "pytest_game_import": "pytest",
+}
 CATEGORIES_WITHOUT_CHECKS = frozenset({"docs"})
 
 

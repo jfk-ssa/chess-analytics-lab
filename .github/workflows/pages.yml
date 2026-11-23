@@ -17,9 +17,12 @@ jobs:
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
           version: "0.12.18"
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v6.5.0
+        with:
+          node-version: "24"
       - run: uv sync --locked --no-editable --extra docs --extra dbt
       - run: uv run --locked --offline --no-editable --extra docs --extra dbt python scripts/materialize_opening_positions.py
-      - run: uv run --locked --offline --no-editable --extra docs --extra dbt pytest -q tests/test_docs_site.py
+      - run: uv run --locked --offline --no-editable --extra docs --extra dbt pytest -q tests/test_docs_site.py tests/test_dashboard_cube.py tests/test_dashboard_export.py
       - run: uv run --locked --offline --no-editable --extra docs --extra dbt python scripts/build_docs_site.py
       - name: Publish dbt docs from the tiny fixture
         run: |

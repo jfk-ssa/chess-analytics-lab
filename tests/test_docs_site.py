@@ -184,8 +184,22 @@ def test_materialized_positions_match_the_publication_checkpoint():
 def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     before = (ROOT / "reports/decisions-routing-comparison.html").read_bytes()
     result = site.build(ROOT, tmp_path / "output")
-    assert len(result["pages"]) == 10
+    assert len(result["pages"]) == 11
     assert "portfolio.html" in result["pages"]
+    assert "dashboard.html" in result["pages"]
+    sources = result["sources"]
+    cube_source = sources["data/public/dashboard_cube.parquet"]
+    extract_source = sources["data/public/dashboard_extract.json"]
+    assert cube_source["row_count"] == sum(cube_source["grain_counts"].values())
+    assert "mart_id" not in cube_source and "build" not in cube_source
+    assert extract_source["game_draw_rate_mart_id"]
+    assert extract_source["build"]["source_snapshot_id"]
+    generated = tmp_path / "output/assets/dashboard.json"
+    assert result["outputs"]["assets/dashboard.json"] == site.digest(generated.read_bytes())
+    dashboard = (tmp_path / "output/dashboard.html").read_text()
+    assert "Cube provenance" in dashboard and "Extract provenance" in dashboard
+    assert "do not establish cube-wide lineage" in dashboard
+    assert 'href="site-build.json"' in dashboard
     assert result["sources"]["PORTFOLIO.md"] == site.digest((ROOT / "PORTFOLIO.md").read_bytes())
     assert result["local_links_checked"] > 50
     assert result["live_requests"] == result["data_downloads"] == 0
@@ -233,7 +247,7 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
         destinations = [link["href"] for link in navigation.links]
         expected = [path for _, path in site.PRIMARY_NAV + site.LAB_NAV]
         assert destinations == expected + expected
-        assert set(destinations) == set(result["pages"])
+        assert set(destinations) == set(result["pages"]) - {"dashboard.html"}
         current = [link["href"] for link in navigation.links if link.get("aria-current") == "page"]
         assert current == [href for href in destinations if href == name]
         assert "nav-toggle" not in text and "js-class.js" not in text and "nav-group" not in text

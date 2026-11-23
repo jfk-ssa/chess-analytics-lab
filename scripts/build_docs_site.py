@@ -19,6 +19,7 @@ import chess.svg
 import markdown
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
+from chess_analytics.dashboard_export import CUBE, EXTRACT, export_dashboard
 from chess_analytics.eval_report import build_page, discover_receipts, load_cases
 
 TEMPLATES = Path(__file__).resolve().parent / "templates"
@@ -60,6 +61,9 @@ REPORTS = (
     "M8-e2e-checkpoint.json",
 )
 ASSETS = {
+    "dashboard-core.mjs": "site/assets/dashboard-core.mjs",
+    "dashboard-ui.mjs": "site/assets/dashboard-ui.mjs",
+    "dashboard.css": "site/assets/dashboard.css",
     "game-import-core.mjs": "site/assets/game-import-core.mjs",
     "game-import-worker.mjs": "site/assets/game-import-worker.mjs",
     "game-import-ui.js": "site/assets/game-import-ui.js",
@@ -1229,8 +1233,19 @@ def build(repo, output):
     ):
         if (repo / "site/assets" / name).exists():
             demo_images += render("demo_figure.html.j2", name=name, caption=caption)
+    dashboard_sources = export_dashboard(repo, output / "assets", commit)
     live_title, live_description, live_body = live_eval(repo)
     bodies = {
+        "dashboard.html": (
+            "Explore the published games",
+            "Filter games, opening positions and clock pressure "
+            "with explicit population boundaries.",
+            render(
+                "dashboard.html.j2",
+                cube=dashboard_sources[CUBE],
+                extract=dashboard_sources[EXTRACT],
+            ),
+        ),
         "index.html": (
             "Chess Analytics Lab",
             (
@@ -1365,6 +1380,8 @@ def build(repo, output):
     )
     source_files.add(repo / "tests/fixtures/portfolio_expected.json")
     source_files.add(repo / "src/chess_analytics/eval_report.py")
+    source_files.add(repo / "src/chess_analytics/dashboard_export.py")
+    source_files.add(repo / "src/chess_analytics/dashboard_cube.py")
     source_files.add(repo / "evals/cases/analyst_live_v1.json")
     source_files.update(discover_receipts(repo / "reports"))
     source_files.add(repo / "site/assets/favicon.ico")
@@ -1376,7 +1393,7 @@ def build(repo, output):
         "kind": "static_documentation_build_no_live_requests",
         "source_revision": commit,
         "pages": sorted(bodies),
-        "local_links_checked": validate_site(output, repo),
+        "local_links_checked": 0,
         "sources": {
             p.relative_to(repo).as_posix(): digest(p.read_bytes()) for p in sorted(source_files)
         },
@@ -1388,6 +1405,9 @@ def build(repo, output):
         "live_requests": 0,
         "data_downloads": 0,
     }
+    manifest["sources"].update(dashboard_sources)
+    (output / "site-build.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    manifest["local_links_checked"] = validate_site(output, repo)
     (output / "site-build.json").write_text(json.dumps(manifest, indent=2) + "\n")
     return manifest
 
