@@ -106,7 +106,7 @@ jobs:
         run: python3 scripts/ci_offline_install.py --validate-only
       - id: setup_uv
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.setup_uv == 'true' }}
-        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2
+        uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d
         with:
           version: "0.12.18"
       - id: setup_node
@@ -238,7 +238,7 @@ jobs:
         run: python3 scripts/ci_offline_install.py --validate-only
       - id: core_setup_uv
         if: ${{ needs.changes.result != 'success' || steps.core_selection.outputs.fallback != 'false' || needs.changes.outputs.core_setup_uv == 'true' }}
-        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2
+        uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d
         with:
           version: "0.12.18"
       - id: core_setup_node
@@ -268,7 +268,7 @@ jobs:
         run: python3 scripts/ci_offline_install.py --validate-only
       - id: portfolio_setup_uv
         if: ${{ needs.changes.result != 'success' || steps.portfolio_record.outputs.fallback != 'false' || needs.changes.outputs.portfolio_setup_uv == 'true' }}
-        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2
+        uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d
         with:
           version: "0.12.18"
       - id: portfolio_sync
