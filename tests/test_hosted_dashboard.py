@@ -644,7 +644,7 @@ def test_cost_captions_keep_a_literal_dollar(project, monkeypatch):
 
 def _assert_live_eval_link(app) -> None:
     caption = _caption(app, "Published live-eval report")
-    assert "https://jfk-ssa.github.io/chess-analytics-lab/live-eval.html" in caption
+    assert "https://jfkbot.github.io/chess-analytics-lab/live-eval.html" in caption
 
 
 def _assert_section_origins(app) -> None:

@@ -8,8 +8,8 @@ and have separately recorded spending caps.
 
 New here? Start with the portfolio overview: [PORTFOLIO.md](PORTFOLIO.md).
 
-**Website:** [documentation homepage](https://jfk-ssa.github.io/chess-analytics-lab/)
-· [published comparison](https://jfk-ssa.github.io/chess-analytics-lab/comparison.html).
+**Website:** [documentation homepage](https://jfkbot.github.io/chess-analytics-lab/)
+· [published comparison](https://jfkbot.github.io/chess-analytics-lab/comparison.html).
 
 **Start here:** [documentation guide](docs/README.md) · [offline demo](docs/DEMO.md)
 · [classifier results](docs/CLASSIFIER_COMPARISON.md) · [current status](docs/STATUS.md).
@@ -38,7 +38,7 @@ advisory locks; native Windows execution is not supported by those lock imports.
 Clone the repository, then run from its root:
 
 ```sh
-git clone https://github.com/jfk-ssa/chess-analytics-lab.git
+git clone https://github.com/jfkbot/chess-analytics-lab.git
 cd chess-analytics-lab
 uv sync --locked --no-editable --extra dashboard
 uv run --locked --offline --no-editable --extra dashboard chesslab demo --scope all
@@ -91,8 +91,8 @@ reliable ingestion, not contemporary chess behavior. See [data sources](docs/DAT
 | Understand the pipeline and code | [Architecture](docs/ARCHITECTURE.md) and [repository map](docs/README.md#repository-map) |
 | Understand findings and denominators | [Opening memo](docs/M4-OPENINGS.md), [clock memo](docs/M4-CLOCK.md), [metrics](docs/METRICS.md) |
 | Analyze local game exports | [Local PGN guide](docs/GAME_IMPORT.md): browser-only White-game analysis with explicit provider/player selection |
-| Design opening lessons | [Opening learning](https://jfk-ssa.github.io/chess-analytics-lab/opening-learning.html) and [maintained rationale](docs/TRANSPOSITION_LEARNING.md) |
-| Explore measured transpositions | [Interactive HTML](https://jfk-ssa.github.io/chess-analytics-lab/transpositions.html); public position rankings, route balance, coverage, fianchetto lenses and [definitions](docs/TRANSPOSITIONS.md) |
+| Design opening lessons | [Opening learning](https://jfkbot.github.io/chess-analytics-lab/opening-learning.html) and [maintained rationale](docs/TRANSPOSITION_LEARNING.md) |
+| Explore measured transpositions | [Interactive HTML](https://jfkbot.github.io/chess-analytics-lab/transpositions.html); public position rankings, route balance, coverage, fianchetto lenses and [definitions](docs/TRANSPOSITIONS.md) |
 | Evaluate the AI claims | [Evaluation guide](docs/EVALUATION.md), [evidence index](docs/EVIDENCE_INDEX.md) |
 | Call checked tools from another client | [MCP guide](docs/MCP.md): optional stdio server; per-call evidence; planner scores do not transfer |
 | Estimate what a rating would play | [Maia guide](docs/MAIA.md): local Maia-3 probabilities; not an engine score |

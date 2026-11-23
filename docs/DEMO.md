@@ -1,6 +1,6 @@
 # Run the offline product demo
 
-**HTML version:** [Read this guide on the documentation site](https://jfk-ssa.github.io/chess-analytics-lab/demo.html).
+**HTML version:** [Read this guide on the documentation site](https://jfkbot.github.io/chess-analytics-lab/demo.html).
 
 This walkthrough exercises the checked data platform, opening and clock
 analytics, and analyst fixture replay from tracked files. It needs no API key,

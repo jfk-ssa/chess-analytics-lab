@@ -29,13 +29,13 @@ and limitations retained alongside their results.
 | How does the pipeline work? | [Architecture](ARCHITECTURE.md) |
 | How are metrics defined? | [Definitions and denominators](METRICS.md) |
 | What do the models demonstrate? | [Measured comparison](CLASSIFIER_COMPARISON.md) |
-| How did the live analyst score? | [Live eval report](https://jfk-ssa.github.io/chess-analytics-lab/live-eval.html) |
+| How did the live analyst score? | [Live eval report](https://jfkbot.github.io/chess-analytics-lab/live-eval.html) |
 | Which study boards occur in my games? | [Local PGN analysis](GAME_IMPORT.md), with explicit player selection and a bounded public reference |
 | Which opening positions recur across move orders? | [Transposition analysis](TRANSPOSITIONS.md) and [learning design](TRANSPOSITION_LEARNING.md) |
 | Can I reproduce a small example? | [Offline walkthrough](DEMO.md) |
 | What is complete and what comes next? | [Current project status](STATUS.md) |
 
 The [documentation guide](README.md) indexes operational runbooks, analytical
-memos and historical evidence. The [repository](https://github.com/jfk-ssa/chess-analytics-lab)
+memos and historical evidence. The [repository](https://github.com/jfkbot/chess-analytics-lab)
 contains the maintained code and contracts. Project author:
-[jfk-ssa on GitHub](https://github.com/jfk-ssa).
+[jfkbot on GitHub](https://github.com/jfkbot).

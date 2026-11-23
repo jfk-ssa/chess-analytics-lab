@@ -16,7 +16,7 @@ TARGET = ROOT / "reports" / "opening-positions.json"
 PUBLICATION_COMMIT = "c1e3040a3c9542626a3b8cb78e1e7475ea8bcdab"
 EXPECTED_SHA256 = "31a395044203532224cbb387475ef0bb790c8e88faac98bc9b2a12f5d500c46e"
 SOURCE_URL = (
-    "https://raw.githubusercontent.com/jfk-ssa/chess-analytics-lab/"
+    "https://raw.githubusercontent.com/jfkbot/chess-analytics-lab/"
     f"{PUBLICATION_COMMIT}/reports/opening-positions.json"
 )
 

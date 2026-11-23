@@ -1,6 +1,6 @@
 # Architecture and boundaries
 
-**HTML version:** [Read this guide on the documentation site](https://jfk-ssa.github.io/chess-analytics-lab/architecture.html).
+**HTML version:** [Read this guide on the documentation site](https://jfkbot.github.io/chess-analytics-lab/architecture.html).
 
 Chess Analytics Lab uses one Python/SQL repository and local DuckDB files.
 `chesslab` provides the foundation ingestion and two offline demos. The
@@ -49,7 +49,7 @@ and engine-tool fixture checks use `engine-1.0`.
 
 The dbt graph is drawn in [dbt lineage](DBT_LINEAGE.md). GitHub renders that
 Mermaid diagram from the committed manifest projection. The published catalog
-is the [dbt docs for the tiny fixture](https://jfk-ssa.github.io/chess-analytics-lab/dbt-docs/).
+is the [dbt docs for the tiny fixture](https://jfkbot.github.io/chess-analytics-lab/dbt-docs/).
 The Pages workflow generates it at deploy time. It is not the 2013 corpus.
 
 The same allowlisted tools are available outside that planner through

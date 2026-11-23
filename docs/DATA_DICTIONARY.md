@@ -1,6 +1,6 @@
 # Data dictionary
 
-**HTML version:** [Read this guide on the documentation site](https://jfk-ssa.github.io/chess-analytics-lab/metrics.html).
+**HTML version:** [Read this guide on the documentation site](https://jfkbot.github.io/chess-analytics-lab/metrics.html).
 
 The explicit storage types are in contracts/tables.json.
 
