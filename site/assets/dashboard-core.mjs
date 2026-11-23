@@ -382,7 +382,7 @@ export class Cube {
       number(total),
       games.notes.includes('cut')
         ? 'no cells for this cut'
-        : `rated public games in range${pop(games.notes)}${note(games.notes)}${priorGames ? ` · ${countSigned(total - sum(priorGames, 'games'))} vs prior` : ''}`,
+        : `${games.notes.includes('date') ? 'full published rated-public window; date filter unavailable' : 'rated public games in range'}${pop(games.notes)}${note(games.notes.filter((n) => n !== 'date'))}${priorGames ? ` · ${countSigned(total - sum(priorGames, 'games'))} vs prior` : ''}`,
     );
     const scored = sum(results.rows, 'games');
     const prior = this.prior('result_cell', results);

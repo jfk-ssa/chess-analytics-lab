@@ -55,7 +55,15 @@ def pages_kpis(con, raw):
     for card in cards:
         detail = card["detail"]
         if card["label"] == "Games":
-            card["detail"] = detail.replace("games in range", "rated public games in range")
+            base, _, ignored = detail.partition(" · not by ")
+            notes = ignored.split(", ") if ignored else []
+            label = "rated public games in range"
+            if "date" in notes:
+                label = "full published rated-public window; date filter unavailable"
+                notes.remove("date")
+            card["detail"] = base.replace("games in range", label)
+            if notes:
+                card["detail"] += " · not by " + ", ".join(notes)
         elif card["label"] in {"Win rate", "Loss rate", "Draw rate"} and " / " in detail:
             count, separator, notes = detail.replace(" · White", "").partition(" · ")
             perspective = "Black" if raw.get("color") == "black" else "White"
@@ -375,7 +383,8 @@ def test_input_change_during_export_fails_closed(inputs, monkeypatch):
     assert not (inputs / "out/dashboard.json").exists()
 
 
-def test_dashboard_layout_contract_at_desktop_and_phone():
+def test_static_layout_contract_at_desktop_and_phone():
+    """Check CSS/template tokens and assumed track widths, not rendered browser layout."""
     css = (ROOT / "site/assets/dashboard.css").read_text()
     site_css = (ROOT / "site/assets/site.css").read_text()
     template = (ROOT / "scripts/templates/dashboard.html.j2").read_text()
@@ -389,7 +398,7 @@ def test_dashboard_layout_contract_at_desktop_and_phone():
     for token in ("--paper", "--ink", "--teal", "--accent", "--line"):
         assert f"var({token})" in css
     assert "From<input" in template and "Through<input" in template
-    # Equal fr tracks leave room for labels at both requested viewports.
+    # Static track calculation under the assumed viewport, padding and gap values.
     for width, padding, columns, gap in ((1280, 28, 4, 16), (390, 18, 2, 10)):
         track = (min(width, 1120) - padding * 2 - gap * (columns - 1)) / columns
         assert track >= 160

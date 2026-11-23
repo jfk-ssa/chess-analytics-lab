@@ -30,17 +30,17 @@ no live requests. Pages now keeps games/results/openings/periods in `rated_publi
 (770,626 Games; nine period bars totaling 802,260), with August clock data
 separate. Pages rate bars start at 90% of the displayed minimum and end at the
 highest displayed rate, with both bounds in the caption.
-Cohort, rate-axis and perspective regressions pass: 22 Node tests and
-59 focused Python tests offline. Hosted code/tests and the local dashboard remain. Deployed-page
-acceptance and browser review at 1280px/390px are still pending; local sockets and
-Chromium are unavailable in this implementation sandbox. Follow the
+Cohort, rate-axis and perspective regressions are covered by the Node and focused
+Python suites. Hosted code/tests and the local dashboard remain.
+2026-11-23: preview-artifact visual review at 1280px and 390px done on 7f25296;
+John's acceptance of the deployed page is still outstanding for PR 3. Follow the
 [acceptance procedure](SITE.md#dashboard-acceptance-before-pr-3) before PR 3.
 
 Local PR 2 review on 2026-11-23: the focused docs-site, dashboard-cube and
-dashboard-export tests passed 58 tests without xdist. Ruff lint/format and the
-offline workflow generator check passed; the eleven-page build checked 1,109
-local links with zero live requests. On Node 24, `node --test tests/js` failed
-with `MODULE_NOT_FOUND`; the catalogued explicit-file command passed 19 tests.
+dashboard-export tests passed without xdist. Ruff lint/format and the
+offline workflow generator check passed; the site build checked local links
+with zero live requests. On Node 24, `node --test tests/js` failed
+with `MODULE_NOT_FOUND`; the catalogued explicit-file command passed.
 The full pytest suite was left for an environment that permits sockets.
 
 The portfolio page presents root `PORTFOLIO.md` with an intro strip,

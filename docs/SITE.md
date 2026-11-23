@@ -219,7 +219,7 @@ stacked cards; ordinary article tables align to the prose reading width.
 
 ## Site review improvements
 
-The ten current pages have distinct descriptions, self-canonical URLs,
+The current pages have distinct descriptions, self-canonical URLs,
 Open Graph and Twitter sharing tags, a shared 1200×630 PNG preview and SVG/ICO
 favicons. The homepage canonical URL is the directory URL. Sharing metadata is
 checked locally; provider preview caches may need to be refreshed after deployment.

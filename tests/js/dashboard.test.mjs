@@ -55,6 +55,15 @@ test('result rate subtitles name the selected perspective, including All colors'
     assert.equal(cards[0].value, color === 'black' ? '50.0%' : '40.0%');
   }
 });
+test('Games subtitle distinguishes the default range from a full-window date fallback', () => {
+  const cube = fixture([cell, { ...cell, grain: 'game_cell' }, { ...cell, grain: 'corpus_month' }]);
+  const [start, end] = cube.bounds();
+  assert.equal(cube.kpis({ start, end })[0].detail, 'rated public games in range');
+  const narrow = { start: '2026-08-02', end: '2026-08-31' };
+  assert.deepEqual(cube.periods(narrow).rows, []);
+  assert.equal(cube.kpis(narrow)[0].value, '100');
+  assert.equal(cube.kpis(narrow)[0].detail, 'full published rated-public window; date filter unavailable');
+});
 test('clock rates stay within the August cohort', () => {
   const clock = { ...cell, grain: 'clock_slice', cohort: 'm3_august_prefix', clock_band: 'under_10', moves: 200, evaluable_moves: 100, proxy_errors: 20 };
   const cube = fixture([clock, { ...clock, cohort: 'elite_reference', proxy_errors: 80 }]);
