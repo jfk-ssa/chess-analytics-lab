@@ -9,10 +9,11 @@ permissions:
   contents: read
 concurrency:
   group: offline-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 jobs:
   changes:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     outputs:
       # BEGIN managed outputs
       run_all: ${{ steps.filter.outputs.run_all }}
@@ -93,6 +94,7 @@ jobs:
     needs: changes
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       # BEGIN managed offline
       - id: checkout
@@ -227,6 +229,7 @@ jobs:
     needs: changes
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       # BEGIN managed offline-core
       - id: core_checkout
@@ -257,6 +260,7 @@ jobs:
     needs: changes
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       # BEGIN managed portfolio
       - id: portfolio_checkout
