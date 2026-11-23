@@ -18,7 +18,8 @@ PR 1 of [ADR 0119](adr/0119-deduplicate-workflows-and-prune-stale-extras.md)
 uses a generated offline step catalog and one selected-extra sync, and removes
 the duplicate Pages lint check, unused orchestration adapters, and auxiliary
 examples. Offline checks: 679 passed, 18 skipped; 63 classifier tests passed.
-Frozen evidence and dated measurements stay unchanged. PRs 2–4 remain proposed.
+Frozen evidence and dated measurements stay unchanged. PRs 3–4 remain proposed;
+PR 2's publication work is described below.
 
 PR 2 of [ADR 0120](adr/0120-replace-hosted-streamlit-with-static-dashboard.md)
 adds the [Pages dashboard](https://jfkbot.github.io/chess-analytics-lab/dashboard.html)
@@ -29,6 +30,13 @@ no live requests. Hosted code/tests and the local dashboard remain. Deployed-pag
 acceptance and browser review at 1280px/390px are still pending; local sockets and
 Chromium are unavailable in this implementation sandbox. Follow the
 [acceptance procedure](SITE.md#dashboard-acceptance-before-pr-3) before PR 3.
+
+Local PR 2 review on 2026-11-23: the focused docs-site, dashboard-cube and
+dashboard-export tests passed 58 tests without xdist. Ruff lint/format and the
+offline workflow generator check passed; the eleven-page build checked 1,109
+local links with zero live requests. On Node 24, `node --test tests/js` failed
+with `MODULE_NOT_FOUND`; the catalogued explicit-file command passed 19 tests.
+The full pytest suite was left for an environment that permits sockets.
 
 The portfolio page presents root `PORTFOLIO.md` with an intro strip,
 live-link pills, topic cards, wrapping source chips and a source-derived
