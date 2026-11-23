@@ -80,8 +80,11 @@ bodies set a floor near 40s.
 
 - Expected savings are modest: about 15–25s off the PR critical path
   and 0.5–1 billable minute per code PR. The main gain is reliability:
-  bounded hangs, `main` runs and deploys that are never cancelled, and
-  less PyPI exposure.
+  bounded hangs and less PyPI exposure. In-progress `main` workflows,
+  including Pages deploys, are not cancelled by newer pushes. Each
+  concurrency group keeps only the latest pending run, which starts
+  after the running one finishes; dropped runs never deploy, so deploys
+  stay in order.
 - `loadscope` can unbalance workers. The gate in PR B catches that.
 - The uv cache adds an Actions cache entry per job, well inside the
   repository cache quota.
