@@ -56,7 +56,7 @@ function bars(rows, { action = '', sanLabels = false, field = 'games', count = t
     rows.map((r) => r[field]),
     count,
   );
-  return `<div class="dash-bars"><p class="dash-axis">${count ? `Count axis: 0–${num(high)}` : `Rate axis: ${Math.round(low * 100)}–100%`}</p>${rows
+  return `<div class="dash-bars"><p class="dash-axis">${count ? `Count axis: 0–${num(high)}` : `Rate axis: ${(low * 100).toFixed(1)}%–${(high * 100).toFixed(1)}%`}</p>${rows
     .map((r, i) => {
       const mark = `<span class="dash-bar-track"><span class="dash-bar" style="width:${Math.max(0, ((r[field] - low) / (high - low)) * 100)}%"></span></span><strong>${count ? num(r[field]) : `${(r[field] * 100).toFixed(1)}%`}</strong>`;
       const label =

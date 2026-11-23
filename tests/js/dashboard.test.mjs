@@ -13,7 +13,7 @@ function payload(rows) {
 }
 const fixture = (rows) => new Cube(payload(rows));
 const f = { start: '2026-08-01', end: '2026-08-31' };
-const cell = { grain: 'result_cell', cohort: 'warehouse', period: '2026-08', period_start: '2026-08-01', period_end: '2026-08-31', time_control: '180+0', color: 'white', rating_band: '1400_1599', opening_family: 'Sicilian', games: 100, wins: 40, draws: 10, losses: 50, rating_diff: 5, mean_ply: 60 };
+const cell = { grain: 'result_cell', cohort: 'rated_public', period: '2026-08', period_start: '2026-08-01', period_end: '2026-08-31', time_control: '180+0', color: 'white', rating_band: '1400_1599', opening_family: 'Sicilian', games: 100, wins: 40, draws: 10, losses: 50, rating_diff: 5, mean_ply: 60 };
 
 test('carried cuts stay empty; unsupported dimensions are captioned', () => {
   const cube = fixture([{ ...cell, grain: 'game_cell', color: null, rating_band: null }]);
@@ -36,6 +36,31 @@ test('prior periods require equal blocks, contiguous months, cohort and span', (
     assert.doesNotMatch(other.kpis(f)[1].detail, /vs prior/);
   }
 });
+test('default bounds, KPIs and periods exclude elite rows even in an expanded range', () => {
+  const publicRows = [cell, { ...cell, grain: 'game_cell' }, { ...cell, grain: 'corpus_month' }];
+  const elite = publicRows.map((r) => ({ ...r, cohort: 'elite_reference', period: '2025-11', period_start: '2025-11-01', period_end: '2025-11-30', games: 240086, wins: 200000, mean_ply: 100 }));
+  const cube = fixture([...elite, ...publicRows]);
+  assert.deepEqual(cube.bounds(), [f.start, f.end]);
+  for (const cut of [f, { ...f, start: '2025-11-01' }]) {
+    assert.deepEqual(cube.kpis(cut), fixture(publicRows).kpis(f));
+    assert.equal(cube.kpis(cut)[0].value, '100');
+    assert.deepEqual(cube.periods(cut).rows, [{ label: '2026-08', games: 100 }]);
+  }
+});
+test('result rate subtitles name the selected perspective, including All colors', () => {
+  const cube = fixture([cell, { ...cell, color: 'black', wins: 50, losses: 40 }]);
+  for (const color of [null, 'white', 'black']) {
+    const cards = cube.kpis({ ...f, color }).slice(1, 4);
+    for (const card of cards) assert.match(card.detail, color === 'black' ? /Black perspective/ : /White perspective/);
+    assert.equal(cards[0].value, color === 'black' ? '50.0%' : '40.0%');
+  }
+});
+test('clock rates stay within the August cohort', () => {
+  const clock = { ...cell, grain: 'clock_slice', cohort: 'm3_august_prefix', clock_band: 'under_10', moves: 200, evaluable_moves: 100, proxy_errors: 20 };
+  const cube = fixture([clock, { ...clock, cohort: 'elite_reference', proxy_errors: 80 }]);
+  assert.equal(cube.clock(f).rows[0].error_proxy_rate, 0.2);
+  assert.equal(cube.kpis(f).at(-1).value, '20.0%');
+});
 test('drills retain clock state and breadcrumbs; single-position back skips position', () => {
   const family = selectFamily({ clock_band: 'under_10' }, 'Sicilian');
   const line = selectLine(family, { label: 'e4 c5', fens: ['fen'] });
@@ -50,16 +75,18 @@ test('period empty date cut never widens and unsupported filters have captions',
   assert.match(cube.periods({ ...f, color: 'black' }).caption, /not split by color/);
 });
 test('August clock fallback is explicit and absent controls never reuse it', () => {
-  const cube = fixture([{ ...cell, grain: 'clock_slice', color: null, opening_family: null, clock_band: 'under_10', moves: 200, evaluable_moves: 100, proxy_errors: 20 }]);
+  const cube = fixture([{ ...cell, grain: 'clock_slice', cohort: 'm3_august_prefix', color: null, opening_family: null, clock_band: 'under_10', moves: 200, evaluable_moves: 100, proxy_errors: 20 }]);
   assert.match(cube.clock({ start: '2025-01-01', end: '2025-01-31' }).caption, /August prefix/);
   assert.equal(cube.clock({ ...f, time_control: 'never' }).rows.length, 0);
   assert.equal(cube.clockGames({ ...f, time_control: 'never' }, 'under_10').total, 0);
   assert.throws(() => cube.clockGames(f, 'invalid'));
   assert.throws(() => cube.clockGames(f, 'under_10', 0));
 });
-test('count axes use zero and clustered rate axes retain ten points of context', () => {
+test('count axes use zero and rate axes start ten percent below the minimum', () => {
   assert.deepEqual(barDomain([30, 40]), [0, 40]);
-  assert.deepEqual(barDomain([0.8, 0.9], false), [0.7000000000000001, 1]);
+  assert.deepEqual(barDomain([0.8, 0.9], false), [0.9 * 0.8, 1]);
+  assert.deepEqual(barDomain([0.077, 0.193], false), [0.9 * 0.077, 1]);
+  assert.deepEqual(barDomain([0, 0], false), [0, 1]);
 });
 test('invalid exported JSON fails visibly', () => {
   assert.throws(() => new Cube({ version: 2, grains: {} }));
@@ -74,8 +101,8 @@ test('UI renders the shared query results, drills, reset, empty cut and invalid 
     { ...cell, grain: 'opening_line', cohort: 'rated_public', opening_line: '1.e4 c5 2.Nf3', fen, color: null, rating_band: null, time_control: null },
     { ...cell, grain: 'opening_position', cohort: 'rated_public', fen },
     { ...cell, grain: 'opening_continuation', cohort: 'rated_public', fen, continuation: 'Nf3' },
-    { ...cell, grain: 'clock_slice', clock_band: 'under_10', moves: 200, evaluable_moves: 100, proxy_errors: 10 },
-    { ...cell, grain: 'clock_game', lichess_id: 'abcdefgh', clock_band: 'under_10', white_rating: 1500, black_rating: 1550, opening_line: 'Sicilian' },
+    { ...cell, grain: 'clock_slice', cohort: 'm3_august_prefix', clock_band: 'under_10', moves: 200, evaluable_moves: 100, proxy_errors: 10 },
+    { ...cell, grain: 'clock_game', cohort: 'm3_august_prefix', lichess_id: 'abcdefgh', clock_band: 'under_10', white_rating: 1500, black_rating: 1550, opening_line: 'Sicilian' },
     { ...cell, grain: 'corpus_month' },
   ]);
   data.clock_ranks = { abcdefgh: '1' };
@@ -94,6 +121,8 @@ test('UI renders the shared query results, drills, reset, empty cut and invalid 
   try {
     await import('../../site/assets/dashboard-ui.mjs?ui-test');
     assert.match(view.innerHTML, /dash-kpis/);
+    assert.match(view.innerHTML, /Rate axis: 9.0%–100.0%/);
+    assert.match(view.innerHTML, /White perspective/);
     assert.match(view.innerHTML, /200 eligible moves/);
     assert.match(view.innerHTML, /100 evaluable moves/);
     assert.match(view.innerHTML, /<h2>Games<\/h2>/);

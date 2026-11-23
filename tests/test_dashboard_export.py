@@ -49,11 +49,33 @@ def filters(raw):
     )
 
 
-def test_every_supported_dimension_cut_matches_hosted(published):
+def pages_kpis(con, raw):
+    """Retain hosted arithmetic expectations with the Pages population/perspective copy."""
+    cards = [dataclasses.asdict(k) for k in cube.kpis(con, filters(raw))]
+    for card in cards:
+        detail = card["detail"]
+        if card["label"] == "Games":
+            card["detail"] = detail.replace("games in range", "rated public games in range")
+        elif card["label"] in {"Win rate", "Loss rate", "Draw rate"} and " / " in detail:
+            count, separator, notes = detail.replace(" · White", "").partition(" · ")
+            perspective = "Black" if raw.get("color") == "black" else "White"
+            card["detail"] = f"{count} · {perspective} perspective{separator}{notes}"
+    return cards
+
+
+def test_every_supported_dimension_cut_matches_scoped_hosted(published):
     """Every published value, missing values and intersected cuts; all displayed sections."""
     payload, _ = published
     con = cube.connect(ROOT / export.CUBE)
     try:
+        # The hosted implementation predates the Pages single-cohort boundary.
+        # Scope its independent SQL oracle, keeping the browser payload unfiltered.
+        con.execute("""
+            create table pages_cube as select * from cube
+            where cohort = case when grain in ('clock_slice', 'clock_game')
+                then 'm3_august_prefix' else 'rated_public' end
+        """)
+        con.execute("create or replace view cube as select * from pages_cube")
         cuts = [
             WIDE,
             {"start": "2025-11-01", "end": "2025-11-30"},
@@ -89,7 +111,7 @@ def test_every_supported_dimension_cut_matches_hosted(published):
         for raw in cuts:
             f = filters(raw)
             requests.append(request("kpis", raw))
-            expected.append([dataclasses.asdict(k) for k in cube.kpis(con, f)])
+            expected.append(pages_kpis(con, raw))
             requests.append(request("clock", raw))
             bands, caption, tag = cube.clock_display(con, f)
             expected.append({"rows": bands, "caption": caption, "tag": tag})
@@ -110,6 +132,21 @@ def test_every_supported_dimension_cut_matches_hosted(published):
                 assert observed == value, (req, key, observed, value)
     finally:
         con.close()
+
+
+def test_default_public_population_on_committed_cube(published):
+    payload, _ = published
+    start, end = browser(payload, [request("bounds")])[0]
+    assert (start, end) == ("2025-12-01", "2026-08-01")
+    for cut in ({"start": start, "end": end}, WIDE):
+        cards, periods = browser(payload, [request("kpis", cut), request("periods", cut)])
+        assert cards[0]["value"] == "770,626"
+        assert "rated public" in cards[0]["detail"]
+        assert [row["label"] for row in periods["rows"]] == [
+            "2025-12",
+            *(f"2026-{month:02}" for month in range(1, 9)),
+        ]
+        assert sum(row["games"] for row in periods["rows"]) == 802260
 
 
 def test_opening_drills_and_clock_sample_parity(published):
@@ -279,7 +316,7 @@ def test_kpi_prior_period_deltas_match_python_on_fixture(inputs):
             rows.append(
                 cube._row(
                     grain=grain,
-                    cohort="fixture",
+                    cohort="rated_public",
                     period=period,
                     period_start=date.fromisoformat(period + "-01"),
                     period_end=date.fromisoformat(period + "-31"),
@@ -304,7 +341,7 @@ def test_kpi_prior_period_deltas_match_python_on_fixture(inputs):
     got = browser(payload, [request("kpis", cut)])[0]
     con = cube.connect(path)
     try:
-        expected = [dataclasses.asdict(k) for k in cube.kpis(con, filters(cut))]
+        expected = pages_kpis(con, cut)
     finally:
         con.close()
     # No position grain is published in this fixture; compare all six comparable KPIs.

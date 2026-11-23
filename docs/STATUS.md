@@ -26,7 +26,10 @@ adds the [Pages dashboard](https://jfkbot.github.io/chess-analytics-lab/dashboar
 from the committed public cube, with browser filters/drills, KPI comparisons,
 capped clock samples, separately scoped cube/extract provenance and a downloadable
 PR preview. The JSON view contains 35,100 rows in 14 grains. The site build makes
-no live requests. Hosted code/tests and the local dashboard remain. Deployed-page
+no live requests. Pages now keeps games/results/openings/periods in `rated_public`
+(770,626 Games; nine period bars totaling 802,260), with August clock data
+separate. Cohort, rate-axis and perspective regressions pass: 22 Node tests and
+59 focused Python tests offline. Hosted code/tests and the local dashboard remain. Deployed-page
 acceptance and browser review at 1280px/390px are still pending; local sockets and
 Chromium are unavailable in this implementation sandbox. Follow the
 [acceptance procedure](SITE.md#dashboard-acceptance-before-pr-3) before PR 3.

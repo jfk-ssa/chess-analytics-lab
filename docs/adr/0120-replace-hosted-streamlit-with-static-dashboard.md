@@ -80,6 +80,15 @@ filters, as they do today. That page reads `reports/live-eval-receipt-*.json`
 and the case set directly through `build_docs_site.live_eval`; it does
 not read `dashboard_extract.json`.
 
+PR 2's cohort correction scopes Games, results, opening views and periods to
+`rated_public`, including date fallbacks and prior-period comparisons. Default
+dates use that cohort's bounds; expanding the range never adds `elite_reference`.
+Clock slices and samples retain their separate `m3_august_prefix` population.
+All-color result rates explicitly name White perspective. Count bars start at
+zero; rate bars start at 90% of the displayed minimum and end at 100%, with
+both bounds in the caption. Offline regression tests cover synthetic mixed
+cohorts and the committed cube's 770,626 Games and nine rated-public periods.
+
 Provenance has two distinct inputs. The cube supplies chart rows and
 has no mart id, source snapshot, or build hashes in its columns.
 Validate `data/public/dashboard_extract.json` and read its `build`

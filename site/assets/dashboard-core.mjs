@@ -93,9 +93,10 @@ export class Cube {
     ].sort();
   }
   bounds() {
+    const rows = this.rows.filter((r) => r.cohort === 'rated_public');
     return [
-      this.rows.map((r) => r.period_start).sort()[0],
-      this.rows
+      rows.map((r) => r.period_start).sort()[0],
+      rows
         .map((r) => r.period_end)
         .sort()
         .at(-1),
@@ -106,11 +107,19 @@ export class Cube {
       .filter((key) => f[key] && !this.carries(g, key))
       .map((key) => labels[key]);
   }
-  query(g, f, { dates = true, cohort = null, dimensional = true } = {}) {
+  query(
+    g,
+    f,
+    {
+      dates = true,
+      cohort = ['clock_slice', 'clock_game'].includes(g) ? 'm3_august_prefix' : 'rated_public',
+      dimensional = true,
+    } = {},
+  ) {
     return this.grain(g).filter(
       (r) =>
         (!dates || inside(r, f)) &&
-        (!cohort || r.cohort === cohort) &&
+        r.cohort === cohort &&
         (!dimensional ||
           dimensions.every(
             (k) =>
@@ -159,14 +168,7 @@ export class Cube {
     return sum(found, 'games') > 0 ? found : null;
   }
   cohort(f) {
-    const preferred = ['rated_public', 'elite_reference'];
-    const covered = preferred.find(
-      (c) => this.query('opening_family', f, { dimensional: false, cohort: c }).length,
-    );
-    return [
-      covered || preferred.find((c) => this.grain('opening_family').some((r) => r.cohort === c)),
-      !!covered,
-    ];
+    return ['rated_public', !!this.query('opening_family', f, { dimensional: false }).length];
   }
   openings(f, d = {}) {
     const [cohort, covered] = this.cohort(f);
@@ -256,7 +258,7 @@ export class Cube {
     let fallback = false;
     let named = absent;
     if (!rows.length && !absent.length && this.grain(g).length) {
-      const all = this.grain(g);
+      const all = this.query(g, f, { dates: false, dimensional: false });
       const low = all.map((r) => r.period_start).sort()[0];
       const high = all
         .map((r) => r.period_end)
@@ -359,7 +361,7 @@ export class Cube {
       .map((k) => (k === 'time_control' ? 'time control' : labels[k]));
     return {
       rows,
-      caption: `${rows.length ? '' : 'No published period sits fully inside this date range. '}${ignored.length ? `Period totals are not split by ${join(ignored)}.` : 'Each bar is one published period. The Games card counts warehouse cells of at least 10 games.'}`,
+      caption: `Rated public. ${rows.length ? '' : 'No published period sits fully inside this date range. '}${ignored.length ? `Period totals are not split by ${join(ignored)}.` : 'Each bar is one published period. The Games card counts warehouse cells of at least 10 games.'}`,
     };
   }
   kpis(f) {
@@ -380,7 +382,7 @@ export class Cube {
       number(total),
       games.notes.includes('cut')
         ? 'no cells for this cut'
-        : `games in range${pop(games.notes)}${note(games.notes)}${priorGames ? ` · ${countSigned(total - sum(priorGames, 'games'))} vs prior` : ''}`,
+        : `rated public games in range${pop(games.notes)}${note(games.notes)}${priorGames ? ` · ${countSigned(total - sum(priorGames, 'games'))} vs prior` : ''}`,
     );
     const scored = sum(results.rows, 'games');
     const prior = this.prior('result_cell', results);
@@ -400,7 +402,7 @@ export class Cube {
           ? results.notes.includes('cut')
             ? 'no cells for this cut'
             : 'no scored cells'
-          : `${number(count)} / ${number(scored)}${pop(results.notes)}${note(results.notes)}${delta}`,
+          : `${number(count)} / ${number(scored)} · ${force === 'black' ? 'Black' : 'White'} perspective${note(results.notes)}${delta}`,
       );
     }
     const [cohort, covered] = this.cohort(f);
@@ -454,7 +456,7 @@ export class Cube {
     return cards;
   }
 }
-// Clustered rates use 10 percentage points of context; count bars always start at zero.
+// Rates start 10% below the displayed minimum; count bars always start at zero.
 export function barDomain(values, count = true) {
-  return [count ? 0 : Math.max(0, Math.min(...values) - 0.1), count ? Math.max(1, ...values) : 1];
+  return [count ? 0 : Math.max(0, 0.9 * Math.min(...values)), count ? Math.max(1, ...values) : 1];
 }
