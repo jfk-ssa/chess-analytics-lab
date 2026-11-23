@@ -75,9 +75,9 @@ live-eval fixture, and the public extract still run the checks that guard
 them. The full no-dbt `pytest` step is the `offline-core` job. It covers
 `tests/test_public_extract.py` and `tests/test_game_import.py`. That import
 test shells out to Node, so `offline-core` sets up Node 24 with the step.
-The `CHESSLAB_REQUIRE_DBT=1` pytest step stays in `offline` and sets up
-Node 24 with it, for the same import test. The narrower pytest commands
-stay in `offline` and stay off when the full file set already runs.
+The `CHESSLAB_REQUIRE_DBT=1` pytest step stays in `offline` and needs no
+Node setup. Site/import checks and full runs keep Node 24. The narrower pytest
+commands stay in `offline` and stay off when the full file set already runs.
 Other pytest paths stay in the full run; test ownership outside those two
 files is not narrow enough to select.
 

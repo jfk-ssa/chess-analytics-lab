@@ -98,15 +98,19 @@ jobs:
     steps:
       # BEGIN managed offline
       - id: checkout
+        name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - id: audit_map
+        name: Audit map
         run: python3 scripts/ci_offline_changes.py --audit
       - id: record_selection
+        name: Record selection
         env:
           CHANGES_RESULT: ${{ needs.changes.result }}
           SELECTION: ${{ toJSON(needs.changes.outputs) }}
         run: python3 scripts/ci_offline_install.py --validate-only
       - id: setup_uv
+        name: Setup uv
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.setup_uv == 'true' }}
         uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d
         with:
@@ -114,65 +118,84 @@ jobs:
           enable-cache: true
           cache-suffix: offline
       - id: setup_node
+        name: Setup node
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.setup_node == 'true' }}
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: "24"
       - id: biome
+        name: Biome
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.biome == 'true' }}
         run: npx --yes @biomejs/biome@2.5.15 check
       - id: node_test
+        name: Node test
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.node_test == 'true' }}
         run: node --test --test-isolation=none tests/js/game_import.test.mjs tests/js/dashboard.test.mjs
       - id: node_check_import
+        name: Node check import
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.node_check_import == 'true' }}
         run: node scripts/check_game_import.mjs
       - id: node_parity_authored
+        name: Node parity authored
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.node_parity_authored == 'true' }}
         run: node tests/js/import_parity.mjs tests/fixtures/imports/authored-games.pgn
       - id: node_parity_zero
+        name: Node parity zero
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.node_parity_zero == 'true' }}
         run: node tests/js/import_parity.mjs tests/fixtures/imports/zero-castling.pgn
       - id: sync
+        name: Sync
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.sync == 'true' }}
         env:
           CHANGES_RESULT: ${{ needs.changes.result }}
           SELECTION: ${{ toJSON(needs.changes.outputs) }}
         run: python3 scripts/ci_offline_install.py
       - id: ruff
+        name: Ruff
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.ruff == 'true' }}
         run: uv run --locked --offline --no-editable --no-sync ruff check .
       - id: ruff_format
+        name: Ruff format
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.ruff_format == 'true' }}
         run: uv run --locked --offline --no-editable --no-sync ruff format --check .
       - id: basedpyright
+        name: Basedpyright
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.basedpyright == 'true' }}
         run: uv run --locked --offline --no-editable --no-sync basedpyright
       - id: pytest_extract
+        name: Pytest extract
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.pytest_extract == 'true' }}
         run: uv run --locked --offline --no-editable --no-sync pytest -q tests/test_public_extract.py
       - id: pytest_dashboard
+        name: Pytest dashboard
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.pytest_dashboard == 'true' }}
         run: uv run --locked --offline --no-editable --no-sync pytest -q tests/test_dashboard_cube.py tests/test_dashboard_export.py
       - id: pytest_game_import
+        name: Pytest game import
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.pytest_game_import == 'true' }}
         run: uv run --locked --offline --no-editable --no-sync pytest -q tests/test_game_import.py
       - id: pytest_mcp
+        name: Pytest mcp
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.pytest_mcp == 'true' }}
         run: uv run --locked --offline --no-editable --no-sync pytest -q tests/test_mcp_protocol.py
       - id: pytest_ml
+        name: Pytest ml
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.pytest_ml == 'true' }}
         run: uv run --locked --offline --no-editable --no-sync pytest -q tests/test_mistake_classifier.py
       - id: demo
+        name: Demo
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.demo == 'true' }}
         run: uv run --locked --offline --no-editable --no-sync chesslab demo
       - id: pytest_dbt
+        name: Pytest dbt
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.pytest_dbt == 'true' }}
         run: CHESSLAB_REQUIRE_DBT=1 uv run --locked --offline --no-editable --no-sync pytest -m dbt -q -n 4 --durations=15
       - id: transform
+        name: Transform
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.transform == 'true' }}
         run: uv run --locked --offline --no-editable --no-sync python -m chess_analytics.marts transform --dataset tiny
       - id: semantic
+        name: Semantic
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.semantic == 'true' }}
         run: |
           set -euo pipefail
@@ -192,9 +215,11 @@ jobs:
           uv run --locked --offline --no-editable --no-sync python -m chess_analytics.analyst.semantic smoke-draw-rate "$warehouse" "$manifest"
           uv run --locked --offline --no-editable --no-sync python scripts/render_dbt_dag.py --manifest "$RUNNER_TEMP/dbt-target/manifest.json" --output docs/DBT_LINEAGE.md --check
       - id: analyst_gate
+        name: Analyst gate
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.analyst_gate == 'true' }}
         run: uv run --locked --offline --no-editable --no-sync python -m chess_analytics.analyst gate
       - id: dbt_base_checkout
+        name: Dbt base checkout
         if: ${{ (needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.dbt_base_checkout == 'true') && (github.event_name == 'pull_request' || (github.event.before != '0000000000000000000000000000000000000000' && github.event.before != '')) }}
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -204,6 +229,7 @@ jobs:
           sparse-checkout: dbt
           persist-credentials: false
       - id: dbt_slim
+        name: Dbt slim
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.dbt_slim == 'true' }}
         run: |
           set -euo pipefail
@@ -235,13 +261,16 @@ jobs:
     steps:
       # BEGIN managed offline-core
       - id: core_checkout
+        name: Core checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - id: core_selection
+        name: Core selection
         env:
           CHANGES_RESULT: ${{ needs.changes.result }}
           SELECTION: ${{ toJSON(needs.changes.outputs) }}
         run: python3 scripts/ci_offline_install.py --validate-only
       - id: core_setup_uv
+        name: Core setup uv
         if: ${{ needs.changes.result != 'success' || steps.core_selection.outputs.fallback != 'false' || needs.changes.outputs.core_setup_uv == 'true' }}
         uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d
         with:
@@ -249,14 +278,17 @@ jobs:
           enable-cache: true
           cache-suffix: offline-core
       - id: core_setup_node
+        name: Core setup node
         if: ${{ needs.changes.result != 'success' || steps.core_selection.outputs.fallback != 'false' || needs.changes.outputs.core_setup_node == 'true' }}
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: "24"
       - id: core_sync
+        name: Core sync
         if: ${{ needs.changes.result != 'success' || steps.core_selection.outputs.fallback != 'false' || needs.changes.outputs.core_sync == 'true' }}
         run: uv sync --locked --no-editable
       - id: pytest
+        name: Pytest
         if: ${{ needs.changes.result != 'success' || steps.core_selection.outputs.fallback != 'false' || needs.changes.outputs.pytest == 'true' }}
         run: uv run --locked --offline --no-editable --no-sync pytest -q -n 4 --durations=15
       # END managed offline-core
@@ -268,13 +300,16 @@ jobs:
     steps:
       # BEGIN managed portfolio
       - id: portfolio_checkout
+        name: Portfolio checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - id: portfolio_record
+        name: Portfolio record
         env:
           CHANGES_RESULT: ${{ needs.changes.result }}
           SELECTION: ${{ toJSON(needs.changes.outputs) }}
         run: python3 scripts/ci_offline_install.py --validate-only
       - id: portfolio_setup_uv
+        name: Portfolio setup uv
         if: ${{ needs.changes.result != 'success' || steps.portfolio_record.outputs.fallback != 'false' || needs.changes.outputs.portfolio_setup_uv == 'true' }}
         uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d
         with:
@@ -282,12 +317,15 @@ jobs:
           enable-cache: true
           cache-suffix: portfolio
       - id: portfolio_sync
+        name: Portfolio sync
         if: ${{ needs.changes.result != 'success' || steps.portfolio_record.outputs.fallback != 'false' || needs.changes.outputs.portfolio_sync == 'true' }}
         run: uv sync --locked --no-editable --extra dashboard
       - id: pytest_portfolio
+        name: Pytest portfolio
         if: ${{ needs.changes.result != 'success' || steps.portfolio_record.outputs.fallback != 'false' || needs.changes.outputs.pytest_portfolio == 'true' }}
         run: uv run --locked --offline --no-editable --no-sync --extra dashboard pytest -q tests/test_portfolio_integrity.py tests/test_portfolio_demo.py tests/test_hosted_dashboard.py
       - id: demo_all
+        name: Demo all
         if: ${{ needs.changes.result != 'success' || steps.portfolio_record.outputs.fallback != 'false' || needs.changes.outputs.demo_all == 'true' }}
         run: uv run --locked --offline --no-editable --no-sync --extra dashboard chesslab demo --scope all
       # END managed portfolio

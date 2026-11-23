@@ -325,7 +325,7 @@ STEPS = (
             "--no-sync pytest -m dbt -q -n 4 --durations=15"
         ),
         extras=("dbt",),
-        requires=("setup_node", "sync", "record_selection", "setup_uv"),
+        requires=("sync", "record_selection", "setup_uv"),
     ),
     Step(
         "offline",

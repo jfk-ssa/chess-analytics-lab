@@ -24,6 +24,7 @@ def render(text: str) -> str:
             if step.job != job:
                 continue
             lines.append(f"      - id: {step.step_id}\n")
+            lines.append(f"        name: {step.step_id.replace('_', ' ').capitalize()}\n")
             if step.kind != "always":
                 lines.append(f"        if: {step.if_expr or default_if(step.step_id, job)}\n")
             if step.uses:
