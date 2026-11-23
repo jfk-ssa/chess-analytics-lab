@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="assets/dashboard.css">
+<div id="dashboard" class="dashboard">
+<p class="source-note">Published aggregate cells have a ten-game floor. Games, results, periods and opening positions use the rated-public cohort. Clock slices and game samples use the separate August prefix. <a href="live-eval.html">Live eval</a> is separate and ignores these filters.</p>
+<form id="dashboard-filters" class="dash-filters" aria-label="Dashboard filters">
+<label>From<input name="start" type="date" required></label>
+<label>Through<input name="end" type="date" required></label>
+<label>Time control<select name="time_control"></select></label>
+<label>Color<select name="color"></select></label>
+<label>Rating band<select name="rating_band"></select></label>
+<label>Opening family<select name="opening_family"></select></label>
+<button type="reset">Reset filters</button>
+</form>
+<p id="dashboard-status" role="status">Loading published cube…</p>
+<noscript>This interactive dashboard needs JavaScript. Download the <a href="assets/dashboard.json">public JSON view</a> and inspect its scoped provenance.</noscript>
+<div id="dashboard-view" aria-live="polite"></div>
+<details class="dash-provenance"><summary>Provenance: cube and extract</summary>
+<h2>Cube provenance</h2><p>{{ cube.populations | e }}</p>
+<dl>{% for key, value in cube.items() if key != 'populations' %}<dt>{{ key | e }}</dt><dd>{{ value | e }}</dd>{% endfor %}</dl>
+<h2>Extract provenance</h2><p>These build fields and the game_draw_rate mart id describe the extract only. They do not establish cube-wide lineage.</p>
+<dl>{% for key, value in extract.items() %}<dt>{{ key | e }}</dt><dd>{{ value | e }}</dd>{% endfor %}</dl>
+<p><a href="assets/dashboard.json">Download public JSON view</a> · <a href="site-build.json">Site build manifest</a></p>
+</details>
+</div>
+<script type="module" src="assets/dashboard-ui.mjs"></script>

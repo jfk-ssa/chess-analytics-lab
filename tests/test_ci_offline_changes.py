@@ -269,7 +269,7 @@ def test_hosted_runs_the_extract_budget_test_and_skips_dbt_pytest(changes):
     assert flags["pytest_portfolio"] == "true"
     assert flags["basedpyright"] == "true"
     replaced = _skipped(flags, OFFLINE_STEPS) - MEDIAN_SECONDS["pytest"]
-    assert replaced == 352.5
+    assert replaced == 351.5
     source = changes.outputs_for("pull_request", ["src/chess_analytics/public_extract.py"])
     assert source["pytest"] == "true"
     builder = changes.outputs_for("pull_request", ["scripts/build_public_extract.py"])
@@ -576,3 +576,47 @@ def test_valid_selection_keeps_skips_and_narrow_suppression(
     assert flags["pytest_extract"] == flags["pytest_game_import"] == "false"
     if event == "pull_request" and path == "README.md":
         assert all(flags[step.step_id] == "false" for step in (*changes.CHECKS, *changes.SUPPORT))
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "site/assets/dashboard-core.mjs",
+        "site/assets/dashboard-ui.mjs",
+        "site/assets/dashboard.css",
+        "scripts/templates/dashboard.html.j2",
+        "scripts/templates/shell.html.j2",
+        "scripts/templates/live_eval.html.j2",
+        "tests/js/dashboard.test.mjs",
+        "tests/js/dashboard_query.mjs",
+        "tests/test_dashboard_export.py",
+        "tests/test_dashboard_cube.py",
+        "scripts/build_docs_site.py",
+        "scripts/build_dashboard_cube.py",
+        "scripts/build_warehouse_cube.py",
+        "src/chess_analytics/dashboard_cube.py",
+        "src/chess_analytics/dashboard_export.py",
+        "src/chess_analytics/dashboard/analysis.py",
+        "src/chess_analytics/public_extract.py",
+        "scripts/build_public_extract.py",
+        "data/public/dashboard_cube.parquet",
+        "data/public/dashboard_extract.json",
+    ],
+)
+def test_dashboard_changes_select_node_and_python_coverage(changes, path):
+    flags = changes.outputs_for("pull_request", [path])
+    assert flags["setup_node"] == flags["node_test"] == "true"
+    assert flags["pytest_dashboard"] == "true" or flags["pytest"] == "true"
+    assert flags["sync"] == "true"
+    if path.startswith("data/public/"):
+        assert flags["pytest_dashboard"] == "true"
+        assert flags["pytest"] == "false"
+
+
+def test_dashboard_command_and_order_are_catalogued(changes):
+    steps = {step.step_id: step for step in changes.CHECKS}
+    assert "tests/js/dashboard.test.mjs" in steps["node_test"].exact
+    assert "tests/js/game_import.test.mjs" in steps["node_test"].exact
+    assert "tests/test_dashboard_cube.py" in steps["pytest_dashboard"].exact
+    assert "tests/test_dashboard_export.py" in steps["pytest_dashboard"].exact
+    assert "setup_node" in steps["pytest_dashboard"].requires

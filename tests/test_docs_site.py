@@ -70,7 +70,7 @@ def test_header_layouts_fit_without_a_horizontal_scroller():
     assert "scrollbar-width: none" in phone
     assert "flex-wrap: nowrap" in phone
     assert "repeat(5, minmax(0, 1fr))" in tablet
-    assert "repeat(7, minmax(0, 1fr))" in tablet
+    assert "repeat(8, minmax(0, 1fr))" in tablet
     assert ".cards.preview-cards" in css
     assert "grid-template-columns: minmax(0, 1fr);" in css
     assert "Analyze games" in (ROOT / "scripts/build_docs_site.py").read_text()
@@ -184,8 +184,22 @@ def test_materialized_positions_match_the_publication_checkpoint():
 def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     before = (ROOT / "reports/decisions-routing-comparison.html").read_bytes()
     result = site.build(ROOT, tmp_path / "output")
-    assert len(result["pages"]) == 10
+    assert len(result["pages"]) == 11
     assert "portfolio.html" in result["pages"]
+    assert "dashboard.html" in result["pages"]
+    sources = result["sources"]
+    cube_source = sources["data/public/dashboard_cube.parquet"]
+    extract_source = sources["data/public/dashboard_extract.json"]
+    assert cube_source["row_count"] == sum(cube_source["grain_counts"].values())
+    assert "mart_id" not in cube_source and "build" not in cube_source
+    assert extract_source["game_draw_rate_mart_id"]
+    assert extract_source["build"]["source_snapshot_id"]
+    generated = tmp_path / "output/assets/dashboard.json"
+    assert result["outputs"]["assets/dashboard.json"] == site.digest(generated.read_bytes())
+    dashboard = (tmp_path / "output/dashboard.html").read_text()
+    assert "Cube provenance" in dashboard and "Extract provenance" in dashboard
+    assert "do not establish cube-wide lineage" in dashboard
+    assert 'href="site-build.json"' in dashboard
     assert result["sources"]["PORTFOLIO.md"] == site.digest((ROOT / "PORTFOLIO.md").read_bytes())
     assert result["local_links_checked"] > 50
     assert result["live_requests"] == result["data_downloads"] == 0
@@ -215,6 +229,7 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
         ("AI analyst", "comparison.html"),
     )
     assert site.LAB_NAV == (
+        ("Dashboard", "dashboard.html"),
         ("Metrics & data", "metrics.html"),
         ("Architecture", "architecture.html"),
         ("Run the demo", "demo.html"),
@@ -289,7 +304,7 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     assert '<body class="page-portfolio">' in portfolio
     assert 'class="portfolio-intro"' in portfolio
     assert 'class="portfolio-lead"' in portfolio
-    assert portfolio.count('class="portfolio-live-pill"') == 3
+    assert portfolio.count('class="portfolio-live-pill"') == 4
     assert portfolio.count('class="portfolio-card') == 9
     assert 'class="portfolio-sources"' in portfolio
     assert 'class="portfolio-source"' in portfolio
@@ -648,3 +663,17 @@ def test_import_publication_rejects_changed_vendor(tmp_path):
     (vendor / "chess-1.4.0.mjs").write_text("modified dependency")
     with pytest.raises(ValueError, match="Vendored chess library hash changed"):
         site.game_import(tmp_path, tmp_path / "output")
+
+
+def test_pages_pr_preview_keeps_the_deploy_guard():
+    workflow = (ROOT / ".github/workflows/pages.yml").read_text()
+    preview = workflow.split("      - name: Downloadable PR preview\n", 1)[1]
+    preview = preview.split("      - uses: actions/upload-pages-artifact@", 1)[0]
+    assert "if: github.event_name == 'pull_request'" in preview
+    assert "uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9" in preview
+    assert "path: work/docs-site" in preview
+    assert "include-hidden-files: true" in preview
+    assert "if-no-files-found: error" in preview
+    assert "if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'" in workflow
+    assert "tests/test_dashboard_cube.py tests/test_dashboard_export.py" in workflow
+    assert "actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1" in workflow

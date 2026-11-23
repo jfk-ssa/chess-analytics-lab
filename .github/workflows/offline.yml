@@ -26,6 +26,7 @@ jobs:
       ruff_format: ${{ steps.filter.outputs.ruff_format }}
       basedpyright: ${{ steps.filter.outputs.basedpyright }}
       pytest_extract: ${{ steps.filter.outputs.pytest_extract }}
+      pytest_dashboard: ${{ steps.filter.outputs.pytest_dashboard }}
       pytest_game_import: ${{ steps.filter.outputs.pytest_game_import }}
       pytest_mcp: ${{ steps.filter.outputs.pytest_mcp }}
       pytest_ml: ${{ steps.filter.outputs.pytest_ml }}
@@ -118,7 +119,7 @@ jobs:
         run: npx --yes @biomejs/biome@2.5.15 check
       - id: node_test
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.node_test == 'true' }}
-        run: node --test tests/js/game_import.test.mjs
+        run: node --test --test-isolation=none tests/js/game_import.test.mjs tests/js/dashboard.test.mjs
       - id: node_check_import
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.node_check_import == 'true' }}
         run: node scripts/check_game_import.mjs
@@ -146,6 +147,9 @@ jobs:
       - id: pytest_extract
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.pytest_extract == 'true' }}
         run: uv run --locked --offline --no-editable --no-sync pytest -q tests/test_public_extract.py
+      - id: pytest_dashboard
+        if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.pytest_dashboard == 'true' }}
+        run: uv run --locked --offline --no-editable --no-sync pytest -q tests/test_dashboard_cube.py tests/test_dashboard_export.py
       - id: pytest_game_import
         if: ${{ needs.changes.result != 'success' || steps.record_selection.outputs.fallback != 'false' || needs.changes.outputs.pytest_game_import == 'true' }}
         run: uv run --locked --offline --no-editable --no-sync pytest -q tests/test_game_import.py

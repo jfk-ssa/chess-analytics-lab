@@ -80,6 +80,14 @@ filters, as they do today. That page reads `reports/live-eval-receipt-*.json`
 and the case set directly through `build_docs_site.live_eval`; it does
 not read `dashboard_extract.json`.
 
+Games, results, opening views and periods use only `rated_public`, including
+date fallbacks and prior-period comparisons; never sum across cohorts. Default
+dates use that cohort's bounds.
+Clock slices and samples retain their separate `m3_august_prefix` population.
+All-color result rates explicitly name White perspective. Count bars start at
+zero; rate bars start at 90% of the displayed minimum and end at the highest
+displayed rate, with both bounds in the caption.
+
 Provenance has two distinct inputs. The cube supplies chart rows and
 has no mart id, source snapshot, or build hashes in its columns.
 Validate `data/public/dashboard_extract.json` and read its `build`

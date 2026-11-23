@@ -1,5 +1,11 @@
 # Hosted dashboard
 
+The [Pages dashboard](https://jfkbot.github.io/chess-analytics-lab/dashboard.html) publishes
+the same cube as a static interactive page. [ADR 0120](adr/0120-replace-hosted-streamlit-with-static-dashboard.md)
+stages its rollout; the [acceptance procedure](SITE.md#dashboard-acceptance-before-pr-3)
+must be completed on the deployed page before a separate PR 3 retires hosted
+Streamlit. This guide and the hosted code/tests remain current during PR 2.
+
 `hosted/dashboard.py` queries `data/public/dashboard_cube.parquet` with
 DuckDB and reads `data/public/dashboard_extract.json` for live eval.
 It does not open a warehouse, take uploads, read secrets, or call the

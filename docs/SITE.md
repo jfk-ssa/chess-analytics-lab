@@ -17,6 +17,7 @@ The site is static: it cannot run the analyst, contact a model or download games
 | [Demo](https://jfkbot.github.io/chess-analytics-lab/demo.html) | [Demo walkthrough](DEMO.md), synthetic dashboard screenshots | Actual example screens and copyable commands |
 | [Transpositions](https://jfkbot.github.io/chess-analytics-lab/transpositions.html) | [Analysis guide](TRANSPOSITIONS.md), checked corpus and position reports | Rankings, route balance, coverage/depth/scatter charts, public fianchetto lenses and route comparisons |
 | [Opening learning](https://jfkbot.github.io/chess-analytics-lab/opening-learning.html) | [Transposition learning](TRANSPOSITION_LEARNING.md) | Illustrative board, lesson design and evaluation proposal |
+| [Dashboard](https://jfkbot.github.io/chess-analytics-lab/dashboard.html) | `data/public/dashboard_cube.parquet`, `data/public/dashboard_extract.json`, `dashboard_export.py` and dashboard assets/template | Browser filters, KPI deltas, family/line/position drills, clock game samples and separate provenance panels |
 | [Live eval](https://jfkbot.github.io/chess-analytics-lab/live-eval.html) | Committed `reports/live-eval-receipt-*.json` files and [analyst_live_v1.json](../evals/cases/analyst_live_v1.json) | Scorecard, intervals, hard-fail panel, and per-case chart. Generated in the Pages build. |
 
 | [Analyze games](https://jfkbot.github.io/chess-analytics-lab/import-games.html) | [Local PGN guide](GAME_IMPORT.md), [import contract](../contracts/imported_games.json), authored fixtures | Local worker replay, explicit provider/player selection, bounded reference coverage and summary download |
@@ -71,20 +72,40 @@ that HTML. Page markup lives in `scripts/templates`. Edit the Markdown, contract
 templates, or `site/assets/site.css` and `site/assets/site.js`, then rebuild. The
 optional `docs` extra pins Markdown and Jinja2; the application does not need them.
 
+## Download a pull-request preview
+
+On the pull request's **Documentation website** run, download the
+`docs-site-pr-<number>` artifact and unzip it into a fresh directory. It contains
+the complete `work/docs-site` build, including `dashboard.html`, its local assets,
+and `site-build.json` with input/output hashes and separate provenance scopes.
+The artifact expires after seven days. Serve the unzipped directory over HTTP:
+
+```sh
+python3 -m http.server 8767 --bind 127.0.0.1 --directory /path/to/unzipped-preview
+```
+
+Open `http://127.0.0.1:8767/dashboard.html`. HTTP serves the JavaScript modules
+and JSON view; opening the HTML directly as a file does not provide that module
+loading environment. The same command previews a local build by substituting
+`work/docs-site` for the directory. Stop the server with Ctrl-C.
+
+PR runs upload this downloadable preview and never deploy Pages. The existing
+main/non-PR deploy guard remains the publication gate. A preview review does
+not count as the deployed-page acceptance required before PR 3.
+
 ## Navigation
 
 Every generated page shows the same links. No group is behind a dropdown or a
 Menu button. Primary links are Home, Data pipeline, Transpositions, Analyze
-games, and AI analyst. The Lab strip lists Metrics & data, Architecture, Run
-the demo, AI comparison, Opening learning, and Live eval. Data pipeline and Architecture
+games, and AI analyst. The Lab strip lists Dashboard, Metrics & data, Architecture, Run
+the demo, AI comparison, Opening learning, Live eval, and Portfolio. Data pipeline and Architecture
 both open the architecture guide. AI analyst and AI comparison both open the
 comparison guide. Each link to the current page has `aria-current="page"`.
 
 Above 960 CSS pixels the header is sticky. From 601px through 960px it scrolls
-away. The primary row is a five-column grid and the Lab row is a six-column
-grid. At 600px and below the primary links
-are full-width 44px rows and Lab is one wrapping line of text links at least
-24px tall. The compact header is CSS, so it does not wait for JavaScript and
+away. The primary row is a five-column grid and the Lab row is an eight-column
+grid. At 600px and below each navigation group is one swipeable row with
+44px touch targets. The compact header is CSS, so it does not wait for JavaScript and
 does not shift into place. `site.js` no longer watches a navigation breakpoint.
 This navigation adds no dependency, provider request, persistence, or custom
 ARIA menu roles.
@@ -198,7 +219,7 @@ stacked cards; ordinary article tables align to the prose reading width.
 
 ## Site review improvements
 
-The ten current pages have distinct descriptions, self-canonical URLs,
+The current pages have distinct descriptions, self-canonical URLs,
 Open Graph and Twitter sharing tags, a shared 1200×630 PNG preview and SVG/ICO
 favicons. The homepage canonical URL is the directory URL. Sharing metadata is
 checked locally; provider preview caches may need to be refreshed after deployment.
@@ -240,7 +261,7 @@ implementation with independent python-chess replay. Node 24 is used for browser
 logic tests in offline CI. No npm install or runtime CDN is needed:
 
 ```sh
-node --test tests/js/game_import.test.mjs
+node --test --test-isolation=none tests/js/game_import.test.mjs tests/js/dashboard.test.mjs
 uv run --locked --offline --no-editable --extra docs pytest -q tests/test_game_import.py tests/test_docs_site.py
 node scripts/check_game_import.mjs work/game-import-performance.json
 ```
@@ -249,3 +270,95 @@ The performance script generates at most 5,000 unique-ID authored 20-ply games;
 it does not read account files or contact either provider. Its timings are local
 fixture evidence, not guarantees for long games, mobile hardware or account history.
 See [the verification receipt](../reports/game-import-verification.json).
+
+
+## Dashboard acceptance before PR 3
+
+The published target is [the Pages dashboard](https://jfkbot.github.io/chess-analytics-lab/dashboard.html).
+PR 2 adds the page while hosted Streamlit, its pin tests, and the local six-view
+app remain available. No deployed-page acceptance or Cloud deletion is recorded
+by this PR. PR 3 is a separate merge gate in [ADR 0120](adr/0120-replace-hosted-streamlit-with-static-dashboard.md).
+
+The Pages build exports only the two committed public inputs. It opens an
+in-memory DuckDB connection over the Parquet file, with no warehouse, MetricFlow,
+model, or download. String dictionaries and per-grain columns keep the generated
+JSON compact. Inter, the shared site tokens and the 1120px outer canvas remain.
+The Lab navigation includes Dashboard. Layout uses four equal tracks on desktop
+and two on phones; SAN full moves wrap as units. Count axes start at zero;
+clock error rates start 10% below the lowest displayed rate and end at the highest
+displayed rate, with the actual domain shown in the axis caption.
+
+Games, results, periods, positions and transpositions use only `rated_public`,
+even when the date range includes the elite reference month. The default range
+is 2025-12-01 through 2026-08-01. Games shows 770,626 after the ten-game cell floor;
+the nine period bars total 802,260 before the ten-game cell floor. Clock slices
+and game samples remain the separate August prefix. With Color set to All,
+Win/Loss/Draw rates explicitly say White perspective; a selected color names
+that side.
+
+Date, time control, color, rating band and opening family apply where each grain
+stores them. Captions identify unsupported filters and labelled full-window or
+August fallbacks. Carried dimensions stay applied through a date fallback, and
+an unmatched cut stays empty. An empty period date range stays empty too.
+The KPI strip is Games / Win / Loss / Draw, then Positions / Rating diff /
+Game length / Clock error. Six KPIs compare the previous equal block only when
+months, cohort and period spans are comparable. Clock bars count evaluable moves;
+cards also name eligible moves. The game sample is hash ordered, deduplicated,
+and capped at twelve matches, from the published six-opening-per-cell sample.
+Live-eval receipts stay on their separate page.
+
+`site-build.json.sources` records byte hashes for both inputs. Cube scope includes
+path, row count, grain counts, mixed populations and site source revision, with
+no cube mart id. Extract scope contains the validated build record and the
+`game_draw_rate` receipt's mart id; those fields describe the extract only.
+The generated JSON hash is in `outputs`. Both input-change tests and a
+change-during-export guard prevent stale input/hash pairings.
+
+Run the offline acceptance checks after installation:
+
+```sh
+uv sync --locked --no-editable --extra docs --extra dbt --extra dashboard --extra mcp --extra ml --reinstall-package chess-analytics-lab
+uv run --locked --offline --no-editable --extra docs --extra dbt --extra dashboard --extra mcp --extra ml python scripts/materialize_opening_positions.py
+uv run --locked --offline --no-editable --extra docs --extra dbt --extra dashboard --extra mcp --extra ml pytest -n auto
+.venv/bin/ruff check .
+.venv/bin/ruff format --check .
+uv run --locked --offline --no-editable --extra docs --extra dbt --extra dashboard --extra mcp --extra ml basedpyright
+node --test --test-isolation=none tests/js/game_import.test.mjs tests/js/dashboard.test.mjs
+uv run --locked --offline --no-editable --extra docs --extra dbt --extra dashboard --extra mcp --extra ml python scripts/ci_offline_generate.py --check
+uv run --locked --offline --no-editable --extra docs --extra dbt --extra dashboard --extra mcp --extra ml python scripts/build_docs_site.py
+wc -lc work/docs-site/dashboard.html work/docs-site/site-build.json work/docs-site/assets/dashboard.json
+```
+
+Run the pinned Biome check as configured in `biome.json` (the offline catalog
+names its exact version). The Python exporter tests run in Pages CI. Offline CI
+selects Node, its catalogued dashboard/import tests, and Python cube/export
+coverage for dashboard assets, templates, tests, builder/analysis changes, and
+either public input alone. Docs-only skips and full/failure selection remain
+covered by the ADR 0100 classifier tests. Source edits require reinstalling the
+wheel before verification. The materializer restores an existing pinned report;
+it is preparation, not a download performed by imports, tests or the site build.
+
+After merge and successful Pages deployment, John reviews the actual public
+page at **1280px and 390px**, including the following acceptance steps:
+
+1. Verify equal sibling widths, four/two grid tracks, the eight-card KPI order,
+   readable horizontal labels, data labels, unbroken SAN full moves and unclipped
+   marks. Check the count and clock-rate baselines.
+2. Exercise every filter and a combination. Select a time control absent from
+   clock slices, and a family absent from positions: both cuts stay empty.
+   Check unsupported-grain captions and an explicitly labelled August fallback.
+3. Select a comparable published month and inspect prior-period deltas; verify
+   that gaps or incompatible windows do not produce a comparison.
+4. Drill family → line → position → continuations, use breadcrumbs and Back,
+   then reset. Open transposition boards and inspect the other-orders rule.
+5. Select each clock band, exercise color/rating/opening/time cuts and confirm
+   the twelve-game cap, sample caption and eligible/evaluable distinction.
+6. Expand provenance. Compare both input hashes and extract build fields with
+   `site-build.json`; confirm extract metadata is never labelled cube lineage.
+
+Before merging PR 3, record **John's explicit deployed-page acceptance**, the
+exact deployed URL, source revision from `site-build.json`, Pages build/run link,
+date and both reviewed viewport widths. Retain any failures and subsequent fixes.
+A PR artifact or a local fixture check cannot establish this acceptance. PR 3
+also requires John's separately recorded manual Community Cloud deletion; this
+PR performs no retirement or deployment action.

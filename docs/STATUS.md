@@ -18,7 +18,30 @@ PR 1 of [ADR 0119](adr/0119-deduplicate-workflows-and-prune-stale-extras.md)
 uses a generated offline step catalog and one selected-extra sync, and removes
 the duplicate Pages lint check, unused orchestration adapters, and auxiliary
 examples. Offline checks: 679 passed, 18 skipped; 63 classifier tests passed.
-Frozen evidence and dated measurements stay unchanged. PRs 2–4 remain proposed.
+Frozen evidence and dated measurements stay unchanged. PRs 3–4 remain proposed;
+PR 2's publication work is described below.
+
+PR 2 of [ADR 0120](adr/0120-replace-hosted-streamlit-with-static-dashboard.md)
+adds the [Pages dashboard](https://jfkbot.github.io/chess-analytics-lab/dashboard.html)
+from the committed public cube, with browser filters/drills, KPI comparisons,
+capped clock samples, separately scoped cube/extract provenance and a downloadable
+PR preview. The JSON view contains 35,100 rows in 14 grains. The site build makes
+no live requests. Pages now keeps games/results/openings/periods in `rated_public`
+(770,626 Games; nine period bars totaling 802,260), with August clock data
+separate. Pages rate bars start at 90% of the displayed minimum and end at the
+highest displayed rate, with both bounds in the caption.
+Cohort, rate-axis and perspective regressions are covered by the Node and focused
+Python suites. Hosted code/tests and the local dashboard remain.
+2026-11-23: preview-artifact visual review at 1280px and 390px done on 7f25296;
+John's acceptance of the deployed page is still outstanding for PR 3. Follow the
+[acceptance procedure](SITE.md#dashboard-acceptance-before-pr-3) before PR 3.
+
+Local PR 2 review on 2026-11-23: the focused docs-site, dashboard-cube and
+dashboard-export tests passed without xdist. Ruff lint/format and the
+offline workflow generator check passed; the site build checked local links
+with zero live requests. On Node 24, `node --test tests/js` failed
+with `MODULE_NOT_FOUND`; the catalogued explicit-file command passed.
+The full pytest suite was left for an environment that permits sockets.
 
 The portfolio page presents root `PORTFOLIO.md` with an intro strip,
 live-link pills, topic cards, wrapping source chips and a source-derived

@@ -13,6 +13,7 @@ live evaluations are recorded separately.
 | Your goal | Read / do next | What you will get |
 |---|---|---|
 | Run something immediately | [Offline demo](DEMO.md) | Install, build four unique fixture games, explore six dashboard views, replay checked answers |
+| Explore the published cube | [Pages dashboard](https://jfkbot.github.io/chess-analytics-lab/dashboard.html) and [site runbook](SITE.md#dashboard-acceptance-before-pr-3) | Filters, KPI deltas, opening drills, clock samples and scoped provenance |
 | Read the hosted aggregate dashboard | [Hosted dashboard](HOSTED_DASHBOARD.md) | Community Cloud app over the committed extract; no warehouse |
 | Understand the system | [Architecture](ARCHITECTURE.md) → [data dictionary](DATA_DICTIONARY.md) | Pipeline, code boundaries, table grain and provenance |
 | Understand an analysis | [Metric contracts](METRICS.md) → [opening memo](M4-OPENINGS.md) / [clock memo](M4-CLOCK.md) | Denominators, cohort filters, missingness and limits |
