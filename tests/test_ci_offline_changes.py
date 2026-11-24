@@ -212,6 +212,7 @@ def test_docs_skip_the_long_steps(changes):
         "CONTRIBUTING.md",
         "AGENTS.md",
         "LICENSE",
+        "THIRD_PARTY_NOTICES.md",
         "auxiliary-examples/README.md",
     ):
         flags = changes.outputs_for("pull_request", [path])
@@ -269,25 +270,43 @@ def test_site_runs_biome_node_and_the_import_test(changes):
     assert templates["pytest"] == "false"
 
 
-def test_hosted_runs_the_extract_budget_test_and_skips_dbt_pytest(changes):
-    flags = changes.outputs_for("pull_request", ["data/public/dashboard_extract.json"])
-    assert flags["pytest_extract"] == "true"
-    assert flags["pytest"] == "false"
-    assert flags["pytest_dbt"] == "false"
-    assert flags["pytest_portfolio"] == "true"
-    assert flags["basedpyright"] == "true"
+@pytest.mark.parametrize(
+    "path", ["data/public/dashboard_extract.json", "data/public/dashboard_cube.parquet"]
+)
+def test_public_inputs_keep_extract_and_static_coverage(changes, path):
+    flags = changes.outputs_for("pull_request", [path])
+    assert flags["categories"] == "dashboard,public"
+    assert flags["pytest_extract"] == flags["pytest_dashboard"] == "true"
+    assert flags["setup_node"] == flags["node_test"] == "true"
+    assert flags["pytest"] == flags["pytest_dbt"] == "false"
+    assert flags["pytest_portfolio"] == flags["demo_all"] == "false"
+    assert flags["basedpyright"] == "false"
     replaced = _skipped(flags, OFFLINE_STEPS) - MEDIAN_SECONDS["pytest"]
-    assert replaced == 351.5
+    assert replaced == 356.5
     source = changes.outputs_for("pull_request", ["src/chess_analytics/public_extract.py"])
     assert source["pytest"] == "true"
     builder = changes.outputs_for("pull_request", ["scripts/build_public_extract.py"])
     assert builder["pytest"] == "true"
-    notices = changes.outputs_for("pull_request", ["THIRD_PARTY_NOTICES.md"])
-    assert notices["run_all"] == "false"
-    assert notices["categories"] == "hosted"
-    assert notices["pytest_extract"] == "true"
-    assert notices["pytest_portfolio"] == "true"
-    assert notices["pytest"] == "false"
+
+
+@pytest.mark.parametrize("path", ["data/README.md", "data/public/another_extract.json"])
+def test_public_paths_keep_extract_budget_coverage(changes, path):
+    flags = changes.outputs_for("pull_request", [path])
+    assert flags["run_all"] == "false"
+    assert flags["pytest_extract"] == "true"
+    assert flags["pytest"] == flags["pytest_dbt"] == flags["pytest_portfolio"] == "false"
+
+
+def test_local_streamlit_config_runs_portfolio_and_demo(changes):
+    flags = changes.outputs_for("pull_request", [".streamlit/config.toml"])
+    assert flags["categories"] == "local_dashboard"
+    assert flags["pytest_portfolio"] == flags["demo_all"] == "true"
+    assert flags["portfolio_sync"] == "true"
+    assert flags["pytest_extract"] == flags["pytest"] == flags["pytest_dbt"] == "false"
+    step = next(step for step in changes.CHECKS if step.step_id == "pytest_portfolio")
+    assert step.exact.endswith(
+        "pytest -q tests/test_portfolio_integrity.py tests/test_portfolio_demo.py"
+    )
 
 
 def test_metrics_contract_keeps_the_analyst_guards(changes):
@@ -447,7 +466,8 @@ def test_every_check_category_has_a_pattern(changes):
     [
         (["docs/STATUS.md"], []),
         (["site/assets/site.css"], []),
-        (["hosted/dashboard.py"], []),
+        (["data/public/dashboard_extract.json"], []),
+        ([".streamlit/config.toml"], []),
         (["dbt/models/marts/games.sql"], ["dbt"]),
         (["evals/cases/analyst_live_v1.json"], ["dbt"]),
         (["site/assets/site.css", "dbt/models/marts/games.sql"], ["dbt"]),

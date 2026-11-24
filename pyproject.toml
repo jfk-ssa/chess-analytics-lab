@@ -36,9 +36,6 @@ dbt = [
 # compromised emSign intermediates (GHSA-6q48-6c7w-9gw2).
 dashboard = [
     "streamlit==1.67.0",
-    # Keep hosted pip installs and the shared dashboard lock on the same releases.
-    "pandas==3.1.1",
-    "narwhals==2.29.0",
     "pillow==13.0.0",
     "certifi==2026.10.23",
 ]
@@ -72,7 +69,7 @@ torch = [
 ]
 
 [tool.basedpyright]
-include = ["src", "hosted"]
+include = ["src"]
 pythonVersion = "3.12"
 typeCheckingMode = "basic"
 venvPath = "."

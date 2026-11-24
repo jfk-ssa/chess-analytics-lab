@@ -46,7 +46,6 @@ RULES = (
     Rule(
         "docs",
         ("docs/**", "*.md", "LICENSE", "auxiliary-examples/**"),
-        ("THIRD_PARTY_NOTICES.md",),
     ),
     Rule(
         "dashboard",
@@ -78,16 +77,8 @@ RULES = (
             "scripts/check_game_import.mjs",
         ),
     ),
-    Rule(
-        "hosted",
-        (
-            "hosted/**",
-            "data/public/**",
-            "data/README.md",
-            ".streamlit/**",
-            "THIRD_PARTY_NOTICES.md",
-        ),
-    ),
+    Rule("public", ("data/public/**", "data/README.md")),
+    Rule("local_dashboard", (".streamlit/**",)),
     Rule(
         "python",
         (
@@ -232,7 +223,7 @@ STEPS = (
         "offline",
         "ruff",
         "check",
-        categories=("python", "hosted", "lint"),
+        categories=("python", "lint"),
         exact="uv run --locked --offline --no-editable --no-sync ruff check .",
         requires=("sync", "record_selection", "setup_uv"),
     ),
@@ -240,7 +231,7 @@ STEPS = (
         "offline",
         "ruff_format",
         "check",
-        categories=("python", "hosted", "lint"),
+        categories=("python", "lint"),
         exact="uv run --locked --offline --no-editable --no-sync ruff format --check .",
         requires=("sync", "record_selection", "setup_uv"),
     ),
@@ -248,7 +239,7 @@ STEPS = (
         "offline",
         "basedpyright",
         "check",
-        categories=("python", "hosted"),
+        categories=("python",),
         exact="uv run --locked --offline --no-editable --no-sync basedpyright",
         requires=("sync", "record_selection", "setup_uv"),
     ),
@@ -256,7 +247,7 @@ STEPS = (
         "offline",
         "pytest_extract",
         "check",
-        categories=("hosted",),
+        categories=("public",),
         exact=(
             "uv run --locked --offline --no-editable --no-sync pytest -q "
             "tests/test_public_extract.py"
@@ -529,11 +520,11 @@ STEPS = (
         "portfolio",
         "pytest_portfolio",
         "check",
-        categories=("python", "analyst", "dbt", "hosted"),
+        categories=("python", "analyst", "dbt", "local_dashboard"),
         exact=(
             "uv run --locked --offline --no-editable --no-sync --extra dashboard "
             "pytest -q tests/test_portfolio_integrity.py "
-            "tests/test_portfolio_demo.py tests/test_hosted_dashboard.py"
+            "tests/test_portfolio_demo.py"
         ),
         requires=("portfolio_sync", "portfolio_record", "portfolio_setup_uv"),
     ),
@@ -541,7 +532,7 @@ STEPS = (
         "portfolio",
         "demo_all",
         "check",
-        categories=("python", "analyst", "dbt", "hosted"),
+        categories=("python", "analyst", "dbt", "local_dashboard"),
         exact=(
             "uv run --locked --offline --no-editable --no-sync --extra dashboard "
             "chesslab demo --scope all"

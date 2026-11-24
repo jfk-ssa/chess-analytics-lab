@@ -14,7 +14,8 @@ That step shells out to Node, so ``offline-core`` sets up Node with it.
 The dbt pytest step selects only tests marked ``dbt``. The existing Node 24
 setup selection in ``offline`` stays unchanged.
 
-The categories are docs, site, hosted, python, dbt, and analyst. ``docs``
+The categories are docs, site, dashboard, public, local_dashboard, python,
+dbt, analyst, and lint. ``docs``
 selects no extra step. Run ``python3 scripts/ci_offline_changes.py --audit``
 after adding a path or a workflow step.
 """
