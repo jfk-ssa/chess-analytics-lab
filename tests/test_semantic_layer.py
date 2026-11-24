@@ -239,7 +239,7 @@ def test_model_hash_skips_only_the_top_level_generated_directory(tmp_path):
     project = tmp_path / "project"
     for name in ("common.py", "marts/pipeline.py", "dashboard/analysis.py"):
         required = project / "src/chess_analytics" / name
-        required.parent.mkdir(parents=True)
+        required.parent.mkdir(parents=True, exist_ok=True)
         required.write_text("# fixture implementation\n")
     nested = project / "dbt/models/target"
     nested.mkdir(parents=True)

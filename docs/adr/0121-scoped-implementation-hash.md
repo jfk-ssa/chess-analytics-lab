@@ -272,5 +272,6 @@ to reingest, not only to rebuild. A missing source manifest raises the same
 error once the analytical id still recomputes. A malformed source id keeps the
 existing identity-mismatch error. Unchanged code still returns the current
 snapshot. This does not edit frozen analyst modules, historical receipts, or
-`uv.lock`. Publications hashed before the amendment fail closed until reingest
-and rebuild.
+`uv.lock`. The amendment leaves `implementation_hash()` unchanged. Publications
+from PR 4 before the amendment (`b0d6af6`) require an analytical snapshot and mart
+rebuild. Pre-PR-4 publications from `main` require reingest and rebuild.

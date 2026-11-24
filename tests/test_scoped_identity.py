@@ -276,12 +276,14 @@ def test_ingest_changes_require_fresh_snapshot(staged, path):
     old_source = root / "published" / manifest["source_snapshot_id"]
     implementation = implementation_hash(staged)
     analytical = manifest["analytics_implementation_sha256"]
+    model = model_hash(staged)
     with (staged / path).open("a") as file:
         file.write("\n")
 
     assert implementation_hash(staged) != implementation
     if path.endswith("common.py") or path.startswith("contracts/"):
         assert analytics_hash(staged) != analytical
+        assert model_hash(staged) != model
     else:
         assert analytics_hash(staged) == analytical
     for read in (current_snapshot, CheckedTools, _quote):
@@ -292,6 +294,15 @@ def test_ingest_changes_require_fresh_snapshot(staged, path):
     with pytest.raises(ValueError, match="snapshot implementation differs"):
         report(staged, old_source)
     assert _reingest(staged) != old_source
+    for read in (current_snapshot, CheckedTools, _quote):
+        with pytest.raises(ValueError, match="reingest and rebuild"):
+            read(staged)
+
+    rebuilt = _publish_moves(staged)
+    assert rebuilt.name != moves.name
+    assert current_snapshot(staged) == rebuilt
+    assert CheckedTools(staged).dataset_id == rebuilt.name
+    _instructions_hash(staged, rebuilt.name)
 
 
 def test_missing_ingest_implementation_refuses_before_tools_and_quote(staged):
