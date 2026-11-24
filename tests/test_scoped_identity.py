@@ -118,11 +118,20 @@ def test_recursive_analyst_helper_is_hashed(staged):
     assert implementation_hash(staged) == implementation
 
 
+@pytest.mark.parametrize("identity", [None, 1, "0" * 23, "g" * 24])
+def test_current_snapshot_rejects_invalid_pointer(staged, identity):
+    pointer = staged / "data/analytical-moves-current.json"
+    write_json(pointer, {} if identity is None else {"analytical_id": identity})
+    with pytest.raises(ValueError, match="invalid analytical snapshot identity"):
+        current_snapshot(staged)
+
+
 @pytest.mark.parametrize(
     ("field", "value", "message"),
     [
         ("analytics_implementation_sha256", None, "analytical implementation differs"),
         ("source_snapshot_id", None, "analytical snapshot identity mismatch"),
+        ("source_snapshot_id", "0" * 24, "analytical snapshot identity mismatch"),
         ("source_sha256", None, "analytical snapshot identity mismatch"),
         ("source_sha256", "0" * 64, "analytical snapshot identity mismatch"),
         ("analytical_id", None, "invalid analytical snapshot manifest"),
@@ -136,8 +145,27 @@ def test_current_snapshot_checks_manifest_identity(staged, field, value, message
     else:
         manifest[field] = value
     write_json(path, manifest)
-    with pytest.raises(ValueError, match=message):
-        current_snapshot(staged)
+    for read in (current_snapshot, CheckedTools, _quote):
+        with pytest.raises(ValueError, match=message):
+            read(staged)
+
+
+@pytest.mark.parametrize(
+    "path", [f"{PACKAGE}/marts/pipeline.py", "dbt/models/marts/move_evals.sql"]
+)
+def test_mart_changes_invalidate_current_tools_and_quote(staged, path):
+    implementation = implementation_hash(staged)
+    analytical = analytics_hash(staged)
+    model = model_hash(staged)
+    with (staged / path).open("a") as file:
+        file.write("\n")
+
+    assert implementation_hash(staged) == implementation
+    assert analytics_hash(staged) != analytical
+    assert model_hash(staged) != model
+    for read in (CheckedTools, _quote):
+        with pytest.raises(ValueError, match="analytical implementation differs"):
+            read(staged)
 
 
 @pytest.mark.dbt

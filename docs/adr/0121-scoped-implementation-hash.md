@@ -228,3 +228,11 @@ The receipt test passed against the existing pins for six receipts and all 14
 frozen modules. No live requests were made.
 The targeted offline suite passed 93 tests. Ruff lint and format checks and
 basedpyright passed. Engine, replay-gate and MCP tests stalled in the sandbox.
+
+The PR 4 cold-review follow-up matched all three base digest algorithms on
+identical Linux input files. Isolated checks verified sorted dbt definitions,
+root-only generated dbt exclusions in demo staging, cache exclusion in the
+warehouse digest, and errors for absent required files. Non-dbt fixtures cover
+malformed pointers, bad source fields, and stale pointers after mart input edits.
+The scoped identity, semantic layer, receipt, and portfolio demo suites passed
+44 offline tests with dbt required. Ruff lint and format and basedpyright passed.

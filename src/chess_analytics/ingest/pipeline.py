@@ -18,12 +18,20 @@ from chess_analytics.ingest.pgn import normalize, records
 def implementation_hash(project: Path) -> str:
     """Hash the implementation and contracts that determine warehouse snapshots."""
     package = project / "src/chess_analytics"
-    paths = [package / "common.py", *(project / "contracts").glob("*.json")]
+    common = package / "common.py"
+    paths = list((project / "contracts").glob("*.json"))
     for directory in ("ingest", "warehouse", "metrics"):
         for pattern in ("*.py", "*.sql"):
             paths.extend((package / directory).rglob(pattern))
     return hash_json(
-        {str(path.relative_to(project)): digest(path) for path in sorted(paths) if path.is_file()}
+        {
+            common.relative_to(project).as_posix(): digest(common),
+            **{
+                path.relative_to(project).as_posix(): digest(path)
+                for path in sorted(paths)
+                if "__pycache__" not in path.relative_to(project).parts and path.is_file()
+            },
+        }
     )
 
 

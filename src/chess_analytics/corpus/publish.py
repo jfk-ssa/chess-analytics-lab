@@ -26,24 +26,27 @@ def dbt_definition_paths(project: Path) -> list[Path]:
             continue
         if path.suffix in {".sql", ".yml"} and path.is_file():
             paths.append(path)
-    return paths
+    return sorted(paths)
 
 
 def analytics_hash(project: Path) -> str:
     package = project / "src/chess_analytics"
+    analysis = package / "dashboard/analysis.py"
     paths = [
         *(package / "corpus").glob("*.py"),
         *(project / "contracts").glob("*.json"),
-        package / "dashboard/analysis.py",
         *(package / "analyst").rglob("*.py"),
-        project / MART_PIPELINE_PATH,
         *dbt_definition_paths(project),
     ]
     return hash_json(
         {
-            str(path.relative_to(project)): digest(path)
-            for path in sorted(paths)
-            if "__pycache__" not in path.relative_to(project).parts and path.is_file()
+            analysis.relative_to(project).as_posix(): digest(analysis),
+            MART_PIPELINE_PATH: digest(project / MART_PIPELINE_PATH),
+            **{
+                path.relative_to(project).as_posix(): digest(path)
+                for path in sorted(paths)
+                if "__pycache__" not in path.relative_to(project).parts and path.is_file()
+            },
         }
     )
 

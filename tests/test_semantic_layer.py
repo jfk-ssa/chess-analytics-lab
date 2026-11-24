@@ -237,9 +237,10 @@ def test_allowlist_is_unchanged():
 
 def test_model_hash_skips_only_the_top_level_generated_directory(tmp_path):
     project = tmp_path / "project"
-    pipeline = project / "src/chess_analytics/marts/pipeline.py"
-    pipeline.parent.mkdir(parents=True)
-    pipeline.write_text("# fixture pipeline\n")
+    for name in ("marts/pipeline.py", "dashboard/analysis.py"):
+        required = project / "src/chess_analytics" / name
+        required.parent.mkdir(parents=True)
+        required.write_text("# fixture implementation\n")
     nested = project / "dbt/models/target"
     nested.mkdir(parents=True)
     (nested / "keep.sql").write_text("select 1\n")

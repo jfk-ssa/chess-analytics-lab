@@ -25,12 +25,19 @@ def _stage_project(source_project: Path, project: Path) -> None:
     project.mkdir(parents=True, exist_ok=True)
     for directory in ("src", "contracts"):
         shutil.copytree(source_project / directory, project / directory, dirs_exist_ok=True)
-    if (source_project / "dbt").is_dir():
+    dbt_root = source_project / "dbt"
+    if dbt_root.is_dir():
+
+        def ignore_generated_dbt(directory: str, names: list[str]) -> set[str]:
+            if Path(directory) == dbt_root:
+                return {"target", "logs", "dbt_packages"}.intersection(names)
+            return set()
+
         shutil.copytree(
-            source_project / "dbt",
+            dbt_root,
             project / "dbt",
             dirs_exist_ok=True,
-            ignore=shutil.ignore_patterns("target", "logs", "dbt_packages"),
+            ignore=ignore_generated_dbt,
         )
     shutil.copy2(source_project / "uv.lock", project / "uv.lock")
     (project / "reports").mkdir(exist_ok=True)

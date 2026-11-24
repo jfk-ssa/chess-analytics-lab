@@ -41,7 +41,7 @@ def model_hash(project: Path) -> str:
     return hash_json(
         {
             **{
-                str(path.relative_to(project)): digest(path)
+                path.relative_to(project).as_posix(): digest(path)
                 for path in dbt_definition_paths(project)
             },
             MART_PIPELINE_PATH: digest(project / MART_PIPELINE_PATH),
