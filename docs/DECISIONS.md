@@ -9,9 +9,11 @@ dashboard publication, separately scoped provenance, CI tests and PR previews
 from ADR 0120. John accepted the deployed [Pages dashboard](https://jfkbot.github.io/chess-analytics-lab/dashboard.html)
 on 2026-11-23 at 18:49 CT, source `214a20b`; the
 [deployment record](SITE.md#dashboard-acceptance-before-pr-3) completes PR 2's gate.
-PR 3 removes the hosted Streamlit repository code while retaining local Streamlit;
-John will delete the Cloud app after merge (ADR 0120 evidence). PR 4 implements
-scoped hashing locally (ADR 0121). ADR 0122 records PR B as rejected: #106 closed
+PR 3 removes the hosted Streamlit repository code while retaining local Streamlit.
+John has deleted the Cloud app (ADR 0120 evidence). PR 4 implements scoped
+hashing locally; the 2026-11-23 amendment refuses a stale or missing ingest
+implementation hash before checked tools or quoting, and includes `common.py`
+in `analytics_hash()` (ADR 0121). ADR 0122 records PR B as rejected: #106 closed
 unmerged after its timing improvement missed the keep gate.
 
 | Number | Date | Record |

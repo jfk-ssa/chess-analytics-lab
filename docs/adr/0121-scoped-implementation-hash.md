@@ -236,3 +236,41 @@ warehouse digest, and errors for absent required files. Non-dbt fixtures cover
 malformed pointers, bad source fields, and stale pointers after mart input edits.
 The scoped identity, semantic layer, receipt, and portfolio demo suites passed
 44 offline tests with dbt required. Ruff lint and format and basedpyright passed.
+
+## Amendment (2026-11-23)
+
+Cold review Major #1: `build()` and `report()` already refuse a warehouse
+manifest whose `implementation_sha256` does not match `implementation_hash()`,
+but `current_snapshot()` only compared `analytics_implementation_sha256` with
+`analytics_hash()`. Ingest, warehouse, and metrics edits change
+`implementation_hash()` without changing `analytics_hash()` or
+`snapshot_identity()`, so an already published analytical snapshot stayed
+servable. `CheckedTools` and `quote_request` both obtain the dataset through
+`current_snapshot()`, and would still quote that stale `Dataset:` id.
+`common.py` was on the ingest allowlist only. Its `digest` and `hash_json`
+helpers feed every digest, including the analytical one, so a helper change
+could also leave `analytical_id` unchanged.
+
+`analytics_hash()` now includes `src/chess_analytics/common.py` in the same
+explicit way `implementation_hash()` does. A change to those helpers changes
+the analytical digest and therefore `analytical_id`.
+
+The serving guard does not add a field to the analytical manifest. It reads
+the hash ingest already stores, `implementation_sha256`, from the source
+snapshot manifest named by `source_snapshot_id`. When that file exists, a
+missing or unequal value raises before the analytical-digest and identity
+checks:
+
+```text
+stored ingest implementation is missing or differs; reingest and rebuild the analytical snapshot and mart
+```
+
+That refusal is what `CheckedTools` and `quote_request` see, so neither serves
+or quotes the snapshot. Checking the ingest hash first matters for `common.py`
+and `contracts/*.json`, which sit in both digests: the message tells the user
+to reingest, not only to rebuild. A missing source manifest raises the same
+error once the analytical id still recomputes. A malformed source id keeps the
+existing identity-mismatch error. Unchanged code still returns the current
+snapshot. This does not edit frozen analyst modules, historical receipts, or
+`uv.lock`. Publications hashed before the amendment fail closed until reingest
+and rebuild.
