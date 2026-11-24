@@ -1,4 +1,4 @@
-"""Add a capped clock-band game sample to the hosted cube.
+"""Add a capped clock-band game sample to the public cube.
 
 Reads a local PGN prefix or a ``fact_move`` warehouse. It does not download.
 Player names stay out of the file. The public Lichess site id and the two

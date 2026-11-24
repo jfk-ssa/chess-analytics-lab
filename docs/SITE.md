@@ -274,10 +274,17 @@ See [the verification receipt](../reports/game-import-verification.json).
 
 ## Dashboard acceptance before PR 3
 
-The published target is [the Pages dashboard](https://jfkbot.github.io/chess-analytics-lab/dashboard.html).
-PR 2 adds the page while hosted Streamlit, its pin tests, and the local six-view
-app remain available. No deployed-page acceptance or Cloud deletion is recorded
-by this PR. PR 3 is a separate merge gate in [ADR 0120](adr/0120-replace-hosted-streamlit-with-static-dashboard.md).
+John accepted [the deployed Pages dashboard](https://jfkbot.github.io/chess-analytics-lab/dashboard.html)
+as the Streamlit replacement on **2026-11-23 18:49 CT (America/Chicago)**.
+The live `site-build.json` reports source `214a20b`
+(`214a20bdadd9bcbd34deac219d9408a59cbd7088`), from
+[Pages run 45264591067](https://github.com/jfkbot/chess-analytics-lab/actions/runs/45264591067).
+This was the #105 main deploy after #103's publication at `bb65063`, not a PR
+preview. The site root is https://jfkbot.github.io/chess-analytics-lab/.
+PR 2's acceptance gate is complete. PR 3 retires the hosted repository code;
+local six-view Streamlit remains. John will delete the Cloud app after merge;
+[ADR 0120 evidence](adr/0120-replace-hosted-streamlit-with-static-dashboard.md#pr-2-acceptance-and-pr-3-implementation-evidence)
+records the rollout, pending manual deletion and rollback procedure.
 
 The Pages build exports only the two committed public inputs. It opens an
 in-memory DuckDB connection over the Parquet file, with no warehouse, MetricFlow,
@@ -314,7 +321,7 @@ no cube mart id. Extract scope contains the validated build record and the
 The generated JSON hash is in `outputs`. Both input-change tests and a
 change-during-export guard prevent stale input/hash pairings.
 
-Run the offline acceptance checks after installation:
+Run the offline regression checks after installation:
 
 ```sh
 uv sync --locked --no-editable --extra docs --extra dbt --extra dashboard --extra mcp --extra ml --reinstall-package chess-analytics-lab
@@ -338,8 +345,8 @@ covered by the ADR 0100 classifier tests. Source edits require reinstalling the
 wheel before verification. The materializer restores an existing pinned report;
 it is preparation, not a download performed by imports, tests or the site build.
 
-After merge and successful Pages deployment, John reviews the actual public
-page at **1280px and 390px**, including the following acceptance steps:
+For subsequent dashboard changes, recheck the public page at **1280px and
+390px**, including these interactions:
 
 1. Verify equal sibling widths, four/two grid tracks, the eight-card KPI order,
    readable horizontal labels, data labels, unbroken SAN full moves and unclipped
@@ -356,9 +363,6 @@ page at **1280px and 390px**, including the following acceptance steps:
 6. Expand provenance. Compare both input hashes and extract build fields with
    `site-build.json`; confirm extract metadata is never labelled cube lineage.
 
-Before merging PR 3, record **John's explicit deployed-page acceptance**, the
-exact deployed URL, source revision from `site-build.json`, Pages build/run link,
-date and both reviewed viewport widths. Retain any failures and subsequent fixes.
-A PR artifact or a local fixture check cannot establish this acceptance. PR 3
-also requires John's separately recorded manual Community Cloud deletion; this
-PR performs no retirement or deployment action.
+The deployed-page acceptance is recorded above and in ADR 0120. A PR artifact
+or local fixture check alone cannot establish deployed acceptance. Cloud deletion
+is a separate manual operation pending after PR 3 merges.

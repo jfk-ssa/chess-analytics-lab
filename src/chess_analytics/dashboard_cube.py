@@ -1,6 +1,6 @@
 """Public dashboard cube: build, filter, KPI deltas, and drill state.
 
-The hosted app queries the committed Parquet file with DuckDB. The builder
+The Pages exporter reads the committed Parquet file with DuckDB. The builder
 reads the same published reports as the public extract. It does not open the
 analytical warehouse. Aggregate rows do not copy player or game identifiers.
 A clock-band game row may carry the public Lichess site id and the two

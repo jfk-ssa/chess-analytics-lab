@@ -264,3 +264,53 @@ extract and builders. Revert PR 3's repository changes to roll back; if John
 has already deleted the app, he must also manually redeploy with the restored
 entrypoint and requirements described in the original Decision. A revert
 alone cannot restore a deleted Cloud deployment. PR 4 remains proposed.
+
+### Repository and offline validation
+
+The catalog now selects extract budget tests for `public` paths
+(`data/public/**`, `data/README.md`); cube/extract changes also keep Node and
+Python dashboard coverage. `.streamlit/**` selects local portfolio/demo checks
+through `local_dashboard`. Notices are docs-only. The generated workflow drops
+only the deleted hosted test from its explicit portfolio command; local tests,
+full/fallback selection and the Pages deploy guard remain.
+
+The local app imports Streamlit, without direct pandas/narwhals imports. Its
+extra keeps Streamlit 1.67.0 and the Pillow 13.0.0 / certifi 2026.10.23 security
+pins and comments; explicit pandas/narwhals pins and the hosted lockstep comment
+are removed. Their existing transitive versions remain in the unchanged lock.
+
+`UV_CACHE_DIR=/tmp/pr1-uv-cache uv lock --offline` failed because the pinned
+Maia Git checkout was unavailable in that cache and remote fetches are disabled.
+`uv.lock` is untouched and needs regeneration with access to that source before
+merge. The requested locked Ruff command hit the same resolution failure.
+Targeted checks used installed `.venv/bin` tools after reinstalling the project
+wheel with `uv sync --frozen --offline --no-editable` and
+`--reinstall-package chess-analytics-lab` (docs/dbt/dashboard/mcp/ml extras).
+This reused the existing lock; it does not establish lock/metadata consistency.
+The full pytest suite was deliberately skipped pending lock regeneration.
+
+The classifier suite passed 94 tests. Ruff lint/format, basedpyright (zero
+errors/warnings), generator check, map audit and actionlint passed. The
+catalogued Node command passed 23 tests; `chesslab demo --scope all` passed
+with synthetic inputs, fixture replay and zero live requests.
+
+The expanded seven-file pytest run initially had 216 passes, one skip and
+eight docs failures due to the absent pinned `reports/opening-positions.json`.
+The standalone site build failed for the same reason. Restored the original
+publication from local Git commit `c1e3040a3c9542626a3b8cb78e1e7475ea8bcdab`,
+verifying its checkpoint SHA-256; no download or regeneration. The subsequent
+site build passed: 11 pages, 1,115 local links, zero live requests. The affected
+docs-site/cube/export rerun passed all 59 tests. The one expanded-run skip was
+the public-extract reduction check whose Git blob probe is unavailable here.
+
+All 14 frozen files and 308 protected evidence/input paths were byte-checked
+unchanged, including tracked reports/evals and both public inputs. Historical
+ADR bodies and URLs remain unchanged. Current-reference searches outside
+historical ADRs, receipts and the dated roadmap found no retired URL, deleted
+hosted path or test reference. The retained `HOSTED_DASHBOARD.md` links now
+point to the Pages guide; Dependabot has no hosted pip entry.
+
+Before merge: regenerate `uv.lock` with the Maia source available, reinstall
+with the locked extras, and run the full locked pytest suite plus the documented
+checks. These local checks are offline evidence, not new hosted timings or
+live model results.

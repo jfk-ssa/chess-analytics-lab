@@ -65,10 +65,13 @@ the diff touches any of:
 - `scripts/ci_offline_changes.py`
 - `tests/test_ci_offline_changes.py`
 
-Docs-only, site, and hosted diffs skip the long pytest steps. `offline-core`
-still succeeds on those diffs, with its pytest step skipped.
-`THIRD_PARTY_NOTICES.md` is hosted, because the hosted dashboard test reads
-the Streamlit pin from it. `docs/METRICS.md` is a frozen analyst preflight
+Docs-only, site, public-data and local-dashboard-config diffs skip the long
+pytest steps. `offline-core` still succeeds with its pytest step skipped.
+`public` covers `data/public/**` and `data/README.md` and selects the extract
+budget tests. Cube/extract file changes also select Node and Python dashboard
+coverage, without running local Streamlit portfolio/demo tests.
+`local_dashboard` covers `.streamlit/**` and selects local portfolio/demo tests.
+`THIRD_PARTY_NOTICES.md` is a normal docs path and skips pytest. `docs/METRICS.md` is a frozen analyst preflight
 input, so it also runs the analyst guards. Changes under
 `src/chess_analytics/analyst/`, `evals/`, `reports/live-eval-receipt-*`, the
 live-eval fixture, and the public extract still run the checks that guard

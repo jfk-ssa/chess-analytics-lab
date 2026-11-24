@@ -6,11 +6,13 @@ short summary of the current checkout, not a log of new decisions.
 
 PR 1 implements CI cleanup and pruning in ADR 0119. PR 2 implements the static
 dashboard publication, separately scoped provenance, CI tests and PR previews
-from ADR 0120. The [acceptance procedure](SITE.md#dashboard-acceptance-before-pr-3)
-records the remaining deployed-page review gate. PR 3 hosted Streamlit retirement
-(0120) and PR 4 scoped hashing (0121) remain proposed.
-PRs 2 and 3 merge separately;
-PR 3 requires recorded acceptance of the deployed Pages dashboard.
+from ADR 0120. John accepted the deployed [Pages dashboard](https://jfkbot.github.io/chess-analytics-lab/dashboard.html)
+on 2026-11-23 at 18:49 CT, source `214a20b`; the
+[deployment record](SITE.md#dashboard-acceptance-before-pr-3) completes PR 2's gate.
+PR 3 removes the hosted Streamlit repository code while retaining local Streamlit;
+John will delete the Cloud app after merge (ADR 0120 evidence). PR 4 scoped
+hashing (0121) remains proposed. ADR 0122 records PR B as rejected: #106 closed
+unmerged after its timing improvement missed the keep gate.
 
 | Number | Date | Record |
 |---|---|---|

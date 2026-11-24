@@ -1,4 +1,4 @@
-"""Build the hosted dashboard cube from the published reports.
+"""Build the public dashboard cube from the published reports.
 
 The opening-position rankings are not on the branch tip. Restore them with
 scripts/materialize_opening_positions.py, or pass ``--positions``. This script
