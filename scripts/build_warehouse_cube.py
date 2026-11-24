@@ -1,4 +1,4 @@
-"""Append warehouse aggregates to the hosted dashboard cube.
+"""Append warehouse aggregates to the public dashboard cube.
 
 The script reads a local ``warehouse.duckdb``. It does not download. Cells
 under 10 games are dropped, and player or game identifiers are not written.
@@ -61,7 +61,7 @@ def main(argv: list[str] | None = None) -> int:
             file=sys.stderr,
         )
         print(
-            "The hosted cube stays the published aggregate until this command succeeds.",
+            "The public cube stays the published aggregate until this command succeeds.",
             file=sys.stderr,
         )
         return 2

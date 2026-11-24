@@ -1,6 +1,6 @@
 # 0120. Replace the hosted Streamlit app with a static Pages dashboard
 
-- Status: Proposed
+- Status: Accepted for PR 2; deployed page accepted 2026-11-23; PR 3 retires the hosted app
 - Date: 2026-11-22
 
 ## Context
@@ -231,3 +231,62 @@ PR 3 (only after recorded deployed-page acceptance):
 3. `docs: replace current hosted links and preserve historical ADR URLs`
 
 PR 1 is CI cleanup and pruning; PR 4 is the scoped hash change.
+
+## PR 2 acceptance and PR 3 implementation evidence
+
+John accepted the deployed Pages dashboard as the Streamlit replacement on
+**2026-11-23 18:49 CT (America/Chicago)**.
+
+- Deployed URL: https://jfkbot.github.io/chess-analytics-lab/dashboard.html
+- Site root: https://jfkbot.github.io/chess-analytics-lab/
+- Source revision from live `site-build.json`: `214a20b`
+  (full SHA `214a20bdadd9bcbd34deac219d9408a59cbd7088`).
+- [Pages workflow run 45264591067](https://github.com/jfkbot/chess-analytics-lab/actions/runs/45264591067),
+  [build job](https://github.com/jfkbot/chess-analytics-lab/actions/runs/45264591067/job/138008025403),
+  [deploy job](https://github.com/jfkbot/chess-analytics-lab/actions/runs/45264591067/job/138008690925).
+
+This is the #105 main deploy, a CI-only change after #103's dashboard
+publication at `bb65063`. John accepted the currently deployed page, not a
+PR preview. This satisfies PR 3's deployed-page acceptance gate.
+
+### Rollout and rollback
+
+The actual sequence differs from the original Decision's pre-merge Cloud
+deletion step: **John will delete the Community Cloud app after PR 3 merges**,
+following the official
+[delete-your-app instructions](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app/delete-your-app).
+Repository deletion does not remove the Cloud app. Cloud deletion is pending;
+no completion date is recorded. Do not promise a redirect from the old URL.
+
+PR 3 removes the hosted code, reload label and pin tests, keeping the local
+six-view Streamlit app, its dashboard extra, demo and analysis helpers, cube,
+extract and builders. Revert PR 3's repository changes to roll back; if John
+has already deleted the app, he must also manually redeploy with the restored
+entrypoint and requirements described in the original Decision. A revert
+alone cannot restore a deleted Cloud deployment. PR 4 remains proposed.
+
+### Repository and offline validation
+
+The catalog now selects extract budget tests for `public` paths
+(`data/public/**`, `data/README.md`); cube/extract changes also keep Node and
+Python dashboard coverage. `.streamlit/**` selects local portfolio/demo checks
+through `local_dashboard`. Notices are docs-only. The generated workflow drops
+only the deleted hosted test from its explicit portfolio command; local tests,
+full/fallback selection and the Pages deploy guard remain.
+
+The local app imports Streamlit, without direct pandas/narwhals imports. Its
+extra keeps Streamlit 1.67.0 and the Pillow 13.0.0 / certifi 2026.10.23 security
+pins and comments; explicit pandas/narwhals pins and the hosted lockstep comment
+are removed. `uv.lock` was regenerated for that metadata change only: four
+dashboard-extra pin lines came out. pandas 3.1.1 and narwhals 2.29.0 remain as
+transitive dependencies; no package versions changed.
+
+Local locked validation with docs, dbt, dashboard, mcp, and ml extras, after
+reinstalling the project wheel: 712 passed, 17 skipped (the hosted pin and
+render tests are gone; the portfolio page now has three live pills, not four).
+Ruff lint/format, basedpyright, generator check, map audit, and actionlint
+passed. The catalogued Node command passed 23 tests. All 14 frozen files and
+historical ADR bodies, receipts, and public inputs remain unchanged.
+`docs/HOSTED_DASHBOARD.md` is the current Pages guide. Dependabot has no hosted
+pip entry. These are fixture/offline checks, not live evaluations or new hosted
+timings.

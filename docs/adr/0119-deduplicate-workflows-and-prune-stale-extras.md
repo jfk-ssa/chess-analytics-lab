@@ -1,6 +1,6 @@
 # 0119. Deduplicate offline CI and prune stale extras
 
-- Status: Accepted for PR 1; PRs 2–4 remain proposed
+- Status: Accepted for PRs 1–2; deployed page accepted 2026-11-23; PR 3 retires hosted Streamlit; PR 4 remains proposed
 - Date: 2026-11-22
 
 ## Context

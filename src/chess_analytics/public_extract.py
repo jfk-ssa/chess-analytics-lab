@@ -1,7 +1,7 @@
 """Read the committed public aggregate extract.
 
-The hosted dashboard cannot run dbt or open the analytical warehouse.
-It loads this JSON file with the standard library. ``connect`` registers
+The Pages dashboard uses this JSON file for extract provenance.
+It is validated with the standard library. ``connect`` registers
 the same rows in an in-memory DuckDB database. Nothing here reads
 credentials, downloads data, or labels a metric.
 """

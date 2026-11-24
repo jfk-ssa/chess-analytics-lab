@@ -4,8 +4,7 @@ Chess Analytics Lab turns chess game records into reproducible opening, clock-pr
 
 ## Live
 
-- Pages dashboard (committed cube, browser filters and scoped provenance): https://jfkbot.github.io/chess-analytics-lab/dashboard.html
-- Hosted Streamlit dashboard (reads a committed Parquet cube without opening a warehouse): https://chess-analytics-lab.streamlit.app/
+- Pages dashboard (committed cube, browser filters, scoped provenance; no warehouse): https://jfkbot.github.io/chess-analytics-lab/dashboard.html
 - Documentation site: https://jfkbot.github.io/chess-analytics-lab/
 - Repository: https://github.com/jfkbot/chess-analytics-lab
 
@@ -40,9 +39,9 @@ Where: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), [src/chess_analytics/ingest
 - Bounded ingestion with source hashes, quarantine, and immutable snapshot pointers before publishing any mart or metric.
 - Analytical move publication writes `fact_move` from source `%eval` / clock annotations; dbt `move_evals` stages that table for MetricFlow.
 - Dagster and Prefect adapters were compared once and retired ([history](docs/ORCHESTRATION.md)); the pipeline runs as plain stage/publish/verify functions. Airflow is a later option, not built here.
-- Hosted BI uses a committed Parquet cube rebuilt from warehouse extracts so Streamlit Cloud never opens DuckDB.
+- Public BI uses a Pages export of the committed Parquet cube, with separate extract provenance and no analytical warehouse at build or runtime.
 
-Where: [src/chess_analytics/ingest/pipeline.py](src/chess_analytics/ingest/pipeline.py), [src/chess_analytics/warehouse/snapshots.py](src/chess_analytics/warehouse/snapshots.py), [src/chess_analytics/corpus/moves.py](src/chess_analytics/corpus/moves.py), [src/chess_analytics/corpus/publish.py](src/chess_analytics/corpus/publish.py), [dbt/models/marts/move_evals.sql](dbt/models/marts/move_evals.sql), [docs/ORCHESTRATION.md](docs/ORCHESTRATION.md), [hosted/dashboard.py](hosted/dashboard.py), [docs/HOSTED_DASHBOARD.md](docs/HOSTED_DASHBOARD.md).
+Where: [src/chess_analytics/ingest/pipeline.py](src/chess_analytics/ingest/pipeline.py), [src/chess_analytics/warehouse/snapshots.py](src/chess_analytics/warehouse/snapshots.py), [src/chess_analytics/corpus/moves.py](src/chess_analytics/corpus/moves.py), [src/chess_analytics/corpus/publish.py](src/chess_analytics/corpus/publish.py), [dbt/models/marts/move_evals.sql](dbt/models/marts/move_evals.sql), [docs/ORCHESTRATION.md](docs/ORCHESTRATION.md), [src/chess_analytics/dashboard_export.py](src/chess_analytics/dashboard_export.py), [docs/HOSTED_DASHBOARD.md](docs/HOSTED_DASHBOARD.md).
 
 ## Analytics engineering / semantic layer
 

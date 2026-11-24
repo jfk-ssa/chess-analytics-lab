@@ -323,7 +323,7 @@ jobs:
       - id: pytest_portfolio
         name: Pytest portfolio
         if: ${{ needs.changes.result != 'success' || steps.portfolio_record.outputs.fallback != 'false' || needs.changes.outputs.pytest_portfolio == 'true' }}
-        run: uv run --locked --offline --no-editable --no-sync --extra dashboard pytest -q tests/test_portfolio_integrity.py tests/test_portfolio_demo.py tests/test_hosted_dashboard.py
+        run: uv run --locked --offline --no-editable --no-sync --extra dashboard pytest -q tests/test_portfolio_integrity.py tests/test_portfolio_demo.py
       - id: demo_all
         name: Demo all
         if: ${{ needs.changes.result != 'success' || steps.portfolio_record.outputs.fallback != 'false' || needs.changes.outputs.demo_all == 'true' }}

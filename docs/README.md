@@ -14,7 +14,7 @@ live evaluations are recorded separately.
 |---|---|---|
 | Run something immediately | [Offline demo](DEMO.md) | Install, build four unique fixture games, explore six dashboard views, replay checked answers |
 | Explore the published cube | [Pages dashboard](https://jfkbot.github.io/chess-analytics-lab/dashboard.html) and [site runbook](SITE.md#dashboard-acceptance-before-pr-3) | Filters, KPI deltas, opening drills, clock samples and scoped provenance |
-| Read the hosted aggregate dashboard | [Hosted dashboard](HOSTED_DASHBOARD.md) | Community Cloud app over the committed extract; no warehouse |
+| Read the public aggregate dashboard | [Pages dashboard](HOSTED_DASHBOARD.md) | Static interactive page built from the committed cube and extract; no warehouse |
 | Understand the system | [Architecture](ARCHITECTURE.md) → [data dictionary](DATA_DICTIONARY.md) | Pipeline, code boundaries, table grain and provenance |
 | Understand an analysis | [Metric contracts](METRICS.md) → [opening memo](M4-OPENINGS.md) / [clock memo](M4-CLOCK.md) | Denominators, cohort filters, missingness and limits |
 | Explore measured positions | [Transpositions](TRANSPOSITIONS.md) | [Interactive analytics](https://jfkbot.github.io/chess-analytics-lab/transpositions.html), route balance, coverage and public lenses |
@@ -36,7 +36,6 @@ live evaluations are recorded separately.
 | `src/chess_analytics/` | Foundation CLI, ingestion/warehouse, offline demo and optional classifier studies |
 | `src/chess_analytics/marts/`, `dbt/` | Local marts and their validation/recovery path |
 | `src/chess_analytics/corpus/`, `src/chess_analytics/dashboard/` | Analytical source/moves, parameterized metrics, Streamlit dashboard |
-| `hosted/` | Community Cloud read-only dashboard over the committed aggregate extract |
 | `src/chess_analytics/analyst/` | Checked read-only tools, typed plans, provider adapter, evaluation harness, and optional stdio MCP server |
 | `docs/MCP.md` | How to run the optional stdio MCP server from Claude Desktop or Cursor |
 | `docs/MCP_EXAMPLE.md` | Recorded MCP calls on the real August prefix, with evidence IDs and local reproduction limits |
@@ -48,7 +47,7 @@ live evaluations are recorded separately.
 | `docs/adr/`, `docs/DECISIONS.md` | Numbered decision records and their index. New decisions go here; [status](STATUS.md) stays a short summary |
 | `reports/` | Compact historical evidence and the original comparison report |
 | `site/`, `scripts/build_docs_site.py` | Static website assets and generation from maintained guides |
-| `work/`, `data/` | Ignored local outputs and bulk warehouses. `data/public/dashboard_extract.json` is the committed extract the hosted dashboard reads |
+| `work/`, `data/` | Ignored local outputs and bulk warehouses. `data/public/dashboard_extract.json` supplies the Pages dashboard's extract provenance |
 
 Paths with `m2`–`m5` identify where components were introduced; `M0`–`M8` files
 record development milestones. They are not instructions to rerun all milestones

@@ -1,7 +1,7 @@
 # Data and dependency notices
 
 Inspected installed distribution metadata on 2026-10-03. The Streamlit row
-below is the current lock, 1.67.0, also pinned in `hosted/requirements.txt`.
+below is the current lock, 1.67.0, in the optional local `dashboard` extra.
 The 2026-10-03 inspection recorded Streamlit 1.50.0; [ADR 0008](docs/adr/0008-m4-local-product-and-uncertainty.md)
 is that earlier pin and is unchanged. Dependencies are installed
 by uv, not vendored in Git; their original license files remain in distributions.

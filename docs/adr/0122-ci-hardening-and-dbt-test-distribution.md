@@ -1,6 +1,6 @@
 # 0122. Harden CI workflows and trial module-scoped dbt test distribution
 
-- Status: Accepted for PR A; PR B remains proposed
+- Status: Accepted for PR A; PR B rejected
 - Date: 2026-11-22
 
 ## Context
@@ -122,3 +122,23 @@ Verification for both: `ruff check`, `ruff format --check`,
 `scripts/ci_offline_changes.py --audit`,
 `pytest -q tests/test_ci_offline_changes.py`, the full suite on the PR,
 and before and after medians from hosted `--durations=15` output.
+
+## PR B result and evidence
+
+PR B rejected; [#106](https://github.com/jfkbot/chess-analytics-lab/pull/106)
+closed unmerged. `pytest_dbt` with `--dist loadscope` over 3 hosted runs:
+
+| Run | Time |
+|---|---|
+| [45266906797](https://github.com/jfkbot/chess-analytics-lab/actions/runs/45266906797) | 51s |
+| [45297694104](https://github.com/jfkbot/chess-analytics-lab/actions/runs/45297694104) | 60s |
+| [45298242920](https://github.com/jfkbot/chess-analytics-lab/actions/runs/45298242920) | 62s |
+
+Median 60s vs 65s baseline: a 5s improvement, below the 10s keep gate.
+No loadscope code change is retained.
+
+`offline.yml` uses concurrency group `offline-${{ github.ref }}` with
+`cancel-in-progress` only when the ref is not `main`. A second
+`workflow_dispatch` on a non-main ref cancels the in-progress run on that
+ref; on `main` the later run queues until the current one finishes. Timing
+runs on a feature branch must therefore go one at a time.
