@@ -32,6 +32,7 @@ def dbt_definition_paths(project: Path) -> list[Path]:
 def analytics_hash(project: Path) -> str:
     package = project / "src/chess_analytics"
     analysis = package / "dashboard/analysis.py"
+    common = package / "common.py"
     paths = [
         *(package / "corpus").glob("*.py"),
         *(project / "contracts").glob("*.json"),
@@ -41,6 +42,7 @@ def analytics_hash(project: Path) -> str:
     return hash_json(
         {
             analysis.relative_to(project).as_posix(): digest(analysis),
+            common.relative_to(project).as_posix(): digest(common),
             MART_PIPELINE_PATH: digest(project / MART_PIPELINE_PATH),
             **{
                 path.relative_to(project).as_posix(): digest(path)

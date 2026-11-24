@@ -237,7 +237,7 @@ def test_allowlist_is_unchanged():
 
 def test_model_hash_skips_only_the_top_level_generated_directory(tmp_path):
     project = tmp_path / "project"
-    for name in ("marts/pipeline.py", "dashboard/analysis.py"):
+    for name in ("common.py", "marts/pipeline.py", "dashboard/analysis.py"):
         required = project / "src/chess_analytics" / name
         required.parent.mkdir(parents=True)
         required.write_text("# fixture implementation\n")

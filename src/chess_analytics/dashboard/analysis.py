@@ -10,9 +10,27 @@ import duckdb
 from chess_analytics.common import digest, read_json
 from chess_analytics.corpus.metrics import clock_pressure, opening_player_score
 from chess_analytics.corpus.publish import analytics_hash, snapshot_identity, validate_analytical
+from chess_analytics.ingest.pipeline import implementation_hash
+
+_STALE_INGEST = (
+    "stored ingest implementation is missing or differs; "
+    "reingest and rebuild the analytical snapshot and mart"
+)
 
 FAMILIES = ("Sicilian Defense", "French Defense")
 BUCKETS = ("under_10", "10_to_29", "30_to_59", "60_plus")
+
+
+def _stored_implementation_sha256(root: Path, source_id: object) -> str | None:
+    if not isinstance(source_id, str) or not re.fullmatch(r"[0-9a-f]{24}", source_id):
+        return None
+    path = root / "published" / source_id / "manifest.json"
+    if not path.is_file():
+        return None
+    stored = read_json(path).get("implementation_sha256")
+    if not isinstance(stored, str) or not stored:
+        raise ValueError(_STALE_INGEST)
+    return stored
 
 
 def current_snapshot(project: Path) -> Path:
@@ -22,12 +40,15 @@ def current_snapshot(project: Path) -> Path:
         raise ValueError("invalid analytical snapshot identity")
     snapshot = root / "analytical/published" / identity
     manifest = validate_analytical(snapshot)
+    source_id = manifest.get("source_snapshot_id")
+    source_sha = manifest.get("source_sha256")
+    stored = _stored_implementation_sha256(root, source_id)
+    if stored is not None and stored != implementation_hash(project):
+        raise ValueError(_STALE_INGEST)
     if manifest.get("analytics_implementation_sha256") != analytics_hash(project):
         raise ValueError(
             "analytical implementation differs; rebuild the analytical snapshot and mart"
         )
-    source_id = manifest.get("source_snapshot_id")
-    source_sha = manifest.get("source_sha256")
     if (
         not isinstance(source_id, str)
         or not re.fullmatch(r"[0-9a-f]{24}", source_id)
@@ -38,6 +59,8 @@ def current_snapshot(project: Path) -> Path:
         raise ValueError(
             "analytical snapshot identity mismatch; rebuild the analytical snapshot and mart"
         )
+    if stored is None:
+        raise ValueError(_STALE_INGEST)
     return snapshot
 
 

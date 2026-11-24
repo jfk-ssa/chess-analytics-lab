@@ -270,15 +270,51 @@ def test_presentation_changes_preserve_snapshot_ids_and_quote(staged, path):
 )
 def test_ingest_changes_require_fresh_snapshot(staged, path):
     root = staged / "data"
-    manifest = read_json(current_snapshot(staged) / "manifest.json")
+    moves = current_snapshot(staged)
+    manifest = read_json(moves / "manifest.json")
+    assert CheckedTools(staged).dataset_id == moves.name
     old_source = root / "published" / manifest["source_snapshot_id"]
     implementation = implementation_hash(staged)
+    analytical = manifest["analytics_implementation_sha256"]
     with (staged / path).open("a") as file:
         file.write("\n")
 
     assert implementation_hash(staged) != implementation
+    if path.endswith("common.py") or path.startswith("contracts/"):
+        assert analytics_hash(staged) != analytical
+    else:
+        assert analytics_hash(staged) == analytical
+    for read in (current_snapshot, CheckedTools, _quote):
+        with pytest.raises(ValueError, match="reingest and rebuild"):
+            read(staged)
     with pytest.raises(ValueError, match="implementation changed after ingest"):
         build(staged, root, DATASET)
     with pytest.raises(ValueError, match="snapshot implementation differs"):
         report(staged, old_source)
     assert _reingest(staged) != old_source
+
+
+def test_missing_ingest_implementation_refuses_before_tools_and_quote(staged):
+    moves = current_snapshot(staged)
+    assert CheckedTools(staged).dataset_id == moves.name
+    instructions = _instructions_hash(staged, moves.name)
+    manifest = read_json(moves / "manifest.json")
+    path = staged / "data/published" / manifest["source_snapshot_id"] / "manifest.json"
+    body = read_json(path)
+    stored = body["implementation_sha256"]
+    del body["implementation_sha256"]
+    write_json(path, body)
+    for read in (current_snapshot, CheckedTools, _quote):
+        with pytest.raises(ValueError, match="reingest and rebuild"):
+            read(staged)
+
+    body["implementation_sha256"] = stored
+    write_json(path, body)
+    assert current_snapshot(staged) == moves
+    assert CheckedTools(staged).dataset_id == moves.name
+    assert _instructions_hash(staged, moves.name) == instructions
+
+    path.unlink()
+    for read in (current_snapshot, CheckedTools, _quote):
+        with pytest.raises(ValueError, match="reingest and rebuild"):
+            read(staged)
