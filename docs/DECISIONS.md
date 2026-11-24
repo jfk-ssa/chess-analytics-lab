@@ -10,8 +10,8 @@ from ADR 0120. John accepted the deployed [Pages dashboard](https://jfkbot.githu
 on 2026-11-23 at 18:49 CT, source `214a20b`; the
 [deployment record](SITE.md#dashboard-acceptance-before-pr-3) completes PR 2's gate.
 PR 3 removes the hosted Streamlit repository code while retaining local Streamlit;
-John will delete the Cloud app after merge (ADR 0120 evidence). PR 4 scoped
-hashing (0121) remains proposed. ADR 0122 records PR B as rejected: #106 closed
+John will delete the Cloud app after merge (ADR 0120 evidence). PR 4 implements
+scoped hashing locally (ADR 0121). ADR 0122 records PR B as rejected: #106 closed
 unmerged after its timing improvement missed the keep gate.
 
 | Number | Date | Record |

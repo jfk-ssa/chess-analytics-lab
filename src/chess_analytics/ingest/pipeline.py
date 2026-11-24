@@ -15,10 +15,16 @@ from chess_analytics.common import digest, guard_disk, hash_json, now, write_jso
 from chess_analytics.ingest.pgn import normalize, records
 
 
-def implementation_hash(project):
-    files = sorted((project / "src").rglob("*.py")) + sorted((project / "src").rglob("*.sql"))
-    files += sorted((project / "contracts").glob("*.json"))
-    return hash_json({str(p.relative_to(project)): digest(p) for p in files})
+def implementation_hash(project: Path) -> str:
+    """Hash the implementation and contracts that determine warehouse snapshots."""
+    package = project / "src/chess_analytics"
+    paths = [package / "common.py", *(project / "contracts").glob("*.json")]
+    for directory in ("ingest", "warehouse", "metrics"):
+        for pattern in ("*.py", "*.sql"):
+            paths.extend((package / directory).rglob(pattern))
+    return hash_json(
+        {str(path.relative_to(project)): digest(path) for path in sorted(paths) if path.is_file()}
+    )
 
 
 def ingest(project: Path, root: Path, dataset: str, source: Path, plan: dict):

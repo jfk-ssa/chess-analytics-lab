@@ -22,7 +22,8 @@ uses a generated offline step catalog and one selected-extra sync, and removes
 the duplicate Pages lint check, unused orchestration adapters, and auxiliary
 examples. Offline checks: 679 passed, 18 skipped; 63 classifier tests passed.
 Frozen evidence and dated measurements stay unchanged. PR 2 is accepted;
-PR 3 retires hosted Streamlit repository code; PR 4 remains proposed.
+PR 3 retires hosted Streamlit repository code. PR 4 implements scoped snapshot
+hashes and stale-publication checks locally ([ADR 0121](adr/0121-scoped-implementation-hash.md)).
 
 PR 2 of [ADR 0120](adr/0120-replace-hosted-streamlit-with-static-dashboard.md)
 adds the [Pages dashboard](https://jfkbot.github.io/chess-analytics-lab/dashboard.html)

@@ -1,6 +1,6 @@
 # 0121. Scope implementation_hash to pipeline and contract modules
 
-- Status: Proposed
+- Status: Implemented locally, pending cold review
 - Date: 2026-11-22
 
 ## Context
@@ -216,3 +216,15 @@ the ingest hash; tests ship with each change. Commit 1 proves downstream
 invalidation under the broad ingest hash; commit 2 adds the identity
 isolation assertions with narrowed ingest coverage. Never rewrite
 historical receipts, their hashes, or any `FROZEN_FILES` bytes.
+
+## Implementation evidence — 2026-11-23
+
+Isolated offline fixtures showed that presentation edits preserve the ingest and
+analytical IDs and quoted instructions. Corpus, tool, and mart mutations change
+downstream identities while reingesting the same rows yields the same source ID.
+Mart rebuilds preserve prior publication bytes and agree with the model-hash
+sidecar. The portfolio demo stages dbt definitions before publishing its snapshot.
+The receipt test passed against the existing pins for six receipts and all 14
+frozen modules. No live requests were made.
+The targeted offline suite passed 93 tests. Ruff lint and format checks and
+basedpyright passed. Engine, replay-gate and MCP tests stalled in the sandbox.

@@ -21,7 +21,7 @@ from chess_analytics.dashboard.analysis import current_snapshot
 from chess_analytics.ingest.pipeline import implementation_hash, ingest
 from chess_analytics.marts.pipeline import build_mart, mart_id, model_hash, validate_mart
 from chess_analytics.portfolio_demo import QUESTIONS, _stage_project
-from chess_analytics.warehouse.snapshots import build
+from chess_analytics.warehouse.snapshots import build, report
 
 PACKAGE = "src/chess_analytics"
 DATASET = "analytical"
@@ -87,8 +87,10 @@ def test_analytical_changes_invalidate_current_tools_and_quote(staged, path, bef
     old_id = CheckedTools(staged).dataset_id
     old_instructions = _instructions_hash(staged, old_id)
     manifest = read_json(current_snapshot(staged) / "manifest.json")
+    implementation = implementation_hash(staged)
     _mutate(staged, f"{PACKAGE}/{path}", before, after)
 
+    assert implementation_hash(staged) == implementation
     assert analytics_hash(staged) != manifest["analytics_implementation_sha256"]
     assert (
         snapshot_identity(staged, manifest["source_snapshot_id"], manifest["source_sha256"])
@@ -99,7 +101,7 @@ def test_analytical_changes_invalidate_current_tools_and_quote(staged, path, bef
     with pytest.raises(ValueError, match="analytical implementation differs"):
         _quote(staged)
 
-    _reingest(staged)
+    assert _reingest(staged).name == manifest["source_snapshot_id"]
     rebuilt = _publish_moves(staged)
     assert rebuilt.name != old_id
     assert CheckedTools(staged).dataset_id == rebuilt.name
@@ -108,10 +110,12 @@ def test_analytical_changes_invalidate_current_tools_and_quote(staged, path, bef
 
 def test_recursive_analyst_helper_is_hashed(staged):
     original = analytics_hash(staged)
+    implementation = implementation_hash(staged)
     helper = staged / PACKAGE / "analyst/new/helper.py"
     helper.parent.mkdir()
     helper.write_text("def value():\n    return 1\n")
     assert analytics_hash(staged) != original
+    assert implementation_hash(staged) == implementation
 
 
 @pytest.mark.parametrize(
@@ -156,17 +160,20 @@ def test_mart_changes_publish_new_model_and_preserve_previous_bytes(staged, path
 
     old_moves = current_snapshot(staged)
     old_analytical = read_json(old_moves / "manifest.json")
+    implementation = implementation_hash(staged)
     old_mart = _publish_mart(staged)
     old_manifest = validate_mart(old_mart)
     old_bytes = {file.name: digest(file) for file in old_mart.iterdir()}
     assert published_mart(staged, old_moves) is not None
     _mutate(staged, path, before, after)
+    assert implementation_hash(staged) == implementation
     assert analytics_hash(staged) != old_analytical["analytics_implementation_sha256"]
     assert model_hash(staged) != old_manifest["model_sha256"]
     assert mart_id(staged, old_manifest["snapshot_id"]) != old_mart.name
     assert published_mart(staged, old_moves) is None  # Same source, stale model hash.
 
     source = _reingest(staged)
+    assert source.name == old_manifest["snapshot_id"]
     assert _publish_moves(staged) != old_moves
     if path.endswith(".py"):
         rebuilt = _publish_mart(staged, runpy.run_path(str(staged / path))["build_mart"])
@@ -203,3 +210,47 @@ def test_generated_dbt_files_leave_identities_unchanged(staged):
     assert _reingest(staged).name == source_id
     assert _publish_moves(staged) == moves
     assert mart_id(staged, source_id) == mart
+
+
+@pytest.mark.parametrize(
+    "path", ["eval_report.py", "public_extract.py", "dashboard_cube.py", "dashboard/dashboard.py"]
+)
+def test_presentation_changes_preserve_snapshot_ids_and_quote(staged, path):
+    moves = current_snapshot(staged)
+    manifest = read_json(moves / "manifest.json")
+    implementation = implementation_hash(staged)
+    instructions = _instructions_hash(staged, moves.name)
+    with (staged / PACKAGE / path).open("a") as file:
+        file.write("\n# Fixture presentation edit.\n")
+
+    assert implementation_hash(staged) == implementation
+    assert analytics_hash(staged) == manifest["analytics_implementation_sha256"]
+    assert _reingest(staged).name == manifest["source_snapshot_id"]
+    assert _publish_moves(staged) == moves
+    assert _instructions_hash(staged, moves.name) == instructions
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        f"{PACKAGE}/ingest/pgn.py",
+        f"{PACKAGE}/warehouse/snapshots.py",
+        f"{PACKAGE}/metrics/draw_rate.sql",
+        f"{PACKAGE}/common.py",
+        "contracts/tables.json",
+    ],
+)
+def test_ingest_changes_require_fresh_snapshot(staged, path):
+    root = staged / "data"
+    manifest = read_json(current_snapshot(staged) / "manifest.json")
+    old_source = root / "published" / manifest["source_snapshot_id"]
+    implementation = implementation_hash(staged)
+    with (staged / path).open("a") as file:
+        file.write("\n")
+
+    assert implementation_hash(staged) != implementation
+    with pytest.raises(ValueError, match="implementation changed after ingest"):
+        build(staged, root, DATASET)
+    with pytest.raises(ValueError, match="snapshot implementation differs"):
+        report(staged, old_source)
+    assert _reingest(staged) != old_source
