@@ -44,12 +44,10 @@ John will delete the Cloud app after PR 3 merges; repository deletion does not
 remove it. ADR 0122 PR B was rejected; #106 closed unmerged (median 60s vs 65s,
 below the 10s keep gate).
 
-PR 3 offline checks: 94 classifier tests, Ruff lint/format, basedpyright,
-workflow generation/audit, actionlint, 23 Node tests and the synthetic demo
-passed. The site build passed after restoring the pinned publication from
-local Git history. Lock regeneration is blocked by the uncached Maia Git
-source; `uv.lock` is unchanged. Full locked pytest remains a reviewer gate.
-See ADR 0120 evidence for the retained failures and validation limits.
+PR 3 offline checks: 712 passed, 17 skipped; Ruff lint/format, basedpyright,
+workflow generation/audit, actionlint and 23 Node tests passed. `uv.lock`
+dropped only the hosted pandas/narwhals extra pins; those versions remain
+transitive. See ADR 0120 evidence.
 
 Local PR 2 review on 2026-11-23: the focused docs-site, dashboard-cube and
 dashboard-export tests passed without xdist. Ruff lint/format and the

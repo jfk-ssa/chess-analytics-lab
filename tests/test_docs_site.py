@@ -304,7 +304,9 @@ def test_site_publishes_guides_without_mutating_evidence(tmp_path):
     assert '<body class="page-portfolio">' in portfolio
     assert 'class="portfolio-intro"' in portfolio
     assert 'class="portfolio-lead"' in portfolio
-    assert portfolio.count('class="portfolio-live-pill"') == 4
+    assert portfolio.count('class="portfolio-live-pill"') == 3
+    assert "https://jfkbot.github.io/chess-analytics-lab/dashboard.html" in portfolio
+    assert "chess-analytics-lab.streamlit.app" not in portfolio
     assert portfolio.count('class="portfolio-card') == 9
     assert 'class="portfolio-sources"' in portfolio
     assert 'class="portfolio-source"' in portfolio

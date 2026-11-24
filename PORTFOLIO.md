@@ -4,8 +4,7 @@ Chess Analytics Lab turns chess game records into reproducible opening, clock-pr
 
 ## Live
 
-- Pages dashboard (committed cube, browser filters and scoped provenance): https://jfkbot.github.io/chess-analytics-lab/dashboard.html
-- Pages dashboard (built from the committed public cube and extract without opening a warehouse): https://jfkbot.github.io/chess-analytics-lab/dashboard.html
+- Pages dashboard (committed cube, browser filters, scoped provenance; no warehouse): https://jfkbot.github.io/chess-analytics-lab/dashboard.html
 - Documentation site: https://jfkbot.github.io/chess-analytics-lab/
 - Repository: https://github.com/jfkbot/chess-analytics-lab
 
