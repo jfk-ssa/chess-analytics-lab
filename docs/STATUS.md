@@ -22,7 +22,13 @@ uses a generated offline step catalog and one selected-extra sync, and removes
 the duplicate Pages lint check, unused orchestration adapters, and auxiliary
 examples. Offline checks: 679 passed, 18 skipped; 63 classifier tests passed.
 Frozen evidence and dated measurements stay unchanged. PR 2 is accepted;
-PR 3 retires hosted Streamlit repository code; PR 4 remains proposed.
+PR 3 retires hosted Streamlit repository code. PR 4 implements scoped snapshot
+hashes and stale-publication checks locally ([ADR 0121](adr/0121-scoped-implementation-hash.md)).
+Its 2026-11-23 amendment refuses a stale or missing stored ingest
+implementation hash in `current_snapshot()` before checked tools or quoting,
+and includes `common.py` in `analytics_hash()`.
+The PR 4 cold-review follow-up verified POSIX digest compatibility on identical
+input files and checked stale pointers without a mart rebuild.
 
 PR 2 of [ADR 0120](adr/0120-replace-hosted-streamlit-with-static-dashboard.md)
 adds the [Pages dashboard](https://jfkbot.github.io/chess-analytics-lab/dashboard.html)
@@ -39,10 +45,9 @@ Python suites. The local six-view Streamlit app remains available.
 John accepted the deployed page on 2026-11-23 at 18:49 CT (America/Chicago),
 source `214a20b`, [Pages run 45264591067](https://github.com/jfkbot/chess-analytics-lab/actions/runs/45264591067).
 [ADR 0120 evidence](adr/0120-replace-hosted-streamlit-with-static-dashboard.md#pr-2-acceptance-and-pr-3-implementation-evidence)
-records acceptance of the #105 main deploy and the actual rollout sequence:
-John will delete the Cloud app after PR 3 merges; repository deletion does not
-remove it. ADR 0122 PR B was rejected; #106 closed unmerged (median 60s vs 65s,
-below the 10s keep gate).
+records acceptance of the #105 main deploy and the actual rollout sequence.
+John has deleted the Community Cloud app. ADR 0122 PR B was rejected; #106
+closed unmerged (median 60s vs 65s, below the 10s keep gate).
 
 PR 3 offline checks: 712 passed, 17 skipped; Ruff lint/format, basedpyright,
 workflow generation/audit, actionlint and 23 Node tests passed. `uv.lock`

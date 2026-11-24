@@ -227,11 +227,6 @@ def portfolio_product(tmp_path_factory):
     workspace = tmp_path_factory.mktemp("semantic-portfolio")
     run(PROJECT, workspace)
     demo = workspace / "project"
-    shutil.copytree(
-        PROJECT / "dbt",
-        demo / "dbt",
-        ignore=shutil.ignore_patterns("target", "logs", "dbt_packages"),
-    )
     _transform(demo, demo / "data")
     return demo
 
@@ -242,6 +237,10 @@ def test_allowlist_is_unchanged():
 
 def test_model_hash_skips_only_the_top_level_generated_directory(tmp_path):
     project = tmp_path / "project"
+    for name in ("common.py", "marts/pipeline.py", "dashboard/analysis.py"):
+        required = project / "src/chess_analytics" / name
+        required.parent.mkdir(parents=True, exist_ok=True)
+        required.write_text("# fixture implementation\n")
     nested = project / "dbt/models/target"
     nested.mkdir(parents=True)
     (nested / "keep.sql").write_text("select 1\n")

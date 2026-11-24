@@ -1,36 +1,72 @@
 """Checked, parameterized analysis over a published M3 snapshot."""
 
 import random
+import re
 from collections import defaultdict
 from pathlib import Path
 
 import duckdb
 
-from chess_analytics.common import digest
+from chess_analytics.common import digest, read_json
 from chess_analytics.corpus.metrics import clock_pressure, opening_player_score
-from chess_analytics.corpus.publish import validate_analytical
+from chess_analytics.corpus.publish import analytics_hash, snapshot_identity, validate_analytical
+from chess_analytics.ingest.pipeline import implementation_hash
+
+_STALE_INGEST = (
+    "stored ingest implementation is missing or differs; "
+    "reingest and rebuild the analytical snapshot and mart"
+)
 
 FAMILIES = ("Sicilian Defense", "French Defense")
 BUCKETS = ("under_10", "10_to_29", "30_to_59", "60_plus")
 
 
-def current_snapshot(project: Path) -> Path:
-    from chess_analytics.common import read_json
+def _stored_implementation_sha256(root: Path, source_id: object) -> str | None:
+    if not isinstance(source_id, str) or not re.fullmatch(r"[0-9a-f]{24}", source_id):
+        return None
+    path = root / "published" / source_id / "manifest.json"
+    if not path.is_file():
+        return None
+    stored = read_json(path).get("implementation_sha256")
+    if not isinstance(stored, str) or not stored:
+        raise ValueError(_STALE_INGEST)
+    return stored
 
+
+def current_snapshot(project: Path) -> Path:
     root = project / "data"
-    identity = read_json(root / "analytical-moves-current.json")["analytical_id"]
-    if len(identity) != 24 or any(c not in "0123456789abcdef" for c in identity):
+    identity = read_json(root / "analytical-moves-current.json").get("analytical_id")
+    if not isinstance(identity, str) or not re.fullmatch(r"[0-9a-f]{24}", identity):
         raise ValueError("invalid analytical snapshot identity")
     snapshot = root / "analytical/published" / identity
-    validate_analytical(snapshot)
+    manifest = validate_analytical(snapshot)
+    source_id = manifest.get("source_snapshot_id")
+    source_sha = manifest.get("source_sha256")
+    stored = _stored_implementation_sha256(root, source_id)
+    if stored is not None and stored != implementation_hash(project):
+        raise ValueError(_STALE_INGEST)
+    if manifest.get("analytics_implementation_sha256") != analytics_hash(project):
+        raise ValueError(
+            "analytical implementation differs; rebuild the analytical snapshot and mart"
+        )
+    if (
+        not isinstance(source_id, str)
+        or not re.fullmatch(r"[0-9a-f]{24}", source_id)
+        or not isinstance(source_sha, str)
+        or not re.fullmatch(r"[0-9a-f]{64}", source_sha)
+        or snapshot_identity(project, source_id, source_sha) != identity
+    ):
+        raise ValueError(
+            "analytical snapshot identity mismatch; rebuild the analytical snapshot and mart"
+        )
+    if stored is None:
+        raise ValueError(_STALE_INGEST)
     return snapshot
 
 
 def coverage(project: Path, snapshot: Path) -> dict:
     manifest = validate_analytical(snapshot)
     source = project / "data/published" / manifest["source_snapshot_id"] / "manifest.json"
-    from chess_analytics.common import read_json
-
     source_manifest = read_json(source)
     return {
         "analytical_id": manifest["analytical_id"],
