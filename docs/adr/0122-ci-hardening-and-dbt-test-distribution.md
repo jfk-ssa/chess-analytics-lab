@@ -137,5 +137,8 @@ closed unmerged. `pytest_dbt` with `--dist loadscope` over 3 hosted runs:
 Median 60s vs 65s baseline: a 5s improvement, below the 10s keep gate.
 No loadscope code change is retained.
 
-`offline.yml` concurrency cancels concurrent `workflow_dispatch` runs on the
-same branch, so timing runs must go one at a time.
+`offline.yml` uses concurrency group `offline-${{ github.ref }}` with
+`cancel-in-progress` only when the ref is not `main`. A second
+`workflow_dispatch` on a non-main ref cancels the in-progress run on that
+ref; on `main` the later run queues until the current one finishes. Timing
+runs on a feature branch must therefore go one at a time.

@@ -10,8 +10,10 @@
 Showcase practical data engineering and AI/ML on a real warehouse, not a toy
 demo. The lab already has dbt-duckdb marts, a MetricFlow semantic path
 ([ADR 0085](../adr/0085-governed-semantic-layer-metricflow.md)), a Parquet
-hosted cube (`data/public/dashboard_cube.parquet`), Streamlit at
-https://chess-analytics-lab.streamlit.app/, Pages at
+hosted cube (`data/public/dashboard_cube.parquet`), the Pages dashboard at
+https://jfkbot.github.io/chess-analytics-lab/dashboard.html (the Community
+Cloud app at https://chess-analytics-lab.streamlit.app/ is retired; John will
+delete it after PR 3 merges), documentation site at
 https://jfkbot.github.io/chess-analytics-lab/, and a manual `live-eval`
 environment with budget caps, receipts, and frozen-file hashes. Three
 features turn that stack into resume evidence: one source of truth for KPIs,
