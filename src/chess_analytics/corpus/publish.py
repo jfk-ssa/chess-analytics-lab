@@ -13,11 +13,39 @@ from chess_analytics.corpus.moves import SAMPLE_MODULUS, write_sampled_moves
 from chess_analytics.corpus.source import extracted_path
 from chess_analytics.warehouse.snapshots import current, report
 
+MART_PIPELINE_PATH = "src/chess_analytics/marts/pipeline.py"
+_GENERATED_DBT = frozenset({"target", "logs", "dbt_packages"})
+
+
+def dbt_definition_paths(project: Path) -> list[Path]:
+    root = project / "dbt"
+    paths = []
+    for path in root.rglob("*"):
+        parts = path.relative_to(root).parts
+        if parts[0] in _GENERATED_DBT or "__pycache__" in parts:
+            continue
+        if path.suffix in {".sql", ".yml"} and path.is_file():
+            paths.append(path)
+    return paths
+
 
 def analytics_hash(project: Path) -> str:
-    paths = sorted((project / "src/chess_analytics/corpus").glob("*.py"))
-    paths += sorted((project / "contracts").glob("*.json"))
-    return hash_json({str(path.relative_to(project)): digest(path) for path in paths})
+    package = project / "src/chess_analytics"
+    paths = [
+        *(package / "corpus").glob("*.py"),
+        *(project / "contracts").glob("*.json"),
+        package / "dashboard/analysis.py",
+        *(package / "analyst").rglob("*.py"),
+        project / MART_PIPELINE_PATH,
+        *dbt_definition_paths(project),
+    ]
+    return hash_json(
+        {
+            str(path.relative_to(project)): digest(path)
+            for path in sorted(paths)
+            if "__pycache__" not in path.relative_to(project).parts and path.is_file()
+        }
+    )
 
 
 def snapshot_identity(project: Path, source_id: str, extracted_hash: str) -> str:
@@ -114,7 +142,7 @@ def validate_analytical(directory: Path) -> dict:
     if not re.fullmatch(r"[0-9a-f]{24}", directory.name):
         raise ValueError("invalid analytical snapshot ID")
     manifest = read_json(directory / "manifest.json")
-    if directory.name != manifest["analytical_id"] or manifest["status"] != "published":
+    if directory.name != manifest.get("analytical_id") or manifest["status"] != "published":
         raise ValueError("invalid analytical snapshot manifest")
     for name, expected in manifest["artifacts"].items():
         if digest(directory / name) != expected:

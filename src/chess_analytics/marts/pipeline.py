@@ -20,7 +20,13 @@ from chess_analytics.common import (
     read_json,
     write_json,
 )
-from chess_analytics.corpus.publish import analytics_hash, snapshot_identity, validate_analytical
+from chess_analytics.corpus.publish import (
+    MART_PIPELINE_PATH,
+    analytics_hash,
+    dbt_definition_paths,
+    snapshot_identity,
+    validate_analytical,
+)
 from chess_analytics.warehouse.snapshots import current, report
 
 
@@ -30,22 +36,15 @@ def checked_id(value: str) -> str:
     return value
 
 
-_GENERATED_DBT = frozenset({"target", "logs", "dbt_packages"})
-
-
 def model_hash(project: Path) -> str:
     """Hash dbt definitions and the move-input implementation; skip generated dbt files."""
-    root = project / "dbt"
-    paths = []
-    for pattern in ("*.sql", "*.yml"):
-        for path in sorted(root.rglob(pattern)):
-            relative = path.relative_to(root)
-            if not path.is_file() or (relative.parts and relative.parts[0] in _GENERATED_DBT):
-                continue
-            paths.append(path)
     return hash_json(
         {
-            **{str(path.relative_to(project)): digest(path) for path in paths},
+            **{
+                str(path.relative_to(project)): digest(path)
+                for path in dbt_definition_paths(project)
+            },
+            MART_PIPELINE_PATH: digest(project / MART_PIPELINE_PATH),
             "move_inputs": analytics_hash(project),
         }
     )

@@ -25,6 +25,13 @@ def _stage_project(source_project: Path, project: Path) -> None:
     project.mkdir(parents=True, exist_ok=True)
     for directory in ("src", "contracts"):
         shutil.copytree(source_project / directory, project / directory, dirs_exist_ok=True)
+    if (source_project / "dbt").is_dir():
+        shutil.copytree(
+            source_project / "dbt",
+            project / "dbt",
+            dirs_exist_ok=True,
+            ignore=shutil.ignore_patterns("target", "logs", "dbt_packages"),
+        )
     shutil.copy2(source_project / "uv.lock", project / "uv.lock")
     (project / "reports").mkdir(exist_ok=True)
     for name in ("M5-both-harness.json", "M7-December-Sol-v12-checkpoint.json"):
