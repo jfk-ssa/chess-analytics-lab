@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling==1.33.0", "packaging==26.3", "pathspec==1.1.1", "pluggy==1.7.0", "trove-classifiers==2026.9.21.13"]
+requires = ["hatchling==1.33.0", "packaging==26.4", "pathspec==1.1.1", "pluggy==1.7.0", "trove-classifiers==2026.9.21.13"]
 build-backend = "hatchling.build"
 
 [tool.hatch.metadata]
@@ -37,7 +37,7 @@ dbt = [
 dashboard = [
     "streamlit==1.67.0",
     "pillow==13.0.0",
-    "certifi==2026.10.23",
+    "certifi==2026.11.20",
 ]
 mcp = [
     "mcp==2.3.0",
